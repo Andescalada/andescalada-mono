@@ -1,0 +1,16 @@
+{
+  "name": "@zart/api",
+  "version": "0.0.1",
+  "author": "KATT",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "src"
+  ],
+  "scripts": {},
+  "dependencies": {
+    "@trpc/react": "^10.0.0-alpha.36",
+    "@trpc/server": "^10.0.0-alpha.36"
+  },
+  "devDependencies": {}
+}
