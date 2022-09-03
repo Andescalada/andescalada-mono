@@ -1,4 +1,4 @@
-import { HelloWorld } from '@zart/react-native/hello-world';
+import ZonesList from '@zart/react-native/zonesLists';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
@@ -28,7 +28,7 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         {/* <SafeAreaProvider> */}
         <StatusBar style="dark" />
-        <HelloWorld />
+        <ZonesList />
         {/* </SafeAreaProvider> */}
       </QueryClientProvider>
     </trpc.Provider>

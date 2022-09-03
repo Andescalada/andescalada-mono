@@ -2,7 +2,7 @@
  * This file contains the root router of your tRPC-backend
  */
 import { t } from '../createRouter';
-import { postRouter } from './post';
+import { zonesRouter } from './zones';
 
 /**
  * Create your application's root router
@@ -11,7 +11,7 @@ import { postRouter } from './post';
  * @link https://trpc.io/docs/router
  */
 export const appRouter = t.router({
-  post: postRouter,
+  zones: zonesRouter,
 });
 
 export type AppRouter = typeof appRouter;

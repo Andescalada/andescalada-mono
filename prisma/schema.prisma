@@ -629,26 +629,26 @@ model zone_owners {
 }
 
 model zones {
-  id                    BigInt                    @id @default(autoincrement())
-  camping_zone          Int?                      @default(2)
-  bathroom_available    Int?                      @default(2)
-  fire_allowed          Int?                      @default(2)
-  published             Boolean?                  @default(false)
-  multipitch            Boolean?                  @default(false)
-  latitude              Decimal?                  @db.Decimal
-  longitude             Decimal?                  @db.Decimal
+  id                    BigInt                @id @default(autoincrement())
+  camping_zone          Int?                  @default(2)
+  bathroom_available    Int?                  @default(2)
+  fire_allowed          Int?                  @default(2)
+  published             Boolean?              @default(false)
+  multipitch            Boolean?              @default(false)
+  latitude              Decimal?              @db.Decimal
+  longitude             Decimal?              @db.Decimal
   altitude              Float?
-  routes_count          Int?                      @default(0)
-  price                 Int?                      @default(0)
+  routes_count          Int?                  @default(0)
+  price                 Int?                  @default(0)
   region_id             BigInt
-  name                  String?                   @db.VarChar
-  location              String?                   @db.VarChar
-  lonlat                Unsupported("geography")?
+  name                  String?               @db.VarChar
+  location              String?               @db.VarChar
+  lonlat                BigInt?
   description           String?
-  created_at            DateTime                  @db.Timestamp(6)
-  updated_at            DateTime                  @db.Timestamp(6)
-  suitable_for_children Int?                      @default(2)
-  regions               regions                   @relation(fields: [region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_612e015e24")
+  created_at            DateTime              @db.Timestamp(6)
+  updated_at            DateTime              @db.Timestamp(6)
+  suitable_for_children Int?                  @default(2)
+  regions               regions               @relation(fields: [region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_612e015e24")
   downloaded_zones      downloaded_zones[]
   recent_zones          recent_zones[]
   sectors               sectors[]
