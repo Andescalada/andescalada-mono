@@ -3,7 +3,20 @@ import { FlatList, View, Text } from 'react-native';
 
 const ZonesList = () => {
   const { data } = trpc.useQuery(['zones.all']);
-  if (!data) return null;
+  console.log(data);
+  if (!data)
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#bdbdbd',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text>Sin zonas</Text>
+      </View>
+    );
   return (
     <FlatList
       data={data}
