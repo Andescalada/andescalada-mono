@@ -573,7 +573,7 @@ CREATE TABLE "zones" (
     "region_id" BIGINT NOT NULL,
     "name" VARCHAR,
     "location" VARCHAR,
-    "lonlat" geography,
+    "lonlat" BIGINT,
     "description" TEXT,
     "created_at" TIMESTAMP(6) NOT NULL,
     "updated_at" TIMESTAMP(6) NOT NULL,

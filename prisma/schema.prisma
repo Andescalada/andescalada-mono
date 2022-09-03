@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model action_text_rich_texts {
@@ -643,7 +644,7 @@ model zones {
   region_id             BigInt
   name                  String?               @db.VarChar
   location              String?               @db.VarChar
-  lonlat                BigInt?
+  lonlat                String?               @db.VarChar
   description           String?
   created_at            DateTime              @db.Timestamp(6)
   updated_at            DateTime              @db.Timestamp(6)
