@@ -1,21 +1,9 @@
 import Head from 'next/head';
-import Link from 'next/link';
+
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { trpc } from '../utils/trpc';
 
 export default function IndexPage() {
   // const utils = trpc.useContext();
-  // const postsQuery = trpc.proxy.post.all.useQuery();
-  // const addPost = trpc.proxy.post.add.useMutation({
-  //   onSuccess: () => utils.invalidateQueries('post.all'),
-  // });
-
-  // prefetch all posts for instant navigation
-  // useEffect(() => {
-  //   postsQuery.data?.forEach((post) => {
-  //     utils.prefetchQuery(['post.byId', post.id]);
-  //   });
-  // }, [postsQuery.data, utils]);
 
   return (
     <>
@@ -29,18 +17,6 @@ export default function IndexPage() {
         stuck, or ping <a href="https://twitter.com/alexdotjs">@alexdotjs</a> on
         Twitter.
       </p>
-      {/* <h2>
-        Posts
-        {postsQuery.status === 'loading' && '(loading)'}
-      </h2>
-      {postsQuery.data?.map((item) => (
-        <article key={item.id}>
-          <h3>{item.title}</h3>
-          <Link href={`/post/${item.id}`}>
-            <a>View more</a>
-          </Link>
-        </article>
-      ))} */}
 
       {process.env.NODE_ENV !== 'production' && (
         <ReactQueryDevtools initialIsOpen={false} />
