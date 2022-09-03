@@ -7,7 +7,6 @@ export const zonesRouter = t.router({
     const zones = ctx.prisma.zones.findMany({
       include: { regions: { select: { name: true } } },
     });
-    console.log(zones);
     return zones;
   }),
   byId: t.procedure.input(z.number()).query(async ({ ctx, input }) => {
