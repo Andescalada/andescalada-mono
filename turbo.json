@@ -10,7 +10,6 @@
       "outputs": []
     },
     "dev": {
-      "dependsOn": ["//#db-migrate-dev"],
       "cache": false
     },
     "clean": {
