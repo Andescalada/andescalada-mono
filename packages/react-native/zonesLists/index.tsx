@@ -21,14 +21,13 @@ const ZonesList = () => {
     <FlatList
       data={data}
       contentContainerStyle={{
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
       }}
       renderItem={({ item }) => (
         <View style={{ margin: 16 }}>
           <Text>{item.name}</Text>
-          <Text>{item.description}</Text>
+          <Text>{item.regions.name}</Text>
         </View>
       )}
     />
