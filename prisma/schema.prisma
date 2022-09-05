@@ -15,7 +15,7 @@ model User {
   email String @unique
 }
 
-model Zones {
+model Zone {
   id   String @id @default(uuid())
   name String
 }
