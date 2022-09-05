@@ -659,3 +659,4 @@ model zones {
 
   @@index([region_id], map: "index_zones_on_region_id")
 }
+

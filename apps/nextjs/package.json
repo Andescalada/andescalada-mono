@@ -18,6 +18,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.9.1",
     "@prisma/client": "^3.8.1",
     "@trpc/client": "^10.0.0-alpha.36",
     "@trpc/next": "^10.0.0-alpha.36",
