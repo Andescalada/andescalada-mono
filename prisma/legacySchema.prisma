@@ -1,0 +1,665 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model action_text_rich_texts {
+  id          BigInt   @id @default(autoincrement())
+  name        String   @db.VarChar
+  body        String?
+  record_type String   @db.VarChar
+  record_id   BigInt
+  created_at  DateTime @db.Timestamp(6)
+  updated_at  DateTime @db.Timestamp(6)
+
+  @@unique([record_type, record_id, name], map: "index_action_text_rich_texts_uniqueness")
+}
+
+model active_storage_attachments {
+  id                   BigInt               @id @default(autoincrement())
+  name                 String               @db.VarChar
+  record_type          String               @db.VarChar
+  record_id            BigInt
+  blob_id              BigInt
+  created_at           DateTime             @db.Timestamp(6)
+  active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c3b3935057")
+  zones                zones[]
+
+  @@unique([record_type, record_id, name, blob_id], map: "index_active_storage_attachments_uniqueness")
+  @@index([blob_id], map: "index_active_storage_attachments_on_blob_id")
+  @@index([name, record_id, record_type], name: "relation_index")
+}
+
+model active_storage_blobs {
+  id                             BigInt                           @id @default(autoincrement())
+  key                            String                           @unique(map: "index_active_storage_blobs_on_key") @db.VarChar
+  filename                       String                           @db.VarChar
+  content_type                   String?                          @db.VarChar
+  metadata                       String?
+  byte_size                      BigInt
+  checksum                       String                           @db.VarChar
+  created_at                     DateTime                         @db.Timestamp(6)
+  service_name                   String                           @db.VarChar
+  active_storage_attachments     active_storage_attachments[]
+  active_storage_variant_records active_storage_variant_records[]
+}
+
+model active_storage_variant_records {
+  id                   BigInt               @id @default(autoincrement())
+  blob_id              BigInt
+  variation_digest     String               @db.VarChar
+  active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_993965df05")
+
+  @@unique([blob_id, variation_digest], map: "index_active_storage_variant_records_uniqueness")
+}
+
+model ar_internal_metadata {
+  key        String   @id @db.VarChar
+  value      String?  @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model climbed_routes {
+  id         BigInt   @id @default(autoincrement())
+  route_id   BigInt
+  user_id    BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_0018cc96bd")
+  routes     routes   @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_ec5d461b4b")
+
+  @@index([route_id], map: "index_climbed_routes_on_route_id")
+  @@index([user_id], map: "index_climbed_routes_on_user_id")
+}
+
+model climbing_types {
+  id                   BigInt                 @id @default(autoincrement())
+  name                 Int?                   @default(0)
+  created_at           DateTime               @db.Timestamp(6)
+  updated_at           DateTime               @db.Timestamp(6)
+  route_climbing_types route_climbing_types[]
+  zone_climbing_types  zone_climbing_types[]
+}
+
+model coalition_members {
+  id           BigInt     @id @default(autoincrement())
+  coalition_id BigInt
+  user_id      BigInt
+  created_at   DateTime   @db.Timestamp(6)
+  updated_at   DateTime   @db.Timestamp(6)
+  approved     Boolean?   @default(false)
+  users        users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c0ad645cdc")
+  coalitions   coalitions @relation(fields: [coalition_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c2e979f43c")
+
+  @@index([coalition_id], map: "index_coalition_members_on_coalition_id")
+  @@index([user_id], map: "index_coalition_members_on_user_id")
+}
+
+model coalitions {
+  id                BigInt              @id @default(autoincrement())
+  name              String?             @db.VarChar
+  email             String?             @db.VarChar
+  twitter           String?             @db.VarChar
+  instagram         String?             @db.VarChar
+  youtube           String?             @db.VarChar
+  tiktok            String?             @db.VarChar
+  facebook          String?             @db.VarChar
+  description       String?
+  created_at        DateTime            @db.Timestamp(6)
+  updated_at        DateTime            @db.Timestamp(6)
+  initiatives_count Int?                @default(0)
+  coalition_members coalition_members[]
+  initiatives       initiatives[]
+  zone_coalitions   zone_coalitions[]
+}
+
+model collaborated_routes {
+  id         BigInt   @id @default(autoincrement())
+  route_id   BigInt
+  user_id    BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  routes     routes   @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_cc3c43a14f")
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_efe00b7180")
+
+  @@index([route_id], map: "index_collaborated_routes_on_route_id")
+  @@index([user_id], map: "index_collaborated_routes_on_user_id")
+}
+
+model countries {
+  id         BigInt    @id @default(autoincrement())
+  name       String?   @db.VarChar
+  created_at DateTime  @db.Timestamp(6)
+  updated_at DateTime  @db.Timestamp(6)
+  regions    regions[]
+}
+
+model descent_alternatives {
+  id         BigInt   @id @default(autoincrement())
+  route_id   BigInt
+  descent_id BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  routes     routes   @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_936331ca91")
+  descents   descents @relation(fields: [descent_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c3b7bb5d83")
+
+  @@index([descent_id], map: "index_descent_alternatives_on_descent_id")
+  @@index([route_id], map: "index_descent_alternatives_on_route_id")
+}
+
+model descents {
+  id                   BigInt                 @id @default(autoincrement())
+  name                 Int?                   @default(0)
+  created_at           DateTime               @db.Timestamp(6)
+  updated_at           DateTime               @db.Timestamp(6)
+  descent_alternatives descent_alternatives[]
+  recommended_descents recommended_descents[]
+}
+
+model downloaded_zones {
+  id         BigInt   @id @default(autoincrement())
+  user_id    BigInt
+  zone_id    BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_4ccf10a633")
+  zones      zones    @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_d725ababd5")
+
+  @@index([user_id], map: "index_downloaded_zones_on_user_id")
+  @@index([zone_id], map: "index_downloaded_zones_on_zone_id")
+}
+
+model equipped_routes {
+  id         BigInt    @id @default(autoincrement())
+  route_id   BigInt
+  user_id    BigInt
+  date       DateTime? @db.Date
+  created_at DateTime  @db.Timestamp(6)
+  updated_at DateTime  @db.Timestamp(6)
+  routes     routes    @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_a70f6e1c60")
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_e1536e5352")
+
+  @@index([route_id], map: "index_equipped_routes_on_route_id")
+  @@index([user_id], map: "index_equipped_routes_on_user_id")
+}
+
+model initiative_participants {
+  id            BigInt      @id @default(autoincrement())
+  initiative_id BigInt
+  user_id       BigInt
+  created_at    DateTime    @db.Timestamp(6)
+  updated_at    DateTime    @db.Timestamp(6)
+  initiatives   initiatives @relation(fields: [initiative_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_5379583e00")
+  users         users       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_62d736b348")
+
+  @@index([initiative_id], map: "index_initiative_participants_on_initiative_id")
+  @@index([user_id], map: "index_initiative_participants_on_user_id")
+}
+
+model initiative_sponsors {
+  id            BigInt      @id @default(autoincrement())
+  initiative_id BigInt
+  sponsor_id    BigInt
+  created_at    DateTime    @db.Timestamp(6)
+  updated_at    DateTime    @db.Timestamp(6)
+  sponsors      sponsors    @relation(fields: [sponsor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_6a8eb171d4")
+  initiatives   initiatives @relation(fields: [initiative_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_e3a97d7c3f")
+
+  @@index([initiative_id], map: "index_initiative_sponsors_on_initiative_id")
+  @@index([sponsor_id], map: "index_initiative_sponsors_on_sponsor_id")
+}
+
+model initiatives {
+  id                      BigInt                    @id @default(autoincrement())
+  donatable               Boolean?                  @default(true)
+  joinable                Boolean?                  @default(true)
+  start_date              DateTime?                 @db.Timestamp(6)
+  end_date                DateTime?                 @db.Timestamp(6)
+  donated                 Float?                    @default(0.0)
+  coalition_id            BigInt
+  name                    String?                   @db.VarChar
+  email                   String?                   @db.VarChar
+  twitter                 String?                   @db.VarChar
+  instagram               String?                   @db.VarChar
+  youtube                 String?                   @db.VarChar
+  tiktok                  String?                   @db.VarChar
+  facebook                String?                   @db.VarChar
+  description             String?
+  created_at              DateTime                  @db.Timestamp(6)
+  updated_at              DateTime                  @db.Timestamp(6)
+  active                  Boolean?                  @default(false)
+  coalitions              coalitions                @relation(fields: [coalition_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_0e3749c93b")
+  initiative_participants initiative_participants[]
+  initiative_sponsors     initiative_sponsors[]
+
+  @@index([coalition_id], map: "index_initiatives_on_coalition_id")
+}
+
+model nesting_seasons {
+  id         BigInt    @id @default(autoincrement())
+  start_date DateTime? @db.Timestamp(6)
+  end_date   DateTime? @db.Timestamp(6)
+  route_id   BigInt
+  created_at DateTime  @db.Timestamp(6)
+  updated_at DateTime  @db.Timestamp(6)
+  routes     routes    @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_e6c09384ec")
+
+  @@index([route_id], map: "index_nesting_seasons_on_route_id")
+}
+
+model owners {
+  id              BigInt        @id @default(autoincrement())
+  company         Boolean?      @default(false)
+  government      Boolean?      @default(false)
+  name            String?       @db.VarChar
+  email           String?       @db.VarChar
+  phone_number    String?       @db.VarChar
+  additional_info String?
+  created_at      DateTime      @db.Timestamp(6)
+  updated_at      DateTime      @db.Timestamp(6)
+  zone_owners     zone_owners[]
+}
+
+model pictures {
+  id             BigInt   @id @default(autoincrement())
+  downloaded     Boolean? @default(false)
+  imageable_type String?  @db.VarChar
+  imageable_id   BigInt?
+  created_at     DateTime @db.Timestamp(6)
+  updated_at     DateTime @db.Timestamp(6)
+  description    String?
+
+  @@index([imageable_type, imageable_id], map: "index_pictures_on_imageable_type_and_imageable_id")
+}
+
+model recent_zones {
+  id         BigInt   @id @default(autoincrement())
+  user_id    BigInt
+  zone_id    BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  zones      zones    @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_71b57ed864")
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_d2ef29384e")
+
+  @@index([user_id], map: "index_recent_zones_on_user_id")
+  @@index([zone_id], map: "index_recent_zones_on_zone_id")
+}
+
+model recommended_descents {
+  id         BigInt   @id @default(autoincrement())
+  route_id   BigInt
+  descent_id BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  routes     routes   @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_2f6f42df34")
+  descents   descents @relation(fields: [descent_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_b215929dfb")
+
+  @@index([descent_id], map: "index_recommended_descents_on_descent_id")
+  @@index([route_id], map: "index_recommended_descents_on_route_id")
+}
+
+model recommended_seasons {
+  id         BigInt   @id @default(autoincrement())
+  wall_id    BigInt
+  season_id  BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  walls      walls    @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_418236aa58")
+  seasons    seasons  @relation(fields: [season_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_902b959204")
+
+  @@index([season_id], map: "index_recommended_seasons_on_season_id")
+  @@index([wall_id], map: "index_recommended_seasons_on_wall_id")
+}
+
+model regions {
+  id         BigInt    @id @default(autoincrement())
+  name       String?   @db.VarChar
+  country_id BigInt
+  created_at DateTime  @db.Timestamp(6)
+  updated_at DateTime  @db.Timestamp(6)
+  countries  countries @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_f2ba72ccee")
+  zones      zones[]
+
+  @@index([country_id], map: "index_regions_on_country_id")
+}
+
+model roles {
+  id            BigInt   @id @default(autoincrement())
+  name          String?  @db.VarChar
+  resource_type String?  @db.VarChar
+  resource_id   BigInt?
+  created_at    DateTime @db.Timestamp(6)
+  updated_at    DateTime @db.Timestamp(6)
+
+  @@index([name], map: "index_roles_on_name")
+  @@index([name, resource_type, resource_id], map: "index_roles_on_name_and_resource_type_and_resource_id")
+  @@index([resource_type, resource_id], map: "index_roles_on_resource")
+}
+
+model route_climbing_types {
+  id               BigInt         @id @default(autoincrement())
+  route_id         BigInt
+  climbing_type_id BigInt
+  created_at       DateTime       @db.Timestamp(6)
+  updated_at       DateTime       @db.Timestamp(6)
+  routes           routes         @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_05078d3aa7")
+  climbing_types   climbing_types @relation(fields: [climbing_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_86223d883c")
+
+  @@index([climbing_type_id], map: "index_route_climbing_types_on_climbing_type_id")
+  @@index([route_id], map: "index_route_climbing_types_on_route_id")
+}
+
+model route_reviews {
+  id                BigInt   @id @default(autoincrement())
+  climbing_type_id  Int?
+  protection_rating Int?
+  stars             Int?
+  route_id          BigInt
+  user_id           BigInt
+  grade             String?  @db.VarChar
+  comment           String?
+  created_at        DateTime @db.Timestamp(6)
+  updated_at        DateTime @db.Timestamp(6)
+  routes            routes   @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_0663ab2e3c")
+  users             users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_6220be3ded")
+
+  @@index([route_id], map: "index_route_reviews_on_route_id")
+  @@index([user_id], map: "index_route_reviews_on_user_id")
+}
+
+model routes {
+  id                   BigInt                 @id @default(autoincrement())
+  rains                Boolean?               @default(false)
+  classic              Boolean?               @default(false)
+  published            Boolean?               @default(false)
+  status               Int?                   @default(0)
+  protection_ranking   Int?                   @default(0)
+  slope                Int?                   @default(0)
+  pitch_num            Int?                   @default(1)
+  wind                 Int?                   @default(0)
+  topo_num             Int?
+  length               Int?
+  reviews_count        Int?                   @default(0)
+  wall_id              BigInt
+  left_route_id        BigInt?
+  name                 String?                @db.VarChar
+  grade                String?                @db.VarChar
+  community_grade      String?                @db.VarChar
+  quickdraws           String?                @db.VarChar
+  status_title         String?                @db.VarChar
+  status_description   String?
+  created_at           DateTime               @db.Timestamp(6)
+  updated_at           DateTime               @db.Timestamp(6)
+  walls                walls                  @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_2070c35097")
+  climbed_routes       climbed_routes[]
+  collaborated_routes  collaborated_routes[]
+  descent_alternatives descent_alternatives[]
+  equipped_routes      equipped_routes[]
+  nesting_seasons      nesting_seasons[]
+  recommended_descents recommended_descents[]
+  route_climbing_types route_climbing_types[]
+  route_reviews        route_reviews[]
+  saved_routes         saved_routes[]
+
+  @@index([left_route_id], map: "index_routes_on_left_route_id")
+  @@index([wall_id], map: "index_routes_on_wall_id")
+}
+
+model saved_routes {
+  id         BigInt   @id @default(autoincrement())
+  route_id   BigInt
+  user_id    BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_42dd46a0c3")
+  routes     routes   @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_6046b6fc44")
+
+  @@index([route_id], map: "index_saved_routes_on_route_id")
+  @@index([user_id], map: "index_saved_routes_on_user_id")
+}
+
+model schema_migrations {
+  version String @id @db.VarChar
+}
+
+model season_sun_exposures {
+  id              BigInt        @id @default(autoincrement())
+  sun_exposure_id BigInt
+  season_id       BigInt
+  created_at      DateTime      @db.Timestamp(6)
+  updated_at      DateTime      @db.Timestamp(6)
+  sun_exposures   sun_exposures @relation(fields: [sun_exposure_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_284f855421")
+  seasons         seasons       @relation(fields: [season_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_89bd34377e")
+
+  @@index([season_id], map: "index_season_sun_exposures_on_season_id")
+  @@index([sun_exposure_id], map: "index_season_sun_exposures_on_sun_exposure_id")
+}
+
+model seasons {
+  id                   BigInt                 @id @default(autoincrement())
+  start_date           DateTime?              @db.Timestamp(6)
+  end_date             DateTime?              @db.Timestamp(6)
+  name                 Int?
+  created_at           DateTime               @db.Timestamp(6)
+  updated_at           DateTime               @db.Timestamp(6)
+  recommended_seasons  recommended_seasons[]
+  season_sun_exposures season_sun_exposures[]
+}
+
+model sectors {
+  id         BigInt   @id @default(autoincrement())
+  latitude   Decimal? @db.Decimal
+  longitude  Decimal? @db.Decimal
+  zone_id    BigInt
+  name       String?  @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  zones      zones    @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_7180e343e9")
+  walls      walls[]
+
+  @@index([zone_id], map: "index_sectors_on_zone_id")
+}
+
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+model sponsors {
+  id                  BigInt                @id @default(autoincrement())
+  name                String?               @db.VarChar
+  created_at          DateTime              @db.Timestamp(6)
+  updated_at          DateTime              @db.Timestamp(6)
+  url                 String?               @db.VarChar
+  initiative_sponsors initiative_sponsors[]
+  user_sponsors       user_sponsors[]
+}
+
+model sun_exposures {
+  id                   BigInt                 @id @default(autoincrement())
+  exposure             Int?                   @default(0)
+  wall_id              BigInt
+  created_at           DateTime               @db.Timestamp(6)
+  updated_at           DateTime               @db.Timestamp(6)
+  walls                walls                  @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_ec20665e80")
+  season_sun_exposures season_sun_exposures[]
+
+  @@index([wall_id], map: "index_sun_exposures_on_wall_id")
+}
+
+model user_sponsors {
+  id         BigInt   @id @default(autoincrement())
+  user_id    BigInt
+  sponsor_id BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_394a76b27e")
+  sponsors   sponsors @relation(fields: [sponsor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_f52fc8efab")
+
+  @@index([sponsor_id], map: "index_user_sponsors_on_sponsor_id")
+  @@index([user_id], map: "index_user_sponsors_on_user_id")
+}
+
+model users {
+  id                      BigInt                    @id @default(autoincrement())
+  provider                String                    @default("email") @db.VarChar
+  uid                     String                    @default("") @db.VarChar
+  encrypted_password      String                    @default("") @db.VarChar
+  reset_password_token    String?                   @unique(map: "index_users_on_reset_password_token") @db.VarChar
+  reset_password_sent_at  DateTime?                 @db.Timestamp(6)
+  allow_password_change   Boolean?                  @default(false)
+  remember_created_at     DateTime?                 @db.Timestamp(6)
+  sign_in_count           Int                       @default(0)
+  current_sign_in_at      DateTime?                 @db.Timestamp(6)
+  last_sign_in_at         DateTime?                 @db.Timestamp(6)
+  current_sign_in_ip      String?                   @db.Inet
+  last_sign_in_ip         String?                   @db.Inet
+  confirmation_token      String?                   @unique(map: "index_users_on_confirmation_token") @db.VarChar
+  confirmed_at            DateTime?                 @db.Timestamp(6)
+  confirmation_sent_at    DateTime?                 @db.Timestamp(6)
+  unconfirmed_email       String?                   @db.VarChar
+  climbing_since          Int?
+  boulder_scale           Int?                      @default(0)
+  route_scale             Int?                      @default(0)
+  name                    String?                   @db.VarChar
+  brief_bio               String?                   @db.VarChar
+  email                   String?                   @db.VarChar
+  phone_number            BigInt?                   @unique(map: "index_users_on_phone_number")
+  twitter                 String?                   @db.VarChar
+  instagram               String?                   @db.VarChar
+  youtube                 String?                   @db.VarChar
+  tiktok                  String?                   @db.VarChar
+  facebook                String?                   @db.VarChar
+  last_sign_in_country    String?                   @db.VarChar
+  biography               String?
+  tokens                  String?
+  created_at              DateTime                  @db.Timestamp(6)
+  updated_at              DateTime                  @db.Timestamp(6)
+  country_code            String?                   @db.VarChar
+  show_modal              Boolean?                  @default(true)
+  climbed_routes          climbed_routes[]
+  coalition_members       coalition_members[]
+  collaborated_routes     collaborated_routes[]
+  downloaded_zones        downloaded_zones[]
+  equipped_routes         equipped_routes[]
+  initiative_participants initiative_participants[]
+  recent_zones            recent_zones[]
+  route_reviews           route_reviews[]
+  saved_routes            saved_routes[]
+  user_sponsors           user_sponsors[]
+
+  @@unique([uid, provider], map: "index_users_on_uid_and_provider")
+}
+
+model users_roles {
+  id      BigInt  @id @default(autoincrement())
+  user_id BigInt?
+  role_id BigInt?
+
+  @@index([role_id], map: "index_users_roles_on_role_id")
+  @@index([user_id], map: "index_users_roles_on_user_id")
+  @@index([user_id, role_id], map: "index_users_roles_on_user_id_and_role_id")
+  @@ignore
+}
+
+model walls {
+  id                  BigInt                @id @default(autoincrement())
+  rains               Boolean?              @default(false)
+  published           Boolean?              @default(false)
+  routes_count        Int?                  @default(0)
+  zone_id             BigInt
+  name                String?               @db.VarChar
+  description         String?
+  created_at          DateTime              @db.Timestamp(6)
+  updated_at          DateTime              @db.Timestamp(6)
+  sector_id           BigInt?
+  sectors             sectors?              @relation(fields: [sector_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_67fb9acabc")
+  zones               zones                 @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_7398561f75")
+  recommended_seasons recommended_seasons[]
+  routes              routes[]
+  sun_exposures       sun_exposures[]
+
+  @@index([sector_id], map: "index_walls_on_sector_id")
+  @@index([zone_id], map: "index_walls_on_zone_id")
+}
+
+model zone_climbing_types {
+  id               BigInt         @id @default(autoincrement())
+  zone_id          BigInt
+  climbing_type_id BigInt
+  created_at       DateTime       @db.Timestamp(6)
+  updated_at       DateTime       @db.Timestamp(6)
+  zones            zones          @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_dd8a762b0e")
+  climbing_types   climbing_types @relation(fields: [climbing_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_eb80b69298")
+
+  @@index([climbing_type_id], map: "index_zone_climbing_types_on_climbing_type_id")
+  @@index([zone_id], map: "index_zone_climbing_types_on_zone_id")
+}
+
+model zone_coalitions {
+  id           BigInt     @id @default(autoincrement())
+  coalition_id BigInt
+  zone_id      BigInt
+  created_at   DateTime   @db.Timestamp(6)
+  updated_at   DateTime   @db.Timestamp(6)
+  zones        zones      @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_3864ebebf9")
+  coalitions   coalitions @relation(fields: [coalition_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_fe83a4d6cf")
+
+  @@index([coalition_id], map: "index_zone_coalitions_on_coalition_id")
+  @@index([zone_id], map: "index_zone_coalitions_on_zone_id")
+}
+
+model zone_owners {
+  id         BigInt   @id @default(autoincrement())
+  zone_id    BigInt
+  owner_id   BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  zones      zones    @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_04ca08c58c")
+  owners     owners   @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_7ddfbe3bb8")
+
+  @@index([owner_id], map: "index_zone_owners_on_owner_id")
+  @@index([zone_id], map: "index_zone_owners_on_zone_id")
+}
+
+model zones {
+  id                           BigInt                      @id @default(autoincrement())
+  camping_zone                 Int?                        @default(2)
+  bathroom_available           Int?                        @default(2)
+  fire_allowed                 Int?                        @default(2)
+  published                    Boolean?                    @default(false)
+  multipitch                   Boolean?                    @default(false)
+  latitude                     Decimal?                    @db.Decimal
+  longitude                    Decimal?                    @db.Decimal
+  altitude                     Float?
+  routes_count                 Int?                        @default(0)
+  price                        Int?                        @default(0)
+  region_id                    BigInt
+  name                         String?                     @db.VarChar
+  location                     String?                     @db.VarChar
+  lonlat                       String?                     @db.VarChar
+  description                  String?
+  created_at                   DateTime                    @db.Timestamp(6)
+  updated_at                   DateTime                    @db.Timestamp(6)
+  suitable_for_children        Int?                        @default(2)
+  regions                      regions                     @relation(fields: [region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_612e015e24")
+  downloaded_zones             downloaded_zones[]
+  recent_zones                 recent_zones[]
+  sectors                      sectors[]
+  walls                        walls[]
+  zone_climbing_types          zone_climbing_types[]
+  zone_coalitions              zone_coalitions[]
+  zone_owners                  zone_owners[]
+  active_storage_attachments   active_storage_attachments? @relation(fields: [active_storage_attachmentsId], references: [id])
+  active_storage_attachmentsId BigInt?
+
+  @@index([region_id], map: "index_zones_on_region_id")
+}
