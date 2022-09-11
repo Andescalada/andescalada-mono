@@ -56,7 +56,7 @@ export default function App() {
             <Button title="Log in with Auth0" onPress={onLogin} />
           )}
         </View>
-        {/* <ZonesList /> */}
+        <ZonesList />
         {/* </SafeAreaProvider> */}
       </QueryClientProvider>
     </trpc.Provider>

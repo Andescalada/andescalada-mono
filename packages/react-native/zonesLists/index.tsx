@@ -3,7 +3,7 @@ import { FlatList, View, Text } from 'react-native';
 
 const ZonesList = () => {
   const { data } = trpc.useQuery(['zones.all']);
-  console.log(data);
+
   if (!data)
     return (
       <View
@@ -27,7 +27,6 @@ const ZonesList = () => {
       renderItem={({ item }) => (
         <View style={{ margin: 16 }}>
           <Text>{item.name}</Text>
-          <Text>{item.regions.name}</Text>
         </View>
       )}
     />
