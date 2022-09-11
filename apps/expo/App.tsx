@@ -10,6 +10,7 @@ import { transformer, trpc } from './utils/trpc';
 import * as AuthSession from 'expo-auth-session';
 import { AUTH0_DOMAIN, AUTH0_CLIENT_ID } from '@env';
 import jwtDecode from 'jwt-decode';
+import { login } from './utils/auth0';
 
 // enableScreens(true);
 const { manifest } = Constants;
@@ -35,51 +36,11 @@ export default function App() {
 
   const [name, setName] = useState<string | null>(null);
 
-  const [request, result, promptAsync] = AuthSession.useAuthRequest(
-    {
-      redirectUri,
-      clientId: AUTH0_CLIENT_ID,
-      // id_token will return a JWT token
-      responseType: 'id_token',
-      // retrieve the user's profile
-      scopes: ['openid', 'profile'],
-      extraParams: {
-        // ideally, this will be a random value
-        nonce: 'nonce',
-      },
-    },
-    { authorizationEndpoint },
-  );
+  const onLogin = async () => {
+    const { accessToken } = await login();
+    console.log(accessToken);
+  };
 
-  // Retrieve the redirect URL, add this to the callback URL list
-  // of your Auth0 application.
-  console.log(`Redirect URL: ${redirectUri}`);
-
-  useEffect(() => {
-    if (result) {
-      if (result?.type === 'error') {
-        Alert.alert(
-          'Authentication error',
-          result.params.error_description || 'something went wrong',
-        );
-        return;
-      }
-      if (result.type === 'success') {
-        // Retrieve the JWT token and decode it
-        const jwtToken = result.params.id_token;
-        console.log(result.params);
-        const decoded: { name: string } = jwtDecode(jwtToken);
-
-        const { name } = decoded;
-        console.log(decoded);
-        setName(name);
-      }
-    }
-  }, [result]);
-
-  useEffect(() => {
-    console.log(name);
-  }, [name]);
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
@@ -92,11 +53,7 @@ export default function App() {
               <Button title="Log out" onPress={() => setName(null)} />
             </>
           ) : (
-            <Button
-              disabled={!request}
-              title="Log in with Auth0"
-              onPress={() => promptAsync({ useProxy })}
-            />
+            <Button title="Log in with Auth0" onPress={onLogin} />
           )}
         </View>
         {/* <ZonesList /> */}
