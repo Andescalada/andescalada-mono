@@ -41,7 +41,7 @@ const settings = {
   code_challenge_method: 'S256',
   client_id: AUTH0_CLIENT_ID,
   clientId: AUTH0_CLIENT_ID,
-  scope: 'openid name profile',
+  scope: 'openid name profile offline_access',
   audience: AUTH0_AUDIENCE,
 };
 
@@ -49,7 +49,6 @@ const getTokens = async (
   code: string,
   codeVerifier: string,
 ): Promise<Tokens> => {
-  console.log('In getTokens');
   const redirectUrl = AuthSession.makeRedirectUri({
     native: nativeReturnUrl,
   });
@@ -84,7 +83,6 @@ const onLoginResponse = async (
   state: string,
   codeVerifier: string,
 ): Promise<LoginResponse> => {
-  console.log('in onLoginResponse');
   if (response.type !== 'success' || response.params.state !== state) {
     throw new Error();
   }
@@ -93,13 +91,6 @@ const onLoginResponse = async (
     codeVerifier,
   );
   const decodedJwtIdToken = tokenDecode(idToken);
-
-  await AsyncStorage.setItem(Storage.ACCESS_TOKEN, accessToken);
-  await AsyncStorage.setItem(Storage.REFRESH_TOKEN, refreshToken);
-  await AsyncStorage.setItem(
-    Storage.DECODED_ID_TOKEN,
-    String(decodedJwtIdToken),
-  );
 
   return { decodedIdToken: decodedJwtIdToken, accessToken, refreshToken };
 };
@@ -155,6 +146,22 @@ export const refreshTokens = async () => {
     Storage.DECODED_ID_TOKEN,
     String(decodedJwtIdToken),
   );
+};
+
+export const logout = async () => {
+  const redirectUrl = AuthSession.makeRedirectUri({
+    native: nativeReturnUrl,
+  });
+  const params = {
+    returnTo: redirectUrl,
+    client_id: AUTH0_CLIENT_ID,
+  };
+  const queryParams = toQueryString(params);
+  const authUrl = `https://${auth0Domain}/v2/logout${queryParams}`;
+  return await AuthSession.startAsync({
+    authUrl,
+    returnUrl: redirectUrl,
+  });
 };
 
 export default { login, refreshTokens };

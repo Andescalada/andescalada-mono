@@ -18,7 +18,7 @@ const ZonesList = () => {
       </View>
     );
   return (
-    <View>
+    <View style={{ flex: 1, padding: 36 }}>
       <Button title="Refetch" onPress={() => refetch()} />
       <FlatList
         data={data}

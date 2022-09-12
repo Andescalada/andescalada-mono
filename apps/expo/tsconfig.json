@@ -7,7 +7,9 @@
       "@navigation/*": ["./navigation/*"],
       "@features/*": ["./features/*"],
       "@assets/*": ["./assets/*"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@store/*": ["./store/*"],
+      "@hooks/*": ["./hooks/*"]
     }
   }
 }
