@@ -30,3 +30,6 @@ export const toQueryString = (params: StringMap): string =>
         `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
     )
     .join('&')}`;
+
+export const isExpired = (expTime: number): boolean =>
+  Math.round(+new Date() / 1000) > expTime;

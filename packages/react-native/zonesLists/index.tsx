@@ -1,8 +1,8 @@
 import { trpc } from '../trpc';
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, View, Text, Button } from 'react-native';
 
 const ZonesList = () => {
-  const { data } = trpc.useQuery(['zones.all']);
+  const { data, refetch } = trpc.useQuery(['zones.all']);
 
   if (!data)
     return (
@@ -18,18 +18,21 @@ const ZonesList = () => {
       </View>
     );
   return (
-    <FlatList
-      data={data}
-      contentContainerStyle={{
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      renderItem={({ item }) => (
-        <View style={{ margin: 16 }}>
-          <Text>{item.name}</Text>
-        </View>
-      )}
-    />
+    <View>
+      <Button title="Refetch" onPress={() => refetch()} />
+      <FlatList
+        data={data}
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        renderItem={({ item }) => (
+          <View style={{ margin: 16 }}>
+            <Text>{item.name}</Text>
+          </View>
+        )}
+      />
+    </View>
   );
 };
 

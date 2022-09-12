@@ -18,6 +18,9 @@ module.exports = function (api) {
           root: ['.'],
           alias: {
             '@navigation': './navigation',
+            '@features': './features',
+            '@assets': './assets',
+            '@utils': './utils',
           },
         },
       ],

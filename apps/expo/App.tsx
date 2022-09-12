@@ -1,34 +1,37 @@
-import ZonesList from '@zart/react-native/zonesLists';
-import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
-import { Alert, Button, Platform, StyleSheet, Text, View } from 'react-native';
-// import { SafeAreaProvider } from 'react-native-safe-area-context';
-// import { enableScreens } from 'react-native-screens';
+import React, { useCallback, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { transformer, trpc } from './utils/trpc';
-import * as AuthSession from 'expo-auth-session';
-import { AUTH0_DOMAIN, AUTH0_CLIENT_ID } from '@env';
+import { login, refreshTokens } from './utils/auth0';
+import NavigationMemoized from '@navigation/NavigationMemoized';
+import Constants from 'expo-constants';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Storage } from '@assets/Constants';
 import jwtDecode from 'jwt-decode';
-import { login } from './utils/auth0';
+import { isExpired } from '@utils/decode';
+import AppNavigation from '@navigation/AppNavigation';
 
-// enableScreens(true);
 const { manifest } = Constants;
 
-const useProxy = Platform.select({ web: false, default: true });
-const redirectUri = AuthSession.makeRedirectUri({ useProxy });
-const authorizationEndpoint = `https://${AUTH0_DOMAIN}/authorize`;
+export interface AccessToken {
+  exp: number;
+}
 
 const localhost = `http://${manifest?.debuggerHost?.split(':').shift()}:3000`;
 
 export default function App() {
+  const [accessToken, setAccessToken] = useState<null | string>(null);
   const [queryClient] = useState(() => new QueryClient());
-  const [trpcClient] = useState(() =>
+  console.log(localhost);
+  const [trpcClient, setTrpcClient] = useState(() =>
     trpc.createClient({
       url: `${localhost}/api/trpc`,
 
       async headers() {
-        return {};
+        return {
+          Authorization: `Bearer ${accessToken}`,
+        };
       },
       transformer,
     }),
@@ -37,42 +40,70 @@ export default function App() {
   const [name, setName] = useState<string | null>(null);
 
   const onLogin = async () => {
-    const { accessToken } = await login();
-    console.log(accessToken);
+    const { accessToken: aT } = await login();
+    setTrpcClient(() =>
+      trpc.createClient({
+        url: `${localhost}/api/trpc`,
+
+        async headers() {
+          return {
+            Authorization: `Bearer ${aT}`,
+          };
+        },
+        transformer,
+      }),
+    );
+
+    setAccessToken(aT);
   };
+
+  const [isAuth, setIsAuth] = useState(false);
+
+  const isLoggedIn = async () => {
+    const token = await AsyncStorage.getItem(Storage.ACCESS_TOKEN);
+    if (!token) return false;
+    const decodedToken: AccessToken = jwtDecode(token);
+    const hasExpired = isExpired(decodedToken.exp);
+    if (!hasExpired) return true;
+    await refreshTokens();
+    return true;
+  };
+
+  const updateAccessToken = async () => {
+    const token = await AsyncStorage.getItem(Storage.ACCESS_TOKEN);
+    setTrpcClient(() =>
+      trpc.createClient({
+        url: `${localhost}/api/trpc`,
+
+        async headers() {
+          return {
+            Authorization: `Bearer ${token}`,
+          };
+        },
+        transformer,
+      }),
+    );
+  };
+
+  const checkIsAuth = useCallback(async () => {
+    const loggedIn = await isLoggedIn();
+    if (!loggedIn) setIsAuth(false);
+    await updateAccessToken();
+    setIsAuth(true);
+  }, []);
+
+  useEffect(() => {
+    checkIsAuth();
+  }, [checkIsAuth]);
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        {/* <SafeAreaProvider> */}
-        <StatusBar style="dark" />
-        <View style={styles.container}>
-          {name ? (
-            <>
-              <Text style={styles.title}>You are logged in, {name}!</Text>
-              <Button title="Log out" onPress={() => setName(null)} />
-            </>
-          ) : (
-            <Button title="Log in with Auth0" onPress={onLogin} />
-          )}
-        </View>
-        <ZonesList />
-        {/* </SafeAreaProvider> */}
+        <NavigationMemoized>
+          <StatusBar style="auto" />
+          <AppNavigation isAuth={isAuth} />
+        </NavigationMemoized>
       </QueryClientProvider>
     </trpc.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginTop: 40,
-  },
-});

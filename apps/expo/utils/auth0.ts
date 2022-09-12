@@ -13,6 +13,7 @@ import {
   getShortUUID,
   toQueryString,
 } from './decode';
+import { Storage } from '@assets/Constants';
 
 const auth0Domain = AUTH0_DOMAIN;
 
@@ -93,6 +94,13 @@ const onLoginResponse = async (
   );
   const decodedJwtIdToken = tokenDecode(idToken);
 
+  await AsyncStorage.setItem(Storage.ACCESS_TOKEN, accessToken);
+  await AsyncStorage.setItem(Storage.REFRESH_TOKEN, refreshToken);
+  await AsyncStorage.setItem(
+    Storage.DECODED_ID_TOKEN,
+    String(decodedJwtIdToken),
+  );
+
   return { decodedIdToken: decodedJwtIdToken, accessToken, refreshToken };
 };
 
@@ -103,7 +111,7 @@ export const login = async (): Promise<LoginResponse> => {
   const redirectUrl = AuthSession.makeRedirectUri({
     native: nativeReturnUrl,
   });
-  console.log({ redirectUrl });
+
   const params = {
     code_challenge: codeChallenge,
     redirect_uri: redirectUrl,
@@ -129,17 +137,24 @@ export const login = async (): Promise<LoginResponse> => {
       refreshToken: '',
     };
   }
+
   return onLoginResponse(response, state, codeVerifier);
 };
 
-const refreshTokens = async () => {
-  const refreshToken = await AsyncStorage.getItem('REFRESH_TOKEN');
+export const refreshTokens = async () => {
+  const refreshToken = await AsyncStorage.getItem(Storage.REFRESH_TOKEN);
   if (!refreshToken) return;
   const response = await getRefreshData(refreshToken);
-  await AsyncStorage.setItem('TOKEN', response.data.access_token);
-  await AsyncStorage.setItem('REFRESH_TOKEN', response.data.refresh_token);
+  await AsyncStorage.setItem(Storage.ACCESS_TOKEN, response.data.access_token);
+  await AsyncStorage.setItem(
+    Storage.REFRESH_TOKEN,
+    response.data.refresh_token,
+  );
   const decodedJwtIdToken = tokenDecode(response.data.id_token);
-  await AsyncStorage.setItem('IDTOKEN', String(decodedJwtIdToken));
+  await AsyncStorage.setItem(
+    Storage.DECODED_ID_TOKEN,
+    String(decodedJwtIdToken),
+  );
 };
 
 export default { login, refreshTokens };
