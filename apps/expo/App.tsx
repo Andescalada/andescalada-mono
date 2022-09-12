@@ -87,7 +87,11 @@ export default function App() {
 
   const checkIsAuth = useCallback(async () => {
     const loggedIn = await isLoggedIn();
-    if (!loggedIn) setIsAuth(false);
+
+    if (!loggedIn) {
+      setIsAuth(false);
+      return;
+    }
     await updateAccessToken();
     setIsAuth(true);
   }, []);
