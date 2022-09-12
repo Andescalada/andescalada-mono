@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
-import { getSession } from '@auth0/nextjs-auth0';
+import verifyAndDecodeToken from './utils/verifyAndDecodeToken';
 
 export const prisma = new PrismaClient({
   log:
@@ -18,13 +18,18 @@ export const createContext = async ({
   req,
   res,
 }: trpcNext.CreateNextContextOptions) => {
-  const session = req && res && getSession(req, res);
-  // for API-response caching see https://trpc.io/docs/caching
+  const user = await verifyAndDecodeToken(req);
+
+  const userExist = prisma.user.findUnique({ where: { email: user?.email } });
+  if (!userExist && user?.email) {
+    prisma.user.create({ data: { email: user.email, name: '' } });
+  }
+
   return {
     req,
     res,
     prisma,
-    session,
+    user,
   };
 };
 
