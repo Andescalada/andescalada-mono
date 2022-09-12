@@ -2,7 +2,6 @@ import axios from 'axios';
 
 import * as AuthSession from 'expo-auth-session';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '@env';
 import {
@@ -17,15 +16,12 @@ import {
 
 const auth0Domain = AUTH0_DOMAIN;
 
-if (Constants.manifest)
-  Constants.manifest.originalFullName = '@houm/houmer-mobile-app';
-
 const config = {
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
   },
 };
-const nativeReturnUrl = `houmapp://${auth0Domain}/${Platform.OS}/@houm/houmer-mobile-app/callback`;
+const nativeReturnUrl = `andescalada://${auth0Domain}/${Platform.OS}/@eyalll/andescalada-app/callback`;
 
 export interface Tokens {
   idToken: string;
@@ -44,8 +40,7 @@ const settings = {
   code_challenge_method: 'S256',
   client_id: AUTH0_CLIENT_ID,
   clientId: AUTH0_CLIENT_ID,
-  scope:
-    'openid profile read:current_user update:current_user_identities offline_access',
+  scope: 'openid name profile',
   audience: AUTH0_AUDIENCE,
 };
 
@@ -97,17 +92,6 @@ const onLoginResponse = async (
     codeVerifier,
   );
   const decodedJwtIdToken = tokenDecode(idToken);
-
-  // this could happen on first login
-  // if (!decodedJwtIdToken['https://api.houm.com/roles']) {
-  //   const res = await getRefreshData(refreshToken);
-  //   const newDecodedIdToken: IdToken = tokenDecode(res.data.id_token);
-  //   return {
-  //     decodedIdToken: newDecodedIdToken,
-  //     accessToken: res.data.access_token,
-  //     refreshToken: res.data.refresh_token,
-  //   };
-  // }
 
   return { decodedIdToken: decodedJwtIdToken, accessToken, refreshToken };
 };
