@@ -146,6 +146,7 @@ export const refreshTokens = async () => {
     Storage.DECODED_ID_TOKEN,
     String(decodedJwtIdToken),
   );
+  return { accessToken: response.data.access_token as string };
 };
 
 export const logout = async () => {
