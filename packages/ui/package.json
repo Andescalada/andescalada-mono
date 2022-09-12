@@ -1,0 +1,16 @@
+{
+  "name": "@andescalada/ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {},
+  "license": "MIT",
+  "dependencies": {
+    "deepmerge": "^4.2.2"
+  },
+  "peerDependencies": {
+    "@shopify/restyle": "*"
+  },
+  "devDependencies": {
+    "@shopify/restyle": "*"
+  }
+}

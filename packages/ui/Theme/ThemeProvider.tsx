@@ -13,8 +13,10 @@ interface Props {
   children: ReactNode;
 }
 
-export const ThemeProvider: FC<Props> = ({ children, theme = {} }) => {
+const ThemeProvider: FC<Props> = ({ children, theme = {} }) => {
   const mergeTheme = useMemo(() => deepmerge(theme, baseTheme), [theme]);
 
   return <RestyleProvider theme={mergeTheme}>{children}</RestyleProvider>;
 };
+
+export default ThemeProvider;

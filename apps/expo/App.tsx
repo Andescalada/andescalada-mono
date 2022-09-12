@@ -6,6 +6,7 @@ import { Store } from '@store/index';
 import { useFonts } from 'expo-font';
 import { useCallback, useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
+import ThemeProvider from '@andescalada/ui/Theme/ThemeProvider';
 
 const fonts = {
   'Rubik-300': require('./assets/fonts/Rubik-Light.ttf'),
@@ -38,11 +39,13 @@ export default function App() {
   }
 
   return (
-    <StoreProvider store={Store}>
-      <NavigationMemoized>
-        <StatusBar style="auto" />
-        <AppNavigation />
-      </NavigationMemoized>
-    </StoreProvider>
+    <ThemeProvider>
+      <StoreProvider store={Store}>
+        <NavigationMemoized>
+          <StatusBar style="auto" />
+          <AppNavigation />
+        </NavigationMemoized>
+      </StoreProvider>
+    </ThemeProvider>
   );
 }
