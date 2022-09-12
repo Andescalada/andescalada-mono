@@ -4,7 +4,6 @@ import { t } from '../createRouter';
 
 export const zonesRouter = t.router({
   all: t.procedure.query(({ ctx }) => {
-    console.log(ctx.session, 'session');
     const zones = ctx.prisma.zone.findMany();
     return zones;
   }),
