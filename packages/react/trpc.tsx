@@ -5,7 +5,7 @@ import { NextPageContext } from 'next';
 import superjson from 'superjson';
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
-import type { AppRouter } from '@zart/api/src/routers/_app';
+import type { AppRouter } from '@andescalada/api/src/routers/_app';
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') {

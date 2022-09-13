@@ -2,7 +2,7 @@ import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { withTRPC } from '@trpc/next';
 import { AppType } from 'next/dist/shared/lib/utils';
-import type { AppRouter } from '@zart/api/src/routers/_app';
+import type { AppRouter } from '@andescalada/api/src/routers/_app';
 import { transformer } from 'utils/trpc';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
