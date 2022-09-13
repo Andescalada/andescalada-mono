@@ -8,6 +8,10 @@
     "noUnusedLocals": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@andescalada/*": ["packages/*"]
+    }
   }
 }

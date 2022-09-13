@@ -8,8 +8,9 @@ const variants = { textVariants };
 
 const darkBaseTheme = {
   colors: {
-    primary: '#0000',
+    primary: pallete.brand.primaryB,
     text: pallete.grayscale[100],
+    listItemBackground: pallete.grayscale[600],
   },
   breakpoints,
   spacing,
@@ -18,4 +19,5 @@ const darkBaseTheme = {
 const theme = createTheme({ ...darkBaseTheme, ...variants });
 
 export type Theme = typeof theme;
+export type Colors = Partial<keyof Omit<Theme['colors'], 'defaults'>>;
 export default theme;

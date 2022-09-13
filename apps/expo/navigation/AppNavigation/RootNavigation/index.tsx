@@ -4,7 +4,7 @@ import {
   RootNavigationRoutes,
   RootNavigationNavigationParamList,
 } from '@navigation/AppNavigation/RootNavigation/types';
-import ZonesScreen from '@features/zones/ZonesScreen';
+import ZonesScreen from '@features/climbs/ZonesListScreen';
 import { transformer, trpc } from '@utils/trpc';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
