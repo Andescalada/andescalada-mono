@@ -4,24 +4,38 @@ import { t } from '../createRouter';
 
 export const sectorsRouter = t.router({
   all: t.procedure.query(({ ctx }) => {
-    const zones = ctx.prisma.sector.findMany();
-    return zones;
+    const sectors = ctx.prisma.sector.findMany({
+      orderBy: { position: 'desc' },
+    });
+    return sectors;
   }),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
-    const zone = await ctx.prisma.sector.findUnique({ where: { id: input } });
-    if (!zone) {
+    const sector = await ctx.prisma.sector.findUnique({ where: { id: input } });
+    if (!sector) {
       throw new TRPCError({
         code: 'NOT_FOUND',
-        message: `No zone with id '${input}'`,
+        message: `No sector with id '${input}'`,
       });
     }
-    return zone;
+    return sector;
   }),
   add: t.procedure
     .input(z.object({ zoneId: z.string(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      ctx.prisma.sector.create({
-        data: { name: input.name, zoneId: input.zoneId },
+      const biggestPosition = await ctx.prisma.sector.aggregate({
+        _max: { position: true },
       });
+
+      const newSector = await ctx.prisma.sector.create({
+        data: {
+          name: input.name,
+          zoneId: input.zoneId,
+          position: biggestPosition._max.position
+            ? Number(biggestPosition._max.position) + 1
+            : 1,
+        },
+      });
+
+      return newSector;
     }),
 });

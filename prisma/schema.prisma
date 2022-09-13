@@ -35,6 +35,7 @@ model Sector {
   id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
+  position  BigInt   @default(0)
   Zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   zoneId    String
   walls     Wall[]
