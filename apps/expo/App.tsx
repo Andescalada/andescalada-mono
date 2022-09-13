@@ -6,10 +6,8 @@ import { Store } from '@store/index';
 import { useFonts } from 'expo-font';
 import { useCallback, useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-// import theme from '@andescalada/ui/Theme/index';
 import ThemeProvider from '@andescalada/ui/Theme/ThemeProvider';
 import { darkTheme } from '@andescalada/ui/Theme/navigationTheme';
-// import { createTheme, ThemeProvider } from '@shopify/restyle';
 
 const fonts = {
   'Rubik-300': require('./assets/fonts/Rubik-Light.ttf'),
@@ -21,8 +19,6 @@ const fonts = {
   'Rubik-900': require('./assets/fonts/Rubik-Black.ttf'),
   'Rubik-400-Italic': require('./assets/fonts/Rubik-Italic.ttf'),
 };
-
-// export type Theme = typeof theme;
 
 SplashScreen.preventAutoHideAsync();
 
