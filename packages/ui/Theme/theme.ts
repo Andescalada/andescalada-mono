@@ -1,19 +1,21 @@
 import { createTheme } from '@shopify/restyle';
 import breakpoints from './breakpoints';
+import { pallete } from './pallete';
 import spacing from './spacing';
 import textVariants from './textVariants';
 
-const baseTheme = {
+const variants = { textVariants };
+
+const darkBaseTheme = {
   colors: {
     primary: '#0000',
+    text: pallete.grayscale[100],
   },
   breakpoints,
   spacing,
 };
 
-const variants = { textVariants };
-
-const theme = createTheme({ ...baseTheme, ...variants });
+const theme = createTheme({ ...darkBaseTheme, ...variants });
 
 export type Theme = typeof theme;
 export default theme;

@@ -7,7 +7,8 @@
   "dependencies": {
     "@trpc/react": "^10.0.0-alpha.36",
     "@trpc/server": "^10.0.0-alpha.36",
-    "deepmerge": "^4.2.2"
+    "deepmerge": "^4.2.2",
+    "@andescalada/ui": "*"
   },
   "peerDependencies": {
     "@shopify/restyle": "*"

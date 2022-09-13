@@ -5,12 +5,7 @@
   "scripts": {},
   "license": "MIT",
   "dependencies": {
+    "@shopify/restyle": "^2.1.0",
     "deepmerge": "^4.2.2"
-  },
-  "peerDependencies": {
-    "@shopify/restyle": "*"
-  },
-  "devDependencies": {
-    "@shopify/restyle": "*"
   }
 }

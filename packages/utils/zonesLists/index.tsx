@@ -1,5 +1,6 @@
 import { trpc } from '../trpc';
-import { FlatList, View, Text, Button } from 'react-native';
+import { FlatList, View, Button } from 'react-native';
+import { Text } from '@andescalada/ui';
 
 const ZonesList = () => {
   const { data, refetch } = trpc.useQuery(['zones.all']);
@@ -28,7 +29,7 @@ const ZonesList = () => {
         }}
         renderItem={({ item }) => (
           <View style={{ margin: 16 }}>
-            <Text>{item.name}</Text>
+            <Text variant="p1R">{item.name}</Text>
           </View>
         )}
       />
