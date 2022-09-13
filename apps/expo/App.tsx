@@ -47,7 +47,7 @@ export default function App() {
     <ThemeProvider>
       <StoreProvider store={Store}>
         <NavigationMemoized theme={darkTheme}>
-          <StatusBar style="auto" />
+          <StatusBar style="light" />
           <AppNavigation />
         </NavigationMemoized>
       </StoreProvider>
