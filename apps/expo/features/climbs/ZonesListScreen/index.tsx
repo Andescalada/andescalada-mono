@@ -1,10 +1,16 @@
-import { Button, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { Text, Screen, ActivityIndicator, Pressable } from '@andescalada/ui';
 import React from 'react';
 import { trpc } from '@andescalada/utils/trpc';
 import useRefresh from '@hooks/useRefresh';
+import {
+  RootNavigationRoutes,
+  RootNavigationScreenProps,
+} from '@navigation/AppNavigation/RootNavigation/types';
 
-const ZonesScreen = () => {
+type Props = RootNavigationScreenProps<RootNavigationRoutes.ZonesList>;
+
+const ZonesScreen = ({ navigation }: Props) => {
   const { data, refetch, isLoading, isFetching } = trpc.useQuery(['zones.all']);
   const refresh = useRefresh(refetch, isFetching);
   if (isLoading)
@@ -25,6 +31,12 @@ const ZonesScreen = () => {
             alignItems="stretch"
             padding="m"
             marginVertical={'s'}
+            onPress={() =>
+              navigation.navigate(RootNavigationRoutes.Zone, {
+                zoneId: item.id,
+                zoneName: item.name,
+              })
+            }
           >
             <Text variant="p1R">{item.name}</Text>
           </Pressable>

@@ -4,7 +4,8 @@ import {
   RootNavigationRoutes,
   RootNavigationNavigationParamList,
 } from '@navigation/AppNavigation/RootNavigation/types';
-import ZonesScreen from '@features/climbs/ZonesListScreen';
+import ZonesListScreen from '@features/climbs/ZonesListScreen';
+import ZoneScreen from '@features/climbs/ZoneScreen';
 import { transformer, trpc } from '@utils/trpc';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -44,8 +45,12 @@ const Navigator: FC<Props> = ({ accessToken }) => {
       <QueryClientProvider client={queryClient}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
-            name={RootNavigationRoutes.Placeholder}
-            component={ZonesScreen}
+            name={RootNavigationRoutes.ZonesList}
+            component={ZonesListScreen}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.Zone}
+            component={ZoneScreen}
           />
         </Stack.Navigator>
       </QueryClientProvider>

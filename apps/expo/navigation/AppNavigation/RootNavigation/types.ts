@@ -1,12 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Zone } from '@prisma/client';
 
 export enum RootNavigationRoutes {
-  Placeholder = 'Placeholder',
+  ZonesList = 'ZonesList',
+  Zone = 'Zone',
 }
 
 export type RootNavigationNavigationParamList = {
-  [RootNavigationRoutes.Placeholder]: undefined;
+  [RootNavigationRoutes.ZonesList]: undefined;
+  [RootNavigationRoutes.Zone]: { zoneId: Zone['id']; zoneName: Zone['name'] };
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =
