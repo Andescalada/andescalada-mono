@@ -1,7 +1,6 @@
 import { Button } from 'react-native';
 import { Box, Text } from '@andescalada/ui';
 import React from 'react';
-import ZonesList from '@andescalada/utils/zonesLists';
 import { useAppDispatch } from '@hooks/redux';
 import { logoutAuth0 } from '@store/auth';
 
@@ -10,7 +9,7 @@ const ZonesScreen = () => {
   return (
     <Box flex={1} justifyContent="center" alignItems="center" padding="xl">
       <Text variant="h1">Zonas</Text>
-      <ZonesList />
+
       <Button
         title="Cerrar Sesión"
         onPress={() => {
