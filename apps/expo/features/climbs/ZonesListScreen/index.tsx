@@ -1,14 +1,13 @@
 import { Button, FlatList } from 'react-native';
 import { Text, Screen, ActivityIndicator, Pressable } from '@andescalada/ui';
 import React from 'react';
-import { useAppDispatch } from '@hooks/redux';
-import { logoutAuth0 } from '@store/auth';
 import { trpc } from '@andescalada/utils/trpc';
+import useRefresh from '@hooks/useRefresh';
 
 const ZonesScreen = () => {
-  const dispatch = useAppDispatch();
-  const { data, refetch, isFetching } = trpc.useQuery(['zones.all']);
-  if (isFetching)
+  const { data, refetch, isLoading, isFetching } = trpc.useQuery(['zones.all']);
+  const refresh = useRefresh(refetch, isFetching);
+  if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
         <ActivityIndicator size={'large'} />
@@ -19,6 +18,7 @@ const ZonesScreen = () => {
       <Text variant="h1">Zonas</Text>
       <FlatList
         data={data}
+        refreshControl={refresh}
         renderItem={({ item }) => (
           <Pressable
             backgroundColor="listItemBackground"
