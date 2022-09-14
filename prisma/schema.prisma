@@ -47,8 +47,9 @@ model Wall {
   id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
-  Secotor   Sector   @relation(fields: [secotorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  secotorId String
+  position  BigInt   @default(0)
+  Sector    Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sectorId  String
 
-  @@index([secotorId])
+  @@index([sectorId])
 }

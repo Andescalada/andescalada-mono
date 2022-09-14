@@ -18,7 +18,8 @@ type Props = RootNavigationScreenProps<RootNavigationRoutes.Sector>;
 
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const { data, refetch, isFetching, isLoading } = trpc.useQuery([
-    'sectors.all',
+    'sectors.allWalls',
+    { sectorId: route.params.sectorId },
   ]);
   const refresh = useRefresh(refetch, isFetching);
   if (isLoading)
@@ -44,7 +45,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
           contentContainerStyle={{ flex: 1 }}
           ListEmptyComponent={() => (
             <Box flex={1} justifyContent="center" alignItems="center">
-              <Text variant={'h3'}>Sin sectores</Text>
+              <Text variant={'h3'}>Sin paredes</Text>
             </Box>
           )}
           renderItem={({ item }) => (
