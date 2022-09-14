@@ -91,7 +91,16 @@ const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
         alignItems="center"
         marginTop={'m'}
         onPress={() => {
-          Alert.alert('¿Seguro que quieres cancelar?');
+          Alert.alert('¿Seguro que quieres cancelar?', '', [
+            {
+              text: 'Si',
+              onPress: () => navigation.goBack(),
+            },
+            {
+              text: 'Cancelar',
+              style: 'cancel',
+            },
+          ]);
         }}
       >
         <Text variant="p1B" color="error">
