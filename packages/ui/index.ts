@@ -6,3 +6,7 @@ export { default as SafeAreaView } from './SafeAreaView/SafeAreaView';
 export { default as ActivityIndicator } from './ActivityIndicator/ActivityIndicator';
 export { default as Pressable } from './Pressable/Pressable';
 export { default as TextInput } from './TextInput/TextInput';
+export { default as Button } from './Button/Button';
+export { default as SemanticButton } from './SemanticButton/SemanticButton';
+
+export type { Theme, Colors, BaseTheme } from './Theme/theme';

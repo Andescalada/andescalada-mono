@@ -1,8 +1,10 @@
 import {
   ActivityIndicator,
   Box,
+  Button,
   Pressable,
   Screen,
+  SemanticButton,
   Text,
   TextInput,
 } from '@andescalada/ui';
@@ -53,8 +55,22 @@ const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
     mutate({ zoneId, name: input.sectorName });
   });
 
-  // const [sectorName, setSectorName] = useState('');
-  // const [errorMessage, setErrorMessage] = useState('');
+  const onCancel = () => {
+    if (!isDirty) {
+      navigation.goBack();
+      return;
+    }
+    Alert.alert('¿Seguro que quieres cancelar?', '', [
+      {
+        text: 'Si',
+        onPress: () => navigation.goBack(),
+      },
+      {
+        text: 'Cancelar',
+        style: 'cancel',
+      },
+    ]);
+  };
 
   return (
     <Screen padding="m">
@@ -63,54 +79,19 @@ const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
         <Text variant={'p1R'} marginBottom={'s'}>
           Nombre del sector
         </Text>
-        <TextInput onChangeText={onChange} containerProps={{ height: 30 }} />
+        <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
         <Text marginTop={'xs'} color="error">
           {error?.message}
         </Text>
       </Box>
-      <Pressable
-        backgroundColor={'primaryButtonBackground'}
-        borderRadius={5}
-        padding="xs"
-        justifyContent="center"
-        alignItems="center"
-        marginTop={'m'}
+      <Button
+        variant="primary"
+        title="Agregar"
         onPress={onSubmit}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="primaryButtonText" />
-        ) : (
-          <Text variant={'h3'} color="primaryButtonText">
-            Agregar
-          </Text>
-        )}
-      </Pressable>
-      <Pressable
-        padding={'xs'}
-        justifyContent="center"
-        alignItems="center"
-        marginTop={'m'}
-        onPress={() => {
-          if (!isDirty) {
-            navigation.goBack();
-            return;
-          }
-          Alert.alert('¿Seguro que quieres cancelar?', '', [
-            {
-              text: 'Si',
-              onPress: () => navigation.goBack(),
-            },
-            {
-              text: 'Cancelar',
-              style: 'cancel',
-            },
-          ]);
-        }}
-      >
-        <Text variant="p1B" color="error">
-          Cancelar
-        </Text>
-      </Pressable>
+        isLoading={isLoading}
+        marginVertical="s"
+      />
+      <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
     </Screen>
   );
 };

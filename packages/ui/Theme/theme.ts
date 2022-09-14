@@ -4,8 +4,17 @@ import { pallete } from './pallete';
 import spacing from './spacing';
 import textVariants from './textVariants';
 import textInputVariants from './textInputVariants';
+import semanticButtonVariants, {
+  semanticButtonVariantsColors,
+} from './semanticButtonVariants';
+import buttonVariants, { buttonVariantsColors } from './buttonVariants';
 
-const variants = { textVariants, textInputVariants };
+const variants = {
+  textVariants,
+  textInputVariants,
+  buttonVariants,
+  semanticButtonVariants,
+};
 
 const darkBaseTheme = {
   colors: {
@@ -15,8 +24,8 @@ const darkBaseTheme = {
     listItemBackground: pallete.grayscale[600],
     filledTextInputVariantBackground: pallete.grayscale[300],
     filledTextInputVariantPlaceholder: pallete.grayscale.black,
-    primaryButtonBackground: pallete.shadesB[100],
-    primaryButtonText: pallete.shadesB[400],
+    ...buttonVariantsColors,
+    ...semanticButtonVariantsColors,
     ...pallete.semantic,
   },
   breakpoints,
@@ -26,6 +35,6 @@ const darkBaseTheme = {
 const theme = createTheme({ ...darkBaseTheme, ...variants });
 
 export type Theme = typeof theme;
-export type baseTheme = typeof darkBaseTheme;
+export type BaseTheme = typeof darkBaseTheme;
 export type Colors = Partial<keyof Omit<Theme['colors'], 'defaults'>>;
 export default theme;
