@@ -43,7 +43,7 @@ const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const {
     field: { onChange },
-    fieldState: { error },
+    fieldState: { error, isDirty },
   } = useController({
     control,
     name: 'sectorName',
@@ -91,6 +91,10 @@ const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
         alignItems="center"
         marginTop={'m'}
         onPress={() => {
+          if (!isDirty) {
+            navigation.goBack();
+            return;
+          }
           Alert.alert('¿Seguro que quieres cancelar?', '', [
             {
               text: 'Si',
