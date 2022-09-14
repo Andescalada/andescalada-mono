@@ -14,9 +14,9 @@ import {
 import { FC } from 'react';
 import { Button, FlatList } from 'react-native';
 
-type Props = RootNavigationScreenProps<RootNavigationRoutes.Zone>;
+type Props = RootNavigationScreenProps<RootNavigationRoutes.Sector>;
 
-const ZoneScreen: FC<Props> = ({ route, navigation }) => {
+const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const { data, refetch, isFetching, isLoading } = trpc.useQuery([
     'sectors.all',
   ]);
@@ -34,15 +34,8 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         alignItems="center"
         justifyContent={'space-between'}
       >
-        <Text variant={'h1'}>{route.params.zoneName}</Text>
-        <Button
-          title="Agregar"
-          onPress={() =>
-            navigation.navigate(RootNavigationRoutes.AddZone, {
-              zoneId: route.params.zoneId,
-            })
-          }
-        />
+        <Text variant={'h3'}>{route.params.sectorName}</Text>
+        <Button title="Agregar" />
       </Box>
       <Box flex={1}>
         <FlatList
@@ -61,9 +54,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
               padding="m"
               marginVertical={'s'}
               onPress={() =>
-                navigation.navigate(RootNavigationRoutes.Sector, {
-                  sectorId: item.id,
-                  sectorName: item.name,
+                navigation.navigate(RootNavigationRoutes.Zone, {
+                  zoneId: item.id,
+                  zoneName: item.name,
                 })
               }
             >
@@ -76,4 +69,4 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   );
 };
 
-export default ZoneScreen;
+export default SectorScreen;
