@@ -80,7 +80,7 @@ const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
         {isLoading ? (
           <ActivityIndicator color="primaryButtonText" />
         ) : (
-          <Text variant={'h2'} color="primaryButtonText">
+          <Text variant={'h3'} color="primaryButtonText">
             Agregar
           </Text>
         )}
