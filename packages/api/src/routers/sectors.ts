@@ -5,7 +5,7 @@ import { t } from '../createRouter';
 export const sectorsRouter = t.router({
   all: t.procedure.query(({ ctx }) => {
     const sectors = ctx.prisma.sector.findMany({
-      orderBy: { position: 'desc' },
+      orderBy: { position: 'asc' },
     });
     return sectors;
   }),
@@ -22,17 +22,16 @@ export const sectorsRouter = t.router({
   add: t.procedure
     .input(z.object({ zoneId: z.string(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const biggestPosition = await ctx.prisma.sector.aggregate({
+      const result = await ctx.prisma.sector.aggregate({
         _max: { position: true },
       });
+      const biggestPosition = Number(result._max.position) || 0;
 
       const newSector = await ctx.prisma.sector.create({
         data: {
           name: input.name,
           zoneId: input.zoneId,
-          position: biggestPosition._max.position
-            ? Number(biggestPosition._max.position) + 1
-            : 1,
+          position: biggestPosition + 1,
         },
       });
 
