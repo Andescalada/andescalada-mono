@@ -5,3 +5,4 @@ export { default as Screen } from './Screen/Screen';
 export { default as SafeAreaView } from './SafeAreaView/SafeAreaView';
 export { default as ActivityIndicator } from './ActivityIndicator/ActivityIndicator';
 export { default as Pressable } from './Pressable/Pressable';
+export { default as TextInput } from './TextInput/TextInput';

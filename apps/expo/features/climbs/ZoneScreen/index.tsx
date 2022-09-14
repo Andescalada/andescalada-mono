@@ -17,7 +17,6 @@ import { Button, FlatList } from 'react-native';
 type Props = RootNavigationScreenProps<RootNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
-  const {} = trpc.useMutation(['sectors.add']);
   const { data, refetch, isFetching, isLoading } = trpc.useQuery([
     'sectors.all',
   ]);
@@ -36,7 +35,14 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         justifyContent={'space-between'}
       >
         <Text variant={'h1'}>{route.params.zoneName}</Text>
-        <Button title="Agregar" />
+        <Button
+          title="Agregar"
+          onPress={() =>
+            navigation.navigate(RootNavigationRoutes.AddZone, {
+              zoneId: route.params.zoneId,
+            })
+          }
+        />
       </Box>
       <Box flex={1}>
         <FlatList
