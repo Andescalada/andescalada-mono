@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Constants from 'expo-constants';
 import { FC } from 'react';
-import AddZoneScreen from '@features/climbs/AddZoneScreen';
+import AddSectorScreen from '@features/climbs/AddSectorScreen';
 
 const { manifest } = Constants;
 
@@ -55,7 +55,7 @@ const Navigator: FC<Props> = ({ accessToken }) => {
           />
           <Stack.Screen
             name={RootNavigationRoutes.AddZone}
-            component={AddZoneScreen}
+            component={AddSectorScreen}
             options={{ presentation: 'modal' }}
           />
         </Stack.Navigator>

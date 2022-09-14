@@ -1,8 +1,6 @@
 import {
-  ActivityIndicator,
   Box,
   Button,
-  Pressable,
   Screen,
   SemanticButton,
   Text,
@@ -13,7 +11,7 @@ import {
   RootNavigationRoutes,
   RootNavigationScreenProps,
 } from '@navigation/AppNavigation/RootNavigation/types';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Alert } from 'react-native';
 import { z } from 'zod';
 import { useForm, useController } from 'react-hook-form';
@@ -29,7 +27,7 @@ const schema = z.object({
 
 type Form = z.infer<typeof schema>;
 
-const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
+const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId } = route.params;
   const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.useMutation(['sectors.add'], {
@@ -96,4 +94,4 @@ const AddZoneScreen: FC<Props> = ({ route, navigation }) => {
   );
 };
 
-export default AddZoneScreen;
+export default AddSectorScreen;
