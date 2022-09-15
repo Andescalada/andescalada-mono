@@ -1,16 +1,25 @@
-import { Box, Pressable, Screen, Text } from '@andescalada/ui';
+import {
+  Box,
+  Pressable,
+  Screen,
+  Text,
+  ActivityIndicator,
+} from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
+import usePickImage from '@hooks/usePickImage';
 import useRefresh from '@hooks/useRefresh';
 import {
   RootNavigationRoutes,
   RootNavigationScreenProps,
 } from '@navigation/AppNavigation/RootNavigation/types';
-import { FC } from 'react';
-import { FlatList } from 'react-native';
+import useUploadImage from '@hooks/useUploadImage';
+import { FC, useState } from 'react';
+import { FlatList, Image } from 'react-native';
 
 type Props = RootNavigationScreenProps<RootNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
+  const utils = trpc.useContext();
   const { data, refetch, isFetching } = trpc.useQuery([
     'walls.byId',
     route.params.wallId,
@@ -19,10 +28,32 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
 
   const mainTopo = data?.topos[0];
 
+  const { pickImage, selectedImage } = usePickImage();
+
+  const { uploadImage } = useUploadImage();
+
+  const { mutateAsync } = trpc.useMutation(['topos.add']);
+
+  const [isLoading, setIsLading] = useState(false);
+  const onUpload = async () => {
+    if (!selectedImage) return;
+    setIsLading(true);
+    const topoImg = await uploadImage(selectedImage?.base64Img);
+    await mutateAsync(
+      { wallId: route.params.wallId, image: topoImg },
+      {
+        onSuccess: () => {
+          utils.invalidateQueries(['walls.byId', route.params.wallId]);
+        },
+      },
+    );
+    setIsLading(false);
+  };
+
   return (
     <Screen padding={'m'}>
       <Text variant={'h3'}>{route.params.wallName}</Text>
-      {!mainTopo && (
+      {!mainTopo && !selectedImage && (
         <Pressable
           flex={1 / 2}
           borderColor="info"
@@ -32,8 +63,67 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           justifyContent="center"
           alignItems={'center'}
           marginVertical="s"
+          onPress={pickImage}
         >
           <Text variant={'p1R'}>Agregar topo</Text>
+        </Pressable>
+      )}
+      {selectedImage && (
+        <Pressable
+          flex={1 / 2}
+          borderColor="info"
+          borderWidth={2}
+          borderRadius={10}
+          borderStyle={'dashed'}
+          justifyContent="center"
+          alignItems={'center'}
+          marginVertical="s"
+          overflow="hidden"
+          position="relative"
+          onPress={onUpload}
+        >
+          <Box
+            position="absolute"
+            top={0}
+            bottom={0}
+            right={0}
+            left={0}
+            flex={1}
+            zIndex={100}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box
+              backgroundColor="textContrast"
+              alignItems="stretch"
+              paddingHorizontal="s"
+            >
+              {isLoading ? (
+                <ActivityIndicator padding="s" />
+              ) : (
+                <Text variant="h2">Subir</Text>
+              )}
+            </Box>
+          </Box>
+          <Image
+            style={{ flex: 1, width: '100%', height: 1000 }}
+            source={{ uri: selectedImage.localUri }}
+          />
+        </Pressable>
+      )}
+      {mainTopo?.image && (
+        <Pressable
+          flex={1 / 2}
+          borderRadius={10}
+          justifyContent="center"
+          alignItems={'center'}
+          marginVertical="s"
+          overflow="hidden"
+        >
+          <Image
+            style={{ flex: 1, width: '100%', height: 1000 }}
+            source={{ uri: mainTopo.image }}
+          />
         </Pressable>
       )}
       <FlatList

@@ -68,7 +68,7 @@ model Topo {
   Wall      Wall        @relation(fields: [wallId], references: [id])
   wallId    String
   main      Boolean     @default(false)
-  name      String
+  name      String?
   RoutePath RoutePath[]
   canvas    String?     @db.LongText
   image     String?     @db.LongText
