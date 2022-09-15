@@ -48,10 +48,15 @@ export const sectorsRouter = t.router({
   allWalls: t.procedure
     .input(z.object({ sectorId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const walls = await ctx.prisma.wall.findMany({
-        where: { sectorId: input.sectorId },
-        include: { Sector: { select: { name: true, zoneId: true } } },
+      const res = await ctx.prisma.sector.findUnique({
+        where: { id: input.sectorId },
+        select: { walls: { select: { id: true, name: true } } },
       });
-      return walls;
+      if (!res)
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No walls found for sector  with id '${input.sectorId}'`,
+        });
+      return res.walls;
     }),
 });

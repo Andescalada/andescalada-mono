@@ -35,4 +35,18 @@ export const wallsRouter = t.router({
       });
       return newWall;
     }),
+  allRoutes: t.procedure
+    .input(z.object({ wallId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const res = await ctx.prisma.wall.findUnique({
+        where: { id: input.wallId },
+        select: { routes: { select: { name: true, grade: true, id: true } } },
+      });
+      if (!res)
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No routes found for wall  with id '${input.wallId}'`,
+        });
+      return res.routes;
+    }),
 });

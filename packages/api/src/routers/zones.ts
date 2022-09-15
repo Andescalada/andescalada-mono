@@ -17,7 +17,7 @@ export const zonesRouter = t.router({
   allSectors: t.procedure
     .input(z.object({ zoneId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const res = await ctx.prisma.zone.findFirst({
+      const res = await ctx.prisma.zone.findUnique({
         where: { id: input.zoneId },
         select: { sectors: true },
       });
