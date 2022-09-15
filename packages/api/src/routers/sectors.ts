@@ -50,7 +50,7 @@ export const sectorsRouter = t.router({
     .query(async ({ ctx, input }) => {
       const walls = await ctx.prisma.wall.findMany({
         where: { sectorId: input.sectorId },
-        include: { Sector: { select: { name: true } } },
+        include: { Sector: { select: { name: true, zoneId: true } } },
       });
       return walls;
     }),

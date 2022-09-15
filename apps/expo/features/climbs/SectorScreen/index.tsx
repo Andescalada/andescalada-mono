@@ -38,7 +38,10 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   ]);
   const editSector = trpc.useMutation('sectors.edit', {
     onSuccess: () => {
-      utils.invalidateQueries('sectors.all');
+      utils.invalidateQueries([
+        'zones.allSectors',
+        { zoneId: route.params.zoneId },
+      ]);
     },
   });
   const { control, handleSubmit } = useForm<Form>({

@@ -18,6 +18,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.AddWall]: { sectorId: Sector['id'] };
   [RootNavigationRoutes.Sector]: {
     sectorId: Sector['id'];
+    zoneId: Zone['id'];
     sectorName: Sector['name'];
   };
   [RootNavigationRoutes.Wall]: { wallId: Wall['id']; wallName: Wall['name'] };

@@ -18,7 +18,8 @@ type Props = RootNavigationScreenProps<RootNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { data, refetch, isFetching, isLoading } = trpc.useQuery([
-    'sectors.all',
+    'zones.allSectors',
+    { zoneId: route.params.zoneId },
   ]);
   const refresh = useRefresh(refetch, isFetching);
   if (isLoading)
@@ -64,6 +65,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                 navigation.navigate(RootNavigationRoutes.Sector, {
                   sectorId: item.id,
                   sectorName: item.name,
+                  zoneId: route.params.zoneId,
                 })
               }
             >
