@@ -4,17 +4,12 @@ import {
   RootNavigationRoutes,
   RootNavigationNavigationParamList,
 } from '@navigation/AppNavigation/RootNavigation/types';
-import ZonesListScreen from '@features/climbs/ZonesListScreen';
-import ZoneScreen from '@features/climbs/ZoneScreen';
 import { transformer, trpc } from '@utils/trpc';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Constants from 'expo-constants';
+import ClimbsStackNavigation from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation';
 import { FC } from 'react';
-import AddSectorScreen from '@features/climbs/AddSectorScreen';
-import SectorScreen from '@features/climbs/SectorScreen';
-import AddWallScreen from '@features/climbs/AddWallScreen';
-import WallScreen from '@features/climbs/WallScreen';
 
 const { manifest } = Constants;
 
@@ -49,30 +44,8 @@ const Navigator: FC<Props> = ({ accessToken }) => {
       <QueryClientProvider client={queryClient}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
-            name={RootNavigationRoutes.ZonesList}
-            component={ZonesListScreen}
-          />
-          <Stack.Screen
-            name={RootNavigationRoutes.Zone}
-            component={ZoneScreen}
-          />
-          <Stack.Screen
-            name={RootNavigationRoutes.AddZone}
-            component={AddSectorScreen}
-            options={{ presentation: 'modal' }}
-          />
-          <Stack.Screen
-            name={RootNavigationRoutes.Sector}
-            component={SectorScreen}
-          />
-          <Stack.Screen
-            name={RootNavigationRoutes.AddWall}
-            component={AddWallScreen}
-            options={{ presentation: 'modal' }}
-          />
-          <Stack.Screen
-            name={RootNavigationRoutes.Wall}
-            component={WallScreen}
+            name={RootNavigationRoutes.Climbs}
+            component={ClimbsStackNavigation}
           />
         </Stack.Navigator>
       </QueryClientProvider>
