@@ -9,7 +9,16 @@ export const wallsRouter = t.router({
     }),
   ),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
-    const wall = await ctx.prisma.wall.findUnique({ where: { id: input } });
+    const wall = await ctx.prisma.wall.findUnique({
+      where: { id: input },
+      include: {
+        routes: { select: { name: true, id: true, grade: true } },
+        topos: {
+          where: { main: true },
+          select: { id: true, image: true, name: true },
+        },
+      },
+    });
     if (!wall) {
       throw new TRPCError({
         code: 'NOT_FOUND',

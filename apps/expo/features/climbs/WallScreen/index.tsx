@@ -12,16 +12,32 @@ type Props = RootNavigationScreenProps<RootNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
   const { data, refetch, isFetching } = trpc.useQuery([
-    'walls.allRoutes',
-    { wallId: route.params.wallId },
+    'walls.byId',
+    route.params.wallId,
   ]);
   const refresh = useRefresh(refetch, isFetching);
+
+  const mainTopo = data?.topos[0];
 
   return (
     <Screen padding={'m'}>
       <Text variant={'h3'}>{route.params.wallName}</Text>
+      {!mainTopo && (
+        <Pressable
+          flex={1 / 2}
+          borderColor="info"
+          borderWidth={2}
+          borderRadius={10}
+          borderStyle={'dashed'}
+          justifyContent="center"
+          alignItems={'center'}
+          marginVertical="s"
+        >
+          <Text variant={'p1R'}>Agregar topo</Text>
+        </Pressable>
+      )}
       <FlatList
-        data={data}
+        data={data?.routes}
         refreshControl={refresh}
         contentContainerStyle={{ flex: 1 }}
         ListEmptyComponent={() => (
