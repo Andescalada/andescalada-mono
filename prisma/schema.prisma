@@ -80,6 +80,7 @@ model Route {
   id           String      @id @default(uuid())
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+  name         String
   position     BigInt      @default(0)
   leftRouteId  String?
   rightRouteId String?
