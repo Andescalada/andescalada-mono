@@ -8,13 +8,13 @@ import {
 import { trpc } from '@andescalada/utils/trpc';
 import useRefresh from '@hooks/useRefresh';
 import {
-  RootNavigationRoutes,
-  RootNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/types';
+  ClimbsNavigationRoutes,
+  ClimbsNavigationScreenProps,
+} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
 import { FC } from 'react';
 import { Button, FlatList } from 'react-native';
 
-type Props = RootNavigationScreenProps<RootNavigationRoutes.Zone>;
+type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { data, refetch, isFetching, isLoading } = trpc.useQuery([
@@ -39,7 +39,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         <Button
           title="Agregar"
           onPress={() =>
-            navigation.navigate(RootNavigationRoutes.AddZone, {
+            navigation.navigate(ClimbsNavigationRoutes.AddZone, {
               zoneId: route.params.zoneId,
             })
           }
@@ -62,7 +62,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
               padding="m"
               marginVertical={'s'}
               onPress={() =>
-                navigation.navigate(RootNavigationRoutes.Sector, {
+                navigation.navigate(ClimbsNavigationRoutes.Sector, {
                   sectorId: item.id,
                   sectorName: item.name,
                   zoneId: route.params.zoneId,

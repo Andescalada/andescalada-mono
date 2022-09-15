@@ -7,16 +7,18 @@ import {
   TextInput,
 } from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
-import {
-  RootNavigationRoutes,
-  RootNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/types';
+
 import { FC } from 'react';
 import { Alert } from 'react-native';
 import { z } from 'zod';
 import { useForm, useController } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-type Props = RootNavigationScreenProps<RootNavigationRoutes.AddWall>;
+import {
+  ClimbsNavigationRoutes,
+  ClimbsNavigationScreenProps,
+} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
+
+type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddWall>;
 
 const schema = z.object({
   wallName: z

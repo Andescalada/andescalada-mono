@@ -9,10 +9,6 @@ import {
 } from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
 import useRefresh from '@hooks/useRefresh';
-import {
-  RootNavigationRoutes,
-  RootNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/types';
 import { FC, useState } from 'react';
 import { Alert, FlatList } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
@@ -20,12 +16,16 @@ import { useController, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import sector from '@andescalada/api/schemas/sector';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  ClimbsNavigationRoutes,
+  ClimbsNavigationScreenProps,
+} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
 
 const { schema } = sector;
 
 type Form = z.infer<typeof schema>;
 
-type Props = RootNavigationScreenProps<RootNavigationRoutes.Sector>;
+type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const { showActionSheetWithOptions } = useActionSheet();
@@ -82,7 +82,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     const cancelButtonIndex = 2;
     const actions = [
       () =>
-        navigation.navigate(RootNavigationRoutes.AddWall, {
+        navigation.navigate(ClimbsNavigationRoutes.AddWall, {
           sectorId: route.params.sectorId,
         }),
       () => {
@@ -153,7 +153,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               padding="m"
               marginVertical={'s'}
               onPress={() =>
-                navigation.navigate(RootNavigationRoutes.Wall, {
+                navigation.navigate(ClimbsNavigationRoutes.Wall, {
                   wallId: item.id,
                   wallName: item.name,
                   sectorId: route.params.sectorId,

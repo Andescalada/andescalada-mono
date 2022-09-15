@@ -3,12 +3,13 @@ import { Text, Screen, ActivityIndicator, Pressable } from '@andescalada/ui';
 import React from 'react';
 import { trpc } from '@andescalada/utils/trpc';
 import useRefresh from '@hooks/useRefresh';
-import {
-  RootNavigationRoutes,
-  RootNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/types';
 
-type Props = RootNavigationScreenProps<RootNavigationRoutes.ZonesList>;
+import {
+  ClimbsNavigationRoutes,
+  ClimbsNavigationScreenProps,
+} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
+
+type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 
 const ZonesScreen = ({ navigation }: Props) => {
   const { data, refetch, isLoading, isFetching } = trpc.useQuery(['zones.all']);
@@ -32,7 +33,7 @@ const ZonesScreen = ({ navigation }: Props) => {
             padding="m"
             marginVertical={'s'}
             onPress={() =>
-              navigation.navigate(RootNavigationRoutes.Zone, {
+              navigation.navigate(ClimbsNavigationRoutes.Zone, {
                 zoneId: item.id,
                 zoneName: item.name,
               })

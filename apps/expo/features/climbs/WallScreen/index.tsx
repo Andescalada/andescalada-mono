@@ -8,17 +8,17 @@ import {
 import { trpc } from '@andescalada/utils/trpc';
 import usePickImage from '@hooks/usePickImage';
 import useRefresh from '@hooks/useRefresh';
-import {
-  RootNavigationRoutes,
-  RootNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/types';
 import useUploadImage from '@hooks/useUploadImage';
 import { FC, useState } from 'react';
 import { FlatList, Image } from 'react-native';
+import {
+  ClimbsNavigationRoutes,
+  ClimbsNavigationScreenProps,
+} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
 
-type Props = RootNavigationScreenProps<RootNavigationRoutes.Wall>;
+type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
-const WallScreen: FC<Props> = ({ route, navigation }) => {
+const WallScreen: FC<Props> = ({ route }) => {
   const utils = trpc.useContext();
   const { data, refetch, isFetching } = trpc.useQuery([
     'walls.byId',
