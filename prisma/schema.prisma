@@ -10,9 +10,11 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(uuid())
-  name  String
-  email String @unique
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  email     String   @unique
 
   @@index([email])
 }
@@ -21,6 +23,7 @@ model Zone {
   id         String     @id @default(uuid())
   name       String
   createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   infoAccess InfoAccess @default(Public)
   sectors    Sector[]
 }
@@ -35,6 +38,7 @@ model Sector {
   id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   position  BigInt   @default(0)
   Zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   zoneId    String
@@ -45,11 +49,69 @@ model Sector {
 
 model Wall {
   id        String   @id @default(uuid())
-  name      String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
   position  BigInt   @default(0)
   Sector    Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   sectorId  String
+  topos     Topo[]
+  routes    Route[]
 
   @@index([sectorId])
+}
+
+model Topo {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Wall      Wall        @relation(fields: [wallId], references: [id])
+  wallId    String
+  main      Boolean     @default(false)
+  name      String
+  RoutePath RoutePath[]
+  canvas    String?     @db.LongText
+  image     String?     @db.LongText
+
+  @@index([wallId])
+}
+
+model Route {
+  id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  position     BigInt      @default(0)
+  leftRouteId  String?
+  rightRouteId String?
+  grade        Int?
+  classic      Boolean     @default(false)
+  kind         RouteKind
+  Wall         Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  wallId       String
+  description  String?     @db.LongText
+  RoutePath    RoutePath[]
+
+  @@index([wallId])
+}
+
+enum RouteKind {
+  Sport
+  Trad
+  Boulder
+  Mixed
+  Ice
+}
+
+model RoutePath {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  path      String?  @db.LongText
+  topo      Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topoId    String
+  route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  routeId   String
+
+  @@index([topoId])
+  @@index([routeId])
 }
