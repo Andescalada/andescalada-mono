@@ -14,6 +14,7 @@ import { FC } from 'react';
 import AddSectorScreen from '@features/climbs/AddSectorScreen';
 import SectorScreen from '@features/climbs/SectorScreen';
 import AddWallScreen from '@features/climbs/AddWallScreen';
+import WallScreen from '@features/climbs/WallScreen';
 
 const { manifest } = Constants;
 
@@ -68,6 +69,10 @@ const Navigator: FC<Props> = ({ accessToken }) => {
             name={RootNavigationRoutes.AddWall}
             component={AddWallScreen}
             options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.Wall}
+            component={WallScreen}
           />
         </Stack.Navigator>
       </QueryClientProvider>

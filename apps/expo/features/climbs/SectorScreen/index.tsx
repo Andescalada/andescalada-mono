@@ -156,6 +156,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
                 navigation.navigate(RootNavigationRoutes.Wall, {
                   wallId: item.id,
                   wallName: item.name,
+                  sectorId: route.params.sectorId,
                 })
               }
             >
