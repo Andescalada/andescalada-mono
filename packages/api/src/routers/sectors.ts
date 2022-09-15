@@ -37,6 +37,14 @@ export const sectorsRouter = t.router({
 
       return newSector;
     }),
+  edit: t.procedure
+    .input(z.object({ sectorId: z.string(), name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.sector.update({
+        where: { id: input.sectorId },
+        data: { name: input.name },
+      });
+    }),
   allWalls: t.procedure
     .input(z.object({ sectorId: z.string() }))
     .query(async ({ ctx, input }) => {

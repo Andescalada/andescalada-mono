@@ -13,6 +13,7 @@
     "@andescalada/api": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
+    "@expo/react-native-action-sheet": "^3.13.0",
     "@hookform/resolvers": "^2.9.8",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-navigation/native": "^6.0.12",

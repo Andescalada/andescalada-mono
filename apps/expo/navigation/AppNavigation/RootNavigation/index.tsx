@@ -13,6 +13,7 @@ import Constants from 'expo-constants';
 import { FC } from 'react';
 import AddSectorScreen from '@features/climbs/AddSectorScreen';
 import SectorScreen from '@features/climbs/SectorScreen';
+import AddWallScreen from '@features/climbs/AddWallScreen';
 
 const { manifest } = Constants;
 
@@ -62,6 +63,11 @@ const Navigator: FC<Props> = ({ accessToken }) => {
           <Stack.Screen
             name={RootNavigationRoutes.Sector}
             component={SectorScreen}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.AddWall}
+            component={AddWallScreen}
+            options={{ presentation: 'modal' }}
           />
         </Stack.Navigator>
       </QueryClientProvider>

@@ -8,6 +8,7 @@ import { useCallback, useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import ThemeProvider from '@andescalada/ui/Theme/ThemeProvider';
 import { darkTheme } from '@andescalada/ui/Theme/navigationTheme';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 const fonts = {
   'Rubik-300': require('./assets/fonts/Rubik-Light.ttf'),
@@ -43,8 +44,12 @@ export default function App() {
     <ThemeProvider>
       <StoreProvider store={Store}>
         <NavigationMemoized theme={darkTheme}>
-          <StatusBar style="light" />
-          <AppNavigation />
+          <ActionSheetProvider>
+            <>
+              <StatusBar style="light" />
+              <AppNavigation />
+            </>
+          </ActionSheetProvider>
         </NavigationMemoized>
       </StoreProvider>
     </ThemeProvider>

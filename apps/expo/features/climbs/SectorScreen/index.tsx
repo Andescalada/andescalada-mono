@@ -3,7 +3,9 @@ import {
   Box,
   Pressable,
   Screen,
+  SemanticButton,
   Text,
+  TextInput,
 } from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
 import useRefresh from '@hooks/useRefresh';
@@ -11,17 +13,90 @@ import {
   RootNavigationRoutes,
   RootNavigationScreenProps,
 } from '@navigation/AppNavigation/RootNavigation/types';
-import { FC } from 'react';
-import { Button, FlatList } from 'react-native';
+import { FC, useState } from 'react';
+import { Alert, FlatList } from 'react-native';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useController, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import sector from '@andescalada/api/schemas/sector';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const { schema } = sector;
+
+type Form = z.infer<typeof schema>;
 
 type Props = RootNavigationScreenProps<RootNavigationRoutes.Sector>;
 
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
+  const { showActionSheetWithOptions } = useActionSheet();
+  const [editing, setEditing] = useState(false);
+  const [cancel, setCancel] = useState(false);
+  const utils = trpc.useContext();
   const { data, refetch, isFetching, isLoading } = trpc.useQuery([
     'sectors.allWalls',
     { sectorId: route.params.sectorId },
   ]);
+  const editSector = trpc.useMutation('sectors.edit', {
+    onSuccess: () => {
+      utils.invalidateQueries('sectors.all');
+    },
+  });
+  const { control, handleSubmit } = useForm<Form>({
+    resolver: zodResolver(schema),
+  });
+  const {
+    field: { onChange, value },
+  } = useController({
+    name: 'sectorName',
+    control,
+    defaultValue: route.params.sectorName,
+  });
   const refresh = useRefresh(refetch, isFetching);
+
+  const onSave = cancel
+    ? () => {
+        setEditing(false);
+        setCancel(false);
+      }
+    : handleSubmit(
+        (input) => {
+          editSector.mutate({
+            name: input.sectorName,
+            sectorId: route.params.sectorId,
+          });
+          setEditing(false);
+        },
+        (error) => {
+          const errorMessage = error.sectorName?.message || 'Hubo un error';
+          Alert.alert(errorMessage);
+          onChange(route.params.sectorName);
+          setEditing(false);
+        },
+      );
+
+  const onOptions = () => {
+    const options = ['Agregar Pared', 'Cambiar Nombre', 'Cancelar'];
+    const cancelButtonIndex = 2;
+    const actions = [
+      () =>
+        navigation.navigate(RootNavigationRoutes.AddWall, {
+          sectorId: route.params.sectorId,
+        }),
+      () => {
+        setEditing(true);
+      },
+    ];
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === undefined || buttonIndex === 2) return;
+        actions[buttonIndex]();
+      },
+    );
+  };
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
@@ -35,8 +110,28 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         alignItems="center"
         justifyContent={'space-between'}
       >
-        <Text variant={'h3'}>{route.params.sectorName}</Text>
-        <Button title="Agregar" />
+        <TextInput
+          value={value}
+          variant={editing ? 'filled' : 'disableAsText'}
+          editable={editing}
+          onChangeText={onChange}
+          textVariant="h3"
+          lineHeight={20}
+          multiline
+          textAlignVertical="top"
+          containerProps={{
+            justifyContent: 'center',
+            flex: 1,
+          }}
+        />
+        <SemanticButton
+          variant={cancel ? 'error' : 'info'}
+          title={editing ? (cancel ? 'Cancelar' : 'Guardar') : 'Opciones'}
+          onPress={editing ? onSave : onOptions}
+          onLongPress={() => {
+            if (editing) setCancel(true);
+          }}
+        />
       </Box>
       <Box flex={1}>
         <FlatList
@@ -55,9 +150,9 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               padding="m"
               marginVertical={'s'}
               onPress={() =>
-                navigation.navigate(RootNavigationRoutes.Zone, {
-                  zoneId: item.id,
-                  zoneName: item.name,
+                navigation.navigate(RootNavigationRoutes.Wall, {
+                  wallId: item.id,
+                  wallName: item.name,
                 })
               }
             >

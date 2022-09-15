@@ -2,6 +2,7 @@
  * This file contains the root router of your tRPC-backend
  */
 import { sectorsRouter } from '@andescalada/api/src/routers/sectors';
+import { wallsRouter } from '@andescalada/api/src/routers/walls';
 import { t } from '../createRouter';
 import { zonesRouter } from './zones';
 
@@ -14,6 +15,7 @@ import { zonesRouter } from './zones';
 export const appRouter = t.router({
   zones: zonesRouter,
   sectors: sectorsRouter,
+  walls: wallsRouter,
 });
 
 export type AppRouter = typeof appRouter;

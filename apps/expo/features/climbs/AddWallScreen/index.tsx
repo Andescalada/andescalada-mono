@@ -16,20 +16,24 @@ import { Alert } from 'react-native';
 import { z } from 'zod';
 import { useForm, useController } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-type Props = RootNavigationScreenProps<RootNavigationRoutes.AddZone>;
-import sector from '@andescalada/api/schemas/sector';
+type Props = RootNavigationScreenProps<RootNavigationRoutes.AddWall>;
 
-const { schema } = sector;
+const schema = z.object({
+  wallName: z
+    .string({ required_error: 'Requerido' })
+    .min(3, 'Nombre muy corto')
+    .max(50, 'Nombre muy largo'),
+});
 
 type Form = z.infer<typeof schema>;
 
 const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
-  const { zoneId } = route.params;
+  const { sectorId } = route.params;
   const utils = trpc.useContext();
-  const { mutate, isLoading } = trpc.useMutation(['sectors.add'], {
+  const { mutate, isLoading } = trpc.useMutation(['walls.add'], {
     onSuccess: () => {
       navigation.goBack();
-      utils.invalidateQueries('sectors.all');
+      utils.invalidateQueries('sectors.allWalls');
     },
   });
 
@@ -42,11 +46,11 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     fieldState: { error, isDirty },
   } = useController({
     control,
-    name: 'sectorName',
+    name: 'wallName',
   });
 
   const onSubmit = handleSubmit((input) => {
-    mutate({ zoneId, name: input.sectorName });
+    mutate({ sectorId, name: input.wallName });
   });
 
   const onCancel = () => {
@@ -68,10 +72,10 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
 
   return (
     <Screen padding="m">
-      <Text variant="h1">Agregar sector</Text>
+      <Text variant="h1">Agregar pared</Text>
       <Box marginTop={'m'}>
         <Text variant={'p1R'} marginBottom={'s'}>
-          Nombre del sector
+          Nombre de la pared
         </Text>
         <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
         <Text marginTop={'xs'} color="error">

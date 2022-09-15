@@ -14,10 +14,10 @@ const textFieldVariants = createBoxVariant({
   //   borderColor: 'dividerColor',
   //   paddingBottom: 's',
   // },
+  disableAsText: {},
   filled: {
     borderRadius: 4,
     backgroundColor: 'filledTextInputVariantBackground',
-    paddingLeft: 's',
   },
 });
 

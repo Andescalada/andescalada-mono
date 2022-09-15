@@ -20,7 +20,7 @@ export type RootNavigationNavigationParamList = {
     sectorId: Sector['id'];
     sectorName: Sector['name'];
   };
-  [RootNavigationRoutes.Wall]: { wallId: Wall['id']; name: Wall['name'] };
+  [RootNavigationRoutes.Wall]: { wallId: Wall['id']; wallName: Wall['name'] };
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =
