@@ -44,8 +44,8 @@ const Button: FC<Props> = ({
       ) : (
         <Text
           variant={titleVariant}
-          {...titleProps}
           color={`${variant}ButtonText` as Colors}
+          {...titleProps}
         >
           {title}
         </Text>

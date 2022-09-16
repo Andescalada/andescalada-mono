@@ -1,10 +1,11 @@
-import type { Route, Wall } from '@prisma/client';
+import type { Route, Topo, Wall } from '@prisma/client';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 export enum RoutesManagerNavigationRoutes {
   SelectRouteToDraw = 'SelectRouteToDraw',
   DrawRoute = 'DrawRoute',
+  TopoViewer = 'TopoViewer',
 }
 
 export type RoutesManagerNavigationParamList = {
@@ -14,6 +15,9 @@ export type RoutesManagerNavigationParamList = {
   [RoutesManagerNavigationRoutes.DrawRoute]: {
     route: { id: Route['id']; position: Route['position'] };
     wallId: Wall['id'];
+  };
+  [RoutesManagerNavigationRoutes.TopoViewer]: {
+    topoId: Topo['id'];
   };
 };
 

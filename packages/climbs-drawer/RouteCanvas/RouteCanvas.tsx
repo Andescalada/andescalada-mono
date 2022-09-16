@@ -4,6 +4,7 @@ import {
   HandlerStateChangeEvent,
   TapGestureHandler,
   TapGestureHandlerEventPayload,
+  TapGestureHandlerProps,
 } from 'react-native-gesture-handler';
 import {
   ReactNativeZoomableView as ZoomView,
@@ -17,12 +18,13 @@ interface Coords {
 }
 
 interface Props {
-  value: Coords | undefined;
-  setValue: (_coords: Coords | undefined) => void;
+  value?: Coords | undefined;
+  setValue?: (_coords: Coords | undefined) => void;
   height?: number;
   width?: number;
   imageUri: string | undefined | null;
   zoomProps?: ReactNativeZoomableViewProps;
+  tapGestureProps?: TapGestureHandlerProps;
 }
 
 const { width: initialScreenWidth, height: screenHeight } =
@@ -36,6 +38,7 @@ const RouteCanvas: React.FC<Props> = ({
   width = initialScreenWidth,
   imageUri,
   zoomProps,
+  tapGestureProps,
 }) => {
   const [tappedCoords, setTapCoords] = useState<Coords | undefined>(value);
   const onGestureHandler = useCallback(
@@ -46,15 +49,17 @@ const RouteCanvas: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    setValue(tappedCoords);
+    if (setValue) setValue(tappedCoords);
   }, [tappedCoords, setValue]);
 
   return (
-    <TapGestureHandler onHandlerStateChange={onGestureHandler}>
+    <TapGestureHandler
+      onHandlerStateChange={onGestureHandler}
+      {...tapGestureProps}
+    >
       <View style={{ height: screenHeight }}>
         <ZoomView
           maxZoom={30}
-          bindToBorders={false}
           contentWidth={width}
           contentHeight={height}
           minZoom={1}

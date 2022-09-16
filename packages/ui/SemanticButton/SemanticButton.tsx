@@ -35,7 +35,7 @@ const Button: FC<Props> = ({
         variant={titleVariant}
         fontFamily="Rubik-400"
         {...titleProps}
-        color={`${variant}ButtonText` as Colors}
+        color={`${variant}SemanticButtonText` as Colors}
       >
         {title}
       </Text>

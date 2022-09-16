@@ -1,5 +1,6 @@
 import DrawRoute from '@features/routesManager/DrawRoute';
 import SelectRouteToDrawScreen from '@features/routesManager/SelectRouteToDrawScreen';
+import TopoViewer from '@features/routesManager/TopoViewer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import {
@@ -19,6 +20,10 @@ const Navigator = () => {
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.DrawRoute}
         component={DrawRoute}
+      />
+      <Stack.Screen
+        name={RoutesManagerNavigationRoutes.TopoViewer}
+        component={TopoViewer}
       />
     </Stack.Navigator>
   );

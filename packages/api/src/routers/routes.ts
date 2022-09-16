@@ -43,4 +43,19 @@ export const routesRouter = t.router({
       });
       return newRoute;
     }),
+  addPath: t.procedure
+    .input(
+      z.object({
+        routeId: z.string(),
+        path: z.string(),
+        topoId: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.routePath.create({
+        data: {
+          ...input,
+        },
+      }),
+    ),
 });

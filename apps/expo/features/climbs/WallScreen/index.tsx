@@ -165,6 +165,14 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           alignItems={'center'}
           marginVertical="s"
           overflow="hidden"
+          onPress={() => {
+            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+              screen: RoutesManagerNavigationRoutes.TopoViewer,
+              params: {
+                topoId: mainTopo.id,
+              },
+            });
+          }}
         >
           <Image
             style={{ flex: 1, width: '100%', height: 1000 }}

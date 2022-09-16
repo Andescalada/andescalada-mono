@@ -14,7 +14,7 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
 
   const { data } = trpc.useQuery(['walls.byId', wallId]);
-  console.log(data?.routes);
+
   return (
     <Screen padding="m">
       <Text variant="h3">Selecciona una ruta</Text>

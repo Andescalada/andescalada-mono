@@ -5,12 +5,14 @@ import { RouteRef } from '../RoutePath/RoutePath';
 type Path = string | undefined;
 type Id = string;
 type Finished = boolean;
+type Label = string;
 
 export interface Route {
   ref: React.RefObject<RouteRef>;
   id: Id;
   path?: Path;
   finished?: Finished;
+  label?: Label;
 }
 
 enum Actions {
@@ -36,6 +38,7 @@ interface FinishRoute {
 interface CreateRoute {
   type: typeof Actions.CreateRoute;
   id: Id;
+  label?: Label;
 }
 
 interface RemoveRoute {
@@ -68,6 +71,9 @@ const reducer = (state: State, action: ActionTypes) => {
         (r) => r.id === action.id,
       );
       newState.routes[selectedRoute].path = action.path;
+      if (newState.route) {
+        newState.route.path = action.path;
+      }
       return newState;
     }
     case Actions.FinishRoute: {
@@ -76,15 +82,21 @@ const reducer = (state: State, action: ActionTypes) => {
         (r) => r.id === action.id,
       );
       newState.routes[selectedRoute].finished = action.finished;
+      if (newState.route) {
+        newState.route.finished = action.finished;
+      }
       return newState;
     }
     case Actions.CreateRoute: {
+      if (state.routes.findIndex((r) => r.id === action.id) !== -1)
+        return state;
       return {
         ...state,
         routes: [
           ...state.routes,
           {
             id: action.id,
+            label: action.label,
             ref: createRef<RouteRef>(),
             finished: false,
             path: undefined,
@@ -129,8 +141,8 @@ const useRoutes = ({
     dispatch({ type: Actions.FinishRoute, finished, id });
   };
 
-  const create = ({ id }: { id: Id }) => {
-    dispatch({ type: Actions.CreateRoute, id });
+  const create = ({ id, label }: { id: Id; label: Label }) => {
+    dispatch({ type: Actions.CreateRoute, id, label });
   };
 
   const remove = ({ id }: { id: Id }) => {

@@ -10,7 +10,7 @@ interface Props {
   value?: string | undefined;
   setValue?: (_path: string | undefined) => void;
   label?: number | string;
-  allowDrawing?: boolean;
+  disableDrawing?: boolean;
   finished?: boolean;
   tappedCoords?:
     | {
@@ -22,7 +22,7 @@ interface Props {
 
 interface Ref {
   undo: () => void;
-  finishRoute: () => void;
+  finishRoute: (onFinish?: () => void) => void;
   reset: () => void;
 }
 
@@ -36,8 +36,19 @@ const stringToArrayPath = (path: string | undefined) => {
   return array;
 };
 
+const arrayToString = (path: number[][]) => {
+  return path.map((a) => `${a[0]},${a[1]}`).join(` `);
+};
+
 const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
-  { value, setValue, allowDrawing = true, tappedCoords, finished, label = '?' },
+  {
+    value,
+    setValue,
+    disableDrawing = false,
+    tappedCoords,
+    finished,
+    label = '?',
+  },
   ref,
 ) => {
   const [end, setEnd] = useState<{ x: number; y: number }>();
@@ -45,28 +56,44 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
   const [stringPath, setStringPath] = useState<string | undefined>(value);
   const [start, setStart] = useState<{ x: number; y: number } | undefined>();
 
-  const finishRoute = useCallback(() => {
-    const lastElement = path.length - 1;
-    if (lastElement > 1)
-      setEnd({ x: path[lastElement][0], y: path[lastElement][1] });
-  }, [path]);
+  const finishRoute = useCallback(
+    (onFinish?: () => void) => {
+      const lastElement = path.length - 1;
+
+      if (lastElement > 1)
+        setEnd({ x: path[lastElement][0], y: path[lastElement][1] });
+      if (onFinish) onFinish();
+    },
+    [path],
+  );
 
   useEffect(() => {
     if (path.length > 0) setStart({ x: path[0][0], y: path[0][1] });
   }, [path]);
 
   useEffect(() => {
-    if (finished === true) finishRoute();
+    if (finished === true) {
+      finishRoute();
+    }
   }, [finished, finishRoute]);
 
   useImperativeHandle(ref, () => ({
     undo: () => {
       const lastElement = path.length - 1;
       if (end) setEnd(undefined);
-      else if (lastElement > 0) setPath((prev) => prev.slice(0, lastElement));
-      else {
+      else if (lastElement > 0) {
+        setPath((prev) => {
+          const undoPath = prev.slice(0, lastElement);
+          const undoStringPath = arrayToString(undoPath);
+          setStringPath(undoStringPath);
+          if (setValue) setValue(undoStringPath);
+          return undoPath;
+        });
+      } else {
         setStart(undefined);
         setPath([]);
+        setStringPath(undefined);
+        if (setValue) setValue(undefined);
       }
     },
     finishRoute,
@@ -74,35 +101,40 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
       setStart(undefined);
       setEnd(undefined);
       setPath([]);
+      setStringPath(undefined);
+      if (setValue) setValue(undefined);
     },
   }));
 
   useEffect(() => {
-    if (!allowDrawing) return;
+    if (disableDrawing) return;
     if (tappedCoords) {
       const lastElement = path[path.length - 1];
       if (!lastElement) {
         setStart({ x: tappedCoords.x, y: tappedCoords.y });
-        setPath((prev) => [...prev, [tappedCoords.x, tappedCoords.y]]);
+        setPath((prev) => {
+          const newPath = [...prev, [tappedCoords.x, tappedCoords.y]];
+          const newStringPath = arrayToString(newPath);
+          setStringPath(newStringPath);
+          if (setValue) setValue(newStringPath);
+          return newPath;
+        });
       } else if (
         lastElement[0] !== tappedCoords.x &&
         lastElement[1] !== tappedCoords.y &&
         !end
-      )
-        setPath((prev) => [...prev, [tappedCoords.x, tappedCoords.y]]);
+      ) {
+        setPath((prev) => {
+          const newPath = [...prev, [tappedCoords.x, tappedCoords.y]];
+          const newStringPath = arrayToString(newPath);
+          setStringPath(newStringPath);
+          if (setValue) setValue(newStringPath);
+          return newPath;
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tappedCoords]);
-
-  useEffect(() => {
-    setStringPath(path.map((a) => `${a[0]},${a[1]}`).join(' '));
-  }, [path, setValue]);
-
-  useEffect(() => {
-    if (setValue) {
-      setValue(stringPath);
-    }
-  }, [setValue, stringPath]);
 
   return (
     <>

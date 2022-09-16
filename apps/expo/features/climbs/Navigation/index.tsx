@@ -11,7 +11,6 @@ import SectorScreen from '@features/climbs/SectorScreen';
 import AddWallScreen from '@features/climbs/AddWallScreen';
 import WallScreen from '@features/climbs/WallScreen';
 import AddRouteScreen from '@features/climbs/AddRouteScreen';
-import { EditTopoScreen } from '@features/routesManager';
 
 const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 

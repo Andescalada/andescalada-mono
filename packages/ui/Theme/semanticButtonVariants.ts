@@ -2,8 +2,8 @@ import { pallete } from './pallete';
 import { createBoxVariant } from './createVariants';
 
 export const semanticButtonVariantsColors = {
-  errorButtonText: pallete.semantic.error,
-  infoButtonText: pallete.semantic.info,
+  errorSemanticButtonText: pallete.semantic.error,
+  infoSemanticButtonText: pallete.semantic.info,
 };
 
 const semanticButtonVariants = createBoxVariant({

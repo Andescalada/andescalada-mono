@@ -6,6 +6,11 @@ export const toposRouter = t.router({
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({
       where: { id: input },
+      include: {
+        RoutePath: {
+          include: { route: { select: { id: true, position: true } } },
+        },
+      },
     });
     if (!topo) {
       throw new TRPCError({

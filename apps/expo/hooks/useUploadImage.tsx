@@ -14,8 +14,7 @@ const useUploadImage = () => {
       setIsLoading(true);
       setIsSuccess(false);
       setUri(undefined);
-      console.log(data);
-      console.log(CLOUDINARY_URL);
+
       const res = await axios.post<{ url: string }>(
         CLOUDINARY_URL,
 
