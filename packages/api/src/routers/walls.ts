@@ -36,7 +36,7 @@ export const wallsRouter = t.router({
       const result = await ctx.prisma.wall.aggregate({
         _max: { position: true },
       });
-      const biggestPosition = Number(result._max.position) || 0;
+      const biggestPosition = result._max.position || 0;
 
       const newWall = await ctx.prisma.wall.create({
         data: {

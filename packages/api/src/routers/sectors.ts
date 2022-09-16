@@ -25,7 +25,7 @@ export const sectorsRouter = t.router({
       const result = await ctx.prisma.sector.aggregate({
         _max: { position: true },
       });
-      const biggestPosition = Number(result._max.position) || 0;
+      const biggestPosition = result._max.position || 0;
 
       const newSector = await ctx.prisma.sector.create({
         data: {

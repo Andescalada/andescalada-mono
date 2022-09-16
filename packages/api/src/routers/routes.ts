@@ -31,7 +31,7 @@ export const routesRouter = t.router({
       const result = await ctx.prisma.route.aggregate({
         _max: { position: true },
       });
-      const biggestPosition = Number(result._max.position) || 0;
+      const biggestPosition = result._max.position || 0;
 
       const newRoute = await ctx.prisma.route.create({
         data: {
