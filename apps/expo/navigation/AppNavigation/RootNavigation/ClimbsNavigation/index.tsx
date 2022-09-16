@@ -10,6 +10,7 @@ import AddSectorScreen from '@features/climbs/AddSectorScreen';
 import SectorScreen from '@features/climbs/SectorScreen';
 import AddWallScreen from '@features/climbs/AddWallScreen';
 import WallScreen from '@features/climbs/WallScreen';
+import AddRouteScreen from '@features/climbs/AddRouteScreen';
 
 const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 
@@ -33,6 +34,11 @@ const Navigator = () => {
       <Stack.Screen
         name={ClimbsNavigationRoutes.AddWall}
         component={AddWallScreen}
+        options={{ presentation: 'modal' }}
+      />
+      <Stack.Screen
+        name={ClimbsNavigationRoutes.AddRoute}
+        component={AddRouteScreen}
         options={{ presentation: 'modal' }}
       />
       <Stack.Screen name={ClimbsNavigationRoutes.Wall} component={WallScreen} />

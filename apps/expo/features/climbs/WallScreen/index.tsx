@@ -4,6 +4,7 @@ import {
   Screen,
   Text,
   ActivityIndicator,
+  SemanticButton,
 } from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
 import usePickImage from '@hooks/usePickImage';
@@ -18,7 +19,7 @@ import {
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
-const WallScreen: FC<Props> = ({ route }) => {
+const WallScreen: FC<Props> = ({ route, navigation }) => {
   const utils = trpc.useContext();
   const { data, refetch, isFetching } = trpc.useQuery([
     'walls.byId',
@@ -52,7 +53,22 @@ const WallScreen: FC<Props> = ({ route }) => {
 
   return (
     <Screen padding={'m'}>
-      <Text variant={'h3'}>{route.params.wallName}</Text>
+      <Box
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-around"
+      >
+        <Text variant={'h3'}>{route.params.wallName}</Text>
+        <SemanticButton
+          variant="info"
+          title="Agregar"
+          onPress={() => {
+            navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+              wallId: route.params.wallId,
+            });
+          }}
+        />
+      </Box>
       {!mainTopo && !selectedImage && (
         <Pressable
           flex={1 / 2}

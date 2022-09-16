@@ -24,7 +24,8 @@ const darkBaseTheme = {
     listItemBackground: pallete.grayscale[600],
     filledTextInputVariantBackground: pallete.grayscale[300],
     filledTextInputVariantPlaceholder: pallete.grayscale.black,
-
+    selectedButtonGroup: pallete.brand.primaryA,
+    buttonGroup: pallete.grayscale[600],
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,
     ...pallete.semantic,

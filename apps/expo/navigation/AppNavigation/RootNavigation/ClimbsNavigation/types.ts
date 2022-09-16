@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Zone, Sector, Wall } from '@prisma/client';
+import type { Zone, Sector, Wall } from '@prisma/client';
 
 export enum ClimbsNavigationRoutes {
   ZonesList = 'ZonesList',
@@ -9,6 +9,7 @@ export enum ClimbsNavigationRoutes {
   Sector = 'Sector',
   AddWall = 'AddWall',
   Wall = 'Wall',
+  AddRoute = 'AddRoute',
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -26,6 +27,7 @@ export type ClimbsNavigationNavigationParamList = {
     wallName: Wall['name'];
     sectorId: Sector['id'];
   };
+  [ClimbsNavigationRoutes.AddRoute]: { wallId: Wall['id'] };
 };
 
 export type ClimbsNavigationRouteProps<T extends ClimbsNavigationRoutes> =
