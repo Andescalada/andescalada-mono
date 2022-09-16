@@ -16,10 +16,12 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
+  const { wallId } = route.params;
   const utils = trpc.useContext();
   const { data, refetch, isFetching } = trpc.useQuery([
     'walls.byId',
@@ -41,14 +43,42 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     setIsLading(true);
     const topoImg = await uploadImage(selectedImage?.base64Img);
     await mutateAsync(
-      { wallId: route.params.wallId, image: topoImg },
+      { wallId, image: topoImg },
       {
         onSuccess: () => {
-          utils.invalidateQueries(['walls.byId', route.params.wallId]);
+          utils.invalidateQueries(['walls.byId', wallId]);
         },
       },
     );
     setIsLading(false);
+  };
+
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const onOptions = () => {
+    const options = ['Editar Topo', 'Agregar Ruta', 'Cancelar'];
+    const cancelButtonIndex = 2;
+    const actions = [
+      () =>
+        navigation.navigate(ClimbsNavigationRoutes.EditTopo, {
+          wallId,
+        }),
+      () => {
+        navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+          wallId,
+        });
+      },
+    ];
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === undefined || buttonIndex === 2) return;
+        actions[buttonIndex]();
+      },
+    );
   };
 
   return (
@@ -59,15 +89,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         justifyContent="space-around"
       >
         <Text variant={'h3'}>{route.params.wallName}</Text>
-        <SemanticButton
-          variant="info"
-          title="Agregar"
-          onPress={() => {
-            navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
-              wallId: route.params.wallId,
-            });
-          }}
-        />
+        <SemanticButton variant="info" title="Opciones" onPress={onOptions} />
       </Box>
       {!mainTopo && !selectedImage && (
         <Pressable

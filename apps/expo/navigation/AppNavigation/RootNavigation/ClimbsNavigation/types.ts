@@ -10,6 +10,7 @@ export enum ClimbsNavigationRoutes {
   AddWall = 'AddWall',
   Wall = 'Wall',
   AddRoute = 'AddRoute',
+  EditTopo = 'EditTopo',
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -28,6 +29,7 @@ export type ClimbsNavigationNavigationParamList = {
     sectorId: Sector['id'];
   };
   [ClimbsNavigationRoutes.AddRoute]: { wallId: Wall['id'] };
+  [ClimbsNavigationRoutes.EditTopo]: { wallId: Wall['id'] };
 };
 
 export type ClimbsNavigationRouteProps<T extends ClimbsNavigationRoutes> =
