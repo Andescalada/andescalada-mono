@@ -10,8 +10,10 @@ import { FC, useState } from 'react';
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
 
 const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
-  const { wallId, route: routeParams } = navRoute.params;
+  const { wallId, route: routeParams, topoId } = navRoute.params;
   const { data } = trpc.useQuery(['walls.byId', wallId]);
+  const { data: topo } = trpc.useQuery(['topos.byId', topoId]);
+  const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.useMutation(['routes.addPath']);
   const [tappedCoords, setTapCoords] = useState<{ x: number; y: number }>();
   const [canSave, setCanSave] = useState(false);
@@ -33,12 +35,19 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
       return;
     }
     if (route?.path && data) {
-      mutate({
-        path: route?.path,
-        routeId: route.id,
-        topoId: data.topos[0].id,
-      });
-      setTimeout(() => navigation.popToTop(), 500);
+      mutate(
+        {
+          path: route?.path,
+          routeId: route.id,
+          topoId: data.topos[0].id,
+        },
+        {
+          onSuccess: () => {
+            utils.invalidateQueries(['topos.byId', topoId]);
+            setTimeout(() => navigation.popToTop(), 500);
+          },
+        },
+      );
     }
   };
 
@@ -60,6 +69,15 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
             tappedCoords={tappedCoords}
           />
         )}
+        {topo?.RoutePath.map((route) => (
+          <RoutePath
+            disableDrawing
+            key={route.id}
+            finished
+            label={route.route.position}
+            value={route.path}
+          />
+        ))}
       </RouteCanvas>
       <Box position="absolute" top={50} right={0} margin="l">
         <Button

@@ -15,6 +15,7 @@ export type RoutesManagerNavigationParamList = {
   [RoutesManagerNavigationRoutes.DrawRoute]: {
     route: { id: Route['id']; position: Route['position'] };
     wallId: Wall['id'];
+    topoId: Topo['id'];
   };
   [RoutesManagerNavigationRoutes.TopoViewer]: {
     topoId: Topo['id'];

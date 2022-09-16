@@ -15,6 +15,8 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
 
   const { data } = trpc.useQuery(['walls.byId', wallId]);
 
+  if (!data) return null;
+
   return (
     <Screen padding="m">
       <Text variant="h3">Selecciona una ruta</Text>
@@ -37,6 +39,7 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
                 navigation.navigate(RoutesManagerNavigationRoutes.DrawRoute, {
                   route: { id, position },
                   wallId,
+                  topoId: data?.topos[0].id,
                 });
               }}
             >
