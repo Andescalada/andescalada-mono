@@ -17,7 +17,7 @@ import {
   ClimbsNavigationScreenProps,
 } from '@features/climbs/Navigation/types';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { RouteManagerNavigationRoutes } from '@features/routesManager/Navigation/types';
+import { RoutesManagerNavigationRoutes } from '@features/routesManager/Navigation/types';
 import { RootNavigationRoutes } from '@navigation/AppNavigation/RootNavigation/types';
 import useRootNavigation from '@hooks/useRootNavigation';
 
@@ -66,7 +66,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     const actions = [
       () =>
         rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-          screen: RouteManagerNavigationRoutes.SelectRouteToDraw,
+          screen: RoutesManagerNavigationRoutes.SelectRouteToDraw,
           params: {
             wallId,
           },
