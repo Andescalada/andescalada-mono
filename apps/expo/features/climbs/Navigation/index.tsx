@@ -43,10 +43,6 @@ const Navigator = () => {
         options={{ presentation: 'modal' }}
       />
       <Stack.Screen name={ClimbsNavigationRoutes.Wall} component={WallScreen} />
-      <Stack.Screen
-        name={ClimbsNavigationRoutes.EditTopo}
-        component={EditTopoScreen}
-      />
     </Stack.Navigator>
   );
 };

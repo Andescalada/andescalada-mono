@@ -7,7 +7,7 @@ import useRefresh from '@hooks/useRefresh';
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
+} from '@features/climbs/Navigation/types';
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 

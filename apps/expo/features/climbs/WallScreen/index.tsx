@@ -15,8 +15,11 @@ import { FlatList, Image } from 'react-native';
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
+} from '@features/climbs/Navigation/types';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { RouteManagerNavigationRoutes } from '@features/routesManager/Navigation/types';
+import { RootNavigationRoutes } from '@navigation/AppNavigation/RootNavigation/types';
+import useRootNavigation from '@hooks/useRootNavigation';
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
@@ -55,13 +58,18 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
 
   const { showActionSheetWithOptions } = useActionSheet();
 
+  const rootNavigation = useRootNavigation();
+
   const onOptions = () => {
     const options = ['Editar Topo', 'Agregar Ruta', 'Cancelar'];
     const cancelButtonIndex = 2;
     const actions = [
       () =>
-        navigation.navigate(ClimbsNavigationRoutes.EditTopo, {
-          wallId,
+        rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+          screen: RouteManagerNavigationRoutes.SelectRouteToDraw,
+          params: {
+            wallId,
+          },
         }),
       () => {
         navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
@@ -180,7 +188,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             padding="m"
             marginVertical={'s'}
           >
-            <Text variant="p1R">{item.name}</Text>
+            <Text variant="p1R">{`${item.position} - ${item.name}`}</Text>
           </Pressable>
         )}
       />

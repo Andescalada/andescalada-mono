@@ -12,7 +12,10 @@ export const wallsRouter = t.router({
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input },
       include: {
-        routes: { select: { name: true, id: true, grade: true } },
+        routes: {
+          orderBy: { position: 'asc' },
+          select: { name: true, id: true, grade: true, position: true },
+        },
         topos: {
           where: { main: true },
           select: { id: true, image: true, name: true },
@@ -49,7 +52,11 @@ export const wallsRouter = t.router({
     .query(async ({ ctx, input }) => {
       const res = await ctx.prisma.wall.findUnique({
         where: { id: input.wallId },
-        select: { routes: { select: { name: true, grade: true, id: true } } },
+        select: {
+          routes: {
+            select: { name: true, grade: true, id: true, position: true },
+          },
+        },
       });
       if (!res)
         throw new TRPCError({

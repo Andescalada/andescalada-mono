@@ -1,6 +1,6 @@
-import { createRef, useCallback, useReducer } from "react";
+import { createRef, useCallback, useReducer } from 'react';
 
-import { RouteRef } from "./RoutePath";
+import { RouteRef } from './RoutePath';
 
 type Path = string | undefined;
 type Id = string;
@@ -118,7 +118,7 @@ interface UseRoute {
 
 const useRoutes = ({
   initialState = { routes: [], route: null },
-}: UseRoute) => {
+}: UseRoute = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const savePath = useCallback(({ id, path }: { id: Id; path: Path }) => {

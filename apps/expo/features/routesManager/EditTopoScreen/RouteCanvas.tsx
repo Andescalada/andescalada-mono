@@ -1,11 +1,14 @@
-import { Dimensions, StyleSheet, View } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import React, { ComponentProps, useCallback, useEffect, useState } from 'react';
 import {
   HandlerStateChangeEvent,
   TapGestureHandler,
   TapGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import { ReactNativeZoomableView as ZoomView } from '@openspacelabs/react-native-zoomable-view';
+import {
+  ReactNativeZoomableView as ZoomView,
+  ReactNativeZoomableViewProps,
+} from '@openspacelabs/react-native-zoomable-view';
 import Svg from 'react-native-svg';
 
 interface Coords {
@@ -18,16 +21,21 @@ interface Props {
   setValue: (_coords: Coords | undefined) => void;
   height?: number;
   width?: number;
+  imageUri: string | undefined | null;
+  zoomProps?: ReactNativeZoomableViewProps;
 }
 
-const { width: initialScreenWidth } = Dimensions.get('window');
+const { width: initialScreenWidth, height: screenHeight } =
+  Dimensions.get('window');
 
 const RouteCanvas: React.FC<Props> = ({
   children,
   value,
   setValue,
-  height = 400,
+  height = screenHeight,
   width = initialScreenWidth,
+  imageUri,
+  zoomProps,
 }) => {
   const [tappedCoords, setTapCoords] = useState<Coords | undefined>(value);
   const onGestureHandler = useCallback(
@@ -43,15 +51,22 @@ const RouteCanvas: React.FC<Props> = ({
 
   return (
     <TapGestureHandler onHandlerStateChange={onGestureHandler}>
-      <View style={styles.frame}>
+      <View style={{ height: screenHeight }}>
         <ZoomView
           maxZoom={30}
-          zoomEnabled={false}
+          bindToBorders={false}
           contentWidth={width}
           contentHeight={height}
           minZoom={1}
           style={styles.routeContainer}
+          {...zoomProps}
         >
+          {imageUri && (
+            <Image
+              source={{ uri: imageUri }}
+              style={{ height, width, position: 'absolute' }}
+            />
+          )}
           <Svg height={height} width={width}>
             {children}
           </Svg>
@@ -68,5 +83,5 @@ const styles = StyleSheet.create({
     height: 400,
     overflow: 'hidden',
   },
-  routeContainer: { backgroundColor: '#FFF' },
+  routeContainer: { zIndex: 1000 },
 });

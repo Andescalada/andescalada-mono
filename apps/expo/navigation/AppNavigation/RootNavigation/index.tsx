@@ -8,7 +8,8 @@ import { transformer, trpc } from '@utils/trpc';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Constants from 'expo-constants';
-import ClimbsStackNavigation from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation';
+import ClimbsStackNavigation from '@features/climbs/Navigation';
+import RouteManagerStackNavigation from '@features/routesManager/Navigation';
 import { FC } from 'react';
 
 const { manifest } = Constants;
@@ -46,6 +47,10 @@ const Navigator: FC<Props> = ({ accessToken }) => {
           <Stack.Screen
             name={RootNavigationRoutes.Climbs}
             component={ClimbsStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.RouteManager}
+            component={RouteManagerStackNavigation}
           />
         </Stack.Navigator>
       </QueryClientProvider>

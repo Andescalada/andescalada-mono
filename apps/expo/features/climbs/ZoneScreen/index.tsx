@@ -10,7 +10,7 @@ import useRefresh from '@hooks/useRefresh';
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
+} from '@features/climbs/Navigation/types';
 import { FC } from 'react';
 import { Button, FlatList } from 'react-native';
 

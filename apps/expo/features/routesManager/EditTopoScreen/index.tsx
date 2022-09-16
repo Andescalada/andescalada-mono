@@ -1,21 +1,32 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { Text, View, Image } from 'react-native';
+import React, { FC, useEffect, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
-import { Button } from '@andescalada/ui';
+import { Box, Button, Screen } from '@andescalada/ui';
 
 import RouteCanvas from './RouteCanvas';
 import RoutePath from './RoutePath';
 import useRoutes from './useRoutes';
+import {
+  ClimbsNavigationRoutes,
+  ClimbsNavigationScreenProps,
+} from '@features/climbs/Navigation/types';
+import { trpc } from '@andescalada/utils/trpc';
 
-const EditTopoScreenTemplate = () => {
-  const { state, methods } = useRoutes({});
+interface Props {}
+
+const EditTopoScreen: FC<Props> = ({ route: navRoute }) => {
+  const { wallId } = navRoute.params;
+
+  const { data } = trpc.useQuery(['walls.byId', wallId]);
+
+  const { state, methods } = useRoutes();
   const { create, finish, remove, savePath, setRoute } = methods;
   const { routes, route } = state;
 
   const [tappedCoords, setTapCoords] = useState<{ x: number; y: number }>();
   const [maxRouteLength, setMaxRouteLength] = useState<number>(1);
 
-  const [zoomEnable, setZoomEnable] = useState<boolean>(false);
+  const [allowToDraw, setAllowToDraw] = useState<boolean>(true);
 
   const [selectedRoute, setSelectedRoute] = useState<string>();
 
@@ -31,41 +42,55 @@ const EditTopoScreenTemplate = () => {
   };
 
   return (
-    <View style={styles.screen}>
-      <RouteCanvas value={tappedCoords} setValue={setTapCoords}>
-        {routes
-          .filter((r) => r.id === selectedRoute)
-          ?.map((r) => {
-            return (
-              <RoutePath
-                key={r.id}
-                ref={r.ref}
-                label={r.id}
-                finished={r.finished}
-                allowDrawing={!zoomEnable}
-                value={r.path}
-                setValue={(p) => savePath({ id: r.id, path: p })}
-                tappedCoords={tappedCoords}
-              />
-            );
-          })}
-        {routes
-          .filter((r) => r.id !== selectedRoute)
-          .map((r) => {
-            return (
-              <RoutePath
-                key={r.id}
-                label={r.id}
-                allowDrawing={false}
-                value={r.path}
-                finished={r.finished}
-              />
-            );
-          })}
-      </RouteCanvas>
+    <Screen>
+      <Box height={400} overflow="hidden">
+        <RouteCanvas
+          value={tappedCoords}
+          setValue={setTapCoords}
+          imageUri={data?.topos[0].image}
+        >
+          {routes
+            .filter((r) => r.id === selectedRoute)
+            ?.map((r) => {
+              return (
+                <RoutePath
+                  key={r.id}
+                  ref={r.ref}
+                  label={r.id}
+                  finished={r.finished}
+                  allowDrawing={allowToDraw}
+                  value={r.path}
+                  setValue={(p) => savePath({ id: r.id, path: p })}
+                  tappedCoords={tappedCoords}
+                />
+              );
+            })}
+          {routes
+            .filter((r) => r.id !== selectedRoute)
+            .map((r) => {
+              return (
+                <RoutePath
+                  key={r.id}
+                  label={r.id}
+                  allowDrawing={false}
+                  value={r.path}
+                  finished={r.finished}
+                />
+              );
+            })}
+        </RouteCanvas>
+      </Box>
 
-      <View style={{ flex: 1, paddingTop: 20 }}>
-        <Text>{`Zoom: ${zoomEnable}`}</Text>
+      <View
+        style={{
+          flex: 1,
+          paddingTop: 20,
+          position: 'absolute',
+          bottom: 100,
+          right: 60,
+        }}
+      >
+        <Text>{`Zoom: ${allowToDraw}`}</Text>
         <Text>{`Selected Route: ${selectedRoute}`}</Text>
         <Button
           onPress={() => {
@@ -110,9 +135,9 @@ const EditTopoScreenTemplate = () => {
         <Button
           variant="primary"
           onPress={() => {
-            setZoomEnable((prev) => !prev);
+            setAllowToDraw((prev) => !prev);
           }}
-          title={!zoomEnable ? 'Dejar de dibujar' : 'Dibujar'}
+          title={!allowToDraw ? 'Dejar de dibujar' : 'Dibujar'}
         />
         <FlatList
           data={routes}
@@ -134,12 +159,8 @@ const EditTopoScreenTemplate = () => {
           )}
         />
       </View>
-    </View>
+    </Screen>
   );
 };
 
-export default EditTopoScreenTemplate;
-
-const styles = StyleSheet.create({
-  screen: { flex: 1 },
-});
+export default EditTopoScreen;

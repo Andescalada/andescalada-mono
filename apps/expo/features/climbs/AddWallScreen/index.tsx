@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@navigation/AppNavigation/RootNavigation/ClimbsNavigation/types';
+} from '@features/climbs/Navigation/types';
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddWall>;
 
