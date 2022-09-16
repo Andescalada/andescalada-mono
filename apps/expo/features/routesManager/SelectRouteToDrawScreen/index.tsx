@@ -1,22 +1,24 @@
 import { Box, Pressable, Screen, Text } from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
 import {
-  RouteManagerNavigationRoutes,
-  RouteManagerScreenProps,
+  RoutesManagerNavigationRoutes,
+  RoutesManagerScreenProps,
 } from '@features/routesManager/Navigation/types';
 import { FC } from 'react';
 import { FlatList } from 'react-native';
 
 type Props =
-  RouteManagerScreenProps<RouteManagerNavigationRoutes.SelectRouteToDraw>;
+  RoutesManagerScreenProps<RoutesManagerNavigationRoutes.SelectRouteToDraw>;
 
-const SelectRouteToDrawScreen: FC<Props> = ({ route }) => {
+const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
+
   const { data } = trpc.useQuery(['walls.byId', wallId]);
+  console.log(data?.routes);
   return (
     <Screen padding="m">
       <Text variant="h3">Selecciona una ruta</Text>
-      <Box>
+      <Box flex={1}>
         <FlatList
           data={data?.routes}
           contentContainerStyle={{ flex: 1 }}
@@ -25,14 +27,20 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route }) => {
               <Text variant={'h3'}>Sin rutas</Text>
             </Box>
           )}
-          renderItem={({ item }) => (
+          renderItem={({ item: { name, position, id } }) => (
             <Pressable
               backgroundColor="listItemBackground"
               alignItems="stretch"
               padding="m"
               marginVertical={'s'}
+              onPress={() => {
+                navigation.navigate(RoutesManagerNavigationRoutes.DrawRoute, {
+                  route: { id, position },
+                  wallId,
+                });
+              }}
             >
-              <Text variant="p1R">{`${item.position} - ${item.name}`}</Text>
+              <Text variant="p1R">{`${position} - ${name}`}</Text>
             </Pressable>
           )}
         />

@@ -1,19 +1,24 @@
+import DrawRoute from '@features/routesManager/DrawRoute';
 import SelectRouteToDrawScreen from '@features/routesManager/SelectRouteToDrawScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import {
-  RouteManagerNavigationRoutes,
-  RouteManagerNavigationParamList,
+  RoutesManagerNavigationRoutes,
+  RoutesManagerNavigationParamList,
 } from './types';
 
-const Stack = createStackNavigator<RouteManagerNavigationParamList>();
+const Stack = createStackNavigator<RoutesManagerNavigationParamList>();
 
 const Navigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name={RouteManagerNavigationRoutes.SelectRouteToDraw}
+        name={RoutesManagerNavigationRoutes.SelectRouteToDraw}
         component={SelectRouteToDrawScreen}
+      />
+      <Stack.Screen
+        name={RoutesManagerNavigationRoutes.DrawRoute}
+        component={DrawRoute}
       />
     </Stack.Navigator>
   );

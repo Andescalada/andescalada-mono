@@ -1,7 +1,7 @@
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ClimbsNavigationNavigationParamList } from '@features/climbs/Navigation/types';
-import { RouteManagerNavigationParamList } from '@features/routesManager/Navigation/types';
+import { RoutesManagerNavigationParamList } from '@features/routesManager/Navigation/types';
 
 export enum RootNavigationRoutes {
   Climbs = 'ClimbsStack',
@@ -10,7 +10,7 @@ export enum RootNavigationRoutes {
 
 export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.Climbs]: NavigatorScreenParams<ClimbsNavigationNavigationParamList>;
-  [RootNavigationRoutes.RouteManager]: NavigatorScreenParams<RouteManagerNavigationParamList>;
+  [RootNavigationRoutes.RouteManager]: NavigatorScreenParams<RoutesManagerNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =

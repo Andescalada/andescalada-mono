@@ -3,9 +3,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Box, Button, Screen } from '@andescalada/ui';
 
-import RouteCanvas from './RouteCanvas';
-import RoutePath from './RoutePath';
-import useRoutes from './useRoutes';
+import { RouteCanvas, RoutePath, useRoutes } from '@andescalada/climbs-drawer';
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,

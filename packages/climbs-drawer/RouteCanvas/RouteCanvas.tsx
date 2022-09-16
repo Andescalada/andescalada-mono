@@ -1,5 +1,5 @@
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import React, { ComponentProps, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   HandlerStateChangeEvent,
   TapGestureHandler,

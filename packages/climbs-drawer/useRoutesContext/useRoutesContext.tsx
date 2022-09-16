@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
-import omit from '@utils/omit';
+import omit from '@andescalada/utils/omit';
 
-import { RoutesReturnTypes } from './useRoutes';
+import { RoutesReturnTypes } from '@andescalada/climbs-drawer/useRoutes/useRoutes';
 
 const RoutesContext = createContext<RoutesReturnTypes | null>(null);
 

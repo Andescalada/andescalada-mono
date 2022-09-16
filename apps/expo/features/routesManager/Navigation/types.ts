@@ -2,30 +2,31 @@ import type { Route, Wall } from '@prisma/client';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-export enum RouteManagerNavigationRoutes {
+export enum RoutesManagerNavigationRoutes {
   SelectRouteToDraw = 'SelectRouteToDraw',
   DrawRoute = 'DrawRoute',
 }
 
-export type RouteManagerNavigationParamList = {
-  [RouteManagerNavigationRoutes.SelectRouteToDraw]: {
+export type RoutesManagerNavigationParamList = {
+  [RoutesManagerNavigationRoutes.SelectRouteToDraw]: {
     wallId: Wall['id'];
   };
-  [RouteManagerNavigationRoutes.DrawRoute]: {
+  [RoutesManagerNavigationRoutes.DrawRoute]: {
     route: { id: Route['id']; position: Route['position'] };
+    wallId: Wall['id'];
   };
 };
 
-export type RouteManagerRouteProps<T extends RouteManagerNavigationRoutes> =
-  RouteProp<RouteManagerNavigationParamList, T>;
+export type RoutesManagerRouteProps<T extends RoutesManagerNavigationRoutes> =
+  RouteProp<RoutesManagerNavigationParamList, T>;
 
-export type RouteManagerNavigationProps<
-  T extends RouteManagerNavigationRoutes,
-> = StackNavigationProp<RouteManagerNavigationParamList, T>;
+export type RoutesManagerNavigationProps<
+  T extends RoutesManagerNavigationRoutes,
+> = StackNavigationProp<RoutesManagerNavigationParamList, T>;
 
-export interface RouteManagerScreenProps<
-  T extends RouteManagerNavigationRoutes,
+export interface RoutesManagerScreenProps<
+  T extends RoutesManagerNavigationRoutes,
 > {
-  navigation: RouteManagerNavigationProps<T>;
-  route: RouteManagerRouteProps<T>;
+  navigation: RoutesManagerNavigationProps<T>;
+  route: RoutesManagerRouteProps<T>;
 }

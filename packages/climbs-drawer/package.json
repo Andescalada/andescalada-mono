@@ -1,0 +1,16 @@
+{
+  "name": "@andescalada/climbs-drawer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {},
+  "license": "MIT",
+  "dependencies": {
+    "@andescalada/ui": "*"
+  },
+  "peerDependencies": {
+    "@shopify/restyle": "*"
+  },
+  "devDependencies": {
+    "@shopify/restyle": "*"
+  }
+}
