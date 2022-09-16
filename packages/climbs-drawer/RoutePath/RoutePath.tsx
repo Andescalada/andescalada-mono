@@ -12,6 +12,7 @@ interface Props {
   label?: number | string;
   disableDrawing?: boolean;
   finished?: boolean;
+  routeColor?: string;
   tappedCoords?:
     | {
         x: number;
@@ -45,6 +46,7 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
     value,
     setValue,
     disableDrawing = false,
+    routeColor = 'red',
     tappedCoords,
     finished,
     label = '?',
@@ -138,7 +140,12 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
 
   return (
     <>
-      <Polyline points={stringPath} fill="none" stroke="red" strokeWidth={2} />
+      <Polyline
+        points={stringPath}
+        fill="none"
+        stroke={routeColor}
+        strokeWidth={2}
+      />
       {start && (
         <G id="start">
           <G>
@@ -147,7 +154,7 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
               cy={start.y}
               r="10"
               fill="white"
-              stroke="red"
+              stroke={routeColor}
               strokeWidth={2}
             />
             <Text
@@ -171,7 +178,7 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
               cy={end.y}
               r="10"
               fill="white"
-              stroke="red"
+              stroke={routeColor}
               strokeWidth={2}
             />
             <Path
@@ -179,7 +186,7 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
               strokeWidth={48}
               strokeLinejoin="round"
               strokeLinecap="round"
-              stroke="red"
+              stroke={routeColor}
               scale={0.037}
               x={end.x - 9.5}
               y={end.y - 9.5}

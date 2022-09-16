@@ -27,6 +27,7 @@ export const toposRouter = t.router({
         name: z.string().optional(),
         image: z.string().optional(),
         topoId: z.string().optional(),
+        routePathId: z.string().optional(),
       }),
     )
     .mutation(({ ctx, input }) =>

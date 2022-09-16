@@ -49,13 +49,28 @@ export const routesRouter = t.router({
         routeId: z.string(),
         path: z.string(),
         topoId: z.string(),
+        routePathId: z.string().optional(),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.routePath.create({
-        data: {
-          ...input,
-        },
-      }),
-    ),
+    .mutation(async ({ ctx, input }) => {
+      if (input.routePathId) {
+        const path = await ctx.prisma.routePath.findUnique({
+          where: { id: input.routePathId },
+        });
+        if (path) {
+          return ctx.prisma.routePath.update({
+            where: { id: input.routePathId },
+            data: { path: input.path },
+          });
+        }
+      } else {
+        return ctx.prisma.routePath.create({
+          data: {
+            topoId: input.topoId,
+            routeId: input.routeId,
+            path: input.path,
+          },
+        });
+      }
+    }),
 });

@@ -19,6 +19,7 @@ const variants = {
 const darkBaseTheme = {
   colors: {
     primary: pallete.brand.primaryB,
+    drawingRoute: pallete.brand.primaryA,
     text: pallete.grayscale[100],
     textContrast: pallete.grayscale.black,
     listItemBackground: pallete.grayscale[600],

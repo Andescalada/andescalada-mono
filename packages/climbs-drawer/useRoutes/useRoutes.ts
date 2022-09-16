@@ -39,6 +39,7 @@ interface CreateRoute {
   type: typeof Actions.CreateRoute;
   id: Id;
   label?: Label;
+  path?: Path;
 }
 
 interface RemoveRoute {
@@ -98,8 +99,8 @@ const reducer = (state: State, action: ActionTypes) => {
             id: action.id,
             label: action.label,
             ref: createRef<RouteRef>(),
-            finished: false,
-            path: undefined,
+            finished: !!action.path,
+            path: action.path,
           },
         ],
       };
@@ -141,8 +142,16 @@ const useRoutes = ({
     dispatch({ type: Actions.FinishRoute, finished, id });
   };
 
-  const create = ({ id, label }: { id: Id; label: Label }) => {
-    dispatch({ type: Actions.CreateRoute, id, label });
+  const create = ({
+    id,
+    label,
+    path,
+  }: {
+    id: Id;
+    label: Label;
+    path?: Path;
+  }) => {
+    dispatch({ type: Actions.CreateRoute, id, label, path });
   };
 
   const remove = ({ id }: { id: Id }) => {

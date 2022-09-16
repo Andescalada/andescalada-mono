@@ -1,18 +1,61 @@
 import { RouteCanvas, RoutePath, useRoutes } from '@andescalada/climbs-drawer';
-import { Box, Button, Screen } from '@andescalada/ui';
+import { Box, Button, Screen, Theme } from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from '@features/routesManager/Navigation/types';
+import type { RoutePath as RoutePathType } from '@prisma/client';
+import { useTheme } from '@shopify/restyle';
 import { FC, useState } from 'react';
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
 
+interface RP extends RoutePathType {
+  route: {
+    id: string;
+    position: number;
+  };
+}
+
 const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
+  const theme = useTheme<Theme>();
   const { wallId, route: routeParams, topoId } = navRoute.params;
   const { data } = trpc.useQuery(['walls.byId', wallId]);
-  const { data: topo } = trpc.useQuery(['topos.byId', topoId]);
+  const [otherRoutes, setOtherRoutes] = useState<RP[]>();
+  const [selectedRoutePathId, setSelectedRoutePathId] = useState<
+    string | undefined
+  >();
+  trpc.useQuery(['topos.byId', topoId], {
+    onSettled(topo) {
+      const existingRoutesPath = topo?.RoutePath;
+      if (existingRoutesPath) {
+        const selectedRoute = existingRoutesPath.find(
+          (r) => r.route.id === routeParams.id,
+        );
+        if (selectedRoute) {
+          create({
+            id: routeParams.id,
+            label: routeParams.position.toString(),
+            path: selectedRoute.path,
+          });
+          setSelectedRoutePathId(selectedRoute.id);
+        } else {
+          create({
+            id: routeParams.id,
+            label: routeParams.position.toString(),
+          });
+        }
+      }
+      const filteredTopos = topo?.RoutePath.filter(
+        (r) => r.route.id !== routeParams.id,
+      );
+
+      setOtherRoutes(filteredTopos);
+      setRoute({ id: routeParams.id });
+    },
+  });
+
   const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.useMutation(['routes.addPath']);
   const [tappedCoords, setTapCoords] = useState<{ x: number; y: number }>();
@@ -20,11 +63,6 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   const { state, methods } = useRoutes();
   const { create, finish, savePath, setRoute } = methods;
   const { route } = state;
-
-  const createRoute = () => {
-    create({ id: routeParams.id, label: routeParams.position.toString() });
-    setRoute({ id: routeParams.id });
-  };
 
   const onFinishOrSave = () => {
     if (!canSave) {
@@ -40,6 +78,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
           path: route?.path,
           routeId: route.id,
           topoId: data.topos[0].id,
+          routePathId: selectedRoutePathId,
         },
         {
           onSuccess: () => {
@@ -52,7 +91,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   };
 
   return (
-    <Screen onLayout={createRoute}>
+    <Screen>
       <RouteCanvas
         value={tappedCoords}
         setValue={setTapCoords}
@@ -65,11 +104,12 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
             ref={route.ref}
             label={route.label}
             value={route.path}
+            routeColor={theme.colors.drawingRoute}
             setValue={(p) => savePath({ id: route.id, path: p })}
             tappedCoords={tappedCoords}
           />
         )}
-        {topo?.RoutePath.map((route) => (
+        {otherRoutes?.map((route) => (
           <RoutePath
             disableDrawing
             key={route.id}
