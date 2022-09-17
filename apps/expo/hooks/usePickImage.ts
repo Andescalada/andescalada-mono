@@ -37,10 +37,13 @@ const usePickImage = () => {
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         presentationStyle: UIImagePickerPresentationStyle.FULL_SCREEN,
+        base64: true,
       });
       if (result.cancelled === true) {
         return;
       }
+
+      console.log(result);
 
       const base64Img = `data:image/jpg;base64,${result.base64}`;
 

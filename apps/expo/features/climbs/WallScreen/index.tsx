@@ -26,10 +26,12 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 const WallScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
   const utils = trpc.useContext();
-  const { data, refetch, isFetching } = trpc.useQuery([
-    'walls.byId',
-    route.params.wallId,
-  ]);
+  const {
+    data,
+    refetch,
+    isFetching,
+    isLoading: isLoadingWall,
+  } = trpc.useQuery(['walls.byId', route.params.wallId]);
   const refresh = useRefresh(refetch, isFetching);
 
   const mainTopo = data?.topos[0];
@@ -38,22 +40,36 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
 
   const { uploadImage } = useUploadImage();
 
-  const { mutateAsync } = trpc.useMutation(['topos.add']);
+  const { mutate } = trpc.useMutation(['topos.add']);
 
   const [isLoading, setIsLading] = useState(false);
   const onUpload = async () => {
     if (!selectedImage) return;
     setIsLading(true);
-    const topoImg = await uploadImage(selectedImage?.base64Img);
-    await mutateAsync(
-      { wallId, image: topoImg },
+    const img = await uploadImage(selectedImage?.base64Img);
+    mutate(
+      {
+        main: true,
+        wallId,
+        image: {
+          assetId: img.asset_id,
+          format: img.format,
+          height: img.height,
+          width: img.width,
+          publicId: img.public_id,
+          storageService: 'Cloudinary',
+          url: img.secure_url,
+          version: img.version,
+          bytes: img.bytes,
+        },
+      },
       {
         onSuccess: () => {
           utils.invalidateQueries(['walls.byId', wallId]);
+          setIsLading(false);
         },
       },
     );
-    setIsLading(false);
   };
 
   const { showActionSheetWithOptions } = useActionSheet();
@@ -61,22 +77,30 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   const rootNavigation = useRootNavigation();
 
   const onOptions = () => {
-    const options = ['Editar Topo', 'Agregar Ruta', 'Cancelar'];
+    const options = ['Agregar Ruta', 'Cancelar'];
+
     const cancelButtonIndex = 2;
     const actions = [
-      () =>
+      () => {
+        navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+          wallId,
+        });
+      },
+      () => {
+        return;
+      },
+    ];
+    if (data && data.topos.length > 0) {
+      actions.unshift(() =>
         rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
           screen: RoutesManagerNavigationRoutes.SelectRouteToDraw,
           params: {
             wallId,
           },
         }),
-      () => {
-        navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
-          wallId,
-        });
-      },
-    ];
+      );
+      options.unshift('Editar Topo');
+    }
     showActionSheetWithOptions(
       {
         options,
@@ -99,87 +123,94 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         <Text variant={'h3'}>{route.params.wallName}</Text>
         <SemanticButton variant="info" title="Opciones" onPress={onOptions} />
       </Box>
-      {!mainTopo && !selectedImage && (
-        <Pressable
-          flex={1 / 2}
-          borderColor="info"
-          borderWidth={2}
-          borderRadius={10}
-          borderStyle={'dashed'}
-          justifyContent="center"
-          alignItems={'center'}
-          marginVertical="s"
-          onPress={pickImage}
-        >
-          <Text variant={'p1R'}>Agregar topo</Text>
-        </Pressable>
-      )}
-      {selectedImage && (
-        <Pressable
-          flex={1 / 2}
-          borderColor="info"
-          borderWidth={2}
-          borderRadius={10}
-          borderStyle={'dashed'}
-          justifyContent="center"
-          alignItems={'center'}
-          marginVertical="s"
-          overflow="hidden"
-          position="relative"
-          onPress={onUpload}
-        >
-          <Box
-            position="absolute"
-            top={0}
-            bottom={0}
-            right={0}
-            left={0}
+      <Box flex={1 / 2}>
+        {isLoadingWall && (
+          <Box flex={1} justifyContent="center" alignItems="center">
+            <ActivityIndicator />
+          </Box>
+        )}
+        {!mainTopo && !selectedImage && !isLoadingWall && (
+          <Pressable
             flex={1}
-            zIndex={100}
+            borderColor="info"
+            borderWidth={2}
+            borderRadius={10}
+            borderStyle={'dashed'}
             justifyContent="center"
-            alignItems="center"
+            alignItems={'center'}
+            marginVertical="s"
+            onPress={pickImage}
+          >
+            <Text variant={'p1R'}>Agregar topo</Text>
+          </Pressable>
+        )}
+        {selectedImage && (
+          <Pressable
+            flex={1}
+            borderColor="info"
+            borderWidth={2}
+            borderRadius={10}
+            borderStyle={'dashed'}
+            justifyContent="center"
+            alignItems={'center'}
+            marginVertical="s"
+            overflow="hidden"
+            position="relative"
+            onPress={onUpload}
           >
             <Box
-              backgroundColor="textContrast"
-              alignItems="stretch"
-              paddingHorizontal="s"
+              position="absolute"
+              top={0}
+              bottom={0}
+              right={0}
+              left={0}
+              flex={1}
+              zIndex={100}
+              justifyContent="center"
+              alignItems="center"
             >
-              {isLoading ? (
-                <ActivityIndicator padding="s" />
-              ) : (
-                <Text variant="h2">Subir</Text>
-              )}
+              <Box
+                backgroundColor="textContrast"
+                alignItems="stretch"
+                paddingHorizontal="s"
+              >
+                {isLoading ? (
+                  <ActivityIndicator padding="s" />
+                ) : (
+                  <Text variant="h2">Subir</Text>
+                )}
+              </Box>
             </Box>
-          </Box>
-          <Image
-            style={{ flex: 1, width: '100%', height: 1000 }}
-            source={{ uri: selectedImage.localUri }}
-          />
-        </Pressable>
-      )}
-      {mainTopo?.image && (
-        <Pressable
-          flex={1 / 2}
-          borderRadius={10}
-          justifyContent="center"
-          alignItems={'center'}
-          marginVertical="s"
-          overflow="hidden"
-          onPress={() => {
-            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-              screen: RoutesManagerNavigationRoutes.TopoViewer,
-              params: {
-                topoId: mainTopo.id,
-              },
-            });
-          }}
-        >
-          <Image
-            style={{ flex: 1, width: '100%', height: 1000 }}
-            source={{ uri: mainTopo.image }}
-          />
-        </Pressable>
-      )}
+            <Image
+              style={{ flex: 1, width: '100%', height: 1000 }}
+              source={{ uri: selectedImage.localUri }}
+            />
+          </Pressable>
+        )}
+        {mainTopo?.image && (
+          <Pressable
+            flex={1}
+            borderRadius={10}
+            justifyContent="center"
+            alignItems={'center'}
+            marginVertical="s"
+            overflow="hidden"
+            onPress={() => {
+              rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+                screen: RoutesManagerNavigationRoutes.TopoViewer,
+                params: {
+                  topoId: mainTopo.id,
+                },
+              });
+            }}
+          >
+            <Image
+              style={{ flex: 1, width: '100%', height: 1000 }}
+              source={{ uri: mainTopo.image.url }}
+            />
+          </Pressable>
+        )}
+      </Box>
       <FlatList
         data={data?.routes}
         refreshControl={refresh}

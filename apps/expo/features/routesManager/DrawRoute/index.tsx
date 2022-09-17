@@ -95,7 +95,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
       <RouteCanvas
         value={tappedCoords}
         setValue={setTapCoords}
-        imageUri={data?.topos[0].image}
+        imageUri={data?.topos[0].image.url}
         zoomProps={{ zoomEnabled: false }}
       >
         {route && (

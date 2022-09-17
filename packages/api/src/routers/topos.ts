@@ -1,3 +1,4 @@
+import { imageParser } from '@andescalada/api/src/routers/images';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { t } from '../createRouter';
@@ -10,6 +11,7 @@ export const toposRouter = t.router({
         RoutePath: {
           include: { route: { select: { id: true, position: true } } },
         },
+        image: { select: { url: true, height: true, width: true } },
       },
     });
     if (!topo) {
@@ -25,16 +27,21 @@ export const toposRouter = t.router({
       z.object({
         wallId: z.string(),
         name: z.string().optional(),
-        image: z.string().optional(),
-        topoId: z.string().optional(),
-        routePathId: z.string().optional(),
+        main: z.boolean().optional(),
+        image: imageParser,
       }),
     )
     .mutation(({ ctx, input }) =>
       ctx.prisma.topo.create({
         data: {
-          wallId: input.wallId,
-          image: input.image,
+          main: input.main,
+          name: input.name,
+          Wall: { connect: { id: input.wallId } },
+          image: {
+            create: {
+              ...input.image,
+            },
+          },
         },
       }),
     ),

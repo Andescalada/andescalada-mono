@@ -10,13 +10,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  email     String   @unique
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  email        String   @unique
+  profilePhoto Image?   @relation(fields: [imageId], references: [id])
+  imageId      String?
 
   @@index([email])
+  @@index([imageId])
 }
 
 model Zone {
@@ -26,6 +29,7 @@ model Zone {
   updatedAt  DateTime   @updatedAt
   infoAccess InfoAccess @default(Public)
   sectors    Sector[]
+  photos     Image[]
 }
 
 enum InfoAccess {
@@ -72,9 +76,11 @@ model Topo {
   name      String?
   RoutePath RoutePath[]
   canvas    String?     @db.LongText
-  image     String?     @db.LongText
+  image     Image       @relation(fields: [imageId], references: [id])
+  imageId   String
 
   @@index([wallId])
+  @@index([imageId])
 }
 
 model Route {
@@ -116,4 +122,28 @@ model RoutePath {
 
   @@index([topoId])
   @@index([routeId])
+}
+
+model Image {
+  id             String         @id @default(uuid())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  height         Int
+  width          Int
+  url            String         @db.LongText
+  storageService StorageService
+  bytes          BigInt?
+  publicId       String?        @db.MediumText
+  version        BigInt?
+  assetId        String?        @db.MediumText
+  format         String?
+
+  Topo   Topo[]
+  User   User[]
+  Zone   Zone?   @relation(fields: [zoneId], references: [id])
+  zoneId String?
+}
+
+enum StorageService {
+  Cloudinary
 }

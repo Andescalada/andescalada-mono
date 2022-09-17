@@ -15,7 +15,7 @@ const TopoViewer: FC<Props> = ({ route: navRoute }) => {
   if (!data) return null;
   return (
     <Screen>
-      <RouteCanvas imageUri={data.image} zoomProps={{ zoomEnabled: true }}>
+      <RouteCanvas imageUri={data.image.url} zoomProps={{ zoomEnabled: true }}>
         {data.RoutePath.map((route) => (
           <RoutePath
             disableDrawing

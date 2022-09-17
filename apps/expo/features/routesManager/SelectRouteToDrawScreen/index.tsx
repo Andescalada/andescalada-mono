@@ -1,4 +1,10 @@
-import { Box, Pressable, Screen, Text } from '@andescalada/ui';
+import {
+  ActivityIndicator,
+  Box,
+  Pressable,
+  Screen,
+  Text,
+} from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
 import {
   RoutesManagerNavigationRoutes,
@@ -13,10 +19,17 @@ type Props =
 const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
 
-  const { data } = trpc.useQuery(['walls.byId', wallId]);
+  const { data, isLoading } = trpc.useQuery(['walls.byId', wallId]);
+
+  if (isLoading) {
+    return (
+      <Screen justifyContent="center" alignItems="center">
+        <ActivityIndicator />
+      </Screen>
+    );
+  }
 
   if (!data) return null;
-
   return (
     <Screen padding="m">
       <Text variant="h3">Selecciona una ruta</Text>
@@ -39,7 +52,7 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
                 navigation.navigate(RoutesManagerNavigationRoutes.DrawRoute, {
                   route: { id, position },
                   wallId,
-                  topoId: data?.topos[0].id,
+                  topoId: data?.topos[0]?.id,
                 });
               }}
             >
