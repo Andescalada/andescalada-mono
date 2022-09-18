@@ -41,6 +41,7 @@ const TextInput: FC<Props> = ({
       <OriginalTextInput
         variant={textVariant}
         color={color}
+        style={{ flex: 1 }}
         placeholderTextColor={theme.colors.filledTextInputVariantPlaceholder}
         {...props}
       />
