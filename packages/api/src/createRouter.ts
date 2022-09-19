@@ -1,11 +1,11 @@
-import * as trpc from '@trpc/server';
+import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { Context } from './createContext';
 
 /**
  * Helper function to create a router with context
  */
-export const t = trpc.initTRPC<{ ctx: Context }>()({
+export const t = initTRPC.context<Context>().create({
   /**
    * Add data transformers
    * @link https://trpc.io/docs/data-transformers
