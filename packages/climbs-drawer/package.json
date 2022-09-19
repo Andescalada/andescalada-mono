@@ -5,12 +5,14 @@
   "scripts": {},
   "license": "MIT",
   "dependencies": {
-    "@andescalada/ui": "*"
+    "@andescalada/ui": "*",
+    "react-native": "0.69.5"
   },
   "peerDependencies": {
     "@shopify/restyle": "*"
   },
   "devDependencies": {
-    "@shopify/restyle": "*"
+    "@shopify/restyle": "*",
+    "@types/react-native": "^0.70.2"
   }
 }

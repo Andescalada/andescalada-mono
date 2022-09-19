@@ -26,7 +26,9 @@ interface Props {
   accessToken: string;
 }
 
-const localhost = `http://${manifest?.debuggerHost?.split(':').shift()}:3000`;
+const localhost = __DEV__
+  ? `http://${manifest?.debuggerHost?.split(':').shift()}:3000`
+  : 'https://andescalada-mono-git-main-andescalada.vercel.app';
 
 // async headers() {
 //   return {
