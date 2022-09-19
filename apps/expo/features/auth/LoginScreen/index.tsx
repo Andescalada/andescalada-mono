@@ -1,4 +1,4 @@
-import { View, Text, Button } from 'react-native';
+import { Text, Button, Screen } from '@andescalada/ui';
 import React from 'react';
 import { useAppDispatch } from '@hooks/redux';
 import { loginAuth0 } from '@store/auth';
@@ -9,9 +9,9 @@ export default function LoginScreen() {
     dispatch(loginAuth0());
   };
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Bienvenido</Text>
-      <Button title="Iniciar Sesión" onPress={onLogin} />
-    </View>
+    <Screen alignItems="center" justifyContent="space-evenly">
+      <Text variant="h1">Bienvenido</Text>
+      <Button title="Iniciar Sesión" onPress={onLogin} variant="primary" />
+    </Screen>
   );
 }

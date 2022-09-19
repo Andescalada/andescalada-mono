@@ -17,10 +17,8 @@ import { Button, FlatList } from 'react-native';
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
-  const { data, refetch, isFetching, isLoading } = trpc.useQuery([
-    'zones.allSectors',
-    { zoneId: route.params.zoneId },
-  ]);
+  const { data, refetch, isFetching, isLoading } =
+    trpc.zones.allSectors.useQuery({ zoneId: route.params.zoneId });
   const refresh = useRefresh(refetch, isFetching);
   if (isLoading)
     return (
