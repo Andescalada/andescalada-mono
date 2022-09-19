@@ -1,4 +1,4 @@
-import { Box, Text, TextInput } from '@andescalada/ui';
+import { Box, Text, TextInput, SemanticButton } from '@andescalada/ui';
 import { FC, ReactNode, ComponentProps } from 'react';
 
 interface Props extends ComponentProps<typeof TextInput> {
@@ -32,14 +32,7 @@ const ScreenTitle: FC<Props> = ({
         }}
         {...props}
       />
-      <Button
-        title="Agregar"
-        onPress={() =>
-          navigation.navigate(ClimbsNavigationRoutes.AddZone, {
-            zoneId: route.params.zoneId,
-          })
-        }
-      />
+      <SemanticButton variant="info" title="Agregar" />
     </Box>
   );
 };
