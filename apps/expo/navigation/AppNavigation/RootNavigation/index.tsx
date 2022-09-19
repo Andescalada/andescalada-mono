@@ -5,6 +5,7 @@ import {
   RootNavigationNavigationParamList,
 } from '@navigation/AppNavigation/RootNavigation/types';
 import { trpc } from '@utils/trpc';
+import { httpBatchLink } from '@trpc/client';
 import { transformer } from '@andescalada/api/src/transformer';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -27,17 +28,27 @@ interface Props {
 
 const localhost = `http://${manifest?.debuggerHost?.split(':').shift()}:3000`;
 
+// async headers() {
+//   return {
+//     Authorization: `Bearer ${accessToken}`,
+//   };
+// },
+
 const Navigator: FC<Props> = ({ accessToken }) => {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
-      url: `${localhost}/api/trpc`,
+      links: [
+        httpBatchLink({
+          url: `${localhost}/api/trpc`,
 
-      async headers() {
-        return {
-          Authorization: `Bearer ${accessToken}`,
-        };
-      },
+          async headers() {
+            return {
+              Authorization: `Bearer ${accessToken}`,
+            };
+          },
+        }),
+      ],
       transformer,
     }),
   );
