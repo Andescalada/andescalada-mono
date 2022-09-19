@@ -6,8 +6,9 @@
   "license": "MIT",
   "scripts": {
     "db-up": "pscale connect andescalada develop --port 3309",
-    "dev:nextjs": "turbo run dev --filter=@zart/nextjs",
+    "dev:nextjs": "turbo run dev --filter=@andescalada/nextjs",
     "dev:expo": "turbo run dev --filter=expo-app",
+    "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev": "turbo run dev",
