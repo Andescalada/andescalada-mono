@@ -7,7 +7,7 @@
   "scripts": {
     "db-up": "pscale connect andescalada develop --port 3309",
     "db-migrate-dev": "yarn prisma migrate dev",
-    "dev:nextjs": "turbo run dev --filter=@andescalada/nextjs",
+    "dev:nextjs": "turbo run dev --filter=@zart/nextjs",
     "dev:expo": "turbo run dev --filter=expo-app",
     "lint": "eslint --ext \".js,.ts,.tsx\" --ignore-path .gitignore . && manypkg check",
     "lint-fix": "yarn lint --fix && manypkg fix",
