@@ -1,1 +1,1 @@
-export * from '@zart/react/trpc';
+export {}
