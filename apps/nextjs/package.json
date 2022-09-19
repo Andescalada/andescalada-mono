@@ -3,19 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "predev": "prisma generate",
     "dev": "next dev",
-    "migrate-dev": "prisma migrate dev",
-    "migrate": "prisma migrate deploy",
+    "build": "next build",
     "start": "next start",
-    "build:1-generate": "prisma generate",
-    "build:2-migrate": "prisma migrate deploy",
-    "build:3-build": "next build",
-    "build": "run-s build:* --print-label",
-    "studio": "prisma studio",
-    "test-dev": "start-server-and-test dev 3000 test",
-    "test-start": "start-server-and-test start 3000 test",
-    "test": "jest"
+    "lint": "next lint"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
