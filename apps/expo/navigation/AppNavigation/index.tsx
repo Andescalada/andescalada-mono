@@ -13,6 +13,8 @@ const Navigator = () => {
     dispatch(autoLoginAuth0());
   }, [dispatch]);
 
+  console.log({ isAuth, accessToken });
+
   return (
     <>
       {isAuth && accessToken ? (

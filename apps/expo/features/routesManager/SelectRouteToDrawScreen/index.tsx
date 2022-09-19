@@ -19,7 +19,7 @@ type Props =
 const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
 
-  const { data, isLoading } = trpc.useQuery(['walls.byId', wallId]);
+  const { data, isLoading } = trpc.walls.byId.useQuery(wallId);
 
   if (isLoading) {
     return (

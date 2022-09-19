@@ -32,16 +32,11 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const [editing, setEditing] = useState(false);
   const [cancel, setCancel] = useState(false);
   const utils = trpc.useContext();
-  const { data, refetch, isFetching, isLoading } = trpc.useQuery([
-    'sectors.allWalls',
-    { sectorId: route.params.sectorId },
-  ]);
-  const editSector = trpc.useMutation('sectors.edit', {
+  const { data, refetch, isFetching, isLoading } =
+    trpc.sectors.allWalls.useQuery({ sectorId: route.params.sectorId });
+  const editSector = trpc.sectors.edit.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries([
-        'zones.allSectors',
-        { zoneId: route.params.zoneId },
-      ]);
+      utils.zones.allSectors.invalidate({ zoneId: route.params.zoneId });
     },
   });
   const { control, handleSubmit } = useForm<Form>({

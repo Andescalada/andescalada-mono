@@ -4,9 +4,10 @@ import {
   RootNavigationRoutes,
   RootNavigationNavigationParamList,
 } from '@navigation/AppNavigation/RootNavigation/types';
-import { transformer, trpc } from '@utils/trpc';
+import { trpc } from '@utils/trpc';
+import { transformer } from '@andescalada/api/src/transformer';
 import { useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import ClimbsStackNavigation from '@features/climbs/Navigation';
 import RouteManagerStackNavigation from '@features/routesManager/Navigation';
