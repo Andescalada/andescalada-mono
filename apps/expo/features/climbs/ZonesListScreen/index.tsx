@@ -12,7 +12,7 @@ import {
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 
 const ZonesScreen = ({ navigation }: Props) => {
-  const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
+  const { data, refetch, isLoading, isFetching } = trpc.useQuery(['zones.all']);
   const refresh = useRefresh(refetch, isFetching);
   if (isLoading)
     return (

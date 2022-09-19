@@ -42,10 +42,10 @@ type Form = z.infer<typeof schema>;
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
   const utils = trpc.useContext();
-  const { mutate, isLoading } = trpc.routes.add.useMutation({
+  const { mutate, isLoading } = trpc.useMutation(['routes.add'], {
     onSuccess: () => {
       navigation.goBack();
-      utils.walls.byId.invalidate(route.params.wallId);
+      utils.invalidateQueries(['walls.byId', route.params.wallId]);
     },
   });
 

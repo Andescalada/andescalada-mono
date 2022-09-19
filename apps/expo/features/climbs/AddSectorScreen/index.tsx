@@ -27,10 +27,10 @@ type Form = z.infer<typeof schema>;
 const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId } = route.params;
   const utils = trpc.useContext();
-  const { mutate, isLoading } = trpc.sectors.add.useMutation({
+  const { mutate, isLoading } = trpc.useMutation(['sectors.add'], {
     onSuccess: () => {
       navigation.goBack();
-      utils.sectors.all.invalidate();
+      utils.invalidateQueries('sectors.all');
     },
   });
 

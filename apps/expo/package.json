@@ -11,19 +11,18 @@
   },
   "dependencies": {
     "@andescalada/api": "*",
-    "@andescalada/climbs-drawer": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
+    "@andescalada/climbs-drawer": "*",
+    "@prisma/client": "^3.8.1",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@hookform/resolvers": "^2.9.8",
     "@openspacelabs/react-native-zoomable-view": "^2.0.4",
-    "@prisma/client": "^3.8.1",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-navigation/native": "^6.0.12",
     "@react-navigation/stack": "^6.2.3",
     "@reduxjs/toolkit": "^1.8.5",
     "@shopify/restyle": "^2.1.0",
-    "@tanstack/react-query": "^4.3.9",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.2",
     "expo": "~46.0.9",
@@ -47,6 +46,7 @@
     "react-native-screens": "~3.15.0",
     "react-native-svg": "12.3.0",
     "react-native-web": "~0.18.7",
+    "react-query": "3.23.2",
     "react-redux": "^8.0.2",
     "zod": "^3.19.1"
   },
@@ -55,8 +55,8 @@
     "@types/jwt-decode": "^3.1.0",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.69.1",
-    "prisma": "^3.8.1",
-    "typescript": "~4.3.5"
+    "typescript": "~4.3.5",
+    "prisma": "^3.8.1"
   },
   "resolutions": {
     "@types/react": "17.0.43"

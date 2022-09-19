@@ -25,10 +25,8 @@ export const loginAuth0 = createAsyncThunk(
   'auth/loginAuth0',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      console.log('here');
       dispatch(setLoadingAuth(true));
       const { accessToken, decodedIdToken, refreshToken } = await login();
-      console.log({ accessToken, decodedIdToken, refreshToken });
       await AsyncStorage.setItem(Storage.ACCESS_TOKEN, accessToken);
       await AsyncStorage.setItem(Storage.REFRESH_TOKEN, refreshToken);
       await AsyncStorage.setItem(
@@ -38,7 +36,6 @@ export const loginAuth0 = createAsyncThunk(
       dispatch(setLoadingAuth(false));
       return { isAuth: true, accessToken };
     } catch (err) {
-      console.log(err);
       rejectWithValue(err);
       return { isAuth: false };
     }

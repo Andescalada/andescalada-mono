@@ -31,7 +31,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     refetch,
     isFetching,
     isLoading: isLoadingWall,
-  } = trpc.walls.byId.useQuery(route.params.wallId);
+  } = trpc.useQuery(['walls.byId', route.params.wallId]);
   const refresh = useRefresh(refetch, isFetching);
 
   const mainTopo = data?.topos[0];
@@ -40,7 +40,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
 
   const { uploadImage } = useUploadImage();
 
-  const { mutate } = trpc.topos.add.useMutation();
+  const { mutate } = trpc.useMutation(['topos.add']);
 
   const [isLoading, setIsLading] = useState(false);
   const onUpload = async () => {
@@ -65,7 +65,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
       },
       {
         onSuccess: () => {
-          utils.walls.byId.invalidate(wallId);
+          utils.invalidateQueries(['walls.byId', wallId]);
           setIsLading(false);
         },
       },

@@ -21,12 +21,12 @@ interface RP extends RoutePathType {
 const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   const theme = useTheme<Theme>();
   const { wallId, route: routeParams, topoId } = navRoute.params;
-  const { data } = trpc.walls.byId.useQuery(wallId);
+  const { data } = trpc.useQuery(['walls.byId', wallId]);
   const [otherRoutes, setOtherRoutes] = useState<RP[]>();
   const [selectedRoutePathId, setSelectedRoutePathId] = useState<
     string | undefined
   >();
-  trpc.topos.byId.useQuery(topoId, {
+  trpc.useQuery(['topos.byId', topoId], {
     onSettled(topo) {
       const existingRoutesPath = topo?.RoutePath;
       if (existingRoutesPath) {
@@ -57,7 +57,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   });
 
   const utils = trpc.useContext();
-  const { mutate, isLoading } = trpc.routes.addPath.useMutation();
+  const { mutate, isLoading } = trpc.useMutation(['routes.addPath']);
   const [tappedCoords, setTapCoords] = useState<{ x: number; y: number }>();
   const [canSave, setCanSave] = useState(false);
   const { state, methods } = useRoutes();
@@ -82,7 +82,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
         },
         {
           onSuccess: () => {
-            utils.topos.byId.invalidate(topoId);
+            utils.invalidateQueries(['topos.byId', topoId]);
             setTimeout(() => navigation.popToTop(), 500);
           },
         },
