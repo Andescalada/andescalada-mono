@@ -8,5 +8,6 @@ export { default as Pressable } from './Pressable/Pressable';
 export { default as TextInput } from './TextInput/TextInput';
 export { default as Button } from './Button/Button';
 export { default as SemanticButton } from './SemanticButton/SemanticButton';
+export {default as ListItem} from "./ListItem/ListItem"
 
 export type { Theme, Colors, BaseTheme } from './Theme/theme';

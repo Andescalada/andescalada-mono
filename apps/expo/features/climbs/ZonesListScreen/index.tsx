@@ -1,5 +1,11 @@
 import { FlatList } from 'react-native';
-import { Text, Screen, ActivityIndicator, Pressable } from '@andescalada/ui';
+import {
+  Text,
+  Screen,
+  ActivityIndicator,
+  Pressable,
+  ListItem,
+} from '@andescalada/ui';
 import React from 'react';
 import { trpc } from '@andescalada/utils/trpc';
 import useRefresh from '@hooks/useRefresh';
@@ -27,10 +33,7 @@ const ZonesScreen = ({ navigation }: Props) => {
         data={data}
         refreshControl={refresh}
         renderItem={({ item }) => (
-          <Pressable
-            backgroundColor="listItemBackground"
-            alignItems="stretch"
-            padding="m"
+          <ListItem
             marginVertical={'s'}
             onPress={() =>
               navigation.navigate(ClimbsNavigationRoutes.Zone, {
@@ -40,7 +43,7 @@ const ZonesScreen = ({ navigation }: Props) => {
             }
           >
             <Text variant="p1R">{item.name}</Text>
-          </Pressable>
+          </ListItem>
         )}
       />
     </Screen>
