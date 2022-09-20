@@ -11,7 +11,12 @@ export default function LoginScreen() {
   return (
     <Screen alignItems="center" justifyContent="space-evenly">
       <Text variant="h1">Bienvenido</Text>
-      <Button title="Iniciar Sesión" onPress={onLogin} variant="primary" />
+      <Button
+        title="Iniciar Sesión"
+        onPress={onLogin}
+        variant="primary"
+        paddingHorizontal="s"
+      />
     </Screen>
   );
 }

@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "andescalada-app",
+    "name": "Andescalada",
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/expoConfig/icon_ae.png",
+    "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/expoConfig/ae_splash_white.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#121212"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,12 +24,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/expoConfig/ae_splash_white.png",
+        "backgroundColor": "#121212"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/expoConfig/favicon.png"
     },
     "extra": {
       "eas": {

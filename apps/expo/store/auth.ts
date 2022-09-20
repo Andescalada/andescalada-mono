@@ -9,6 +9,7 @@ export interface AuthState {
   isAuth: boolean;
   loadingAuth: boolean;
   accessToken: undefined | string;
+  autoLoginCompleted: boolean
 }
 
 export interface AccessToken {
@@ -19,6 +20,7 @@ const initialState: AuthState = {
   loadingAuth: false,
   isAuth: false,
   accessToken: undefined,
+  autoLoginCompleted: false
 };
 
 export const loginAuth0 = createAsyncThunk(
@@ -34,9 +36,11 @@ export const loginAuth0 = createAsyncThunk(
         String(decodedIdToken),
       );
       dispatch(setLoadingAuth(false));
+      dispatch(setAutoLoginCompleted(true))
       return { isAuth: true, accessToken };
     } catch (err) {
       rejectWithValue(err);
+      dispatch(setAutoLoginCompleted(true))
       return { isAuth: false };
     }
   },
@@ -91,6 +95,9 @@ const authSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
     },
+    setAutoLoginCompleted: (state, action: PayloadAction<boolean>) => {
+      state.autoLoginCompleted = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loginAuth0.fulfilled, (state, action) => {
@@ -107,6 +114,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLoadingAuth, setIsAuth } = authSlice.actions;
+export const { setLoadingAuth, setIsAuth, setAutoLoginCompleted } = authSlice.actions;
 
 export default authSlice;

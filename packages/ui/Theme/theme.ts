@@ -27,6 +27,7 @@ const darkBaseTheme = {
     filledTextInputVariantPlaceholder: pallete.grayscale.black,
     selectedButtonGroup: pallete.brand.primaryA,
     buttonGroup: pallete.grayscale[600],
+    transitionScreen: pallete.grayscale.black,
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,
     ...pallete.semantic,
