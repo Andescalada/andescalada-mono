@@ -1,10 +1,6 @@
-import {
-  Text,
-  Pressable,
-  ActivityIndicator,
-  Theme,
-  Colors,
-} from '@andescalada/ui';
+import Pressable from '../Pressable/Pressable';
+import Text from '../Text/Text';
+import { Colors, Theme } from '../Theme/theme';
 import {
   composeRestyleFunctions,
   createVariant,
@@ -12,6 +8,7 @@ import {
   VariantProps,
 } from '@shopify/restyle';
 import { FC, ComponentProps } from 'react';
+import ActivityIndicator from '../ActivityIndicator/ActivityIndicator';
 
 type RestyleProps = ComponentProps<typeof Pressable> &
   Required<VariantProps<Theme, 'buttonVariants'>>;

@@ -1,4 +1,3 @@
-import { Text, Pressable, Theme, Colors } from '@andescalada/ui';
 import {
   composeRestyleFunctions,
   createVariant,
@@ -6,6 +5,9 @@ import {
   VariantProps,
 } from '@shopify/restyle';
 import { FC, ComponentProps } from 'react';
+import Pressable from '../Pressable/Pressable';
+import Text from '../Text/Text';
+import { Colors, Theme } from '../Theme/theme';
 
 type RestyleProps = ComponentProps<typeof Pressable> &
   Required<VariantProps<Theme, 'semanticButtonVariants'>>;
