@@ -4,10 +4,9 @@ import AuthNavigation from '@navigation/AppNavigation/AuthNavigation';
 import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-
+import { Screen } from '@andescalada/ui';
 import { autoLoginAuth0 } from '@store/auth';
 import fonts from '@assets/fonts';
-import { Screen } from '@andescalada/ui';
 
 SplashScreen.preventAutoHideAsync();
 

@@ -30,12 +30,6 @@ const localhost = __DEV__
   ? `http://${manifest?.debuggerHost?.split(':').shift()}:3000`
   : 'https://andescalada-mono-git-main-andescalada.vercel.app';
 
-// async headers() {
-//   return {
-//     Authorization: `Bearer ${accessToken}`,
-//   };
-// },
-
 const Navigator: FC<Props> = ({ accessToken }) => {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
