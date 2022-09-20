@@ -23,7 +23,6 @@
     "@react-navigation/stack": "^6.2.3",
     "@reduxjs/toolkit": "^1.8.5",
     "@shopify/restyle": "^2.1.0",
-    "@tanstack/react-query": "^4.3.9",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.2",
     "expo": "~46.0.9",
@@ -36,8 +35,6 @@
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
     "jwt-decode": "^3.1.2",
-    "react": "18.0.0",
-    "react-dom": "18.0.0",
     "react-hook-form": "^7.35.0",
     "react-native": "0.69.5",
     "react-native-dotenv": "^3.3.1",
@@ -47,8 +44,7 @@
     "react-native-screens": "~3.15.0",
     "react-native-svg": "12.3.0",
     "react-native-web": "~0.18.7",
-    "react-redux": "^8.0.2",
-    "zod": "^3.19.1"
+    "react-redux": "^8.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
