@@ -5,6 +5,7 @@ import {
   Text,
   ActivityIndicator,
   SemanticButton,
+  ListItem,
 } from '@andescalada/ui';
 import { trpc } from '@andescalada/utils/trpc';
 import usePickImage from '@hooks/usePickImage';
@@ -221,14 +222,9 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           </Box>
         )}
         renderItem={({ item }) => (
-          <Pressable
-            backgroundColor="listItemBackground"
-            alignItems="stretch"
-            padding="m"
-            marginVertical={'s'}
-          >
+          <ListItem marginVertical={'s'}>
             <Text variant="p1R">{`${item.position} - ${item.name}`}</Text>
-          </Pressable>
+          </ListItem>
         )}
       />
     </Screen>

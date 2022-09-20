@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Box,
+  ListItem,
   Pressable,
   Screen,
   Text,
@@ -54,10 +55,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
             </Box>
           )}
           renderItem={({ item }) => (
-            <Pressable
-              backgroundColor="listItemBackground"
-              alignItems="stretch"
-              padding="m"
+            <ListItem
               marginVertical={'s'}
               onPress={() =>
                 navigation.navigate(ClimbsNavigationRoutes.Sector, {
@@ -68,7 +66,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
               }
             >
               <Text variant="p1R">{item.name}</Text>
-            </Pressable>
+            </ListItem>
           )}
         />
       </Box>

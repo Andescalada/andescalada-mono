@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Box,
+  ListItem,
   Pressable,
   Screen,
   Text,
@@ -43,10 +44,7 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
             </Box>
           )}
           renderItem={({ item: { name, position, id } }) => (
-            <Pressable
-              backgroundColor="listItemBackground"
-              alignItems="stretch"
-              padding="m"
+            <ListItem
               marginVertical={'s'}
               onPress={() => {
                 navigation.navigate(RoutesManagerNavigationRoutes.DrawRoute, {
@@ -57,7 +55,7 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
               }}
             >
               <Text variant="p1R">{`${position} - ${name}`}</Text>
-            </Pressable>
+            </ListItem>
           )}
         />
       </Box>
