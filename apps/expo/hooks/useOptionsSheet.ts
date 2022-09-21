@@ -4,7 +4,10 @@ import {
 } from "@expo/react-native-action-sheet";
 import { useCallback, useMemo } from "react";
 
-type Options = Record<string, () => void>;
+type Options = Record<
+  string,
+  (() => void) | { action: () => void; hide: boolean }
+>;
 
 interface Args extends Omit<ActionSheetOptions, "options"> {
   withCancel?: boolean;
@@ -17,7 +20,10 @@ const useOptionsSheet = (
   const { showActionSheetWithOptions } = useActionSheet();
 
   const { options, actions } = useMemo(() => {
-    const o = Object.entries(optionsObject);
+    const o = Object.entries(optionsObject).filter((ops) => {
+      if (typeof ops[1] === "object" && ops[1].hide === true) return false;
+      return true;
+    });
     const cancelPosition =
       cancelButtonIndex !== undefined ? cancelButtonIndex : o.length + 1;
     if (withCancel) {
@@ -29,7 +35,12 @@ const useOptionsSheet = (
       ]);
     }
     const options = o.map((v) => v[0]);
-    const actions = o.map((v) => v[1]);
+    const actions = o.map((v) => {
+      if (typeof v[1] === "object") {
+        return v[1].action;
+      }
+      return v[1];
+    });
     return { options, actions };
   }, [cancelButtonIndex, optionsObject, withCancel]);
 

@@ -1,3 +1,4 @@
+import wall from "@andescalada/api/schemas/wall";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -65,5 +66,13 @@ export const wallsRouter = t.router({
           message: `No routes found for wall  with id '${input.wallId}'`,
         });
       return res.routes;
+    }),
+  edit: t.procedure
+    .input(wall.schema.merge(z.object({ wallId: z.string() })))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.wall.update({
+        where: { id: input.wallId },
+        data: { name: input.name },
+      });
     }),
 });

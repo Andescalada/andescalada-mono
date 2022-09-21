@@ -1,26 +1,35 @@
+import wall from "@andescalada/api/schemas/wall";
 import {
   ActivityIndicator,
   Box,
+  EditableTitle,
   ListItem,
   Pressable,
   Screen,
-  SemanticButton,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { useActionSheet } from "@expo/react-native-action-sheet";
+import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
+import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePickImage from "@hooks/usePickImage";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useUploadImage from "@hooks/useUploadImage";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useState } from "react";
-import { FlatList, Image } from "react-native";
+import { useForm } from "react-hook-form";
+import { Alert, FlatList, Image } from "react-native";
+import { z } from "zod";
+
+const { schema } = wall;
+
+type Form = z.infer<typeof schema>;
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
@@ -73,56 +82,61 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     );
   };
 
-  const { showActionSheetWithOptions } = useActionSheet();
-
+  const editWall = trpc.walls.edit.useMutation();
+  const methods = useForm<Form>();
+  const onSubmit = methods.handleSubmit(
+    (input) => {
+      if (methods.formState.isDirty)
+        editWall.mutate({
+          name: input.name,
+          wallId: route.params.wallId,
+        });
+      hProps.setEditing(false);
+    },
+    (error) => {
+      const errorMessage = error.name?.message || "Hubo un error";
+      Alert.alert(errorMessage);
+      methods.setValue("name", route.params.wallName);
+      hProps.setEditing(false);
+    },
+  );
+  const hProps = useHeaderOptionButton({ onSave: onSubmit });
   const rootNavigation = useRootNavigation();
 
-  const onOptions = () => {
-    const options = ["Agregar Ruta", "Cancelar"];
-
-    const cancelButtonIndex = 2;
-    const actions = [
-      () => {
-        navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
-          wallId,
-        });
-      },
-      () => {
-        return;
-      },
-    ];
-    if (data && data.topos.length > 0) {
-      actions.unshift(() =>
+  const onOptions = useOptionsSheet({
+    "Agregar Sector": () =>
+      navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+        wallId,
+      }),
+    "Editar Topo": {
+      action: () =>
         rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
           screen: RoutesManagerNavigationRoutes.SelectRouteToDraw,
           params: {
             wallId,
           },
         }),
-      );
-      options.unshift("Editar Topo");
-    }
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      (buttonIndex) => {
-        if (buttonIndex === undefined || buttonIndex === 2) return;
-        actions[buttonIndex]();
-      },
-    );
-  };
+      hide: !data || data.topos.length === 0,
+    },
+    "Cambiar Nombre": () => {
+      hProps.setEditing(true);
+    },
+  });
 
   return (
     <Screen padding={"m"}>
       <Box
         flexDirection="row"
         alignItems="center"
-        justifyContent="space-around"
+        justifyContent="space-between"
       >
-        <Text variant={"h3"}>{route.params.wallName}</Text>
-        <SemanticButton variant="info" title="Opciones" onPress={onOptions} />
+        <EditableTitle
+          title={route.params.wallName}
+          control={methods.control}
+          editable={hProps.editing}
+          name="name"
+        />
+        <HeaderOptionsButton {...hProps} onOptions={onOptions} />
       </Box>
       <Box flex={1 / 2}>
         {isLoadingWall && (
