@@ -3,7 +3,7 @@
     "name": "Andescalada",
     "slug": "andescalada-app",
     "scheme": "andescalada",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/expoConfig/icon_ae.png",
     "userInterfaceStyle": "dark",
@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.andescalada.app"
