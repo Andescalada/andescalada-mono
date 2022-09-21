@@ -1,10 +1,9 @@
-import { createStackNavigator } from '@react-navigation/stack';
-
+import LoginScreen from "@features/auth/LoginScreen";
 import {
   AuthNavigationNavigationParamList,
   AuthNavigationRoutes,
-} from '@navigation/AppNavigation/AuthNavigation/types';
-import LoginScreen from '@features/auth/LoginScreen';
+} from "@navigation/AppNavigation/AuthNavigation/types";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator<AuthNavigationNavigationParamList>();
 

@@ -1,8 +1,8 @@
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum AuthNavigationRoutes {
-  Login = 'Login',
+  Login = "Login",
 }
 
 export type AuthNavigationNavigationParamList = {

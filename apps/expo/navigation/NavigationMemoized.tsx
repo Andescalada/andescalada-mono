@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { InitialState, NavigationContainer } from '@react-navigation/native';
-import Constants from 'expo-constants';
-import * as SplashScreen from 'expo-splash-screen';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { InitialState, NavigationContainer } from "@react-navigation/native";
+import Constants from "expo-constants";
+import * as SplashScreen from "expo-splash-screen";
 import React, {
   ComponentProps,
   FC,
@@ -9,7 +9,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
 const NAVIGATION_STATE_KEY = `NAVIGATION_STATE_KEY-${
   Constants.manifest && Constants.manifest.sdkVersion

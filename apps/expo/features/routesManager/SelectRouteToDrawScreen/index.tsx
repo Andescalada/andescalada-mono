@@ -2,17 +2,16 @@ import {
   ActivityIndicator,
   Box,
   ListItem,
-  Pressable,
   Screen,
   Text,
-} from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
+} from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
-} from '@features/routesManager/Navigation/types';
-import { FC } from 'react';
-import { FlatList } from 'react-native';
+} from "@features/routesManager/Navigation/types";
+import { FC } from "react";
+import { FlatList } from "react-native";
 
 type Props =
   RoutesManagerScreenProps<RoutesManagerNavigationRoutes.SelectRouteToDraw>;
@@ -40,12 +39,12 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
           contentContainerStyle={{ flex: 1 }}
           ListEmptyComponent={() => (
             <Box flex={1} justifyContent="center" alignItems="center">
-              <Text variant={'h3'}>Sin rutas</Text>
+              <Text variant={"h3"}>Sin rutas</Text>
             </Box>
           )}
           renderItem={({ item: { name, position, id } }) => (
             <ListItem
-              marginVertical={'s'}
+              marginVertical={"s"}
               onPress={() => {
                 navigation.navigate(RoutesManagerNavigationRoutes.DrawRoute, {
                   route: { id, position },

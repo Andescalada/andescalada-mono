@@ -1,8 +1,7 @@
-import * as ImagePicker from 'expo-image-picker';
-import { UIImagePickerPresentationStyle } from 'expo-image-picker';
-
-import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import * as ImagePicker from "expo-image-picker";
+import { UIImagePickerPresentationStyle } from "expo-image-picker";
+import { useCallback, useState } from "react";
+import { Alert } from "react-native";
 
 export interface SelectedImage {
   localUri: string;
@@ -15,7 +14,7 @@ const usePickImage = () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
-      Alert.alert('Se require acceso a la librería de fotos');
+      Alert.alert("Se require acceso a la librería de fotos");
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -51,13 +50,13 @@ const usePickImage = () => {
     }
   }, []);
   const pickImage = useCallback(() => {
-    Alert.alert('Seleccionar imagen', '', [
-      { text: 'Tomar una foto', onPress: pickFromCamera },
-      { text: 'Seleccionar una foto', onPress: pickFromLibrary },
+    Alert.alert("Seleccionar imagen", "", [
+      { text: "Tomar una foto", onPress: pickFromCamera },
+      { text: "Seleccionar una foto", onPress: pickFromLibrary },
       {
-        text: 'Cancelar',
+        text: "Cancelar",
         onPress: () => setSelectedImage(undefined),
-        style: 'cancel',
+        style: "cancel",
       },
     ]);
   }, [pickFromCamera, pickFromLibrary]);

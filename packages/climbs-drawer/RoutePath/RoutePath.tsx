@@ -3,8 +3,8 @@ import React, {
   useEffect,
   useImperativeHandle,
   useState,
-} from 'react';
-import { Circle, G, Path, Polyline, Text } from 'react-native-svg';
+} from "react";
+import { Circle, G, Path, Polyline, Text } from "react-native-svg";
 
 interface Props {
   value?: string | undefined;
@@ -30,8 +30,8 @@ interface Ref {
 const stringToArrayPath = (path: string | undefined) => {
   if (!path) return [];
   const array = path
-    .split(' ')
-    .map((s) => s.split(','))
+    .split(" ")
+    .map((s) => s.split(","))
     .map((s) => s.map((j) => parseInt(j, 10)));
 
   return array;
@@ -46,10 +46,10 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
     value,
     setValue,
     disableDrawing = false,
-    routeColor = 'red',
+    routeColor = "red",
     tappedCoords,
     finished,
-    label = '?',
+    label = "?",
   },
   ref,
 ) => {

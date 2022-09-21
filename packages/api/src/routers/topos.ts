@@ -1,7 +1,8 @@
-import { imageParser } from '@andescalada/api/src/routers/images';
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { t } from '../createRouter';
+import { imageParser } from "@andescalada/api/src/routers/images";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import { t } from "../createRouter";
 
 export const toposRouter = t.router({
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -16,7 +17,7 @@ export const toposRouter = t.router({
     });
     if (!topo) {
       throw new TRPCError({
-        code: 'NOT_FOUND',
+        code: "NOT_FOUND",
         message: `No topo with id '${input}'`,
       });
     }

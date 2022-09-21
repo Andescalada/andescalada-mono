@@ -1,14 +1,15 @@
-import { createTheme } from '@shopify/restyle';
-import breakpoints from './breakpoints';
-import { pallete } from './pallete';
-import spacing from './spacing';
-import textVariants from './textVariants';
-import listItemVariants, {lisItemVariantsColors} from './listItemVariants';
-import textInputVariants from './textInputVariants';
+import { createTheme } from "@shopify/restyle";
+
+import breakpoints from "./breakpoints";
+import buttonVariants, { buttonVariantsColors } from "./buttonVariants";
+import listItemVariants, { lisItemVariantsColors } from "./listItemVariants";
+import { pallete } from "./pallete";
 import semanticButtonVariants, {
   semanticButtonVariantsColors,
-} from './semanticButtonVariants';
-import buttonVariants, { buttonVariantsColors } from './buttonVariants';
+} from "./semanticButtonVariants";
+import spacing from "./spacing";
+import textInputVariants from "./textInputVariants";
+import textVariants from "./textVariants";
 
 const variants = {
   textVariants,
@@ -42,5 +43,5 @@ const theme = createTheme({ ...darkBaseTheme, ...variants });
 
 export type Theme = typeof theme;
 export type BaseTheme = typeof darkBaseTheme;
-export type Colors = Partial<keyof Omit<Theme['colors'], 'defaults'>>;
+export type Colors = Partial<keyof Omit<Theme["colors"], "defaults">>;
 export default theme;

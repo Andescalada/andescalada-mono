@@ -1,26 +1,27 @@
-import Pressable from '../Pressable/Pressable';
-import Text from '../Text/Text';
-import { Colors, Theme } from '../Theme/theme';
 import {
   composeRestyleFunctions,
   createVariant,
   useRestyle,
   VariantProps,
-} from '@shopify/restyle';
-import { FC, ComponentProps } from 'react';
-import ActivityIndicator from '../ActivityIndicator/ActivityIndicator';
+} from "@shopify/restyle";
+import { ComponentProps, FC } from "react";
+
+import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
+import Pressable from "../Pressable/Pressable";
+import Text from "../Text/Text";
+import { Colors, Theme } from "../Theme/theme";
 
 type RestyleProps = ComponentProps<typeof Pressable> &
-  Required<VariantProps<Theme, 'buttonVariants'>>;
+  Required<VariantProps<Theme, "buttonVariants">>;
 
 interface Props extends RestyleProps {
   isLoading?: boolean;
   title: string;
-  titleVariant?: ComponentProps<typeof Text>['variant'];
-  titleProps?: Omit<ComponentProps<typeof Text>, 'variant'>;
+  titleVariant?: ComponentProps<typeof Text>["variant"];
+  titleProps?: Omit<ComponentProps<typeof Text>, "variant">;
 }
 
-const buttonVariant = createVariant({ themeKey: 'buttonVariants' });
+const buttonVariant = createVariant({ themeKey: "buttonVariants" });
 const restyleFunction = composeRestyleFunctions<Theme, RestyleProps>([
   buttonVariant,
 ]);
@@ -28,7 +29,7 @@ const restyleFunction = composeRestyleFunctions<Theme, RestyleProps>([
 const Button: FC<Props> = ({
   isLoading,
   title,
-  titleVariant = 'h3',
+  titleVariant = "h3",
   titleProps,
   variant,
   ...rest

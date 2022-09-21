@@ -1,10 +1,11 @@
-import React, { FC, ReactNode, useMemo } from 'react';
 import {
-  ThemeProvider as RestyleProvider,
   KnownBaseTheme,
-} from '@shopify/restyle';
-import deepmerge from 'deepmerge';
-import baseTheme, { Theme as BaseTheme } from './theme';
+  ThemeProvider as RestyleProvider,
+} from "@shopify/restyle";
+import deepmerge from "deepmerge";
+import React, { FC, ReactNode, useMemo } from "react";
+
+import baseTheme, { Theme as BaseTheme } from "./theme";
 
 export type Theme<T> = BaseTheme & T;
 

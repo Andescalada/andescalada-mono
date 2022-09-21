@@ -1,12 +1,12 @@
-import DrawRoute from '@features/routesManager/DrawRoute';
-import SelectRouteToDrawScreen from '@features/routesManager/SelectRouteToDrawScreen';
-import TopoViewer from '@features/routesManager/TopoViewer';
-import { createStackNavigator } from '@react-navigation/stack';
+import DrawRoute from "@features/routesManager/DrawRoute";
+import SelectRouteToDrawScreen from "@features/routesManager/SelectRouteToDrawScreen";
+import TopoViewer from "@features/routesManager/TopoViewer";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import {
-  RoutesManagerNavigationRoutes,
   RoutesManagerNavigationParamList,
-} from './types';
+  RoutesManagerNavigationRoutes,
+} from "./types";
 
 const Stack = createStackNavigator<RoutesManagerNavigationParamList>();
 

@@ -1,6 +1,7 @@
-import { StorageService } from '@prisma/client';
-import { z } from 'zod';
-import { t } from '../createRouter';
+import { StorageService } from "@prisma/client";
+import { z } from "zod";
+
+import { t } from "../createRouter";
 
 export const imageParser = z.object({
   name: z.string().optional(),

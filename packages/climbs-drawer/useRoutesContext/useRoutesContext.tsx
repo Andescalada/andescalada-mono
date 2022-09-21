@@ -1,7 +1,6 @@
-import React, { createContext, useContext } from 'react';
-import omit from '@andescalada/utils/omit';
-
-import { RoutesReturnTypes } from '@andescalada/climbs-drawer/useRoutes/useRoutes';
+import { RoutesReturnTypes } from "@andescalada/climbs-drawer/useRoutes/useRoutes";
+import omit from "@andescalada/utils/omit";
+import React, { createContext, useContext } from "react";
 
 const RoutesContext = createContext<RoutesReturnTypes | null>(null);
 
@@ -15,7 +14,7 @@ interface RoutesProviderProps extends RoutesReturnTypes {
 export const RoutesProvider = (props: RoutesProviderProps) => {
   return (
     <RoutesContext.Provider
-      value={omit(props, 'children') as unknown as RoutesReturnTypes}
+      value={omit(props, "children") as unknown as RoutesReturnTypes}
     >
       {props.children}
     </RoutesContext.Provider>

@@ -10,7 +10,8 @@
     "dev": "yarn env:development && npx expo r -c ",
     "prod": "yarn env:production && expo start --no-dev",
     "env:production": "cp .env.production .env",
-    "env:development": "cp .env.development .env"
+    "env:development": "cp .env.development .env",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json"
   },
   "dependencies": {
     "@andescalada/api": "*",

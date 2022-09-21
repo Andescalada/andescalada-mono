@@ -1,26 +1,26 @@
 import {
+  ActivityIndicator,
   Box,
+  ListItem,
   Pressable,
   Screen,
-  Text,
-  ActivityIndicator,
   SemanticButton,
-  ListItem,
-} from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
-import usePickImage from '@hooks/usePickImage';
-import useRefresh from '@hooks/useRefresh';
-import useUploadImage from '@hooks/useUploadImage';
-import { FC, useState } from 'react';
-import { FlatList, Image } from 'react-native';
+  Text,
+} from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@features/climbs/Navigation/types';
-import { useActionSheet } from '@expo/react-native-action-sheet';
-import { RoutesManagerNavigationRoutes } from '@features/routesManager/Navigation/types';
-import { RootNavigationRoutes } from '@navigation/AppNavigation/RootNavigation/types';
-import useRootNavigation from '@hooks/useRootNavigation';
+} from "@features/climbs/Navigation/types";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import usePickImage from "@hooks/usePickImage";
+import useRefresh from "@hooks/useRefresh";
+import useRootNavigation from "@hooks/useRootNavigation";
+import useUploadImage from "@hooks/useUploadImage";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { FC, useState } from "react";
+import { FlatList, Image } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
@@ -58,7 +58,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           height: img.height,
           width: img.width,
           publicId: img.public_id,
-          storageService: 'Cloudinary',
+          storageService: "Cloudinary",
           url: img.secure_url,
           version: img.version,
           bytes: img.bytes,
@@ -78,7 +78,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   const rootNavigation = useRootNavigation();
 
   const onOptions = () => {
-    const options = ['Agregar Ruta', 'Cancelar'];
+    const options = ["Agregar Ruta", "Cancelar"];
 
     const cancelButtonIndex = 2;
     const actions = [
@@ -100,7 +100,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           },
         }),
       );
-      options.unshift('Editar Topo');
+      options.unshift("Editar Topo");
     }
     showActionSheetWithOptions(
       {
@@ -115,13 +115,13 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   };
 
   return (
-    <Screen padding={'m'}>
+    <Screen padding={"m"}>
       <Box
         flexDirection="row"
         alignItems="center"
         justifyContent="space-around"
       >
-        <Text variant={'h3'}>{route.params.wallName}</Text>
+        <Text variant={"h3"}>{route.params.wallName}</Text>
         <SemanticButton variant="info" title="Opciones" onPress={onOptions} />
       </Box>
       <Box flex={1 / 2}>
@@ -136,13 +136,13 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             borderColor="info"
             borderWidth={2}
             borderRadius={10}
-            borderStyle={'dashed'}
+            borderStyle={"dashed"}
             justifyContent="center"
-            alignItems={'center'}
+            alignItems={"center"}
             marginVertical="s"
             onPress={pickImage}
           >
-            <Text variant={'p1R'}>Agregar topo</Text>
+            <Text variant={"p1R"}>Agregar topo</Text>
           </Pressable>
         )}
         {selectedImage && (
@@ -151,9 +151,9 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             borderColor="info"
             borderWidth={2}
             borderRadius={10}
-            borderStyle={'dashed'}
+            borderStyle={"dashed"}
             justifyContent="center"
-            alignItems={'center'}
+            alignItems={"center"}
             marginVertical="s"
             overflow="hidden"
             position="relative"
@@ -183,7 +183,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
               </Box>
             </Box>
             <Image
-              style={{ flex: 1, width: '100%', height: 1000 }}
+              style={{ flex: 1, width: "100%", height: 1000 }}
               source={{ uri: selectedImage.localUri }}
             />
           </Pressable>
@@ -193,7 +193,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             flex={1}
             borderRadius={10}
             justifyContent="center"
-            alignItems={'center'}
+            alignItems={"center"}
             marginVertical="s"
             overflow="hidden"
             onPress={() => {
@@ -206,7 +206,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             }}
           >
             <Image
-              style={{ flex: 1, width: '100%', height: 1000 }}
+              style={{ flex: 1, width: "100%", height: 1000 }}
               source={{ uri: mainTopo.image.url }}
             />
           </Pressable>
@@ -218,11 +218,11 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         contentContainerStyle={{ flex: 1 }}
         ListEmptyComponent={() => (
           <Box flex={1} justifyContent="center" alignItems="center">
-            <Text variant={'h3'}>Sin rutas</Text>
+            <Text variant={"h3"}>Sin rutas</Text>
           </Box>
         )}
         renderItem={({ item }) => (
-          <ListItem marginVertical={'s'}>
+          <ListItem marginVertical={"s"}>
             <Text variant="p1R">{`${item.position} - ${item.name}`}</Text>
           </ListItem>
         )}

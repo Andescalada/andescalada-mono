@@ -1,15 +1,15 @@
-import { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_URL } from '@env';
-import axios from 'axios';
-import { useCallback, useState } from 'react';
-import type { SelectedImage } from '@hooks/usePickImage';
-import { Alert } from 'react-native';
+import { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_URL } from "@env";
+import type { SelectedImage } from "@hooks/usePickImage";
+import axios from "axios";
+import { useCallback, useState } from "react";
+import { Alert } from "react-native";
 
 const useUploadImage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [uri, setUri] = useState<string>();
 
-  const uploadImage = useCallback(async (data: SelectedImage['base64Img']) => {
+  const uploadImage = useCallback(async (data: SelectedImage["base64Img"]) => {
     try {
       setIsLoading(true);
       setIsSuccess(false);
@@ -21,7 +21,7 @@ const useUploadImage = () => {
         { file: data, upload_preset: CLOUDINARY_UPLOAD_PRESET },
         {
           headers: {
-            'content-type': 'application/json',
+            "content-type": "application/json",
           },
         },
       );
@@ -30,7 +30,7 @@ const useUploadImage = () => {
       setIsLoading(false);
       return res.data;
     } catch (err) {
-      Alert.alert('Hubo un error al subir la imagen');
+      Alert.alert("Hubo un error al subir la imagen");
       setIsLoading(false);
       throw new Error(err as string);
     }
@@ -44,7 +44,7 @@ interface CloudinaryResponse {
   access_mode: string;
   asset_id: string;
   bytes: number;
-  created_at: '2022-09-15T17:46:30Z';
+  created_at: "2022-09-15T17:46:30Z";
   eager: [
     {
       bytes: number;
@@ -57,7 +57,7 @@ interface CloudinaryResponse {
     },
   ];
   etag: string;
-  folder: 'andescalada-app-dev';
+  folder: "andescalada-app-dev";
   format: string;
   height: number;
   placeholder: false;

@@ -1,6 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
-import authSlice from '@store/auth';
+import { configureStore } from "@reduxjs/toolkit";
+import authSlice from "@store/auth";
+import { combineReducers } from "redux";
 
 const stores = {
   [authSlice.name]: authSlice.reducer,

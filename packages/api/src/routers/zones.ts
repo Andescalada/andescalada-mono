@@ -1,6 +1,7 @@
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { t } from '../createRouter';
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import { t } from "../createRouter";
 
 export const zonesRouter = t.router({
   all: t.procedure.query(({ ctx }) => ctx.prisma.zone.findMany()),
@@ -8,7 +9,7 @@ export const zonesRouter = t.router({
     const zone = await ctx.prisma.zone.findUnique({ where: { id: input } });
     if (!zone) {
       throw new TRPCError({
-        code: 'NOT_FOUND',
+        code: "NOT_FOUND",
         message: `No zone with id '${input}'`,
       });
     }
@@ -23,7 +24,7 @@ export const zonesRouter = t.router({
       });
       if (!res) {
         throw new TRPCError({
-          code: 'NOT_FOUND',
+          code: "NOT_FOUND",
           message: `No sectors found for the zone with id '${input.zoneId}'`,
         });
       }

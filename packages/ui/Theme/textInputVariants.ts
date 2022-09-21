@@ -1,4 +1,4 @@
-import { createBoxVariant } from '@andescalada/ui/Theme/createVariants';
+import { createBoxVariant } from "@andescalada/ui/Theme/createVariants";
 
 const textFieldVariants = createBoxVariant({
   // outlined: {
@@ -17,7 +17,7 @@ const textFieldVariants = createBoxVariant({
   disableAsText: {},
   filled: {
     borderRadius: 4,
-    backgroundColor: 'filledTextInputVariantBackground',
+    backgroundColor: "filledTextInputVariantBackground",
   },
 });
 

@@ -1,12 +1,13 @@
 /**
  * This file contains the root router of your tRPC-backend
  */
-import { routesRouter } from '@andescalada/api/src/routers/routes';
-import { sectorsRouter } from '@andescalada/api/src/routers/sectors';
-import { toposRouter } from '@andescalada/api/src/routers/topos';
-import { wallsRouter } from '@andescalada/api/src/routers/walls';
-import { t } from '../createRouter';
-import { zonesRouter } from './zones';
+import { routesRouter } from "@andescalada/api/src/routers/routes";
+import { sectorsRouter } from "@andescalada/api/src/routers/sectors";
+import { toposRouter } from "@andescalada/api/src/routers/topos";
+import { wallsRouter } from "@andescalada/api/src/routers/walls";
+
+import { t } from "../createRouter";
+import { zonesRouter } from "./zones";
 
 /**
  * Create your application's root router

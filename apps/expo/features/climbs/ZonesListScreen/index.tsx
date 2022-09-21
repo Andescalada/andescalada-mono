@@ -1,19 +1,12 @@
-import { FlatList } from 'react-native';
-import {
-  Text,
-  Screen,
-  ActivityIndicator,
-  Pressable,
-  ListItem,
-} from '@andescalada/ui';
-import React from 'react';
-import { trpc } from '@andescalada/utils/trpc';
-import useRefresh from '@hooks/useRefresh';
-
+import { ActivityIndicator, ListItem, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@features/climbs/Navigation/types';
+} from "@features/climbs/Navigation/types";
+import useRefresh from "@hooks/useRefresh";
+import React from "react";
+import { FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 
@@ -23,7 +16,7 @@ const ZonesScreen = ({ navigation }: Props) => {
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
-        <ActivityIndicator size={'large'} />
+        <ActivityIndicator size={"large"} />
       </Screen>
     );
   return (
@@ -34,7 +27,7 @@ const ZonesScreen = ({ navigation }: Props) => {
         refreshControl={refresh}
         renderItem={({ item }) => (
           <ListItem
-            marginVertical={'s'}
+            marginVertical={"s"}
             onPress={() =>
               navigation.navigate(ClimbsNavigationRoutes.Zone, {
                 zoneId: item.id,

@@ -1,12 +1,12 @@
-import { useEffect, useCallback } from 'react';
-import RootNavigation from '@navigation/AppNavigation/RootNavigation';
-import AuthNavigation from '@navigation/AppNavigation/AuthNavigation';
-import { useAppDispatch, useAppSelector } from '@hooks/redux';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { Screen } from '@andescalada/ui';
-import { autoLoginAuth0 } from '@store/auth';
-import fonts from '@assets/fonts';
+import { Screen } from "@andescalada/ui";
+import fonts from "@assets/fonts";
+import { useAppDispatch, useAppSelector } from "@hooks/redux";
+import AuthNavigation from "@navigation/AppNavigation/AuthNavigation";
+import RootNavigation from "@navigation/AppNavigation/RootNavigation";
+import { autoLoginAuth0 } from "@store/auth";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { useCallback, useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,7 +20,7 @@ const Navigator = () => {
     if (fontsLoaded && autoLoginCompleted) {
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [autoLoginCompleted, fontsLoaded]);
 
   useEffect(() => {
     onLayoutRootView();

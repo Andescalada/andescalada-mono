@@ -1,18 +1,16 @@
-import { createStackNavigator } from '@react-navigation/stack';
-
+import { transformer } from "@andescalada/api/src/transformer";
+import ClimbsStackNavigation from "@features/climbs/Navigation";
+import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import {
-  RootNavigationRoutes,
   RootNavigationNavigationParamList,
-} from '@navigation/AppNavigation/RootNavigation/types';
-import { trpc } from '@utils/trpc';
-import { httpBatchLink } from '@trpc/client';
-import { transformer } from '@andescalada/api/src/transformer';
-import { useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Constants from 'expo-constants';
-import ClimbsStackNavigation from '@features/climbs/Navigation';
-import RouteManagerStackNavigation from '@features/routesManager/Navigation';
-import { FC } from 'react';
+  RootNavigationRoutes,
+} from "@navigation/AppNavigation/RootNavigation/types";
+import { createStackNavigator } from "@react-navigation/stack";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
+import { trpc } from "@utils/trpc";
+import Constants from "expo-constants";
+import { FC, useState } from "react";
 
 const { manifest } = Constants;
 
@@ -27,8 +25,8 @@ interface Props {
 }
 
 const localhost = __DEV__
-  ? `http://${manifest?.debuggerHost?.split(':').shift()}:3000`
-  : 'https://andescalada-mono-git-main-andescalada.vercel.app';
+  ? `http://${manifest?.debuggerHost?.split(":").shift()}:3000`
+  : "https://andescalada-mono-git-main-andescalada.vercel.app";
 
 const Navigator: FC<Props> = ({ accessToken }) => {
   const [queryClient] = useState(() => new QueryClient());

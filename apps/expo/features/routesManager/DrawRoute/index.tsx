@@ -1,13 +1,13 @@
-import { RouteCanvas, RoutePath, useRoutes } from '@andescalada/climbs-drawer';
-import { Box, Button, Screen, Theme } from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
+import { RouteCanvas, RoutePath, useRoutes } from "@andescalada/climbs-drawer";
+import { Box, Button, Screen, Theme } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
-} from '@features/routesManager/Navigation/types';
-import type { RoutePath as RoutePathType } from '@prisma/client';
-import { useTheme } from '@shopify/restyle';
-import { FC, useState } from 'react';
+} from "@features/routesManager/Navigation/types";
+import type { RoutePath as RoutePathType } from "@prisma/client";
+import { useTheme } from "@shopify/restyle";
+import { FC, useState } from "react";
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
 
@@ -121,16 +121,16 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
       </RouteCanvas>
       <Box position="absolute" top={50} right={0} margin="l">
         <Button
-          title={canSave ? 'Guardar' : 'Finalizar'}
-          variant={canSave ? 'success' : 'error'}
-          titleVariant={'p1R'}
+          title={canSave ? "Guardar" : "Finalizar"}
+          variant={canSave ? "success" : "error"}
+          titleVariant={"p1R"}
           isLoading={isLoading}
           onPress={onFinishOrSave}
         />
         <Button
           title="Deshacer"
-          variant={'transparent'}
-          titleVariant={'p1R'}
+          variant={"transparent"}
+          titleVariant={"p1R"}
           marginTop="s"
           onPress={() => {
             route?.ref.current?.undo();
@@ -141,8 +141,8 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
         />
         <Button
           title="Borrar"
-          variant={'transparent'}
-          titleVariant={'p1R'}
+          variant={"transparent"}
+          titleVariant={"p1R"}
           marginTop="s"
           onPress={() => {
             route?.ref.current?.reset();

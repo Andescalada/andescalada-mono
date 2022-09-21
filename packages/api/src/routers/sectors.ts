@@ -1,11 +1,12 @@
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { t } from '../createRouter';
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import { t } from "../createRouter";
 
 export const sectorsRouter = t.router({
   all: t.procedure.query(({ ctx }) => {
     const sectors = ctx.prisma.sector.findMany({
-      orderBy: { position: 'asc' },
+      orderBy: { position: "asc" },
     });
     return sectors;
   }),
@@ -13,7 +14,7 @@ export const sectorsRouter = t.router({
     const sector = await ctx.prisma.sector.findUnique({ where: { id: input } });
     if (!sector) {
       throw new TRPCError({
-        code: 'NOT_FOUND',
+        code: "NOT_FOUND",
         message: `No sector with id '${input}'`,
       });
     }
@@ -54,7 +55,7 @@ export const sectorsRouter = t.router({
       });
       if (!res)
         throw new TRPCError({
-          code: 'NOT_FOUND',
+          code: "NOT_FOUND",
           message: `No walls found for sector  with id '${input.sectorId}'`,
         });
       return res.walls;

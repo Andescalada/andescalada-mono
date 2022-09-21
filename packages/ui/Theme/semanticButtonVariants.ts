@@ -1,5 +1,5 @@
-import { pallete } from './pallete';
-import { createBoxVariant } from './createVariants';
+import { createBoxVariant } from "./createVariants";
+import { pallete } from "./pallete";
 
 export const semanticButtonVariantsColors = {
   errorSemanticButtonText: pallete.semantic.error,
@@ -8,14 +8,14 @@ export const semanticButtonVariantsColors = {
 
 const semanticButtonVariants = createBoxVariant({
   error: {
-    padding: 'xs',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: "xs",
+    justifyContent: "center",
+    alignItems: "center",
   },
   info: {
-    padding: 'xs',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: "xs",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

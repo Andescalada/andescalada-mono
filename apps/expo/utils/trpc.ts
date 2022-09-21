@@ -1,1 +1,1 @@
-export * from '@andescalada/utils/trpc';
+export * from "@andescalada/utils/trpc";

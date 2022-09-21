@@ -1,13 +1,14 @@
-import { PrismaClient } from '@prisma/client';
-import * as trpc from '@trpc/server';
-import * as trpcNext from '@trpc/server/adapters/next';
-import verifyAndDecodeToken from './utils/verifyAndDecodeToken';
+import { PrismaClient } from "@prisma/client";
+import * as trpc from "@trpc/server";
+import * as trpcNext from "@trpc/server/adapters/next";
+
+import verifyAndDecodeToken from "./utils/verifyAndDecodeToken";
 
 export const prisma = new PrismaClient({
   log:
-    process.env.NODE_ENV === 'development'
-      ? ['query', 'error', 'warn']
-      : ['error'],
+    process.env.NODE_ENV === "development"
+      ? ["query", "error", "warn"]
+      : ["error"],
 });
 
 /**
@@ -25,7 +26,7 @@ export const createContext = async ({
       where: { email: user?.email },
     });
     if (!userExist && user?.email) {
-      await prisma.user.create({ data: { email: user.email, name: '' } });
+      await prisma.user.create({ data: { email: user.email, name: "" } });
     }
   }
 

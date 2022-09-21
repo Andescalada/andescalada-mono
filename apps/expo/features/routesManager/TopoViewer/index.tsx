@@ -1,11 +1,11 @@
-import { RouteCanvas, RoutePath } from '@andescalada/climbs-drawer';
-import { Screen } from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
+import { RouteCanvas, RoutePath } from "@andescalada/climbs-drawer";
+import { Screen } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
-} from '@features/routesManager/Navigation/types';
-import { FC } from 'react';
+} from "@features/routesManager/Navigation/types";
+import { FC } from "react";
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.TopoViewer>;
 

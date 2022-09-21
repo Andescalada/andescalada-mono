@@ -6,35 +6,34 @@ import {
   SemanticButton,
   Text,
   TextInput,
-} from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
-
-import { createContext, FC, useContext } from 'react';
-import { Alert } from 'react-native';
-import { z } from 'zod';
-import { useForm, useController } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@features/climbs/Navigation/types';
+} from "@features/climbs/Navigation/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createContext, FC, useContext } from "react";
+import { useController, useForm } from "react-hook-form";
+import { Alert } from "react-native";
+import { z } from "zod";
 
 const RouteKind = {
-  Sport: 'Sport',
-  Trad: 'Trad',
-  Boulder: 'Boulder',
-  Mixed: 'Mixed',
-  Ice: 'Ice',
+  Sport: "Sport",
+  Trad: "Trad",
+  Boulder: "Boulder",
+  Mixed: "Mixed",
+  Ice: "Ice",
 };
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddRoute>;
 
 const schema = z.object({
   routeName: z
-    .string({ required_error: 'Requerido' })
-    .min(3, 'Nombre muy corto')
-    .max(50, 'Nombre muy largo'),
-  kind: z.nativeEnum(RouteKind, { required_error: 'Requerido' }),
+    .string({ required_error: "Requerido" })
+    .min(3, "Nombre muy corto")
+    .max(50, "Nombre muy largo"),
+  kind: z.nativeEnum(RouteKind, { required_error: "Requerido" }),
 });
 
 type Form = z.infer<typeof schema>;
@@ -62,18 +61,18 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     fieldState: { error },
   } = useController({
     control,
-    name: 'routeName',
+    name: "routeName",
   });
   const {
     field: { onChange: onKindChange, value: kindValue },
     fieldState: { error: kindError },
   } = useController({
     control,
-    name: 'kind',
+    name: "kind",
   });
 
   const onSubmit = handleSubmit((input) => {
-    mutate({ wallId, name: input.routeName, kind: 'Boulder' });
+    mutate({ wallId, name: input.routeName, kind: "Boulder" });
   });
 
   const onCancel = () => {
@@ -81,14 +80,14 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       navigation.goBack();
       return;
     }
-    Alert.alert('¿Seguro que quieres cancelar?', '', [
+    Alert.alert("¿Seguro que quieres cancelar?", "", [
       {
-        text: 'Si',
+        text: "Si",
         onPress: () => navigation.goBack(),
       },
       {
-        text: 'Cancelar',
-        style: 'cancel',
+        text: "Cancelar",
+        style: "cancel",
       },
     ]);
   };
@@ -96,8 +95,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   return (
     <Screen padding="m">
       <Text variant="h1">Agregar ruta</Text>
-      <Box marginTop={'m'}>
-        <Text variant={'p1R'} marginBottom={'s'}>
+      <Box marginTop={"m"}>
+        <Text variant={"p1R"} marginBottom={"s"}>
           Nombre de la ruta
         </Text>
         <TextInput
@@ -106,11 +105,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           containerProps={{ height: 50 }}
           textAlignVertical="center"
         />
-        <Text marginTop={'xs'} color="error">
+        <Text marginTop={"xs"} color="error">
           {error?.message}
         </Text>
       </Box>
-      <Text variant={'p1R'} marginBottom={'s'}>
+      <Text variant={"p1R"} marginBottom={"s"}>
         Tipo de ruta
       </Text>
       <ButtonGroup value={kindValue} onChange={onKindChange}>
@@ -121,7 +120,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           <ButtonItem value={RouteKind.Mixed} label="Mixta" />
           <ButtonItem value={RouteKind.Ice} label="Hielo" />
         </Box>
-        <Text marginTop={'xs'} color="error">
+        <Text marginTop={"xs"} color="error">
           {kindError?.message}
         </Text>
       </ButtonGroup>
@@ -157,11 +156,11 @@ const ButtonItem: FC<ButtonItemProps> = ({ label, value: localValue }) => {
         onChange(localValue);
       }}
       padding="m"
-      margin={'s'}
-      backgroundColor={isSelected ? 'selectedButtonGroup' : 'buttonGroup'}
+      margin={"s"}
+      backgroundColor={isSelected ? "selectedButtonGroup" : "buttonGroup"}
       borderRadius={100}
     >
-      <Text variant={isSelected ? 'p2B' : 'p2R'}>{label}</Text>
+      <Text variant={isSelected ? "p2B" : "p2R"}>{label}</Text>
     </Pressable>
   );
 };

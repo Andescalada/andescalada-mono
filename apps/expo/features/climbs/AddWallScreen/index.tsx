@@ -5,26 +5,25 @@ import {
   SemanticButton,
   Text,
   TextInput,
-} from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
-
-import { FC } from 'react';
-import { Alert } from 'react-native';
-import { z } from 'zod';
-import { useForm, useController } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@features/climbs/Navigation/types';
+} from "@features/climbs/Navigation/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FC } from "react";
+import { useController, useForm } from "react-hook-form";
+import { Alert } from "react-native";
+import { z } from "zod";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddWall>;
 
 const schema = z.object({
   wallName: z
-    .string({ required_error: 'Requerido' })
-    .min(3, 'Nombre muy corto')
-    .max(50, 'Nombre muy largo'),
+    .string({ required_error: "Requerido" })
+    .min(3, "Nombre muy corto")
+    .max(50, "Nombre muy largo"),
 });
 
 type Form = z.infer<typeof schema>;
@@ -48,7 +47,7 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     fieldState: { error, isDirty },
   } = useController({
     control,
-    name: 'wallName',
+    name: "wallName",
   });
 
   const onSubmit = handleSubmit((input) => {
@@ -60,14 +59,14 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
       navigation.goBack();
       return;
     }
-    Alert.alert('¿Seguro que quieres cancelar?', '', [
+    Alert.alert("¿Seguro que quieres cancelar?", "", [
       {
-        text: 'Si',
+        text: "Si",
         onPress: () => navigation.goBack(),
       },
       {
-        text: 'Cancelar',
-        style: 'cancel',
+        text: "Cancelar",
+        style: "cancel",
       },
     ]);
   };
@@ -75,12 +74,12 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   return (
     <Screen padding="m">
       <Text variant="h1">Agregar pared</Text>
-      <Box marginTop={'m'}>
-        <Text variant={'p1R'} marginBottom={'s'}>
+      <Box marginTop={"m"}>
+        <Text variant={"p1R"} marginBottom={"s"}>
           Nombre de la pared
         </Text>
         <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
-        <Text marginTop={'xs'} color="error">
+        <Text marginTop={"xs"} color="error">
           {error?.message}
         </Text>
       </Box>

@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {},
   "license": "MIT",
-
   "dependencies": {
     "@andescalada/ui": "*",
     "@trpc/react": "^10.0.0-proxy-beta.0",

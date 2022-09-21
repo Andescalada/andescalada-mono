@@ -1,12 +1,12 @@
-import * as Random from 'expo-random';
-import * as Crypto from 'expo-crypto';
-import jwtDecode from 'jwt-decode';
-import { Buffer } from 'buffer';
+import { Buffer } from "buffer";
+import * as Crypto from "expo-crypto";
+import * as Random from "expo-random";
+import jwtDecode from "jwt-decode";
 
 export const URLEncode = (str: string): string =>
-  str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  str.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 export const base64encode = (data: ArrayBuffer): string =>
-  Buffer.from(data).toString('base64');
+  Buffer.from(data).toString("base64");
 export const getRandomBytes = (bytesCount: number): Uint8Array =>
   Random.getRandomBytes(bytesCount);
 export const sha256 = async (str: string): Promise<string> =>
@@ -29,7 +29,7 @@ export const toQueryString = (params: StringMap): string =>
       ([key, value]) =>
         `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
     )
-    .join('&')}`;
+    .join("&")}`;
 
 export const isExpired = (expTime: number): boolean =>
   Math.round(+new Date() / 1000) > expTime;

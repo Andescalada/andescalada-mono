@@ -1,5 +1,5 @@
-import { pallete } from './pallete';
-import { createBoxVariant } from './createVariants';
+import { createBoxVariant } from "./createVariants";
+import { pallete } from "./pallete";
 
 export const buttonVariantsColors = {
   primaryButtonBackground: pallete.shadesB[100],
@@ -14,32 +14,32 @@ export const buttonVariantsColors = {
 
 const buttonVariants = createBoxVariant({
   primary: {
-    backgroundColor: 'primaryButtonBackground',
+    backgroundColor: "primaryButtonBackground",
     borderRadius: 5,
-    padding: 'xs',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: "xs",
+    justifyContent: "center",
+    alignItems: "center",
   },
   transparent: {
-    backgroundColor: 'transparentButtonBackground',
+    backgroundColor: "transparentButtonBackground",
     borderRadius: 100,
-    padding: 'm',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: "m",
+    justifyContent: "center",
+    alignItems: "center",
   },
   success: {
-    backgroundColor: 'successButtonBackground',
+    backgroundColor: "successButtonBackground",
     borderRadius: 100,
-    padding: 'm',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: "m",
+    justifyContent: "center",
+    alignItems: "center",
   },
   error: {
-    backgroundColor: 'errorButtonBackground',
+    backgroundColor: "errorButtonBackground",
     borderRadius: 100,
-    padding: 'm',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: "m",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

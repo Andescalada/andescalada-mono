@@ -1,7 +1,8 @@
-import { RouteKind } from '@prisma/client';
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { t } from '../createRouter';
+import { RouteKind } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import { t } from "../createRouter";
 
 export const Kind = RouteKind;
 
@@ -12,7 +13,7 @@ export const routesRouter = t.router({
     });
     if (!route) {
       throw new TRPCError({
-        code: 'NOT_FOUND',
+        code: "NOT_FOUND",
         message: `No route with id '${input}'`,
       });
     }

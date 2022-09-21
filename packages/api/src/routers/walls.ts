@@ -1,11 +1,12 @@
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { t } from '../createRouter';
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import { t } from "../createRouter";
 
 export const wallsRouter = t.router({
   all: t.procedure.query(({ ctx }) =>
     ctx.prisma.wall.findMany({
-      orderBy: { position: 'asc' },
+      orderBy: { position: "asc" },
     }),
   ),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -13,7 +14,7 @@ export const wallsRouter = t.router({
       where: { id: input },
       include: {
         routes: {
-          orderBy: { position: 'asc' },
+          orderBy: { position: "asc" },
           select: { name: true, id: true, grade: true, position: true },
         },
         topos: {
@@ -24,7 +25,7 @@ export const wallsRouter = t.router({
     });
     if (!wall) {
       throw new TRPCError({
-        code: 'NOT_FOUND',
+        code: "NOT_FOUND",
         message: `No wall with id '${input}'`,
       });
     }
@@ -60,7 +61,7 @@ export const wallsRouter = t.router({
       });
       if (!res)
         throw new TRPCError({
-          code: 'NOT_FOUND',
+          code: "NOT_FOUND",
           message: `No routes found for wall  with id '${input.wallId}'`,
         });
       return res.routes;

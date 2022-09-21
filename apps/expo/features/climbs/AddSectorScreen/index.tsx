@@ -46,7 +46,7 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     name: "sectorName",
   });
 
-  const onSubmit = handleSubmit(input => {
+  const onSubmit = handleSubmit((input) => {
     mutate({ zoneId, name: input.sectorName });
   });
 
