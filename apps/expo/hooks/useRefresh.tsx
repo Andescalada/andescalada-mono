@@ -1,7 +1,7 @@
-import { useTheme } from '@shopify/restyle';
-import { useMemo } from 'react';
-import { RefreshControl } from 'react-native';
-import { Theme } from '@andescalada/ui/Theme/theme';
+import { Theme } from "@andescalada/ui/Theme/theme";
+import { useTheme } from "@shopify/restyle";
+import { useMemo } from "react";
+import { RefreshControl } from "react-native";
 
 const useRefresh = (refetch: () => void, isFetching: boolean) => {
   const theme = useTheme<Theme>();

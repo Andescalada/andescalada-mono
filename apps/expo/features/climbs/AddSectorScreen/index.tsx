@@ -1,3 +1,4 @@
+import sector from "@andescalada/api/schemas/sector";
 import {
   Box,
   Button,
@@ -5,18 +6,17 @@ import {
   SemanticButton,
   Text,
   TextInput,
-} from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
-import { FC } from 'react';
-import { Alert } from 'react-native';
-import { z } from 'zod';
-import { useForm, useController } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import sector from '@andescalada/api/schemas/sector';
+} from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@features/climbs/Navigation/types';
+} from "@features/climbs/Navigation/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { FC } from "react";
+import { useController, useForm } from "react-hook-form";
+import { Alert } from "react-native";
+import { z } from "zod";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddZone>;
 
@@ -43,10 +43,10 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     fieldState: { error, isDirty },
   } = useController({
     control,
-    name: 'sectorName',
+    name: "sectorName",
   });
 
-  const onSubmit = handleSubmit((input) => {
+  const onSubmit = handleSubmit(input => {
     mutate({ zoneId, name: input.sectorName });
   });
 
@@ -55,14 +55,14 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
       navigation.goBack();
       return;
     }
-    Alert.alert('¿Seguro que quieres cancelar?', '', [
+    Alert.alert("¿Seguro que quieres cancelar?", "", [
       {
-        text: 'Si',
+        text: "Si",
         onPress: () => navigation.goBack(),
       },
       {
-        text: 'Cancelar',
-        style: 'cancel',
+        text: "Cancelar",
+        style: "cancel",
       },
     ]);
   };
@@ -70,12 +70,12 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   return (
     <Screen padding="m">
       <Text variant="h1">Agregar sector</Text>
-      <Box marginTop={'m'}>
-        <Text variant={'p1R'} marginBottom={'s'}>
+      <Box marginTop="m">
+        <Text variant="p1R" marginBottom="s">
           Nombre del sector
         </Text>
         <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
-        <Text marginTop={'xs'} color="error">
+        <Text marginTop="xs" color="error">
           {error?.message}
         </Text>
       </Box>

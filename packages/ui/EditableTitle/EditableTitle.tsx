@@ -1,15 +1,14 @@
-import { Box, Text, TextInput, SemanticButton } from '@andescalada/ui';
-import { FC, ReactNode, ComponentProps } from 'react';
-import { z } from 'zod';
-import { useController, Controller } from 'react-hook-form';
-import type { Control, FieldValues, UseControllerProps } from 'react-hook-form';
+import { TextInput } from "@andescalada/ui";
+import { ComponentProps } from "react";
+import type { FieldValues, UseControllerProps } from "react-hook-form";
+import { useController } from "react-hook-form";
 
-type TextInputProps = Omit<ComponentProps<typeof TextInput>, 'defaultValue'>;
+type TextInputProps = Omit<ComponentProps<typeof TextInput>, "defaultValue">;
 
 interface Props<T extends FieldValues>
-  extends Omit<UseControllerProps<T>, 'defaultValue'>,
+  extends Omit<UseControllerProps<T>, "defaultValue">,
     TextInputProps {
-  title: UseControllerProps<T>['defaultValue'];
+  title: UseControllerProps<T>["defaultValue"];
 }
 
 const EditableTitle = <T extends FieldValues>({
@@ -31,7 +30,7 @@ const EditableTitle = <T extends FieldValues>({
   });
   return (
     <TextInput
-      variant={props.editable ? 'filled' : 'disableAsText'}
+      variant={props.editable ? "filled" : "disableAsText"}
       textVariant="h3"
       lineHeight={20}
       value={value}
@@ -40,7 +39,7 @@ const EditableTitle = <T extends FieldValues>({
       multiline
       textAlignVertical="top"
       containerProps={{
-        justifyContent: 'center',
+        justifyContent: "center",
         flex: 1,
       }}
       {...props}

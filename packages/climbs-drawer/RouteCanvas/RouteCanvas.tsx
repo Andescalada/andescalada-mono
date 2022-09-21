@@ -1,16 +1,16 @@
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import {
+  ReactNativeZoomableView as ZoomView,
+  ReactNativeZoomableViewProps,
+} from "@openspacelabs/react-native-zoomable-view";
+import React, { useCallback, useEffect, useState } from "react";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
 import {
   HandlerStateChangeEvent,
   TapGestureHandler,
   TapGestureHandlerEventPayload,
   TapGestureHandlerProps,
-} from 'react-native-gesture-handler';
-import {
-  ReactNativeZoomableView as ZoomView,
-  ReactNativeZoomableViewProps,
-} from '@openspacelabs/react-native-zoomable-view';
-import Svg from 'react-native-svg';
+} from "react-native-gesture-handler";
+import Svg from "react-native-svg";
 
 interface Coords {
   x: number;
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const { width: initialScreenWidth, height: screenHeight } =
-  Dimensions.get('window');
+  Dimensions.get("window");
 
 const RouteCanvas: React.FC<Props> = ({
   children,
@@ -69,7 +69,7 @@ const RouteCanvas: React.FC<Props> = ({
           {imageUri && (
             <Image
               source={{ uri: imageUri }}
-              style={{ height, width, position: 'absolute' }}
+              style={{ height, width, position: "absolute" }}
             />
           )}
           <Svg height={height} width={width}>
@@ -86,7 +86,7 @@ export default RouteCanvas;
 const styles = StyleSheet.create({
   frame: {
     height: 400,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   routeContainer: { zIndex: 1000 },
 });

@@ -1,3 +1,4 @@
+import sector from "@andescalada/api/schemas/sector";
 import {
   ActivityIndicator,
   Box,
@@ -6,20 +7,19 @@ import {
   Screen,
   SemanticButton,
   Text,
-} from '@andescalada/ui';
-import { trpc } from '@andescalada/utils/trpc';
-import useRefresh from '@hooks/useRefresh';
-import { FC, useState } from 'react';
-import { Alert, FlatList } from 'react-native';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import sector from '@andescalada/api/schemas/sector';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
-} from '@features/climbs/Navigation/types';
-import useOptionsSheet from '@hooks/useOptionsSheet';
+} from "@features/climbs/Navigation/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useOptionsSheet from "@hooks/useOptionsSheet";
+import useRefresh from "@hooks/useRefresh";
+import { FC, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Alert, FlatList } from "react-native";
+import { z } from "zod";
 
 const { schema } = sector;
 
@@ -58,19 +58,19 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
           setEditing(false);
         },
         (error) => {
-          const errorMessage = error.sectorName?.message || 'Hubo un error';
+          const errorMessage = error.sectorName?.message || "Hubo un error";
           Alert.alert(errorMessage);
-          methods.setValue('sectorName', route.params.sectorName);
+          methods.setValue("sectorName", route.params.sectorName);
           setEditing(false);
         },
       );
 
   const onOptions = useOptionsSheet({
-    'Agregar Pared': () =>
+    "Agregar Pared": () =>
       navigation.navigate(ClimbsNavigationRoutes.AddWall, {
         sectorId: route.params.sectorId,
       }),
-    'Cambiar Nombre': () => {
+    "Cambiar Nombre": () => {
       setEditing(true);
     },
   });
@@ -78,15 +78,15 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
-        <ActivityIndicator size={'large'} />
+        <ActivityIndicator size="large" />
       </Screen>
     );
   return (
     <Screen padding="m">
       <Box
-        flexDirection={'row'}
+        flexDirection="row"
         alignItems="center"
-        justifyContent={'space-between'}
+        justifyContent="space-between"
       >
         <EditableTitle
           title={route.params.sectorName}
@@ -96,8 +96,8 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         />
 
         <SemanticButton
-          variant={cancel ? 'error' : 'info'}
-          title={editing ? (cancel ? 'Cancelar' : 'Guardar') : 'Opciones'}
+          variant={cancel ? "error" : "info"}
+          title={editing ? (cancel ? "Cancelar" : "Guardar") : "Opciones"}
           onPress={editing ? onSave : onOptions}
           onLongPress={() => {
             if (editing) setCancel(true);
@@ -111,7 +111,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
           contentContainerStyle={{ flex: 1 }}
           ListEmptyComponent={() => (
             <Box flex={1} justifyContent="center" alignItems="center">
-              <Text variant={'h3'}>Sin paredes</Text>
+              <Text variant="h3">Sin paredes</Text>
             </Box>
           )}
           renderItem={({ item }) => (
@@ -119,7 +119,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               backgroundColor="listItemBackground"
               alignItems="stretch"
               padding="m"
-              marginVertical={'s'}
+              marginVertical="s"
               onPress={() =>
                 navigation.navigate(ClimbsNavigationRoutes.Wall, {
                   wallId: item.id,
