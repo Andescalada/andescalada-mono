@@ -5,10 +5,11 @@ import {
   EditableTitle,
   Pressable,
   Screen,
-  SemanticButton,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
+import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -16,7 +17,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 import { z } from "zod";
@@ -28,42 +29,41 @@ type Form = z.infer<typeof schema>;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
-  const [editing, setEditing] = useState(false);
-  const [cancel, setCancel] = useState(false);
   const utils = trpc.useContext();
+
   const { data, refetch, isFetching, isLoading } =
     trpc.sectors.allWalls.useQuery({ sectorId: route.params.sectorId });
+
   const editSector = trpc.sectors.edit.useMutation({
     onSuccess: () => {
       utils.zones.allSectors.invalidate({ zoneId: route.params.zoneId });
     },
   });
+
   const methods = useForm<Form>({
     resolver: zodResolver(schema),
   });
 
   const refresh = useRefresh(refetch, isFetching);
 
-  const onSave = cancel
-    ? () => {
-        setEditing(false);
-        setCancel(false);
-      }
-    : methods.handleSubmit(
-        (input) => {
-          editSector.mutate({
-            name: input.sectorName,
-            sectorId: route.params.sectorId,
-          });
-          setEditing(false);
-        },
-        (error) => {
-          const errorMessage = error.sectorName?.message || "Hubo un error";
-          Alert.alert(errorMessage);
-          methods.setValue("sectorName", route.params.sectorName);
-          setEditing(false);
-        },
-      );
+  const onSubmit = methods.handleSubmit(
+    (input) => {
+      editSector.mutate({
+        name: input.sectorName,
+        sectorId: route.params.sectorId,
+      });
+      setEditing(false);
+    },
+    (error) => {
+      const errorMessage = error.sectorName?.message || "Hubo un error";
+      Alert.alert(errorMessage);
+      methods.setValue("sectorName", route.params.sectorName);
+      setEditing(false);
+    },
+  );
+
+  const { onSave, cancel, editing, setCancel, setEditing } =
+    useHeaderOptionButton({ onSave: onSubmit });
 
   const onOptions = useOptionsSheet({
     "Agregar Pared": () =>
@@ -95,13 +95,12 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
           control={methods.control}
         />
 
-        <SemanticButton
-          variant={cancel ? "error" : "info"}
-          title={editing ? (cancel ? "Cancelar" : "Guardar") : "Opciones"}
-          onPress={editing ? onSave : onOptions}
-          onLongPress={() => {
-            if (editing) setCancel(true);
-          }}
+        <HeaderOptionsButton
+          cancel={cancel}
+          setCancel={setCancel}
+          editing={editing}
+          onOptions={onOptions}
+          onSave={onSave}
         />
       </Box>
       <Box flex={1}>
