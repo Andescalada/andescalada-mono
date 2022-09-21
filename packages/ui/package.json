@@ -9,5 +9,11 @@
     "@types/react-native": "^0.70.2",
     "deepmerge": "^4.2.2",
     "react-native": "0.69.5"
+  },
+  "peerDependencies": {
+    "@andescalada/ui": "*",
+    "react": "*",
+    "react-hook-form": "*",
+    "zod": "*"
   }
 }
