@@ -7,6 +7,7 @@ import {
   SemanticButton,
   Text,
   TextInput,
+  Theme,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -15,10 +16,11 @@ import {
 } from "@features/climbs/Navigation/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Picker } from "@react-native-picker/picker";
+import { useTheme } from "@shopify/restyle";
 import { allGrades, gradeUnits } from "@utils/climbingGrades";
 import { createContext, FC, ReactNode, useContext } from "react";
 import { useController, useForm } from "react-hook-form";
-import { Alert, Keyboard } from "react-native";
+import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
 
 enum RouteKind {
@@ -108,6 +110,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
+  const theme = useTheme<Theme>();
+
   return (
     <Screen>
       <ScrollView flex={1} padding="m" onResponderGrant={Keyboard.dismiss}>
@@ -150,10 +154,16 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             selectedValue={gradeValue}
             onBlur={onGradeBlur}
             mode="dialog"
+            style={{
+              backgroundColor:
+                Platform.OS === "android"
+                  ? theme.colors.filledTextInputVariantBackground
+                  : undefined,
+            }}
           >
             {allGrades.map((n) => (
               <Picker.Item
-                color="white"
+                color={Platform.OS === "android" ? "black" : "white"}
                 fontFamily="Rubik-400"
                 key={n}
                 label={gradeUnits.FrenchGrade[n]}
@@ -161,13 +171,13 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               />
             ))}
             <Picker.Item
-              color="white"
+              color={Platform.OS === "android" ? "black" : "white"}
               fontFamily="Rubik-400"
               label={"Desconocido"}
               value={null}
             />
             <Picker.Item
-              color="white"
+              color={Platform.OS === "android" ? "black" : "white"}
               fontFamily="Rubik-400"
               label={"Proyecto"}
               value={"project"}
