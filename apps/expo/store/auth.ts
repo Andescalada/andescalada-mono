@@ -1,15 +1,15 @@
-import { Storage } from '@assets/Constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { login, logout, refreshTokens } from '@utils/auth0';
-import { isExpired } from '@utils/decode';
-import jwtDecode from 'jwt-decode';
+import { Storage } from "@assets/Constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { auth0Tokens, login, logout } from "@utils/auth0";
+import { isExpired } from "@utils/decode";
+import jwtDecode from "jwt-decode";
 
 export interface AuthState {
   isAuth: boolean;
   loadingAuth: boolean;
   accessToken: undefined | string;
-  autoLoginCompleted: boolean
+  autoLoginCompleted: boolean;
 }
 
 export interface AccessToken {
@@ -20,11 +20,11 @@ const initialState: AuthState = {
   loadingAuth: false,
   isAuth: false,
   accessToken: undefined,
-  autoLoginCompleted: false
+  autoLoginCompleted: false,
 };
 
 export const loginAuth0 = createAsyncThunk(
-  'auth/loginAuth0',
+  "auth/loginAuth0",
   async (_, { dispatch, rejectWithValue }) => {
     try {
       dispatch(setLoadingAuth(true));
@@ -36,18 +36,19 @@ export const loginAuth0 = createAsyncThunk(
         String(decodedIdToken),
       );
       dispatch(setLoadingAuth(false));
-      dispatch(setAutoLoginCompleted(true))
+      dispatch(setAutoLoginCompleted(true));
       return { isAuth: true, accessToken };
     } catch (err) {
+      // console.log(err);
       rejectWithValue(err);
-      dispatch(setAutoLoginCompleted(true))
+      dispatch(setAutoLoginCompleted(true));
       return { isAuth: false };
     }
   },
 );
 
 export const autoLoginAuth0 = createAsyncThunk(
-  'auth/autoLoginAuth0',
+  "auth/autoLoginAuth0",
   async (_, { rejectWithValue }) => {
     try {
       const token = await AsyncStorage.getItem(Storage.ACCESS_TOKEN);
@@ -55,7 +56,7 @@ export const autoLoginAuth0 = createAsyncThunk(
       const decodedToken: AccessToken = jwtDecode(token);
       const hasExpired = isExpired(decodedToken.exp);
       if (!hasExpired) return { isAuth: true, accessToken: token };
-      const res = await refreshTokens();
+      const res = await auth0Tokens.refreshTokens();
       if (res?.accessToken) {
         return { isAuth: true, accessToken: res.accessToken };
       }
@@ -67,7 +68,7 @@ export const autoLoginAuth0 = createAsyncThunk(
 );
 
 export const logoutAuth0 = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
       await logout();
@@ -83,7 +84,7 @@ export const logoutAuth0 = createAsyncThunk(
 );
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setLoadingAuth: (state, action: PayloadAction<boolean>) => {
@@ -114,6 +115,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLoadingAuth, setIsAuth, setAutoLoginCompleted } = authSlice.actions;
+export const { setLoadingAuth, setIsAuth, setAutoLoginCompleted } =
+  authSlice.actions;
 
 export default authSlice;
