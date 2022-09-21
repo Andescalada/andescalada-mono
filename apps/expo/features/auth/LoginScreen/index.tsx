@@ -1,7 +1,7 @@
-import { Text, Button, Screen } from '@andescalada/ui';
-import React from 'react';
-import { useAppDispatch } from '@hooks/redux';
-import { loginAuth0 } from '@store/auth';
+import { Button, Screen, Text } from "@andescalada/ui";
+import { useAppDispatch } from "@hooks/redux";
+import { loginAuth0 } from "@store/auth";
+import React from "react";
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch();
