@@ -11,7 +11,7 @@ Cambiar a Organizacion elevy - pscale org switch elevy
 - PlanetScale
 - Cloudinary
 - Auth0 -> Passwordless
-- TRPC 
+- TRPC V10
 - React Query
 - Restyle 
 - Zod 
