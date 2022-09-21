@@ -49,15 +49,15 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const onSubmit = methods.handleSubmit(
     (input) => {
       editSector.mutate({
-        name: input.sectorName,
+        name: input.name,
         sectorId: route.params.sectorId,
       });
       setEditing(false);
     },
     (error) => {
-      const errorMessage = error.sectorName?.message || "Hubo un error";
+      const errorMessage = error.name?.message || "Hubo un error";
       Alert.alert(errorMessage);
-      methods.setValue("sectorName", route.params.sectorName);
+      methods.setValue("name", route.params.sectorName);
       setEditing(false);
     },
   );
@@ -90,7 +90,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
       >
         <EditableTitle
           title={route.params.sectorName}
-          name="sectorName"
+          name="name"
           editable={editing}
           control={methods.control}
         />

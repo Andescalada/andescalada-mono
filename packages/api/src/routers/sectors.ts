@@ -1,3 +1,4 @@
+import sector from "@andescalada/api/schemas/sector";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -39,7 +40,7 @@ export const sectorsRouter = t.router({
       return newSector;
     }),
   edit: t.procedure
-    .input(z.object({ sectorId: z.string(), name: z.string() }))
+    .input(sector.schema.merge(z.object({ sectorId: z.string() })))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.sector.update({
         where: { id: input.sectorId },
