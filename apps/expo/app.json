@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/expoConfig/ae_splash_white.png",
+        "foregroundImage": "./assets/expoConfig/ae_splash_white_android.png",
         "backgroundColor": "#121212"
       }
     },
