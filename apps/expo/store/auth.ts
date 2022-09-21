@@ -39,7 +39,6 @@ export const loginAuth0 = createAsyncThunk(
       dispatch(setAutoLoginCompleted(true));
       return { isAuth: true, accessToken };
     } catch (err) {
-      // console.log(err);
       rejectWithValue(err);
       dispatch(setAutoLoginCompleted(true));
       return { isAuth: false };

@@ -42,8 +42,6 @@ const usePickImage = () => {
         return;
       }
 
-      console.log(result);
-
       const base64Img = `data:image/jpg;base64,${result.base64}`;
 
       setSelectedImage({ localUri: result.uri, base64Img });
