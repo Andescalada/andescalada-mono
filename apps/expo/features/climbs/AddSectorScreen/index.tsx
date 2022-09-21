@@ -30,7 +30,7 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   const { mutate, isLoading } = trpc.sectors.add.useMutation({
     onSuccess: () => {
       navigation.goBack();
-      utils.sectors.all.invalidate();
+      utils.zones.allSectors.invalidate({ zoneId });
     },
   });
 

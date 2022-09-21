@@ -25,7 +25,10 @@ export const routesRouter = t.router({
         wallId: z.string(),
         name: z.string(),
         kind: z.nativeEnum(RouteKind),
-        grade: z.number().optional(),
+        grade: z.object({
+          grade: z.number().nullable(),
+          project: z.boolean(),
+        }),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -33,6 +36,7 @@ export const routesRouter = t.router({
         _max: { position: true },
       });
       const biggestPosition = result._max.position || 0;
+      console.log(input);
 
       const newRoute = await ctx.prisma.route.create({
         data: {
@@ -40,6 +44,9 @@ export const routesRouter = t.router({
           wallId: input.wallId,
           kind: input.kind,
           position: biggestPosition + 1,
+          RouteGrade: {
+            create: { grade: input.grade.grade, project: input.grade.project },
+          },
         },
       });
       return newRoute;

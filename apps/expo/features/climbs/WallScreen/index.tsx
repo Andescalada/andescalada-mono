@@ -22,6 +22,7 @@ import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useUploadImage from "@hooks/useUploadImage";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { gradeUnits } from "@utils/climbingGrades";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, FlatList, Image } from "react-native";
@@ -104,7 +105,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   const rootNavigation = useRootNavigation();
 
   const onOptions = useOptionsSheet({
-    "Agregar Sector": () =>
+    "Agregar Ruta": () =>
       navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
         wallId,
       }),
@@ -235,11 +236,21 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             <Text variant={"h3"}>Sin rutas</Text>
           </Box>
         )}
-        renderItem={({ item }) => (
-          <ListItem marginVertical={"s"}>
-            <Text variant="p1R">{`${item.position} - ${item.name}`}</Text>
-          </ListItem>
-        )}
+        renderItem={({ item }) => {
+          const n = item.RouteGrade?.grade;
+          const grade = typeof n === "number" ? gradeUnits.FrenchGrade[n] : "?";
+          return (
+            <ListItem
+              marginVertical={"s"}
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Text variant="p2R">{`${item.position} - ${item.name}`}</Text>
+              <Text variant="p2R">{grade}</Text>
+            </ListItem>
+          );
+        }}
       />
     </Screen>
   );

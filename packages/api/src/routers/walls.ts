@@ -16,7 +16,7 @@ export const wallsRouter = t.router({
       include: {
         routes: {
           orderBy: { position: "asc" },
-          select: { name: true, id: true, grade: true, position: true },
+          select: { name: true, id: true, RouteGrade: true, position: true },
         },
         topos: {
           where: { main: true },
@@ -56,7 +56,7 @@ export const wallsRouter = t.router({
         where: { id: input.wallId },
         select: {
           routes: {
-            select: { name: true, grade: true, id: true, position: true },
+            select: { name: true, id: true, position: true, RouteGrade: true },
           },
         },
       });

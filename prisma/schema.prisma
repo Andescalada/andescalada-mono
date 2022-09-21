@@ -84,20 +84,20 @@ model Topo {
 }
 
 model Route {
-  id           String       @id @default(uuid())
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   name         String
-  position     Int          @default(0)
+  position     Int         @default(0)
   leftRouteId  String?
   rightRouteId String?
-  classic      Boolean      @default(false)
+  classic      Boolean     @default(false)
   kind         RouteKind
-  Wall         Wall         @relation(fields: [wallId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Wall         Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   wallId       String
-  description  String?      @db.LongText
+  description  String?     @db.LongText
   RoutePath    RoutePath[]
-  RouteGrade   RouteGrade[]
+  RouteGrade   RouteGrade?
 
   @@index([wallId])
 }
@@ -109,8 +109,8 @@ model RouteGrade {
   grade      Int?
   project    Boolean  @default(false)
   slashGrade Boolean  @default(false)
-  route      Route    @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  routeId    String
+  route      Route    @relation(fields: [routeId], references: [id])
+  routeId    String   @unique
 
   @@index([routeId])
 }

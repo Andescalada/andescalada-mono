@@ -34,7 +34,6 @@ export const gradeUnits = {
     "9b+",
     "9c",
     "10a",
-    "Project",
   ],
   YosemiteGrade: [
     "5",
@@ -72,6 +71,7 @@ export const gradeUnits = {
     "5.15c",
     "5.15d",
     "5.16a",
-    "Project",
   ],
 };
+
+export const allGrades = [...Array(gradeUnits.FrenchGrade.length).keys()];
