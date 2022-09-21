@@ -15,3 +15,5 @@ web-build/
 .DS_Store
 
 .env
+.env.production
+.env.development

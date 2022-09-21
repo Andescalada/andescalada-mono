@@ -7,7 +7,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "dev": "npx expo r -c "
+    "dev": "yarn env:development && npx expo r -c ",
+    "prod": "yarn env:production && expo start --no-dev",
+    "env:production": "cp .env.production .env",
+    "env:development": "cp .env.development .env"
   },
   "dependencies": {
     "@andescalada/api": "*",
@@ -55,6 +58,9 @@
     "prisma": "^3.8.1",
     "typescript": "^4.6.3"
   },
-  "peerDependencies": {"zod": "*", "react": "*"},
+  "peerDependencies": {
+    "zod": "*",
+    "react": "*"
+  },
   "private": true
 }
