@@ -43,11 +43,11 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     fieldState: { error, isDirty },
   } = useController({
     control,
-    name: "sectorName",
+    name: "name",
   });
 
   const onSubmit = handleSubmit((input) => {
-    mutate({ zoneId, name: input.sectorName });
+    mutate({ zoneId, name: input.name });
   });
 
   const onCancel = () => {
