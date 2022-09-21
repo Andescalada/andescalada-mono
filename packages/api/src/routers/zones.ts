@@ -1,3 +1,4 @@
+import zone from "@andescalada/api/schemas/zone";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -16,7 +17,7 @@ export const zonesRouter = t.router({
     return zone;
   }),
   edit: t.procedure
-    .input(z.object({ zoneId: z.string(), name: z.string() }))
+    .input(zone.schema.merge(z.object({ zoneId: z.string() })))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.zone.update({
         where: { id: input.zoneId },
