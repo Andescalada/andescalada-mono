@@ -15,6 +15,14 @@ export const zonesRouter = t.router({
     }
     return zone;
   }),
+  edit: t.procedure
+    .input(z.object({ zoneId: z.string(), name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { name: input.name },
+      });
+    }),
   allSectors: t.procedure
     .input(z.object({ zoneId: z.string() }))
     .query(async ({ ctx, input }) => {

@@ -5,7 +5,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum ClimbsNavigationRoutes {
   ZonesList = "ZonesList",
   Zone = "Zone",
-  AddZone = "AddZone",
+  AddSector = "AddSector",
   Sector = "Sector",
   AddWall = "AddWall",
   Wall = "Wall",
@@ -15,7 +15,7 @@ export enum ClimbsNavigationRoutes {
 export type ClimbsNavigationNavigationParamList = {
   [ClimbsNavigationRoutes.ZonesList]: undefined;
   [ClimbsNavigationRoutes.Zone]: { zoneId: Zone["id"]; zoneName: Zone["name"] };
-  [ClimbsNavigationRoutes.AddZone]: { zoneId: Zone["id"] };
+  [ClimbsNavigationRoutes.AddSector]: { zoneId: Zone["id"] };
   [ClimbsNavigationRoutes.AddWall]: { sectorId: Sector["id"] };
   [ClimbsNavigationRoutes.Sector]: {
     sectorId: Sector["id"];

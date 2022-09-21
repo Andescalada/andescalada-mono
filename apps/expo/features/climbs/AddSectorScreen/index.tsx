@@ -18,7 +18,7 @@ import { useController, useForm } from "react-hook-form";
 import { Alert } from "react-native";
 import { z } from "zod";
 
-type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddZone>;
+type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddSector>;
 
 const { schema } = sector;
 

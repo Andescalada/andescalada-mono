@@ -23,7 +23,7 @@ const Navigator = () => {
       />
       <Stack.Screen name={ClimbsNavigationRoutes.Zone} component={ZoneScreen} />
       <Stack.Screen
-        name={ClimbsNavigationRoutes.AddZone}
+        name={ClimbsNavigationRoutes.AddSector}
         component={AddSectorScreen}
         options={{ presentation: "modal" }}
       />
