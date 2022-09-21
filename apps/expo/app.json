@@ -3,7 +3,7 @@
     "name": "Andescalada",
     "slug": "andescalada-app",
     "scheme": "andescalada",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/expoConfig/icon_ae.png",
     "userInterfaceStyle": "dark",
