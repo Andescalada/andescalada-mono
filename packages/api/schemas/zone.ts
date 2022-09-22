@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const id = z.object({ zoneId: z.string() });
+
 const schema = z.object({
   name: z
     .string({ required_error: "Requerido" })
@@ -7,4 +9,4 @@ const schema = z.object({
     .max(50, "Nombre muy largo"),
 });
 
-export default { schema };
+export default { schema, id };
