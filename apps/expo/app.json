@@ -16,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.andescalada.app"
@@ -36,6 +34,14 @@
       "eas": {
         "projectId": "a034137d-75c2-4941-a3b0-003e7b6ff487"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "La app accede a tus fotos para que subas topos y fotos de las rutas"
+        }
+      ]
+    ]
   }
 }

@@ -77,8 +77,8 @@ export const logoutAuth0 = createAsyncThunk(
       return { isAuth: false };
     } catch (error) {
       rejectWithValue(error);
+      return { isAuth: true };
     }
-    return { isAuth: true };
   },
 );
 
