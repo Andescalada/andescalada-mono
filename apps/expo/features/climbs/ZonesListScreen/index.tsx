@@ -1,10 +1,18 @@
-import { ActivityIndicator, ListItem, Screen, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  ListItem,
+  Screen,
+  SemanticButton,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { useAppDispatch } from "@hooks/redux";
 import useRefresh from "@hooks/useRefresh";
+import { logoutAuth0 } from "@store/auth";
 import React from "react";
 import { FlatList } from "react-native";
 
@@ -13,6 +21,10 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 const ZonesScreen = ({ navigation }: Props) => {
   const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
   const refresh = useRefresh(refetch, isFetching);
+  const dispatch = useAppDispatch();
+  const onLogout = () => {
+    dispatch(logoutAuth0());
+  };
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
@@ -38,6 +50,12 @@ const ZonesScreen = ({ navigation }: Props) => {
             <Text variant="p1R">{item.name}</Text>
           </ListItem>
         )}
+      />
+      <SemanticButton
+        title="Cerrar sesión"
+        variant="info"
+        marginBottom="l"
+        onPress={onLogout}
       />
     </Screen>
   );
