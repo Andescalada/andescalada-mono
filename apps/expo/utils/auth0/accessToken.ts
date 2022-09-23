@@ -6,7 +6,7 @@ import * as AuthSession from "expo-auth-session";
 
 import { tokenDecode } from "../decode";
 const authUrl = `https://${AUTH0_DOMAIN}/oauth/token`;
-const headers = { "content-type": "application/x-www-form-urlencoded" };
+const headers = { "content-type": "application/json" };
 
 export interface Tokens {
   idToken: string;
@@ -26,7 +26,7 @@ const getTokens = async (
     method: "POST",
     url: authUrl,
     headers,
-    body: new URLSearchParams({
+    body: JSON.stringify({
       grant_type: "authorization_code",
       client_id: AUTH0_CLIENT_ID,
       code_verifier: codeVerifier,
@@ -49,7 +49,7 @@ const getRefreshData = async (refreshToken: string) => {
     method: "POST",
     url: authUrl,
     headers,
-    body: new URLSearchParams({
+    body: JSON.stringify({
       grant_type: "refresh_token",
       client_id: AUTH0_CLIENT_ID,
       refresh_token: refreshToken,
