@@ -1,5 +1,3 @@
-import "@utils/rollbar";
-
 import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
 import ThemeProvider from "@andescalada/ui/Theme/ThemeProvider";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
