@@ -30,7 +30,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/expoConfig/ae_splash_white_android.png",
         "backgroundColor": "#121212"
-      }
+      },
+      "package": "com.andescalada.app",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
