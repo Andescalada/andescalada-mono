@@ -4,4 +4,7 @@ declare module "@env" {
   export const AUTH0_AUDIENCE: string;
   export const CLOUDINARY_UPLOAD_PRESET: string;
   export const CLOUDINARY_URL: string;
+  export const DATADOG_CLIENT_TOKEN: string;
+  export const DATADOG_ENV: string;
+  export const DATADOG_APPLICATION_ID: string;
 }
