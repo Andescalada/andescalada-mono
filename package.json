@@ -21,10 +21,6 @@
     "packages": [
       "packages/*",
       "apps/*"
-    ],
-    "nohoist": [
-      "**/react-native",
-      "**/react-native/**"
     ]
   },
   "dependencies": {

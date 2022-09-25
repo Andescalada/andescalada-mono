@@ -1138,12 +1138,12 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@datadog/mobile-react-native@^1.1.1":
+"@datadog/mobile-react-native@^1.0.0-rc7":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@datadog/mobile-react-native/-/mobile-react-native-1.1.1.tgz#ccb6680b197708826854d0c4b77dfe2f438ca8ef"
   integrity sha512-ZTjT5QVQRll+yajt36fmt1+k11tOhp2eAEnS1s050qMJrpqrRo7hbYfGtGRgjXuQXgrsNV9cYcCd20T1qH2tMQ==
 
-"@datadog/mobile-react-navigation@^1.1.1":
+"@datadog/mobile-react-navigation@^1.0.0-rc8":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@datadog/mobile-react-navigation/-/mobile-react-navigation-1.1.1.tgz#b33f86c9be2adbe66aceabdb1394caa339f97e94"
   integrity sha512-UlWQOHpQn1bZZR5p9hrOapRxgEaiRcdzdjKPJ9ckRBRjsktOn0sv8KLJrXlNVY2ivUuhyh+VimlIKIdtpx7zdw==
@@ -2657,19 +2657,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*":
+"@types/react@*", "@types/react@17.0.43", "@types/react@^18.0.20", "@types/react@~18.0.0":
   version "17.0.43"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.43.tgz#4adc142887dd4a2601ce730bc56c3436fdb07a55"
   integrity sha512-8Q+LNpdxf057brvPu1lMtC5Vn7J119xrP1aq4qiaefNioQUYANF/CYeK4NsKorSZyUGJ66g0IM+4bbjwx45o2A==
-  dependencies:
-    "@types/prop-types" "*"
-    "@types/scheduler" "*"
-    csstype "^3.0.2"
-
-"@types/react@^18.0.20", "@types/react@~18.0.0":
-  version "18.0.21"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.21.tgz#b8209e9626bb00a34c76f55482697edd2b43cc67"
-  integrity sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
