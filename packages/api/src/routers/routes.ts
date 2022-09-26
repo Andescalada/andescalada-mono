@@ -33,10 +33,10 @@ export const routesRouter = t.router({
     )
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.prisma.route.aggregate({
+        where: { wallId: input.wallId },
         _max: { position: true },
       });
       const biggestPosition = result._max.position || 0;
-      console.log(input);
 
       const newRoute = await ctx.prisma.route.create({
         data: {
