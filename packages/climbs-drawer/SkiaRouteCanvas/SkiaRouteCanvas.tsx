@@ -1,6 +1,7 @@
 import { ReactNativeZoomableView as ZoomView } from "@openspacelabs/react-native-zoomable-view";
 import {
   Canvas,
+  SkiaMutableValue,
   useImage,
   useTouchHandler,
   useValue,
@@ -17,11 +18,19 @@ interface Props {
   imageUrl: string;
   height: number;
   width: number;
+  coords: SkiaMutableValue<{
+    x: number;
+    y: number;
+  }>;
 }
 
-const SkiaRouteCanvas: FC<Props> = ({ imageUrl, height, width, children }) => {
-  const coords = useValue({ x: 0, y: 0 });
-
+const SkiaRouteCanvas: FC<Props> = ({
+  imageUrl,
+  height,
+  width,
+  children,
+  coords,
+}) => {
   const allowToDraw = useValue(true);
 
   const touchHandler = useTouchHandler({
@@ -50,7 +59,6 @@ const SkiaRouteCanvas: FC<Props> = ({ imageUrl, height, width, children }) => {
       <View
         style={{
           flex: 1,
-          backgroundColor: allowToDraw.current ? "green" : "blue",
         }}
       >
         <View style={{ position: "absolute", width: 10, height: 10 }} />

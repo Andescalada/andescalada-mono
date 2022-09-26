@@ -1,7 +1,7 @@
 import {
-  RouteCanvas,
-  RoutePath,
   SkiaRouteCanvas,
+  SkiaRoutePath,
+  SkiaRoutePathDrawer,
   useRoutes,
 } from "@andescalada/climbs-drawer";
 import { Box, Button, Screen, Theme } from "@andescalada/ui";
@@ -10,10 +10,10 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
-import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import type { RoutePath as RoutePathType } from "@prisma/client";
+import { useValue } from "@shopify/react-native-skia";
 import { useTheme } from "@shopify/restyle";
-import { fitContent, SCREEN_HEIGHT, SCREEN_WIDTH } from "@utils/Dimensions";
+import { fitContent } from "@utils/Dimensions";
 import { FC, useState } from "react";
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
@@ -65,7 +65,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
 
   const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.routes.addPath.useMutation();
-  const [tappedCoords, setTapCoords] = useState<{ x: number; y: number }>();
+
   const [canSave, setCanSave] = useState(false);
   const { state, methods } = useRoutes();
   const { create, finish, savePath, setRoute } = methods;
@@ -76,6 +76,10 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
       route?.ref.current?.finishRoute(() =>
         finish({ id: routeParams.id, finished: true }),
       );
+      savePath({
+        id: routeParams.id,
+        path: route?.ref.current?.pointsToString(),
+      });
       setCanSave(true);
       return;
     }
@@ -104,49 +108,70 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   };
 
   const fitted = fitContent({ height, width });
+  const coords = useValue({ x: 0, y: 0 });
 
-  return (
-    <Screen safeAreaDisabled justifyContent="center">
-      <SkiaRouteCanvas
-        imageUrl={url}
-        height={fitted.height}
-        width={fitted.width}
-      />
-      {/* <Box position="absolute" top={50} right={0} margin="l">
-        <Button
-          title={canSave ? "Guardar" : "Finalizar"}
-          variant={canSave ? "success" : "error"}
-          titleVariant={"p1R"}
-          isLoading={isLoading}
-          onPress={onFinishOrSave}
-        />
-        <Button
-          title="Deshacer"
-          variant={"transparent"}
-          titleVariant={"p1R"}
-          marginTop="s"
-          onPress={() => {
-            route?.ref.current?.undo();
-            setCanSave(false);
-            if (route?.finished)
-              finish({ id: routeParams.id, finished: false });
-          }}
-        />
-        <Button
-          title="Borrar"
-          variant={"transparent"}
-          titleVariant={"p1R"}
-          marginTop="s"
-          onPress={() => {
-            route?.ref.current?.reset();
-            setCanSave(false);
-            if (route?.finished)
-              finish({ id: routeParams.id, finished: false });
-          }}
-        />
-      </Box> */}
-    </Screen>
-  );
+  if (route)
+    return (
+      <Screen safeAreaDisabled justifyContent="center">
+        <SkiaRouteCanvas
+          coords={coords}
+          imageUrl={url}
+          height={fitted.height}
+          width={fitted.width}
+        >
+          <SkiaRoutePathDrawer
+            coords={coords}
+            ref={route?.ref}
+            path={route?.path}
+            label={route?.label}
+            color={theme.colors.drawingRoute}
+            withStart={!!route?.path}
+          />
+          {otherRoutes?.map((route) => (
+            <SkiaRoutePath
+              key={route.id}
+              label={route.route.position.toString()}
+              path={route.path}
+            />
+          ))}
+        </SkiaRouteCanvas>
+        <Box position="absolute" top={50} right={0} margin="l">
+          <Button
+            title={canSave ? "Guardar" : "Finalizar"}
+            variant={canSave ? "success" : "error"}
+            titleVariant={"p1R"}
+            isLoading={isLoading}
+            onPress={onFinishOrSave}
+          />
+          <Button
+            title="Deshacer"
+            variant={"transparent"}
+            titleVariant={"p1R"}
+            marginTop="s"
+            onPress={() => {
+              route?.ref.current?.undo();
+              setCanSave(false);
+              if (route?.finished)
+                finish({ id: routeParams.id, finished: false });
+            }}
+          />
+          <Button
+            title="Borrar"
+            variant={"transparent"}
+            titleVariant={"p1R"}
+            marginTop="s"
+            onPress={() => {
+              route?.ref.current?.reset();
+              setCanSave(false);
+              if (route?.finished)
+                finish({ id: routeParams.id, finished: false });
+            }}
+          />
+        </Box>
+      </Screen>
+    );
+
+  return null;
 };
 
 export default DrawRoute;

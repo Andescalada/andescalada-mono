@@ -1,6 +1,7 @@
 import { createRef, useCallback, useReducer } from "react";
 
-import { RouteRef } from "../RoutePath/RoutePath";
+// import { RouteRef } from "../RoutePath/RoutePath";
+import { SkiaRouteRef } from "../SkiaRoutePathDrawer/SkiaRoutePathDrawer";
 
 type Path = string | undefined;
 type Id = string;
@@ -8,7 +9,7 @@ type Finished = boolean;
 type Label = string;
 
 export interface Route {
-  ref: React.RefObject<RouteRef>;
+  ref: React.RefObject<SkiaRouteRef>;
   id: Id;
   path?: Path;
   finished?: Finished;
@@ -98,7 +99,7 @@ const reducer = (state: State, action: ActionTypes) => {
           {
             id: action.id,
             label: action.label,
-            ref: createRef<RouteRef>(),
+            ref: createRef<SkiaRouteRef>(),
             finished: !!action.path,
             path: action.path,
           },
