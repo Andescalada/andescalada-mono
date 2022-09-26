@@ -41,7 +41,6 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
   { coords, path, withEnd, withStart, label = "?", color },
   ref,
 ) => {
-  console.log(withStart, label);
   const { points, start, end } = usePathToPoints(path);
   const [hasStart, setHasStart] = useState(withStart);
   const [hasEnd, setHasEnd] = useState(withEnd);

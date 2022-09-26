@@ -6,8 +6,8 @@ import {
   useTouchHandler,
   useValue,
 } from "@shopify/react-native-skia";
-import { FC, useCallback } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { ComponentProps, FC, useCallback } from "react";
+import { Dimensions, StyleSheet } from "react-native";
 
 import { Picture } from "../SkiaPicture/SkiaPicture";
 
@@ -15,13 +15,14 @@ export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
   Dimensions.get("window");
 
 interface Props {
-  imageUrl: string;
+  imageUrl?: string;
   height: number;
   width: number;
-  coords: SkiaMutableValue<{
+  coords?: SkiaMutableValue<{
     x: number;
     y: number;
   }>;
+  zoomViewProps?: Partial<ComponentProps<typeof ZoomView>>;
 }
 
 const SkiaRouteCanvas: FC<Props> = ({
@@ -30,12 +31,13 @@ const SkiaRouteCanvas: FC<Props> = ({
   width,
   children,
   coords,
+  zoomViewProps,
 }) => {
   const allowToDraw = useValue(true);
 
   const touchHandler = useTouchHandler({
     onEnd: ({ x, y }) => {
-      if (allowToDraw.current) {
+      if (allowToDraw.current && coords) {
         coords.current = { x, y };
       }
     },
@@ -56,38 +58,32 @@ const SkiaRouteCanvas: FC<Props> = ({
 
   if (image)
     return (
-      <View
-        style={{
-          flex: 1,
-        }}
+      <ZoomView
+        maxZoom={30}
+        contentWidth={width}
+        contentHeight={height}
+        doubleTapDelay={0}
+        minZoom={1}
+        style={styles.routeContainer}
+        doubleTapZoomToCenter={false}
+        onZoomBefore={blockDrawing}
+        onZoomEnd={allowDrawingWithTimeout}
+        onShiftingBefore={blockDrawing}
+        onShiftingEnd={allowDrawingWithTimeout}
+        {...zoomViewProps}
       >
-        <View style={{ position: "absolute", width: 10, height: 10 }} />
-        <ZoomView
-          maxZoom={30}
-          contentWidth={width}
-          contentHeight={height}
-          doubleTapDelay={0}
-          minZoom={1}
-          style={styles.routeContainer}
-          doubleTapZoomToCenter={false}
-          onZoomBefore={blockDrawing}
-          onZoomEnd={allowDrawingWithTimeout}
-          onShiftingBefore={blockDrawing}
-          onShiftingEnd={allowDrawingWithTimeout}
+        <Canvas
+          style={{
+            height,
+            width,
+          }}
+          onTouch={touchHandler}
+          mode="continuous"
         >
-          <Canvas
-            style={{
-              height,
-              width,
-            }}
-            onTouch={touchHandler}
-            mode="continuous"
-          >
-            <Picture height={height} width={width} image={image} />
-            {children}
-          </Canvas>
-        </ZoomView>
-      </View>
+          <Picture height={height} width={width} image={image} />
+          {children}
+        </Canvas>
+      </ZoomView>
     );
 
   return null;

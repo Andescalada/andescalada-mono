@@ -18,6 +18,7 @@ interface Props {
 
 const StartPointer: FC<Props> = ({ label, c, color = "red" }) => {
   const fontSize = 12;
+  const r = 10;
   const font = useFont(require("../assets/fonts/Rubik-SemiBold.ttf"), fontSize);
 
   const transform = useComputedValue(
@@ -27,18 +28,19 @@ const StartPointer: FC<Props> = ({ label, c, color = "red" }) => {
   if (font === null) {
     return null;
   }
+  const textWidth = font.getTextWidth(label);
   return (
     <Group transform={transform}>
-      <Circle cx={0} cy={0} r={10} color="white" />
+      <Circle cx={0} cy={0} r={r} color="white"></Circle>
+      <Text y={r / 2} x={-textWidth / 2} text={label} font={font} />
       <Circle
         cx={0}
         cy={0}
-        r={10}
+        r={r}
         color={color}
         style={"stroke"}
         strokeWidth={2}
       />
-      <Text x={-4} y={+5} text={label} font={font} />
     </Group>
   );
 };

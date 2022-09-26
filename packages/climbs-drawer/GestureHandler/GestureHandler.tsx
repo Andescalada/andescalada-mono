@@ -38,7 +38,6 @@ export const GestureHandler = ({
   }, matrix);
 
   const pan = Gesture.Pan().onChange((e) => {
-    console.log("here");
     matrix.value = multiply4(
       Matrix4.translate(e.changeX, e.changeY, 0),
       matrix.value,

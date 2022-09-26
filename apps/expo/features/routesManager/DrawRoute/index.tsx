@@ -121,11 +121,12 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
         >
           <SkiaRoutePathDrawer
             coords={coords}
-            ref={route?.ref}
-            path={route?.path}
-            label={route?.label}
+            ref={route.ref}
+            path={route.path}
+            label={route.label}
             color={theme.colors.drawingRoute}
-            withStart={!!route?.path}
+            withStart={!!route.path}
+            withEnd={!!route.path}
           />
           {otherRoutes?.map((route) => (
             <SkiaRoutePath
