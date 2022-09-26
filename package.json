@@ -21,6 +21,10 @@
     "packages": [
       "packages/*",
       "apps/*"
+    ],
+    "nohoist": [
+      "**/@shopify/react-native-skia/**",
+      "**/@shopify/react-native-skia"
     ]
   },
   "dependencies": {

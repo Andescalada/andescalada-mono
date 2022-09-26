@@ -9,10 +9,14 @@
     "react-native": "0.69.5"
   },
   "peerDependencies": {
-    "@shopify/restyle": "*"
+    "@shopify/restyle": "*",
+    "@shopify/react-native-skia": "*",
+    "react-native-redash": "*",
+    "@openspacelabs/react-native-zoomable-view": "*"
   },
   "devDependencies": {
     "@shopify/restyle": "*",
+    "@shopify/react-native-skia": "*",
     "@types/react-native": "~0.69.5"
   }
 }

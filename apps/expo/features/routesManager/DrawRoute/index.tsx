@@ -1,12 +1,19 @@
-import { RouteCanvas, RoutePath, useRoutes } from "@andescalada/climbs-drawer";
+import {
+  RouteCanvas,
+  RoutePath,
+  SkiaRouteCanvas,
+  useRoutes,
+} from "@andescalada/climbs-drawer";
 import { Box, Button, Screen, Theme } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
+import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import type { RoutePath as RoutePathType } from "@prisma/client";
 import { useTheme } from "@shopify/restyle";
+import { fitContent, SCREEN_HEIGHT, SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, useState } from "react";
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
@@ -90,36 +97,22 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
     }
   };
 
+  const { height, width, url } = data?.topos[0].image || {
+    height: 0,
+    width: 0,
+    url: "",
+  };
+
+  const fitted = fitContent({ height, width });
+
   return (
-    <Screen>
-      <RouteCanvas
-        value={tappedCoords}
-        setValue={setTapCoords}
-        imageUri={data?.topos[0].image.url}
-        zoomProps={{ zoomEnabled: false }}
-      >
-        {route && (
-          <RoutePath
-            key={route.id}
-            ref={route.ref}
-            label={route.label}
-            value={route.path}
-            routeColor={theme.colors.drawingRoute}
-            setValue={(p) => savePath({ id: route.id, path: p })}
-            tappedCoords={tappedCoords}
-          />
-        )}
-        {otherRoutes?.map((route) => (
-          <RoutePath
-            disableDrawing
-            key={route.id}
-            finished
-            label={route.route.position}
-            value={route.path}
-          />
-        ))}
-      </RouteCanvas>
-      <Box position="absolute" top={50} right={0} margin="l">
+    <Screen safeAreaDisabled justifyContent="center">
+      <SkiaRouteCanvas
+        imageUrl={url}
+        height={fitted.height}
+        width={fitted.width}
+      />
+      {/* <Box position="absolute" top={50} right={0} margin="l">
         <Button
           title={canSave ? "Guardar" : "Finalizar"}
           variant={canSave ? "success" : "error"}
@@ -151,7 +144,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
               finish({ id: routeParams.id, finished: false });
           }}
         />
-      </Box>
+      </Box> */}
     </Screen>
   );
 };
