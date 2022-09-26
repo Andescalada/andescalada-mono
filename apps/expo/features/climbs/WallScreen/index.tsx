@@ -51,12 +51,12 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
 
   const { uploadImage } = useUploadImage();
 
-  const { mutate } = trpc.topos.add.useMutation();
+  const { mutate, isSuccess } = trpc.topos.add.useMutation();
 
-  const [isLoading, setIsLading] = useState(false);
+  const [isLoadingUpload, setIsLoadingUpload] = useState(false);
   const onUpload = async () => {
     if (!selectedImage) return;
-    setIsLading(true);
+    setIsLoadingUpload(true);
     const img = await uploadImage(selectedImage?.base64Img);
     mutate(
       {
@@ -77,7 +77,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
       {
         onSuccess: () => {
           utils.walls.byId.invalidate(wallId);
-          setIsLading(false);
+          setIsLoadingUpload(false);
         },
       },
     );
@@ -160,7 +160,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             <Text variant={"p1R"}>Agregar topo</Text>
           </Pressable>
         )}
-        {selectedImage && (
+        {selectedImage && !isSuccess && (
           <Pressable
             flex={1}
             borderColor="info"
@@ -190,7 +190,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
                 alignItems="stretch"
                 paddingHorizontal="s"
               >
-                {isLoading ? (
+                {isLoadingUpload ? (
                   <ActivityIndicator padding="s" />
                 ) : (
                   <Text variant="h2">Subir</Text>
