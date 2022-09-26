@@ -79,3 +79,4 @@ web-build/
 dist/
 
 # @end expo-cli
+google_service_account.json
