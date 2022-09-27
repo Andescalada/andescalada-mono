@@ -1,6 +1,6 @@
 import RouteDrawer from "@features/routesManager/RouteDrawer";
 import SelectRouteToDrawScreen from "@features/routesManager/SelectRouteToDrawScreen";
-import TopoViewer from "@features/routesManager/TopoViewer";
+import { TopoViewer } from "@features/routesManager/TopoViewer/index";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {

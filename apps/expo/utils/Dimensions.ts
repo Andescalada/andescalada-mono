@@ -12,19 +12,24 @@ export const fitContent = (
     height: number;
   },
   fit: "width" | "height" = "width",
+  fitTo?: number,
 ) => {
   const aspectRatio = height / width;
+
   if (fit === "width") {
+    const valueToFit = fitTo !== undefined ? fitTo : SCREEN_WIDTH;
     return {
-      height: SCREEN_WIDTH * aspectRatio,
-      width: SCREEN_WIDTH,
-      ratioToOriginal: SCREEN_HEIGHT / (SCREEN_WIDTH * aspectRatio),
+      height: valueToFit * aspectRatio,
+      width: valueToFit,
+      aspectRatio,
+      scale: valueToFit / width,
     };
   }
+  const valueToFit = fitTo !== undefined ? fitTo : SCREEN_HEIGHT;
   return {
-    height: SCREEN_HEIGHT,
-    width: SCREEN_HEIGHT / aspectRatio,
+    height: valueToFit,
+    width: valueToFit / aspectRatio,
     aspectRatio,
-    ratioToOriginal: SCREEN_WIDTH / (SCREEN_HEIGHT / aspectRatio),
+    scale: valueToFit / height,
   };
 };

@@ -14,11 +14,13 @@ interface Props {
   label: string;
   c: SkiaValue<SkPoint>;
   color?: string;
+  scale?: number;
 }
 
-const StartPointer: FC<Props> = ({ label, c, color = "red" }) => {
-  const fontSize = 12;
-  const r = 10;
+const StartPointer: FC<Props> = ({ label, c, color = "red", scale = 1 }) => {
+  const fontSize = 120 * scale;
+  const r = 100 * scale;
+  const strokeWidth = r / 5;
   const font = useFont(require("../assets/fonts/Rubik-SemiBold.ttf"), fontSize);
 
   const transform = useComputedValue(
@@ -31,7 +33,7 @@ const StartPointer: FC<Props> = ({ label, c, color = "red" }) => {
   const textWidth = font.getTextWidth(label);
   return (
     <Group transform={transform}>
-      <Circle cx={0} cy={0} r={r} color="white"></Circle>
+      <Circle cx={0} cy={0} r={r} color="white" />
       <Text y={r / 2} x={-textWidth / 2} text={label} font={font} />
       <Circle
         cx={0}
@@ -39,7 +41,7 @@ const StartPointer: FC<Props> = ({ label, c, color = "red" }) => {
         r={r}
         color={color}
         style={"stroke"}
-        strokeWidth={2}
+        strokeWidth={strokeWidth}
       />
     </Group>
   );

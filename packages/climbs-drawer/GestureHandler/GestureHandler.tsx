@@ -1,36 +1,41 @@
-import type {
+import {
+  Skia,
   SkiaMutableValue,
   SkMatrix,
   SkRect,
+  useSharedValueEffect,
 } from "@shopify/react-native-skia";
-import { Skia, useSharedValueEffect } from "@shopify/react-native-skia";
 import React, { ReactNode } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { identity4, Matrix4, multiply4, toMatrix3 } from "react-native-redash";
+import { Matrix4, multiply4, toMatrix3 } from "react-native-redash";
 
-import { concat, vec3 } from "./MatrixHelpers";
+import { concat, initial4, vec3 } from "./MatrixHelpers";
 
 interface GestureHandlerProps {
   matrix: SkiaMutableValue<SkMatrix>;
-  dimensions: SkRect;
-  debug?: boolean;
+  dimensions?: SkRect;
   children: ReactNode;
+  height: number;
+  width: number;
 }
 
 export const GestureHandler = ({
   matrix: skMatrix,
-  dimensions,
-  debug,
   children,
+  height,
+  width,
 }: GestureHandlerProps) => {
-  const { x, y, width, height } = dimensions;
+  const x = 0;
+  const y = 0;
+  const initialValue = initial4({ height, width });
+
   const origin = useSharedValue(vec3(0, 0, 0));
-  const matrix = useSharedValue(identity4);
-  const offset = useSharedValue(identity4);
+  const matrix = useSharedValue(initialValue);
+  const offset = useSharedValue(initialValue);
 
   useSharedValueEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,14 +64,13 @@ export const GestureHandler = ({
     top: y,
     width,
     height,
-    backgroundColor: debug ? "rgba(100, 200, 300, 0.4)" : "transparent",
     transform: [
-      // { translateX: -width / 2 },
-      // { translateY: -height / 2 },
+      { translateX: -width / 2 },
+      { translateY: -height / 2 },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       { matrix: matrix.value as any },
-      // { translateX: width / 2 },
-      // { translateY: height / 2 },
+      { translateX: width / 2 },
+      { translateY: height / 2 },
     ],
   }));
   return (

@@ -1,5 +1,5 @@
 import { Group, Points } from "@shopify/react-native-skia";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import usePathToPoints from "../usePathToPoints/usePathToPoints";
 import EndPointer from "./EndPointer";
@@ -9,10 +9,18 @@ interface Props {
   path: string;
   label: string;
   color?: string;
+  scale?: number;
 }
 
-const SkiaRoutePath: FC<Props> = ({ label = "?", path, color = "red" }) => {
-  const { points, start, end } = usePathToPoints(path);
+const SkiaRoutePath: FC<Props> = ({
+  label = "?",
+  path,
+  color = "red",
+  scale = 1,
+}) => {
+  const { points, start, end } = usePathToPoints(path, scale);
+
+  const strokeWidth = useMemo(() => 21.5 * scale, [scale]);
 
   return (
     <Group>
@@ -21,13 +29,13 @@ const SkiaRoutePath: FC<Props> = ({ label = "?", path, color = "red" }) => {
         mode="polygon"
         color={color}
         style="stroke"
-        strokeJoin={"round"}
+        strokeJoin="round"
         strokeCap="round"
         strokeMiter={1}
-        strokeWidth={2}
+        strokeWidth={strokeWidth}
       />
-      <EndPointer c={end} color={color} />
-      <StartPointer c={start} label={label} />
+      <EndPointer c={end} color={color} scale={scale} />
+      <StartPointer c={start} label={label} scale={scale} />
     </Group>
   );
 };

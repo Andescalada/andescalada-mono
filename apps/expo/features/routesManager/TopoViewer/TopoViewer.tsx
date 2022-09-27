@@ -16,7 +16,9 @@ const TopoViewer: FC<Props> = ({ route: navRoute }) => {
 
   if (data) {
     const { height, url, width } = data.image;
-    const fitted = fitContent({ height, width });
+
+    const fitted = fitContent({ height, width }, "width");
+
     return (
       <Screen>
         <SkiaRouteCanvas
@@ -29,6 +31,7 @@ const TopoViewer: FC<Props> = ({ route: navRoute }) => {
               label={route.route.position.toString()}
               path={route.path}
               key={route.id}
+              scale={fitted.scale}
             />
           ))}
         </SkiaRouteCanvas>

@@ -2,7 +2,6 @@ import {
   Group,
   Points,
   SkiaValue,
-  SkPoint,
   useValue,
   useValueEffect,
   vec,
@@ -10,7 +9,9 @@ import {
 import {
   forwardRef,
   ForwardRefRenderFunction,
+  useCallback,
   useImperativeHandle,
+  useMemo,
   useState,
 } from "react";
 
@@ -28,6 +29,7 @@ interface Props {
   withStart?: boolean;
   label?: string;
   color?: string;
+  scale?: number;
 }
 
 interface Ref {
@@ -38,10 +40,10 @@ interface Ref {
 }
 
 const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
-  { coords, path, withEnd, withStart, label = "?", color },
+  { coords, path, withEnd, withStart, label = "?", color, scale = 1 },
   ref,
 ) => {
-  const { points, start, end } = usePathToPoints(path);
+  const { points, start, end } = usePathToPoints(path, scale);
   const [hasStart, setHasStart] = useState(withStart);
   const [hasEnd, setHasEnd] = useState(withEnd);
 
@@ -61,24 +63,27 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     }
   });
 
-  const finishRoute = () => {
+  const finishRoute = useCallback(() => {
     end.current = points.current[points.current.length - 1];
     setHasEnd(true);
     drawEnd.current = true;
-  };
+  }, [drawEnd, end, points]);
+
+  const undo = useCallback(() => {
+    if (hasEnd) {
+      setHasEnd(false);
+      drawEnd.current = false;
+    } else if (points.current && points.current.length > 1) {
+      points.current = points.current.splice(0, points.current.length - 1);
+    } else {
+      points.current = [];
+      drawStart.current = false;
+      setHasStart(false);
+    }
+  }, [drawEnd, hasEnd, points, drawStart]);
 
   useImperativeHandle(ref, () => ({
-    undo: () => {
-      if (hasEnd) {
-        setHasEnd(false);
-        drawEnd.current = false;
-      } else if (points.current && points.current.length > 1) {
-        points.current.pop();
-      } else {
-        points.current = [];
-        setHasStart(false);
-      }
-    },
+    undo,
     finishRoute,
     reset: () => {
       setHasStart(false);
@@ -86,13 +91,15 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
       points.current = [];
     },
     pointsToString: () => {
-      if (points.current.length < 1) return "";
+      if (points.current.length < 1) return "0,0";
       const stringifyPoints = points.current
-        .map((p) => `${p.x},${p.y}`)
+        .map((p) => `${p.x / scale},${p.y / scale}`)
         .join(" ");
       return stringifyPoints;
     },
   }));
+
+  const strokeWidth = useMemo(() => 21.5 * scale, [scale]);
 
   return (
     <Group>
@@ -104,10 +111,12 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
         strokeJoin={"round"}
         strokeCap="round"
         strokeMiter={1}
-        strokeWidth={2}
+        strokeWidth={strokeWidth}
       />
-      {hasEnd && <EndPointer c={end} color={color} />}
-      {hasStart && <StartPointer c={start} label={label} color={color} />}
+      {hasEnd && <EndPointer c={end} color={color} scale={scale} />}
+      {hasStart && (
+        <StartPointer c={start} label={label} color={color} scale={scale} />
+      )}
     </Group>
   );
 };

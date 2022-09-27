@@ -127,12 +127,14 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
             color={theme.colors.drawingRoute}
             withStart={!!route.path}
             withEnd={!!route.path}
+            scale={fitted.scale}
           />
           {otherRoutes?.map((route) => (
             <SkiaRoutePath
               key={route.id}
               label={route.route.position.toString()}
               path={route.path}
+              scale={fitted.scale}
             />
           ))}
         </SkiaRouteCanvas>

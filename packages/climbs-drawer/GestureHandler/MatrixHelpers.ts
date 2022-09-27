@@ -1,7 +1,29 @@
-import type { Matrix4, Transforms3d, Vec3 } from "react-native-redash";
-import { multiply4, processTransform3d } from "react-native-redash";
+import { Dimensions } from "react-native";
+import {
+  identity4,
+  Matrix4,
+  multiply4,
+  processTransform3d,
+  Transforms3d,
+  Vec3,
+} from "react-native-redash";
+
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export const vec3 = (x: number, y: number, z: number) => [x, y, z] as const;
+
+export const initial4 = ({
+  height,
+  width,
+}: {
+  height: number;
+  width: number;
+}) => {
+  "worklet";
+  const scale = SCREEN_WIDTH / width;
+  const translateY = (SCREEN_HEIGHT - height * scale) / 2;
+  return multiply4(identity4, processTransform3d([{ translateY }, { scale }]));
+};
 
 export const transformOrigin3d = (
   origin: Vec3,
