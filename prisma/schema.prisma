@@ -17,9 +17,26 @@ model User {
   email        String   @unique
   profilePhoto Image?   @relation(fields: [imageId], references: [id])
   imageId      String?
+  auth0id      String?
 
   @@index([email])
   @@index([imageId])
+}
+
+model Roles {
+  id          String        @id @default(uuid())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  permissions Permissions[]
+}
+
+model Permissions {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roles     Roles[]
 }
 
 model Zone {
