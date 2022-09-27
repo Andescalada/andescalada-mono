@@ -58,4 +58,12 @@ export const pallete = {
     error: "#EA1601",
     info: "#2C73DB",
   },
+  contrast: {
+    purple: "#8931EF",
+    yellow: "#F2CA19",
+    pink: "#FF00BD",
+    blue: "#0057E9",
+    green: "#87E911",
+    red: " #E11845",
+  },
 };
