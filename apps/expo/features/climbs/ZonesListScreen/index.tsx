@@ -13,8 +13,8 @@ import {
 import { useAppDispatch } from "@hooks/redux";
 import useRefresh from "@hooks/useRefresh";
 import { logoutAuth0 } from "@store/auth";
-import React from "react";
-import { FlatList } from "react-native";
+import { useCallback } from "react";
+import { Alert, FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 
@@ -22,9 +22,20 @@ const ZonesScreen = ({ navigation }: Props) => {
   const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
   const refresh = useRefresh(refetch, isFetching);
   const dispatch = useAppDispatch();
-  const onLogout = () => {
-    dispatch(logoutAuth0());
-  };
+  const onLogout = useCallback(() => {
+    Alert.alert("Cerrar Sesión", "¿Seguro que quieres cerrar sesión?", [
+      {
+        text: "Si",
+        onPress: () => dispatch(logoutAuth0()),
+        style: "destructive",
+      },
+      {
+        text: "No",
+        style: "cancel",
+      },
+    ]);
+  }, [dispatch]);
+
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
