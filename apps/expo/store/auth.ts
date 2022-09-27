@@ -29,11 +29,12 @@ export const loginAuth0 = createAsyncThunk(
     try {
       dispatch(setLoadingAuth(true));
       const { accessToken, decodedIdToken, refreshToken } = await login();
+
       await AsyncStorage.setItem(Storage.ACCESS_TOKEN, accessToken);
       await AsyncStorage.setItem(Storage.REFRESH_TOKEN, refreshToken);
       await AsyncStorage.setItem(
         Storage.DECODED_ID_TOKEN,
-        String(decodedIdToken),
+        JSON.stringify(decodedIdToken),
       );
       dispatch(setLoadingAuth(false));
       dispatch(setAutoLoginCompleted(true));
