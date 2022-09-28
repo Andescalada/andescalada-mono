@@ -18,6 +18,7 @@
     "@andescalada/climbs-drawer": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
+    "@cloudinary/url-gen": "^1.8.6",
     "@datadog/mobile-react-native": "^1.0.0-rc7",
     "@datadog/mobile-react-navigation": "^1.0.0-rc8",
     "@expo/react-native-action-sheet": "^3.13.0",

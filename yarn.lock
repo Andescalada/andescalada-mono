@@ -1133,6 +1133,20 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@cloudinary/transformation-builder-sdk@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@cloudinary/transformation-builder-sdk/-/transformation-builder-sdk-1.0.1.tgz#95826f75f53ec420fd00207fe0e9fc0944edcd6a"
+  integrity sha512-9AIRH9lD8Z3AFY+fSVTbHSTei7hW03eIppaR0+WHwCzRRIDfNbE8i70eGY52IV/5VLkN5nt7Lr4izjSKdX5QzA==
+  dependencies:
+    "@cloudinary/url-gen" "^1.7.0"
+
+"@cloudinary/url-gen@^1.7.0", "@cloudinary/url-gen@^1.8.6":
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/@cloudinary/url-gen/-/url-gen-1.8.6.tgz#5d28c6957c01f3237230181387c818394ff30aab"
+  integrity sha512-BZUHOns1+ECmZTGlcWWZ1mM7Fu5TsSWqbknGCVtmhgX2g82kwZa3W3LhICMu/xyPjuQmz8ykjXHAkRw5kRZf+w==
+  dependencies:
+    "@cloudinary/transformation-builder-sdk" "^1.0.0"
+
 "@colors/colors@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"

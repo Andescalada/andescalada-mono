@@ -12,7 +12,9 @@ export const toposRouter = t.router({
         RoutePath: {
           include: { route: { select: { id: true, position: true } } },
         },
-        image: { select: { url: true, height: true, width: true } },
+        image: {
+          select: { url: true, height: true, width: true, publicId: true },
+        },
       },
     });
     if (!topo) {

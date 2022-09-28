@@ -23,6 +23,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import useUploadImage from "@hooks/useUploadImage";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { gradeUnits } from "@utils/climbingGrades";
+import { getThumbnail } from "@utils/cloudinary";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, FlatList, Image } from "react-native";
@@ -203,7 +204,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             />
           </Pressable>
         )}
-        {mainTopo?.image && (
+        {mainTopo?.image.publicId && (
           <Pressable
             flex={1}
             borderRadius={10}
@@ -222,7 +223,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           >
             <Image
               style={{ flex: 1, width: "100%", height: 1000 }}
-              source={{ uri: mainTopo.image.url }}
+              source={{ uri: getThumbnail(mainTopo.image.publicId) }}
             />
           </Pressable>
         )}
