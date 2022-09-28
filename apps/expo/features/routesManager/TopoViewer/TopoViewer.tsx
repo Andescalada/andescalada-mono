@@ -6,6 +6,7 @@ import {
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useCachedImage from "@hooks/useCachedImage";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
 import { FC } from "react";
@@ -18,17 +19,18 @@ const TopoViewer: FC<Props> = ({ route: navRoute }) => {
 
   const theme = useAppTheme();
 
+  const image = optimizedImage(data?.image.publicId || undefined);
+
+  const { fileUrl } = useCachedImage(image);
+
   if (data) {
-    const { height, width, publicId } = data.image;
-
-    const topoImage = publicId ? optimizedImage(publicId) : "";
-
+    const { height, width } = data?.image;
     const fitted = fitContent({ height, width }, "width");
 
     return (
       <Screen>
         <SkiaRouteCanvas
-          imageUrl={topoImage}
+          imageUrl={fileUrl}
           height={fitted.height}
           width={fitted.width}
         >

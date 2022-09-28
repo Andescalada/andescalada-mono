@@ -223,7 +223,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           >
             <Image
               style={{ flex: 1, width: "100%", height: 1000 }}
-              source={{ uri: getThumbnail(mainTopo.image.publicId) }}
+              source={{ uri: getThumbnail(mainTopo.image.publicId).url || "" }}
             />
           </Pressable>
         )}

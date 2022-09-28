@@ -10,9 +10,11 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
+import useCachedImage from "@hooks/useCachedImage";
 import type { RoutePath as RoutePathType } from "@prisma/client";
 import { useValue } from "@shopify/react-native-skia";
 import { useTheme } from "@shopify/restyle";
+import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
 import { FC, useState } from "react";
 
@@ -101,11 +103,16 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
     }
   };
 
-  const { height, width, url } = data?.topos[0].image || {
+  const { height, width, publicId } = data?.topos[0].image || {
     height: 0,
     width: 0,
     url: "",
+    publicId: undefined,
   };
+
+  const image = optimizedImage(publicId || undefined);
+
+  const { fileUrl } = useCachedImage(image);
 
   const fitted = fitContent({ height, width });
   const coords = useValue({ x: 0, y: 0 });
@@ -115,7 +122,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
       <Screen safeAreaDisabled justifyContent="center">
         <SkiaRouteCanvas
           coords={coords}
-          imageUrl={url}
+          imageUrl={fileUrl}
           height={fitted.height}
           width={fitted.width}
         >
