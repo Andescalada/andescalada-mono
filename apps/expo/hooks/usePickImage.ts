@@ -8,7 +8,9 @@ export interface SelectedImage {
   base64Img: string;
 }
 
-const usePickImage = () => {
+type Args = ImagePicker.ImagePickerOptions;
+
+const usePickImage = (args?: Args) => {
   const [selectedImage, setSelectedImage] = useState<SelectedImage>();
   const pickFromLibrary = useCallback(async () => {
     const permissionResult =
@@ -21,6 +23,7 @@ const usePickImage = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       presentationStyle: UIImagePickerPresentationStyle.FULL_SCREEN,
       base64: true,
+      ...args,
     });
     if (result.cancelled === true) {
       return;
@@ -29,7 +32,7 @@ const usePickImage = () => {
     const base64Img = `data:image/jpg;base64,${result.base64}`;
 
     setSelectedImage({ localUri: result.uri, base64Img });
-  }, []);
+  }, [args]);
   const pickFromCamera = useCallback(async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     if (permissionResult.granted) {
@@ -37,6 +40,7 @@ const usePickImage = () => {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         presentationStyle: UIImagePickerPresentationStyle.FULL_SCREEN,
         base64: true,
+        ...args,
       });
       if (result.cancelled === true) {
         return;
@@ -46,7 +50,7 @@ const usePickImage = () => {
 
       setSelectedImage({ localUri: result.uri, base64Img });
     }
-  }, []);
+  }, [args]);
   const pickImage = useCallback(() => {
     Alert.alert("Seleccionar imagen", "", [
       { text: "Tomar una foto", onPress: pickFromCamera },
