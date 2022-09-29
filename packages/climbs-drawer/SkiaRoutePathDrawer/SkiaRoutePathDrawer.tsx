@@ -47,8 +47,8 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
   const [hasStart, setHasStart] = useState(withStart);
   const [hasEnd, setHasEnd] = useState(withEnd);
 
-  const drawStart = useValue<boolean>(false);
-  const drawEnd = useValue<boolean>(false);
+  const drawStart = useValue<boolean>(!!withStart);
+  const drawEnd = useValue<boolean>(!!withEnd);
 
   useValueEffect(coords, () => {
     if (drawEnd.current) return;
