@@ -4,9 +4,10 @@ import { z } from "zod";
 import { t } from "../createRouter";
 
 const isAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.user?.email) {
+  if (!ctx.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
   return next({
     ctx: {
       ...ctx,

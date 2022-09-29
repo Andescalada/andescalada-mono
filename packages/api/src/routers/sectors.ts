@@ -1,4 +1,5 @@
 import sector from "@andescalada/api/schemas/sector";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -21,7 +22,7 @@ export const sectorsRouter = t.router({
     }
     return sector;
   }),
-  add: t.procedure
+  add: protectedProcedure
     .input(z.object({ zoneId: z.string(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.prisma.sector.aggregate({
@@ -32,8 +33,9 @@ export const sectorsRouter = t.router({
       const newSector = await ctx.prisma.sector.create({
         data: {
           name: input.name,
-          zoneId: input.zoneId,
+          Zone: { connect: { id: input.zoneId } },
           position: biggestPosition + 1,
+          Author: { connect: { email: ctx.session.user.email } },
         },
       });
 

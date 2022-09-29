@@ -1,4 +1,5 @@
 import wall from "@andescalada/api/schemas/wall";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -32,7 +33,7 @@ export const wallsRouter = t.router({
     }
     return wall;
   }),
-  add: t.procedure
+  add: protectedProcedure
     .input(z.object({ sectorId: z.string(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.prisma.wall.aggregate({
@@ -43,8 +44,9 @@ export const wallsRouter = t.router({
       const newWall = await ctx.prisma.wall.create({
         data: {
           name: input.name,
-          sectorId: input.sectorId,
+          Sector: { connect: { id: input.sectorId } },
           position: biggestPosition + 1,
+          Author: { connect: { email: ctx.session.user.email } },
         },
       });
       return newWall;

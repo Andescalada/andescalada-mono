@@ -19,8 +19,17 @@ model User {
   profilePhotoId String?
   firstLogin     Boolean  @default(true)
   auth0id        String?
-  author         Topo[]   @relation("Author")
-  coAuthor       Topo[]   @relation("CoAuthor")
+
+  authorSector      Sector[]    @relation("AuthorSector")
+  coAuthorSector    Sector[]    @relation("CoAuthorSector")
+  authorWall        Wall[]      @relation("AuthorWall")
+  coAuthorWall      Wall[]      @relation("CoAuthorWall")
+  authorRoute       Route[]     @relation("AuthorRoute")
+  authorTopo        Topo[]      @relation("AuthorTopo")
+  coAuthorTopo      Topo[]      @relation("CoAuthorTopo")
+  coAuthorRoute     Route[]     @relation("CoAuthorRoute")
+  authorRoutePath   RoutePath[] @relation("AuthorRoutePath")
+  coAuthorRoutePath RoutePath[] @relation("CoAuthorRoutePath")
 
   @@index([email])
   @@index([profilePhotoId])
@@ -67,8 +76,12 @@ model Sector {
   Zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   zoneId    String
   walls     Wall[]
+  Author    User     @relation(name: "AuthorSector", fields: [authorId], references: [id])
+  authorId  String
+  coAuthors User[]   @relation("CoAuthorSector")
 
   @@index([zoneId])
+  @@index([authorId])
 }
 
 model Wall {
@@ -81,8 +94,12 @@ model Wall {
   sectorId  String
   topos     Topo[]
   routes    Route[]
+  Author    User     @relation(name: "AuthorWall", fields: [authorId], references: [id])
+  authorId  String
+  coAuthors User[]   @relation("CoAuthorWall")
 
   @@index([sectorId])
+  @@index([authorId])
 }
 
 model Topo {
@@ -98,9 +115,9 @@ model Topo {
   canvas    String?     @db.LongText
   image     Image       @relation(fields: [imageId], references: [id])
   imageId   String
-  author    User?       @relation("Author", fields: [authorId], references: [id])
-  authorId  String?
-  coAuthors User[]      @relation("CoAuthor")
+  Author    User        @relation("AuthorTopo", fields: [authorId], references: [id])
+  authorId  String
+  coAuthors User[]      @relation("CoAuthorTopo")
 
   @@index([wallId])
   @@index([imageId])
@@ -122,8 +139,12 @@ model Route {
   description  String?     @db.LongText
   RoutePath    RoutePath[]
   RouteGrade   RouteGrade?
+  Author       User        @relation(name: "AuthorRoute", fields: [authorId], references: [id])
+  authorId     String
+  coAuthors    User[]      @relation("CoAuthorRoute")
 
   @@index([wallId])
+  @@index([authorId])
 }
 
 model RouteGrade {
@@ -152,13 +173,17 @@ model RoutePath {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   path      String   @db.LongText
-  topo      Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Topo      Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   topoId    String
-  route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   routeId   String
+  Author    User     @relation(name: "AuthorRoutePath", fields: [authorId], references: [id])
+  authorId  String
+  coAuthors User[]   @relation("CoAuthorRoutePath")
 
   @@index([topoId])
   @@index([routeId])
+  @@index([authorId])
 }
 
 model Image {

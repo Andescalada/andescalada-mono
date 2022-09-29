@@ -1,3 +1,4 @@
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { RouteKind } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -19,7 +20,7 @@ export const routesRouter = t.router({
     }
     return route;
   }),
-  add: t.procedure
+  add: protectedProcedure
     .input(
       z.object({
         wallId: z.string(),
@@ -41,17 +42,18 @@ export const routesRouter = t.router({
       const newRoute = await ctx.prisma.route.create({
         data: {
           name: input.name,
-          wallId: input.wallId,
+          Wall: { connect: { id: input.wallId } },
           kind: input.kind,
           position: biggestPosition + 1,
           RouteGrade: {
             create: { grade: input.grade.grade, project: input.grade.project },
           },
+          Author: { connect: { email: ctx.session.user.email } },
         },
       });
       return newRoute;
     }),
-  addPath: t.procedure
+  addPath: protectedProcedure
     .input(
       z.object({
         routeId: z.string(),
@@ -74,8 +76,9 @@ export const routesRouter = t.router({
       } else {
         return ctx.prisma.routePath.create({
           data: {
-            topoId: input.topoId,
-            routeId: input.routeId,
+            Topo: { connect: { id: input.topoId } },
+            Route: { connect: { id: input.routeId } },
+            Author: { connect: { email: ctx.session.user.email } },
             path: input.path,
           },
         });

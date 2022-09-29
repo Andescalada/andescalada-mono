@@ -1,4 +1,5 @@
 import topo from "@andescalada/api/schemas/topo";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -10,7 +11,7 @@ export const toposRouter = t.router({
       where: { id: input },
       include: {
         RoutePath: {
-          include: { route: { select: { id: true, position: true } } },
+          include: { Route: { select: { id: true, position: true } } },
         },
         image: {
           select: { url: true, height: true, width: true, publicId: true },
@@ -25,7 +26,7 @@ export const toposRouter = t.router({
     }
     return topo;
   }),
-  add: t.procedure.input(topo.schema).mutation(({ ctx, input }) =>
+  add: protectedProcedure.input(topo.schema).mutation(({ ctx, input }) =>
     ctx.prisma.topo.create({
       data: {
         main: input.main,
@@ -34,6 +35,7 @@ export const toposRouter = t.router({
         image: {
           create: input.image,
         },
+        Author: { connect: { email: ctx.session.user.email } },
       },
     }),
   ),
