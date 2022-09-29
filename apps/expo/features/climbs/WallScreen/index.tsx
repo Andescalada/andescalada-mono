@@ -58,22 +58,12 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   const onUpload = async () => {
     if (!selectedImage) return;
     setIsLoadingUpload(true);
-    const img = await uploadImage(selectedImage?.base64Img);
+    const image = await uploadImage(selectedImage?.base64Img);
     mutate(
       {
         main: true,
         wallId,
-        image: {
-          assetId: img.asset_id,
-          format: img.format,
-          height: img.height,
-          width: img.width,
-          publicId: img.public_id,
-          storageService: "Cloudinary",
-          url: img.secure_url,
-          version: img.version,
-          bytes: img.bytes,
-        },
+        image,
       },
       {
         onSuccess: () => {

@@ -4,6 +4,7 @@
 import { routesRouter } from "@andescalada/api/src/routers/routes";
 import { sectorsRouter } from "@andescalada/api/src/routers/sectors";
 import { toposRouter } from "@andescalada/api/src/routers/topos";
+import { userRouter } from "@andescalada/api/src/routers/user";
 import { wallsRouter } from "@andescalada/api/src/routers/walls";
 
 import { t } from "../createRouter";
@@ -21,6 +22,7 @@ export const appRouter = t.router({
   walls: wallsRouter,
   topos: toposRouter,
   routes: routesRouter,
+  user: userRouter,
 });
 
 export type AppRouter = typeof appRouter;

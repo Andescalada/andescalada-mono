@@ -1,4 +1,4 @@
-import { imageParser } from "@andescalada/api/src/routers/images";
+import topo from "@andescalada/api/schemas/topo";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -25,27 +25,16 @@ export const toposRouter = t.router({
     }
     return topo;
   }),
-  add: t.procedure
-    .input(
-      z.object({
-        wallId: z.string(),
-        name: z.string().optional(),
-        main: z.boolean().optional(),
-        image: imageParser,
-      }),
-    )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.topo.create({
-        data: {
-          main: input.main,
-          name: input.name,
-          Wall: { connect: { id: input.wallId } },
-          image: {
-            create: {
-              ...input.image,
-            },
-          },
+  add: t.procedure.input(topo.schema).mutation(({ ctx, input }) =>
+    ctx.prisma.topo.create({
+      data: {
+        main: input.main,
+        name: input.name,
+        Wall: { connect: { id: input.wallId } },
+        image: {
+          create: input.image,
         },
-      }),
-    ),
+      },
+    }),
+  ),
 });
