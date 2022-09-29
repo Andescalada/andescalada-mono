@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import AuthNavigation from "@navigation/AppNavigation/AuthNavigation";
 import RootNavigation from "@navigation/AppNavigation/RootNavigation";
 import { autoLoginAuth0 } from "@store/auth";
+import TRPCProvider from "@utils/trpc/Provider";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect } from "react";
@@ -36,7 +37,9 @@ const Navigator = () => {
   return (
     <>
       {isAuth && accessToken ? (
-        <RootNavigation accessToken={accessToken} />
+        <TRPCProvider accessToken={accessToken}>
+          <RootNavigation />
+        </TRPCProvider>
       ) : (
         <AuthNavigation />
       )}

@@ -1,3 +1,5 @@
+import imageSchema from "@andescalada/api/schemas/image";
+import user from "@andescalada/api/schemas/user";
 import {
   Box,
   BoxWithKeyboard,
@@ -8,14 +10,22 @@ import {
   TextInput,
   Theme,
 } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
+import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {
   UserNavigationRoutes,
   UserScreenProps,
 } from "@features/user/Navigation/types";
+import { zodResolver } from "@hookform/resolvers/zod";
 import usePickImage from "@hooks/usePickImage";
+import useRootNavigation from "@hooks/useRootNavigation";
+import useUploadImage from "@hooks/useUploadImage";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { createBox } from "@shopify/restyle";
 import { ComponentProps, FC, useState } from "react";
+import { useController, useForm } from "react-hook-form";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { z } from "zod";
 
 type Props = UserScreenProps<UserNavigationRoutes.FirstTimeLogin>;
 
@@ -29,8 +39,37 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   const [namePosition, setNamePosition] = useState(0);
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: true,
-    quality: 0.7,
+    quality: 0.5,
   });
+  const { uploadImage } = useUploadImage();
+  const form = useForm<z.infer<typeof user.schema>>({
+    resolver: zodResolver(user.schema),
+  });
+  const {
+    field: { onChange, onBlur, value },
+    fieldState: { error },
+  } = useController({ control: form.control, name: "name" });
+
+  const utils = trpc.useContext();
+  const { mutateAsync } = trpc.user.edit.useMutation();
+
+  const rootNavigation = useRootNavigation();
+
+  const [loading, setLoading] = useState(false);
+  const onSubmit = form.handleSubmit(async ({ name }) => {
+    setLoading(true);
+    let image: z.infer<typeof imageSchema.schema> | undefined;
+    if (selectedImage) {
+      image = await uploadImage(selectedImage.base64Img);
+    }
+    await mutateAsync({ name, image });
+    await utils.user.ownInfo.invalidate();
+    setLoading(false);
+    // rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+    //   screen: ClimbsNavigationRoutes.ZonesList,
+    // });
+  });
+
   return (
     <Screen margin={{ mobile: "m", tablet: "xxl" }}>
       <BoxWithKeyboard keyboardOffset={-namePosition + 20}>
@@ -79,7 +118,15 @@ const FirstTimeLoginScreen: FC<Props> = () => {
             <Text variant="p1B" marginBottom="s">
               Nombre
             </Text>
-            <TextInput containerProps={{ height: 40 }} />
+            <TextInput
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              containerProps={{ height: 40 }}
+            />
+            <Text marginTop={"xs"} color="error">
+              {error?.message}
+            </Text>
           </Box>
         </Box>
         <Button
@@ -87,6 +134,8 @@ const FirstTimeLoginScreen: FC<Props> = () => {
           title="Continuar"
           alignSelf={"center"}
           marginTop="xxl"
+          onPress={onSubmit}
+          isLoading={loading}
         />
       </BoxWithKeyboard>
     </Screen>

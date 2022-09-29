@@ -1,5 +1,9 @@
-import { StorageService } from "@prisma/client";
+// import { StorageService } from "@prisma/client";
 import { z } from "zod";
+
+export enum StorageService {
+  Cloudinary = "Cloudinary",
+}
 
 const schema = z.object({
   name: z.string().optional(),
