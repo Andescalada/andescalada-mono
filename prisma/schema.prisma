@@ -10,20 +10,20 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  name         String
-  email        String   @unique
-  profilePhoto Image?   @relation(fields: [imageId], references: [id])
-  imageId      String?
-  firstLogin   Boolean  @default(true)
-  auth0id      String?
-  author       Topo[]   @relation("Author")
-  coAuthor     Topo[]   @relation("CoAuthor")
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  name           String
+  email          String   @unique
+  profilePhoto   Image?   @relation(fields: [profilePhotoId], references: [id])
+  profilePhotoId String?
+  firstLogin     Boolean  @default(true)
+  auth0id        String?
+  author         Topo[]   @relation("Author")
+  coAuthor       Topo[]   @relation("CoAuthor")
 
   @@index([email])
-  @@index([imageId])
+  @@index([profilePhotoId])
 }
 
 model Roles {
