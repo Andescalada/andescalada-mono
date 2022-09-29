@@ -4,8 +4,9 @@ import {
   SkiaRoutePathDrawer,
   useRoutes,
 } from "@andescalada/climbs-drawer";
-import { Box, Button, Screen, Theme } from "@andescalada/ui";
+import { Box, Button, Pressable, Screen, Theme } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -146,6 +147,16 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
             />
           ))}
         </SkiaRouteCanvas>
+        <Box position="absolute" top={50} left={0} margin="l" marginLeft={"s"}>
+          <Pressable
+            backgroundColor={"transparentButtonBackground"}
+            borderRadius={100}
+            padding="m"
+            onPress={navigation.goBack}
+          >
+            <Ionicons name="arrow-back" size={30} />
+          </Pressable>
+        </Box>
         <Box position="absolute" top={50} right={0} margin="l">
           <Button
             title={canSave ? "Guardar" : "Finalizar"}
