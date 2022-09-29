@@ -1,22 +1,15 @@
-import {
-  Skia,
-  SkiaMutableValue,
-  SkMatrix,
-  SkRect,
-  useSharedValueEffect,
-} from "@shopify/react-native-skia";
+import { SkRect } from "@shopify/react-native-skia";
 import React, { ReactNode } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { Matrix4, multiply4, toMatrix3 } from "react-native-redash";
+import { Matrix4, multiply4 } from "react-native-redash";
 
 import { concat, initial4, vec3 } from "./MatrixHelpers";
 
 interface GestureHandlerProps {
-  matrix: SkiaMutableValue<SkMatrix>;
   dimensions?: SkRect;
   children: ReactNode;
   height: number;
@@ -24,7 +17,6 @@ interface GestureHandlerProps {
 }
 
 export const GestureHandler = ({
-  matrix: skMatrix,
   children,
   height,
   width,
@@ -37,17 +29,19 @@ export const GestureHandler = ({
   const matrix = useSharedValue(initialValue);
   const offset = useSharedValue(initialValue);
 
-  useSharedValueEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    skMatrix.current = Skia.Matrix(toMatrix3(matrix.value) as any);
-  }, matrix);
-
-  const pan = Gesture.Pan().onChange((e) => {
-    matrix.value = multiply4(
-      Matrix4.translate(e.changeX, e.changeY, 0),
-      matrix.value,
-    );
-  });
+  const pan = Gesture.Pan()
+    .onChange((e) => {
+      matrix.value = multiply4(
+        Matrix4.translate(e.changeX, e.changeY, 0),
+        matrix.value,
+      );
+    })
+    .onEnd(() => {
+      const currentScale = matrix.value[0];
+      if (currentScale <= 1) {
+        matrix.value = initialValue;
+      }
+    });
 
   const scale = Gesture.Pinch()
     .onBegin((e) => {
@@ -56,6 +50,12 @@ export const GestureHandler = ({
     })
     .onChange((e) => {
       matrix.value = concat(offset.value, origin.value, [{ scale: e.scale }]);
+    })
+    .onEnd(() => {
+      const currentScale = matrix.value[0];
+      if (currentScale < 1) {
+        matrix.value = concat(initialValue, [0, 0, 0], [{ scale: 1 }]);
+      }
     });
 
   const style = useAnimatedStyle(() => ({

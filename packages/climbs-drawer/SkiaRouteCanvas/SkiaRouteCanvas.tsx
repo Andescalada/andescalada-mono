@@ -1,9 +1,7 @@
 import {
   Canvas,
-  Skia,
   SkiaMutableValue,
   useTouchHandler,
-  useValue,
 } from "@shopify/react-native-skia";
 import { FC } from "react";
 import { Dimensions } from "react-native";
@@ -43,11 +41,10 @@ const SkiaRouteCanvas: FC<Props> = ({
   });
 
   const image = useCacheImage(imageUrl);
-  const canvasMatrix = useValue(Skia.Matrix());
 
   if (image)
     return (
-      <GestureHandler matrix={canvasMatrix} height={height} width={width}>
+      <GestureHandler height={height} width={width}>
         <Canvas
           style={{
             height,
