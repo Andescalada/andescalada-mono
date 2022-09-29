@@ -1,3 +1,4 @@
+import { StorageService } from "@andescalada/api/schemas/image";
 import { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_URL } from "@env";
 import type { SelectedImage } from "@hooks/usePickImage";
 import axios from "axios";
@@ -10,7 +11,7 @@ export const parseImageResponse = (img: CloudinaryResponse) => ({
   height: img.height,
   width: img.width,
   publicId: img.public_id,
-  storageService: "Cloudinary" as const,
+  storageService: StorageService.Cloudinary,
   url: img.secure_url,
   version: img.version,
   bytes: img.bytes,
