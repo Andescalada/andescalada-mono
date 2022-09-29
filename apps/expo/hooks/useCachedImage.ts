@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { cachedImage } from "@utils/FileSystem/cachedImages";
 import { useCallback, useEffect, useState } from "react";
 
@@ -20,7 +21,11 @@ const useCachedImage = ({
     getCachedImage();
   }, [getCachedImage]);
 
-  return { fileUrl, getCachedImage };
+  return {
+    fileUrl,
+    getCachedImage,
+    uri: fileUrl ? { uri: fileUrl } : undefined,
+  };
 };
 
 export default useCachedImage;

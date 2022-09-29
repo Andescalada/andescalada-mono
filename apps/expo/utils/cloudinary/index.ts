@@ -24,7 +24,7 @@ export const getImage = (publicId: string, width: number, height: number) => {
 export const optimizedImage = (publicId?: string, quality = 60) =>
   imageObject(cld.image(publicId).format("auto").quality(quality), publicId);
 
-export const getThumbnail = (publicId: string) => {
+export const getThumbnail = (publicId?: string) => {
   const image = cld
     .image(publicId)
     .resize(Resize.scale(SCREEN_WIDTH))

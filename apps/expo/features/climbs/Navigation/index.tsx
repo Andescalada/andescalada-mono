@@ -5,6 +5,7 @@ import SectorScreen from "@features/climbs/SectorScreen";
 import WallScreen from "@features/climbs/WallScreen";
 import ZoneScreen from "@features/climbs/ZoneScreen";
 import ZonesListScreen from "@features/climbs/ZonesListScreen";
+import UserHeader from "@features/user/components/UserHeader/UserHeader";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -20,6 +21,7 @@ const Navigator = () => {
       <Stack.Screen
         name={ClimbsNavigationRoutes.ZonesList}
         component={ZonesListScreen}
+        options={{ header: () => <UserHeader />, headerShown: true }}
       />
       <Stack.Screen name={ClimbsNavigationRoutes.Zone} component={ZoneScreen} />
       <Stack.Screen

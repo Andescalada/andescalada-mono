@@ -4,34 +4,26 @@ import {
   Box,
   BoxWithKeyboard,
   Button,
+  Image,
   Pressable,
   Screen,
   Text,
   TextInput,
-  Theme,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {
   UserNavigationRoutes,
   UserScreenProps,
 } from "@features/user/Navigation/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import usePickImage from "@hooks/usePickImage";
-import useRootNavigation from "@hooks/useRootNavigation";
 import useUploadImage from "@hooks/useUploadImage";
-import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { createBox } from "@shopify/restyle";
-import { ComponentProps, FC, useState } from "react";
+import { FC, useState } from "react";
 import { useController, useForm } from "react-hook-form";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { FadeIn } from "react-native-reanimated";
 import { z } from "zod";
 
 type Props = UserScreenProps<UserNavigationRoutes.FirstTimeLogin>;
-
-const Image = createBox<Theme, ComponentProps<typeof Animated.Image>>(
-  Animated.Image,
-);
 
 const responsiveImageSize = { mobile: 200, tablet: 400 };
 
@@ -52,8 +44,6 @@ const FirstTimeLoginScreen: FC<Props> = () => {
 
   const utils = trpc.useContext();
   const { mutateAsync } = trpc.user.edit.useMutation();
-
-  const rootNavigation = useRootNavigation();
 
   const [loading, setLoading] = useState(false);
   const onSubmit = form.handleSubmit(async ({ name }) => {

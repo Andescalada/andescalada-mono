@@ -3,6 +3,7 @@ export { default as Box } from "./Box/Box";
 export { default as BoxWithKeyboard } from "./BoxWithKeyboard/BoxWithKeyboard";
 export { default as Button } from "./Button/Button";
 export { default as EditableTitle } from "./EditableTitle/EditableTitle";
+export { default as Image } from "./Image/Image";
 export { default as KeyboardAvoidingBox } from "./KeyboardAvoidingBox/KeyboardAvoidingBox";
 export { default as ListItem } from "./ListItem/ListItem";
 export { default as Pressable } from "./Pressable/Pressable";
