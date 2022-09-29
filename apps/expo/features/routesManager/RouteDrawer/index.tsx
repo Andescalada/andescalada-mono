@@ -151,7 +151,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
           <Pressable
             backgroundColor={"transparentButtonBackground"}
             borderRadius={100}
-            padding="m"
+            padding="s"
             onPress={navigation.goBack}
           >
             <Ionicons name="arrow-back" size={30} />

@@ -1,6 +1,7 @@
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
-import { Screen } from "@andescalada/ui";
+import { Box, Pressable, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -13,7 +14,7 @@ import { FC } from "react";
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.TopoViewer>;
 
-const TopoViewer: FC<Props> = ({ route: navRoute }) => {
+const TopoViewer: FC<Props> = ({ route: navRoute, navigation }) => {
   const { topoId } = navRoute.params;
   const { data } = trpc.topos.byId.useQuery(topoId);
 
@@ -44,6 +45,16 @@ const TopoViewer: FC<Props> = ({ route: navRoute }) => {
             />
           ))}
         </SkiaRouteCanvas>
+        <Box position="absolute" top={50} left={0} margin="l" marginLeft={"s"}>
+          <Pressable
+            backgroundColor={"transparentButtonBackground"}
+            borderRadius={100}
+            padding="s"
+            onPress={navigation.goBack}
+          >
+            <Ionicons name="arrow-back" size={30} />
+          </Pressable>
+        </Box>
       </Screen>
     );
   }
