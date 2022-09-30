@@ -17,40 +17,37 @@ export const parseImageResponse = (img: CloudinaryResponse) => ({
   bytes: img.bytes,
 });
 
-const useUploadImage = ({ parsed = true }: { parsed?: boolean } = {}) => {
+const useUploadImage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [uri, setUri] = useState<string>();
 
-  const uploadImage = useCallback(
-    async (data: SelectedImage["base64Img"]) => {
-      try {
-        setIsLoading(true);
-        setIsSuccess(false);
-        setUri(undefined);
+  const uploadImage = useCallback(async (data: SelectedImage["base64Img"]) => {
+    try {
+      setIsLoading(true);
+      setIsSuccess(false);
+      setUri(undefined);
 
-        const res = await axios.post<CloudinaryResponse>(
-          CLOUDINARY_URL,
+      const res = await axios.post<CloudinaryResponse>(
+        CLOUDINARY_URL,
 
-          { file: data, upload_preset: CLOUDINARY_UPLOAD_PRESET },
-          {
-            headers: {
-              "content-type": "application/json",
-            },
+        { file: data, upload_preset: CLOUDINARY_UPLOAD_PRESET },
+        {
+          headers: {
+            "content-type": "application/json",
           },
-        );
-        setUri(res.data.url);
-        setIsSuccess(true);
-        setIsLoading(false);
-        return parseImageResponse(res.data);
-      } catch (err) {
-        Alert.alert("Hubo un error al subir la imagen");
-        setIsLoading(false);
-        throw new Error(err as string);
-      }
-    },
-    [parsed],
-  );
+        },
+      );
+      setUri(res.data.url);
+      setIsSuccess(true);
+      setIsLoading(false);
+      return parseImageResponse(res.data);
+    } catch (err) {
+      Alert.alert("Hubo un error al subir la imagen");
+      setIsLoading(false);
+      throw new Error(err as string);
+    }
+  }, []);
   return { isLoading, uri, uploadImage, isSuccess };
 };
 

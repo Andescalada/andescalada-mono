@@ -9,7 +9,6 @@ import {
 } from "@env";
 import isExpoGo from "@utils/isExpoGo";
 import getTrackingPermission from "@utils/trackingPermissions";
-import Constants, { AppOwnership } from "expo-constants";
 import { Platform } from "react-native";
 
 const trackInteractions = true;
