@@ -22,7 +22,7 @@ import { FC, useState } from "react";
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
 
 interface RP extends RoutePathType {
-  route: {
+  Route: {
     id: string;
     position: number;
   };
@@ -41,7 +41,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
       const existingRoutesPath = topo?.RoutePath;
       if (existingRoutesPath) {
         const selectedRoute = existingRoutesPath.find(
-          (r) => r.route.id === routeParams.id,
+          (r) => r.Route.id === routeParams.id,
         );
         if (selectedRoute) {
           create({
@@ -58,7 +58,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
         }
       }
       const filteredTopos = topo?.RoutePath.filter(
-        (r) => r.route.id !== routeParams.id,
+        (r) => r.Route.id !== routeParams.id,
       );
 
       setOtherRoutes(filteredTopos);
@@ -140,7 +140,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
           {otherRoutes?.map((route) => (
             <SkiaRoutePath
               key={route.id}
-              label={route.route.position.toString()}
+              label={route.Route.position.toString()}
               path={route.path}
               scale={fitted.scale}
               color={theme.colors.routePath}

@@ -37,7 +37,7 @@ const TopoViewer: FC<Props> = ({ route: navRoute, navigation }) => {
         >
           {data.RoutePath.map((route) => (
             <SkiaRoutePath
-              label={route.route.position.toString()}
+              label={route.Route.position.toString()}
               path={route.path}
               key={route.id}
               color={theme.colors.routePath}
