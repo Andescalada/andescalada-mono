@@ -47,17 +47,16 @@ const FirstTimeLoginScreen: FC<Props> = () => {
 
   const [loading, setLoading] = useState(false);
   const onSubmit = form.handleSubmit(async ({ name }) => {
-    setLoading(true);
-    let image: z.infer<typeof imageSchema.schema> | undefined;
-    if (selectedImage) {
-      image = await uploadImage(selectedImage.base64Img);
-    }
-    await mutateAsync({ name, image });
-    await utils.user.ownInfo.invalidate();
+    try {
+      setLoading(true);
+      let image: z.infer<typeof imageSchema.schema> | undefined;
+      if (selectedImage) {
+        image = await uploadImage(selectedImage.base64Img);
+      }
+      await mutateAsync({ name, image });
+      await utils.user.ownInfo.invalidate();
+    } catch (err) {}
     setLoading(false);
-    // rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-    //   screen: ClimbsNavigationRoutes.ZonesList,
-    // });
   });
 
   return (
