@@ -10,16 +10,15 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  name           String
-  email          String   @unique
-  profilePhoto   Image?   @relation(fields: [profilePhotoId], references: [id])
-  profilePhotoId String?
-  firstLogin     Boolean  @default(true)
-  auth0id        String?
-
+  id                String      @id @default(uuid())
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  name              String
+  email             String      @unique
+  profilePhoto      Image?      @relation(fields: [profilePhotoId], references: [id])
+  profilePhotoId    String?
+  firstLogin        Boolean     @default(true)
+  auth0id           String?
   authorSector      Sector[]    @relation("AuthorSector")
   coAuthorSector    Sector[]    @relation("CoAuthorSector")
   authorWall        Wall[]      @relation("AuthorWall")
@@ -61,22 +60,16 @@ model Zone {
   photos     Image[]
 }
 
-enum InfoAccess {
-  Public
-  Community
-  Private
-}
-
 model Sector {
   id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   position  Int      @default(0)
-  Zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
   zoneId    String
   walls     Wall[]
-  Author    User     @relation(name: "AuthorSector", fields: [authorId], references: [id])
+  Author    User     @relation("AuthorSector", fields: [authorId], references: [id])
   authorId  String
   coAuthors User[]   @relation("CoAuthorSector")
 
@@ -90,11 +83,11 @@ model Wall {
   updatedAt DateTime @updatedAt
   name      String
   position  Int      @default(0)
-  Sector    Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Sector    Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade)
   sectorId  String
   topos     Topo[]
   routes    Route[]
-  Author    User     @relation(name: "AuthorWall", fields: [authorId], references: [id])
+  Author    User     @relation("AuthorWall", fields: [authorId], references: [id])
   authorId  String
   coAuthors User[]   @relation("CoAuthorWall")
 
@@ -134,12 +127,12 @@ model Route {
   rightRouteId String?
   classic      Boolean     @default(false)
   kind         RouteKind
-  Wall         Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Wall         Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId       String
   description  String?     @db.LongText
   RoutePath    RoutePath[]
   RouteGrade   RouteGrade?
-  Author       User        @relation(name: "AuthorRoute", fields: [authorId], references: [id])
+  Author       User        @relation("AuthorRoute", fields: [authorId], references: [id])
   authorId     String
   coAuthors    User[]      @relation("CoAuthorRoute")
 
@@ -160,24 +153,16 @@ model RouteGrade {
   @@index([routeId])
 }
 
-enum RouteKind {
-  Sport
-  Trad
-  Boulder
-  Mixed
-  Ice
-}
-
 model RoutePath {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   path      String   @db.LongText
-  Topo      Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Topo      Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade)
   topoId    String
-  Route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
   routeId   String
-  Author    User     @relation(name: "AuthorRoutePath", fields: [authorId], references: [id])
+  Author    User     @relation("AuthorRoutePath", fields: [authorId], references: [id])
   authorId  String
   coAuthors User[]   @relation("CoAuthorRoutePath")
 
@@ -199,11 +184,24 @@ model Image {
   version        BigInt?
   assetId        String?        @db.MediumText
   format         String?
+  Topo           Topo[]
+  User           User[]
+  Zone           Zone?          @relation(fields: [zoneId], references: [id])
+  zoneId         String?
+}
 
-  Topo   Topo[]
-  User   User[]
-  Zone   Zone?   @relation(fields: [zoneId], references: [id])
-  zoneId String?
+enum InfoAccess {
+  Public
+  Community
+  Private
+}
+
+enum RouteKind {
+  Sport
+  Trad
+  Boulder
+  Mixed
+  Ice
 }
 
 enum StorageService {
