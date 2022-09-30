@@ -15,11 +15,11 @@ import {
   UserNavigationRoutes,
   UserScreenProps,
 } from "@features/user/Navigation/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import usePickImage from "@hooks/usePickImage";
 import useUploadImage from "@hooks/useUploadImage";
+import useZodForm from "@hooks/useZodForm";
 import { FC, useState } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { FadeIn } from "react-native-reanimated";
 import { z } from "zod";
 
@@ -34,8 +34,8 @@ const FirstTimeLoginScreen: FC<Props> = () => {
     quality: 0.5,
   });
   const { uploadImage } = useUploadImage();
-  const form = useForm<z.infer<typeof user.schema>>({
-    resolver: zodResolver(user.schema),
+  const form = useZodForm({
+    schema: user.schema,
   });
   const {
     field: { onChange, onBlur, value },

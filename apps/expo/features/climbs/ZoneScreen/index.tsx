@@ -16,13 +16,11 @@ import {
 } from "@features/climbs/Navigation/types";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
+import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
-import { z } from "zod";
 
 const { schema } = zone;
-type Form = z.infer<typeof schema>;
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
@@ -32,7 +30,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const refresh = useRefresh(refetch, isFetching);
 
   const editZone = trpc.zones.edit.useMutation();
-  const methods = useForm<Form>();
+  const methods = useZodForm({ schema });
 
   const onSubmit = methods.handleSubmit(
     (input) => {

@@ -14,17 +14,13 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
+import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
-import { z } from "zod";
 
 const { schema } = sector;
-
-type Form = z.infer<typeof schema>;
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 
@@ -40,8 +36,8 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
-  const methods = useForm<Form>({
-    resolver: zodResolver(schema),
+  const methods = useZodForm({
+    schema,
   });
 
   const refresh = useRefresh(refetch, isFetching);

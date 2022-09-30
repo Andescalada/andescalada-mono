@@ -11,9 +11,9 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { Alert } from "react-native";
 import { z } from "zod";
 
@@ -26,8 +26,6 @@ const schema = z.object({
     .max(50, "Nombre muy largo"),
 });
 
-type Form = z.infer<typeof schema>;
-
 const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   const { sectorId } = route.params;
   const utils = trpc.useContext();
@@ -38,8 +36,8 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
-  const { handleSubmit, control } = useForm<Form>({
-    resolver: zodResolver(schema),
+  const { handleSubmit, control } = useZodForm({
+    schema,
   });
 
   const {

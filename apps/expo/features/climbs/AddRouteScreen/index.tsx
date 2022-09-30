@@ -14,12 +14,12 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import useZodForm from "@hooks/useZodForm";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@shopify/restyle";
 import { allGrades, gradeUnits } from "@utils/climbingGrades";
 import { createContext, FC, ReactNode, useContext } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
 
@@ -44,8 +44,6 @@ const schema = z.object({
   grade: z.union([z.number().nullable(), z.literal("project")]),
 });
 
-type Form = z.infer<typeof schema>;
-
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
   const utils = trpc.useContext();
@@ -60,8 +58,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     handleSubmit,
     control,
     formState: { isDirty },
-  } = useForm<Form>({
-    resolver: zodResolver(schema),
+  } = useZodForm({
+    schema,
   });
 
   const {
