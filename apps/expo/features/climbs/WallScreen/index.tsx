@@ -64,6 +64,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         main: true,
         wallId,
         image,
+        name: `${data?.name} topo`,
       },
       {
         onSuccess: () => {

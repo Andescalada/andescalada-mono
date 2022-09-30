@@ -1,5 +1,6 @@
 import wall from "@andescalada/api/schemas/wall";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { slug } from "@andescalada/api/src/utils/slug";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -44,6 +45,7 @@ export const wallsRouter = t.router({
       const newWall = await ctx.prisma.wall.create({
         data: {
           name: input.name,
+          slug: slug(input.name),
           Sector: { connect: { id: input.sectorId } },
           position: biggestPosition + 1,
           Author: { connect: { email: ctx.session.user.email } },

@@ -1,4 +1,5 @@
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { slug } from "@andescalada/api/src/utils/slug";
 import { RouteKind } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -42,6 +43,7 @@ export const routesRouter = t.router({
       const newRoute = await ctx.prisma.route.create({
         data: {
           name: input.name,
+          slug: slug(input.name),
           Wall: { connect: { id: input.wallId } },
           kind: input.kind,
           position: biggestPosition + 1,

@@ -14,6 +14,7 @@ model User {
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
   name              String
+  username          String      @unique
   email             String      @unique
   profilePhoto      Image?      @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId    String?
@@ -31,6 +32,7 @@ model User {
   coAuthorRoutePath RoutePath[] @relation("CoAuthorRoutePath")
 
   @@index([email])
+  @@index([username])
   @@index([profilePhotoId])
 }
 
@@ -53,6 +55,7 @@ model Permissions {
 model Zone {
   id         String     @id @default(uuid())
   name       String
+  slug       String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   infoAccess InfoAccess @default(Public)
@@ -63,6 +66,7 @@ model Zone {
 model Sector {
   id        String   @id @default(uuid())
   name      String
+  slug      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   position  Int      @default(0)
@@ -82,6 +86,7 @@ model Wall {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
+  slug      String
   position  Int      @default(0)
   Sector    Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade)
   sectorId  String
@@ -99,6 +104,7 @@ model Topo {
   id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+  slug      String
   Wall      Wall        @relation(fields: [wallId], references: [id])
   wallId    String
   position  Int         @default(0)
@@ -122,6 +128,7 @@ model Route {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   name         String
+  slug         String
   position     Int         @default(0)
   leftRouteId  String?
   rightRouteId String?

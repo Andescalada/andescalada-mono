@@ -26,7 +26,13 @@ export const createContext = async ({
       where: { email: user?.email },
     });
     if (!userExist && user?.email) {
-      await prisma.user.create({ data: { email: user.email, name: "" } });
+      await prisma.user.create({
+        data: {
+          email: user.email,
+          name: "",
+          username: `andescalada${Math.random().toString().substring(2, 9)}`,
+        },
+      });
     }
   }
 
