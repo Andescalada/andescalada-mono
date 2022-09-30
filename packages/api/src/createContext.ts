@@ -21,15 +21,24 @@ export const createContext = async ({
 }: trpcNext.CreateNextContextOptions) => {
   const user = await verifyAndDecodeToken(req);
 
-  if (user?.email) {
+  if (user?.email && user?.auth0Id) {
     const userExist = await prisma.user.findUnique({
       where: { email: user?.email },
     });
-    if (!userExist && user?.email) {
+    if (userExist && !userExist.auth0id) {
+      await prisma.user.update({
+        where: { email: user.email },
+        data: {
+          auth0id: user.auth0Id,
+        },
+      });
+    }
+    if (!userExist) {
       await prisma.user.create({
         data: {
           email: user.email,
           name: "",
+          auth0id: user.auth0Id,
           username: `andescalada${Math.random().toString().substring(2, 9)}`,
         },
       });

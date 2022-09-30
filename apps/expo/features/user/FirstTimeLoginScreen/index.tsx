@@ -41,19 +41,27 @@ const FirstTimeLoginScreen: FC<Props> = () => {
     field: { onChange, onBlur, value },
     fieldState: { error },
   } = useController({ control: form.control, name: "name" });
+  const {
+    field: {
+      onChange: onChangeUsername,
+      onBlur: onBlurUsername,
+      value: valueUsername,
+    },
+    fieldState: { error: errorUsername },
+  } = useController({ control: form.control, name: "username" });
 
   const utils = trpc.useContext();
   const { mutateAsync } = trpc.user.edit.useMutation();
 
   const [loading, setLoading] = useState(false);
-  const onSubmit = form.handleSubmit(async ({ name }) => {
+  const onSubmit = form.handleSubmit(async ({ name, username }) => {
     try {
       setLoading(true);
       let image: z.infer<typeof imageSchema.schema> | undefined;
       if (selectedImage) {
         image = await uploadImage(selectedImage.base64Img);
       }
-      await mutateAsync({ name, image });
+      await mutateAsync({ name, image, username });
       await utils.user.ownInfo.invalidate();
     } catch (err) {}
     setLoading(false);

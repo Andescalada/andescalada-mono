@@ -21,6 +21,7 @@ export const userRouter = t.router({
       where: { email: ctx.session.user.email },
       data: {
         name: input.name,
+        username: input.username,
         profilePhoto: input.image ? { create: input.image } : undefined,
         firstLogin: false,
       },
