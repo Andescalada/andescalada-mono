@@ -1,3 +1,4 @@
+import routeSchema from "@andescalada/api/schemas/route";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { RouteKind } from "@prisma/client";
@@ -22,17 +23,7 @@ export const routesRouter = t.router({
     return route;
   }),
   add: protectedProcedure
-    .input(
-      z.object({
-        wallId: z.string(),
-        name: z.string(),
-        kind: z.nativeEnum(RouteKind),
-        grade: z.object({
-          grade: z.number().nullable(),
-          project: z.boolean(),
-        }),
-      }),
-    )
+    .input(routeSchema.schema)
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.prisma.route.aggregate({
         where: { wallId: input.wallId },

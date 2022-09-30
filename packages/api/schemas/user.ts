@@ -1,9 +1,6 @@
 import image from "@andescalada/api/schemas/image";
+import { r } from "@andescalada/api/src/utils/regex";
 import { z } from "zod";
-
-const lowercaseOnly = /^[a-z]+$/g;
-const noSpaces = /^\S*$/g;
-const numbersAndLettersOnly = /^[A-Za-z0-9_&.\s]*$/;
 
 const schema = z.object({
   name: z
@@ -15,10 +12,10 @@ const schema = z.object({
     .string()
     .min(3, "Nombre de usuario muy corto, mínimo 3 caracteres")
     .max(15, "Nombre de usuario muy largo")
-    .regex(lowercaseOnly, "Solo letras minúsculas")
-    .regex(noSpaces, "No se permiten espacios")
+    .regex(r.lowercaseOnly, "Solo letras minúsculas")
+    .regex(r.noSpaces, "No se permiten espacios")
     .regex(
-      numbersAndLettersOnly,
+      r.numbersLettersAndSpecialOnly,
       "Solo se permiten números y letras, caracteres especiales permitidos: . _ &",
     ),
 });
