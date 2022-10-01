@@ -10,8 +10,8 @@
   "scripts": {},
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
-    "@trpc/react": "^10.0.0-proxy-beta.0",
-    "@trpc/server": "^10.0.0-proxy-beta.0",
+    "@trpc/react": "^10.0.0-proxy-beta.10",
+    "@trpc/server": "^10.0.0-proxy-beta.10",
     "axios": "^0.27.2",
     "jose": "^4.9.2"
   },

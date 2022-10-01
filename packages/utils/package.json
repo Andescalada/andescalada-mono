@@ -6,8 +6,8 @@
   "license": "MIT",
   "dependencies": {
     "@andescalada/ui": "*",
-    "@trpc/react": "^10.0.0-proxy-beta.0",
-    "@trpc/server": "^10.0.0-proxy-beta.0",
+    "@trpc/react": "^10.0.0-proxy-beta.10",
+    "@trpc/server": "^10.0.0-proxy-beta.10",
     "deepmerge": "^4.2.2"
   },
   "peerDependencies": {
