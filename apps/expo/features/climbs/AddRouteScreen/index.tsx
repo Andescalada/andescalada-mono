@@ -1,3 +1,4 @@
+import { RouteKind } from "@andescalada/db/client";
 import {
   Box,
   Button,
@@ -23,13 +24,13 @@ import { useController } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
 
-enum RouteKind {
-  Sport = "Sport",
-  Trad = "Trad",
-  Boulder = "Boulder",
-  Mixed = "Mixed",
-  Ice = "Ice",
-}
+// enum RouteKind {
+//   Sport = "Sport",
+//   Trad = "Trad",
+//   Boulder = "Boulder",
+//   Mixed = "Mixed",
+//   Ice = "Ice",
+// }
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddRoute>;
 
