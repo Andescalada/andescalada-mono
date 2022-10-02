@@ -3,7 +3,7 @@ import {
   ActivityIndicator,
   Box,
   EditableTitle,
-  Pressable,
+  ListItem,
   Screen,
   Text,
 } from "@andescalada/ui";
@@ -110,11 +110,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
             </Box>
           )}
           renderItem={({ item }) => (
-            <Pressable
-              backgroundColor="listItemBackground"
-              alignItems="stretch"
-              padding="m"
-              marginVertical="s"
+            <ListItem
               onPress={() =>
                 navigation.navigate(ClimbsNavigationRoutes.Wall, {
                   wallId: item.id,
@@ -124,7 +120,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               }
             >
               <Text variant="p1R">{item.name}</Text>
-            </Pressable>
+            </ListItem>
           )}
         />
       </Box>
