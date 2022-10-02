@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
+import { Redis } from "@upstash/redis";
 
 import verifyAndDecodeToken from "./utils/verifyAndDecodeToken";
 
@@ -9,6 +10,11 @@ export const prisma = new PrismaClient({
     process.env.NODE_ENV === "development"
       ? ["query", "error", "warn"]
       : ["error"],
+});
+
+export const access = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || "",
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
 });
 
 /**
@@ -50,6 +56,7 @@ export const createContext = async ({
     res,
     prisma,
     user,
+    access,
   };
 };
 

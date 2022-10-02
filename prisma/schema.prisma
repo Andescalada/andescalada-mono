@@ -10,57 +10,97 @@ datasource db {
 }
 
 model User {
-  id                String      @id @default(uuid())
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  id                String       @id @default(uuid())
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
   name              String
-  username          String      @unique
-  email             String      @unique
-  profilePhoto      Image?      @relation(fields: [profilePhotoId], references: [id])
+  username          String       @unique
+  email             String       @unique
+  profilePhoto      Image?       @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId    String?
-  firstLogin        Boolean     @default(true)
+  firstLogin        Boolean      @default(true)
   auth0id           String?
-  authorSector      Sector[]    @relation("AuthorSector")
-  coAuthorSector    Sector[]    @relation("CoAuthorSector")
-  authorWall        Wall[]      @relation("AuthorWall")
-  coAuthorWall      Wall[]      @relation("CoAuthorWall")
-  authorRoute       Route[]     @relation("AuthorRoute")
-  authorTopo        Topo[]      @relation("AuthorTopo")
-  coAuthorTopo      Topo[]      @relation("CoAuthorTopo")
-  coAuthorRoute     Route[]     @relation("CoAuthorRoute")
-  authorRoutePath   RoutePath[] @relation("AuthorRoutePath")
-  coAuthorRoutePath RoutePath[] @relation("CoAuthorRoutePath")
+  authorSector      Sector[]     @relation("AuthorSector")
+  coAuthorSector    Sector[]     @relation("CoAuthorSector")
+  authorWall        Wall[]       @relation("AuthorWall")
+  coAuthorWall      Wall[]       @relation("CoAuthorWall")
+  authorRoute       Route[]      @relation("AuthorRoute")
+  authorTopo        Topo[]       @relation("AuthorTopo")
+  coAuthorTopo      Topo[]       @relation("CoAuthorTopo")
+  coAuthorRoute     Route[]      @relation("CoAuthorRoute")
+  authorRoutePath   RoutePath[]  @relation("AuthorRoutePath")
+  coAuthorRoutePath RoutePath[]  @relation("CoAuthorRoutePath")
+  RoleByZone        RoleByZone[]
 
   @@index([email])
   @@index([username])
   @@index([profilePhotoId])
 }
 
-model Roles {
+model RoleByZone {
+  id     String @id @default(uuid())
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+  Zone   Zone   @relation(fields: [zoneId], references: [id])
+  zoneId String
+  Role   Role   @relation(fields: [roleId], references: [id])
+  roleId String
+
+  @@index([id])
+  @@index([userId, zoneId, roleId])
+}
+
+model Role {
   id          String        @id @default(uuid())
-  name        String
+  name        RoleNames     @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   permissions Permissions[]
+
+  RoleByZone RoleByZone[]
+
+  @@index([id])
+  @@index([name])
+}
+
+enum RoleNames {
+  Admin
+  Collaborator
+  Editor
+  Reader
 }
 
 model Permissions {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  roles     Roles[]
+  id        String            @id @default(uuid())
+  action    PermissionActions @unique
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  roles     Role[]
+
+  @@index([id])
+  @@index([action])
+}
+
+enum PermissionActions {
+  Create
+  Update
+  Read
+  Delete
+  GrantAccess
+  RevokeAccess
+  DenyAccess
 }
 
 model Zone {
-  id         String     @id @default(uuid())
+  id         String       @id @default(uuid())
   name       String
   slug       String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  infoAccess InfoAccess @default(Public)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  infoAccess InfoAccess   @default(Public)
   sectors    Sector[]
   photos     Image[]
+  RoleByZone RoleByZone[]
 }
 
 model Sector {
