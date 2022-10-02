@@ -1,5 +1,8 @@
 import user from "@andescalada/api/schemas/user";
+import zone from "@andescalada/api/schemas/zone";
+import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { deserialize } from "superjson";
 
 import { t } from "../createRouter";
 
@@ -27,4 +30,15 @@ export const userRouter = t.router({
       },
     }),
   ),
+  zonePermissions: protectedProcedure
+    .input(zone.id)
+    .query(async ({ ctx, input }) => {
+      const res = await ctx.access.hget<Access>(ctx.user.email, input.zoneId);
+      let permissions: Permissions = new Set();
+      if (res) {
+        permissions = deserialize<Permissions>(res);
+      }
+
+      return permissions;
+    }),
 });
