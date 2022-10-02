@@ -6,7 +6,7 @@ import { t } from "../createRouter";
 export const userRouter = t.router({
   ownInfo: protectedProcedure.query(({ ctx }) =>
     ctx.prisma.user.findUnique({
-      where: { email: ctx.session.user.email },
+      where: { email: ctx.user.email },
       select: {
         email: true,
         firstLogin: true,
@@ -18,7 +18,7 @@ export const userRouter = t.router({
   ),
   edit: protectedProcedure.input(user.schema).mutation(({ ctx, input }) =>
     ctx.prisma.user.update({
-      where: { email: ctx.session.user.email },
+      where: { email: ctx.user.email },
       data: {
         name: input.name,
         username: input.username,

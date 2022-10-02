@@ -37,7 +37,7 @@ export const sectorsRouter = t.router({
           slug: slug(input.name),
           Zone: { connect: { id: input.zoneId } },
           position: biggestPosition + 1,
-          Author: { connect: { email: ctx.session.user.email } },
+          Author: { connect: { email: ctx.user.email } },
         },
       });
 

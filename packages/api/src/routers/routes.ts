@@ -41,7 +41,7 @@ export const routesRouter = t.router({
           RouteGrade: {
             create: { grade: input.grade.grade, project: input.grade.project },
           },
-          Author: { connect: { email: ctx.session.user.email } },
+          Author: { connect: { email: ctx.user.email } },
         },
       });
       return newRoute;
@@ -71,7 +71,7 @@ export const routesRouter = t.router({
           data: {
             Topo: { connect: { id: input.topoId } },
             Route: { connect: { id: input.routeId } },
-            Author: { connect: { email: ctx.session.user.email } },
+            Author: { connect: { email: ctx.user.email } },
             path: input.path,
           },
         });

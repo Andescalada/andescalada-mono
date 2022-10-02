@@ -37,7 +37,7 @@ export const toposRouter = t.router({
         image: {
           create: input.image,
         },
-        Author: { connect: { email: ctx.session.user.email } },
+        Author: { connect: { email: ctx.user.email } },
       },
     }),
   ),

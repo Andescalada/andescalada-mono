@@ -48,7 +48,7 @@ export const wallsRouter = t.router({
           slug: slug(input.name),
           Sector: { connect: { id: input.sectorId } },
           position: biggestPosition + 1,
-          Author: { connect: { email: ctx.session.user.email } },
+          Author: { connect: { email: ctx.user.email } },
         },
       });
       return newWall;
