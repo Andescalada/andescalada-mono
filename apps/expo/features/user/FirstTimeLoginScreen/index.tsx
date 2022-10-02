@@ -112,7 +112,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               setNamePosition(e.nativeEvent.layout.y);
             }}
           >
-            <Text variant="p1B" marginBottom="s">
+            <Text variant="p1R" marginBottom="s">
               Nombre
             </Text>
             <TextInput
@@ -125,6 +125,24 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               {error?.message}
             </Text>
           </Box>
+        </Box>
+        <Box
+          onLayout={(e) => {
+            setNamePosition(e.nativeEvent.layout.y);
+          }}
+        >
+          <Text variant="p1R" marginBottom="s">
+            Usuario
+          </Text>
+          <TextInput
+            value={valueUsername}
+            onChangeText={onChangeUsername}
+            onBlur={onBlurUsername}
+            containerProps={{ height: 40 }}
+          />
+          <Text marginTop={"xs"} color="error">
+            {errorUsername?.message}
+          </Text>
         </Box>
         <Button
           variant={"info"}
