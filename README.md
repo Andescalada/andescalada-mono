@@ -26,6 +26,8 @@ pscale org switch elevy
 DATABASE_URL=
 AUTH0_DOMAIN=
 AUTH0_AUDIENCE=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 ###  Envs expo-app `./apps/expo`
 
@@ -82,3 +84,5 @@ prisma studio
 - Vercel
 - NextJS
 - Turborepo
+- Redis
+- Upstash
