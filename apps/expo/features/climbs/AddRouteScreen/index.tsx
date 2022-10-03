@@ -1,4 +1,4 @@
-import { RouteKind } from "@andescalada/api/schemas/route";
+import { RouteKindSchema } from "@andescalada/db/zod";
 import {
   Box,
   Button,
@@ -31,7 +31,7 @@ const schema = z.object({
     .string({ required_error: "Requerido" })
     .min(3, "Nombre muy corto")
     .max(50, "Nombre muy largo"),
-  kind: z.nativeEnum(RouteKind, {
+  kind: z.nativeEnum(RouteKindSchema.Enum, {
     required_error: "Requerido",
   }),
   grade: z.union([z.number().nullable(), z.literal("project")]),
@@ -126,11 +126,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         </Text>
         <ButtonGroup value={kindValue} onChange={onKindChange}>
           <Box flexWrap="wrap" flexDirection="row">
-            <ButtonItem value={RouteKind.Sport} label="Deportiva" />
-            <ButtonItem value={RouteKind.Boulder} label="Boulder" />
-            <ButtonItem value={RouteKind.Trad} label="Tradicional" />
-            <ButtonItem value={RouteKind.Mixed} label="Mixta" />
-            <ButtonItem value={RouteKind.Ice} label="Hielo" />
+            <ButtonItem value={RouteKindSchema.Enum.Sport} label="Deportiva" />
+            <ButtonItem value={RouteKindSchema.Enum.Boulder} label="Boulder" />
+            <ButtonItem value={RouteKindSchema.Enum.Trad} label="Tradicional" />
+            <ButtonItem value={RouteKindSchema.Enum.Mixed} label="Mixta" />
+            <ButtonItem value={RouteKindSchema.Enum.Ice} label="Hielo" />
           </Box>
           <Text marginTop={"xs"} color="error">
             {kindError?.message}

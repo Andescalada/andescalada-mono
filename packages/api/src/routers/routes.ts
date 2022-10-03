@@ -1,12 +1,10 @@
-import routeSchema, { RouteKind } from "@andescalada/api/schemas/route";
+import routeSchema from "@andescalada/api/schemas/route";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { t } from "../createRouter";
-
-export const Kind = RouteKind;
 
 export const routesRouter = t.router({
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {

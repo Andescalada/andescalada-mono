@@ -3,6 +3,16 @@ generator client {
   previewFeatures = ["referentialIntegrity"]
 }
 
+generator enum {
+  provider = "node node_modules/prisma-enum-generator"
+  output   = "../packages/db/modelEnums"
+}
+
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "../packages/db/zod"
+}
+
 datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
