@@ -35,8 +35,7 @@ export const zonesRouter = t.router({
         message: `No sectors found for the zone with id '${input.zoneId}'`,
       });
     }
-    console.log(res.infoAccess, "info access");
-    console.log(ctx.permissions);
+
     if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
