@@ -33,7 +33,7 @@ const { schema } = wall;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId } = route.params;
+  const { wallId, zoneId } = route.params;
   const utils = trpc.useContext();
   const {
     data,
@@ -97,6 +97,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     "Agregar Ruta": () =>
       navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
         wallId,
+        zoneId,
       }),
     "Editar Topo": {
       action: () =>
@@ -119,6 +120,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
+        height={40}
       >
         <EditableTitle
           title={route.params.wallName}

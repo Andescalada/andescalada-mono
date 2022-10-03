@@ -15,7 +15,6 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useOptionsSheet from "@hooks/useOptionsSheet";
-import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
@@ -28,8 +27,8 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { data, refetch, isFetching, isLoading } =
     trpc.zones.allSectors.useQuery({ zoneId: route.params.zoneId });
+
   const refresh = useRefresh(refetch, isFetching);
-  console.log(route.params.zoneId);
 
   const editZone = trpc.zones.edit.useMutation();
   const methods = useZodForm({ schema });
@@ -53,8 +52,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const hProps = useHeaderOptionButton({ onSave: onSubmit });
 
-  const { permission } = usePermissions({ zoneId: route.params.zoneId });
-
   const onOptions = useOptionsSheet({
     "Agregar Sector": {
       action: () =>
@@ -73,7 +70,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
-  if (permission === undefined) return null;
 
   return (
     <Screen padding="m">
@@ -90,12 +86,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           control={methods.control}
           textAlignVertical="center"
         />
-
-        {permission.has("Create") ? (
-          <HeaderOptionsButton {...hProps} onOptions={onOptions} />
-        ) : (
-          <Box />
-        )}
+        <HeaderOptionsButton {...hProps} onOptions={onOptions} />
       </Box>
       <Box flex={1}>
         <FlatList

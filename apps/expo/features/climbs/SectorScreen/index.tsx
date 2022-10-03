@@ -27,12 +27,14 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const utils = trpc.useContext();
 
+  const { sectorId, zoneId } = route.params;
+
   const { data, refetch, isFetching, isLoading } =
-    trpc.sectors.allWalls.useQuery({ sectorId: route.params.sectorId });
+    trpc.sectors.allWalls.useQuery({ sectorId });
 
   const editSector = trpc.sectors.edit.useMutation({
     onSuccess: () => {
-      utils.zones.allSectors.invalidate({ zoneId: route.params.zoneId });
+      utils.zones.allSectors.invalidate({ zoneId });
     },
   });
 
@@ -46,7 +48,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     (input) => {
       editSector.mutate({
         name: input.name,
-        sectorId: route.params.sectorId,
+        sectorId,
       });
       setEditing(false);
     },
@@ -64,7 +66,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const onOptions = useOptionsSheet({
     "Agregar Pared": () =>
       navigation.navigate(ClimbsNavigationRoutes.AddWall, {
-        sectorId: route.params.sectorId,
+        sectorId,
       }),
     "Cambiar Nombre": () => {
       setEditing(true);
@@ -83,6 +85,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
+        height={40}
       >
         <EditableTitle
           title={route.params.sectorName}
@@ -115,7 +118,8 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
                 navigation.navigate(ClimbsNavigationRoutes.Wall, {
                   wallId: item.id,
                   wallName: item.name,
-                  sectorId: route.params.sectorId,
+                  sectorId,
+                  zoneId,
                 })
               }
             >
