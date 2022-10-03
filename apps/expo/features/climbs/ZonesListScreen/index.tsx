@@ -1,5 +1,7 @@
+import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
+  Box,
   ListItem,
   Screen,
   SemanticButton,
@@ -17,6 +19,19 @@ import { useCallback } from "react";
 import { Alert, FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
+
+type InfoAccess = keyof typeof InfoAccessSchema.Enum;
+
+const InfoAccessColor = (infoAccess: InfoAccess) => {
+  switch (infoAccess) {
+    case InfoAccessSchema.Enum.Community:
+      return "warning" as const;
+    case InfoAccessSchema.Enum.Private:
+      return "private" as const;
+    case InfoAccessSchema.Enum.Public:
+      return "success" as const;
+  }
+};
 
 const ZonesScreen = ({ navigation }: Props) => {
   const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
@@ -57,8 +72,18 @@ const ZonesScreen = ({ navigation }: Props) => {
                 zoneName: item.name,
               })
             }
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            backgroundColor="primary"
           >
             <Text variant="p1R">{item.name}</Text>
+            <Box
+              width={15}
+              height={15}
+              backgroundColor={InfoAccessColor(item.infoAccess)}
+              borderRadius={10}
+            />
           </ListItem>
         )}
       />

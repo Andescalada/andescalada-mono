@@ -22,6 +22,7 @@ const variants = {
 const darkBaseTheme = {
   colors: {
     primary: pallete.brand.primaryB,
+    private: pallete.brand.primaryA,
     drawingRoutePath: pallete.contrast.green,
     routePath: pallete.contrast.red,
     text: pallete.grayscale[100],
