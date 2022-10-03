@@ -29,6 +29,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { data, refetch, isFetching, isLoading } =
     trpc.zones.allSectors.useQuery({ zoneId: route.params.zoneId });
   const refresh = useRefresh(refetch, isFetching);
+  console.log(route.params.zoneId);
 
   const editZone = trpc.zones.edit.useMutation();
   const methods = useZodForm({ schema });
