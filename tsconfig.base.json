@@ -13,5 +13,6 @@
     "paths": {
       "@andescalada/*": ["packages/*"]
     }
-  }
+  },
+  "exclude": ["node-modules"]
 }

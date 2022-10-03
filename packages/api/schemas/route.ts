@@ -1,7 +1,13 @@
 import { r } from "@andescalada/api/src/utils/regex";
-import { RouteKind } from "@prisma/client";
 import { z } from "zod";
 
+export enum RouteKind {
+  Sport = "Sport",
+  Trad = "Trad",
+  Boulder = "Boulder",
+  Mixed = "Mixed",
+  Ice = "Ice",
+}
 const schema = z.object({
   wallId: z.string(),
   name: z

@@ -1,7 +1,6 @@
-import routeSchema from "@andescalada/api/schemas/route";
+import routeSchema, { RouteKind } from "@andescalada/api/schemas/route";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { RouteKind } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
