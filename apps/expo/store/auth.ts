@@ -2,6 +2,7 @@ import { Storage } from "@assets/Constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { auth0Tokens, login, logout } from "@utils/auth0";
+import { DecodedIdToken } from "@utils/auth0/types";
 import { isExpired } from "@utils/decode";
 import jwtDecode from "jwt-decode";
 
@@ -10,6 +11,7 @@ export interface AuthState {
   loadingAuth: boolean;
   accessToken: undefined | string;
   autoLoginCompleted: boolean;
+  email: string | undefined;
 }
 
 export interface AccessToken {
@@ -21,6 +23,7 @@ const initialState: AuthState = {
   isAuth: false,
   accessToken: undefined,
   autoLoginCompleted: false,
+  email: undefined,
 };
 
 export const loginAuth0 = createAsyncThunk(
@@ -38,7 +41,11 @@ export const loginAuth0 = createAsyncThunk(
       );
       dispatch(setLoadingAuth(false));
       dispatch(setAutoLoginCompleted(true));
-      return { isAuth: true, accessToken };
+      return {
+        isAuth: true,
+        accessToken,
+        email: (decodedIdToken as DecodedIdToken)?.name,
+      };
     } catch (err) {
       rejectWithValue(err);
       dispatch(setAutoLoginCompleted(true));
@@ -52,13 +59,22 @@ export const autoLoginAuth0 = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = await AsyncStorage.getItem(Storage.ACCESS_TOKEN);
+      const decodedIdToken = await AsyncStorage.getItem(
+        Storage.DECODED_ID_TOKEN,
+      ).then((d) => (d ? JSON.parse(d) : {}) as DecodedIdToken);
+
       if (!token) return { isAuth: false };
       const decodedToken: AccessToken = jwtDecode(token);
       const hasExpired = isExpired(decodedToken.exp);
-      if (!hasExpired) return { isAuth: true, accessToken: token };
+      if (!hasExpired)
+        return { isAuth: true, accessToken: token, email: decodedIdToken.name };
       const res = await auth0Tokens.refreshTokens();
       if (res?.accessToken) {
-        return { isAuth: true, accessToken: res.accessToken };
+        return {
+          isAuth: true,
+          accessToken: res.accessToken,
+          email: decodedIdToken.name,
+        };
       }
     } catch (err) {
       rejectWithValue(err);
@@ -104,6 +120,7 @@ const authSlice = createSlice({
     builder.addCase(loginAuth0.fulfilled, (state, action) => {
       state.isAuth = action.payload.isAuth;
       state.accessToken = action.payload.accessToken;
+      state.email = action.payload.email;
     });
     builder.addCase(logoutAuth0.fulfilled, (state, action) => {
       state.isAuth = action.payload.isAuth;
@@ -111,6 +128,7 @@ const authSlice = createSlice({
     builder.addCase(autoLoginAuth0.fulfilled, (state, action) => {
       state.isAuth = action.payload.isAuth;
       state.accessToken = action.payload?.accessToken;
+      state.email = action.payload.email;
     });
   },
 });
