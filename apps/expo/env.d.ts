@@ -7,4 +7,6 @@ declare module "@env" {
   export const DATADOG_CLIENT_TOKEN: string;
   export const DATADOG_ENV: string;
   export const DATADOG_APPLICATION_ID: string;
+  export const UPSTASH_REDIS_REST_URL: string;
+  export const UPSTASH_REDIS_REST_TOKEN: string;
 }

@@ -15,6 +15,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useOptionsSheet from "@hooks/useOptionsSheet";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
@@ -51,11 +52,15 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const hProps = useHeaderOptionButton({ onSave: onSubmit });
 
+  const { permission } = usePermissions({ zoneId: route.params.zoneId });
+
   const onOptions = useOptionsSheet({
-    "Agregar Sector": () =>
-      navigation.navigate(ClimbsNavigationRoutes.AddSector, {
-        zoneId: route.params.zoneId,
-      }),
+    "Agregar Sector": {
+      action: () =>
+        navigation.navigate(ClimbsNavigationRoutes.AddSector, {
+          zoneId: route.params.zoneId,
+        }),
+    },
     "Cambiar Nombre": () => {
       hProps.setEditing(true);
     },
@@ -67,20 +72,29 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
+  if (permission === undefined) return null;
+
   return (
     <Screen padding="m">
       <Box
-        flexDirection={"row"}
+        flexDirection="row"
         alignItems="center"
-        justifyContent={"space-between"}
+        justifyContent="space-between"
+        height={40}
       >
         <EditableTitle
           title={route.params.zoneName}
           name="name"
           editable={hProps.editing}
           control={methods.control}
+          textAlignVertical="center"
         />
-        <HeaderOptionsButton {...hProps} onOptions={onOptions} />
+
+        {permission.has("Create") ? (
+          <HeaderOptionsButton {...hProps} onOptions={onOptions} />
+        ) : (
+          <Box />
+        )}
       </Box>
       <Box flex={1}>
         <FlatList
