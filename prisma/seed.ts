@@ -1,26 +1,57 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { Redis } from "@upstash/redis";
+import { Redis } from "@upstash/redis/with-fetch";
+import superjson from "superjson";
+
 const prisma = new PrismaClient();
-const permission = Redis.fromEnv();
+const access = Redis.fromEnv();
+
+const userEmail = "elevy@andescalada.org";
 
 const testUserData: Prisma.UserCreateInput = {
-  name: "Test",
-  email: "test@test.com",
-  username: "test",
+  name: "Eyal Levy (Admin)",
+  email: userEmail,
+  username: "elevy_admin",
+  firstLogin: false,
 };
 
-const sectorData: Prisma.SectorCreateInput = {
-  name: "Zona Diabólica",
-  slug: "zona-diabolica",
-  Zone: {
-    create: {
-      name: "Zona de test ",
-      slug: "zona-de-test",
-      infoAccess: "Community",
+const sectorData: Prisma.SectorCreateInput[] = [
+  {
+    name: "Sector test",
+    slug: "Sector-test",
+    Zone: {
+      create: {
+        name: "Zona Privada",
+        slug: "zona-privada",
+        infoAccess: "Private",
+      },
     },
+    Author: { connect: { email: userEmail } },
   },
-  Author: { connect: { email: "test@test.com" } },
-};
+  {
+    name: "Sector Test Comunitario",
+    slug: "sector-test-comunitario",
+    Zone: {
+      create: {
+        name: "Zona Comunitaria",
+        slug: "zona-comunitaria",
+        infoAccess: "Community",
+      },
+    },
+    Author: { connect: { email: userEmail } },
+  },
+  {
+    name: "Sector Test Publico",
+    slug: "sector-test-publico",
+    Zone: {
+      create: {
+        name: "Zona Pública",
+        slug: "zona-publica",
+        infoAccess: "Public",
+      },
+    },
+    Author: { connect: { email: userEmail } },
+  },
+];
 
 const permissionsData: Prisma.PermissionsCreateInput[] = [
   { action: "Create" },
@@ -72,11 +103,19 @@ async function main() {
   const user = await prisma.user.create({ data: testUserData });
   console.log(`User created with id ${user.id}`);
 
+  console.log(`Clieaning up info in Redis`);
+  await access.del(userEmail);
+  console.log(`Clieaning up info in Redis finished`);
+
   console.log(`Creating a sector and a zone`);
-  const sector = await prisma.sector.create({ data: sectorData });
-  console.log(
-    `Sector and zone created successfully, with zone id ${sector.zoneId}`,
+  const zonesId = await Promise.all(
+    sectorData.map(async (s) => {
+      const sector = await prisma.sector.create({ data: s });
+      return sector.zoneId;
+    }),
   );
+
+  console.log(`${zonesId.length} sector and zone created successfully`);
 
   console.log(`Creating permissions`);
   for (const p of permissionsData) {
@@ -95,31 +134,61 @@ async function main() {
   console.log(`All roles created successfully`);
 
   console.log(
-    `Role **Editor** created for user **test** for **Zona de test** `,
+    `Role **Admin** created for user **elevy_admin** for **Zona Privada** `,
   );
 
-  const roleByZone = await prisma.roleByZone.create({
+  const rolePrivateZone = await prisma.roleByZone.create({
+    data: {
+      Role: { connect: { name: "Admin" } },
+      User: { connect: { email: userEmail } },
+      Zone: { connect: { id: zonesId[0] } },
+    },
+    select: { Role: { select: { permissions: { select: { action: true } } } } },
+  });
+
+  console.log(`Role by zone created successfully`);
+
+  console.log(`Saving roles in Redis`);
+
+  const permissionsActions = rolePrivateZone.Role.permissions.flatMap(
+    (r) => r.action,
+  );
+
+  const uniquePermissions = new Set(permissionsActions);
+  console.log("permissions Private", uniquePermissions);
+  const obj1 = superjson.serialize(uniquePermissions);
+
+  await access.hset(userEmail, { [zonesId[0]]: obj1 });
+
+  console.log(`Role saved in Redis successfully`);
+
+  console.log(
+    `Role **Admin** created for user **elevy_admin** for **Zona Comunitaria** `,
+  );
+
+  const roleCommunityZone = await prisma.roleByZone.create({
     data: {
       Role: { connect: { name: "Editor" } },
-      User: { connect: { username: "test" } },
-      Zone: { connect: { id: sector.zoneId } },
+      User: { connect: { email: userEmail } },
+      Zone: { connect: { id: zonesId[1] } },
     },
+    select: { Role: { select: { permissions: { select: { action: true } } } } },
   });
 
-  const permissionsOfRole = await prisma.role.findUnique({
-    where: { name: "Editor" },
-    select: { permissions: { select: { action: true } } },
-  });
+  console.log(`Role by zone created successfully`);
 
-  if (permissionsOfRole) {
-    const permissionsObject = {};
+  console.log(`Saving roles in Redis`);
 
-    const permissions = permissionsOfRole.permissions.map((p) => p.action);
-  }
+  const permissionsActionsCommunity =
+    roleCommunityZone.Role.permissions.flatMap((r) => r.action);
 
-  const p = await permission.set(`${user.id}:${sector.zoneId}`, "");
+  const uniquePermissionsCommunity = new Set(permissionsActionsCommunity);
+  console.log("permissions Community", uniquePermissionsCommunity);
+  const obj2 = superjson.serialize(uniquePermissions);
 
-  console.log(`Role by zone created successfully`, roleByZone);
+  await access.hset(userEmail, { [zonesId[1]]: obj2 });
+
+  console.log(`Role saved in Redis successfully`);
 
   console.log(`Seeding finished.`);
 }
