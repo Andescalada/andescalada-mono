@@ -36,6 +36,7 @@
     "dotenv": "^16.0.2",
     "expo": "~46.0.9",
     "expo-auth-session": "~3.7.1",
+    "expo-community-flipper": "^46.0.2",
     "expo-constants": "~13.2.4",
     "expo-crypto": "~11.0.0",
     "expo-file-system": "~14.1.0",

@@ -50,7 +50,8 @@
           "photosPermission": "La app accede a tus fotos para que subas topos y fotos de las rutas"
         }
       ],
-      "expo-tracking-transparency"
+      "expo-tracking-transparency",
+      "expo-community-flipper"
     ]
   }
 }
