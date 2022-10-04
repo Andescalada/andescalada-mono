@@ -41,4 +41,13 @@ export const userRouter = t.router({
 
       return permissions;
     }),
+  uniqueUsername: protectedProcedure
+    .input(user.schema.pick({ username: true }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { username: input.username },
+      });
+      if (!user) return true;
+      return false;
+    }),
 });

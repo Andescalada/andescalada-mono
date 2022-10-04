@@ -29,7 +29,10 @@ const Navigator = () => {
     );
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={RootNavigationRoutes.Climbs}
+    >
       {isLoading ? (
         <Stack.Screen
           name={RootNavigationRoutes.Loading}
