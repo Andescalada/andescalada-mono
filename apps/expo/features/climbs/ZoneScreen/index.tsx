@@ -2,6 +2,7 @@ import zone from "@andescalada/api/schemas/zone";
 import {
   ActivityIndicator,
   Box,
+  Button,
   EditableTitle,
   ListItem,
   Screen,
@@ -17,7 +18,7 @@ import {
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Alert, FlatList } from "react-native";
 
 const { schema } = zone;
@@ -25,10 +26,10 @@ const { schema } = zone;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
-  const { data, refetch, isFetching, isLoading } =
+  const { data, refetch, isFetching, isLoading, error } =
     trpc.zones.allSectors.useQuery({ zoneId: route.params.zoneId });
 
-  const refresh = useRefresh(refetch, isFetching);
+  const refresh = useRefresh(refetch, isFetching && !isLoading);
 
   const editZone = trpc.zones.edit.useMutation();
   const methods = useZodForm({ schema });
@@ -64,12 +65,10 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
-  if (isLoading)
-    return (
-      <Screen justifyContent="center" alignItems="center">
-        <ActivityIndicator size={"large"} />
-      </Screen>
-    );
+  const unauthorized = useMemo(
+    () => error?.shape?.data.code === "UNAUTHORIZED",
+    [error],
+  );
 
   return (
     <Screen padding="m">
@@ -94,9 +93,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           refreshControl={refresh}
           contentContainerStyle={{ flex: 1 }}
           ListEmptyComponent={() => (
-            <Box flex={1} justifyContent="center" alignItems="center">
-              <Text variant={"h3"}>Sin sectores</Text>
-            </Box>
+            <NoSectors isLoading={isLoading} unauthorized={unauthorized} />
           )}
           renderItem={({ item }) => (
             <ListItem
@@ -115,6 +112,41 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         />
       </Box>
     </Screen>
+  );
+};
+
+interface NoZonesProps {
+  isLoading: boolean;
+  unauthorized: boolean;
+}
+
+const NoSectors = ({ isLoading, unauthorized }: NoZonesProps) => {
+  if (isLoading)
+    return (
+      <Screen justifyContent="center" alignItems="center">
+        <ActivityIndicator size={"large"} />
+      </Screen>
+    );
+  if (unauthorized)
+    return (
+      <Box flex={1} justifyContent={"flex-start"}>
+        <Box flex={1 / 3} justifyContent="center">
+          <Text variant="h2" marginBottom="l">
+            Acceso comunitario
+          </Text>
+          <Text variant="p1R">No tienes permiso para ver esta zona</Text>
+          <Text marginBottom="s">
+            Cualquier persona que ya tenga acceso a estos topos puede entregarte
+            acceso
+          </Text>
+        </Box>
+        <Button variant="info" title="Solicitar acceso" alignSelf="center" />
+      </Box>
+    );
+  return (
+    <Box flex={1} justifyContent="center" alignItems="center">
+      <Text variant={"h3"}>Sin sectores</Text>
+    </Box>
   );
 };
 
