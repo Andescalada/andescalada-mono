@@ -15,11 +15,11 @@ import {
   UserNavigationRoutes,
   UserScreenProps,
 } from "@features/user/Navigation/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import usePickImage from "@hooks/usePickImage";
 import useUploadImage from "@hooks/useUploadImage";
+import useZodForm from "@hooks/useZodForm";
 import { FC, useState } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { FadeIn } from "react-native-reanimated";
 import { z } from "zod";
 
@@ -34,26 +34,34 @@ const FirstTimeLoginScreen: FC<Props> = () => {
     quality: 0.5,
   });
   const { uploadImage } = useUploadImage();
-  const form = useForm<z.infer<typeof user.schema>>({
-    resolver: zodResolver(user.schema),
+  const form = useZodForm({
+    schema: user.schema,
   });
   const {
     field: { onChange, onBlur, value },
     fieldState: { error },
   } = useController({ control: form.control, name: "name" });
+  const {
+    field: {
+      onChange: onChangeUsername,
+      onBlur: onBlurUsername,
+      value: valueUsername,
+    },
+    fieldState: { error: errorUsername },
+  } = useController({ control: form.control, name: "username" });
 
   const utils = trpc.useContext();
   const { mutateAsync } = trpc.user.edit.useMutation();
 
   const [loading, setLoading] = useState(false);
-  const onSubmit = form.handleSubmit(async ({ name }) => {
+  const onSubmit = form.handleSubmit(async ({ name, username }) => {
     try {
       setLoading(true);
       let image: z.infer<typeof imageSchema.schema> | undefined;
       if (selectedImage) {
         image = await uploadImage(selectedImage.base64Img);
       }
-      await mutateAsync({ name, image });
+      await mutateAsync({ name, image, username });
       await utils.user.ownInfo.invalidate();
     } catch (err) {}
     setLoading(false);
@@ -104,7 +112,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               setNamePosition(e.nativeEvent.layout.y);
             }}
           >
-            <Text variant="p1B" marginBottom="s">
+            <Text variant="p1R" marginBottom="s">
               Nombre
             </Text>
             <TextInput
@@ -117,6 +125,24 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               {error?.message}
             </Text>
           </Box>
+        </Box>
+        <Box
+          onLayout={(e) => {
+            setNamePosition(e.nativeEvent.layout.y);
+          }}
+        >
+          <Text variant="p1R" marginBottom="s">
+            Usuario
+          </Text>
+          <TextInput
+            value={valueUsername}
+            onChangeText={onChangeUsername}
+            onBlur={onBlurUsername}
+            containerProps={{ height: 40 }}
+          />
+          <Text marginTop={"xs"} color="error">
+            {errorUsername?.message}
+          </Text>
         </Box>
         <Button
           variant={"info"}

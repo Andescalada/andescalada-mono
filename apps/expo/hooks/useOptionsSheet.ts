@@ -6,7 +6,7 @@ import { useCallback, useMemo } from "react";
 
 type Options = Record<
   string,
-  (() => void) | { action: () => void; hide: boolean }
+  (() => void) | { action: () => void; hide?: boolean }
 >;
 
 interface Args extends Omit<ActionSheetOptions, "options"> {

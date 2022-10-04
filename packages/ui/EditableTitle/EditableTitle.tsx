@@ -32,7 +32,6 @@ const EditableTitle = <T extends FieldValues>({
     <TextInput
       variant={props.editable ? "filled" : "disableAsText"}
       textVariant="h3"
-      lineHeight={20}
       value={value}
       onChangeText={onChange}
       onBlur={onBlur}

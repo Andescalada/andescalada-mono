@@ -1,3 +1,4 @@
+import { RouteKindSchema } from "@andescalada/db/zod";
 import {
   Box,
   Button,
@@ -14,22 +15,14 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import useZodForm from "@hooks/useZodForm";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@shopify/restyle";
 import { allGrades, gradeUnits } from "@utils/climbingGrades";
 import { createContext, FC, ReactNode, useContext } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
-
-enum RouteKind {
-  Sport = "Sport",
-  Trad = "Trad",
-  Boulder = "Boulder",
-  Mixed = "Mixed",
-  Ice = "Ice",
-}
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddRoute>;
 
@@ -38,13 +31,11 @@ const schema = z.object({
     .string({ required_error: "Requerido" })
     .min(3, "Nombre muy corto")
     .max(50, "Nombre muy largo"),
-  kind: z.nativeEnum(RouteKind, {
+  kind: z.nativeEnum(RouteKindSchema.Enum, {
     required_error: "Requerido",
   }),
   grade: z.union([z.number().nullable(), z.literal("project")]),
 });
-
-type Form = z.infer<typeof schema>;
 
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId } = route.params;
@@ -60,8 +51,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     handleSubmit,
     control,
     formState: { isDirty },
-  } = useForm<Form>({
-    resolver: zodResolver(schema),
+  } = useZodForm({
+    schema,
   });
 
   const {
@@ -135,11 +126,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         </Text>
         <ButtonGroup value={kindValue} onChange={onKindChange}>
           <Box flexWrap="wrap" flexDirection="row">
-            <ButtonItem value={RouteKind.Sport} label="Deportiva" />
-            <ButtonItem value={RouteKind.Boulder} label="Boulder" />
-            <ButtonItem value={RouteKind.Trad} label="Tradicional" />
-            <ButtonItem value={RouteKind.Mixed} label="Mixta" />
-            <ButtonItem value={RouteKind.Ice} label="Hielo" />
+            <ButtonItem value={RouteKindSchema.Enum.Sport} label="Deportiva" />
+            <ButtonItem value={RouteKindSchema.Enum.Boulder} label="Boulder" />
+            <ButtonItem value={RouteKindSchema.Enum.Trad} label="Tradicional" />
+            <ButtonItem value={RouteKindSchema.Enum.Mixed} label="Mixta" />
+            <ButtonItem value={RouteKindSchema.Enum.Ice} label="Hielo" />
           </Box>
           <Text marginTop={"xs"} color="error">
             {kindError?.message}

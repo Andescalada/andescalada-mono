@@ -1,12 +1,15 @@
 import user from "@andescalada/api/schemas/user";
+import zone from "@andescalada/api/schemas/zone";
+import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { deserialize } from "superjson";
 
 import { t } from "../createRouter";
 
 export const userRouter = t.router({
   ownInfo: protectedProcedure.query(({ ctx }) =>
     ctx.prisma.user.findUnique({
-      where: { email: ctx.session.user.email },
+      where: { email: ctx.user.email },
       select: {
         email: true,
         firstLogin: true,
@@ -18,12 +21,24 @@ export const userRouter = t.router({
   ),
   edit: protectedProcedure.input(user.schema).mutation(({ ctx, input }) =>
     ctx.prisma.user.update({
-      where: { email: ctx.session.user.email },
+      where: { email: ctx.user.email },
       data: {
         name: input.name,
+        username: input.username,
         profilePhoto: input.image ? { create: input.image } : undefined,
         firstLogin: false,
       },
     }),
   ),
+  zonePermissions: protectedProcedure
+    .input(zone.id)
+    .query(async ({ ctx, input }) => {
+      const res = await ctx.access.hget<Access>(ctx.user.email, input.zoneId);
+      let permissions: Permissions = new Set();
+      if (res) {
+        permissions = deserialize<Permissions>(res);
+      }
+
+      return permissions;
+    }),
 });

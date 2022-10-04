@@ -8,12 +8,10 @@ export const semanticButtonVariantsColors = {
 
 const semanticButtonVariants = createBoxVariant({
   error: {
-    padding: "xs",
     justifyContent: "center",
     alignItems: "center",
   },
   info: {
-    padding: "xs",
     justifyContent: "center",
     alignItems: "center",
   },

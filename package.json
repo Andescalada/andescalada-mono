@@ -15,7 +15,11 @@
     "clean": "find . -name node_modules -o -name .next -o -name .expo -type d -prune | xargs rm -rf",
     "postinstall": "prisma generate",
     "lint-and-fix": "eslint . --ext .ts,.tsx,.js,.jsx,.json --fix",
-    "prettier-format": "prettier --config .prettierrc '**/*.{json,js,jsx,ts,tsx,css,scss,md}' --write"
+    "prettier-format": "prettier --config .prettierrc '**/*.{json,js,jsx,ts,tsx,css,scss,md}' --write",
+    "db-reset": "npx prisma migrate reset --skip-seed",
+    "db-push": "npx prisma db push",
+    "db-seed": "npx prisma db seed",
+    "db-clean-seed": "yarn db-reset && yarn db-push && yarn db-seed"
   },
   "workspaces": {
     "packages": [
@@ -27,22 +31,27 @@
       "**/@shopify/react-native-skia"
     ]
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "4",
     "@tanstack/react-query": "^4.3.9",
-    "@trpc/client": "^10.0.0-proxy-beta.0",
-    "@trpc/next": "^10.0.0-proxy-beta.0",
-    "@trpc/react": "^10.0.0-proxy-beta.0",
-    "@trpc/server": "^10.0.0-proxy-beta.0",
+    "@trpc/client": "10.0.0-proxy-beta.10",
+    "@trpc/next": "^10.0.0-proxy-beta.10",
+    "@trpc/react": "^10.0.0-proxy-beta.10",
+    "@trpc/server": "^10.0.0-proxy-beta.10",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@elevyg/prisma-zod-enums-generator": "0.0.14",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "@upstash/redis": "^1.13.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react": "^1.1.7",
@@ -53,6 +62,8 @@
     "eslint-plugin-simple-import-sort": "^8.0.0",
     "prettier": "^2.4.0",
     "prisma": "4",
+    "prisma-enum-generator": "^1.0.3",
+    "superjson": "^1.10.0",
     "turbo": "^1.3.1",
     "typescript": "^4.6.3"
   },

@@ -1,4 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -16,18 +17,17 @@ export const zonesRouter = t.router({
     }
     return zone;
   }),
-  edit: t.procedure
-    .input(zone.schema.merge(zone.id))
-    .mutation(async ({ ctx, input }) => {
+  edit: t.procedure.input(zone.schema.merge(zone.id)).mutation(
+    async ({ ctx, input }) =>
       await ctx.prisma.zone.update({
         where: { id: input.zoneId },
         data: { name: input.name },
-      });
-    }),
-  allSectors: t.procedure.input(zone.id).query(async ({ ctx, input }) => {
+      }),
+  ),
+  allSectors: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const res = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
-      select: { sectors: true },
+      select: { sectors: true, infoAccess: true },
     });
     if (!res) {
       throw new TRPCError({
@@ -35,7 +35,12 @@ export const zonesRouter = t.router({
         message: `No sectors found for the zone with id '${input.zoneId}'`,
       });
     }
-    return res.sectors;
+
+    if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
+      return { ...res, sectors: undefined, hasAccess: false };
+    }
+
+    return { ...res, hasAccess: true };
   }),
   downlandAll: t.procedure.input(zone.id).query(({ ctx, input }) =>
     ctx.prisma.zone.findUnique({

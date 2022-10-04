@@ -22,7 +22,9 @@ const url = __DEV__
   : "https://andescalada-mono.vercel.app";
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: { queries: { retry: false } } }),
+  );
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [

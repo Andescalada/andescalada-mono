@@ -1,5 +1,19 @@
-import { SemanticButton } from "@andescalada/ui";
+import { Box, SemanticButton } from "@andescalada/ui";
+import {
+  ClimbsNavigationRoutes,
+  ClimbsNavigationScreenProps,
+} from "@features/climbs/Navigation/types";
+import usePermissions from "@hooks/usePermissions";
+import { CompositeScreenProps, useRoute } from "@react-navigation/native";
 import { ComponentProps, FC } from "react";
+
+type Route = CompositeScreenProps<
+  ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>,
+  CompositeScreenProps<
+    ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>,
+    ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>
+  >
+>["route"];
 
 interface Props
   extends Omit<ComponentProps<typeof SemanticButton>, "title" | "variant"> {
@@ -17,7 +31,10 @@ const HeaderOptionsButton: FC<Props> = ({
   onSave,
   onOptions,
 }) => {
-  return (
+  const route = useRoute<Route>();
+  const { permission } = usePermissions({ zoneId: route.params.zoneId });
+  if (permission === undefined) return null;
+  return permission.has("Create") ? (
     <SemanticButton
       variant={cancel ? "error" : "info"}
       title={editing ? (cancel ? "Cancelar" : "Guardar") : "Opciones"}
@@ -26,6 +43,8 @@ const HeaderOptionsButton: FC<Props> = ({
         if (editing) setCancel(true);
       }}
     />
+  ) : (
+    <Box />
   );
 };
 

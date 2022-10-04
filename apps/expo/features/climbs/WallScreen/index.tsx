@@ -21,22 +21,19 @@ import usePickImage from "@hooks/usePickImage";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useUploadImage from "@hooks/useUploadImage";
+import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { gradeUnits } from "@utils/climbingGrades";
 import { getThumbnail } from "@utils/cloudinary";
 import { FC, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Alert, FlatList, Image } from "react-native";
-import { z } from "zod";
 
 const { schema } = wall;
-
-type Form = z.infer<typeof schema>;
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId } = route.params;
+  const { wallId, zoneId } = route.params;
   const utils = trpc.useContext();
   const {
     data,
@@ -64,6 +61,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         main: true,
         wallId,
         image,
+        name: `${data?.name} topo`,
       },
       {
         onSuccess: () => {
@@ -75,7 +73,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   };
 
   const editWall = trpc.walls.edit.useMutation();
-  const methods = useForm<Form>();
+  const methods = useZodForm({ schema });
   const onSubmit = methods.handleSubmit(
     (input) => {
       if (methods.formState.isDirty)
@@ -99,6 +97,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     "Agregar Ruta": () =>
       navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
         wallId,
+        zoneId,
       }),
     "Editar Topo": {
       action: () =>
@@ -121,6 +120,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
+        height={40}
       >
         <EditableTitle
           title={route.params.wallName}

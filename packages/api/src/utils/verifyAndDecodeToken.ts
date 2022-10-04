@@ -23,15 +23,17 @@ const verifyAndDecodeToken = async (req: NextApiRequest) => {
       });
 
       const data = jose.decodeJwt(token);
+
       return {
         email: data.user_email as string,
+        auth0Id: data.sub,
         permissions: data.permissions as string[],
       };
     }
-    return undefined;
-  } catch {
-    return undefined;
+  } catch (err) {
+    console.error(err);
   }
+  return undefined;
 };
 
 export default verifyAndDecodeToken;

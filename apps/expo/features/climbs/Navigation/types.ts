@@ -26,8 +26,9 @@ export type ClimbsNavigationNavigationParamList = {
     wallId: Wall["id"];
     wallName: Wall["name"];
     sectorId: Sector["id"];
+    zoneId: Zone["id"];
   };
-  [ClimbsNavigationRoutes.AddRoute]: { wallId: Wall["id"] };
+  [ClimbsNavigationRoutes.AddRoute]: { wallId: Wall["id"]; zoneId: Zone["id"] };
 };
 
 export type ClimbsNavigationRouteProps<T extends ClimbsNavigationRoutes> =

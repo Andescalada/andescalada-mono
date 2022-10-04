@@ -1,5 +1,6 @@
 import topo from "@andescalada/api/schemas/topo";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { slug } from "@andescalada/api/src/utils/slug";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -31,11 +32,12 @@ export const toposRouter = t.router({
       data: {
         main: input.main,
         name: input.name,
+        slug: slug(input.name),
         Wall: { connect: { id: input.wallId } },
         image: {
           create: input.image,
         },
-        Author: { connect: { email: ctx.session.user.email } },
+        Author: { connect: { email: ctx.user.email } },
       },
     }),
   ),

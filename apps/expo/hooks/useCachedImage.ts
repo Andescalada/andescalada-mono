@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { images } from "@assets/images";
 import { cachedImage } from "@utils/FileSystem/cachedImages";
 import { useCallback, useEffect, useState } from "react";
 
@@ -24,7 +25,7 @@ const useCachedImage = ({
   return {
     fileUrl,
     getCachedImage,
-    uri: fileUrl ? { uri: fileUrl } : undefined,
+    uri: fileUrl ? { uri: fileUrl } : images.placeholder,
   };
 };
 
