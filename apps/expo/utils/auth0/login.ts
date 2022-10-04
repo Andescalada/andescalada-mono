@@ -75,7 +75,7 @@ export const login = async (): Promise<LoginResponse> => {
     response.params?.error_description === errorMsg
   ) {
     return {
-      decodedIdToken: { "https://api.houm.com/roles": [errorMsg] },
+      decodedIdToken: "",
       accessToken: "",
       refreshToken: "",
     };
