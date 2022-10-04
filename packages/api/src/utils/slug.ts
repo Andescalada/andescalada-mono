@@ -1,2 +1,7 @@
 export const slug = (string: string) =>
-  string.toLowerCase().replace(/\s/g, "-");
+  string
+    .toLowerCase()
+    .trimEnd()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s/g, "-");
