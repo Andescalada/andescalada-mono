@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.0.7",
+    "version": "1.1.0",
     "orientation": "portrait",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
@@ -33,7 +33,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
