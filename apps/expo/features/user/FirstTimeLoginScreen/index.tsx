@@ -11,24 +11,23 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import {
-  UserNavigationRoutes,
-  UserScreenProps,
-} from "@features/user/Navigation/types";
 import usePickImage from "@hooks/usePickImage";
 import useUploadImage from "@hooks/useUploadImage";
 import useZodForm from "@hooks/useZodForm";
+import {
+  RootNavigationRoutes,
+  RootNavigationScreenProps,
+} from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useState } from "react";
 import { useController } from "react-hook-form";
 import { FadeIn } from "react-native-reanimated";
 import { z } from "zod";
 
-type Props = UserScreenProps<UserNavigationRoutes.FirstTimeLogin>;
+type Props = RootNavigationScreenProps<RootNavigationRoutes.FirstTimeLogin>;
 
 const responsiveImageSize = { mobile: 200, tablet: 400 };
 
 const FirstTimeLoginScreen: FC<Props> = () => {
-  const [namePosition, setNamePosition] = useState(0);
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: true,
     quality: 0.5,
@@ -69,7 +68,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
 
   return (
     <Screen margin={{ mobile: "m", tablet: "xxl" }}>
-      <BoxWithKeyboard keyboardOffset={-namePosition + 20}>
+      <BoxWithKeyboard>
         <Box marginVertical={"ll"}>
           <Text variant={"h1"}>Comencemos</Text>
           <Text>
@@ -106,12 +105,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
             </Pressable>
           </Box>
 
-          <Box
-            marginTop={"m"}
-            onLayout={(e) => {
-              setNamePosition(e.nativeEvent.layout.y);
-            }}
-          >
+          <Box marginTop={"m"}>
             <Text variant="p1R" marginBottom="s">
               Nombre
             </Text>
@@ -126,11 +120,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
             </Text>
           </Box>
         </Box>
-        <Box
-          onLayout={(e) => {
-            setNamePosition(e.nativeEvent.layout.y);
-          }}
-        >
+        <Box>
           <Text variant="p1R" marginBottom="s">
             Usuario
           </Text>
@@ -138,6 +128,8 @@ const FirstTimeLoginScreen: FC<Props> = () => {
             value={valueUsername}
             onChangeText={onChangeUsername}
             onBlur={onBlurUsername}
+            autoCapitalize="none"
+            autoCorrect={false}
             containerProps={{ height: 40 }}
           />
           <Text marginTop={"xs"} color="error">
