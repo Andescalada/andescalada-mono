@@ -1,15 +1,12 @@
-import type { User } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum UserNavigationRoutes {
-  FirstTimeLogin = "FirstTimeLogin",
+  Placeholder = "UserPlaceholder",
 }
 
 export type UserNavigationParamList = {
-  [UserNavigationRoutes.FirstTimeLogin]: {
-    userEmail: User["email"];
-  };
+  [UserNavigationRoutes.Placeholder]: undefined;
 };
 
 export type UserRouteProps<T extends UserNavigationRoutes> = RouteProp<

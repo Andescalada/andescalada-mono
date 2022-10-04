@@ -6,6 +6,7 @@ export { default as EditableTitle } from "./EditableTitle/EditableTitle";
 export { default as Image } from "./Image/Image";
 export { default as KeyboardAvoidingBox } from "./KeyboardAvoidingBox/KeyboardAvoidingBox";
 export { default as ListItem } from "./ListItem/ListItem";
+export { default as LoadingScreen } from "./LoadingScreen/LoadingScreen";
 export { default as Pressable } from "./Pressable/Pressable";
 export { default as SafeAreaView } from "./SafeAreaView/SafeAreaView";
 export { default as Screen } from "./Screen/Screen";

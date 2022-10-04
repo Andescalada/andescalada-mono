@@ -1,8 +1,8 @@
-import { ActivityIndicator, Screen } from "@andescalada/ui";
+import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
-import UserNavigationStack from "@features/user/Navigation";
+import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import {
   RootNavigationNavigationParamList,
   RootNavigationRoutes,
@@ -27,19 +27,36 @@ const Navigator = () => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
-  if (data?.firstLogin) return <UserNavigationStack />;
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Group>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={RootNavigationRoutes.Climbs}
+    >
+      {isLoading ? (
         <Stack.Screen
-          name={RootNavigationRoutes.Climbs}
-          component={ClimbsStackNavigation}
+          name={RootNavigationRoutes.Loading}
+          component={LoadingScreen}
+          options={{ presentation: "modal" }}
         />
+      ) : data?.firstLogin ? (
         <Stack.Screen
-          name={RootNavigationRoutes.RouteManager}
-          component={RouteManagerStackNavigation}
+          name={RootNavigationRoutes.FirstTimeLogin}
+          component={FirstTimeLoginScreen}
+          options={{ presentation: "modal" }}
         />
-      </Stack.Group>
+      ) : (
+        <Stack.Group>
+          <Stack.Screen
+            name={RootNavigationRoutes.Climbs}
+            component={ClimbsStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.RouteManager}
+            component={RouteManagerStackNavigation}
+          />
+        </Stack.Group>
+      )}
     </Stack.Navigator>
   );
 };

@@ -1,6 +1,7 @@
 import imageSchema from "@andescalada/api/schemas/image";
 import user from "@andescalada/api/schemas/user";
 import {
+  ActivityIndicator,
   Box,
   BoxWithKeyboard,
   Button,
@@ -11,24 +12,25 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import {
-  UserNavigationRoutes,
-  UserScreenProps,
-} from "@features/user/Navigation/types";
 import usePickImage from "@hooks/usePickImage";
 import useUploadImage from "@hooks/useUploadImage";
+import useUsernameValidation from "@hooks/useUsernameValidation";
 import useZodForm from "@hooks/useZodForm";
-import { FC, useState } from "react";
+import {
+  RootNavigationRoutes,
+  RootNavigationScreenProps,
+} from "@navigation/AppNavigation/RootNavigation/types";
+import { FC, useMemo, useState } from "react";
 import { useController } from "react-hook-form";
+import { NativeSyntheticEvent, TextInputFocusEventData } from "react-native";
 import { FadeIn } from "react-native-reanimated";
 import { z } from "zod";
 
-type Props = UserScreenProps<UserNavigationRoutes.FirstTimeLogin>;
+type Props = RootNavigationScreenProps<RootNavigationRoutes.FirstTimeLogin>;
 
 const responsiveImageSize = { mobile: 200, tablet: 400 };
 
 const FirstTimeLoginScreen: FC<Props> = () => {
-  const [namePosition, setNamePosition] = useState(0);
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: true,
     quality: 0.5,
@@ -36,6 +38,8 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   const { uploadImage } = useUploadImage();
   const form = useZodForm({
     schema: user.schema,
+    mode: "onBlur",
+    reValidateMode: "onBlur",
   });
   const {
     field: { onChange, onBlur, value },
@@ -47,7 +51,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
       onBlur: onBlurUsername,
       value: valueUsername,
     },
-    fieldState: { error: errorUsername },
+    fieldState: { error: errorUsername, isTouched },
   } = useController({ control: form.control, name: "username" });
 
   const utils = trpc.useContext();
@@ -67,9 +71,44 @@ const FirstTimeLoginScreen: FC<Props> = () => {
     setLoading(false);
   });
 
+  const {
+    isLoading: isLoadingUsernameValidation,
+    isValid: isUsernameValid,
+    validateUsername,
+  } = useUsernameValidation();
+
+  const onUserNameBlur = async (
+    e: NativeSyntheticEvent<TextInputFocusEventData>,
+  ) => {
+    onBlurUsername();
+    const res = await validateUsername(e.nativeEvent.text);
+    if (!res.isValid)
+      form.setError("username", {
+        message: res.errorMessage,
+        type: "onBlur",
+      });
+    else form.clearErrors("username");
+  };
+
+  const usernameBorderColor = useMemo(() => {
+    if (isUsernameValid && !isLoadingUsernameValidation && isTouched)
+      return {
+        borderWidth: 1,
+        borderColor: "success" as const,
+      };
+    if (!isUsernameValid && !isLoadingUsernameValidation && isTouched)
+      return {
+        borderWidth: 1,
+        borderColor: "error" as const,
+      };
+    return {
+      borderWidth: 0,
+    };
+  }, [isLoadingUsernameValidation, isTouched, isUsernameValid]);
+
   return (
     <Screen margin={{ mobile: "m", tablet: "xxl" }}>
-      <BoxWithKeyboard keyboardOffset={-namePosition + 20}>
+      <BoxWithKeyboard>
         <Box marginVertical={"ll"}>
           <Text variant={"h1"}>Comencemos</Text>
           <Text>
@@ -106,12 +145,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
             </Pressable>
           </Box>
 
-          <Box
-            marginTop={"m"}
-            onLayout={(e) => {
-              setNamePosition(e.nativeEvent.layout.y);
-            }}
-          >
+          <Box marginTop={"m"}>
             <Text variant="p1R" marginBottom="s">
               Nombre
             </Text>
@@ -126,20 +160,28 @@ const FirstTimeLoginScreen: FC<Props> = () => {
             </Text>
           </Box>
         </Box>
-        <Box
-          onLayout={(e) => {
-            setNamePosition(e.nativeEvent.layout.y);
-          }}
-        >
+        <Box>
           <Text variant="p1R" marginBottom="s">
             Usuario
           </Text>
-          <TextInput
-            value={valueUsername}
-            onChangeText={onChangeUsername}
-            onBlur={onBlurUsername}
-            containerProps={{ height: 40 }}
-          />
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <TextInput
+              value={valueUsername}
+              onChangeText={onChangeUsername}
+              onBlur={onUserNameBlur}
+              autoCapitalize="none"
+              autoCorrect={false}
+              containerProps={{ height: 40, flex: 1, ...usernameBorderColor }}
+              editable={!isLoadingUsernameValidation}
+            />
+            {isLoadingUsernameValidation && (
+              <ActivityIndicator size="small" paddingLeft={"s"} />
+            )}
+          </Box>
           <Text marginTop={"xs"} color="error">
             {errorUsername?.message}
           </Text>

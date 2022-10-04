@@ -1,4 +1,4 @@
-import { Box, Image, Screen, Text } from "@andescalada/ui";
+import { Box, Image, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { andescaladaPathTitle } from "@features/user/components/UserHeader/andescaladaPathTitle";
 import { useAppTheme } from "@hooks/useAppTheme";
@@ -29,7 +29,7 @@ const CANVAS_HEIGHT = 16;
 
 const UserHeader = () => {
   const { data } = trpc.user.ownInfo.useQuery();
-  const { name, profilePhoto } = data || {};
+  const { profilePhoto } = data || {};
 
   const theme = useAppTheme();
   const tablet = useResponsiveProp({ mobile: 0, tablet: 1 }) || 0;
@@ -79,7 +79,7 @@ const UserHeader = () => {
       width={SCREEN_WIDTH}
       borderBottomColor="buttonGroup"
     >
-      <Canvas style={stlyes.canvas}>
+      <Canvas style={styles.canvas}>
         <FitBox
           src={rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)}
           dst={rect(
@@ -106,10 +106,9 @@ const UserHeader = () => {
         alignItems="flex-end"
         flexDirection="row"
         height="100%"
-        style={stlyes.header}
+        style={styles.header}
       >
-        <Text variant="h3">{name}</Text>
-        <Image source={uri} style={stlyes.image} marginLeft="m" />
+        <Image source={uri} style={styles.image} marginLeft="m" />
       </Box>
     </Screen>
   );
@@ -117,7 +116,7 @@ const UserHeader = () => {
 
 export default UserHeader;
 
-const stlyes = StyleSheet.create({
+const styles = StyleSheet.create({
   canvas: {
     flex: 1,
     height: HEADER_HEIGHT,

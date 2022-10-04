@@ -6,6 +6,7 @@ const schema = z.object({
   wallId: z.string(),
   name: z
     .string({ required_error: "Requerido" })
+    .trim()
     .min(3, "Nombre muy corto")
     .max(50, "Nombre muy largo")
     .regex(r.numbersAndLettersOnly, "Solo se permite letras y números"),
