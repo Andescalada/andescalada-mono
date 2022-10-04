@@ -37,10 +37,10 @@ export const zonesRouter = t.router({
     }
 
     if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      return { ...res, sectors: undefined, hasAccess: false };
     }
 
-    return res.sectors;
+    return { ...res, hasAccess: true };
   }),
   downlandAll: t.procedure.input(zone.id).query(({ ctx, input }) =>
     ctx.prisma.zone.findUnique({

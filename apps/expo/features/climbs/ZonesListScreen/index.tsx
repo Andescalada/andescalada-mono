@@ -59,7 +59,7 @@ const ZonesScreen = ({ navigation }: Props) => {
     );
   return (
     <Screen padding="m" safeAreaDisabled>
-      <Text variant="h1">Zonas</Text>
+      <Text variant="h2">Zonas</Text>
       <FlatList
         data={data}
         refreshControl={refresh}
