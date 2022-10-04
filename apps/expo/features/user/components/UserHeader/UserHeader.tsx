@@ -1,39 +1,47 @@
 import { Box, Image, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { images } from "@assets/images";
-import { andescaladaPathTitle } from "@features/user/components/UserHeader/AndescaladaPathTitle";
+import { andescaladaPathTitle } from "@features/user/components/UserHeader/andescaladaPathTitle";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import {
   add,
   Canvas,
   Easing,
+  FitBox,
   Group,
   LinearGradient,
   mix,
   Rect,
+  rect,
   useComputedValue,
   useLoop,
-  useValue,
   vec,
 } from "@shopify/react-native-skia";
+import { useResponsiveProp } from "@shopify/restyle";
 import { getThumbnail } from "@utils/cloudinary";
+import { SCREEN_WIDTH } from "@utils/Dimensions";
+import { useMemo } from "react";
+import { StyleSheet } from "react-native";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-
-const CANVAS_HEIGHT = 40;
-const CANVAS_WIDTH = 150;
+const HEADER_HEIGHT = 100;
+const CANVAS_WIDTH = 128;
+const CANVAS_HEIGHT = 16;
 
 const UserHeader = () => {
   const { data } = trpc.user.ownInfo.useQuery();
   const { name, profilePhoto } = data || {};
 
   const theme = useAppTheme();
-
-  const translate = useValue([
-    { translateY: CANVAS_HEIGHT / 2 },
-    { translateX: 0 },
-  ]);
+  const tablet = useResponsiveProp({ mobile: 0, tablet: 1 }) || 0;
+  const responsiveScale = useMemo(() => (tablet === 1 ? 2 : 1.4), [tablet]);
+  const responsiveCanvasHeight = useMemo(
+    () => CANVAS_HEIGHT * responsiveScale,
+    [responsiveScale],
+  );
+  const responsiveCanvasWidth = useMemo(
+    () => CANVAS_WIDTH * responsiveScale,
+    [responsiveScale],
+  );
 
   const progress = useLoop({ duration: 3000, easing: Easing.cubic });
 
@@ -48,7 +56,7 @@ const UserHeader = () => {
   const end = useComputedValue(
     () =>
       add(
-        vec(CANVAS_HEIGHT, 0),
+        vec(HEADER_HEIGHT, 0),
         vec(
           mix(progress.current, 0, CANVAS_WIDTH),
           mix(progress.current, 0, CANVAS_WIDTH),
@@ -63,50 +71,64 @@ const UserHeader = () => {
   return (
     <Screen
       flex={0}
-      flexDirection={"row"}
+      flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
       borderBottomWidth={1}
-      height={100}
       safeAreaDisabled
+      width={SCREEN_WIDTH}
       borderBottomColor="buttonGroup"
     >
-      <Canvas
-        style={{
-          flex: 1,
-          height: CANVAS_HEIGHT,
-          marginTop: 5,
-          marginLeft: 60,
-          transform: [{ scale: 1.4 }],
-        }}
-      >
-        <Group clip={andescaladaPathTitle} transform={translate}>
-          <Rect x={0} y={0} width={CANVAS_WIDTH} height={CANVAS_HEIGHT}>
-            <LinearGradient
-              start={start}
-              end={end}
-              colors={[theme.colors.gradientB, theme.colors.gradientA]}
-            />
-          </Rect>
-        </Group>
+      <Canvas style={stlyes.canvas}>
+        <FitBox
+          src={rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)}
+          dst={rect(
+            HEADER_HEIGHT / 6,
+            HEADER_HEIGHT - responsiveCanvasHeight - HEADER_HEIGHT / 6,
+            responsiveCanvasWidth,
+            responsiveCanvasHeight,
+          )}
+        >
+          <Group clip={andescaladaPathTitle}>
+            <Rect x={0} y={0} width={CANVAS_WIDTH} height={16}>
+              <LinearGradient
+                start={start}
+                end={end}
+                colors={[theme.colors.gradientB, theme.colors.gradientA]}
+              />
+            </Rect>
+          </Group>
+        </FitBox>
       </Canvas>
-      {/* <Text variant="h2">Andescalda</Text> */}
+
       <Box
         justifyContent="center"
-        alignItems="center"
+        alignItems="flex-end"
         flexDirection="row"
-        marginTop={"l"}
-        marginRight="l"
+        height="100%"
+        style={stlyes.header}
       >
         <Text variant="h3">{name}</Text>
-        <Image
-          source={uri ? uri : images.placeholder}
-          style={{ width: 40, height: 40, borderRadius: 100 }}
-          marginLeft="m"
-        />
+        <Image source={uri} style={stlyes.image} marginLeft="m" />
       </Box>
     </Screen>
   );
 };
 
 export default UserHeader;
+
+const stlyes = StyleSheet.create({
+  canvas: {
+    flex: 1,
+    height: HEADER_HEIGHT,
+  },
+  header: {
+    marginBottom: HEADER_HEIGHT / 4,
+    marginRight: HEADER_HEIGHT / 6,
+  },
+  image: {
+    width: HEADER_HEIGHT / 2.5,
+    height: HEADER_HEIGHT / 2.5,
+    borderRadius: HEADER_HEIGHT,
+  },
+});
