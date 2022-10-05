@@ -3,6 +3,7 @@ import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { nativeReturnUrl } from "@utils/auth0/params";
 import * as AuthSession from "expo-auth-session";
+import { stringify } from "superjson";
 
 import { tokenDecode } from "../decode";
 const authUrl = `https://${AUTH0_DOMAIN}/oauth/token`;
@@ -58,7 +59,7 @@ const getRefreshData = async (refreshToken: string) => {
 
   const response = await fetch(authUrl, options);
 
-  return await response.json();
+  return response.json();
 };
 
 export const refreshTokens = async () => {
@@ -73,7 +74,7 @@ export const refreshTokens = async () => {
   const decodedJwtIdToken = tokenDecode(response.data.id_token);
   await AsyncStorage.setItem(
     Storage.DECODED_ID_TOKEN,
-    String(decodedJwtIdToken),
+    stringify(decodedJwtIdToken),
   );
   return { accessToken: response.data.access_token as string };
 };
