@@ -94,12 +94,12 @@ const FirstTimeLoginScreen: FC<Props> = () => {
     if (isUsernameValid && !isLoadingUsernameValidation && isTouched)
       return {
         borderWidth: 1,
-        borderColor: "success" as const,
+        borderColor: "semantic.success" as const,
       };
     if (!isUsernameValid && !isLoadingUsernameValidation && isTouched)
       return {
         borderWidth: 1,
-        borderColor: "error" as const,
+        borderColor: "semantic.error" as const,
       };
     return {
       borderWidth: 0,
@@ -119,7 +119,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
         <Box marginTop={{ mobile: "m", tablet: "xxl" }}>
           <Box justifyContent="center" alignItems="center">
             <Pressable
-              borderColor="info"
+              borderColor="semantic.info"
               borderWidth={5}
               borderRadius={responsiveImageSize}
               borderStyle={"dashed"}
@@ -155,7 +155,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               onBlur={onBlur}
               containerProps={{ height: 40 }}
             />
-            <Text marginTop={"xs"} color="error">
+            <Text marginTop={"xs"} color="semantic.error">
               {error?.message}
             </Text>
           </Box>
@@ -182,7 +182,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               <ActivityIndicator size="small" paddingLeft={"s"} />
             )}
           </Box>
-          <Text marginTop={"xs"} color="error">
+          <Text marginTop={"xs"} color="semantic.error">
             {errorUsername?.message}
           </Text>
         </Box>

@@ -12,6 +12,7 @@
   },
   "peerDependencies": {
     "@andescalada/ui": "*",
+    "@andescalada/utils": "*",
     "react": "*",
     "react-hook-form": "*",
     "zod": "*",

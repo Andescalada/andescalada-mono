@@ -139,7 +139,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         {!mainTopo && !selectedImage && !isLoadingWall && (
           <Pressable
             flex={1}
-            borderColor="info"
+            borderColor="semantic.info"
             borderWidth={2}
             borderRadius={10}
             borderStyle={"dashed"}
@@ -154,7 +154,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         {selectedImage && !isSuccess && (
           <Pressable
             flex={1}
-            borderColor="info"
+            borderColor="semantic.info"
             borderWidth={2}
             borderRadius={10}
             borderStyle={"dashed"}

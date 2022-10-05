@@ -25,11 +25,11 @@ type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 const InfoAccessColor = (infoAccess: InfoAccess) => {
   switch (infoAccess) {
     case InfoAccessSchema.Enum.Community:
-      return "warning" as const;
+      return "semantic.warning" as const;
     case InfoAccessSchema.Enum.Private:
       return "private" as const;
     case InfoAccessSchema.Enum.Public:
-      return "success" as const;
+      return "semantic.success" as const;
   }
 };
 

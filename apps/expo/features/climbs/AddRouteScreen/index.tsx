@@ -117,7 +117,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             containerProps={{ height: 50 }}
             textAlignVertical="center"
           />
-          <Text marginTop={"xs"} color="error">
+          <Text marginTop={"xs"} color="semantic.error">
             {error?.message}
           </Text>
         </Box>
@@ -132,7 +132,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             <ButtonItem value={RouteKindSchema.Enum.Mixed} label="Mixta" />
             <ButtonItem value={RouteKindSchema.Enum.Ice} label="Hielo" />
           </Box>
-          <Text marginTop={"xs"} color="error">
+          <Text marginTop={"xs"} color="semantic.error">
             {kindError?.message}
           </Text>
         </ButtonGroup>
