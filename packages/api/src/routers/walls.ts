@@ -18,7 +18,13 @@ export const wallsRouter = t.router({
       include: {
         routes: {
           orderBy: { position: "asc" },
-          select: { name: true, id: true, RouteGrade: true, position: true },
+          select: {
+            name: true,
+            id: true,
+            RouteGrade: true,
+            position: true,
+            kind: true,
+          },
         },
         topos: {
           where: { main: true },

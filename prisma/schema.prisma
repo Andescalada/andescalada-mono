@@ -54,6 +54,8 @@ enum GradeSystems {
   French
   Yosemite
   Hueco
+  Ice
+  Mixed
 }
 
 model RoleByZone {

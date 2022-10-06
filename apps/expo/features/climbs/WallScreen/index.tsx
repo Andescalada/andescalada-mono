@@ -15,6 +15,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useGradeSystem from "@hooks/useGradeSystem";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePickImage from "@hooks/usePickImage";
 import useRefresh from "@hooks/useRefresh";
@@ -42,6 +43,8 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     isLoading: isLoadingWall,
   } = trpc.walls.byId.useQuery(route.params.wallId);
   const refresh = useRefresh(refetch, isFetching);
+
+  const { gradeSystem } = useGradeSystem();
 
   const mainTopo = data?.topos[0];
 
@@ -222,7 +225,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         )}
         renderItem={({ item }) => {
           const n = item.RouteGrade?.grade;
-          const grade = typeof n === "number" ? gradeUnits.FrenchGrade[n] : "?";
+          const grade = typeof n === "number" ? gradeSystem(n, item.kind) : "?";
           return (
             <ListItem
               marginVertical={"s"}

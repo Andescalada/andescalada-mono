@@ -23,7 +23,10 @@ const url = __DEV__
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [queryClient] = useState(
-    () => new QueryClient({ defaultOptions: { queries: { retry: false } } }),
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { retry: false, staleTime: 1000 * 60 * 2 } },
+      }),
   );
   const [trpcClient] = useState(() =>
     trpc.createClient({

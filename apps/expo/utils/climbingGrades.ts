@@ -1,5 +1,7 @@
+import { GradeSystemsSchema } from "@andescalada/db/zod";
+
 export const gradeUnits = {
-  FrenchGrade: [
+  [GradeSystemsSchema.Enum.French]: [
     "1",
     "2",
     "3",
@@ -35,7 +37,7 @@ export const gradeUnits = {
     "9c",
     "10a",
   ],
-  YosemiteGrade: [
+  [GradeSystemsSchema.Enum.Yosemite]: [
     "5",
     "5.1",
     "5.2",
@@ -72,7 +74,7 @@ export const gradeUnits = {
     "5.15d",
     "5.16a",
   ],
-  huecoGrade: [
+  [GradeSystemsSchema.Enum.Hueco]: [
     "V0",
     "V1",
     "V2",
@@ -93,8 +95,18 @@ export const gradeUnits = {
     "V17",
     "V18",
   ],
-  iceGrade: ["WI0", "WI1", "WI2", "WI3", "WI4", "WI5", "WI6", "WI7", "WI8"],
-  mixedClimbingGrade: [
+  [GradeSystemsSchema.Enum.Ice]: [
+    "WI0",
+    "WI1",
+    "WI2",
+    "WI3",
+    "WI4",
+    "WI5",
+    "WI6",
+    "WI7",
+    "WI8",
+  ],
+  [GradeSystemsSchema.Enum.Mixed]: [
     "M1",
     "M2",
     "M3",
@@ -109,5 +121,3 @@ export const gradeUnits = {
     "M12",
   ],
 };
-
-export const allGrades = [...Array(gradeUnits.FrenchGrade.length).keys()];

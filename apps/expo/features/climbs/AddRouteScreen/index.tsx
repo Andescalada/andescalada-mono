@@ -15,12 +15,12 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useGradeSystem from "@hooks/useGradeSystem";
 import useZodForm from "@hooks/useZodForm";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@shopify/restyle";
-import { allGrades, gradeUnits } from "@utils/climbingGrades";
 import { FC } from "react";
-import { useController } from "react-hook-form";
+import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
 
@@ -69,6 +69,9 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     control,
     name: "kind",
   });
+
+  const kindWatch = useWatch({ control, name: "kind" });
+
   const {
     field: { onChange: onGradeChange, value: gradeValue, onBlur: onGradeBlur },
   } = useController({
@@ -101,11 +104,18 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
+  const { allGrades, gradeSystem } = useGradeSystem(kindValue);
+
   const theme = useTheme<Theme>();
 
   return (
     <Screen>
-      <ScrollView flex={1} padding="m" onResponderGrant={Keyboard.dismiss}>
+      <ScrollView
+        padding="m"
+        flex={1}
+        marginBottom={"l"}
+        onResponderGrant={Keyboard.dismiss}
+      >
         <Text variant="h1">Agregar ruta</Text>
         <Box marginTop={"m"}>
           <Text variant={"p1R"} marginBottom={"s"}>
@@ -152,41 +162,43 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           <Text variant={"p1R"} marginBottom={"s"}>
             Grado
           </Text>
-          <Picker
-            onValueChange={onGradeChange}
-            selectedValue={gradeValue}
-            onBlur={onGradeBlur}
-            mode="dialog"
-            style={{
-              backgroundColor:
-                Platform.OS === "android"
-                  ? theme.colors.filledTextInputVariantBackground
-                  : undefined,
-            }}
-          >
-            {allGrades.map((n) => (
+          {kindWatch && (
+            <Picker
+              onValueChange={onGradeChange}
+              selectedValue={gradeValue}
+              onBlur={onGradeBlur}
+              mode="dialog"
+              style={{
+                backgroundColor:
+                  Platform.OS === "android"
+                    ? theme.colors.filledTextInputVariantBackground
+                    : undefined,
+              }}
+            >
+              {allGrades.map((n) => (
+                <Picker.Item
+                  color={Platform.OS === "android" ? "black" : "white"}
+                  fontFamily="Rubik-400"
+                  key={n}
+                  label={gradeSystem(n, kindWatch)}
+                  value={n}
+                />
+              ))}
               <Picker.Item
                 color={Platform.OS === "android" ? "black" : "white"}
                 fontFamily="Rubik-400"
-                key={n}
-                label={gradeUnits.FrenchGrade[n]}
-                value={n}
+                label={"Desconocido"}
+                value={null}
               />
-            ))}
-            <Picker.Item
-              color={Platform.OS === "android" ? "black" : "white"}
-              fontFamily="Rubik-400"
-              label={"Desconocido"}
-              value={null}
-            />
-            <Picker.Item
-              color={Platform.OS === "android" ? "black" : "white"}
-              fontFamily="Rubik-400"
-              label={"Proyecto"}
-              value={"project"}
-            />
-            <Picker.Item />
-          </Picker>
+              <Picker.Item
+                color={Platform.OS === "android" ? "black" : "white"}
+                fontFamily="Rubik-400"
+                label={"Proyecto"}
+                value={"project"}
+              />
+              <Picker.Item />
+            </Picker>
+          )}
         </Box>
         <Button
           variant="primary"
@@ -195,7 +207,12 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           isLoading={isLoading}
           marginVertical="s"
         />
-        <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
+        <SemanticButton
+          variant="error"
+          title="Cancelar"
+          onPress={onCancel}
+          marginBottom="l"
+        />
       </ScrollView>
     </Screen>
   );
