@@ -2,14 +2,13 @@ import wall from "@andescalada/api/schemas/wall";
 import {
   ActivityIndicator,
   Box,
-  EditableTitle,
   ListItem,
   Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
+import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
@@ -26,6 +25,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { gradeUnits } from "@utils/climbingGrades";
 import { getThumbnail } from "@utils/cloudinary";
 import { FC, useState } from "react";
+import { FormProvider } from "react-hook-form";
 import { Alert, FlatList, Image } from "react-native";
 
 const { schema } = wall;
@@ -81,16 +81,16 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           name: input.name,
           wallId: route.params.wallId,
         });
-      hProps.setEditing(false);
+      headerMethods.setEditing(false);
     },
     (error) => {
       const errorMessage = error.name?.message || "Hubo un error";
       Alert.alert(errorMessage);
       methods.setValue("name", route.params.wallName);
-      hProps.setEditing(false);
+      headerMethods.setEditing(false);
     },
   );
-  const hProps = useHeaderOptionButton({ onSave: onSubmit });
+  const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
   const rootNavigation = useRootNavigation();
 
   const onOptions = useOptionsSheet({
@@ -110,26 +110,19 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
       hide: !data || data.topos.length === 0,
     },
     "Cambiar Nombre": () => {
-      hProps.setEditing(true);
+      headerMethods.setEditing(true);
     },
   });
 
   return (
     <Screen padding={"m"}>
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        height={40}
-      >
-        <EditableTitle
+      <FormProvider {...methods}>
+        <Header
           title={route.params.wallName}
-          control={methods.control}
-          editable={hProps.editing}
-          name="name"
+          editingTitle={headerMethods.editing}
+          headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
-        <HeaderOptionsButton {...hProps} onOptions={onOptions} />
-      </Box>
+      </FormProvider>
       <Box flex={1 / 2}>
         {isLoadingWall && (
           <Box flex={1} justifyContent="center" alignItems="center">

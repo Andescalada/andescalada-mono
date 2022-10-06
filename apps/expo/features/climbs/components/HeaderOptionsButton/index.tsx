@@ -1,11 +1,13 @@
-import { Box, SemanticButton } from "@andescalada/ui";
+import { Box, Pressable, SemanticButton } from "@andescalada/ui";
+import { Entypo } from "@expo/vector-icons";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { useAppTheme } from "@hooks/useAppTheme";
 import usePermissions from "@hooks/usePermissions";
 import { CompositeScreenProps, useRoute } from "@react-navigation/native";
-import { ComponentProps, FC } from "react";
+import { ComponentProps, FC, useMemo } from "react";
 
 type Route = CompositeScreenProps<
   ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>,
@@ -32,17 +34,36 @@ const HeaderOptionsButton: FC<Props> = ({
   onOptions,
 }) => {
   const route = useRoute<Route>();
+  const theme = useAppTheme();
   const { permission } = usePermissions({ zoneId: route.params.zoneId });
-  if (permission === undefined) return null;
+
+  const icon = useMemo(() => {
+    if (cancel) return "cross";
+    if (editing) return "check";
+    return "dots-three-horizontal";
+  }, [editing, cancel]);
+  const backgroundColor = useMemo(() => {
+    if (cancel) return "semantic.error";
+    if (editing) return "semantic.success";
+    return undefined;
+  }, [editing, cancel]);
+
+  if (permission === undefined) return <Box />;
   return permission.has("Create") ? (
-    <SemanticButton
-      variant={cancel ? "error" : "info"}
-      title={editing ? (cancel ? "Cancelar" : "Guardar") : "Opciones"}
+    <Pressable
       onPress={editing ? onSave : onOptions}
+      backgroundColor={backgroundColor}
+      width={40}
+      height={40}
+      justifyContent="center"
+      alignItems="center"
+      borderRadius={40}
       onLongPress={() => {
         if (editing) setCancel(true);
       }}
-    />
+    >
+      <Entypo name={icon} size={24} color={theme.colors["grayscale.100"]} />
+    </Pressable>
   ) : (
     <Box />
   );

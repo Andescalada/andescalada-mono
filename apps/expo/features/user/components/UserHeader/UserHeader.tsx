@@ -1,8 +1,12 @@
-import { Box, Image, Screen } from "@andescalada/ui";
+import { Box, Image, Pressable, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { andescaladaPathTitle } from "@features/user/components/UserHeader/andescaladaPathTitle";
+import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
+import useOptionsSheet from "@hooks/useOptionsSheet";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import {
   add,
   Canvas,
@@ -67,6 +71,15 @@ const UserHeader = () => {
 
   const image = getThumbnail(profilePhoto?.publicId || undefined);
   const { uri } = useCachedImage(image);
+  const rootNavigation = useRootNavigation();
+  const onOptions = useOptionsSheet({
+    Configuraciones: {
+      action: () =>
+        rootNavigation.navigate(RootNavigationRoutes.User, {
+          screen: UserNavigationRoutes.OwnUserConfig,
+        }),
+    },
+  });
 
   return (
     <Screen
@@ -77,7 +90,7 @@ const UserHeader = () => {
       borderBottomWidth={1}
       safeAreaDisabled
       width={SCREEN_WIDTH}
-      borderBottomColor="buttonGroup"
+      borderBottomColor="grayscale.400"
     >
       <Canvas style={styles.canvas}>
         <FitBox
@@ -108,7 +121,13 @@ const UserHeader = () => {
         height="100%"
         style={styles.header}
       >
-        <Image source={uri} style={styles.image} marginLeft="m" />
+        <Pressable
+          justifyContent="center"
+          alignItems={"center"}
+          onPress={onOptions}
+        >
+          <Image source={uri} style={styles.image} marginLeft="s" />
+        </Pressable>
       </Box>
     </Screen>
   );

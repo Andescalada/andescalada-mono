@@ -4,7 +4,7 @@ import { pallete } from "./pallete";
 export const buttonVariantsColors = {
   primaryButtonBackground: pallete.shadesB[100],
   primaryButtonText: pallete.shadesB[400],
-  transparentButtonBackground: pallete.grayscale.transparent[80][600],
+  transparentButtonBackground: pallete.grayscale.transparent[50][300],
   transparentButtonText: pallete.grayscale.black,
   successButtonBackground: pallete.semantic.success,
   successButtonText: pallete.grayscale.white,
