@@ -4,8 +4,6 @@ import {
   Box,
   BoxWithKeyboard,
   Button,
-  Image,
-  Pressable,
   Screen,
   Text,
   TextInput,
@@ -13,21 +11,22 @@ import {
 import { trpc } from "@andescalada/utils/trpc";
 import ProfileImagePicker from "@features/user/components/ProfileImagePicker/ProfileImagePicker";
 import UsernameInput from "@features/user/components/UsernameInput/UsernameInput";
+import {
+  UserNavigationRoutes,
+  UserNavigationScreenProps,
+} from "@features/user/Navigation/types";
+import useOwnInfo from "@hooks/useOwnInfo";
 import usePickImage from "@hooks/usePickImage";
 import useUploadImage from "@hooks/useUploadImage";
 import useZodForm from "@hooks/useZodForm";
-import {
-  RootNavigationRoutes,
-  RootNavigationScreenProps,
-} from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
-import { FadeIn } from "react-native-reanimated";
 import { z } from "zod";
 
-type Props = RootNavigationScreenProps<RootNavigationRoutes.FirstTimeLogin>;
+type Props = UserNavigationScreenProps<UserNavigationRoutes.PersonalInfo>;
 
-const FirstTimeLoginScreen: FC<Props> = () => {
+const PersonalInfoConfigScreen: FC<Props> = () => {
+  const { data } = useOwnInfo();
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: true,
     quality: 0.5,
@@ -41,33 +40,61 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   const {
     field: { onChange, onBlur, value },
     fieldState: { error },
-  } = useController({ control: form.control, name: "name" });
+  } = useController({
+    control: form.control,
+    name: "name",
+    defaultValue: data?.name,
+  });
 
   const utils = trpc.useContext();
-  const { mutateAsync } = trpc.user.edit.useMutation();
+  const {
+    mutateAsync,
+    isSuccess,
+    reset: resetMutation,
+  } = trpc.user.edit.useMutation({
+    onSettled: (data) => {
+      if (data) {
+        const { name, username } = data;
+        setTimeout(() => {
+          form.reset({
+            name,
+            username,
+          }),
+            resetMutation();
+        }, 1500);
+        utils.user.ownInfo.invalidate();
+      }
+    },
+  });
 
   const [loading, setLoading] = useState(false);
   const onSubmit = form.handleSubmit(async ({ name, username }) => {
-    try {
-      setLoading(true);
-      let image: z.infer<typeof imageSchema.schema> | undefined;
-      if (selectedImage) {
-        image = await uploadImage(selectedImage.base64Img);
-      }
-      await mutateAsync({ name, image, username });
-      await utils.user.ownInfo.invalidate();
-    } catch (err) {}
+    setLoading(true);
+    let image: z.infer<typeof imageSchema.schema> | undefined;
+    if (selectedImage) {
+      image = await uploadImage(selectedImage.base64Img);
+    }
+    await mutateAsync({ name, image, username });
+    await utils.user.ownInfo.invalidate();
+
     setLoading(false);
   });
 
+  const saveButton = useMemo(() => {
+    if (!form.formState.isDirty) {
+      return { variant: "transparent" as const, title: "Guardar" };
+    }
+    if (isSuccess) {
+      return { variant: "success" as const, title: "Guardado" };
+    }
+    return { variant: "info" as const, title: "Guardar" };
+  }, [form.formState.isDirty, isSuccess]);
+
   return (
-    <Screen margin={{ mobile: "m", tablet: "xxl" }}>
+    <Screen margin={{ mobile: "m", tablet: "xxl" }} safeAreaDisabled>
       <BoxWithKeyboard>
         <Box marginVertical={"ll"}>
-          <Text variant={"h1"}>Comencemos</Text>
-          <Text>
-            Para comenzar ingresa tu nombre y elige una foto de perfil
-          </Text>
+          <Text variant="h3">Edita tu información personal</Text>
         </Box>
 
         <Box marginTop={{ mobile: "m", tablet: "xxl" }}>
@@ -75,6 +102,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
             <ProfileImagePicker
               pickImage={pickImage}
               selectedImage={selectedImage}
+              defaultValue={data?.profilePhoto?.publicId || undefined}
             />
           </Box>
           <FormProvider {...form}>
@@ -86,7 +114,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                containerProps={{ height: 40 }}
+                containerProps={{ height: 40, paddingLeft: "s" }}
               />
               <Text marginTop={"xs"} color="semantic.error">
                 {error?.message}
@@ -97,25 +125,22 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               <Text variant="p1R" marginBottom="s">
                 Usuario
               </Text>
-              <Box
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <UsernameInput />
-              </Box>
+              <UsernameInput defaultValue={data?.username} />
             </Box>
           </FormProvider>
         </Box>
         <Button
-          variant={"info"}
-          title="Continuar"
+          title={saveButton.title}
+          variant={saveButton.variant}
           alignSelf={"center"}
-          marginTop="xxl"
+          marginTop="s"
           onPress={onSubmit}
           isLoading={loading}
           disabled={
-            loading || !form.formState.isDirty || !form.formState.isValid
+            loading ||
+            !form.formState.isDirty ||
+            isSuccess ||
+            !form.formState.isValid
           }
         />
       </BoxWithKeyboard>
@@ -123,4 +148,4 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   );
 };
 
-export default FirstTimeLoginScreen;
+export default PersonalInfoConfigScreen;

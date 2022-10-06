@@ -1,8 +1,13 @@
-import { Box, Image, Screen } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
+import { Box, Image, Pressable, Screen } from "@andescalada/ui";
 import { andescaladaPathTitle } from "@features/user/components/UserHeader/andescaladaPathTitle";
+import { UserNavigationRoutes } from "@features/user/Navigation/types";
+import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
+import useOptionsSheet from "@hooks/useOptionsSheet";
+import useOwnInfo from "@hooks/useOwnInfo";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import {
   add,
   Canvas,
@@ -18,17 +23,18 @@ import {
   vec,
 } from "@shopify/react-native-skia";
 import { useResponsiveProp } from "@shopify/restyle";
+import { logoutAuth0 } from "@store/auth";
 import { getThumbnail } from "@utils/cloudinary";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
-import { useMemo } from "react";
-import { StyleSheet } from "react-native";
+import { useCallback, useMemo } from "react";
+import { Alert, StyleSheet } from "react-native";
 
 const HEADER_HEIGHT = 100;
 const CANVAS_WIDTH = 128;
 const CANVAS_HEIGHT = 16;
 
 const UserHeader = () => {
-  const { data } = trpc.user.ownInfo.useQuery();
+  const { data } = useOwnInfo();
   const { profilePhoto } = data || {};
 
   const theme = useAppTheme();
@@ -64,9 +70,37 @@ const UserHeader = () => {
       ),
     [progress],
   );
-
+  const dispatch = useAppDispatch();
   const image = getThumbnail(profilePhoto?.publicId || undefined);
   const { uri } = useCachedImage(image);
+  const rootNavigation = useRootNavigation();
+  const onLogout = useCallback(() => {
+    Alert.alert("Cerrar Sesión", "¿Seguro que quieres cerrar sesión?", [
+      {
+        text: "Si",
+        onPress: () => dispatch(logoutAuth0()),
+        style: "destructive",
+      },
+      {
+        text: "No",
+        style: "cancel",
+      },
+    ]);
+  }, [dispatch]);
+  const onOptions = useOptionsSheet(
+    {
+      Configuración: {
+        action: () =>
+          rootNavigation.navigate(RootNavigationRoutes.User, {
+            screen: UserNavigationRoutes.OwnUserConfig,
+          }),
+      },
+      "Cerrar Sesión": {
+        action: onLogout,
+      },
+    },
+    { destructiveButtonIndex: 1 },
+  );
 
   return (
     <Screen
@@ -77,7 +111,7 @@ const UserHeader = () => {
       borderBottomWidth={1}
       safeAreaDisabled
       width={SCREEN_WIDTH}
-      borderBottomColor="buttonGroup"
+      borderBottomColor="grayscale.400"
     >
       <Canvas style={styles.canvas}>
         <FitBox
@@ -108,7 +142,13 @@ const UserHeader = () => {
         height="100%"
         style={styles.header}
       >
-        <Image source={uri} style={styles.image} marginLeft="m" />
+        <Pressable
+          justifyContent="center"
+          alignItems={"center"}
+          onPress={onOptions}
+        >
+          <Image source={uri} style={styles.image} marginLeft="s" />
+        </Pressable>
       </Box>
     </Screen>
   );

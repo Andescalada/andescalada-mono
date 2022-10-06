@@ -1,8 +1,9 @@
 import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
+import UserStackNavigation from "@features/user/Navigation";
+import useOwnInfo from "@hooks/useOwnInfo";
 import {
   RootNavigationNavigationParamList,
   RootNavigationRoutes,
@@ -16,7 +17,7 @@ export interface AccessToken {
 const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 
 const Navigator = () => {
-  const { data, isLoading } = trpc.user.ownInfo.useQuery();
+  const { data, isLoading } = useOwnInfo();
   if (isLoading)
     return (
       <Screen
@@ -54,6 +55,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.RouteManager}
             component={RouteManagerStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.User}
+            component={UserStackNavigation}
           />
         </Stack.Group>
       )}

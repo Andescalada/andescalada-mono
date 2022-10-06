@@ -11,34 +11,38 @@ const useUsernameValidation = () => {
 
   const validateUsername = useCallback(
     async (u: string) => {
-      setIsLoading(true);
+      try {
+        const validUsername = await user.schema
+          .pick({ username: true })
+          .safeParseAsync({ username: u });
+        if (!validUsername.success)
+          return {
+            isValid: false,
+            errorMessage: validUsername.error.message,
+          };
+        setIsLoading(true);
+        const isUsernameUnique = await utils.user.uniqueUsername.fetch({
+          username: u,
+        });
+        setIsValid(isUsernameUnique);
+        setIsLoading(false);
 
-      const validUsername = user.schema
-        .pick({ username: true })
-        .safeParse({ username: u });
-      if (!validUsername)
-        return {
-          isValid: false,
-          errorMessage: "Nombre de usuario inválido",
-        };
-      const isUsernameUnique = await utils.user.uniqueUsername.fetch({
-        username: u,
-      });
-      setIsValid(isUsernameUnique);
-      setIsLoading(false);
-      if (!isUsernameUnique) {
-        const errorMessage = `Existe un usuario con el nombre ${u}, elige otro...`;
-        setErrorMessage(errorMessage);
-        return {
-          isValid: false,
-          errorMessage,
-        };
-      } else {
-        setErrorMessage(undefined);
-        return {
-          isValid: true,
-          errorMessage: undefined,
-        };
+        if (!isUsernameUnique) {
+          const errorMessage = `Existe un usuario con el nombre ${u}, elige otro...`;
+          setErrorMessage(errorMessage);
+          return {
+            isValid: false,
+            errorMessage,
+          };
+        } else {
+          setErrorMessage(undefined);
+          return {
+            isValid: true,
+            errorMessage: undefined,
+          };
+        }
+      } catch (err) {
+        console.warn(err);
       }
     },
     [utils.user.uniqueUsername],

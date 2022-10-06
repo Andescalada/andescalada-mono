@@ -1,3 +1,4 @@
+import { flattenObject } from "@andescalada/utils/flattenObject";
 import { createTheme } from "@shopify/restyle";
 
 import breakpoints from "./breakpoints";
@@ -37,7 +38,7 @@ const darkBaseTheme = {
     ...lisItemVariantsColors,
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,
-    ...pallete.semantic,
+    ...flattenObject(pallete),
   },
   breakpoints,
   spacing,

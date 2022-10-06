@@ -77,7 +77,7 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
           Nombre de la pared
         </Text>
         <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
-        <Text marginTop={"xs"} color="error">
+        <Text marginTop={"xs"} color="semantic.error">
           {error?.message}
         </Text>
       </Box>

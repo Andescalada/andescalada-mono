@@ -10,11 +10,17 @@
     "deepmerge": "^4.2.2",
     "react-native": "0.69.5"
   },
+  "devDependencies": {
+    "@shopify/react-native-skia": "0.1.141"
+  },
   "peerDependencies": {
     "@andescalada/ui": "*",
+    "@andescalada/utils": "*",
     "react": "*",
     "react-hook-form": "*",
     "zod": "*",
-    "react-native-reanimated": "*"
+    "react-native-reanimated": "*",
+    "expo": "*",
+    "@shopify/react-native-skia": "*"
   }
 }

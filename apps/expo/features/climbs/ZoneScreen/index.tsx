@@ -2,6 +2,7 @@ import zone from "@andescalada/api/schemas/zone";
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
+  BackButton,
   Box,
   Button,
   EditableTitle,
@@ -10,6 +11,7 @@ import {
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import Header from "@features/climbs/components/Header";
 import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
@@ -20,6 +22,7 @@ import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
+import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 
 const { schema } = zone;
@@ -42,17 +45,17 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           name: input.name,
           zoneId: route.params.zoneId,
         });
-      hProps.setEditing(false);
+      headerMethods.setEditing(false);
     },
     (error) => {
       const errorMessage = error.name?.message || "Hubo un error";
       Alert.alert(errorMessage);
       methods.setValue("name", route.params.zoneName);
-      hProps.setEditing(false);
+      headerMethods.setEditing(false);
     },
   );
 
-  const hProps = useHeaderOptionButton({ onSave: onSubmit });
+  const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
 
   const onOptions = useOptionsSheet({
     "Agregar Sector": {
@@ -62,27 +65,19 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         }),
     },
     "Cambiar Nombre": () => {
-      hProps.setEditing(true);
+      headerMethods.setEditing(true);
     },
   });
 
   return (
     <Screen padding="m">
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        height={40}
-      >
-        <EditableTitle
+      <FormProvider {...methods}>
+        <Header
           title={route.params.zoneName}
-          name="name"
-          editable={hProps.editing}
-          control={methods.control}
-          textAlignVertical="center"
+          editingTitle={headerMethods.editing}
+          headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
-        <HeaderOptionsButton {...hProps} onOptions={onOptions} />
-      </Box>
+      </FormProvider>
       <Box flex={1}>
         <FlatList
           data={data?.sectors}

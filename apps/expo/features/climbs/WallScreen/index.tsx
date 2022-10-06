@@ -2,20 +2,20 @@ import wall from "@andescalada/api/schemas/wall";
 import {
   ActivityIndicator,
   Box,
-  EditableTitle,
   ListItem,
   Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
+import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useGradeSystem from "@hooks/useGradeSystem";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePickImage from "@hooks/usePickImage";
 import useRefresh from "@hooks/useRefresh";
@@ -26,6 +26,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { gradeUnits } from "@utils/climbingGrades";
 import { getThumbnail } from "@utils/cloudinary";
 import { FC, useState } from "react";
+import { FormProvider } from "react-hook-form";
 import { Alert, FlatList, Image } from "react-native";
 
 const { schema } = wall;
@@ -42,6 +43,8 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     isLoading: isLoadingWall,
   } = trpc.walls.byId.useQuery(route.params.wallId);
   const refresh = useRefresh(refetch, isFetching);
+
+  const { gradeSystem } = useGradeSystem();
 
   const mainTopo = data?.topos[0];
 
@@ -81,16 +84,16 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           name: input.name,
           wallId: route.params.wallId,
         });
-      hProps.setEditing(false);
+      headerMethods.setEditing(false);
     },
     (error) => {
       const errorMessage = error.name?.message || "Hubo un error";
       Alert.alert(errorMessage);
       methods.setValue("name", route.params.wallName);
-      hProps.setEditing(false);
+      headerMethods.setEditing(false);
     },
   );
-  const hProps = useHeaderOptionButton({ onSave: onSubmit });
+  const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
   const rootNavigation = useRootNavigation();
 
   const onOptions = useOptionsSheet({
@@ -110,26 +113,19 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
       hide: !data || data.topos.length === 0,
     },
     "Cambiar Nombre": () => {
-      hProps.setEditing(true);
+      headerMethods.setEditing(true);
     },
   });
 
   return (
     <Screen padding={"m"}>
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        height={40}
-      >
-        <EditableTitle
+      <FormProvider {...methods}>
+        <Header
           title={route.params.wallName}
-          control={methods.control}
-          editable={hProps.editing}
-          name="name"
+          editingTitle={headerMethods.editing}
+          headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
-        <HeaderOptionsButton {...hProps} onOptions={onOptions} />
-      </Box>
+      </FormProvider>
       <Box flex={1 / 2}>
         {isLoadingWall && (
           <Box flex={1} justifyContent="center" alignItems="center">
@@ -139,7 +135,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         {!mainTopo && !selectedImage && !isLoadingWall && (
           <Pressable
             flex={1}
-            borderColor="info"
+            borderColor="semantic.info"
             borderWidth={2}
             borderRadius={10}
             borderStyle={"dashed"}
@@ -154,7 +150,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         {selectedImage && !isSuccess && (
           <Pressable
             flex={1}
-            borderColor="info"
+            borderColor="semantic.info"
             borderWidth={2}
             borderRadius={10}
             borderStyle={"dashed"}
@@ -229,7 +225,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         )}
         renderItem={({ item }) => {
           const n = item.RouteGrade?.grade;
-          const grade = typeof n === "number" ? gradeUnits.FrenchGrade[n] : "?";
+          const grade = typeof n === "number" ? gradeSystem(n, item.kind) : "?";
           return (
             <ListItem
               marginVertical={"s"}

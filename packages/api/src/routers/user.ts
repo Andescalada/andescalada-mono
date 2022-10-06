@@ -16,6 +16,10 @@ export const userRouter = t.router({
         id: true,
         profilePhoto: true,
         name: true,
+        preferredTradGrade: true,
+        preferredBoulderGrade: true,
+        preferredSportGrade: true,
+        username: true,
       },
     }),
   ),
@@ -30,6 +34,18 @@ export const userRouter = t.router({
       },
     }),
   ),
+  editGradingSystem: protectedProcedure
+    .input(user.gradeSystem)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: { email: ctx.user.email },
+        data: {
+          preferredTradGrade: input.preferredTradGrade,
+          preferredSportGrade: input.preferredSportGrade,
+          preferredBoulderGrade: input.preferredBoulderGrade,
+        },
+      });
+    }),
   zonePermissions: protectedProcedure
     .input(zone.id)
     .query(async ({ ctx, input }) => {

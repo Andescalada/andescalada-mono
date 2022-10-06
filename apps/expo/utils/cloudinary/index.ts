@@ -33,6 +33,15 @@ export const getThumbnail = (publicId?: string) => {
 
   return imageObject(image, publicId);
 };
+export const getProfileImage = (publicId?: string, size?: number) => {
+  const image = cld
+    .image(publicId)
+    .resize(Resize.scale(size))
+    .format("auto")
+    .quality(50);
+
+  return imageObject(image, publicId);
+};
 
 const imageObject = (image?: CloudinaryImage, publicId?: string | null) => {
   if (!image || !publicId) return { url: null, uniqueId: null };

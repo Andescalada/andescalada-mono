@@ -2,11 +2,15 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum UserNavigationRoutes {
-  Placeholder = "UserPlaceholder",
+  OwnUserConfig = "UserConfig",
+  GradingSystem = "GradingSystem",
+  PersonalInfo = "PersonalInfo",
 }
 
 export type UserNavigationParamList = {
-  [UserNavigationRoutes.Placeholder]: undefined;
+  [UserNavigationRoutes.OwnUserConfig]: undefined;
+  [UserNavigationRoutes.GradingSystem]: undefined;
+  [UserNavigationRoutes.PersonalInfo]: undefined;
 };
 
 export type UserRouteProps<T extends UserNavigationRoutes> = RouteProp<
@@ -17,7 +21,7 @@ export type UserRouteProps<T extends UserNavigationRoutes> = RouteProp<
 export type UserNavigationProps<T extends UserNavigationRoutes> =
   StackNavigationProp<UserNavigationParamList, T>;
 
-export interface UserScreenProps<T extends UserNavigationRoutes> {
+export interface UserNavigationScreenProps<T extends UserNavigationRoutes> {
   navigation: UserNavigationProps<T>;
   route: UserRouteProps<T>;
 }

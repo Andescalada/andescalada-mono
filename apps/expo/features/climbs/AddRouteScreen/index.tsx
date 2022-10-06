@@ -2,7 +2,7 @@ import { RouteKindSchema } from "@andescalada/db/zod";
 import {
   Box,
   Button,
-  Pressable,
+  ButtonGroup,
   Screen,
   ScrollView,
   SemanticButton,
@@ -15,12 +15,12 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useGradeSystem from "@hooks/useGradeSystem";
 import useZodForm from "@hooks/useZodForm";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@shopify/restyle";
-import { allGrades, gradeUnits } from "@utils/climbingGrades";
-import { createContext, FC, ReactNode, useContext } from "react";
-import { useController } from "react-hook-form";
+import { FC } from "react";
+import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
 
@@ -69,6 +69,9 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     control,
     name: "kind",
   });
+
+  const kindWatch = useWatch({ control, name: "kind" });
+
   const {
     field: { onChange: onGradeChange, value: gradeValue, onBlur: onGradeBlur },
   } = useController({
@@ -101,11 +104,18 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
+  const { allGrades, gradeSystem } = useGradeSystem(kindValue);
+
   const theme = useTheme<Theme>();
 
   return (
     <Screen>
-      <ScrollView flex={1} padding="m" onResponderGrant={Keyboard.dismiss}>
+      <ScrollView
+        padding="m"
+        flex={1}
+        marginBottom={"l"}
+        onResponderGrant={Keyboard.dismiss}
+      >
         <Text variant="h1">Agregar ruta</Text>
         <Box marginTop={"m"}>
           <Text variant={"p1R"} marginBottom={"s"}>
@@ -117,7 +127,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             containerProps={{ height: 50 }}
             textAlignVertical="center"
           />
-          <Text marginTop={"xs"} color="error">
+          <Text marginTop={"xs"} color="semantic.error">
             {error?.message}
           </Text>
         </Box>
@@ -126,13 +136,25 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         </Text>
         <ButtonGroup value={kindValue} onChange={onKindChange}>
           <Box flexWrap="wrap" flexDirection="row">
-            <ButtonItem value={RouteKindSchema.Enum.Sport} label="Deportiva" />
-            <ButtonItem value={RouteKindSchema.Enum.Boulder} label="Boulder" />
-            <ButtonItem value={RouteKindSchema.Enum.Trad} label="Tradicional" />
-            <ButtonItem value={RouteKindSchema.Enum.Mixed} label="Mixta" />
-            <ButtonItem value={RouteKindSchema.Enum.Ice} label="Hielo" />
+            <ButtonGroup.Item
+              value={RouteKindSchema.Enum.Sport}
+              label="Deportiva"
+            />
+            <ButtonGroup.Item
+              value={RouteKindSchema.Enum.Boulder}
+              label="Boulder"
+            />
+            <ButtonGroup.Item
+              value={RouteKindSchema.Enum.Trad}
+              label="Tradicional"
+            />
+            <ButtonGroup.Item
+              value={RouteKindSchema.Enum.Mixed}
+              label="Mixta"
+            />
+            <ButtonGroup.Item value={RouteKindSchema.Enum.Ice} label="Hielo" />
           </Box>
-          <Text marginTop={"xs"} color="error">
+          <Text marginTop={"xs"} color="semantic.error">
             {kindError?.message}
           </Text>
         </ButtonGroup>
@@ -140,41 +162,43 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           <Text variant={"p1R"} marginBottom={"s"}>
             Grado
           </Text>
-          <Picker
-            onValueChange={onGradeChange}
-            selectedValue={gradeValue}
-            onBlur={onGradeBlur}
-            mode="dialog"
-            style={{
-              backgroundColor:
-                Platform.OS === "android"
-                  ? theme.colors.filledTextInputVariantBackground
-                  : undefined,
-            }}
-          >
-            {allGrades.map((n) => (
+          {kindWatch && (
+            <Picker
+              onValueChange={onGradeChange}
+              selectedValue={gradeValue}
+              onBlur={onGradeBlur}
+              mode="dialog"
+              style={{
+                backgroundColor:
+                  Platform.OS === "android"
+                    ? theme.colors.filledTextInputVariantBackground
+                    : undefined,
+              }}
+            >
+              {allGrades.map((n) => (
+                <Picker.Item
+                  color={Platform.OS === "android" ? "black" : "white"}
+                  fontFamily="Rubik-400"
+                  key={n}
+                  label={gradeSystem(n, kindWatch)}
+                  value={n}
+                />
+              ))}
               <Picker.Item
                 color={Platform.OS === "android" ? "black" : "white"}
                 fontFamily="Rubik-400"
-                key={n}
-                label={gradeUnits.FrenchGrade[n]}
-                value={n}
+                label={"Desconocido"}
+                value={null}
               />
-            ))}
-            <Picker.Item
-              color={Platform.OS === "android" ? "black" : "white"}
-              fontFamily="Rubik-400"
-              label={"Desconocido"}
-              value={null}
-            />
-            <Picker.Item
-              color={Platform.OS === "android" ? "black" : "white"}
-              fontFamily="Rubik-400"
-              label={"Proyecto"}
-              value={"project"}
-            />
-            <Picker.Item />
-          </Picker>
+              <Picker.Item
+                color={Platform.OS === "android" ? "black" : "white"}
+                fontFamily="Rubik-400"
+                label={"Proyecto"}
+                value={"project"}
+              />
+              <Picker.Item />
+            </Picker>
+          )}
         </Box>
         <Button
           variant="primary"
@@ -183,59 +207,15 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           isLoading={isLoading}
           marginVertical="s"
         />
-        <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
+        <SemanticButton
+          variant="error"
+          title="Cancelar"
+          onPress={onCancel}
+          marginBottom="l"
+        />
       </ScrollView>
     </Screen>
   );
 };
 
 export default AddRouteScreen;
-
-interface ButtonItemProps {
-  label: string;
-  value: string | number | undefined;
-}
-
-const ButtonItem: FC<ButtonItemProps> = ({ label, value: localValue }) => {
-  const { value, onChange } = useButtonGroup();
-  const isSelected = value === localValue;
-  return (
-    <Pressable
-      onPress={() => {
-        if (isSelected) {
-          onChange(undefined);
-          return;
-        }
-        onChange(localValue);
-      }}
-      padding="m"
-      margin={"s"}
-      backgroundColor={isSelected ? "selectedButtonGroup" : "buttonGroup"}
-      borderRadius={100}
-    >
-      <Text variant={isSelected ? "p2B" : "p2R"}>{label}</Text>
-    </Pressable>
-  );
-};
-
-interface ButtonGroupProps {
-  value: string | number | undefined;
-  onChange: (v: string | number | undefined) => void;
-  children: ReactNode;
-}
-
-const ButtonGroupContext = createContext<ButtonGroupProps | null>(null);
-
-const ButtonGroup: FC<ButtonGroupProps> = ({ children, value, onChange }) => {
-  return (
-    <ButtonGroupContext.Provider value={{ value, onChange, children }}>
-      {children}
-    </ButtonGroupContext.Provider>
-  );
-};
-
-const useButtonGroup = () => {
-  const methods = useContext(ButtonGroupContext);
-
-  return methods as unknown as ButtonGroupProps;
-};

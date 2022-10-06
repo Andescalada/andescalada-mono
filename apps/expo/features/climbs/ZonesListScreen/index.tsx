@@ -4,7 +4,6 @@ import {
   Box,
   ListItem,
   Screen,
-  SemanticButton,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -12,11 +11,8 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import { useAppDispatch } from "@hooks/redux";
 import useRefresh from "@hooks/useRefresh";
-import { logoutAuth0 } from "@store/auth";
-import { useCallback } from "react";
-import { Alert, FlatList } from "react-native";
+import { FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 
@@ -25,31 +21,17 @@ type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 const InfoAccessColor = (infoAccess: InfoAccess) => {
   switch (infoAccess) {
     case InfoAccessSchema.Enum.Community:
-      return "warning" as const;
+      return "semantic.warning" as const;
     case InfoAccessSchema.Enum.Private:
       return "private" as const;
     case InfoAccessSchema.Enum.Public:
-      return "success" as const;
+      return "semantic.success" as const;
   }
 };
 
 const ZonesScreen = ({ navigation }: Props) => {
   const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
   const refresh = useRefresh(refetch, isFetching);
-  const dispatch = useAppDispatch();
-  const onLogout = useCallback(() => {
-    Alert.alert("Cerrar Sesión", "¿Seguro que quieres cerrar sesión?", [
-      {
-        text: "Si",
-        onPress: () => dispatch(logoutAuth0()),
-        style: "destructive",
-      },
-      {
-        text: "No",
-        style: "cancel",
-      },
-    ]);
-  }, [dispatch]);
 
   if (isLoading)
     return (
@@ -86,12 +68,6 @@ const ZonesScreen = ({ navigation }: Props) => {
             />
           </ListItem>
         )}
-      />
-      <SemanticButton
-        title="Cerrar sesión"
-        variant="info"
-        marginBottom="l"
-        onPress={onLogout}
       />
     </Screen>
   );

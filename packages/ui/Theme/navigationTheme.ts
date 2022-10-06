@@ -5,9 +5,9 @@ export const darkTheme = {
   colors: {
     primary: pallete.brand.secondaryB,
     background: pallete.grayscale.black,
-    card: pallete.grayscale[200],
+    card: pallete.grayscale.black,
     text: pallete.grayscale[100],
-    border: pallete.grayscale[200],
+    border: "transparent",
     notification: pallete.brand.secondaryB,
   },
 };

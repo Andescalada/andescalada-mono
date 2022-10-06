@@ -2,13 +2,12 @@ import sector from "@andescalada/api/schemas/sector";
 import {
   ActivityIndicator,
   Box,
-  EditableTitle,
   ListItem,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
+import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
@@ -18,6 +17,7 @@ import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
+import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 
 const { schema } = sector;
@@ -50,18 +50,17 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         name: input.name,
         sectorId,
       });
-      setEditing(false);
+      headerMethods.setEditing(false);
     },
     (error) => {
       const errorMessage = error.name?.message || "Hubo un error";
       Alert.alert(errorMessage);
       methods.setValue("name", route.params.sectorName);
-      setEditing(false);
+      headerMethods.setEditing(false);
     },
   );
 
-  const { onSave, cancel, editing, setCancel, setEditing } =
-    useHeaderOptionButton({ onSave: onSubmit });
+  const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
 
   const onOptions = useOptionsSheet({
     "Agregar Pared": () =>
@@ -69,7 +68,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         sectorId,
       }),
     "Cambiar Nombre": () => {
-      setEditing(true);
+      headerMethods.setEditing(true);
     },
   });
 
@@ -81,27 +80,13 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     );
   return (
     <Screen padding="m">
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        height={40}
-      >
-        <EditableTitle
+      <FormProvider {...methods}>
+        <Header
           title={route.params.sectorName}
-          name="name"
-          editable={editing}
-          control={methods.control}
+          editingTitle={headerMethods.editing}
+          headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
-
-        <HeaderOptionsButton
-          cancel={cancel}
-          setCancel={setCancel}
-          editing={editing}
-          onOptions={onOptions}
-          onSave={onSave}
-        />
-      </Box>
+      </FormProvider>
       <Box flex={1}>
         <FlatList
           data={data}

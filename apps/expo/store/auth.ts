@@ -2,9 +2,13 @@ import { Storage } from "@assets/Constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { auth0Tokens, login, logout } from "@utils/auth0";
-import { DecodedIdToken } from "@utils/auth0/types";
-import { isExpired } from "@utils/decode";
-import jwtDecode from "jwt-decode";
+import {
+  DecodedAccessToken,
+  DecodedIdToken,
+  GlobalPermissions,
+} from "@utils/auth0/types";
+import { isExpired, tokenDecode } from "@utils/decode";
+import { parse, stringify } from "superjson";
 
 export interface AuthState {
   isAuth: boolean;
@@ -12,6 +16,7 @@ export interface AuthState {
   accessToken: undefined | string;
   autoLoginCompleted: boolean;
   email: string | undefined;
+  globalPermissions: GlobalPermissions[];
 }
 
 export interface AccessToken {
@@ -24,6 +29,7 @@ const initialState: AuthState = {
   accessToken: undefined,
   autoLoginCompleted: false,
   email: undefined,
+  globalPermissions: [],
 };
 
 export const loginAuth0 = createAsyncThunk(
@@ -33,11 +39,13 @@ export const loginAuth0 = createAsyncThunk(
       dispatch(setLoadingAuth(true));
       const { accessToken, decodedIdToken, refreshToken } = await login();
 
+      const decodedAccessToken = tokenDecode<DecodedAccessToken>(accessToken);
+
       await AsyncStorage.setItem(Storage.ACCESS_TOKEN, accessToken);
       await AsyncStorage.setItem(Storage.REFRESH_TOKEN, refreshToken);
       await AsyncStorage.setItem(
         Storage.DECODED_ID_TOKEN,
-        JSON.stringify(decodedIdToken),
+        stringify(decodedIdToken),
       );
       dispatch(setLoadingAuth(false));
       dispatch(setAutoLoginCompleted(true));
@@ -45,6 +53,7 @@ export const loginAuth0 = createAsyncThunk(
         isAuth: true,
         accessToken,
         email: (decodedIdToken as DecodedIdToken)?.name,
+        globalPermissions: decodedAccessToken.permissions,
       };
     } catch (err) {
       rejectWithValue(err);
@@ -61,19 +70,26 @@ export const autoLoginAuth0 = createAsyncThunk(
       const token = await AsyncStorage.getItem(Storage.ACCESS_TOKEN);
       const decodedIdToken = await AsyncStorage.getItem(
         Storage.DECODED_ID_TOKEN,
-      ).then((d) => (d ? JSON.parse(d) : {}) as DecodedIdToken);
+      ).then((d) => (d ? parse(d) : {}) as DecodedIdToken);
 
       if (!token) return { isAuth: false };
-      const decodedToken: AccessToken = jwtDecode(token);
+      const decodedToken = tokenDecode<DecodedAccessToken>(token);
       const hasExpired = isExpired(decodedToken.exp);
       if (!hasExpired)
-        return { isAuth: true, accessToken: token, email: decodedIdToken.name };
+        return {
+          isAuth: true,
+          accessToken: token,
+          email: decodedIdToken.name,
+          globalPermissions: decodedToken.permissions,
+        };
       const res = await auth0Tokens.refreshTokens();
+
       if (res?.accessToken) {
         return {
           isAuth: true,
           accessToken: res.accessToken,
           email: decodedIdToken.name,
+          globalPermissions: decodedToken.permissions,
         };
       }
     } catch (err) {
@@ -121,6 +137,7 @@ const authSlice = createSlice({
       state.isAuth = action.payload.isAuth;
       state.accessToken = action.payload.accessToken;
       state.email = action.payload.email;
+      state.globalPermissions = action.payload.globalPermissions || [];
     });
     builder.addCase(logoutAuth0.fulfilled, (state, action) => {
       state.isAuth = action.payload.isAuth;
@@ -129,6 +146,7 @@ const authSlice = createSlice({
       state.isAuth = action.payload.isAuth;
       state.accessToken = action.payload?.accessToken;
       state.email = action.payload.email;
+      state.globalPermissions = action.payload.globalPermissions || [];
     });
   },
 });

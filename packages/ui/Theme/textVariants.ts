@@ -44,7 +44,7 @@ const textVariants = {
   p1R: {
     fontFamily: "Rubik-400",
     fontSize: 20,
-    lineHeight: 20,
+    lineHeight: 24,
     color: "text",
   },
   p2B: {
