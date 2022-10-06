@@ -29,6 +29,8 @@ const GradingSystemConfigScreen: FC<Props> = () => {
     schema: user.gradeSystem,
   });
 
+  const utils = trpc.useContext();
+
   const {
     mutate,
     isSuccess,
@@ -50,6 +52,7 @@ const GradingSystemConfigScreen: FC<Props> = () => {
           }),
             resetMutation();
         }, 1500);
+        utils.user.ownInfo.invalidate();
       }
     },
   });
