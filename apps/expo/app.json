@@ -17,15 +17,24 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.andescalada.app",
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["uber", "comgooglemaps", "waze"],
-        "UIBackgroundModes": ["location"],
+        "LSApplicationQueriesSchemes": [
+          "uber",
+          "comgooglemaps",
+          "waze"
+        ],
+        "UIBackgroundModes": [
+          "location"
+        ],
         "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
-      }
+      },
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
