@@ -4,11 +4,13 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum UserNavigationRoutes {
   OwnUserConfig = "UserConfig",
   GradingSystem = "GradingSystem",
+  PersonalInfo = "PersonalInfo",
 }
 
 export type UserNavigationParamList = {
   [UserNavigationRoutes.OwnUserConfig]: undefined;
   [UserNavigationRoutes.GradingSystem]: undefined;
+  [UserNavigationRoutes.PersonalInfo]: undefined;
 };
 
 export type UserRouteProps<T extends UserNavigationRoutes> = RouteProp<

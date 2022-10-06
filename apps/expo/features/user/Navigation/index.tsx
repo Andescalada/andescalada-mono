@@ -2,6 +2,7 @@ import { BackButton } from "@andescalada/ui";
 import textVariants from "@andescalada/ui/Theme/textVariants";
 import GradingSystemConfigScreen from "@features/user/GradingSystemConfigScreen";
 import OwnUserConfigScreen from "@features/user/OwnUserConfigScreen";
+import PersonalInfoConfigScreen from "@features/user/PersonalInfoConfigScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import { UserNavigationParamList, UserNavigationRoutes } from "./types";
@@ -29,6 +30,11 @@ const Navigator = () => {
         name={UserNavigationRoutes.GradingSystem}
         component={GradingSystemConfigScreen}
         options={{ title: "Sistema de graduación" }}
+      />
+      <Stack.Screen
+        name={UserNavigationRoutes.PersonalInfo}
+        component={PersonalInfoConfigScreen}
+        options={{ title: "Información personal" }}
       />
     </Stack.Navigator>
   );

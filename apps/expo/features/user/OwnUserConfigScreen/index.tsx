@@ -53,7 +53,12 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
           navigation.navigate(UserNavigationRoutes.GradingSystem);
         }}
       />
-      <ListItemConfig title="Información personal" />
+      <ListItemConfig
+        title="Información personal"
+        onPress={() => {
+          navigation.navigate(UserNavigationRoutes.PersonalInfo);
+        }}
+      />
       {globalPermissions?.includes(GlobalPermissions.CRUD_ROLES) && (
         <ListItemConfig
           title="Asignar rol a usuario"

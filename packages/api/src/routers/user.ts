@@ -19,6 +19,7 @@ export const userRouter = t.router({
         preferredTradGrade: true,
         preferredBoulderGrade: true,
         preferredSportGrade: true,
+        username: true,
       },
     }),
   ),

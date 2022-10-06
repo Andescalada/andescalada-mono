@@ -1,5 +1,7 @@
-import { Pressable, Text } from "@andescalada/ui";
 import { createContext, FC, ReactNode, useContext } from "react";
+
+import Pressable from "../Pressable/Pressable";
+import Text from "../Text/Text";
 
 interface ButtonItemProps {
   label: string;
