@@ -1,4 +1,5 @@
 import { BackButton } from "@andescalada/ui";
+import textVariants from "@andescalada/ui/Theme/textVariants";
 import OwnUserConfigScreen from "@features/user/OwnUserConfigScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -10,20 +11,16 @@ const Navigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitleStyle: { fontFamily: "Rubik-500", fontSize: 18 },
-        headerBackTitleStyle: {
-          fontFamily: "Rubik-400",
-        },
-
+        headerTitleStyle: textVariants.p1R,
         headerLeft({ onPress }) {
-          return <BackButton onPress={onPress} />;
+          return <BackButton onPress={onPress} marginLeft="s" />;
         },
       }}
     >
       <Stack.Screen
         name={UserNavigationRoutes.OwnUserConfig}
         component={OwnUserConfigScreen}
-        options={{ title: "Configuraciones", headerBackTitle: "Atrás" }}
+        options={{ title: "Configuración", headerBackTitle: "Atrás" }}
       />
     </Stack.Navigator>
   );

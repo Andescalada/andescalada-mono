@@ -17,6 +17,16 @@ const listItemVariants = createBoxVariant({
     alignItems: "stretch",
     padding: "m",
   },
+  transparent: {
+    backgroundColor: "grayscale.transparent.50.400",
+    alignItems: "stretch",
+    padding: "m",
+  },
+  accent: {
+    backgroundColor: "brand.primaryA",
+    alignItems: "stretch",
+    padding: "m",
+  },
 });
 
 export default listItemVariants;
