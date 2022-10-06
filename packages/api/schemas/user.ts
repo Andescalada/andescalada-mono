@@ -22,9 +22,9 @@ const schema = z.object({
 });
 
 const gradeSystem = z.object({
-  preferredSportSystem: GradeSystemsSchema,
-  preferredTradSystem: GradeSystemsSchema,
-  preferredBoulderSystem: GradeSystemsSchema,
+  preferredSportGrade: GradeSystemsSchema,
+  preferredTradGrade: GradeSystemsSchema,
+  preferredBoulderGrade: GradeSystemsSchema,
 });
 
 export default { schema, gradeSystem };

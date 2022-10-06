@@ -1,9 +1,14 @@
 import user from "@andescalada/api/schemas/user";
 import { GradeSystemsSchema } from "@andescalada/db/zod";
 import { Box, Button, ButtonGroup, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
+import {
+  UserNavigationRoutes,
+  UserNavigationScreenProps,
+} from "@features/user/Navigation/types";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useZodForm from "@hooks/useZodForm";
-import { ComponentProps, FC } from "react";
+import { ComponentProps, FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 
 const GradingBox = (props: ComponentProps<typeof Box>) => (
@@ -12,26 +17,74 @@ const GradingBox = (props: ComponentProps<typeof Box>) => (
   </Box>
 );
 
-const GradingSystemConfigScreen: FC = () => {
-  const { control, ...methods } = useZodForm({ schema: user.gradeSystem });
+type Props = UserNavigationScreenProps<UserNavigationRoutes.GradingSystem>;
+
+const GradingSystemConfigScreen: FC<Props> = () => {
+  const {
+    control,
+    handleSubmit,
+    formState,
+    reset: resetForm,
+  } = useZodForm({
+    schema: user.gradeSystem,
+  });
+
+  const {
+    mutate,
+    isSuccess,
+    isLoading,
+    reset: resetMutation,
+  } = trpc.user.editGradingSystem.useMutation({
+    onSettled: (data) => {
+      if (data) {
+        const {
+          preferredBoulderGrade,
+          preferredSportGrade,
+          preferredTradGrade,
+        } = data;
+        setTimeout(() => {
+          resetForm({
+            preferredBoulderGrade,
+            preferredSportGrade,
+            preferredTradGrade,
+          }),
+            resetMutation();
+        }, 1500);
+      }
+    },
+  });
 
   const { data } = useOwnInfo();
 
   const sport = useController({
     control,
-    name: "preferredSportSystem",
+    name: "preferredSportGrade",
     defaultValue: data ? data.preferredSportGrade : undefined,
   });
   const trad = useController({
     control,
-    name: "preferredTradSystem",
+    name: "preferredTradGrade",
     defaultValue: data ? data.preferredTradGrade : undefined,
   });
   const boulder = useController({
     control,
-    name: "preferredBoulderSystem",
+    name: "preferredBoulderGrade",
     defaultValue: data ? data.preferredBoulderGrade : undefined,
   });
+
+  const onSave = handleSubmit((data) => {
+    mutate(data);
+  });
+
+  const saveButton = useMemo(() => {
+    if (!formState.isDirty) {
+      return { variant: "transparent" as const, title: "Guardar" };
+    }
+    if (isSuccess) {
+      return { variant: "success" as const, title: "Guardado" };
+    }
+    return { variant: "info" as const, title: "Guardar" };
+  }, [formState.isDirty, isSuccess]);
 
   return (
     <Screen safeAreaDisabled alignItems="center" justifyContent="space-evenly">
@@ -86,7 +139,13 @@ const GradingSystemConfigScreen: FC = () => {
           />
         </ButtonGroup>
       </GradingBox>
-      <Button title="Guardar" variant="info" />
+      <Button
+        title={saveButton.title}
+        variant={saveButton.variant}
+        onPress={onSave}
+        isLoading={isLoading}
+        disabled={!formState.isDirty || isLoading || isSuccess}
+      />
     </Screen>
   );
 };
