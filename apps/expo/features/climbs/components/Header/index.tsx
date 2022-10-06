@@ -2,7 +2,6 @@ import { BackButton, Box, EditableTitle, Text } from "@andescalada/ui";
 import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
 import { useNavigation } from "@react-navigation/native";
 import { ComponentProps, FC } from "react";
-import { FormProvider, useFormContext } from "react-hook-form";
 
 interface Props {
   title: string;

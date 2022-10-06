@@ -5,13 +5,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { UserNavigationParamList, UserNavigationRoutes } from "./types";
 
+const { fontFamily, fontSize, lineHeight } = textVariants.p1R;
+
 const Stack = createStackNavigator<UserNavigationParamList>();
 
 const Navigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitleStyle: textVariants.p1R,
+        headerTitleStyle: { fontFamily, fontSize, lineHeight },
         headerLeft({ onPress }) {
           return <BackButton onPress={onPress} marginLeft="s" />;
         },
