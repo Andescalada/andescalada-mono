@@ -30,7 +30,6 @@ const UsernameInput: FC<Props> = ({ defaultValue, ...props }) => {
     e: NativeSyntheticEvent<TextInputFocusEventData>,
   ) => {
     onBlurUsername();
-
     if (defaultValue === valueUsername) {
       form.clearErrors("username");
       return;
@@ -40,7 +39,6 @@ const UsernameInput: FC<Props> = ({ defaultValue, ...props }) => {
     if (!res?.isValid)
       form.setError("username", {
         message: res?.errorMessage,
-        type: "onBlur",
       });
     else form.clearErrors("username");
   };
@@ -62,7 +60,7 @@ const UsernameInput: FC<Props> = ({ defaultValue, ...props }) => {
   }, [isLoadingUsernameValidation, isTouched, isUsernameValid]);
 
   return (
-    <Box>
+    <Box {...props}>
       <Box
         flexDirection="row"
         justifyContent="space-between"
