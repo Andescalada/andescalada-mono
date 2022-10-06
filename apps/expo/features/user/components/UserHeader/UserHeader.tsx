@@ -1,11 +1,11 @@
 import { Box, Image, Pressable, Screen } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import { andescaladaPathTitle } from "@features/user/components/UserHeader/andescaladaPathTitle";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import useOptionsSheet from "@hooks/useOptionsSheet";
+import useOwnInfo from "@hooks/useOwnInfo";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import {
@@ -34,7 +34,7 @@ const CANVAS_WIDTH = 128;
 const CANVAS_HEIGHT = 16;
 
 const UserHeader = () => {
-  const { data } = trpc.user.ownInfo.useQuery();
+  const { data } = useOwnInfo();
   const { profilePhoto } = data || {};
 
   const theme = useAppTheme();

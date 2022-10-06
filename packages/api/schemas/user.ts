@@ -1,5 +1,6 @@
 import image from "@andescalada/api/schemas/image";
 import { r } from "@andescalada/api/src/utils/regex";
+import { GradeSystemsSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 
 const schema = z.object({
@@ -20,4 +21,10 @@ const schema = z.object({
     ),
 });
 
-export default { schema };
+const gradeSystem = z.object({
+  preferredSportSystem: GradeSystemsSchema,
+  preferredTradSystem: GradeSystemsSchema,
+  preferredBoulderSystem: GradeSystemsSchema,
+});
+
+export default { schema, gradeSystem };

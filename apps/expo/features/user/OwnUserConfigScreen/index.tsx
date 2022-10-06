@@ -43,11 +43,16 @@ const ListItemConfig = ({
   );
 };
 
-const OwnUserConfigScreen: FC<Props> = (props) => {
+const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
   const { globalPermissions } = useAppSelector((state) => state.auth);
   return (
     <Screen safeAreaDisabled margin="m">
-      <ListItemConfig title="Graduación favorita" />
+      <ListItemConfig
+        title="Sistema de graduación"
+        onPress={() => {
+          navigation.navigate(UserNavigationRoutes.GradingSystem);
+        }}
+      />
       <ListItemConfig title="Información personal" />
       {globalPermissions?.includes(GlobalPermissions.CRUD_ROLES) && (
         <ListItemConfig

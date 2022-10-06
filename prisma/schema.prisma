@@ -20,31 +20,40 @@ datasource db {
 }
 
 model User {
-  id                String       @id @default(uuid())
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  name              String
-  username          String       @unique
-  email             String       @unique
-  profilePhoto      Image?       @relation(fields: [profilePhotoId], references: [id])
-  profilePhotoId    String?
-  firstLogin        Boolean      @default(true)
-  auth0id           String?
-  authorSector      Sector[]     @relation("AuthorSector")
-  coAuthorSector    Sector[]     @relation("CoAuthorSector")
-  authorWall        Wall[]       @relation("AuthorWall")
-  coAuthorWall      Wall[]       @relation("CoAuthorWall")
-  authorRoute       Route[]      @relation("AuthorRoute")
-  authorTopo        Topo[]       @relation("AuthorTopo")
-  coAuthorTopo      Topo[]       @relation("CoAuthorTopo")
-  coAuthorRoute     Route[]      @relation("CoAuthorRoute")
-  authorRoutePath   RoutePath[]  @relation("AuthorRoutePath")
-  coAuthorRoutePath RoutePath[]  @relation("CoAuthorRoutePath")
-  RoleByZone        RoleByZone[]
+  id                    String       @id @default(uuid())
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  name                  String
+  username              String       @unique
+  email                 String       @unique
+  profilePhoto          Image?       @relation(fields: [profilePhotoId], references: [id])
+  profilePhotoId        String?
+  firstLogin            Boolean      @default(true)
+  auth0id               String?
+  authorSector          Sector[]     @relation("AuthorSector")
+  coAuthorSector        Sector[]     @relation("CoAuthorSector")
+  authorWall            Wall[]       @relation("AuthorWall")
+  coAuthorWall          Wall[]       @relation("CoAuthorWall")
+  authorRoute           Route[]      @relation("AuthorRoute")
+  authorTopo            Topo[]       @relation("AuthorTopo")
+  coAuthorTopo          Topo[]       @relation("CoAuthorTopo")
+  coAuthorRoute         Route[]      @relation("CoAuthorRoute")
+  authorRoutePath       RoutePath[]  @relation("AuthorRoutePath")
+  coAuthorRoutePath     RoutePath[]  @relation("CoAuthorRoutePath")
+  RoleByZone            RoleByZone[]
+  preferredSportGrade   GradeSystems @default(French)
+  preferredTradGrade    GradeSystems @default(Yosemite)
+  preferredBoulderGrade GradeSystems @default(Hueco)
 
   @@index([email])
   @@index([username])
   @@index([profilePhotoId])
+}
+
+enum GradeSystems {
+  French
+  Yosemite
+  Hueco
 }
 
 model RoleByZone {
