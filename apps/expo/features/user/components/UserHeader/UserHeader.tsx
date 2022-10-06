@@ -2,6 +2,7 @@ import { Box, Image, Pressable, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { andescaladaPathTitle } from "@features/user/components/UserHeader/andescaladaPathTitle";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
+import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import useOptionsSheet from "@hooks/useOptionsSheet";
@@ -22,10 +23,11 @@ import {
   vec,
 } from "@shopify/react-native-skia";
 import { useResponsiveProp } from "@shopify/restyle";
+import { logoutAuth0 } from "@store/auth";
 import { getThumbnail } from "@utils/cloudinary";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
-import { useMemo } from "react";
-import { StyleSheet } from "react-native";
+import { useCallback, useMemo } from "react";
+import { Alert, StyleSheet } from "react-native";
 
 const HEADER_HEIGHT = 100;
 const CANVAS_WIDTH = 128;
@@ -68,18 +70,37 @@ const UserHeader = () => {
       ),
     [progress],
   );
-
+  const dispatch = useAppDispatch();
   const image = getThumbnail(profilePhoto?.publicId || undefined);
   const { uri } = useCachedImage(image);
   const rootNavigation = useRootNavigation();
-  const onOptions = useOptionsSheet({
-    Configuraciones: {
-      action: () =>
-        rootNavigation.navigate(RootNavigationRoutes.User, {
-          screen: UserNavigationRoutes.OwnUserConfig,
-        }),
+  const onLogout = useCallback(() => {
+    Alert.alert("Cerrar Sesión", "¿Seguro que quieres cerrar sesión?", [
+      {
+        text: "Si",
+        onPress: () => dispatch(logoutAuth0()),
+        style: "destructive",
+      },
+      {
+        text: "No",
+        style: "cancel",
+      },
+    ]);
+  }, [dispatch]);
+  const onOptions = useOptionsSheet(
+    {
+      Configuración: {
+        action: () =>
+          rootNavigation.navigate(RootNavigationRoutes.User, {
+            screen: UserNavigationRoutes.OwnUserConfig,
+          }),
+      },
+      "Cerrar Sesión": {
+        action: onLogout,
+      },
     },
-  });
+    { destructiveButtonIndex: 1 },
+  );
 
   return (
     <Screen
