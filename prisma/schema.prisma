@@ -44,6 +44,7 @@ model User {
   preferredSportGrade   GradeSystems @default(French)
   preferredTradGrade    GradeSystems @default(Yosemite)
   preferredBoulderGrade GradeSystems @default(Hueco)
+  AssignedRoles         RoleByZone[] @relation("AssignedBy")
 
   @@index([email])
   @@index([username])
@@ -59,15 +60,18 @@ enum GradeSystems {
 }
 
 model RoleByZone {
-  id     String @id @default(uuid())
-  User   User   @relation(fields: [userId], references: [id])
-  userId String
-  Zone   Zone   @relation(fields: [zoneId], references: [id])
-  zoneId String
-  Role   Role   @relation(fields: [roleId], references: [id])
-  roleId String
+  id           String @id @default(uuid())
+  User         User   @relation(fields: [userId], references: [id])
+  userId       String
+  Zone         Zone   @relation(fields: [zoneId], references: [id])
+  zoneId       String
+  Role         Role   @relation(fields: [roleId], references: [id])
+  roleId       String
+  AssignedBy   User   @relation("AssignedBy", fields: [assignedById], references: [id])
+  assignedById String
 
   @@index([id])
+  @@index([assignedById])
   @@index([userId, zoneId, roleId])
 }
 

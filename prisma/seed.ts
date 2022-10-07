@@ -1,15 +1,24 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Redis } from "@upstash/redis/with-fetch";
-import superjson from "superjson";
+import { serialize } from "superjson";
 
 const prisma = new PrismaClient();
 const access = Redis.fromEnv();
 
-const userEmail = "elevy@andescalada.org";
+const userEmail = "elevyg91@gmail.com";
 
 const testUserData: Prisma.UserCreateInput = {
-  name: "Eyal Levy (Admin)",
+  name: "Eyal Levy",
   email: userEmail,
+  username: "eyalll",
+  firstLogin: false,
+};
+
+const userAdminEmail = "elevy@andescalada.org";
+
+const testUserAdmin: Prisma.UserCreateInput = {
+  name: "Eyal Levy (Admin)",
+  email: userAdminEmail,
   username: "elevy_admin",
   firstLogin: false,
 };
@@ -102,10 +111,14 @@ async function main() {
   console.log(`Creating user`);
   const user = await prisma.user.create({ data: testUserData });
   console.log(`User created with id ${user.id}`);
+  console.log(`Creating admin user`);
+  const userAdmin = await prisma.user.create({ data: testUserAdmin });
+  console.log(`Admin user created with id ${userAdmin.id}`);
 
-  console.log(`Clieaning up info in Redis`);
+  console.log(`Cleaning up info in Redis`);
   await access.del(userEmail);
-  console.log(`Clieaning up info in Redis finished`);
+  await access.del(userAdminEmail);
+  console.log(`Cleaning up info in Redis finished`);
 
   console.log(`Creating a sector and a zone`);
   const zonesId = await Promise.all(
@@ -142,6 +155,7 @@ async function main() {
       Role: { connect: { name: "Admin" } },
       User: { connect: { email: userEmail } },
       Zone: { connect: { id: zonesId[0] } },
+      AssignedBy: { connect: { email: userAdminEmail } },
     },
     select: { Role: { select: { permissions: { select: { action: true } } } } },
   });
@@ -155,8 +169,8 @@ async function main() {
   );
 
   const uniquePermissions = new Set(permissionsActions);
-  console.log("permissions Private", uniquePermissions);
-  const obj1 = superjson.serialize(uniquePermissions);
+  console.log(`permissions Private ${uniquePermissions}`);
+  const obj1 = serialize(uniquePermissions);
 
   await access.hset(userEmail, { [zonesId[0]]: obj1 });
 
@@ -171,6 +185,7 @@ async function main() {
       Role: { connect: { name: "Editor" } },
       User: { connect: { email: userEmail } },
       Zone: { connect: { id: zonesId[1] } },
+      AssignedBy: { connect: { email: userAdminEmail } },
     },
     select: { Role: { select: { permissions: { select: { action: true } } } } },
   });
@@ -183,8 +198,8 @@ async function main() {
     roleCommunityZone.Role.permissions.flatMap((r) => r.action);
 
   const uniquePermissionsCommunity = new Set(permissionsActionsCommunity);
-  console.log("permissions Community", uniquePermissionsCommunity);
-  const obj2 = superjson.serialize(uniquePermissions);
+  console.log(`permissions Community ${uniquePermissionsCommunity}`);
+  const obj2 = serialize(uniquePermissions);
 
   await access.hset(userEmail, { [zonesId[1]]: obj2 });
 
