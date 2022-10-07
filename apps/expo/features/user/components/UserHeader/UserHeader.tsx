@@ -1,5 +1,5 @@
 import { Box, Image, Pressable, Screen } from "@andescalada/ui";
-import { andescaladaPathTitle } from "@features/user/components/UserHeader/andescaladaPathTitle";
+import pathTitle from "@assets/andescaladaPathTitle";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
@@ -30,8 +30,8 @@ import { useCallback, useMemo } from "react";
 import { Alert, StyleSheet } from "react-native";
 
 const HEADER_HEIGHT = 100;
-const CANVAS_WIDTH = 128;
-const CANVAS_HEIGHT = 16;
+const CANVAS_WIDTH = pathTitle.width;
+const CANVAS_HEIGHT = pathTitle.height;
 
 const UserHeader = () => {
   const { data } = useOwnInfo();
@@ -123,7 +123,7 @@ const UserHeader = () => {
             responsiveCanvasHeight,
           )}
         >
-          <Group clip={andescaladaPathTitle}>
+          <Group clip={pathTitle.path}>
             <Rect x={0} y={0} width={CANVAS_WIDTH} height={16}>
               <LinearGradient
                 start={start}
