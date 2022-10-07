@@ -31,7 +31,7 @@ const darkBaseTheme = {
     text: pallete.grayscale[100],
     textContrast: pallete.grayscale.black,
     filledTextInputVariantBackground: pallete.grayscale[300],
-    filledTextInputVariantPlaceholder: pallete.grayscale.black,
+    filledTextInputVariantPlaceholder: pallete.grayscale["500"],
     selectedButtonGroup: pallete.brand.primaryA,
     buttonGroup: pallete.grayscale[600],
     transitionScreen: pallete.grayscale.black,

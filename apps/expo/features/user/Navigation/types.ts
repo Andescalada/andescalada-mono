@@ -5,12 +5,14 @@ export enum UserNavigationRoutes {
   OwnUserConfig = "UserConfig",
   GradingSystem = "GradingSystem",
   PersonalInfo = "PersonalInfo",
+  CreateZone = "CreateZone",
 }
 
 export type UserNavigationParamList = {
   [UserNavigationRoutes.OwnUserConfig]: undefined;
   [UserNavigationRoutes.GradingSystem]: undefined;
   [UserNavigationRoutes.PersonalInfo]: undefined;
+  [UserNavigationRoutes.CreateZone]: undefined;
 };
 
 export type UserRouteProps<T extends UserNavigationRoutes> = RouteProp<

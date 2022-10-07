@@ -10,6 +10,8 @@ import {
 import { ComponentProps, FC, useMemo } from "react";
 import { TextInput as RNTextInput, TextInputProps } from "react-native";
 
+import InputAdornment from "../InputAdornment/InputAdornment";
+
 const OriginalTextInput = createText<Theme, TextInputProps>(RNTextInput);
 
 const TextFieldContainer = createRestyleComponent<
@@ -22,12 +24,14 @@ interface Props
   variant?: ComponentProps<typeof TextFieldContainer>["variant"];
   containerProps?: Partial<ComponentProps<typeof TextFieldContainer>>;
   textVariant?: ComponentProps<typeof OriginalTextInput>["variant"];
+  adornmentProps?: Partial<ComponentProps<typeof InputAdornment>>;
 }
 
 const TextInput: FC<Props> = ({
   containerProps,
   variant = "filled",
-  textVariant,
+  textVariant = "p1R",
+  adornmentProps,
   ...props
 }) => {
   const color = useMemo(() => {
@@ -38,13 +42,15 @@ const TextInput: FC<Props> = ({
   const theme = useTheme<Theme>();
   return (
     <TextFieldContainer variant={variant} {...containerProps}>
-      <OriginalTextInput
-        variant={textVariant}
-        color={color}
-        style={{ flex: 1 }}
-        placeholderTextColor={theme.colors.filledTextInputVariantPlaceholder}
-        {...props}
-      />
+      <InputAdornment {...adornmentProps}>
+        <OriginalTextInput
+          variant={textVariant}
+          color={color}
+          style={{ flex: 1 }}
+          placeholderTextColor={theme.colors.filledTextInputVariantPlaceholder}
+          {...props}
+        />
+      </InputAdornment>
     </TextFieldContainer>
   );
 };
