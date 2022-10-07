@@ -130,6 +130,7 @@ interface UseRoute {
   initialState?: State;
 }
 
+// TODO: Needs refactor, good idea though
 const useRoutes = ({
   initialState = { routes: [], route: null },
 }: UseRoute = {}) => {
