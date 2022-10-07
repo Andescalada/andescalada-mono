@@ -35,7 +35,7 @@ const SkiaRoutePath: FC<Props> = ({
         strokeWidth={strokeWidth}
       />
       <EndPointer c={end} color={color} scale={scale} />
-      <StartPointer c={start} label={label} scale={scale} />
+      <StartPointer c={start} label={label} scale={scale} color={color} />
     </Group>
   );
 };

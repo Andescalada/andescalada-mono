@@ -15,7 +15,7 @@ import { FC } from "react";
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.TopoViewer>;
 
 const TopoViewer: FC<Props> = ({ route: navRoute, navigation }) => {
-  const { topoId } = navRoute.params;
+  const { topoId, routeId } = navRoute.params;
   const { data } = trpc.topos.byId.useQuery(topoId);
 
   const theme = useAppTheme();
@@ -35,15 +35,21 @@ const TopoViewer: FC<Props> = ({ route: navRoute, navigation }) => {
           height={fitted.height}
           width={fitted.width}
         >
-          {data.RoutePath.map((route) => (
-            <SkiaRoutePath
-              label={route.Route.position.toString()}
-              path={route.path}
-              key={route.id}
-              color={theme.colors.routePath}
-              scale={fitted.scale}
-            />
-          ))}
+          {data.RoutePath.map((path) => {
+            return (
+              <SkiaRoutePath
+                label={path.Route.position.toString()}
+                path={path.path}
+                key={path.id}
+                color={
+                  path.Route.id === routeId
+                    ? theme.colors["contrast.green"]
+                    : theme.colors.routePath
+                }
+                scale={fitted.scale}
+              />
+            );
+          })}
         </SkiaRouteCanvas>
         <Box position="absolute" top={50} left={0} margin="l" marginLeft={"s"}>
           <Pressable

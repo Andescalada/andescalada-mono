@@ -23,7 +23,6 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import useUploadImage from "@hooks/useUploadImage";
 import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { gradeUnits } from "@utils/climbingGrades";
 import { getThumbnail } from "@utils/cloudinary";
 import { FC, useState } from "react";
 import { FormProvider } from "react-hook-form";
@@ -232,6 +231,16 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
               flexDirection="row"
               alignItems="center"
               justifyContent="space-between"
+              onPress={() => {
+                if (!mainTopo?.id) return;
+                rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+                  screen: RoutesManagerNavigationRoutes.TopoViewer,
+                  params: {
+                    topoId: mainTopo?.id,
+                    routeId: item.id,
+                  },
+                });
+              }}
             >
               <Text variant="p2R">{`${item.position} - ${item.name}`}</Text>
               <Text variant="p2R">{grade}</Text>

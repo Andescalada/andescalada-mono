@@ -19,6 +19,7 @@ export type RoutesManagerNavigationParamList = {
   };
   [RoutesManagerNavigationRoutes.TopoViewer]: {
     topoId: Topo["id"];
+    routeId?: Route["id"];
   };
 };
 
