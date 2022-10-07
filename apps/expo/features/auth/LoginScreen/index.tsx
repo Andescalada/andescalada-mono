@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Box, Button, Screen } from "@andescalada/ui";
 import pathLogo from "@assets/andescaladaPathLogo";
-import pathTitle from "@assets/andescaladaPathTitle";
+import pathTitle from "@assets/andescaladaPathLTitleUppercase";
 import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import {
@@ -25,18 +25,18 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from "@utils/Dimensions";
 import React from "react";
 import Animated, { FadeIn } from "react-native-reanimated";
 
-const SCALE = 0.9;
+const SCALE = 1;
 const DURATION = 2000;
 
 const ORIGINAL_LOGO_WIDTH = pathLogo.width;
 const ORIGINAL_LOGO_HEIGHT = pathLogo.height;
-const LOGO_WIDTH = 200 * SCALE;
-const LOGO_HEIGHT = 200 * pathLogo.aspectRatio * SCALE;
+const LOGO_WIDTH = 123 * SCALE;
+const LOGO_HEIGHT = 123 * pathLogo.aspectRatio * SCALE;
 
 const ORIGINAL_TITLE_WIDTH = pathTitle.width;
 const ORIGINAL_TITLE_HEIGHT = pathTitle.height;
-const TITLE_WIDTH = 300 * SCALE;
-const TITLE_HEIGHT = 300 * pathTitle.aspectRatio * SCALE;
+const TITLE_WIDTH = 261 * SCALE;
+const TITLE_HEIGHT = 261 * pathTitle.aspectRatio * SCALE;
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -107,7 +107,7 @@ export default function LoginScreen() {
           )}
           dst={rect(
             SCREEN_WIDTH / 2,
-            SCREEN_HEIGHT / 2 - TITLE_HEIGHT / 2,
+            SCREEN_HEIGHT / 2 - TITLE_HEIGHT / 2 + 12.68,
             TITLE_WIDTH,
             TITLE_HEIGHT,
           )}
