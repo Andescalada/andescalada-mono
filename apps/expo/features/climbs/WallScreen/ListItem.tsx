@@ -6,9 +6,11 @@ import Animated, {
   FadeOutLeft,
   Layout,
   SlideOutLeft,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withDelay,
   withSpring,
   WithSpringConfig,
 } from "react-native-reanimated";
@@ -21,11 +23,14 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 interface Props extends Omit<ComponentProps<typeof AnimatedListItem>, "key"> {
   children: ReactNode;
   onDelete?: () => void;
+  onEdit?: () => void;
   index: number;
   allowEdit?: boolean;
 }
 
 const SNAP_PERCENTAGE = 0.2;
+
+export const MIN_HEIGHT = 50;
 
 const WITH_SPRING_CONFIG: WithSpringConfig = {
   damping: 20,
@@ -34,6 +39,7 @@ const WITH_SPRING_CONFIG: WithSpringConfig = {
 const ListItem: FC<Props> = ({
   children,
   onDelete,
+  onEdit,
   index,
   allowEdit,
   ...props
@@ -41,7 +47,7 @@ const ListItem: FC<Props> = ({
   const width = useSharedValue(0);
   const translateX = useSharedValue(0);
 
-  const range = useDerivedValue(() => {
+  const rangeLeft = useDerivedValue(() => {
     return {
       first: between(-translateX.value, 0, SNAP_PERCENTAGE * width.value),
       second: between(
@@ -53,17 +59,38 @@ const ListItem: FC<Props> = ({
     };
   }, [translateX]);
 
+  const rangeRight = useDerivedValue(() => {
+    return {
+      first: between(translateX.value, 0, SNAP_PERCENTAGE * width.value),
+      second: between(
+        translateX.value,
+        SNAP_PERCENTAGE * width.value,
+        0.5 * width.value,
+      ),
+      third: between(translateX.value, 0.5 * width.value, width.value, true),
+    };
+  }, [translateX]);
+
   const deleteOnSwipe = useMemo(
     () =>
       Gesture.Pan()
         .enabled(!!allowEdit)
         .runOnJS(true)
         .onEnd(() => {
-          if (range.value.third) {
+          if (rangeLeft.value.third) {
             onDelete && onDelete();
           }
+          if (rangeRight.value.third) {
+            onEdit && onEdit();
+          }
         }),
-    [allowEdit, onDelete, range.value.third],
+    [
+      allowEdit,
+      onDelete,
+      rangeLeft.value.third,
+      onEdit,
+      rangeRight.value.third,
+    ],
   );
 
   const pan = useMemo(
@@ -75,32 +102,56 @@ const ListItem: FC<Props> = ({
           translateX.value += e.changeX;
         })
         .onEnd(() => {
-          if (range.value.first) {
+          if (rangeLeft.value.first) {
             translateX.value = withSpring(0, WITH_SPRING_CONFIG);
           }
-          if (range.value.second) {
+          if (rangeLeft.value.second) {
             translateX.value = withSpring(
               -width.value * SNAP_PERCENTAGE,
               WITH_SPRING_CONFIG,
             );
           }
-          if (range.value.third) {
+          if (rangeLeft.value.third) {
             translateX.value = withSpring(-width.value, WITH_SPRING_CONFIG);
+          }
+          if (rangeRight.value.first) {
+            translateX.value = withSpring(0, WITH_SPRING_CONFIG);
+          }
+          if (rangeRight.value.second) {
+            translateX.value = withSpring(
+              width.value * SNAP_PERCENTAGE,
+              WITH_SPRING_CONFIG,
+            );
+          }
+          if (rangeRight.value.third) {
+            translateX.value = withSpring(width.value, WITH_SPRING_CONFIG);
+            translateX.value = withDelay(
+              1000,
+              withSpring(0, WITH_SPRING_CONFIG),
+            );
           }
         }),
     [
       allowEdit,
-      range.value.first,
-      range.value.second,
-      range.value.third,
+      rangeLeft.value.first,
+      rangeLeft.value.second,
+      rangeLeft.value.third,
+      rangeRight.value.first,
+      rangeRight.value.second,
+      rangeRight.value.third,
       translateX,
       width.value,
     ],
   );
 
-  const opacity = useDerivedValue(() => {
+  const opacityRight = useDerivedValue(() => {
     const movement = translateX.value / (-width.value * SNAP_PERCENTAGE) || 0;
     if (movement > 0) return Math.abs(movement);
+    return 0;
+  }, [translateX]);
+  const opacityLeft = useDerivedValue(() => {
+    const movement = translateX.value / (-width.value * SNAP_PERCENTAGE) || 0;
+    if (movement < 0) return Math.abs(movement);
     return 0;
   }, [translateX]);
 
@@ -113,9 +164,16 @@ const ListItem: FC<Props> = ({
       ],
     };
   });
-  const deleteStyle = useAnimatedStyle(() => {
+  const rightStyle = useAnimatedStyle(() => {
     return {
-      opacity: opacity.value,
+      opacity: opacityRight.value,
+      zIndex: opacityRight.value > 0 ? 100 : 1,
+    };
+  });
+  const leftStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacityLeft.value,
+      zIndex: opacityLeft.value > 0 ? 100 : 1,
     };
   });
 
@@ -128,10 +186,10 @@ const ListItem: FC<Props> = ({
         exiting={SlideOutLeft}
         layout={Layout.delay(500).springify()}
         marginVertical="s"
-        minHeight={50}
+        minHeight={MIN_HEIGHT}
       >
         <AnimatedPressable
-          style={[deleteStyle]}
+          style={[rightStyle]}
           backgroundColor="semantic.error"
           borderRadius={5}
           position="absolute"
@@ -149,9 +207,29 @@ const ListItem: FC<Props> = ({
         >
           <Text variant="p3B">Borrar</Text>
         </AnimatedPressable>
+        <AnimatedPressable
+          style={[leftStyle]}
+          backgroundColor="semantic.info"
+          borderRadius={5}
+          position="absolute"
+          top={0}
+          right={0}
+          bottom={0}
+          left={0}
+          layout={FadeOutLeft}
+          onPress={() => {
+            onEdit && onEdit();
+          }}
+          justifyContent="center"
+          paddingLeft="s"
+        >
+          <Text variant="p3B">Editar</Text>
+        </AnimatedPressable>
+
         <AnimatedListItem
           layout={FadeOutLeft}
           style={[props.style, style]}
+          zIndex={1000}
           onLayout={(e) => {
             width.value = e.nativeEvent.layout.width;
           }}
