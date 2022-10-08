@@ -22,6 +22,7 @@ interface Props extends Omit<ComponentProps<typeof AnimatedListItem>, "key"> {
   children: ReactNode;
   onDelete?: () => void;
   index: number;
+  allowEdit?: boolean;
 }
 
 const SNAP_PERCENTAGE = 0.2;
@@ -34,7 +35,7 @@ const ListItem: FC<Props> = ({
   children,
   onDelete,
   index,
-  disabled,
+  allowEdit,
   ...props
 }: Props) => {
   const width = useSharedValue(0);
@@ -55,20 +56,20 @@ const ListItem: FC<Props> = ({
   const deleteOnSwipe = useMemo(
     () =>
       Gesture.Pan()
-        .enabled(!disabled)
+        .enabled(!!allowEdit)
         .runOnJS(true)
         .onEnd(() => {
           if (range.value.third) {
             onDelete && onDelete();
           }
         }),
-    [disabled, onDelete, range.value.third],
+    [allowEdit, onDelete, range.value.third],
   );
 
   const pan = useMemo(
     () =>
       Gesture.Pan()
-        .enabled(!disabled)
+        .enabled(!!allowEdit)
         .shouldCancelWhenOutside(true)
         .onChange((e) => {
           translateX.value += e.changeX;
@@ -88,7 +89,7 @@ const ListItem: FC<Props> = ({
           }
         }),
     [
-      disabled,
+      allowEdit,
       range.value.first,
       range.value.second,
       range.value.third,

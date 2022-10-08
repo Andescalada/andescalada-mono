@@ -8,6 +8,8 @@ import {
 import ListItem from "@features/climbs/WallScreen/ListItem";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useOwnInfo from "@hooks/useOwnInfo";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -22,6 +24,8 @@ type NavigationRoute =
 const RoutesList: FC = () => {
   const route = useRoute<NavigationRoute>();
   const { wallId, zoneId } = route.params;
+  const { permission } = usePermissions({ zoneId });
+  const { data: user } = useOwnInfo();
   const utils = trpc.useContext();
   const {
     data,
@@ -76,7 +80,9 @@ const RoutesList: FC = () => {
           <ListItem
             key={item.id}
             index={index}
-            disabled={disabled}
+            allowEdit={
+              permission?.has("Update") || item.Author.email === user?.email
+            }
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"

@@ -24,6 +24,7 @@ export const wallsRouter = t.router({
             RouteGrade: true,
             position: true,
             kind: true,
+            Author: { select: { email: true } },
           },
         },
         topos: {
