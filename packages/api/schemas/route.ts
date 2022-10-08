@@ -17,4 +17,6 @@ const schema = z.object({
   }),
 });
 
-export default { schema };
+const routeId = z.object({ routeId: z.string() });
+
+export default { schema, routeId };

@@ -45,6 +45,7 @@ model User {
   preferredTradGrade    GradeSystems @default(Yosemite)
   preferredBoulderGrade GradeSystems @default(Hueco)
   AssignedRoles         RoleByZone[] @relation("AssignedBy")
+  isDeleted             SoftDelete   @default(NotDeleted)
 
   @@index([email])
   @@index([profilePhotoId])
@@ -60,15 +61,16 @@ enum GradeSystems {
 }
 
 model RoleByZone {
-  id           String @id @default(uuid())
-  User         User   @relation(fields: [userId], references: [id])
+  id           String     @id @default(uuid())
+  User         User       @relation(fields: [userId], references: [id])
   userId       String
-  Zone         Zone   @relation(fields: [zoneId], references: [id])
+  Zone         Zone       @relation(fields: [zoneId], references: [id])
   zoneId       String
-  Role         Role   @relation(fields: [roleId], references: [id])
+  Role         Role       @relation(fields: [roleId], references: [id])
   roleId       String
-  AssignedBy   User   @relation("AssignedBy", fields: [assignedById], references: [id])
+  AssignedBy   User       @relation("AssignedBy", fields: [assignedById], references: [id])
   assignedById String
+  isDeleted    SoftDelete @default(NotDeleted)
 
   @@index([id])
   @@index([assignedById])
@@ -101,6 +103,7 @@ model Permissions {
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   roles     Role[]
+  isDeleted SoftDelete        @default(NotDeleted)
 
   @@index([id])
   @@index([action])
@@ -126,40 +129,43 @@ model Zone {
   sectors    Sector[]
   photos     Image[]
   RoleByZone RoleByZone[]
+  isDeleted  SoftDelete   @default(NotDeleted)
 }
 
 model Sector {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
   slug      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  position  Int      @default(0)
-  Zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  position  Int        @default(0)
+  Zone      Zone       @relation(fields: [zoneId], references: [id], onDelete: Cascade)
   zoneId    String
   walls     Wall[]
-  Author    User     @relation("AuthorSector", fields: [authorId], references: [id])
+  Author    User       @relation("AuthorSector", fields: [authorId], references: [id])
   authorId  String
-  coAuthors User[]   @relation("CoAuthorSector")
+  coAuthors User[]     @relation("CoAuthorSector")
+  isDeleted SoftDelete @default(NotDeleted)
 
   @@index([zoneId])
   @@index([authorId])
 }
 
 model Wall {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   name      String
   slug      String
-  position  Int      @default(0)
-  Sector    Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  position  Int        @default(0)
+  Sector    Sector     @relation(fields: [sectorId], references: [id], onDelete: Cascade)
   sectorId  String
   topos     Topo[]
   routes    Route[]
-  Author    User     @relation("AuthorWall", fields: [authorId], references: [id])
+  Author    User       @relation("AuthorWall", fields: [authorId], references: [id])
   authorId  String
-  coAuthors User[]   @relation("CoAuthorWall")
+  coAuthors User[]     @relation("CoAuthorWall")
+  isDeleted SoftDelete @default(NotDeleted)
 
   @@index([sectorId])
   @@index([authorId])
@@ -182,6 +188,7 @@ model Topo {
   Author    User        @relation("AuthorTopo", fields: [authorId], references: [id])
   authorId  String
   coAuthors User[]      @relation("CoAuthorTopo")
+  isDeleted SoftDelete  @default(NotDeleted)
 
   @@index([wallId])
   @@index([imageId])
@@ -207,36 +214,39 @@ model Route {
   Author       User        @relation("AuthorRoute", fields: [authorId], references: [id])
   authorId     String
   coAuthors    User[]      @relation("CoAuthorRoute")
+  isDeleted    SoftDelete  @default(NotDeleted)
 
   @@index([wallId])
   @@index([authorId])
 }
 
 model RouteGrade {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id         String     @id @default(uuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   grade      Int?
-  project    Boolean  @default(false)
-  slashGrade Boolean  @default(false)
-  route      Route    @relation(fields: [routeId], references: [id])
-  routeId    String   @unique
+  project    Boolean    @default(false)
+  slashGrade Boolean    @default(false)
+  route      Route      @relation(fields: [routeId], references: [id])
+  routeId    String     @unique
+  isDeleted  SoftDelete @default(NotDeleted)
 
   @@index([routeId])
 }
 
 model RoutePath {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  path      String   @db.LongText
-  Topo      Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade)
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  path      String     @db.LongText
+  Topo      Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
   topoId    String
-  Route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  Route     Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
   routeId   String
-  Author    User     @relation("AuthorRoutePath", fields: [authorId], references: [id])
+  Author    User       @relation("AuthorRoutePath", fields: [authorId], references: [id])
   authorId  String
-  coAuthors User[]   @relation("CoAuthorRoutePath")
+  coAuthors User[]     @relation("CoAuthorRoutePath")
+  isDeleted SoftDelete @default(NotDeleted)
 
   @@index([topoId])
   @@index([routeId])
@@ -260,6 +270,7 @@ model Image {
   User           User[]
   Zone           Zone?          @relation(fields: [zoneId], references: [id])
   zoneId         String?
+  isDeleted      SoftDelete     @default(NotDeleted)
 }
 
 enum InfoAccess {
@@ -278,4 +289,11 @@ enum RouteKind {
 
 enum StorageService {
   Cloudinary
+}
+
+enum SoftDelete {
+  DeletedPrivate
+  DeletedPublic
+  DeletedDev
+  NotDeleted
 }

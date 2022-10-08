@@ -1,6 +1,9 @@
+import global from "@andescalada/api/schemas/global";
 import routeSchema from "@andescalada/api/schemas/route";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -11,7 +14,7 @@ export const routesRouter = t.router({
     const route = await ctx.prisma.route.findUnique({
       where: { id: input },
     });
-    if (!route) {
+    if (!route || route.isDeleted !== SoftDelete.NotDeleted) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: `No route with id '${input}'`,
@@ -73,5 +76,43 @@ export const routesRouter = t.router({
           },
         });
       }
+    }),
+  edit: protectedZoneProcedure
+    .input(routeSchema.schema.merge(routeSchema.routeId))
+    .mutation(async ({ ctx, input }) => {
+      const route = await ctx.prisma.route.findUnique({
+        where: { id: input.routeId },
+        select: { Author: { select: { email: true } } },
+      });
+      if (
+        !ctx.permissions.has("Update") &&
+        route?.Author.email !== ctx.user.email
+      ) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      return ctx.prisma.route.update({
+        where: { id: input.routeId },
+        data: input,
+      });
+    }),
+  delete: protectedZoneProcedure
+    .input(routeSchema.routeId.merge(global.isDeleted))
+    .mutation(async ({ ctx, input }) => {
+      const route = await ctx.prisma.route.findUnique({
+        where: { id: input.routeId },
+        select: { Author: { select: { email: true } } },
+      });
+      if (
+        !ctx.permissions.has("Update") &&
+        route?.Author.email !== ctx.user.email
+      ) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      ctx.prisma.route.update({
+        where: { id: input.routeId },
+        data: { isDeleted: input.isDeleted },
+      });
     }),
 });
