@@ -29,7 +29,7 @@ export const getThumbnail = (publicId?: string) => {
     .image(publicId)
     .resize(Resize.scale(SCREEN_WIDTH))
     .format("auto")
-    .quality(50);
+    .quality(100);
 
   return imageObject(image, publicId);
 };
