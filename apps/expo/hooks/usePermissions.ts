@@ -2,6 +2,7 @@ import { Permissions } from "@andescalada/api/src/types/permissions";
 import { UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL } from "@env";
 import { useAppSelector } from "@hooks/redux";
 import type { Zone } from "@prisma/client";
+import permissionStorage from "@utils/mmkv/permissionStorage";
 import { useCallback, useEffect, useState } from "react";
 import { parse } from "superjson";
 
@@ -27,13 +28,16 @@ const usePermissions = ({ zoneId }: Args) => {
 
   const getPermissions = useCallback(async () => {
     if (!email) throw new Error("No email found");
-    const res = await getPermissionsFromUpstash(email, zoneId);
+    let res = permissionStorage.getString(`${email}.${zoneId}`);
+    if (!res) {
+      res = await getPermissionsFromUpstash(email, zoneId);
+    }
 
     if (!res) {
       setPermissions(new Set());
       return;
     }
-
+    permissionStorage.set(`${email}.${zoneId}`, res);
     const deserializedRes = parse<Permissions>(res);
 
     setPermissions(deserializedRes);
