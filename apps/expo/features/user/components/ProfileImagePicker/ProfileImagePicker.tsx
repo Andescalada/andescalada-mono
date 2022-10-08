@@ -40,20 +40,19 @@ const ProfileImagePicker: FC<Props> = ({
       <Text variant={{ mobile: "p2R", tablet: "p1R" }}>
         Agregar foto de perfil
       </Text>
-      {selectedImage?.localUri ||
-        (defaultImage.url && (
-          <Image
-            position={"absolute"}
-            height={responsiveImageSize}
-            width={responsiveImageSize}
-            entering={FadeIn}
-            source={{
-              uri: defaultImage.url
-                ? defaultImage.url
-                : selectedImage?.localUri,
-            }}
-          />
-        ))}
+      {(selectedImage?.localUri || defaultImage.url) && (
+        <Image
+          position={"absolute"}
+          height={responsiveImageSize}
+          width={responsiveImageSize}
+          entering={FadeIn}
+          source={{
+            uri: selectedImage?.localUri
+              ? selectedImage?.localUri
+              : defaultImage.url || "",
+          }}
+        />
+      )}
     </Pressable>
   );
 };

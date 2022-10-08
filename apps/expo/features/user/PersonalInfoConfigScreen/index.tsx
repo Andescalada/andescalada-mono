@@ -25,7 +25,7 @@ import { z } from "zod";
 
 type Props = UserNavigationScreenProps<UserNavigationRoutes.PersonalInfo>;
 
-const PersonalInfoConfigScreen: FC<Props> = () => {
+const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
   const { data } = useOwnInfo();
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: true,
@@ -61,6 +61,7 @@ const PersonalInfoConfigScreen: FC<Props> = () => {
             username,
           }),
             resetMutation();
+          navigation.goBack();
         }, 1500);
         utils.user.ownInfo.invalidate();
       }
@@ -81,14 +82,14 @@ const PersonalInfoConfigScreen: FC<Props> = () => {
   });
 
   const saveButton = useMemo(() => {
-    if (!form.formState.isDirty) {
+    if (!form.formState.isDirty && !selectedImage) {
       return { variant: "transparent" as const, title: "Guardar" };
     }
     if (isSuccess) {
       return { variant: "success" as const, title: "Guardado" };
     }
     return { variant: "info" as const, title: "Guardar" };
-  }, [form.formState.isDirty, isSuccess]);
+  }, [form.formState.isDirty, isSuccess, selectedImage]);
 
   return (
     <Screen margin={{ mobile: "m", tablet: "xxl" }} safeAreaDisabled>
@@ -137,10 +138,7 @@ const PersonalInfoConfigScreen: FC<Props> = () => {
           onPress={onSubmit}
           isLoading={loading}
           disabled={
-            loading ||
-            !form.formState.isDirty ||
-            isSuccess ||
-            !form.formState.isValid
+            loading || (!form.formState.isDirty && !selectedImage) || isSuccess
           }
         />
       </BoxWithKeyboard>
