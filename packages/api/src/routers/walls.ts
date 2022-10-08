@@ -1,6 +1,7 @@
 import wall from "@andescalada/api/schemas/wall";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -18,12 +19,15 @@ export const wallsRouter = t.router({
       include: {
         routes: {
           orderBy: { position: "asc" },
+
+          where: { isDeleted: { equals: SoftDelete.NotDeleted } },
           select: {
             name: true,
             id: true,
             RouteGrade: true,
             position: true,
             kind: true,
+            isDeleted: true,
             Author: { select: { email: true } },
           },
         },

@@ -110,7 +110,7 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      ctx.prisma.route.update({
+      return ctx.prisma.route.update({
         where: { id: input.routeId },
         data: { isDeleted: input.isDeleted },
       });

@@ -1,11 +1,11 @@
-import wall from "@andescalada/api/schemas/wall";
+import { SoftDeleteSchema } from "@andescalada/db/zod";
 import { ScrollView, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import ListItem from "@features/climbs/WallScreen/ListItem";
+import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useOwnInfo from "@hooks/useOwnInfo";
@@ -14,16 +14,15 @@ import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
-import { FC, useState } from "react";
-
-const { schema } = wall;
+import { FC, useRef, useState } from "react";
+import { Alert } from "react-native";
 
 type NavigationRoute =
   ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>["route"];
 
 const RoutesList: FC = () => {
   const route = useRoute<NavigationRoute>();
-  const { wallId, zoneId } = route.params;
+  const { zoneId } = route.params;
   const { permission } = usePermissions({ zoneId });
   const { data: user } = useOwnInfo();
   const utils = trpc.useContext();
@@ -39,6 +38,8 @@ const RoutesList: FC = () => {
       }
     },
   });
+
+  const { mutate } = trpc.routes.delete.useMutation();
   const refresh = useRefresh(refetch, isFetching);
 
   const { gradeSystem } = useGradeSystem();
@@ -49,12 +50,29 @@ const RoutesList: FC = () => {
 
   const [routes, setRoutes] = useState(data?.routes);
 
+  const listItemRef = useRef<ListItemRef>(null);
+
   const onDelete = (id: string) => {
     const r = routes?.filter((route) => route.id !== id);
     if (r) setRoutes([...r]);
+    console.log("here");
+    mutate({
+      isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
+      routeId: id,
+      zoneId,
+    });
   };
 
-  const [disabled, setDisabled] = useState(false);
+  const onDeleteTry = (id: string) => {
+    Alert.alert("Eliminar ruta", "¿Seguro que quieres eliminar esta ruta?", [
+      { text: "Borrar", onPress: () => onDelete(id), style: "destructive" },
+      {
+        text: "Cancelar",
+        onPress: () => listItemRef?.current?.undoDelete(),
+        style: "cancel",
+      },
+    ]);
+  };
 
   if (isLoadingWall) return null;
   if (!route)
@@ -79,6 +97,7 @@ const RoutesList: FC = () => {
         return (
           <ListItem
             key={item.id}
+            ref={listItemRef}
             index={index}
             allowEdit={
               permission?.has("Update") || item.Author.email === user?.email
@@ -86,7 +105,7 @@ const RoutesList: FC = () => {
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-            onDelete={() => onDelete(item.id)}
+            onDelete={() => onDeleteTry(item.id)}
             onPress={() => {
               if (!mainTopo?.id) return;
               rootNavigation.navigate(RootNavigationRoutes.RouteManager, {

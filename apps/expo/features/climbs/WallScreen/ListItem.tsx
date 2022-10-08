@@ -1,5 +1,14 @@
 import { Box, ListItem as UIListItm, Pressable, Text } from "@andescalada/ui";
-import { ComponentProps, FC, ReactNode, useMemo } from "react";
+import {
+  ComponentProps,
+  FC,
+  forwardRef,
+  ForwardRefRenderFunction,
+  ReactNode,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   FadeInDown,
@@ -36,14 +45,14 @@ const WITH_SPRING_CONFIG: WithSpringConfig = {
   damping: 20,
 };
 
-const ListItem: FC<Props> = ({
-  children,
-  onDelete,
-  onEdit,
-  index,
-  allowEdit,
-  ...props
-}: Props) => {
+export interface ListItemRef {
+  undoDelete: () => void;
+}
+
+const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
+  { children, onDelete, onEdit, index, allowEdit, ...props },
+  ref,
+) => {
   const width = useSharedValue(0);
   const translateX = useSharedValue(0);
 
@@ -58,6 +67,12 @@ const ListItem: FC<Props> = ({
       third: between(-translateX.value, 0.5 * width.value, width.value, true),
     };
   }, [translateX]);
+
+  useImperativeHandle(ref, () => ({
+    undoDelete: () => {
+      translateX.value = withSpring(0, WITH_SPRING_CONFIG);
+    },
+  }));
 
   const rangeRight = useDerivedValue(() => {
     return {
@@ -242,4 +257,4 @@ const ListItem: FC<Props> = ({
   );
 };
 
-export default ListItem;
+export default forwardRef(ListItem);
