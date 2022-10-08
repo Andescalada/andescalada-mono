@@ -53,6 +53,7 @@ export const login = async (): Promise<LoginResponse> => {
   const codeChallenge = URLEncode(await sha256(codeVerifier));
   const redirectUrl = AuthSession.makeRedirectUri({
     native: nativeReturnUrl,
+    preferLocalhost: __DEV__,
   });
 
   const params = {
