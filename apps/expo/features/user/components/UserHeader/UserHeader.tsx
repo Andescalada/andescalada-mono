@@ -1,5 +1,6 @@
 import { Box, Image, Pressable, Screen } from "@andescalada/ui";
 import pathTitle from "@assets/andescaladaPathTitle";
+import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
@@ -147,7 +148,11 @@ const UserHeader = () => {
           alignItems={"center"}
           onPress={onOptions}
         >
-          <Image source={uri} style={styles.image} marginLeft="s" />
+          <UserProfileImage
+            publicId={profilePhoto?.publicId || undefined}
+            style={styles.image}
+            marginLeft="s"
+          />
         </Pressable>
       </Box>
     </Screen>

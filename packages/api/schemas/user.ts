@@ -21,10 +21,18 @@ const schema = z.object({
     ),
 });
 
+const usernameSearch = z
+  .string()
+  .trim()
+  .regex(
+    r.username,
+    "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",
+  );
+
 const gradeSystem = z.object({
   preferredSportGrade: GradeSystemsSchema,
   preferredTradGrade: GradeSystemsSchema,
   preferredBoulderGrade: GradeSystemsSchema,
 });
 
-export default { schema, gradeSystem };
+export default { schema, gradeSystem, usernameSearch };

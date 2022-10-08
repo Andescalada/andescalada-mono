@@ -64,9 +64,6 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
           title="Asignar rol a usuario"
           subtitle="Solo administradores Andescalada"
           variant="accent"
-          onPress={() => {
-            navigation.navigate(UserNavigationRoutes.CreateZone);
-          }}
         />
       )}
       {globalPermissions?.includes(GlobalPermissions.CRUD_ZONES) && (
@@ -74,6 +71,9 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
           title="Agregar zona"
           subtitle="Solo administradores Andescalada"
           variant="accent"
+          onPress={() => {
+            navigation.navigate(UserNavigationRoutes.CreateZone);
+          }}
         />
       )}
     </Screen>

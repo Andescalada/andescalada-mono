@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
 }
 
 generator enum {
@@ -47,8 +47,8 @@ model User {
   AssignedRoles         RoleByZone[] @relation("AssignedBy")
 
   @@index([email])
-  @@index([username])
   @@index([profilePhotoId])
+  @@fulltext([username])
 }
 
 enum GradeSystems {

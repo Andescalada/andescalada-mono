@@ -1,3 +1,4 @@
+import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
@@ -44,13 +45,23 @@ export const zonesRouter = t.router({
 
     return { ...res, hasAccess: true };
   }),
-  add: protectedProcedure.input(zone.schema).mutation(({ ctx, input }) => {
-    if (!ctx.user.permissions.includes("crud:zones"))
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    return ctx.prisma.zone.create({
-      data: { name: input.name, slug: slug(input.name) },
-    });
-  }),
+  create: protectedProcedure
+    .input(zone.schema.merge(user.schema.pick({ username: true })))
+    .mutation(({ ctx, input }) => {
+      if (!ctx.user.permissions.includes("crud:zones"))
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      return ctx.prisma.roleByZone.create({
+        data: {
+          Role: { connect: { name: "Admin" } },
+          User: { connect: { username: input.username } },
+          Zone: {
+            create: { name: input.name, slug: slug(input.name) },
+          },
+          AssignedBy: { connect: { email: ctx.user.email } },
+        },
+      });
+    }),
   downlandAll: t.procedure.input(zone.id).query(({ ctx, input }) =>
     ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },

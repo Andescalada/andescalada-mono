@@ -66,4 +66,19 @@ export const userRouter = t.router({
       if (!user) return true;
       return false;
     }),
+  find: protectedProcedure
+    .input(user.usernameSearch)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.user.findMany({
+        where: {
+          username: { contains: input },
+        },
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          profilePhoto: { select: { publicId: true } },
+        },
+      });
+    }),
 });
