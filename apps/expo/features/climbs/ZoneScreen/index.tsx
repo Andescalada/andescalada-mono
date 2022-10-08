@@ -2,17 +2,14 @@ import zone from "@andescalada/api/schemas/zone";
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
-  BackButton,
   Box,
   Button,
-  EditableTitle,
   ListItem,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
-import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
