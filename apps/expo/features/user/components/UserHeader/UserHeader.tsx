@@ -1,10 +1,9 @@
-import { Box, Image, Pressable, Screen } from "@andescalada/ui";
+import { Box, Pressable, Screen } from "@andescalada/ui";
 import pathTitle from "@assets/andescaladaPathTitle";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
-import useCachedImage from "@hooks/useCachedImage";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -25,7 +24,6 @@ import {
 } from "@shopify/react-native-skia";
 import { useResponsiveProp } from "@shopify/restyle";
 import { logoutAuth0 } from "@store/auth";
-import { getThumbnail } from "@utils/cloudinary";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { useCallback, useMemo } from "react";
 import { Alert, StyleSheet } from "react-native";
@@ -72,8 +70,7 @@ const UserHeader = () => {
     [progress],
   );
   const dispatch = useAppDispatch();
-  const image = getThumbnail(profilePhoto?.publicId || undefined);
-  const { uri } = useCachedImage(image);
+
   const rootNavigation = useRootNavigation();
   const onLogout = useCallback(() => {
     Alert.alert("Cerrar Sesión", "¿Seguro que quieres cerrar sesión?", [
