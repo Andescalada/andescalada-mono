@@ -1,7 +1,6 @@
 import { DdRumReactNavigationTracking } from "@datadog/mobile-react-navigation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { InitialState, NavigationContainer } from "@react-navigation/native";
-import isExpoGo from "@utils/isExpoGo";
+import storage from "@utils/mmkv/storage";
 import Constants from "expo-constants";
 import * as SplashScreen from "expo-splash-screen";
 import { useTrackingPermissions } from "expo-tracking-transparency";
@@ -29,9 +28,7 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   useEffect(() => {
     const restoreState = async () => {
       try {
-        const savedStateString = await AsyncStorage.getItem(
-          NAVIGATION_STATE_KEY,
-        );
+        const savedStateString = storage.getString(NAVIGATION_STATE_KEY);
         const state = savedStateString
           ? JSON.parse(savedStateString)
           : undefined;
@@ -47,10 +44,8 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   }, [isNavigationReady]);
 
   const onStateChange = useCallback((state: InitialState | undefined) => {
-    if (state)
-      AsyncStorage.setItem(NAVIGATION_STATE_KEY, JSON.stringify(state));
+    if (state) storage.set(NAVIGATION_STATE_KEY, JSON.stringify(state));
   }, []);
-
   useEffect(() => {
     if (isNavigationReady) {
       SplashScreen.hideAsync();
@@ -68,7 +63,7 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
       ref={navigationRef}
       onReady={() => {
         if (Platform.OS === "ios") {
-          if (!isExpoGo && status?.granted)
+          if (status?.granted)
             DdRumReactNavigationTracking.startTrackingViews(
               navigationRef.current,
             );

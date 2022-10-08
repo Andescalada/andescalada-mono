@@ -1,5 +1,4 @@
 import { Storage } from "@assets/Constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { auth0Tokens, login, logout } from "@utils/auth0";
 import {
@@ -8,7 +7,7 @@ import {
   GlobalPermissions,
 } from "@utils/auth0/types";
 import { isExpired, tokenDecode } from "@utils/decode";
-import permissionStorage from "@utils/mmkv/permissionStorage";
+import storage from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
 
 export interface AuthState {
@@ -41,13 +40,9 @@ export const loginAuth0 = createAsyncThunk(
       const { accessToken, decodedIdToken, refreshToken } = await login();
 
       const decodedAccessToken = tokenDecode<DecodedAccessToken>(accessToken);
-
-      await AsyncStorage.setItem(Storage.ACCESS_TOKEN, accessToken);
-      await AsyncStorage.setItem(Storage.REFRESH_TOKEN, refreshToken);
-      await AsyncStorage.setItem(
-        Storage.DECODED_ID_TOKEN,
-        stringify(decodedIdToken),
-      );
+      storage.set(Storage.ACCESS_TOKEN, accessToken);
+      storage.set(Storage.REFRESH_TOKEN, refreshToken);
+      storage.set(Storage.DECODED_ID_TOKEN, stringify(decodedIdToken));
       dispatch(setLoadingAuth(false));
       dispatch(setAutoLoginCompleted(true));
       return {
@@ -68,10 +63,10 @@ export const autoLoginAuth0 = createAsyncThunk(
   "auth/autoLoginAuth0",
   async (_, { rejectWithValue }) => {
     try {
-      const token = await AsyncStorage.getItem(Storage.ACCESS_TOKEN);
-      const decodedIdToken = await AsyncStorage.getItem(
-        Storage.DECODED_ID_TOKEN,
-      ).then((d) => (d ? parse(d) : {}) as DecodedIdToken);
+      const token = storage.getString(Storage.ACCESS_TOKEN);
+      const decodedIdToken = parse<DecodedIdToken>(
+        storage.getString(Storage.DECODED_ID_TOKEN) || "{}",
+      );
 
       if (!token) return { isAuth: false };
       const decodedToken = tokenDecode<DecodedAccessToken>(token);
@@ -83,7 +78,7 @@ export const autoLoginAuth0 = createAsyncThunk(
           email: decodedIdToken.name,
           globalPermissions: decodedToken.permissions,
         };
-      permissionStorage.clearAll();
+      storage.clearAll();
       const res = await auth0Tokens.refreshTokens();
 
       if (res?.accessToken) {
@@ -106,10 +101,7 @@ export const logoutAuth0 = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logout();
-      await AsyncStorage.removeItem(Storage.ACCESS_TOKEN);
-      await AsyncStorage.removeItem(Storage.REFRESH_TOKEN);
-      await AsyncStorage.removeItem(Storage.DECODED_ID_TOKEN);
-      permissionStorage.clearAll();
+      storage.clearAll();
       return { isAuth: false };
     } catch (error) {
       rejectWithValue(error);

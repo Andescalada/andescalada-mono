@@ -1,7 +1,7 @@
 import { Storage } from "@assets/Constants";
 import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "@env";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { nativeReturnUrl } from "@utils/auth0/params";
+import storage from "@utils/mmkv/storage";
 import * as AuthSession from "expo-auth-session";
 import { stringify } from "superjson";
 
@@ -63,19 +63,16 @@ const getRefreshData = async (refreshToken: string) => {
 };
 
 export const refreshTokens = async () => {
-  const refreshToken = await AsyncStorage.getItem(Storage.REFRESH_TOKEN);
+  const refreshToken = storage.getString(Storage.REFRESH_TOKEN);
   if (!refreshToken) return;
+
   const response = await getRefreshData(refreshToken);
-  await AsyncStorage.setItem(Storage.ACCESS_TOKEN, response.data.access_token);
-  await AsyncStorage.setItem(
-    Storage.REFRESH_TOKEN,
-    response.data.refresh_token,
-  );
-  const decodedJwtIdToken = tokenDecode(response.data.id_token);
-  await AsyncStorage.setItem(
-    Storage.DECODED_ID_TOKEN,
-    stringify(decodedJwtIdToken),
-  );
+  storage.set(Storage.ACCESS_TOKEN, response.data.access_token);
+  storage.set(Storage.REFRESH_TOKEN, response.data.refresh_token);
+
+  const decodedIdToken = tokenDecode(response.data.id_token);
+  storage.set(Storage.DECODED_ID_TOKEN, stringify(decodedIdToken));
+
   return { accessToken: response.data.access_token as string };
 };
 
