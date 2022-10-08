@@ -1,14 +1,15 @@
 import { ActivityIndicator, Box, Text, TextInput } from "@andescalada/ui";
 import useUsernameValidation from "@hooks/useUsernameValidation";
-import { ComponentProps, FC, useMemo } from "react";
+import { ComponentProps, FC, useEffect, useMemo } from "react";
 import { useController, useFormContext } from "react-hook-form";
 import { NativeSyntheticEvent, TextInputFocusEventData } from "react-native";
 
 interface Props extends ComponentProps<typeof Box> {
   defaultValue?: string;
+  onLoading?: (isValid: boolean) => void;
 }
 
-const UsernameInput: FC<Props> = ({ defaultValue, ...props }) => {
+const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
   const form = useFormContext();
 
   const {
@@ -26,21 +27,28 @@ const UsernameInput: FC<Props> = ({ defaultValue, ...props }) => {
     validateUsername,
   } = useUsernameValidation();
 
+  useEffect(() => {
+    if (onLoading) onLoading(isLoadingUsernameValidation);
+  }, [isLoadingUsernameValidation, onLoading]);
+
   const onUserNameBlur = async (
     e: NativeSyntheticEvent<TextInputFocusEventData>,
   ) => {
     onBlurUsername();
     if (defaultValue === valueUsername) {
       form.clearErrors("username");
+
       return;
     }
 
     const res = await validateUsername(e.nativeEvent.text);
-    if (!res?.isValid)
+    if (!res?.isValid) {
       form.setError("username", {
         message: res?.errorMessage,
       });
-    else form.clearErrors("username");
+    } else {
+      form.clearErrors("username");
+    }
   };
 
   const usernameBorderColor = useMemo(() => {

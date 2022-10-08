@@ -46,6 +46,9 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
     defaultValue: data?.name,
   });
 
+  const [isUsernameValidationLoading, setIsUsernameValidationLoading] =
+    useState(false);
+
   const utils = trpc.useContext();
   const {
     mutateAsync,
@@ -82,14 +85,22 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
   });
 
   const saveButton = useMemo(() => {
-    if (!form.formState.isDirty && !selectedImage) {
+    if (
+      (!form.formState.isDirty && !selectedImage) ||
+      isUsernameValidationLoading
+    ) {
       return { variant: "transparent" as const, title: "Guardar" };
     }
     if (isSuccess) {
       return { variant: "success" as const, title: "Guardado" };
     }
     return { variant: "info" as const, title: "Guardar" };
-  }, [form.formState.isDirty, isSuccess, selectedImage]);
+  }, [
+    form.formState.isDirty,
+    isSuccess,
+    selectedImage,
+    isUsernameValidationLoading,
+  ]);
 
   return (
     <Screen margin={{ mobile: "m", tablet: "xxl" }} safeAreaDisabled>
@@ -126,7 +137,10 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
               <Text variant="p1R" marginBottom="s">
                 Usuario
               </Text>
-              <UsernameInput defaultValue={data?.username} />
+              <UsernameInput
+                defaultValue={data?.username}
+                onLoading={setIsUsernameValidationLoading}
+              />
             </Box>
           </FormProvider>
         </Box>
@@ -138,7 +152,10 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
           onPress={onSubmit}
           isLoading={loading}
           disabled={
-            loading || (!form.formState.isDirty && !selectedImage) || isSuccess
+            loading ||
+            (!form.formState.isDirty && !selectedImage) ||
+            isSuccess ||
+            isUsernameValidationLoading
           }
         />
       </BoxWithKeyboard>
