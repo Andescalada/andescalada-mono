@@ -1,5 +1,7 @@
+import global from "@andescalada/api/schemas/global";
 import wall from "@andescalada/api/schemas/wall";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -88,6 +90,27 @@ export const wallsRouter = t.router({
       await ctx.prisma.wall.update({
         where: { id: input.wallId },
         data: { name: input.name },
+      });
+    }),
+  delete: protectedZoneProcedure
+    .input(
+      wall.schema.omit({ name: true }).merge(global.isDeleted).merge(wall.id),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const route = await ctx.prisma.wall.findUnique({
+        where: { id: input.wallId },
+        select: { Author: { select: { email: true } } },
+      });
+      if (
+        !ctx.permissions.has("Update") &&
+        route?.Author.email !== ctx.user.email
+      ) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      return ctx.prisma.wall.update({
+        where: { id: input.wallId },
+        data: { isDeleted: input.isDeleted },
       });
     }),
 });

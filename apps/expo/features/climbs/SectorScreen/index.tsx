@@ -41,10 +41,10 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const deleteSector = trpc.sectors.delete.useMutation({
     onMutate: () => {
-      Alert.alert(`Sector ${route.params.sectorName} eliminado`);
       navigation.goBack();
     },
     onSuccess: () => {
+      Alert.alert(`Sector ${route.params.sectorName} eliminado`);
       utils.zones.allSectors.invalidate({ zoneId });
     },
     onError: () => {
@@ -136,6 +136,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
           )}
           renderItem={({ item }) => (
             <ListItem
+              marginVertical={"s"}
               onPress={() =>
                 navigation.navigate(ClimbsNavigationRoutes.Wall, {
                   wallId: item.id,

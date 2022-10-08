@@ -1,4 +1,5 @@
 import wall from "@andescalada/api/schemas/wall";
+import { SoftDeleteSchema } from "@andescalada/db/zod";
 import { Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
@@ -23,7 +24,7 @@ const { schema } = wall;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId, zoneId } = route.params;
+  const { wallId, zoneId, sectorId } = route.params;
 
   const { data } = trpc.walls.byId.useQuery(route.params.wallId);
 
@@ -48,26 +49,63 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
   const rootNavigation = useRootNavigation();
 
-  const onOptions = useOptionsSheet({
-    "Agregar Ruta": () =>
-      navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
-        wallId,
-        zoneId,
-      }),
-    "Editar Topo": {
-      action: () =>
-        rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-          screen: RoutesManagerNavigationRoutes.SelectRouteToDraw,
-          params: {
-            wallId,
-          },
-        }),
-      hide: !data || data.topos.length === 0,
+  const utils = trpc.useContext();
+  const deleteWall = trpc.walls.delete.useMutation({
+    onMutate: () => {
+      navigation.goBack();
     },
-    "Cambiar Nombre": () => {
-      headerMethods.setEditing(true);
+    onSuccess: () => {
+      Alert.alert(`Pared "${route.params.wallName}" eliminada`);
+      utils.sectors.allWalls.invalidate({ sectorId });
+    },
+    onError: () => {
+      Alert.alert("No pudimos eliminar la pared, intenta más tarde");
     },
   });
+
+  const onOptions = useOptionsSheet(
+    {
+      "Agregar Ruta": () =>
+        navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+          wallId,
+          zoneId,
+        }),
+      "Editar Topo": {
+        action: () =>
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.SelectRouteToDraw,
+            params: {
+              wallId,
+            },
+          }),
+        hide: !data || data.topos.length === 0,
+      },
+      "Cambiar Nombre": () => {
+        headerMethods.setEditing(true);
+      },
+      "Eliminar Pared": () => {
+        Alert.alert(
+          "Eliminar pared",
+          "¿Seguro que quieres eliminar esta pared?",
+          [
+            {
+              text: "Eliminar",
+              onPress: () => {
+                deleteWall.mutate({
+                  isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
+                  wallId,
+                  zoneId,
+                });
+              },
+              style: "destructive",
+            },
+            { text: "Cancelar", style: "cancel" },
+          ],
+        );
+      },
+    },
+    { destructiveButtonIndex: !data || data.topos.length === 0 ? 2 : 3 },
+  );
 
   return (
     <Screen padding={"m"}>
