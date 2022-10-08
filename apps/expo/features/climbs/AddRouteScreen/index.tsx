@@ -19,7 +19,7 @@ import useGradeSystem from "@hooks/useGradeSystem";
 import useZodForm from "@hooks/useZodForm";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@shopify/restyle";
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
@@ -38,14 +38,21 @@ const schema = z.object({
 });
 
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId } = route.params;
+  const { wallId, ...rest } = route.params;
   const utils = trpc.useContext();
+
+  const onSuccess = useCallback(() => {
+    navigation.goBack();
+    utils.walls.byId.invalidate(route.params.wallId);
+  }, [navigation, route.params.wallId, utils.walls.byId]);
+
   const { mutate, isLoading } = trpc.routes.add.useMutation({
-    onSuccess: () => {
-      navigation.goBack();
-      utils.walls.byId.invalidate(route.params.wallId);
-    },
+    onSuccess,
   });
+  const { mutate: mutateEdit, isLoading: isLoadingEdit } =
+    trpc.routes.edit.useMutation({
+      onSuccess,
+    });
 
   const {
     handleSubmit,
@@ -53,6 +60,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     formState: { isDirty },
   } = useZodForm({
     schema,
+    defaultValues: rest,
   });
 
   const {
@@ -84,6 +92,17 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       grade: input.grade !== "project" ? input.grade : null,
       project: input.grade === "project",
     };
+
+    if (rest.id) {
+      mutateEdit({
+        grade,
+        kind: input.kind,
+        name: input.name,
+        routeId: rest.id,
+        zoneId: rest.zoneId,
+      });
+      return;
+    }
     mutate({ wallId, name: input.name, kind: input.kind, grade });
   });
 
@@ -109,14 +128,14 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const theme = useTheme<Theme>();
 
   return (
-    <Screen>
+    <Screen safeAreaDisabled>
       <ScrollView
         padding="m"
         flex={1}
         marginBottom={"l"}
         onResponderGrant={Keyboard.dismiss}
       >
-        <Text variant="h1">Agregar ruta</Text>
+        <Text variant="h1">{rest.id ? "Editar ruta" : "Agregar ruta"}</Text>
         <Box marginTop={"m"}>
           <Text variant={"p1R"} marginBottom={"s"}>
             Nombre de la ruta
@@ -202,9 +221,9 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         </Box>
         <Button
           variant="primary"
-          title="Agregar"
+          title={rest.name ? "Editar" : "Agregar"}
           onPress={onSubmit}
-          isLoading={isLoading}
+          isLoading={isLoading || isLoadingEdit}
           marginVertical="s"
         />
         <SemanticButton

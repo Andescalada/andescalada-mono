@@ -47,6 +47,7 @@ const WITH_SPRING_CONFIG: WithSpringConfig = {
 
 export interface ListItemRef {
   undoDelete: () => void;
+  undoEdit: () => void;
 }
 
 const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
@@ -70,6 +71,9 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
 
   useImperativeHandle(ref, () => ({
     undoDelete: () => {
+      translateX.value = withSpring(0, WITH_SPRING_CONFIG);
+    },
+    undoEdit: () => {
       translateX.value = withSpring(0, WITH_SPRING_CONFIG);
     },
   }));

@@ -13,7 +13,9 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { Route } from "@prisma/client";
 import { useRoute } from "@react-navigation/native";
+import parseGrade, { ParseGrade } from "@utils/parseGrade";
 import { FC, useRef, useState } from "react";
 import { Alert } from "react-native";
 
@@ -71,6 +73,19 @@ const RoutesList: FC = () => {
     });
   };
 
+  const onEdit = (params: {
+    id: Route["id"];
+    name: Route["name"];
+    kind: Route["kind"];
+    grade?: ParseGrade;
+  }) => {
+    listItemRef?.current?.undoEdit();
+    rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+      screen: ClimbsNavigationRoutes.AddRoute,
+      params: { ...params, zoneId, wallId },
+    });
+  };
+
   const onDeleteTry = (id: string) => {
     Alert.alert("Eliminar ruta", "¿Seguro que quieres eliminar esta ruta?", [
       { text: "Borrar", onPress: () => onDelete(id), style: "destructive" },
@@ -114,6 +129,14 @@ const RoutesList: FC = () => {
             alignItems="center"
             justifyContent="space-between"
             onDelete={() => onDeleteTry(item.id)}
+            onEdit={() =>
+              onEdit({
+                id: item.id,
+                name: item.name,
+                kind: item.kind,
+                grade: parseGrade(item.RouteGrade),
+              })
+            }
             onPress={() => {
               if (!mainTopo?.id) return;
               rootNavigation.navigate(RootNavigationRoutes.RouteManager, {

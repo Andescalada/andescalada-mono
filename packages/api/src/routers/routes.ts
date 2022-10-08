@@ -78,7 +78,7 @@ export const routesRouter = t.router({
       }
     }),
   edit: protectedZoneProcedure
-    .input(routeSchema.schema.merge(routeSchema.routeId))
+    .input(routeSchema.schema.omit({ wallId: true }).merge(routeSchema.routeId))
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.route.findUnique({
         where: { id: input.routeId },
@@ -91,9 +91,11 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
+      const { grade, kind, name } = input;
+
       return ctx.prisma.route.update({
         where: { id: input.routeId },
-        data: input,
+        data: { RouteGrade: { update: { ...grade } }, name, kind },
       });
     }),
   delete: protectedZoneProcedure

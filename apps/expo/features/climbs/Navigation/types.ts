@@ -1,6 +1,7 @@
-import type { Sector, Wall, Zone } from "@prisma/client";
+import type { Route, Sector, Wall, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { ParseGrade } from "@utils/parseGrade";
 
 export enum ClimbsNavigationRoutes {
   ZonesList = "ZonesList",
@@ -28,7 +29,14 @@ export type ClimbsNavigationNavigationParamList = {
     sectorId: Sector["id"];
     zoneId: Zone["id"];
   };
-  [ClimbsNavigationRoutes.AddRoute]: { wallId: Wall["id"]; zoneId: Zone["id"] };
+  [ClimbsNavigationRoutes.AddRoute]: {
+    wallId: Wall["id"];
+    zoneId: Zone["id"];
+    name?: Route["name"];
+    kind?: Route["kind"];
+    grade?: ParseGrade;
+    id?: Route["id"];
+  };
 };
 
 export type ClimbsNavigationRouteProps<T extends ClimbsNavigationRoutes> =
