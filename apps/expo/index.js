@@ -1,4 +1,7 @@
 import { registerRootComponent } from "expo";
+if (typeof BigInt === "undefined") {
+  global.BigInt = require("big-integer");
+}
 
 import App from "./App";
 

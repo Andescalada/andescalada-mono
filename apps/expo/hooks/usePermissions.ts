@@ -38,6 +38,7 @@ const usePermissions = ({ zoneId }: Args) => {
       return;
     }
     permissionStorage.set(`${email}.${zoneId}`, res);
+
     const deserializedRes = parse<Permissions>(res);
 
     setPermissions(deserializedRes);

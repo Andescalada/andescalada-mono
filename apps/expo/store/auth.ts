@@ -8,6 +8,7 @@ import {
   GlobalPermissions,
 } from "@utils/auth0/types";
 import { isExpired, tokenDecode } from "@utils/decode";
+import permissionStorage from "@utils/mmkv/permissionStorage";
 import { parse, stringify } from "superjson";
 
 export interface AuthState {
@@ -82,6 +83,7 @@ export const autoLoginAuth0 = createAsyncThunk(
           email: decodedIdToken.name,
           globalPermissions: decodedToken.permissions,
         };
+      permissionStorage.clearAll();
       const res = await auth0Tokens.refreshTokens();
 
       if (res?.accessToken) {
@@ -107,6 +109,7 @@ export const logoutAuth0 = createAsyncThunk(
       await AsyncStorage.removeItem(Storage.ACCESS_TOKEN);
       await AsyncStorage.removeItem(Storage.REFRESH_TOKEN);
       await AsyncStorage.removeItem(Storage.DECODED_ID_TOKEN);
+      permissionStorage.clearAll();
       return { isAuth: false };
     } catch (error) {
       rejectWithValue(error);
