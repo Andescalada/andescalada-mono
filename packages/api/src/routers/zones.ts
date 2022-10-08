@@ -3,6 +3,7 @@ import zone from "@andescalada/api/schemas/zone";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { serialize } from "superjson";
 import { z } from "zod";
@@ -31,9 +32,13 @@ export const zonesRouter = t.router({
   allSectors: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const res = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
-      select: { sectors: true, infoAccess: true },
+      select: {
+        isDeleted: true,
+        sectors: { where: { isDeleted: SoftDelete.NotDeleted } },
+        infoAccess: true,
+      },
     });
-    if (!res) {
+    if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: `No sectors found for the zone with id '${input.zoneId}'`,

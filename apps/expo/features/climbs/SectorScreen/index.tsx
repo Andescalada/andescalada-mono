@@ -1,4 +1,5 @@
 import sector from "@andescalada/api/schemas/sector";
+import { SoftDeleteSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
@@ -38,6 +39,19 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
+  const deleteSector = trpc.sectors.delete.useMutation({
+    onMutate: () => {
+      Alert.alert(`Sector ${route.params.sectorName} eliminado`);
+      navigation.goBack();
+    },
+    onSuccess: () => {
+      utils.zones.allSectors.invalidate({ zoneId });
+    },
+    onError: () => {
+      Alert.alert("No pudimos eliminar el sector, intenta más tarde");
+    },
+  });
+
   const methods = useZodForm({
     schema,
   });
@@ -62,15 +76,38 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
 
-  const onOptions = useOptionsSheet({
-    "Agregar Pared": () =>
-      navigation.navigate(ClimbsNavigationRoutes.AddWall, {
-        sectorId,
-      }),
-    "Cambiar Nombre": () => {
-      headerMethods.setEditing(true);
+  const onOptions = useOptionsSheet(
+    {
+      "Agregar Pared": () =>
+        navigation.navigate(ClimbsNavigationRoutes.AddWall, {
+          sectorId,
+        }),
+      "Cambiar Nombre": () => {
+        headerMethods.setEditing(true);
+      },
+      "Eliminar Sector": () => {
+        Alert.alert(
+          "Eliminar sector",
+          "¿Seguro que quieres eliminar este sector?",
+          [
+            {
+              text: "Eliminar",
+              onPress: () => {
+                deleteSector.mutate({
+                  isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
+                  sectorId,
+                  zoneId,
+                });
+              },
+              style: "destructive",
+            },
+            { text: "Cancelar", style: "cancel" },
+          ],
+        );
+      },
     },
-  });
+    { destructiveButtonIndex: 2 },
+  );
 
   if (isLoading)
     return (

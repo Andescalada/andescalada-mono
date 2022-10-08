@@ -10,4 +10,6 @@ const schema = z.object({
     .regex(r.numbersAndLettersOnly, "Solo se permite letras y números"),
 });
 
-export default { schema };
+const id = z.object({ sectorId: z.string() });
+
+export default { schema, id };

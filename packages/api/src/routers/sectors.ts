@@ -1,6 +1,9 @@
+import global from "@andescalada/api/schemas/global";
 import sector from "@andescalada/api/schemas/sector";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -10,12 +13,13 @@ export const sectorsRouter = t.router({
   all: t.procedure.query(({ ctx }) => {
     const sectors = ctx.prisma.sector.findMany({
       orderBy: { position: "asc" },
+      where: { isDeleted: SoftDelete.NotDeleted },
     });
     return sectors;
   }),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
     const sector = await ctx.prisma.sector.findUnique({ where: { id: input } });
-    if (!sector) {
+    if (!sector || sector?.isDeleted !== SoftDelete.NotDeleted) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: `No sector with id '${input}'`,
@@ -56,13 +60,43 @@ export const sectorsRouter = t.router({
     .query(async ({ ctx, input }) => {
       const res = await ctx.prisma.sector.findUnique({
         where: { id: input.sectorId },
-        select: { walls: { select: { id: true, name: true } } },
+        select: {
+          isDeleted: true,
+          walls: {
+            where: { isDeleted: SoftDelete.NotDeleted },
+            select: { id: true, name: true },
+          },
+        },
       });
-      if (!res)
+      if (!res || res?.isDeleted !== SoftDelete.NotDeleted)
         throw new TRPCError({
           code: "NOT_FOUND",
           message: `No walls found for sector  with id '${input.sectorId}'`,
         });
       return res.walls;
+    }),
+  delete: protectedZoneProcedure
+    .input(
+      sector.schema
+        .omit({ name: true })
+        .merge(global.isDeleted)
+        .merge(sector.id),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const route = await ctx.prisma.sector.findUnique({
+        where: { id: input.sectorId },
+        select: { Author: { select: { email: true } } },
+      });
+      if (
+        !ctx.permissions.has("Update") &&
+        route?.Author.email !== ctx.user.email
+      ) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      return ctx.prisma.sector.update({
+        where: { id: input.sectorId },
+        data: { isDeleted: input.isDeleted },
+      });
     }),
 });
