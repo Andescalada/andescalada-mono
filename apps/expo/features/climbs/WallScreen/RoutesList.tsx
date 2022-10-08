@@ -22,7 +22,7 @@ type NavigationRoute =
 
 const RoutesList: FC = () => {
   const route = useRoute<NavigationRoute>();
-  const { zoneId } = route.params;
+  const { zoneId, wallId } = route.params;
   const { permission } = usePermissions({ zoneId });
   const { data: user } = useOwnInfo();
   const utils = trpc.useContext();
@@ -39,7 +39,15 @@ const RoutesList: FC = () => {
     },
   });
 
-  const { mutate } = trpc.routes.delete.useMutation();
+  const { mutate } = trpc.routes.delete.useMutation({
+    onSuccess() {
+      utils.walls.byId.invalidate(wallId);
+    },
+    onError() {
+      Alert.alert("Error", "No pudimos borrar la ruta");
+      setRoutes(data?.routes);
+    },
+  });
   const refresh = useRefresh(refetch, isFetching);
 
   const { gradeSystem } = useGradeSystem();
