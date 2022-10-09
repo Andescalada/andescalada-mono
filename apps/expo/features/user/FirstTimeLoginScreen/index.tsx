@@ -97,13 +97,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               <Text variant="p1R" marginBottom="s">
                 Usuario
               </Text>
-              <Box
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <UsernameInput />
-              </Box>
+              <UsernameInput />
             </Box>
           </FormProvider>
         </Box>
