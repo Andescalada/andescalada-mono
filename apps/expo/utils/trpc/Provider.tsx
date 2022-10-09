@@ -17,8 +17,10 @@ interface Props {
   children: ReactNode;
 }
 
-const url = __DEV__
-  ? `http://${manifest?.debuggerHost?.split(":").shift()}:3000`
+console.log(`http://${manifest?.debuggerHost?.split(":").shift()}:3000`);
+
+const url = false
+  ? "http://localhost:3000"
   : "https://andescalada-mono.vercel.app";
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {

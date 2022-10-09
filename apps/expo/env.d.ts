@@ -9,4 +9,9 @@ declare module "@env" {
   export const DATADOG_APPLICATION_ID: string;
   export const UPSTASH_REDIS_REST_URL: string;
   export const UPSTASH_REDIS_REST_TOKEN: string;
+  export const SENTRY_ORG: string;
+  export const SENTRY_DNS: string;
+  export const SENTRY_PROJECT: string;
+  export const SENTRY_AUTH_TOKEN: string;
+  export const SENTRY_DEPLOY_ENV: string;
 }
