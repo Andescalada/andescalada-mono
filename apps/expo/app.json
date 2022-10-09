@@ -34,7 +34,7 @@
         ],
         "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
       },
-      "buildNumber": "6"
+      "buildNumber": "7"
     },
     "android": {
       "adaptiveIcon": {
@@ -42,7 +42,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 7
+      "versionCode": 8
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
