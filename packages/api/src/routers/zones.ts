@@ -11,7 +11,9 @@ import { z } from "zod";
 import { t } from "../createRouter";
 
 export const zonesRouter = t.router({
-  all: t.procedure.query(({ ctx }) => ctx.prisma.zone.findMany()),
+  all: t.procedure.query(({ ctx }) =>
+    ctx.prisma.zone.findMany({ where: { isDeleted: SoftDelete.NotDeleted } }),
+  ),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({ where: { id: input } });
     if (!zone) {

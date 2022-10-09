@@ -18,6 +18,8 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
 
 type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 
+const INFO_ACCESS_FLAG = false;
+
 const InfoAccessColor = (infoAccess: InfoAccess) => {
   switch (infoAccess) {
     case InfoAccessSchema.Enum.Community:
@@ -60,12 +62,14 @@ const ZonesScreen = ({ navigation }: Props) => {
             backgroundColor="primary"
           >
             <Text variant="p1R">{item.name}</Text>
-            <Box
-              width={15}
-              height={15}
-              backgroundColor={InfoAccessColor(item.infoAccess)}
-              borderRadius={10}
-            />
+            {INFO_ACCESS_FLAG && (
+              <Box
+                width={15}
+                height={15}
+                backgroundColor={InfoAccessColor(item.infoAccess)}
+                borderRadius={10}
+              />
+            )}
           </ListItem>
         )}
       />
