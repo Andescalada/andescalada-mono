@@ -56,7 +56,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "La app accede a tus fotos para que subas topos y fotos de las rutas"
+          "photosPermission": "La app accede a tus fotos para que subas topos y fotos de las rutas",
+          "cameraPermission": "La app usa la cámara para que subas fotos zonas de escalada e información personal"
         }
       ],
       "expo-tracking-transparency",
