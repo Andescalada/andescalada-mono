@@ -2,10 +2,7 @@ import { transformer } from "@andescalada/api/src/transformer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@utils/trpc";
-import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
-
-const { manifest } = Constants;
 
 export interface AccessToken {
   exp: number;
@@ -18,7 +15,7 @@ interface Props {
 }
 
 const url = __DEV__
-  ? `http://${manifest?.debuggerHost?.split(":").shift()}:3000`
+  ? `http://localhost:3000`
   : "https://andescalada-mono.vercel.app";
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
