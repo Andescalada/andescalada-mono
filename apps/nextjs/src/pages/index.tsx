@@ -1,7 +1,7 @@
 export default function IndexPage() {
   return (
-    <>
-      <h1>Hola</h1>
-    </>
+    <div>
+      <h1>Api Andescalada</h1>
+    </div>
   );
 }
