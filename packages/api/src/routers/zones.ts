@@ -3,7 +3,7 @@ import zone from "@andescalada/api/schemas/zone";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete } from "@prisma/client";
+import { InfoAccess, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { serialize } from "superjson";
 import { z } from "zod";
@@ -12,7 +12,12 @@ import { t } from "../createRouter";
 
 export const zonesRouter = t.router({
   all: t.procedure.query(({ ctx }) =>
-    ctx.prisma.zone.findMany({ where: { isDeleted: SoftDelete.NotDeleted } }),
+    ctx.prisma.zone.findMany({
+      where: {
+        isDeleted: SoftDelete.NotDeleted,
+        infoAccess: InfoAccess.Public,
+      },
+    }),
   ),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({ where: { id: input } });
