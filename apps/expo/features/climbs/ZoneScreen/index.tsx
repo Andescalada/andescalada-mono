@@ -27,7 +27,7 @@ const { schema } = zone;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
-  const { data, refetch, isFetching, isLoading } =
+  const { data, refetch, isFetching, isLoading, isError } =
     trpc.zones.allSectors.useQuery({ zoneId: route.params.zoneId });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
@@ -83,6 +83,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           ListEmptyComponent={() => (
             <NoSectors
               isLoading={isLoading}
+              isError={isError}
               hasAccess={!!data?.hasAccess}
               infoAccess={data?.infoAccess}
             />
@@ -109,11 +110,17 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
 interface NoZonesProps {
   isLoading: boolean;
+  isError: boolean;
   hasAccess: boolean;
   infoAccess: keyof typeof InfoAccessSchema.Enum | undefined;
 }
 
-const NoSectors = ({ isLoading, hasAccess, infoAccess }: NoZonesProps) => {
+const NoSectors = ({
+  isLoading,
+  hasAccess,
+  infoAccess,
+  isError,
+}: NoZonesProps) => {
   const title =
     infoAccess === InfoAccessSchema.Enum.Private
       ? "Acceso Privado"
@@ -129,7 +136,7 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess }: NoZonesProps) => {
       </Screen>
     );
 
-  if (!hasAccess)
+  if (!hasAccess && !isError)
     return (
       <Box flex={1} justifyContent={"flex-start"}>
         <Box flex={1 / 3} justifyContent="center">

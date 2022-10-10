@@ -2,9 +2,9 @@ import { Permissions } from "@andescalada/api/src/types/permissions";
 import { UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL } from "@env";
 import { useAppSelector } from "@hooks/redux";
 import type { Zone } from "@prisma/client";
-import * as Sentry from "@sentry/react-native";
 import storage, { Store } from "@utils/mmkv/storage";
 import { useCallback, useEffect, useState } from "react";
+import * as Sentry from "sentry-expo";
 import { parse } from "superjson";
 
 const getPermissionsFromUpstash = (key: string, value: string) =>
@@ -45,7 +45,7 @@ const usePermissions = ({ zoneId }: Args) => {
 
       setPermissions(deserializedRes);
     } catch (err) {
-      Sentry.captureException(err);
+      Sentry.Native.captureException(err);
     }
   }, [email, zoneId]);
 
