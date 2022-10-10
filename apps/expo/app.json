@@ -34,7 +34,7 @@
         ],
         "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
       },
-      "buildNumber": "8"
+      "buildNumber": "9"
     },
     "android": {
       "adaptiveIcon": {
