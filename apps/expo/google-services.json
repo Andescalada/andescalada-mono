@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "103826376922",
+    "project_id": "andescalada-41c0f",
+    "storage_bucket": "andescalada-41c0f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103826376922:android:e939e9f0f04c3f80eebde3",
+        "android_client_info": {
+          "package_name": "com.andescalada.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "103826376922-gdub3h1arn769uvu88im6lu97pplqk1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFuuxS_1z9QSCcVigF0pzPydyl4FRjyQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "103826376922-gdub3h1arn769uvu88im6lu97pplqk1a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
