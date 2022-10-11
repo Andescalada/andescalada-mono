@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, SoftDelete } from "@prisma/client";
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { Redis } from "@upstash/redis";
@@ -31,14 +31,6 @@ export const createContext = async ({
     const userExist = await prisma.user.findUnique({
       where: { email: user?.email },
     });
-    if (userExist && !userExist.auth0id) {
-      await prisma.user.update({
-        where: { email: user.email },
-        data: {
-          auth0id: user.auth0Id,
-        },
-      });
-    }
     if (!userExist) {
       await prisma.user.create({
         data: {
@@ -48,6 +40,23 @@ export const createContext = async ({
           username: `andescalada${Math.random().toString().substring(2, 9)}`,
         },
       });
+    } else {
+      if (!userExist.auth0id) {
+        await prisma.user.update({
+          where: { email: user.email },
+          data: {
+            auth0id: user.auth0Id,
+          },
+        });
+        if (userExist.isDeleted === SoftDelete.DeletedPublic) {
+          await prisma.user.update({
+            where: { email: user.email },
+            data: {
+              isDeleted: SoftDelete.NotDeleted,
+            },
+          });
+        }
+      }
     }
   }
 

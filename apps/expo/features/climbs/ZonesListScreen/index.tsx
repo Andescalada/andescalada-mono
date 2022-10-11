@@ -62,7 +62,6 @@ const ZonesListScreen = ({ navigation }: Props) => {
             flexDirection="row"
             justifyContent="space-between"
             alignItems="flex-end"
-            backgroundColor="primary"
           >
             <Text variant="p1R">{item.name}</Text>
             {INFO_ACCESS_FLAG && (

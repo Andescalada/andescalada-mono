@@ -2,6 +2,7 @@ import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { SoftDelete } from "@prisma/client";
 import { deserialize } from "superjson";
 
 import { t } from "../createRouter";
@@ -72,6 +73,7 @@ export const userRouter = t.router({
       return ctx.prisma.user.findMany({
         where: {
           username: { contains: input },
+          isDeleted: SoftDelete.NotDeleted,
         },
         select: {
           id: true,
@@ -81,4 +83,15 @@ export const userRouter = t.router({
         },
       });
     }),
+  deactivate: protectedProcedure.mutation(({ ctx }) => {
+    return ctx.prisma.user.update({
+      where: { email: ctx.user.email },
+      data: { isDeleted: SoftDelete.DeletedPublic },
+    });
+  }),
+  permanentDelete: protectedProcedure.mutation(({ ctx }) => {
+    return ctx.prisma.user.delete({
+      where: { email: ctx.user.email },
+    });
+  }),
 });
