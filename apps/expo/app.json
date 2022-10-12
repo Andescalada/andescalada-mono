@@ -43,7 +43,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 10
+      "versionCode": 11
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
@@ -64,11 +64,13 @@
       "expo-tracking-transparency",
       "expo-community-flipper",
       "sentry-expo",
-     [ "expo-notifications",
-      {
-        "icon": "./assets/expoConfig/notification-icon.png",
-        "color": "#ffffff"
-      }]
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/expoConfig/notification-icon.png",
+          "color": "#ffffff"
+        }
+      ]
     ]
   },
   "hooks": {
