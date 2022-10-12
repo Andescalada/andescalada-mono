@@ -1,9 +1,20 @@
 import { transformer } from "@andescalada/api/src/transformer";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import NetInfo from "@react-native-community/netinfo";
+import {
+  onlineManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
+
+onlineManager.setEventListener((setOnline) => {
+  return NetInfo.addEventListener((state) => {
+    setOnline(!!state.isConnected);
+  });
+});
 
 const { manifest2 } = Constants;
 export interface AccessToken {
@@ -15,6 +26,12 @@ interface Props {
   firstTimeLogin?: true;
   children: ReactNode;
 }
+
+onlineManager.setEventListener((setOnline) => {
+  return NetInfo.addEventListener((state) => {
+    setOnline(!!state.isConnected);
+  });
+});
 
 const url = __DEV__
   ? `http://${manifest2?.extra?.expoGo?.debuggerHost?.split(":").shift()}:3000`
@@ -43,6 +60,7 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
       transformer,
     }),
   );
+
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

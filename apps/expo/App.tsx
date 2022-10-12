@@ -8,6 +8,7 @@ import AppNavigation from "@navigation/AppNavigation";
 import NavigationMemoized from "@navigation/NavigationMemoized";
 import { Store } from "@store/index";
 import { StatusBar } from "expo-status-bar";
+import { NetworkProvider } from "react-native-offline";
 import { Provider as StoreProvider } from "react-redux";
 import * as Sentry from "sentry-expo";
 
@@ -19,17 +20,19 @@ Sentry.init({
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <StoreProvider store={Store}>
-        <NavigationMemoized theme={darkTheme}>
-          <ActionSheetProvider>
-            <>
-              <StatusBar style="light" />
-              <AppNavigation />
-            </>
-          </ActionSheetProvider>
-        </NavigationMemoized>
-      </StoreProvider>
-    </ThemeProvider>
+    <NetworkProvider>
+      <ThemeProvider>
+        <StoreProvider store={Store}>
+          <NavigationMemoized theme={darkTheme}>
+            <ActionSheetProvider>
+              <>
+                <StatusBar style="light" />
+                <AppNavigation />
+              </>
+            </ActionSheetProvider>
+          </NavigationMemoized>
+        </StoreProvider>
+      </ThemeProvider>
+    </NetworkProvider>
   );
 }
