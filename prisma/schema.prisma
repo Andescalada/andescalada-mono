@@ -71,6 +71,7 @@ model RoleByZone {
   AssignedBy   User       @relation("AssignedBy", fields: [assignedById], references: [id])
   assignedById String
   isDeleted    SoftDelete @default(NotDeleted)
+  version      Int        @default(0)
 
   @@index([id])
   @@index([assignedById])
@@ -130,6 +131,7 @@ model Zone {
   photos     Image[]
   RoleByZone RoleByZone[]
   isDeleted  SoftDelete   @default(NotDeleted)
+  version    Int          @default(0)
 }
 
 model Sector {
@@ -146,6 +148,7 @@ model Sector {
   authorId  String
   coAuthors User[]     @relation("CoAuthorSector")
   isDeleted SoftDelete @default(NotDeleted)
+  version   Int        @default(0)
 
   @@index([zoneId])
   @@index([authorId])
@@ -166,6 +169,7 @@ model Wall {
   authorId  String
   coAuthors User[]     @relation("CoAuthorWall")
   isDeleted SoftDelete @default(NotDeleted)
+  version   Int        @default(0)
 
   @@index([sectorId])
   @@index([authorId])
@@ -189,6 +193,7 @@ model Topo {
   authorId  String
   coAuthors User[]      @relation("CoAuthorTopo")
   isDeleted SoftDelete  @default(NotDeleted)
+  version   Int         @default(0)
 
   @@index([wallId])
   @@index([imageId])
@@ -215,6 +220,7 @@ model Route {
   authorId     String
   coAuthors    User[]      @relation("CoAuthorRoute")
   isDeleted    SoftDelete  @default(NotDeleted)
+  version      Int         @default(0)
 
   @@index([wallId])
   @@index([authorId])
@@ -230,6 +236,7 @@ model RouteGrade {
   route      Route      @relation(fields: [routeId], references: [id])
   routeId    String     @unique
   isDeleted  SoftDelete @default(NotDeleted)
+  version    Int        @default(0)
 
   @@index([routeId])
 }
@@ -247,6 +254,7 @@ model RoutePath {
   authorId  String
   coAuthors User[]     @relation("CoAuthorRoutePath")
   isDeleted SoftDelete @default(NotDeleted)
+  version   Int        @default(0)
 
   @@index([topoId])
   @@index([routeId])
