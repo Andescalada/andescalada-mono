@@ -37,6 +37,7 @@
       "buildNumber": "9"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/expoConfig/android-foregroundImage-adaptiveIcon.png",
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
@@ -62,7 +63,12 @@
       ],
       "expo-tracking-transparency",
       "expo-community-flipper",
-      "sentry-expo"
+      "sentry-expo",
+     [ "expo-notifications",
+      {
+        "icon": "./assets/expoConfig/notification-icon.png",
+        "color": "#ffffff"
+      }]
     ]
   },
   "hooks": {

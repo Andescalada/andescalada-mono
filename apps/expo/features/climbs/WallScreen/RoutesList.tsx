@@ -65,7 +65,6 @@ const RoutesList: FC = () => {
   const onDelete = (id: string) => {
     const r = routes?.filter((route) => route.id !== id);
     if (r) setRoutes([...r]);
-    console.log("here");
     mutate({
       isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
       routeId: id,

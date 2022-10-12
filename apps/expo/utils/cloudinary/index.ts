@@ -3,6 +3,8 @@ import { Cloudinary, CloudinaryImage } from "@cloudinary/url-gen";
 import { Resize } from "@cloudinary/url-gen/actions/resize";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 
+const SAFE_SCREEN_WIDTH = Math.trunc(SCREEN_WIDTH);
+
 // Create your instance
 const cld = new Cloudinary({
   cloud: {
@@ -27,7 +29,7 @@ export const optimizedImage = (publicId?: string, quality = 60) =>
 export const getThumbnail = (publicId?: string) => {
   const image = cld
     .image(publicId)
-    .resize(Resize.scale(SCREEN_WIDTH))
+    .resize(Resize.scale(SAFE_SCREEN_WIDTH))
     .format("auto")
     .quality(100);
 

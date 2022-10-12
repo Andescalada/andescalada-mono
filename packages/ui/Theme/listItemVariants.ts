@@ -2,28 +2,37 @@ import { createBoxVariant } from "./createVariants";
 import { pallete } from "./pallete";
 
 export const lisItemVariantsColors = {
-  listItemBackground: pallete.grayscale[600],
+  listItemBackground: pallete.grayscale.transparent[50][600],
 };
 
 const listItemVariants = createBoxVariant({
   defaults: {
-    backgroundColor: "listItemBackground",
+    borderColor: "listItemBackground",
+    borderWidth: 3,
     alignItems: "stretch",
     padding: "m",
     borderRadius: 5,
   },
-  primary: {
+  fill: {
     backgroundColor: "listItemBackground",
     alignItems: "stretch",
     padding: "m",
   },
-  transparent: {
-    backgroundColor: "grayscale.transparent.50.400",
+  accent: {
+    borderColor: "brand.primaryA",
+    borderWidth: 3,
     alignItems: "stretch",
     padding: "m",
   },
-  accent: {
-    backgroundColor: "brand.primaryA",
+  danger: {
+    borderColor: "semantic.transparent.50.error",
+    borderWidth: 3,
+    alignItems: "stretch",
+    padding: "m",
+  },
+  warning: {
+    borderColor: "semantic.transparent.50.warning",
+    borderWidth: 3,
     alignItems: "stretch",
     padding: "m",
   },

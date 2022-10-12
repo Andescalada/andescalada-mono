@@ -57,6 +57,14 @@ export const pallete = {
     warning: "#FAD202",
     error: "#EA1601",
     info: "#2C73DB",
+    transparent: {
+      "50": {
+        success: "#64BC2680",
+        warning: "#FAD20280",
+        error: "#EA160180",
+        info: "#2C73DB80",
+      },
+    },
   },
   contrast: {
     purple: "#8931EF",

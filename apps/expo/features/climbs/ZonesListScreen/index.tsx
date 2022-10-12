@@ -12,6 +12,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useRefresh from "@hooks/useRefresh";
+import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;
@@ -31,9 +32,11 @@ const InfoAccessColor = (infoAccess: InfoAccess) => {
   }
 };
 
-const ZonesScreen = ({ navigation }: Props) => {
+const ZonesListScreen = ({ navigation }: Props) => {
   const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
   const refresh = useRefresh(refetch, isFetching);
+
+  useSentryWithPermission();
 
   if (isLoading)
     return (
@@ -59,7 +62,6 @@ const ZonesScreen = ({ navigation }: Props) => {
             flexDirection="row"
             justifyContent="space-between"
             alignItems="flex-end"
-            backgroundColor="primary"
           >
             <Text variant="p1R">{item.name}</Text>
             {INFO_ACCESS_FLAG && (
@@ -77,4 +79,4 @@ const ZonesScreen = ({ navigation }: Props) => {
   );
 };
 
-export default ZonesScreen;
+export default ZonesListScreen;
