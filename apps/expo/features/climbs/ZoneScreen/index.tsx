@@ -5,20 +5,23 @@ import {
   Box,
   Button,
   ListItem,
+  Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { useAppTheme } from "@hooks/useAppTheme";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 
@@ -66,6 +69,10 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
+  const theme = useAppTheme();
+
+  const [isDownloaded, setIsDownloaded] = useState(false);
+
   return (
     <Screen padding="m">
       <FormProvider {...methods}>
@@ -75,6 +82,24 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
       </FormProvider>
+      <Box alignItems="flex-end">
+        <Pressable
+          flexDirection="row"
+          alignItems="center"
+          onPress={() => setIsDownloaded((p) => !p)}
+        >
+          <Text marginRight="s">
+            {isDownloaded ? "Descargado" : "Descargar"}
+          </Text>
+          <Ionicons
+            name={
+              isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
+            }
+            size={30}
+            color={theme.colors["brand.primaryA"]}
+          />
+        </Pressable>
+      </Box>
       <Box flex={1}>
         <FlatList
           data={data?.sectors}

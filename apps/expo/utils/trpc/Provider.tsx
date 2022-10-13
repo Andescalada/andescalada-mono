@@ -8,15 +8,15 @@ import {
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
+
+const { manifest2 } = Constants;
 
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
     setOnline(!!state.isConnected);
   });
 });
-
-const { manifest2 } = Constants;
 export interface AccessToken {
   exp: number;
 }
@@ -26,12 +26,6 @@ interface Props {
   firstTimeLogin?: true;
   children: ReactNode;
 }
-
-onlineManager.setEventListener((setOnline) => {
-  return NetInfo.addEventListener((state) => {
-    setOnline(!!state.isConnected);
-  });
-});
 
 const url = __DEV__
   ? `http://${manifest2?.extra?.expoGo?.debuggerHost?.split(":").shift()}:3000`
