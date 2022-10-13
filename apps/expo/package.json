@@ -7,12 +7,15 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "dev": "yarn env:development && yarn start",
+    "dev": "yarn env:development && APP_VARIANT=development yarn start",
     "prod": "yarn env:production && expo start --no-dev",
     "env:production": "cp .env.production .env",
     "env:development": "cp .env.development .env",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json",
-    "build": "EAS_BUILD_AUTOCOMMIT=1 CI=1  eas build --profile production --non-interactive --platform all"
+    "build": "EAS_BUILD_AUTOCOMMIT=1 CI=1  eas build --profile production --non-interactive --platform all",
+    "build:preview": "APP_VARIANT=preview CI=1  eas build --profile preview --non-interactive --platform all",
+    "build:dev":"APP_VARIANT=development eas build --profile development --platform all",
+    "build:dev-simulator":"APP_VARIANT=development eas build --profile development-simulator --platform ios"
   },
   "dependencies": {
     "@andescalada/api": "*",
