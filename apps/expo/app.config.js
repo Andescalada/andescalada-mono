@@ -17,7 +17,6 @@ const variantConfig = (config) => {
       android: {
         ...config.android,
         package: "com.andescalada.dev",
-        googleServicesFile: "./google-services-dev.json",
         adaptiveIcon: {
           foregroundImage:
             "./assets/expoConfig/android-foregroundImage-adaptiveIcon_dev.png",
@@ -49,7 +48,6 @@ const variantConfig = (config) => {
       android: {
         ...config.android,
         package: "com.andescalada.preview",
-        googleServicesFile: "./google-services-preview.json",
         adaptiveIcon: {
           foregroundImage:
             "./assets/expoConfig/android-foregroundImage-adaptiveIcon_preview.png",
