@@ -67,19 +67,5 @@ const BackButton: FC<Props> = ({ iconProps, ...props }) => {
     </Pressable>
   );
 };
-// const BackButton: FC<Props> = ({ iconProps, ...props }) => {
-//   return (
-//     <Pressable
-//       bg={"grayscale.transparent.50.SIZE0"}
-//       borderRadius={SIZE}
-//       onPress={props.onPress}
-//       padding="xs"
-//       marginLeft="s"
-//       {...props}
-//     >
-//       <Ionicons name="arrow-back" size={SIZE} color="black" {...iconProps} />
-//     </Pressable>
-//   );
-// };
 
 export default BackButton;
