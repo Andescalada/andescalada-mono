@@ -83,6 +83,4 @@ dist/
 
 # @end expo-cli
 google_service_account.json
-google-services.json
-google-services-dev.json
-google-services-preview.json
+

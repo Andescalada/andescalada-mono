@@ -13,7 +13,7 @@
     "env:development": "cp .env.development .env",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json",
     "build": "EAS_BUILD_AUTOCOMMIT=1 CI=1  eas build --profile production --non-interactive --platform all",
-    "build:preview": "APP_VARIANT=preview CI=1  eas build --profile preview --non-interactive --platform all",
+    "build:preview": "APP_VARIANT=preview CI=1 eas build --profile preview",
     "build:dev":"APP_VARIANT=development eas build --profile development --platform all",
     "build:dev-simulator":"APP_VARIANT=development eas build --profile development-simulator --platform ios"
   },
