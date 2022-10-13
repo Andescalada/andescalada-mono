@@ -88,16 +88,25 @@ export const zonesRouter = t.router({
 
       return roleByZone;
     }),
-  downlandAll: t.procedure.input(zone.id).query(({ ctx, input }) =>
+  downloadList: protectedZoneProcedure.query(({ ctx, input }) =>
     ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
-      include: {
+      select: {
+        ...idAndVersion,
         sectors: {
-          include: {
+          select: {
+            ...idAndVersion,
             walls: {
-              include: {
-                routes: { include: { RoutePath: true, RouteGrade: true } },
-                topos: true,
+              select: {
+                ...idAndVersion,
+                routes: {
+                  select: {
+                    ...idAndVersion,
+                    RoutePath: { select: idAndVersion },
+                    RouteGrade: { select: idAndVersion },
+                  },
+                },
+                topos: { select: idAndVersion },
               },
             },
           },
@@ -106,3 +115,5 @@ export const zonesRouter = t.router({
     }),
   ),
 });
+
+const idAndVersion = { id: true, version: true };

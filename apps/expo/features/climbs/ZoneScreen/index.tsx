@@ -30,8 +30,9 @@ const { schema } = zone;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
+  const { zoneId } = route.params;
   const { data, refetch, isFetching, isLoading, isError } =
-    trpc.zones.allSectors.useQuery({ zoneId: route.params.zoneId });
+    trpc.zones.allSectors.useQuery({ zoneId });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
@@ -43,7 +44,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
       if (methods.formState.isDirty)
         editZone.mutate({
           name: input.name,
-          zoneId: route.params.zoneId,
+          zoneId,
         });
       headerMethods.setEditing(false);
     },
@@ -61,7 +62,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     "Agregar Sector": {
       action: () =>
         navigation.navigate(ClimbsNavigationRoutes.AddSector, {
-          zoneId: route.params.zoneId,
+          zoneId,
         }),
     },
     "Cambiar Nombre": () => {
@@ -72,6 +73,16 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const theme = useAppTheme();
 
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const downloadList = trpc.zones.downloadList.useQuery(
+    { zoneId },
+    { enabled: false },
+  );
+  const onDownloadPress = () => {
+    downloadList.refetch();
+    setIsDownloaded((p) => !p);
+  };
+
+  console.log(downloadList.data);
 
   return (
     <Screen padding="m">
@@ -86,7 +97,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         <Pressable
           flexDirection="row"
           alignItems="center"
-          onPress={() => setIsDownloaded((p) => !p)}
+          onPress={onDownloadPress}
         >
           <Text marginRight="s">
             {isDownloaded ? "Descargado" : "Descargar"}
