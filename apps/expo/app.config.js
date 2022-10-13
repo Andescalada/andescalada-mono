@@ -16,7 +16,8 @@ const variantConfig = (config) => {
       },
       android: {
         ...config.android,
-        package: "com.andescalada-dev.app",
+        package: "com.andescalada.dev",
+        googleServicesFile: "./google-services-dev.json",
         adaptiveIcon: {
           foregroundImage:
             "./assets/expoConfig/android-foregroundImage-adaptiveIcon_dev.png",
@@ -35,7 +36,7 @@ const variantConfig = (config) => {
   if (process.env.APP_VARIANT === "preview") {
     return {
       ...config,
-      name: "Andescalada Preview",
+      name: "Andescalada β",
       icon: "./assets/expoConfig/icon_ae_preview.png",
       slug: config.slug,
       owner: config.owner,
@@ -47,7 +48,8 @@ const variantConfig = (config) => {
       },
       android: {
         ...config.android,
-        package: "com.andescalada-preview.app",
+        package: "com.andescalada.preview",
+        googleServicesFile: "./google-services-preview.json",
         adaptiveIcon: {
           foregroundImage:
             "./assets/expoConfig/android-foregroundImage-adaptiveIcon_preview.png",
