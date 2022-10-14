@@ -42,7 +42,7 @@
     "big-integer": "^1.6.51",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.2",
-    "expo": "~46.0.9",
+    "expo": "^46.0.16",
     "expo-application": "~4.2.2",
     "expo-auth-session": "~3.7.1",
     "expo-community-flipper": "^46.0.2",
@@ -81,9 +81,10 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0-0",
+    "@babel/core": "^7.18.6",
     "@types/jwt-decode": "^3.1.0",
-    "@types/react-native": "~0.69.5",
+    "@types/react-native": "~0.69.1",
+    "@types/react": "~18.0.17",
     "expo-cli": "^6.0.5",
     "prisma": "^3.8.1",
     "typescript": "^4.6.3"
@@ -91,6 +92,9 @@
   "peerDependencies": {
     "react": "*",
     "zod": "*"
+  },
+  "resolutions": {
+    "@types/react": "17.0.43"
   },
   "private": true
 }
