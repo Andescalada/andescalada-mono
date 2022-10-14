@@ -66,7 +66,6 @@
     "react-hook-form": "^7.35.0",
     "react-native": "0.69.6",
     "react-native-dotenv": "^3.3.1",
-    "react-native-flipper": "^0.164.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-mmkv": "^2.4.3",
     "react-native-offline": "^6.0.0",
