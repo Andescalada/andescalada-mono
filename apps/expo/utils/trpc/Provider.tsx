@@ -8,7 +8,7 @@ import {
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 
 const { manifest2 } = Constants;
 
