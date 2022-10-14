@@ -8,9 +8,17 @@ import AppNavigation from "@navigation/AppNavigation";
 import NavigationMemoized from "@navigation/NavigationMemoized";
 import { Store } from "@store/index";
 import { StatusBar } from "expo-status-bar";
+import { connectToDevTools } from "react-devtools-core";
 import { NetworkProvider } from "react-native-offline";
 import { Provider as StoreProvider } from "react-redux";
 import * as Sentry from "sentry-expo";
+
+if (__DEV__) {
+  connectToDevTools({
+    host: "localhost",
+    port: 8097,
+  });
+}
 
 Sentry.init({
   dsn: SENTRY_DNS,
