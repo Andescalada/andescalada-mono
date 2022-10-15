@@ -2,7 +2,9 @@ import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 
 import { t } from "../createRouter";
@@ -94,4 +96,62 @@ export const userRouter = t.router({
       where: { email: ctx.user.email },
     });
   }),
+  addToDownloadedZones: protectedZoneProcedure.mutation(
+    async ({ ctx, input }) => {
+      const zoneToAdd = await ctx.prisma.zone.findUnique({
+        where: { id: input.zoneId },
+        select: {
+          isDeleted: true,
+          infoAccess: true,
+        },
+      });
+      if (!zoneToAdd || zoneToAdd.isDeleted === SoftDelete.DeletedPublic) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      if (!ctx.permissions.has("Read") && zoneToAdd.infoAccess !== "Public") {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      return ctx.prisma.user.update({
+        where: { email: ctx.user.email },
+        data: { DownloadedZones: { connect: { id: input.zoneId } } },
+      });
+    },
+  ),
+  addToFavoriteZones: protectedZoneProcedure.mutation(
+    async ({ ctx, input }) => {
+      const zoneToAdd = await ctx.prisma.zone.findUnique({
+        where: { id: input.zoneId },
+        select: {
+          isDeleted: true,
+          infoAccess: true,
+        },
+      });
+      if (!zoneToAdd || zoneToAdd.isDeleted === SoftDelete.DeletedPublic) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      if (!ctx.permissions.has("Read") && zoneToAdd.infoAccess !== "Public") {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      return ctx.prisma.user.update({
+        where: { email: ctx.user.email },
+        data: { FavoriteZones: { connect: { id: input.zoneId } } },
+      });
+    },
+  ),
+  removeToDownloadedZones: protectedZoneProcedure.mutation(
+    async ({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: { email: ctx.user.email },
+        data: { DownloadedZones: { disconnect: { id: input.zoneId } } },
+      });
+    },
+  ),
+  removeToFavoriteZones: protectedZoneProcedure.mutation(
+    async ({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: { email: ctx.user.email },
+        data: { FavoriteZones: { disconnect: { id: input.zoneId } } },
+      });
+    },
+  ),
 });

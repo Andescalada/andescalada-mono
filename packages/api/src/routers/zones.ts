@@ -43,6 +43,7 @@ export const zonesRouter = t.router({
         isDeleted: true,
         sectors: { where: { isDeleted: SoftDelete.NotDeleted } },
         infoAccess: true,
+        DownloadedBy: { where: { email: ctx.user.email } },
       },
     });
     if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
@@ -53,10 +54,19 @@ export const zonesRouter = t.router({
     }
 
     if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
-      return { ...res, sectors: undefined, hasAccess: false };
+      return {
+        ...res,
+        sectors: undefined,
+        hasAccess: false,
+        isDownloaded: false,
+      };
     }
 
-    return { ...res, hasAccess: true };
+    return {
+      ...res,
+      hasAccess: true,
+      isDownloaded: res.DownloadedBy.length > 0,
+    };
   }),
   create: protectedProcedure
     .input(zone.schema.merge(user.schema.pick({ username: true })))
@@ -88,6 +98,7 @@ export const zonesRouter = t.router({
 
       return roleByZone;
     }),
+
   downloadList: protectedZoneProcedure.query(({ ctx, input }) =>
     ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },

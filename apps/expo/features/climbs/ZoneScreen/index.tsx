@@ -17,11 +17,12 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 
@@ -31,6 +32,7 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId } = route.params;
+
   const { data, refetch, isFetching, isLoading, isError } =
     trpc.zones.allSectors.useQuery({ zoneId });
 
@@ -72,17 +74,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const theme = useAppTheme();
 
-  const [isDownloaded, setIsDownloaded] = useState(false);
-  const downloadList = trpc.zones.downloadList.useQuery(
-    { zoneId },
-    { enabled: false },
-  );
-  const onDownloadPress = () => {
-    downloadList.refetch();
-    setIsDownloaded((p) => !p);
-  };
-
-  console.log(downloadList.data);
+  const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
 
   return (
     <Screen padding="m">
