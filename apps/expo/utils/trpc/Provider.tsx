@@ -9,8 +9,7 @@ import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
-
-const { manifest2 } = Constants;
+import { addPlugin } from "react-query-native-devtools";
 
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
@@ -28,16 +27,17 @@ interface Props {
 }
 
 const url = __DEV__
-  ? `http://${manifest2?.extra?.expoGo?.debuggerHost?.split(":").shift()}:3000`
+  ? `http://${Constants.manifest?.debuggerHost?.split(":").shift()}:3000`
   : "https://andescalada-mono.vercel.app";
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: { queries: { retry: false, staleTime: 1000 * 60 * 2 } },
-      }),
-  );
+  const [queryClient] = useState(() => {
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false, staleTime: 1000 * 60 * 2 } },
+    });
+    if (__DEV__) addPlugin({ queryClient: client });
+    return client;
+  });
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
