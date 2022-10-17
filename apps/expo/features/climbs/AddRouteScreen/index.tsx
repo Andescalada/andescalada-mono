@@ -43,8 +43,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const onSuccess = useCallback(() => {
     navigation.goBack();
-    utils.walls.byId.invalidate(route.params.wallId);
-  }, [navigation, route.params.wallId, utils.walls.byId]);
+    utils.walls.byId.invalidate({ wallId });
+  }, [navigation, utils.walls.byId, wallId]);
 
   const { mutate, isLoading } = trpc.routes.add.useMutation({
     onSuccess,

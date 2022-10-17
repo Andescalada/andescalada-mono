@@ -15,9 +15,9 @@ export const wallsRouter = t.router({
       orderBy: { position: "asc" },
     }),
   ),
-  byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
+  byId: t.procedure.input(wall.id).query(async ({ ctx, input }) => {
     const wall = await ctx.prisma.wall.findUnique({
-      where: { id: input },
+      where: { id: input.wallId },
       include: {
         routes: {
           orderBy: { position: "asc" },

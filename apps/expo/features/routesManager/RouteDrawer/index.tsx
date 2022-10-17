@@ -38,7 +38,7 @@ interface SelectedRoute {
 const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   const theme = useTheme<Theme>();
   const { wallId, route: routeParams, topoId } = navRoute.params;
-  const { data } = trpc.walls.byId.useQuery(wallId);
+  const { data } = trpc.walls.byId.useQuery({ wallId });
 
   const [route, setRoute] = useState<SelectedRoute>({
     id: routeParams?.id,

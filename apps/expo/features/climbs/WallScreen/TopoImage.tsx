@@ -21,9 +21,9 @@ const TopoImage: FC = () => {
   const route = useRoute<NavigationRoute>();
   const { wallId } = route.params;
   const utils = trpc.useContext();
-  const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery(
-    route.params.wallId,
-  );
+  const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
+    wallId,
+  });
 
   const mainTopo = data?.topos[0];
 
@@ -47,7 +47,7 @@ const TopoImage: FC = () => {
       },
       {
         onSuccess: () => {
-          utils.walls.byId.invalidate(wallId);
+          utils.walls.byId.invalidate({ wallId });
           setIsLoadingUpload(false);
         },
       },

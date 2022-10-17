@@ -26,7 +26,7 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 const WallScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId, zoneId, sectorId } = route.params;
 
-  const { data } = trpc.walls.byId.useQuery(route.params.wallId);
+  const { data } = trpc.walls.byId.useQuery({ wallId });
 
   const editWall = trpc.walls.edit.useMutation();
   const methods = useZodForm({ schema });

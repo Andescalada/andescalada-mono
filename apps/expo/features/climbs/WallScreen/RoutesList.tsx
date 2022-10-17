@@ -33,17 +33,20 @@ const RoutesList: FC = () => {
     refetch,
     isFetching,
     isLoading: isLoadingWall,
-  } = trpc.walls.byId.useQuery(route.params.wallId, {
-    onSuccess(data) {
-      if (data) {
-        setRoutes(data.routes);
-      }
+  } = trpc.walls.byId.useQuery(
+    { wallId },
+    {
+      onSuccess(data) {
+        if (data) {
+          setRoutes(data.routes);
+        }
+      },
     },
-  });
+  );
 
   const { mutate } = trpc.routes.delete.useMutation({
     onSuccess() {
-      utils.walls.byId.invalidate(wallId);
+      utils.walls.byId.invalidate({ wallId });
     },
     onError() {
       Alert.alert("Error", "No pudimos borrar la ruta");
