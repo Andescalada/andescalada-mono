@@ -8,4 +8,6 @@ const schema = z.object({
   image: image.schema,
 });
 
-export default { schema };
+const id = z.object({ topoId: z.string() });
+
+export default { schema, id };

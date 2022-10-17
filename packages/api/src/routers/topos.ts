@@ -7,9 +7,9 @@ import { z } from "zod";
 import { t } from "../createRouter";
 
 export const toposRouter = t.router({
-  byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
+  byId: t.procedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({
-      where: { id: input },
+      where: { id: input.topoId },
       include: {
         RoutePath: {
           include: { Route: { select: { id: true, position: true } } },

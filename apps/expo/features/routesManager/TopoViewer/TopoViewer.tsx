@@ -16,7 +16,7 @@ type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.TopoViewer>;
 
 const TopoViewer: FC<Props> = ({ route: navRoute, navigation }) => {
   const { topoId, routeId } = navRoute.params;
-  const { data } = trpc.topos.byId.useQuery(topoId);
+  const { data } = trpc.topos.byId.useQuery({ topoId });
 
   const theme = useAppTheme();
 

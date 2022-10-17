@@ -44,18 +44,21 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
     id: routeParams?.id,
     label: routeParams?.position.toString(),
   });
-  const { data: topos } = trpc.topos.byId.useQuery(topoId, {
-    select(topo) {
-      return {
-        otherRoutes: topo?.RoutePath.filter(
-          (r) => r.Route.id !== routeParams.id,
-        ),
-        selectedRoute: topo?.RoutePath?.find(
-          (r) => r.Route.id === routeParams.id,
-        ),
-      };
+  const { data: topos } = trpc.topos.byId.useQuery(
+    { topoId },
+    {
+      select(topo) {
+        return {
+          otherRoutes: topo?.RoutePath.filter(
+            (r) => r.Route.id !== routeParams.id,
+          ),
+          selectedRoute: topo?.RoutePath?.find(
+            (r) => r.Route.id === routeParams.id,
+          ),
+        };
+      },
     },
-  });
+  );
 
   useEffect(() => {
     if (topos?.selectedRoute) {
@@ -96,7 +99,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
         },
         {
           onSuccess: () => {
-            utils.topos.byId.invalidate(topoId);
+            utils.topos.byId.invalidate({ topoId });
             setTimeout(() => navigation.popToTop(), 500);
           },
         },
