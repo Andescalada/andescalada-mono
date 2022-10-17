@@ -1,9 +1,11 @@
 import { Box, Pressable, Screen } from "@andescalada/ui";
 import pathTitle from "@assets/andescaladaPathTitle";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -100,6 +102,8 @@ const UserHeader = () => {
     { destructiveButtonIndex: 1 },
   );
 
+  const { isOfflineMode, setIsOfflineMode } = useOfflineMode();
+
   return (
     <Screen
       flex={0}
@@ -140,6 +144,13 @@ const UserHeader = () => {
         height="100%"
         style={styles.header}
       >
+        <Ionicons
+          name={isOfflineMode ? "md-airplane-sharp" : "md-airplane-outline"}
+          color={theme.colors["grayscale.600"]}
+          size={30}
+          style={{ paddingRight: 8 }}
+          onPress={setIsOfflineMode}
+        />
         <Pressable
           justifyContent="center"
           alignItems={"center"}
