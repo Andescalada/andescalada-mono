@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Box, Button, Screen } from "@andescalada/ui";
+import { A, Button, Screen } from "@andescalada/ui";
 import pathLogo from "@assets/andescaladaPathLogo";
 import pathTitle from "@assets/andescaladaPathLTitleUppercase";
 import { useAppDispatch } from "@hooks/redux";
@@ -23,7 +23,7 @@ import {
 import { loginAuth0 } from "@store/auth";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "@utils/Dimensions";
 import React from "react";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { FadeIn } from "react-native-reanimated";
 
 const SCALE = 1;
 const DURATION = 2000;
@@ -37,8 +37,6 @@ const ORIGINAL_TITLE_WIDTH = pathTitle.width;
 const ORIGINAL_TITLE_HEIGHT = pathTitle.height;
 const TITLE_WIDTH = 261 * SCALE;
 const TITLE_HEIGHT = 261 * pathTitle.aspectRatio * SCALE;
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch();
@@ -117,7 +115,7 @@ export default function LoginScreen() {
           </Path>
         </FitBox>
       </Canvas>
-      <AnimatedBox
+      <A.Box
         entering={FadeIn.duration(500).delay(DURATION + 500)}
         justifyContent="flex-end"
         alignItems="center"
@@ -130,7 +128,7 @@ export default function LoginScreen() {
           variant="transparent"
           paddingHorizontal="l"
         />
-      </AnimatedBox>
+      </A.Box>
     </Screen>
   );
 }

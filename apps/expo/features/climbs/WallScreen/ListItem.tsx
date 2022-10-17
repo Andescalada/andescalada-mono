@@ -1,21 +1,18 @@
-import { Box, ListItem as UIListItm, Pressable, Text } from "@andescalada/ui";
+import { A, Text } from "@andescalada/ui";
 import {
   ComponentProps,
-  FC,
   forwardRef,
   ForwardRefRenderFunction,
   ReactNode,
   useImperativeHandle,
   useMemo,
-  useRef,
 } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
+import {
   FadeInDown,
   FadeOutLeft,
   Layout,
   SlideOutLeft,
-  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -25,11 +22,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { between } from "react-native-redash";
 
-const AnimatedListItem = Animated.createAnimatedComponent(UIListItm);
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedBox = Animated.createAnimatedComponent(Box);
-
-interface Props extends Omit<ComponentProps<typeof AnimatedListItem>, "key"> {
+interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
   children: ReactNode;
   onDelete?: () => void;
   onEdit?: () => void;
@@ -200,14 +193,14 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
 
   return (
     <GestureDetector gesture={panGestures}>
-      <AnimatedBox
+      <A.Box
         entering={FadeInDown.delay(100 * index)}
         exiting={SlideOutLeft}
         layout={Layout.delay(500).springify()}
         marginVertical="s"
         minHeight={MIN_HEIGHT}
       >
-        <AnimatedPressable
+        <A.Pressable
           style={[rightStyle]}
           backgroundColor="semantic.error"
           borderRadius={5}
@@ -225,8 +218,8 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           paddingRight="s"
         >
           <Text variant="p3B">Borrar</Text>
-        </AnimatedPressable>
-        <AnimatedPressable
+        </A.Pressable>
+        <A.Pressable
           style={[leftStyle]}
           backgroundColor="semantic.info"
           borderRadius={5}
@@ -243,9 +236,9 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           paddingLeft="s"
         >
           <Text variant="p3B">Editar</Text>
-        </AnimatedPressable>
+        </A.Pressable>
 
-        <AnimatedListItem
+        <A.ListItem
           layout={FadeOutLeft}
           style={[props.style, style]}
           zIndex={1000}
@@ -255,8 +248,8 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           {...props}
         >
           {children}
-        </AnimatedListItem>
-      </AnimatedBox>
+        </A.ListItem>
+      </A.Box>
     </GestureDetector>
   );
 };
