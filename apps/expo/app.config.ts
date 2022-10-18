@@ -1,12 +1,14 @@
-export default ({ config }) => variantConfig(config);
+import { ConfigContext, ExpoConfig } from "@expo/config";
 
-const variantConfig = (config) => {
+export default ({ config }: ConfigContext): ExpoConfig => variantConfig(config);
+
+const variantConfig = (config: ConfigContext["config"]): ExpoConfig => {
   if (process.env.APP_VARIANT === "development") {
     return {
       ...config,
       name: "Andescalada Dev",
       icon: "./assets/expoConfig/icon_ae_dev.png",
-      slug: config.slug,
+      slug: "andescalada-app",
       owner: config.owner,
       currentFullName: `@${config.owner}/${config.slug}`,
       originalFullName: `@${config.owner}/${config.slug}`,
@@ -37,7 +39,7 @@ const variantConfig = (config) => {
       ...config,
       name: "Andescalada β",
       icon: "./assets/expoConfig/icon_ae_preview.png",
-      slug: config.slug,
+      slug: "andescalada-app",
       owner: config.owner,
       currentFullName: `@${config.owner}/${config.slug}`,
       originalFullName: `@${config.owner}/${config.slug}`,
@@ -61,11 +63,15 @@ const variantConfig = (config) => {
       updates: {
         url: "https://u.expo.dev/a034137d-75c2-4941-a3b0-003e7b6ff487",
       },
+      extra: {
+        API_URL: "https://preview-andescalada-mono.vercel.app",
+      },
     };
   }
   return {
     ...config,
-    slug: config.slug,
+    name: "Andescalada",
+    slug: "andescalada-app",
     owner: config.owner,
     currentFullName: `@${config.owner}/${config.slug}`,
     originalFullName: `@${config.owner}/${config.slug}`,
@@ -75,5 +81,6 @@ const variantConfig = (config) => {
     updates: {
       url: "https://u.expo.dev/a034137d-75c2-4941-a3b0-003e7b6ff487",
     },
+    extra: { API_URL: "https://andescalada-mono.vercel.app" },
   };
 };
