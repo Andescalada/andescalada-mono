@@ -64,6 +64,7 @@ const variantConfig = (config: ConfigContext["config"]): ExpoConfig => {
         url: "https://u.expo.dev/a034137d-75c2-4941-a3b0-003e7b6ff487",
       },
       extra: {
+        ...config.extra,
         API_URL: "https://preview-andescalada-mono.vercel.app",
       },
     };
@@ -81,6 +82,6 @@ const variantConfig = (config: ConfigContext["config"]): ExpoConfig => {
     updates: {
       url: "https://u.expo.dev/a034137d-75c2-4941-a3b0-003e7b6ff487",
     },
-    extra: { API_URL: "https://andescalada-mono.vercel.app" },
+    extra: { ...config.extra, API_URL: "https://andescalada-mono.vercel.app" },
   };
 };

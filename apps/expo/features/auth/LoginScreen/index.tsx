@@ -127,6 +127,7 @@ export default function LoginScreen() {
           onPress={onLogin}
           variant="transparent"
           paddingHorizontal="l"
+          titleProps={{ color: "grayscale.white" }}
         />
       </A.Box>
     </Screen>
