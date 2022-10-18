@@ -1,7 +1,5 @@
 import { trpc } from "@andescalada/utils/trpc";
 import useOfflineMode from "@hooks/useOfflineMode";
-import useOwnInfo from "@hooks/useOwnInfo";
-import type { Zone } from "@prisma/client";
 import { onlineManager, useQueryClient } from "@tanstack/react-query";
 import {
   persistQueryClientRestore,
@@ -19,49 +17,62 @@ type Key = {
   sectorId: "sectorId";
   wallId: "wallId";
   routeId: "routeId";
-  toposId: "toposId";
+  topoId: "topoId";
   routePathId: "routePathId";
 };
+
+type QueryKey = [string[], Partial<{ [key in keyof Key]: string }>];
 
 const useOffline = () => {
   const queryClient = useQueryClient();
 
-  const { data: ownInfo } = useOwnInfo();
-
   const downloadList = trpc.user.getDownloadedAssets.useQuery(undefined, {
     enabled: featureFlags.offline,
   });
+  const utils = trpc.useContext();
 
   const idsToCached = useMemo(() => {
-    const ids = new Set<Partial<{ [key in keyof Key]: string }>>([]);
+    const ids = new Set<QueryKey>([]);
+
     downloadList?.data?.DownloadedZones.flatMap((z) => {
-      ids.add({ zoneId: z.id });
+      ids.add([["zones", "allSectors"], { zoneId: z.id }]);
+      utils.zones.allSectors.prefetch({ zoneId: z.id });
       return z.sectors;
     })
       .flatMap((s) => {
-        ids.add({ sectorId: s.id });
+        ids.add([["sectors", "allWalls"], { sectorId: s.id }]);
+        utils.sectors.allWalls.prefetch({ sectorId: s.id });
         return s.walls;
       })
       .flatMap((w) => {
-        ids.add({ wallId: w.id });
+        ids.add([["walls", "byId"], { wallId: w.id }]);
+        utils.walls.byId.prefetch({ wallId: w.id });
         const { routes, topos } = w;
         return { routes, topos };
       })
       .flatMap((rt) => {
         const routePaths = rt.routes.flatMap((r) => {
-          ids.add({ routeId: r.id });
+          ids.add([["route"], { routeId: r.id }]);
           return r.RoutePath;
         });
         rt.topos.forEach((t) => {
-          ids.add({ toposId: t.id });
+          ids.add([["topos", "byId"], { topoId: t.id }]);
+          utils.topos.byId.prefetch({ topoId: t.id });
         });
         return routePaths;
       })
       .forEach((rp) => {
-        ids.add({ routePathId: rp.id });
+        ids.add([["routePath"], { routePathId: rp.id }]);
       });
-    return ids;
-  }, [downloadList?.data?.DownloadedZones]);
+
+    return Array.from(ids).map((k) => hashQueryKey(k));
+  }, [
+    downloadList?.data?.DownloadedZones,
+    utils.sectors.allWalls,
+    utils.topos.byId,
+    utils.walls.byId,
+    utils.zones.allSectors,
+  ]);
 
   if (featureFlags.offline) {
     const unsubscribe = persistQueryClientSubscribe({
@@ -69,7 +80,7 @@ const useOffline = () => {
       persister,
       dehydrateOptions: {
         shouldDehydrateQuery: ({ queryKey, queryHash, state }) => {
-          return true;
+          return idsToCached.includes(queryHash);
         },
       },
     });
@@ -85,3 +96,47 @@ const useOffline = () => {
 };
 
 export default useOffline;
+
+function hasObjectPrototype(o: any): boolean {
+  return Object.prototype.toString.call(o) === "[object Object]";
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function isPlainObject(o: any): o is Object {
+  if (!hasObjectPrototype(o)) {
+    return false;
+  }
+
+  // If has modified constructor
+  const ctor = o.constructor;
+  if (typeof ctor === "undefined") {
+    return true;
+  }
+
+  // If has modified prototype
+  const prot = ctor.prototype;
+  if (!hasObjectPrototype(prot)) {
+    return false;
+  }
+
+  // If constructor does not have an Object-specific method
+  if (!prot.hasOwnProperty("isPrototypeOf")) {
+    return false;
+  }
+
+  // Most likely a plain Object
+  return true;
+}
+
+export function hashQueryKey(queryKey: QueryKey): string {
+  return JSON.stringify(queryKey, (_, val) =>
+    isPlainObject(val)
+      ? Object.keys(val)
+          .sort()
+          .reduce((result, key) => {
+            result[key] = val[key];
+            return result;
+          }, {} as any)
+      : val,
+  );
+}

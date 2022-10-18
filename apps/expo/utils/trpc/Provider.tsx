@@ -31,7 +31,7 @@ interface Props {
 
 const url = __DEV__
   ? `http://${Constants.manifest?.debuggerHost?.split(":").shift()}:3000`
-  : "https://andescalada-mono.vercel.app";
+  : process.env.API_URL;
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [queryClient] = useState(() => {
