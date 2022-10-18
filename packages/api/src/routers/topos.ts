@@ -3,7 +3,6 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 import { t } from "../createRouter";
 
