@@ -9,8 +9,8 @@ import NavigationMemoized from "@navigation/NavigationMemoized";
 import { Store } from "@store/index";
 import storage from "@utils/mmkv/storage";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
 import { connectToDevTools } from "react-devtools-core";
+import { LogBox } from "react-native";
 import { initializeMMKVFlipper } from "react-native-mmkv-flipper-plugin";
 import { NetworkProvider } from "react-native-offline";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -30,6 +30,11 @@ Sentry.init({
   enableNative: !__DEV__,
   debug: __DEV__,
 });
+
+LogBox.ignoreLogs([
+  "Sending `onAnimatedValueUpdate` with no listeners registered.",
+  "The native module for Flipper seems unavailable. Please verify that `react-native-flipper` is installed as yarn dependency to your project and, for iOS, that `pod install` is run in the `ios` directory.",
+]);
 
 export default function App() {
   return (
