@@ -20,7 +20,10 @@ const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 const Navigator = () => {
   return (
     <Box flex={1}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={ClimbsNavigationRoutes.ZonesList}
+      >
         <Stack.Screen
           name={ClimbsNavigationRoutes.ZonesList}
           component={ZonesListScreen}
