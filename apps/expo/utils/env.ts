@@ -16,6 +16,4 @@ const Env = {
   AUTH0_AUDIENCE: Constants?.expoConfig?.extra?.AUTH0_AUDIENCE as string,
 };
 
-console.log(Env);
-
 export default Env;

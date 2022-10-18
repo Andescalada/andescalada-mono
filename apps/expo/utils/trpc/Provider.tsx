@@ -27,7 +27,7 @@ interface Props {
   firstTimeLogin?: true;
   children: ReactNode;
 }
-console.log(Constants);
+
 const url = __DEV__
   ? `http://${Constants.manifest2?.extra?.expoGo?.debuggerHost
       ?.split(":")
