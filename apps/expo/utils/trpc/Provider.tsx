@@ -1,5 +1,7 @@
 import { transformer } from "@andescalada/api/src/transformer";
 import NetInfo from "@react-native-community/netinfo";
+import { Store } from "@store/index";
+import offlineSlice from "@store/offline";
 import {
   onlineManager,
   QueryClient,
@@ -16,6 +18,7 @@ onlineManager.setEventListener((setOnline) => {
     setOnline(!!state.isConnected);
   });
 });
+
 export interface AccessToken {
   exp: number;
 }
@@ -33,7 +36,14 @@ const url = __DEV__
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [queryClient] = useState(() => {
     const client = new QueryClient({
-      defaultOptions: { queries: { retry: false, staleTime: 1000 * 60 * 2 } },
+      defaultOptions: {
+        queries: {
+          retry: false,
+          staleTime: Infinity,
+          cacheTime: Infinity,
+          networkMode: "offlineFirst",
+        },
+      },
     });
     if (__DEV__) addPlugin({ queryClient: client });
     return client;

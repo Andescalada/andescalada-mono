@@ -22,6 +22,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
+import featureFlags from "@utils/featureFlags";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -33,7 +34,7 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId } = route.params;
 
-  const { data, refetch, isFetching, isLoading, isError } =
+  const { data, refetch, isFetching, isLoading, isError, isPaused } =
     trpc.zones.allSectors.useQuery({ zoneId });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
@@ -76,6 +77,13 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
 
+  if (isPaused)
+    return (
+      <Screen padding="m" justifyContent="center" alignItems="center">
+        <Text>Sin conexión a internet</Text>
+      </Screen>
+    );
+
   return (
     <Screen padding="m">
       <FormProvider {...methods}>
@@ -85,24 +93,26 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
       </FormProvider>
-      <Box alignItems="flex-end">
-        <Pressable
-          flexDirection="row"
-          alignItems="center"
-          onPress={onDownloadPress}
-        >
-          <Text marginRight="s">
-            {isDownloaded ? "Descargado" : "Descargar"}
-          </Text>
-          <Ionicons
-            name={
-              isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
-            }
-            size={30}
-            color={theme.colors["brand.primaryA"]}
-          />
-        </Pressable>
-      </Box>
+      {featureFlags.offline && (
+        <Box alignItems="flex-end">
+          <Pressable
+            flexDirection="row"
+            alignItems="center"
+            onPress={onDownloadPress}
+          >
+            <Text marginRight="s">
+              {isDownloaded ? "Descargado" : "Descargar"}
+            </Text>
+            <Ionicons
+              name={
+                isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
+              }
+              size={30}
+              color={theme.colors["brand.primaryA"]}
+            />
+          </Pressable>
+        </Box>
+      )}
       <Box flex={1}>
         <FlatList
           data={data?.sectors}

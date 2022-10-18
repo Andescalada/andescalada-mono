@@ -27,6 +27,7 @@ import {
 import { useResponsiveProp } from "@shopify/restyle";
 import { logoutAuth0 } from "@store/auth";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
+import featureFlags from "@utils/featureFlags";
 import { useCallback, useMemo } from "react";
 import { Alert, StyleSheet } from "react-native";
 
@@ -144,13 +145,15 @@ const UserHeader = () => {
         height="100%"
         style={styles.header}
       >
-        <Ionicons
-          name={isOfflineMode ? "md-airplane-sharp" : "md-airplane-outline"}
-          color={theme.colors["grayscale.600"]}
-          size={30}
-          style={{ paddingRight: 8 }}
-          onPress={setIsOfflineMode}
-        />
+        {featureFlags.offline && (
+          <Ionicons
+            name={isOfflineMode ? "md-airplane-sharp" : "md-airplane-outline"}
+            color={theme.colors["grayscale.600"]}
+            size={30}
+            style={{ paddingRight: 8 }}
+            onPress={setIsOfflineMode}
+          />
+        )}
         <Pressable
           justifyContent="center"
           alignItems={"center"}

@@ -3,6 +3,7 @@ import ClimbsStackNavigation from "@features/climbs/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import UserStackNavigation from "@features/user/Navigation";
+import useOffline from "@hooks/useOffline";
 import useOwnInfo from "@hooks/useOwnInfo";
 import {
   RootNavigationNavigationParamList,
@@ -18,6 +19,9 @@ const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 
 const Navigator = () => {
   const { data, isLoading } = useOwnInfo();
+
+  useOffline();
+
   if (isLoading)
     return (
       <Screen

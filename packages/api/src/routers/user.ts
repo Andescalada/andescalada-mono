@@ -23,6 +23,7 @@ export const userRouter = t.router({
         preferredBoulderGrade: true,
         preferredSportGrade: true,
         username: true,
+        DownloadedZones: { select: { id: true, name: true } },
       },
     }),
   ),
@@ -154,4 +155,36 @@ export const userRouter = t.router({
       });
     },
   ),
+  getDownloadedAssets: protectedProcedure.query(({ ctx }) =>
+    ctx.prisma.user.findUnique({
+      where: { email: ctx.user.email },
+      select: {
+        DownloadedZones: {
+          select: {
+            ...idAndVersion,
+            sectors: {
+              select: {
+                ...idAndVersion,
+                walls: {
+                  select: {
+                    ...idAndVersion,
+                    routes: {
+                      select: {
+                        ...idAndVersion,
+                        RoutePath: { select: idAndVersion },
+                        RouteGrade: { select: idAndVersion },
+                      },
+                    },
+                    topos: { select: idAndVersion },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
+  ),
 });
+
+const idAndVersion = { id: true, version: true };

@@ -19,14 +19,16 @@
       "distribution": "internal",
       "channel": "preview",
       "env": {
-        "APP_VARIANT": "preview"
+        "APP_VARIANT": "preview",
+        "FF_OFFLINE": "true"
       }
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
       "env": {
-        "APP_VARIANT": "production"
+        "APP_VARIANT": "production",
+        "FF_OFFLINE": "false"
       }
     }
   },

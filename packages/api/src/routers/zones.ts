@@ -98,33 +98,4 @@ export const zonesRouter = t.router({
 
       return roleByZone;
     }),
-
-  downloadList: protectedZoneProcedure.query(({ ctx, input }) =>
-    ctx.prisma.zone.findUnique({
-      where: { id: input.zoneId },
-      select: {
-        ...idAndVersion,
-        sectors: {
-          select: {
-            ...idAndVersion,
-            walls: {
-              select: {
-                ...idAndVersion,
-                routes: {
-                  select: {
-                    ...idAndVersion,
-                    RoutePath: { select: idAndVersion },
-                    RouteGrade: { select: idAndVersion },
-                  },
-                },
-                topos: { select: idAndVersion },
-              },
-            },
-          },
-        },
-      },
-    }),
-  ),
 });
-
-const idAndVersion = { id: true, version: true };
