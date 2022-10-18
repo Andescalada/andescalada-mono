@@ -87,7 +87,7 @@
     "@types/jwt-decode": "^3.1.0",
     "@types/react": "~18.0.0",
     "@types/react-native": "~0.69.1",
-    "expo-cli": "^6.0.5",
+    "expo-cli": "^6.0.6",
     "prisma": "^3.8.1",
     "react-native-mmkv-flipper-plugin": "^1.0.0",
     "react-query-native-devtools": "^4.0.0",
