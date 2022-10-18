@@ -21,7 +21,7 @@
       "env": {
         "APP_VARIANT": "preview",
         "FF_OFFLINE": "true",
-        "API_URL": "https://preview-andescalada-mono.vercel.app/"
+        "API_URL": "https://preview-andescalada-mono.vercel.app"
       }
     },
     "production": {
