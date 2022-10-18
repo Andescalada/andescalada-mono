@@ -2,11 +2,11 @@ import "expo-dev-client";
 
 import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
 import ThemeProvider from "@andescalada/ui/Theme/ThemeProvider";
-import { SENTRY_DNS } from "@env";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import AppNavigation from "@navigation/AppNavigation";
 import NavigationMemoized from "@navigation/NavigationMemoized";
 import { Store } from "@store/index";
+import Env from "@utils/env";
 import storage from "@utils/mmkv/storage";
 import { StatusBar } from "expo-status-bar";
 import { connectToDevTools } from "react-devtools-core";
@@ -26,7 +26,7 @@ if (__DEV__) {
 }
 
 Sentry.init({
-  dsn: SENTRY_DNS,
+  dsn: Env.SENTRY_DNS,
   enableNative: !__DEV__,
   debug: __DEV__,
 });

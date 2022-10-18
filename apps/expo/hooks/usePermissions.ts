@@ -1,16 +1,16 @@
 import { Permissions } from "@andescalada/api/src/types/permissions";
-import { UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL } from "@env";
 import { useAppSelector } from "@hooks/redux";
 import type { Zone } from "@prisma/client";
+import Env from "@utils/env";
 import storage, { Store } from "@utils/mmkv/storage";
 import { useCallback, useEffect, useState } from "react";
 import * as Sentry from "sentry-expo";
 import { parse } from "superjson";
 
 const getPermissionsFromUpstash = (key: string, value: string) =>
-  fetch(`${UPSTASH_REDIS_REST_URL}/hget/${key}/${value}`, {
+  fetch(`${Env.UPSTASH_REDIS_REST_URL}/hget/${key}/${value}`, {
     headers: {
-      Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}`,
+      Authorization: `Bearer ${Env.UPSTASH_REDIS_REST_TOKEN}`,
     },
   })
     .then((r) => r.json())

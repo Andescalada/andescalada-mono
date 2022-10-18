@@ -1,6 +1,6 @@
 import { StorageService } from "@andescalada/api/schemas/image";
-import { CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_URL } from "@env";
 import type { SelectedImage } from "@hooks/usePickImage";
+import Env from "@utils/env";
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
@@ -29,9 +29,9 @@ const useUploadImage = () => {
       setUri(undefined);
 
       const res = await axios.post<CloudinaryResponse>(
-        CLOUDINARY_URL,
+        Env.CLOUDINARY_URL,
 
-        { file: data, upload_preset: CLOUDINARY_UPLOAD_PRESET },
+        { file: data, upload_preset: Env.CLOUDINARY_UPLOAD_PRESET },
         {
           headers: {
             "content-type": "application/json",

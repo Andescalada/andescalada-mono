@@ -1,13 +1,12 @@
 import { transformer } from "@andescalada/api/src/transformer";
 import NetInfo from "@react-native-community/netinfo";
-import { Store } from "@store/index";
-import offlineSlice from "@store/offline";
 import {
   onlineManager,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
+import Env from "@utils/env";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
@@ -28,10 +27,12 @@ interface Props {
   firstTimeLogin?: true;
   children: ReactNode;
 }
-
+console.log(Constants);
 const url = __DEV__
-  ? `http://${Constants.manifest?.debuggerHost?.split(":").shift()}:3000`
-  : Constants.manifest?.extra?.API_URL;
+  ? `http://${Constants.manifest2?.extra?.expoGo?.debuggerHost
+      ?.split(":")
+      .shift()}:3000`
+  : Env.API_URL;
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [queryClient] = useState(() => {

@@ -1,12 +1,12 @@
 import { Storage } from "@assets/Constants";
-import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "@env";
 import { nativeReturnUrl } from "@utils/auth0/params";
+import Env from "@utils/env";
 import storage from "@utils/mmkv/storage";
 import * as AuthSession from "expo-auth-session";
 import { stringify } from "superjson";
 
 import { tokenDecode } from "../decode";
-const authUrl = `https://${AUTH0_DOMAIN}/oauth/token`;
+const authUrl = `https://${Env.AUTH0_DOMAIN}/oauth/token`;
 const headers = { "content-type": "application/json" };
 
 export interface Tokens {
@@ -29,7 +29,7 @@ const getTokens = async (
     headers,
     body: JSON.stringify({
       grant_type: "authorization_code",
-      client_id: AUTH0_CLIENT_ID,
+      client_id: Env.AUTH0_CLIENT_ID,
       code_verifier: codeVerifier,
       code,
       redirect_uri: redirectUrl,
@@ -52,7 +52,7 @@ const getRefreshData = async (refreshToken: string) => {
     headers,
     body: JSON.stringify({
       grant_type: "refresh_token",
-      client_id: AUTH0_CLIENT_ID,
+      client_id: Env.AUTH0_CLIENT_ID,
       refresh_token: refreshToken,
     }),
   };

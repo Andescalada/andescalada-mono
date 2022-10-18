@@ -1,6 +1,6 @@
-import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "@env";
 import auth0Tokens from "@utils/auth0/accessToken";
 import { nativeReturnUrl } from "@utils/auth0/params";
+import Env from "@utils/env";
 import * as AuthSession from "expo-auth-session";
 
 import {
@@ -13,7 +13,7 @@ import {
   URLEncode,
 } from "../decode";
 
-const auth0Domain = AUTH0_DOMAIN;
+const auth0Domain = Env.AUTH0_DOMAIN;
 
 export interface LoginResponse {
   decodedIdToken: unknown;
@@ -24,10 +24,10 @@ export interface LoginResponse {
 const settings = {
   response_type: "code",
   code_challenge_method: "S256",
-  client_id: AUTH0_CLIENT_ID,
-  clientId: AUTH0_CLIENT_ID,
+  client_id: Env.AUTH0_CLIENT_ID,
+  clientId: Env.AUTH0_CLIENT_ID,
   scope: "openid name profile offline_access",
-  audience: AUTH0_AUDIENCE,
+  audience: Env.AUTH0_AUDIENCE,
 };
 
 const onLoginResponse = async (
