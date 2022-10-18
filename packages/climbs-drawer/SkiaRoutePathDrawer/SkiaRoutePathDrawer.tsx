@@ -64,8 +64,10 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
   });
 
   const finishRoute = useCallback(() => {
-    end.current = points.current[points.current.length - 1];
-    setHasEnd(true);
+    if (points.current.length > 0) {
+      end.current = points.current[points.current.length - 1];
+      setHasEnd(true);
+    }
     drawEnd.current = true;
   }, [drawEnd, end, points]);
 

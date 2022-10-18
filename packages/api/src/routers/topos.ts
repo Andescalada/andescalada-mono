@@ -1,6 +1,7 @@
 import topo from "@andescalada/api/schemas/topo";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -12,7 +13,12 @@ export const toposRouter = t.router({
       where: { id: input.topoId },
       include: {
         RoutePath: {
-          include: { Route: { select: { id: true, position: true } } },
+          where: { Route: { isDeleted: SoftDelete.NotDeleted } },
+          include: {
+            Route: {
+              select: { id: true, position: true },
+            },
+          },
         },
         image: {
           select: { url: true, height: true, width: true, publicId: true },

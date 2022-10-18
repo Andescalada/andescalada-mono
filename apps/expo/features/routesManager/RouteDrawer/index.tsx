@@ -90,6 +90,10 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
       return;
     }
     if (route.path && data) {
+      if (route.path.length <= 1) {
+        navigation.popToTop();
+        return;
+      }
       mutate(
         {
           path: route.path,
