@@ -70,6 +70,9 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
           title="Asignar rol a usuario"
           subtitle="Solo administradores Andescalada"
           variant="accent"
+          onPress={() => {
+            navigation.navigate(UserNavigationRoutes.AssignRoleToUser);
+          }}
         />
       )}
       {globalPermissions?.includes(GlobalPermissions.CRUD_ZONES) && (
