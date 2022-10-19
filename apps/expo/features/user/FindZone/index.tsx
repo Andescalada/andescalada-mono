@@ -11,6 +11,7 @@ import { pallete } from "@andescalada/ui/Theme/pallete";
 import { trpc } from "@andescalada/utils/trpc";
 import BottomSheet from "@gorhom/bottom-sheet";
 import useDebounce from "@hooks/useDebounce";
+import { Zone } from "@prisma/client";
 import {
   forwardRef,
   ForwardRefRenderFunction,
@@ -21,7 +22,7 @@ import {
 import { FlatList, StyleSheet } from "react-native";
 
 interface Props {
-  onSetZone: (user: string) => void;
+  onSetZone: (zone: { name: Zone["name"]; id: Zone["id"] }) => void;
 }
 
 const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
@@ -114,7 +115,7 @@ const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
                       justifyContent={"space-between"}
                       alignItems="center"
                       onPress={() => {
-                        onSetZone(item.name);
+                        onSetZone({ name: item.name, id: item.id });
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         ref?.current?.close();

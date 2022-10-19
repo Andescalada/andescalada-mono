@@ -1,6 +1,6 @@
 import image from "@andescalada/api/schemas/image";
 import { r } from "@andescalada/api/src/utils/regex";
-import { GradeSystemsSchema } from "@andescalada/db/zod";
+import { GradeSystemsSchema, RoleNamesSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 
 const schema = z.object({
@@ -21,6 +21,10 @@ const schema = z.object({
     ),
 });
 
+const id = z.object({ userId: z.string().uuid() });
+
+const role = z.object({ role: RoleNamesSchema });
+
 const usernameSearch = z
   .string()
   .trim()
@@ -35,4 +39,4 @@ const gradeSystem = z.object({
   preferredBoulderGrade: GradeSystemsSchema,
 });
 
-export default { schema, gradeSystem, usernameSearch };
+export default { schema, gradeSystem, usernameSearch, role, id };

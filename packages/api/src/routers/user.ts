@@ -5,7 +5,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { deserialize } from "superjson";
+import { deserialize, serialize } from "superjson";
 
 import { t } from "../createRouter";
 
@@ -60,6 +60,68 @@ export const userRouter = t.router({
       }
 
       return permissions;
+    }),
+  assignRoleToUser: protectedProcedure
+    .input(user.schema.pick({ username: true }).merge(zone.id).merge(user.role))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.user.permissions.includes("crud:roles")) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      const userToAssign = await ctx.prisma.user.findUnique({
+        where: { username: input.username },
+        select: { email: true },
+      });
+
+      if (!userToAssign) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+      }
+
+      const roles = await ctx.prisma.roleByZone.create({
+        data: {
+          User: { connect: { username: input.username } },
+          Role: { connect: { name: input.role } },
+          Zone: { connect: { id: input.zoneId } },
+          AssignedBy: { connect: { email: ctx.user.email } },
+        },
+        select: {
+          User: {
+            select: {
+              RoleByZone: {
+                select: {
+                  Role: {
+                    select: { permissions: { select: { action: true } } },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const newPermissions = roles.User.RoleByZone.flatMap(
+        (r) => r.Role.permissions,
+      ).flatMap((p) => p.action);
+
+      const res = await ctx.access.hget<Access>(
+        userToAssign.email,
+        input.zoneId,
+      );
+      let updatedPermissions: Permissions;
+      if (res) {
+        const existingPermissions = deserialize<Permissions>(res);
+        updatedPermissions = new Set([
+          ...Array.from(existingPermissions),
+          ...newPermissions,
+        ]);
+      } else {
+        updatedPermissions = new Set(newPermissions);
+      }
+
+      await ctx.access.hset(userToAssign.email, {
+        [input.zoneId]: serialize(updatedPermissions),
+      });
+
+      return roles;
     }),
   uniqueUsername: protectedProcedure
     .input(user.schema.pick({ username: true }))
