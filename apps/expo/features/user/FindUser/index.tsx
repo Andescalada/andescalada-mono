@@ -34,6 +34,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
   const {
     data,
     mutate,
+    reset,
     isLoading: isLoadingSearch,
   } = trpc.user.find.useMutation();
 
@@ -41,6 +42,8 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
   const searchUsername = (value: string) => {
     const isValid = user.usernameSearch.safeParse(value);
     if (!isValid.success) {
+      setIsLoading(false);
+      reset();
       return;
     }
 
@@ -51,8 +54,13 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
   const [search, setSearch] = useState("");
   const onChange = (value: string) => {
     setIsLoading(true);
-    onDebounceChange(value);
     setSearch(value);
+    if (!value) {
+      setIsLoading(false);
+      reset();
+      return;
+    }
+    onDebounceChange(value);
   };
 
   useEffect(() => {
