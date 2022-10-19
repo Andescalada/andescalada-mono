@@ -12,4 +12,12 @@ const schema = z.object({
     .regex(r.numbersAndLettersOnly, "Solo se permite letras y números"),
 });
 
-export default { schema, id };
+const nameSearch = z
+  .string()
+  .trim()
+  .regex(
+    r.numbersAndLettersOnly,
+    "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",
+  );
+
+export default { schema, id, nameSearch };

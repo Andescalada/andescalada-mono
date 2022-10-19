@@ -98,4 +98,13 @@ export const zonesRouter = t.router({
 
       return roleByZone;
     }),
+  find: protectedProcedure.input(zone.nameSearch).mutation(({ ctx, input }) =>
+    ctx.prisma.zone.findMany({
+      where: {
+        name: { contains: input },
+        isDeleted: SoftDelete.NotDeleted,
+      },
+      select: { name: true, id: true },
+    }),
+  ),
 });
