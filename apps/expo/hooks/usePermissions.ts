@@ -37,6 +37,7 @@ const usePermissions = ({ zoneId }: Args) => {
 
   const getPermissions = useCallback(async () => {
     try {
+      Sentry.Native.captureMessage(` token ${Env.UPSTASH_REDIS_REST_TOKEN}`);
       if (!email) throw new Error("No email found");
       Sentry.Native.captureMessage(email);
       // eslint-disable-next-line prefer-const
