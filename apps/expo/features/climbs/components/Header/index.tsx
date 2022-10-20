@@ -1,4 +1,4 @@
-import { BackButton, Box, EditableTitle, Text } from "@andescalada/ui";
+import { BackButton, Box, EditableTitle } from "@andescalada/ui";
 import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton";
 import { useNavigation } from "@react-navigation/native";
 import { ComponentProps, FC } from "react";

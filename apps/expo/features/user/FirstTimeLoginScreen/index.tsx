@@ -4,8 +4,6 @@ import {
   Box,
   BoxWithKeyboard,
   Button,
-  Image,
-  Pressable,
   Screen,
   Text,
   TextInput,
@@ -22,7 +20,6 @@ import {
 } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
-import { FadeIn } from "react-native-reanimated";
 import { z } from "zod";
 
 type Props = RootNavigationScreenProps<RootNavigationRoutes.FirstTimeLogin>;
