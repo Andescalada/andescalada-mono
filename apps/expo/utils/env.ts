@@ -4,6 +4,7 @@ import Constants from "expo-constants";
 const Env = {
   API_URL: Constants.expoConfig?.extra?.API_URL as string,
   SENTRY_DNS: SENTRY_DNS,
+  SENTRY_DEPLOY_ENV: Constants.expoConfig?.extra?.SENTRY_DEPLOY_ENV as string,
   UPSTASH_REDIS_REST_TOKEN: Constants?.expoConfig?.extra
     ?.UPSTASH_REDIS_REST_TOKEN as string,
   UPSTASH_REDIS_REST_URL: Constants?.expoConfig?.extra
