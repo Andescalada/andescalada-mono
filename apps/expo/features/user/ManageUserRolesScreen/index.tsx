@@ -73,7 +73,6 @@ const ManageUserRolesScreen: FC<Props> = ({ navigation }) => {
   const deleteRoleByZone = trpc.user.deleteRoleByUser.useMutation();
 
   const onDeleteRole = (id: RoleByZone["id"]) => {
-    console.log(id);
     deleteRoleByZone.mutate({ roleByZoneId: id });
     setUser(
       (prev) =>

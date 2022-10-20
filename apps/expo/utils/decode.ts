@@ -31,5 +31,7 @@ export const toQueryString = (params: StringMap): string =>
     )
     .join("&")}`;
 
-export const isExpired = (expTime: number): boolean =>
-  Math.round(+new Date() / 1000) > expTime;
+export const isExpired = (exp: number) => {
+  const d = new Date();
+  return d.getTime() > exp;
+};

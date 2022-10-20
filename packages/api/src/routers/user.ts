@@ -98,8 +98,6 @@ export const userRouter = t.router({
         (r) => r.Role.permissions,
       ).flatMap((p) => p.action);
 
-      console.log(newPermissions);
-
       await updateRedisPermissions(
         ctx.access,
         roles.User.email,
@@ -144,7 +142,6 @@ export const userRouter = t.router({
       });
 
       if (user) {
-        console.log(user.RoleByZone.flatMap((r) => r.Role));
         const newPermissions = user.RoleByZone.flatMap((r) => r.Role)
           .flatMap((r) => r.permissions)
           .flatMap((p) => p.action);

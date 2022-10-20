@@ -28,10 +28,12 @@ interface Props {
   children: ReactNode;
 }
 
+const localHost =
+  Constants.manifest2?.extra?.expoGo?.debuggerHost ||
+  Constants.manifest?.debuggerHost;
+
 const url = __DEV__
-  ? `http://${Constants.manifest2?.extra?.expoGo?.debuggerHost
-      ?.split(":")
-      .shift()}:3000`
+  ? `http://${localHost?.split(":").shift()}:3000`
   : Env.API_URL;
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {

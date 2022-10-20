@@ -71,6 +71,7 @@ export const autoLoginAuth0 = createAsyncThunk(
       if (!token) return { isAuth: false };
       const decodedToken = tokenDecode<DecodedAccessToken>(token);
       const hasExpired = isExpired(decodedToken.exp);
+
       if (!hasExpired)
         return {
           isAuth: true,
@@ -78,7 +79,7 @@ export const autoLoginAuth0 = createAsyncThunk(
           email: decodedIdToken.name,
           globalPermissions: decodedToken.permissions,
         };
-      storage.clearAll();
+
       const res = await auth0Tokens.refreshTokens();
 
       if (res?.accessToken) {
