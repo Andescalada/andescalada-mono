@@ -145,6 +145,10 @@ export const userRouter = t.router({
           name: true,
           username: true,
           profilePhoto: { select: { publicId: true } },
+          email: true,
+          RoleByZone: {
+            select: { Role: { select: { name: true } }, zoneId: true },
+          },
         },
       });
     }),

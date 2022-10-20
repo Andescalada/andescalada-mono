@@ -1,7 +1,15 @@
 import { RoleNamesSchema } from "@andescalada/db/zod";
-import { Box, Button, Pressable, Screen, Text } from "@andescalada/ui";
+import {
+  Box,
+  Button,
+  Pressable,
+  Screen,
+  ScrollView,
+  SemanticButton,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import FindUser from "@features/user/FindUser";
+import FindUser, { UserOutput } from "@features/user/FindUser";
 import FindZone from "@features/user/FindZone";
 import {
   UserNavigationRoutes,
@@ -22,7 +30,7 @@ type Props = UserNavigationScreenProps<UserNavigationRoutes.AssignRoleToUser>;
 const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
   const findUserRef = useRef<BottomSheet>(null);
   const findZoneRef = useRef<BottomSheet>(null);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState<UserOutput>();
   const [zone, setZone] = useState<{ id: Zone["id"]; name: Zone["name"] }>();
   const [role, setRole] = useState<RoleType | "">("");
 
@@ -43,23 +51,28 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
     });
 
   const saveButton = useMemo(() => {
-    if (role === "" || !zone || !username) {
+    if (role === "" || !zone || !user) {
       return { variant: "transparent" as const, title: "Guardar" };
     }
     if (isSuccess) {
       return { variant: "success" as const, title: "Guardado" };
     }
     return { variant: "info" as const, title: "Guardar" };
-  }, [isSuccess, role, username, zone]);
+  }, [isSuccess, role, user, zone]);
 
   const onSubmit = () => {
-    if (role === "" || !zone || !username) return;
-    mutate({ role, username, zoneId: zone.id });
+    if (role === "" || !zone || !user) return;
+    mutate({ role, username: user.username, zoneId: zone.id });
   };
+
+  const rolesByZone = useMemo(
+    () => user?.roles?.filter?.((z) => z.zoneId === zone?.id) || [],
+    [user?.roles, zone?.id],
+  );
 
   return (
     <Screen safeAreaDisabled padding="m" justifyContent="space-between">
-      <Box>
+      <ScrollView flex={1}>
         <Box marginTop="m">
           <Text variant="p1R" marginBottom="s">
             Usuario
@@ -77,9 +90,9 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
           >
             <Text
               variant="p1R"
-              color={username ? "grayscale.black" : "grayscale.400"}
+              color={user ? "grayscale.black" : "grayscale.400"}
             >
-              {username || "Buscar usuario"}
+              {user?.username || "Buscar usuario"}
             </Text>
           </Pressable>
         </Box>
@@ -106,9 +119,9 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
             </Text>
           </Pressable>
         </Box>
-        <Box marginTop="m">
+        <Box marginTop="m" visible={!!zone && !!user}>
           <Text variant="p1R" marginBottom="s">
-            Rol
+            Agregar Rol
           </Text>
           <Picker
             onValueChange={setRole}
@@ -133,17 +146,40 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
             ))}
           </Picker>
         </Box>
-      </Box>
+        <Box marginTop="m" visible={!!zone && rolesByZone?.length > 0}>
+          <Text variant="p1R" marginBottom="s">
+            Gestionar Roles
+          </Text>
+          {rolesByZone.map((item) => (
+            <Box
+              padding="m"
+              borderBottomWidth={1}
+              borderBottomColor="grayscale.400"
+              flexDirection="row"
+              justifyContent={"space-between"}
+              alignItems="center"
+              key={item?.Role?.name}
+            >
+              <Text>{item?.Role?.name}</Text>
+              <SemanticButton
+                titleVariant="p3R"
+                title="Eliminar"
+                variant="error"
+              />
+            </Box>
+          ))}
+        </Box>
+      </ScrollView>
       <Button
         alignSelf="center"
         title={saveButton.title}
         variant={saveButton.variant}
         onPress={onSubmit}
         isLoading={isLoading}
-        disabled={isLoading || !username || !role || isSuccess || !zone}
+        disabled={isLoading || !user || !role || isSuccess || !zone}
         marginVertical="m"
       />
-      <FindUser ref={findUserRef} onSetUser={setUsername} />
+      <FindUser ref={findUserRef} onSetUser={setUser} />
       <FindZone ref={findZoneRef} onSetZone={setZone} />
     </Screen>
   );

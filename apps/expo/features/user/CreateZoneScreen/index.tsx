@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import FindUser from "@features/user/FindUser";
+import FindUser, { UserOutput } from "@features/user/FindUser";
 import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
@@ -27,7 +27,7 @@ const CreateZoneScreen: FC<Props> = () => {
     handleSubmit,
     control,
     reset,
-    formState: { isDirty, isValid },
+    formState: { isDirty },
   } = useZodForm({
     schema: zone.schema,
   });
@@ -61,23 +61,24 @@ const CreateZoneScreen: FC<Props> = () => {
     name: "name",
   });
 
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState<UserOutput>();
 
   const onSubmit = handleSubmit((input) => {
-    mutate({ name: input.name, username });
+    if (!user) return;
+    mutate({ name: input.name, username: user?.username });
   });
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const saveButton = useMemo(() => {
-    if (!isDirty || !username) {
+    if (!isDirty || !user) {
       return { variant: "transparent" as const, title: "Guardar" };
     }
     if (isSuccess) {
       return { variant: "success" as const, title: "Guardado" };
     }
     return { variant: "info" as const, title: "Guardar" };
-  }, [isDirty, isSuccess, username]);
+  }, [isDirty, isSuccess, user]);
 
   return (
     <Screen safeAreaDisabled padding="m">
@@ -118,9 +119,9 @@ const CreateZoneScreen: FC<Props> = () => {
             >
               <Text
                 variant="p1R"
-                color={username ? "grayscale.black" : "grayscale.400"}
+                color={user ? "grayscale.black" : "grayscale.400"}
               >
-                {username || "Buscar usuario"}
+                {user?.username || "Buscar usuario"}
               </Text>
             </Pressable>
             <Text marginTop="xs" color="semantic.error">
@@ -138,11 +139,11 @@ const CreateZoneScreen: FC<Props> = () => {
           variant={saveButton.variant}
           onPress={onSubmit}
           isLoading={isLoading}
-          disabled={isLoading || !username || !isDirty || isSuccess}
+          disabled={isLoading || !user || !isDirty || isSuccess}
           marginVertical="m"
         />
       </BoxWithKeyboard>
-      <FindUser ref={bottomSheetRef} onSetUser={setUsername} />
+      <FindUser ref={bottomSheetRef} onSetUser={setUser} />
     </Screen>
   );
 };

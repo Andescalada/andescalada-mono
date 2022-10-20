@@ -1,4 +1,5 @@
 import user from "@andescalada/api/schemas/user";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
   ActivityIndicator,
   Box,
@@ -12,6 +13,7 @@ import { trpc } from "@andescalada/utils/trpc";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import BottomSheet from "@gorhom/bottom-sheet";
 import useDebounce from "@hooks/useDebounce";
+import { inferProcedureOutput } from "@trpc/server";
 import {
   forwardRef,
   ForwardRefRenderFunction,
@@ -21,8 +23,16 @@ import {
 } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
+type FindOutput = inferProcedureOutput<AppRouter["user"]["find"]>[0];
+
+export interface UserOutput {
+  username: FindOutput["username"];
+  email: FindOutput["email"];
+  roles: FindOutput["RoleByZone"];
+}
+
 interface Props {
-  onSetUser: (user: string) => void;
+  onSetUser: (args: UserOutput) => void;
 }
 
 const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
@@ -110,7 +120,9 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                   </Box>
                 ) : null
               }
-              renderItem={({ item }) => {
+              renderItem={({
+                item: { username, RoleByZone, email, name, profilePhoto },
+              }) => {
                 return (
                   <Pressable
                     padding="m"
@@ -120,7 +132,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                     justifyContent={"space-between"}
                     alignItems="center"
                     onPress={() => {
-                      onSetUser(item.username);
+                      onSetUser({ username, email, roles: RoleByZone });
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore
                       ref?.current?.close();
@@ -128,14 +140,14 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                   >
                     <Box>
                       <Text variant="h3R" color="grayscale.white">
-                        {item.username}
+                        {username}
                       </Text>
                       <Text variant="p3R" color="grayscale.white">
-                        {item.name}
+                        {name}
                       </Text>
                     </Box>
                     <UserProfileImage
-                      publicId={item.profilePhoto?.publicId || undefined}
+                      publicId={profilePhoto?.publicId || undefined}
                       style={{ width: 40, height: 40, borderRadius: 40 }}
                     />
                   </Pressable>
