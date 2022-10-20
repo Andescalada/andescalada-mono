@@ -37,32 +37,26 @@ const usePermissions = ({ zoneId }: Args) => {
 
   const getPermissions = useCallback(async () => {
     try {
-      Sentry.Native.captureMessage(
-        ` token ${Env.UPSTASH_REDIS_REST_TOKEN}`,
-        "fatal",
-      );
       if (!email) throw new Error("No email found");
 
-      // eslint-disable-next-line prefer-const
-      let { exp: expCache, permissions } =
-        getPermissionFromStorage(email, zoneId) || {};
+      let { exp, permissions } = getPermissionFromStorage(email, zoneId) || {};
 
       if (permissions) setPermissions(permissions);
 
-      if (!permissions || (expCache && isExpired(expCache))) {
+      if (!permissions || (exp && isExpired(exp))) {
+        storage.delete(`${Store.PERMISSIONS}.${email}.${zoneId}`);
+
         permissions = await getPermissionsFromUpstash(email, zoneId).then((p) =>
           p ? parse<Permissions>(p) : undefined,
         );
+        const d = new Date();
+        exp = d.setTime(d.getTime() + PERMISSIONS_DURATION);
       }
 
-      if (!permissions) {
-        storage.delete(`${Store.PERMISSIONS}.${email}.${zoneId}`);
+      if (!permissions || permission?.size === 0) {
         setPermissions(new Set());
         return;
       }
-
-      const d = new Date();
-      const exp = d.setTime(d.getTime() + PERMISSIONS_DURATION);
 
       const newPermissions = stringify({
         permissions,
@@ -73,7 +67,7 @@ const usePermissions = ({ zoneId }: Args) => {
     } catch (err) {
       Sentry.Native.captureException(err);
     }
-  }, [email, zoneId]);
+  }, [email, permission?.size, zoneId]);
 
   useEffect(() => {
     getPermissions();
