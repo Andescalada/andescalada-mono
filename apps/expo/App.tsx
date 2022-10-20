@@ -27,8 +27,9 @@ if (__DEV__) {
 
 Sentry.init({
   dsn: Env.SENTRY_DNS,
-  enableNative: !__DEV__,
+  // enableNative: !__DEV__,
   debug: __DEV__,
+  enableInExpoDevelopment: true,
 });
 
 LogBox.ignoreLogs([

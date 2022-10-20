@@ -6,7 +6,7 @@ import {
   DecodedIdToken,
   GlobalPermissions,
 } from "@utils/auth0/types";
-import { isExpired, tokenDecode } from "@utils/decode";
+import { isTokenExpired, tokenDecode } from "@utils/decode";
 import storage from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
 
@@ -70,7 +70,7 @@ export const autoLoginAuth0 = createAsyncThunk(
 
       if (!token) return { isAuth: false };
       const decodedToken = tokenDecode<DecodedAccessToken>(token);
-      const hasExpired = isExpired(decodedToken.exp);
+      const hasExpired = isTokenExpired(decodedToken.exp);
 
       if (!hasExpired)
         return {

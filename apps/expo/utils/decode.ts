@@ -35,3 +35,6 @@ export const isExpired = (exp: number) => {
   const d = new Date();
   return d.getTime() > exp;
 };
+
+export const isTokenExpired = (expTime: number): boolean =>
+  Math.round(+new Date() / 1000) > expTime;
