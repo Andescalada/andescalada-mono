@@ -70,6 +70,21 @@ export const userRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
+      const roleExist = await ctx.prisma.roleByZone.findMany({
+        where: {
+          User: { username: input.username },
+          Zone: { id: input.zoneId },
+          Role: { name: input.role },
+        },
+      });
+
+      if (roleExist.length > 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: `User ${input.username} already has role ${input.role} in zone ${input.zoneId}`,
+        });
+      }
+
       const roles = await ctx.prisma.roleByZone.create({
         data: {
           User: { connect: { username: input.username } },
