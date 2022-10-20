@@ -2,6 +2,7 @@ import { Permissions } from "@andescalada/api/src/types/permissions";
 import { useAppSelector } from "@hooks/redux";
 import type { Zone } from "@prisma/client";
 import { useFocusEffect } from "@react-navigation/native";
+import createExpiration from "@utils/createExpiration";
 import { isExpired } from "@utils/decode";
 import Env from "@utils/env";
 import storage, { Store } from "@utils/mmkv/storage";
@@ -51,8 +52,7 @@ const usePermissions = ({ zoneId }: Args) => {
           p ? parse<Permissions>(p) : undefined,
         );
 
-        const d = new Date();
-        exp = d.setTime(d.getTime() + PERMISSIONS_DURATION);
+        exp = createExpiration(PERMISSIONS_DURATION);
       }
 
       if (!permissions || Array.from(permissions || []).length === 0) {
