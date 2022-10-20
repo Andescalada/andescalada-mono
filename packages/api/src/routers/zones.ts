@@ -3,9 +3,9 @@ import zone from "@andescalada/api/schemas/zone";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { InfoAccess, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { serialize } from "superjson";
 import { z } from "zod";
 
 import { t } from "../createRouter";
@@ -93,8 +93,7 @@ export const zonesRouter = t.router({
       const email = roleByZone.User.email;
       const zoneId = roleByZone.zoneId;
       const permissions = roleByZone.Role.permissions.flatMap((p) => p.action);
-      const uniquePermissions = serialize(new Set(permissions));
-      await ctx.access.hset(email, { [zoneId]: uniquePermissions });
+      await updateRedisPermissions(ctx.access, email, zoneId, permissions);
 
       return roleByZone;
     }),

@@ -67,11 +67,11 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
       />
       {globalPermissions?.includes(GlobalPermissions.CRUD_ROLES) && (
         <ListItemConfig
-          title="Asignar rol a usuario"
+          title="Gestionar roles de usuarios"
           subtitle="Solo administradores Andescalada"
           variant="accent"
           onPress={() => {
-            navigation.navigate(UserNavigationRoutes.AssignRoleToUser);
+            navigation.navigate(UserNavigationRoutes.ManageUserRoles);
           }}
         />
       )}

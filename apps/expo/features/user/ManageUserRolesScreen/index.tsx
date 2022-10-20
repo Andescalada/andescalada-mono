@@ -17,7 +17,7 @@ import {
 } from "@features/user/Navigation/types";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useAppTheme } from "@hooks/useAppTheme";
-import type { Zone } from "@prisma/client";
+import type { RoleByZone, Zone } from "@prisma/client";
 import { Picker } from "@react-native-picker/picker";
 import { FC, useMemo, useRef, useState } from "react";
 import { Keyboard, Platform } from "react-native";
@@ -25,9 +25,9 @@ import { z } from "zod";
 
 type RoleType = z.infer<typeof RoleNamesSchema>;
 
-type Props = UserNavigationScreenProps<UserNavigationRoutes.AssignRoleToUser>;
+type Props = UserNavigationScreenProps<UserNavigationRoutes.ManageUserRoles>;
 
-const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
+const ManageUserRolesScreen: FC<Props> = ({ navigation }) => {
   const findUserRef = useRef<BottomSheet>(null);
   const findZoneRef = useRef<BottomSheet>(null);
   const [user, setUser] = useState<UserOutput>();
@@ -70,9 +70,25 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
     [user?.roles, zone?.id],
   );
 
+  const deleteRoleByZone = trpc.user.deleteRoleByUser.useMutation();
+
+  const onDeleteRole = (id: RoleByZone["id"]) => {
+    console.log(id);
+    deleteRoleByZone.mutate({ roleByZoneId: id });
+    setUser(
+      (prev) =>
+        prev && { ...prev, roles: prev.roles.filter((r) => r.id !== id) },
+    );
+  };
+
   return (
     <Screen safeAreaDisabled padding="m" justifyContent="space-between">
       <ScrollView flex={1}>
+        <Box>
+          <Text variant="p2R">
+            Selecciona un usuario y una zona para gestionar sus roles:
+          </Text>
+        </Box>
         <Box marginTop="m">
           <Text variant="p1R" marginBottom="s">
             Usuario
@@ -146,10 +162,17 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
             ))}
           </Picker>
         </Box>
-        <Box marginTop="m" visible={!!zone && rolesByZone?.length > 0}>
+        <Box marginTop="m" visible={!!zone && !!user}>
           <Text variant="p1R" marginBottom="s">
             Gestionar Roles
           </Text>
+          {rolesByZone.length < 1 && (
+            <Box alignItems="center">
+              <Text marginTop="xl" variant="p3R" color="semantic.info">
+                Sin roles asignados
+              </Text>
+            </Box>
+          )}
           {rolesByZone.map((item) => (
             <Box
               padding="m"
@@ -165,6 +188,7 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
                 titleVariant="p3R"
                 title="Eliminar"
                 variant="error"
+                onPress={() => onDeleteRole(item.id)}
               />
             </Box>
           ))}
@@ -185,4 +209,4 @@ const AssignRoleToUserScreen: FC<Props> = ({ navigation }) => {
   );
 };
 
-export default AssignRoleToUserScreen;
+export default ManageUserRolesScreen;

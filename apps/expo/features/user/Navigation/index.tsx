@@ -1,8 +1,8 @@
 import { BackButton } from "@andescalada/ui";
 import textVariants from "@andescalada/ui/Theme/textVariants";
-import AssignRoleToUserScreen from "@features/user/AssignRoleToUserScreen";
 import CreateZoneScreen from "@features/user/CreateZoneScreen";
 import GradingSystemConfigScreen from "@features/user/GradingSystemConfigScreen";
+import ManageUserRolesScreen from "@features/user/ManageUserRolesScreen";
 import OwnUserConfigScreen from "@features/user/OwnUserConfigScreen";
 import PersonalInfoConfigScreen from "@features/user/PersonalInfoConfigScreen";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -44,9 +44,9 @@ const Navigator = () => {
         options={{ title: "Crear zona" }}
       />
       <Stack.Screen
-        name={UserNavigationRoutes.AssignRoleToUser}
-        component={AssignRoleToUserScreen}
-        options={{ title: "Asignar rol" }}
+        name={UserNavigationRoutes.ManageUserRoles}
+        component={ManageUserRolesScreen}
+        options={{ title: "Gestionar roles" }}
       />
     </Stack.Navigator>
   );

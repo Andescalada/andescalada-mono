@@ -6,7 +6,7 @@ export enum UserNavigationRoutes {
   GradingSystem = "GradingSystem",
   PersonalInfo = "PersonalInfo",
   CreateZone = "CreateZone",
-  AssignRoleToUser = "AssignRoleToUser",
+  ManageUserRoles = "ManageUserRoles",
 }
 
 export type UserNavigationParamList = {
@@ -14,7 +14,7 @@ export type UserNavigationParamList = {
   [UserNavigationRoutes.GradingSystem]: undefined;
   [UserNavigationRoutes.PersonalInfo]: undefined;
   [UserNavigationRoutes.CreateZone]: undefined;
-  [UserNavigationRoutes.AssignRoleToUser]: undefined;
+  [UserNavigationRoutes.ManageUserRoles]: undefined;
 };
 
 export type UserRouteProps<T extends UserNavigationRoutes> = RouteProp<

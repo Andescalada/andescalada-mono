@@ -3,9 +3,11 @@ import zone from "@andescalada/api/schemas/zone";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { deserialize, serialize } from "superjson";
+import { deserialize } from "superjson";
+import { z } from "zod";
 
 import { t } from "../createRouter";
 
@@ -67,14 +69,6 @@ export const userRouter = t.router({
       if (!ctx.user.permissions.includes("crud:roles")) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-      const userToAssign = await ctx.prisma.user.findUnique({
-        where: { username: input.username },
-        select: { email: true },
-      });
-
-      if (!userToAssign) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
-      }
 
       const roles = await ctx.prisma.roleByZone.create({
         data: {
@@ -86,8 +80,10 @@ export const userRouter = t.router({
         select: {
           User: {
             select: {
+              email: true,
               RoleByZone: {
                 select: {
+                  id: true,
                   Role: {
                     select: { permissions: { select: { action: true } } },
                   },
@@ -102,26 +98,66 @@ export const userRouter = t.router({
         (r) => r.Role.permissions,
       ).flatMap((p) => p.action);
 
-      const res = await ctx.access.hget<Access>(
-        userToAssign.email,
-        input.zoneId,
-      );
-      let updatedPermissions: Permissions;
-      if (res) {
-        const existingPermissions = deserialize<Permissions>(res);
-        updatedPermissions = new Set([
-          ...Array.from(existingPermissions),
-          ...newPermissions,
-        ]);
-      } else {
-        updatedPermissions = new Set(newPermissions);
-      }
+      console.log(newPermissions);
 
-      await ctx.access.hset(userToAssign.email, {
-        [input.zoneId]: serialize(updatedPermissions),
+      await updateRedisPermissions(
+        ctx.access,
+        roles.User.email,
+        input.zoneId,
+        newPermissions,
+      );
+      return roles;
+    }),
+  deleteRoleByUser: protectedProcedure
+    .input(z.object({ roleByZoneId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.user.permissions.includes("crud:roles")) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      const deletedRole = ctx.prisma.roleByZone.delete({
+        where: { id: input.roleByZoneId },
+        select: {
+          zoneId: true,
+          userId: true,
+        },
       });
 
-      return roles;
+      const transaction = await ctx.prisma.$transaction([deletedRole]);
+
+      const userId = transaction[0].userId;
+      const zoneId = transaction[0].zoneId;
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          email: true,
+          RoleByZone: {
+            where: { zoneId },
+            select: {
+              id: true,
+              Role: {
+                select: { permissions: { select: { action: true } } },
+              },
+            },
+          },
+        },
+      });
+
+      if (user) {
+        console.log(user.RoleByZone.flatMap((r) => r.Role));
+        const newPermissions = user.RoleByZone.flatMap((r) => r.Role)
+          .flatMap((r) => r.permissions)
+          .flatMap((p) => p.action);
+
+        await updateRedisPermissions(
+          ctx.access,
+          user.email,
+          zoneId,
+          newPermissions,
+        );
+      }
+
+      return transaction;
     }),
   uniqueUsername: protectedProcedure
     .input(user.schema.pick({ username: true }))
@@ -147,7 +183,11 @@ export const userRouter = t.router({
           profilePhoto: { select: { publicId: true } },
           email: true,
           RoleByZone: {
-            select: { Role: { select: { name: true } }, zoneId: true },
+            select: {
+              Role: { select: { name: true } },
+              zoneId: true,
+              id: true,
+            },
           },
         },
       });
