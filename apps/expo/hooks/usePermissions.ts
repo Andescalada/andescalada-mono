@@ -1,10 +1,11 @@
 import { Permissions } from "@andescalada/api/src/types/permissions";
 import { useAppSelector } from "@hooks/redux";
 import type { Zone } from "@prisma/client";
+import { useFocusEffect } from "@react-navigation/native";
 import { isExpired } from "@utils/decode";
 import Env from "@utils/env";
 import storage, { Store } from "@utils/mmkv/storage";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import * as Sentry from "sentry-expo";
 import { parse, stringify } from "superjson";
 
@@ -49,11 +50,12 @@ const usePermissions = ({ zoneId }: Args) => {
         permissions = await getPermissionsFromUpstash(email, zoneId).then((p) =>
           p ? parse<Permissions>(p) : undefined,
         );
+
         const d = new Date();
         exp = d.setTime(d.getTime() + PERMISSIONS_DURATION);
       }
 
-      if (!permissions || permission?.size === 0) {
+      if (!permissions || Array.from(permissions || []).length === 0) {
         setPermissions(new Set());
         return;
       }
@@ -67,11 +69,13 @@ const usePermissions = ({ zoneId }: Args) => {
     } catch (err) {
       Sentry.Native.captureException(err);
     }
-  }, [email, permission?.size, zoneId]);
+  }, [email, zoneId]);
 
-  useEffect(() => {
-    getPermissions();
-  }, [getPermissions]);
+  useFocusEffect(
+    useCallback(() => {
+      getPermissions();
+    }, [getPermissions]),
+  );
 
   return { permission, getPermissions };
 };

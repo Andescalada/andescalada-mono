@@ -9,13 +9,14 @@
     "web": "expo start --web",
     "dev": "APP_VARIANT=development yarn start",
     "debug": "yarn dev --force-manifest-type=classic",
+    "load-env": "export $(cat .env | egrep -v '#|^$' | xargs) && echo \"Loaded .env variables.\"",
     "prod": "npx expo start --dev-client --no-dev",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json",
     "build": "EAS_BUILD_AUTOCOMMIT=1 CI=1  eas build --profile production --non-interactive --platform all",
     "build:preview": "APP_VARIANT=preview CI=1 eas build --profile preview",
     "build:dev": "APP_VARIANT=development eas build --profile development --platform all",
     "build:dev-simulator": "APP_VARIANT=development eas build --profile development-simulator --platform ios",
-    "update:preview": "APP_VARIANT=preview eas update --branch preview  --platform all"
+    "update:preview": "yarn load-env && APP_VARIANT=preview eas update --branch preview  --platform all"
   },
   "dependencies": {
     "@andescalada/api": "*",
