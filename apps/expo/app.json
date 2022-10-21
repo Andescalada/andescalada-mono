@@ -34,7 +34,7 @@
         ],
         "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
       },
-      "buildNumber": "10"
+      "buildNumber": "11"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -43,7 +43,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 11
+      "versionCode": 12
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
