@@ -1,6 +1,7 @@
 import { MMKV } from "react-native-mmkv";
 
-const storage = new MMKV();
+console.log(process.env.APP_VARIANT);
+const storage = new MMKV({ id: `expo-${process.env.APP_VARIANT}` });
 
 export enum Store {
   PERMISSIONS = "permissions",

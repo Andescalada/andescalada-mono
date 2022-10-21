@@ -44,21 +44,15 @@ const usePermissions = ({ zoneId }: Args) => {
       let { exp, permissions } = getPermissionFromStorage(email, zoneId) || {};
 
       if (permissions) setPermissions(permissions);
+      if (exp && !isExpired(exp)) return;
 
-      if (!permissions || (exp && isExpired(exp))) {
-        storage.delete(`${Store.PERMISSIONS}.${email}.${zoneId}`);
+      storage.delete(`${Store.PERMISSIONS}.${email}.${zoneId}`);
 
-        permissions = await getPermissionsFromUpstash(email, zoneId).then((p) =>
-          p ? parse<Permissions>(p) : undefined,
-        );
+      permissions = await getPermissionsFromUpstash(email, zoneId).then((p) =>
+        p ? parse<Permissions>(p) : undefined,
+      );
 
-        exp = createExpiration(PERMISSIONS_DURATION);
-      }
-
-      if (!permissions || Array.from(permissions || []).length === 0) {
-        setPermissions(new Set());
-        return;
-      }
+      exp = createExpiration(PERMISSIONS_DURATION);
 
       const newPermissions = stringify({
         permissions,
@@ -66,6 +60,12 @@ const usePermissions = ({ zoneId }: Args) => {
       });
 
       storage.set(`${Store.PERMISSIONS}.${email}.${zoneId}`, newPermissions);
+
+      if (!permissions || Array.from(permissions || []).length === 0) {
+        setPermissions(new Set());
+      } else {
+        setPermissions(permissions);
+      }
     } catch (err) {
       Sentry.Native.captureException(err);
     }
