@@ -1,8 +1,8 @@
 import "dotenv/config";
 
-import { ConfigContext, ExpoConfig } from "@expo/config";
+import type { ConfigContext, ExpoConfig } from "@expo/config";
 
-export default ({ config }: ConfigContext): ExpoConfig => variantConfig(config);
+export default (): ExpoConfig => variantConfig(config);
 
 const variantConfig = (config: ConfigContext["config"]): ExpoConfig => {
   if (process.env.APP_VARIANT === "development") {
@@ -125,3 +125,80 @@ const productionConfig = (config: ConfigContext["config"]): ExpoConfig => ({
       "https://api.cloudinary.com/v1_1/fundacion-andescalada/image/upload",
   },
 });
+
+const config: ConfigContext["config"] = {
+  scheme: "andescalada",
+  owner: "andescalada",
+  version: "1.1.1",
+  jsEngine: "hermes",
+  icon: "./assets/expoConfig/icon_ae.png",
+  orientation: "portrait",
+  userInterfaceStyle: "dark",
+  splash: {
+    image: "./assets/expoConfig/ae_splash_white.png",
+    resizeMode: "contain",
+    backgroundColor: "#121212",
+  },
+  updates: {
+    fallbackToCacheTimeout: 0,
+  },
+  assetBundlePatterns: ["**/*"],
+  ios: {
+    supportsTablet: true,
+    bundleIdentifier: "com.andescalada.app",
+    infoPlist: {
+      LSApplicationQueriesSchemes: ["uber", "comgooglemaps", "waze"],
+      UIBackgroundModes: ["location"],
+      NSUserTrackingUsageDescription:
+        "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas",
+    },
+    buildNumber: "11",
+  },
+  android: {
+    googleServicesFile: "./google-services.json",
+    adaptiveIcon: {
+      foregroundImage:
+        "./assets/expoConfig/android-foregroundImage-adaptiveIcon.png",
+      backgroundImage:
+        "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png",
+    },
+    package: "com.andescalada.app",
+    versionCode: 12,
+  },
+  web: {
+    favicon: "./assets/expoConfig/favicon.png",
+  },
+  extra: {
+    eas: {
+      projectId: "a034137d-75c2-4941-a3b0-003e7b6ff487",
+    },
+  },
+  plugins: [
+    [
+      "expo-image-picker",
+      {
+        photosPermission:
+          "La app accede a tus fotos para que subas topos y fotos de las rutas",
+        cameraPermission:
+          "La app usa la cámara para que subas fotos zonas de escalada e información personal",
+      },
+    ],
+    "expo-tracking-transparency",
+    "expo-community-flipper",
+    "sentry-expo",
+    [
+      "expo-notifications",
+      {
+        icon: "./assets/expoConfig/notification-icon.png",
+        color: "#ffffff",
+      },
+    ],
+  ],
+  hooks: {
+    postPublish: [
+      {
+        file: "sentry-expo/upload-sourcemaps",
+      },
+    ],
+  },
+};
