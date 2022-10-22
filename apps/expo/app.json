@@ -5,7 +5,6 @@
     "scheme": "andescalada",
     "owner": "andescalada",
     "version": "1.1.1",
-    "orientation": "portrait",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "userInterfaceStyle": "dark",
