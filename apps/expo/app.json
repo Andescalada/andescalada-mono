@@ -7,6 +7,7 @@
     "version": "1.1.1",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
+    "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/expoConfig/ae_splash_white.png",
