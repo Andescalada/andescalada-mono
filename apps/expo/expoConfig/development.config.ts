@@ -33,8 +33,6 @@ const developmentConfig = (config: ConfigContext["config"]): ExpoConfig => ({
   extra: {
     ...config.extra,
     featureFlags: featureFlags.development,
-    UPSTASH_REDIS_REST_URL: "https://us1-generous-lark-38614.upstash.io",
-    UPSTASH_REDIS_REST_TOKEN: process.env.DEV_UPSTASH_REDIS_REST_TOKEN,
     SENTRY_DEPLOY_ENV: "development",
     AUTH0_DOMAIN: "andescalada-dev.us.auth0.com",
     AUTH0_CLIENT_ID: "8rRn5mILmCShT1wjCZ38wLR4Plopabk4",

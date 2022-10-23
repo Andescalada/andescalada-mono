@@ -34,8 +34,6 @@ const previewConfig = (config: ConfigContext["config"]): ExpoConfig => ({
     ...config.extra,
     featureFlags: featureFlags.preview,
     API_URL: "https://preview-andescalada-mono.vercel.app",
-    UPSTASH_REDIS_REST_URL: "https://us1-generous-lark-38614.upstash.io",
-    UPSTASH_REDIS_REST_TOKEN: process.env.DEV_UPSTASH_REDIS_REST_TOKEN,
     SENTRY_DEPLOY_ENV: "preview",
     AUTH0_DOMAIN: "andescalada-dev.us.auth0.com",
     AUTH0_CLIENT_ID: "8rRn5mILmCShT1wjCZ38wLR4Plopabk4",

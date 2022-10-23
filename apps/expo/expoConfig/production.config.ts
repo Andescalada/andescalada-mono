@@ -19,8 +19,6 @@ const productionConfig = (config: ConfigContext["config"]): ExpoConfig => ({
     ...config.extra,
     featureFlags: featureFlags.production,
     API_URL: "https://andescalada-mono.vercel.app",
-    UPSTASH_REDIS_REST_URL: "https://us1-rational-wahoo-38618.upstash.io",
-    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     SENTRY_DEPLOY_ENV: "production",
     AUTH0_DOMAIN: "andescalada.us.auth0.com",
     AUTH0_CLIENT_ID: "HpNoZWmoc6zbp1mmDlhNPsgWRsbBwJ39",

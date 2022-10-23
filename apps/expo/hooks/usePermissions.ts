@@ -1,30 +1,9 @@
-import { Permissions } from "@andescalada/api/src/types/permissions";
+import type { Permissions } from "@andescalada/api/src/types/permissions";
+import { trpc } from "@andescalada/utils/trpc";
 import { useAppSelector } from "@hooks/redux";
 import type { Zone } from "@prisma/client";
-import { useFocusEffect } from "@react-navigation/native";
-import createExpiration from "@utils/createExpiration";
-import { isExpired } from "@utils/decode";
-import Env from "@utils/env";
 import storage, { Store } from "@utils/mmkv/storage";
-import { useCallback, useState } from "react";
-import * as Sentry from "sentry-expo";
 import { parse, stringify } from "superjson";
-
-const PERMISSIONS_DURATION = 5 * 60 * 1000; // 5 minutes
-
-interface PermissionInStorage {
-  permissions: Permissions;
-  exp: number;
-}
-
-const getPermissionsFromUpstash = (key: string, value: string) =>
-  fetch(`${Env.UPSTASH_REDIS_REST_URL}/hget/${key}/${value}`, {
-    headers: {
-      Authorization: `Bearer ${Env.UPSTASH_REDIS_REST_TOKEN}`,
-    },
-  })
-    .then((r) => r.json())
-    .then((r) => r.result);
 
 interface Args {
   zoneId: Zone["id"];
@@ -33,51 +12,21 @@ interface Args {
 const usePermissions = ({ zoneId }: Args) => {
   const { email } = useAppSelector((state) => state.auth);
 
-  const [permission, setPermissions] = useState<Permissions | undefined>(
-    new Set(),
+  if (!email) throw new Error("No email found");
+  const storagePermissions = getPermissionFromStorage(email, zoneId);
+
+  const permissions = trpc.user.zonePermissions.useQuery(
+    { zoneId },
+    {
+      staleTime: 1000 * 60 * 2,
+      initialData: storagePermissions,
+      onSuccess: (data) => {
+        storage.set(`${Store.PERMISSIONS}.${email}.${zoneId}`, stringify(data));
+      },
+    },
   );
 
-  const getPermissions = useCallback(async () => {
-    try {
-      if (!email) throw new Error("No email found");
-
-      let { exp, permissions } = getPermissionFromStorage(email, zoneId) || {};
-
-      if (permissions) setPermissions(permissions);
-      if (exp && !isExpired(exp)) return;
-
-      storage.delete(`${Store.PERMISSIONS}.${email}.${zoneId}`);
-
-      permissions = await getPermissionsFromUpstash(email, zoneId).then((p) =>
-        p ? parse<Permissions>(p) : undefined,
-      );
-
-      exp = createExpiration(PERMISSIONS_DURATION);
-
-      const newPermissions = stringify({
-        permissions,
-        exp,
-      });
-
-      storage.set(`${Store.PERMISSIONS}.${email}.${zoneId}`, newPermissions);
-
-      if (!permissions || Array.from(permissions || []).length === 0) {
-        setPermissions(new Set());
-      } else {
-        setPermissions(permissions);
-      }
-    } catch (err) {
-      Sentry.Native.captureException(err);
-    }
-  }, [email, zoneId]);
-
-  useFocusEffect(
-    useCallback(() => {
-      getPermissions();
-    }, [getPermissions]),
-  );
-
-  return { permission, getPermissions };
+  return { permission: permissions.data, getPermissions: permissions.refetch };
 };
 
 export default usePermissions;
@@ -85,5 +34,5 @@ export default usePermissions;
 const getPermissionFromStorage = (email: string, zoneId: string) => {
   const s = storage.getString(`${Store.PERMISSIONS}.${email}.${zoneId}`);
   if (!s) return undefined;
-  return parse<PermissionInStorage>(s);
+  return parse<Permissions>(s);
 };
