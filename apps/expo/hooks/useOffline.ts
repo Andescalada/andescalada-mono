@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import {
   persistQueryClientRestore,
+  persistQueryClientSave,
   persistQueryClientSubscribe,
 } from "@tanstack/react-query-persist-client";
 import featureFlags from "@utils/featureFlags";
@@ -78,19 +79,24 @@ const useOffline = () => {
     utils.zones.allSectors,
   ]);
 
+  let save: (() => void) | undefined;
   if (featureFlags.offline) {
-    const unsubscribe = persistQueryClientSubscribe({
-      queryClient,
-      persister,
-      dehydrateOptions: {
-        shouldDehydrateQuery: ({ queryHash, state }) => {
-          return idsToCached.includes(queryHash) && state.status === "success";
+    save = () =>
+      persistQueryClientSave({
+        queryClient,
+        persister,
+        dehydrateOptions: {
+          shouldDehydrateQuery: ({ queryHash, state }) => {
+            return (
+              idsToCached.includes(queryHash) && state.status === "success"
+            );
+          },
         },
-      },
-    });
+      });
   }
   const { isOfflineMode } = useOfflineMode();
   useEffect(() => {
+    save && save();
     if (isOfflineMode) {
       console.log("first");
       persistQueryClientRestore({ queryClient, persister, maxAge: 0 });
