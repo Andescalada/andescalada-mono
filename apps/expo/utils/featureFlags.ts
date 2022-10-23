@@ -1,7 +1,6 @@
-import { FF_OFFLINE } from "@env";
+import Constants from "expo-constants";
+import { FeatureFlag } from "expoConfig/featureFlags";
 
-const featureFlags = {
-  offline: FF_OFFLINE === "true",
-};
+const featureFlags = Constants.expoConfig?.extra?.featureFlags as FeatureFlag;
 
 export default featureFlags;
