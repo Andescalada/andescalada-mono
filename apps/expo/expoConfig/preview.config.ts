@@ -6,7 +6,7 @@ const previewConfig = (config: ConfigContext["config"]): ExpoConfig => ({
   ...config,
   name: "Andescalada β",
   icon: "./assets/expoConfig/icon_ae_preview.png",
-  slug: "andescalada-app",
+  slug: config.slug as string,
   owner: config.owner,
   currentFullName: `@${config.owner}/${config.slug}`,
   originalFullName: `@${config.owner}/${config.slug}`,
