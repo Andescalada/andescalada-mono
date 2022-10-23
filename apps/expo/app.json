@@ -63,6 +63,7 @@
       ],
       "expo-tracking-transparency",
       "expo-community-flipper",
+      "react-native-flipper-performance-plugin",
       "sentry-expo",
       [
         "expo-notifications",
