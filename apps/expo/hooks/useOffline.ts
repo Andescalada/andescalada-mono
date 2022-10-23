@@ -83,8 +83,8 @@ const useOffline = () => {
       queryClient,
       persister,
       dehydrateOptions: {
-        shouldDehydrateQuery: ({ queryHash }) => {
-          return idsToCached.includes(queryHash);
+        shouldDehydrateQuery: ({ queryHash, state }) => {
+          return idsToCached.includes(queryHash) && state.status === "success";
         },
       },
     });
@@ -92,6 +92,7 @@ const useOffline = () => {
   const { isOfflineMode } = useOfflineMode();
   useEffect(() => {
     if (isOfflineMode) {
+      console.log("first");
       persistQueryClientRestore({ queryClient, persister, maxAge: 0 });
     }
     onlineManager.setOnline(!isOfflineMode);

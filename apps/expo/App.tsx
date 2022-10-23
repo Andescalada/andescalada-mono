@@ -27,7 +27,6 @@ if (__DEV__) {
 
 Sentry.init({
   dsn: Env.SENTRY_DNS,
-  // enableNative: !__DEV__,
   debug: __DEV__,
   enableInExpoDevelopment: true,
   environment: Env.SENTRY_DEPLOY_ENV,

@@ -33,7 +33,15 @@ const InfoAccessColor = (infoAccess: InfoAccess) => {
 };
 
 const ZonesListScreen = ({ navigation }: Props) => {
-  const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
+  const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery(
+    undefined,
+    {
+      onError(err) {
+        console.log(err.message === "Network request failed");
+        console.log(err.data);
+      },
+    },
+  );
   const refresh = useRefresh(refetch, isFetching);
 
   useSentryWithPermission();
