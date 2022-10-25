@@ -3,11 +3,6 @@ generator client {
   previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
 }
 
-generator enum {
-  provider = "node node_modules/prisma-enum-generator"
-  output   = "../packages/db/modelEnums"
-}
-
 generator zod {
   provider = "prisma-zod-generator"
   output   = "../packages/db/zod"

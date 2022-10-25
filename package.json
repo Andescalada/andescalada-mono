@@ -34,7 +34,8 @@
     ]
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "schema": "packages/db/prisma/schema.prisma",
+    "seed": "ts-node packages/db/prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "4",
