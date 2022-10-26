@@ -2,3 +2,5 @@ client
 enums
 zod
 modelEnums
+
+.turbo
