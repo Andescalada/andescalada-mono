@@ -3,7 +3,7 @@ import { MMKV } from "react-native-mmkv";
 console.log(process.env.APP_VARIANT);
 const storage = new MMKV({ id: `expo-${process.env.APP_VARIANT}` });
 
-export enum Store {
+export enum Storage {
   PERMISSIONS = "permissions",
   ACCESS_TOKEN = "TOKEN",
   REFRESH_TOKEN = "REFRESH_TOKEN",

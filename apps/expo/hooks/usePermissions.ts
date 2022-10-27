@@ -2,7 +2,7 @@ import type { Permissions } from "@andescalada/api/src/types/permissions";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppSelector } from "@hooks/redux";
 import type { Zone } from "@prisma/client";
-import storage, { Store } from "@utils/mmkv/storage";
+import storage, { Storage } from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
 
 interface Args {
@@ -21,7 +21,10 @@ const usePermissions = ({ zoneId }: Args) => {
       staleTime: 1000 * 60 * 2,
       initialData: storagePermissions,
       onSuccess: (data) => {
-        storage.set(`${Store.PERMISSIONS}.${email}.${zoneId}`, stringify(data));
+        storage.set(
+          `${Storage.PERMISSIONS}.${email}.${zoneId}`,
+          stringify(data),
+        );
       },
     },
   );
@@ -32,7 +35,7 @@ const usePermissions = ({ zoneId }: Args) => {
 export default usePermissions;
 
 const getPermissionFromStorage = (email: string, zoneId: string) => {
-  const s = storage.getString(`${Store.PERMISSIONS}.${email}.${zoneId}`);
+  const s = storage.getString(`${Storage.PERMISSIONS}.${email}.${zoneId}`);
   if (!s) return undefined;
   return parse<Permissions>(s);
 };
