@@ -46,7 +46,7 @@ export const getProfileImage = (publicId?: string, size?: number) => {
 };
 
 const imageObject = (image?: CloudinaryImage, publicId?: string | null) => {
-  if (!image || !publicId) return { url: null, uniqueId: null };
+  if (!image || !publicId) return null;
   const uniqueId = `${publicId}-${image.toString()}`.replace(/\//g, "-");
 
   return {
