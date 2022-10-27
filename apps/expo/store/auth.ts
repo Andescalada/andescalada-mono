@@ -1,4 +1,3 @@
-import { Storage } from "@assets/Constants";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { auth0Tokens, login, logout } from "@utils/auth0";
 import {
@@ -7,7 +6,7 @@ import {
   GlobalPermissions,
 } from "@utils/auth0/types";
 import { isTokenExpired, tokenDecode } from "@utils/decode";
-import storage from "@utils/mmkv/storage";
+import storage, { Store } from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
 
 export interface AuthState {
@@ -40,9 +39,9 @@ export const loginAuth0 = createAsyncThunk(
       const { accessToken, decodedIdToken, refreshToken } = await login();
 
       const decodedAccessToken = tokenDecode<DecodedAccessToken>(accessToken);
-      storage.set(Storage.ACCESS_TOKEN, accessToken);
-      storage.set(Storage.REFRESH_TOKEN, refreshToken);
-      storage.set(Storage.DECODED_ID_TOKEN, stringify(decodedIdToken));
+      storage.set(Store.ACCESS_TOKEN, accessToken);
+      storage.set(Store.REFRESH_TOKEN, refreshToken);
+      storage.set(Store.DECODED_ID_TOKEN, stringify(decodedIdToken));
       dispatch(setLoadingAuth(false));
       dispatch(setAutoLoginCompleted(true));
       return {
@@ -63,9 +62,9 @@ export const autoLoginAuth0 = createAsyncThunk(
   "auth/autoLoginAuth0",
   async (_, { rejectWithValue }) => {
     try {
-      const token = storage.getString(Storage.ACCESS_TOKEN);
+      const token = storage.getString(Store.ACCESS_TOKEN);
       const decodedIdToken = parse<DecodedIdToken>(
-        storage.getString(Storage.DECODED_ID_TOKEN) || "{}",
+        storage.getString(Store.DECODED_ID_TOKEN) || "{}",
       );
 
       if (!token) return { isAuth: false };

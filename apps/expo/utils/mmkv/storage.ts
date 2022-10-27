@@ -8,6 +8,7 @@ export enum Store {
   ACCESS_TOKEN = "TOKEN",
   REFRESH_TOKEN = "REFRESH_TOKEN",
   DECODED_ID_TOKEN = "DECODED_ID_TOKEN",
+  DOWNLOADED_ASSETS = "DOWNLOADED_ASSETS",
 }
 
 export default storage;

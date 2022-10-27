@@ -1,5 +1,0 @@
-export enum Storage {
-  ACCESS_TOKEN = "TOKEN",
-  REFRESH_TOKEN = "REFRESH_TOKEN",
-  DECODED_ID_TOKEN = "DECODED_ID_TOKEN",
-}
