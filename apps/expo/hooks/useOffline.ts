@@ -1,109 +1,118 @@
+import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { transformer } from "@andescalada/api/src/transformer";
 import { trpc } from "@andescalada/utils/trpc";
-import useOfflineMode from "@hooks/useOfflineMode";
-import {
-  hashQueryKey,
-  onlineManager,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
-  persistQueryClientRestore,
-  persistQueryClientSave,
-  persistQueryClientSubscribe,
-} from "@tanstack/react-query-persist-client";
+import { useQueryClient } from "@tanstack/react-query";
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { getThumbnail, optimizedImage } from "@utils/cloudinary";
+import Env from "@utils/env";
 import featureFlags from "@utils/featureFlags";
-import { createMMKVStoragePersister } from "@utils/mmkv/createMMKVPersister";
-import storage from "@utils/mmkv/storage";
-import { useEffect, useMemo } from "react";
+import { storeImage } from "@utils/FileSystem/storeImage";
+import storage, { Storage } from "@utils/mmkv/storage";
+import offlineDb from "@utils/quick-sqlite";
+import Constants from "expo-constants";
+import { parse, stringify } from "superjson";
 
-const persister = createMMKVStoragePersister({ storage });
+const localHost =
+  Constants.manifest2?.extra?.expoGo?.debuggerHost ||
+  Constants.manifest?.debuggerHost;
 
-type Key = {
-  zoneId: "zoneId";
-  sectorId: "sectorId";
-  wallId: "wallId";
-  routeId: "routeId";
-  topoId: "topoId";
-  routePathId: "routePathId";
+const url = __DEV__
+  ? `http://${localHost?.split(":").shift()}:3000`
+  : Env.API_URL;
+
+const accessToken = () => {
+  return storage.getString(Storage.ACCESS_TOKEN);
 };
 
-type QueryKey = [string[], Partial<{ [key in keyof Key]: string }>];
+const client = createTRPCProxyClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: `${url}/api/trpc`,
+
+      async headers() {
+        return {
+          Authorization: `Bearer ${accessToken()}`,
+        };
+      },
+    }),
+  ],
+  transformer,
+});
 
 const useOffline = () => {
+  console.log("useOffline disabled");
+};
+
+const useOffline1 = () => {
   const queryClient = useQueryClient();
 
-  const downloadList = trpc.user.getDownloadedAssets.useQuery(undefined, {
+  const { data } = trpc.user.getDownloadedAssets.useQuery(undefined, {
     enabled: featureFlags.offline,
   });
   const utils = trpc.useContext();
 
-  const idsToCached = useMemo(() => {
-    const ids = new Set<QueryKey>([]);
+  if (!data) return;
 
-    downloadList?.data?.DownloadedZones.flatMap((z) => {
-      ids.add([["zones", "allSectors"], { zoneId: z.id }]);
-      utils.zones.allSectors.prefetch({ zoneId: z.id });
-      return z.sectors;
-    })
-      .flatMap((s) => {
-        ids.add([["sectors", "allWalls"], { sectorId: s.id }]);
-        utils.sectors.allWalls.prefetch({ sectorId: s.id });
-        return s.walls;
-      })
-      .flatMap((w) => {
-        ids.add([["walls", "byId"], { wallId: w.id }]);
-        utils.walls.byId.prefetch({ wallId: w.id });
-        const { routes, topos } = w;
-        return { routes, topos };
-      })
-      .flatMap((rt) => {
-        const routePaths = rt.routes.flatMap((r) => {
-          ids.add([["route"], { routeId: r.id }]);
-          return r.RoutePath;
-        });
-        rt.topos.forEach((t) => {
-          ids.add([["topos", "byId"], { topoId: t.id }]);
-          utils.topos.byId.prefetch({ topoId: t.id });
-        });
-        return routePaths;
-      })
-      .forEach((rp) => {
-        ids.add([["routePath"], { routePathId: rp.id }]);
-      });
+  storage.set(Storage.DOWNLOADED_ASSETS, stringify(data));
 
-    return Array.from(ids).map((k) => hashQueryKey(k));
-  }, [
-    downloadList?.data?.DownloadedZones,
-    utils.sectors.allWalls,
-    utils.topos.byId,
-    utils.walls.byId,
-    utils.zones.allSectors,
-  ]);
+  data.forEach(async (asset) => {
+    const { params, path, version, zoneId } = asset;
+    Object.defineProperty;
+    const selectedUtils = lookup(utils, path);
+    const selectedClient = lookup(client, path);
 
-  let save: (() => void) | undefined;
-  if (featureFlags.offline) {
-    save = () =>
-      persistQueryClientSave({
-        queryClient,
-        persister,
-        dehydrateOptions: {
-          shouldDehydrateQuery: ({ queryHash, state }) => {
-            return (
-              idsToCached.includes(queryHash) && state.status === "success"
-            );
-          },
-        },
-      });
-  }
-  const { isOfflineMode } = useOfflineMode();
-  useEffect(() => {
-    save && save();
-    if (isOfflineMode) {
-      console.log("first");
-      persistQueryClientRestore({ queryClient, persister, maxAge: 0 });
+    const savedData = offlineDb.get(
+      stringify({ path, params, version }),
+      zoneId,
+    );
+    if (savedData) {
+      const parsedData = parse(savedData);
+      selectedUtils.setData(parsedData);
+    } else {
+      const data = await selectedClient.query(params);
+      await offlineDb.set(stringify({ path, params, version }), zoneId, data);
+
+      storage.set(stringify({ path, params }), stringify(data));
+      selectedUtils.setData(data);
+      if ("image" in data) {
+        if (data.image.publicId === undefined || data.image.publicId === null)
+          return;
+        const optimizedUrl = optimizedImage(data.image.publicId);
+        const thumbnailUrl = getThumbnail(data.image.publicId);
+        optimizedUrl && storeImage(optimizedUrl, "permanent");
+        thumbnailUrl && storeImage(thumbnailUrl, "permanent");
+      }
     }
-    onlineManager.setOnline(!isOfflineMode);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOfflineMode]);
+
+    // const data = await selectedUtils.fetch(params);
+  });
 };
 
+// const AppRouter = lookup(appRouter, "sectors.allWall");
+
 export default useOffline;
+
+type PathImpl<T, Key extends keyof T> = Key extends string
+  ? T[Key] extends Record<string, any>
+    ?
+        | `${Key}.${PathImpl<T[Key], Exclude<keyof T[Key], keyof any[]>> &
+            string}`
+        | `${Key}.${Exclude<keyof T[Key], keyof any[]> & string}`
+    : never
+  : never;
+
+type PathImpl2<T> = PathImpl<T, keyof T> | keyof T;
+
+type Path<T> = PathImpl2<T> extends string | keyof T ? PathImpl2<T> : keyof T;
+
+type PathValue<T, P extends Path<T>> = P extends `${infer Key}.${infer Rest}`
+  ? Key extends keyof T
+    ? Rest extends Path<T[Key]>
+      ? PathValue<T[Key], Rest>
+      : never
+    : never
+  : P extends keyof T
+  ? T[P]
+  : never;
+
+declare function lookup<T, P extends Path<T>>(obj: T, path: P): PathValue<T, P>;
