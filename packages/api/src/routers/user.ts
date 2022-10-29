@@ -273,8 +273,8 @@ export const userRouter = t.router({
       });
     },
   ),
-  getDownloadedAssets: protectedProcedure.query(({ ctx }) =>
-    ctx.prisma.user.findUnique({
+  getDownloadedAssets: protectedProcedure.query(async ({ ctx }) => {
+    const list = await ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },
       select: {
         DownloadedZones: {
@@ -301,8 +301,82 @@ export const userRouter = t.router({
           },
         },
       },
-    }),
-  ),
+    });
+
+    if (!list) {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
+
+    const ids = list.DownloadedZones.flatMap((z) => {
+      const zoneId = z.id;
+      const sectors = z.sectors.flatMap((s) => {
+        const walls = s.walls.flatMap((w) => {
+          const topos = w.topos.flatMap((t) => {
+            return {
+              path: "topos.byId" as const,
+              params: { topoId: t.id },
+              version: t.version,
+              zoneId,
+            };
+          });
+          return [
+            {
+              path: "walls.byId" as const,
+              params: { wallId: w.id },
+              version: w.version,
+              zoneId,
+            },
+            ...topos,
+          ];
+        });
+        return [
+          {
+            path: "sectors.allWalls" as const,
+            params: { sectorId: s.id },
+            version: s.version,
+            zoneId,
+          },
+          ...walls,
+        ];
+      });
+      return [
+        {
+          path: "zones.allSectors" as const,
+          params: { zoneId: z.id },
+          version: z.version,
+          zoneId,
+        },
+        ...sectors,
+      ];
+    });
+
+    const recorrer = ids.map((item) => {
+      const { path, params, version } = item;
+      const router = path[0];
+      const param = path[1];
+    });
+
+    return ids;
+  }),
 });
 
 const idAndVersion = { id: true, version: true };
+
+type Key = {
+  zoneId: "zoneId";
+  sectorId: "sectorId";
+  wallId: "wallId";
+  routeId: "routeId";
+  topoId: "topoId";
+  routePathId: "routePathId";
+};
+type KeyTypes = {
+  zoneId: string;
+  sectorId: string;
+  wallId: string;
+  routeId: string;
+  topoId: string;
+  routePathId: string;
+};
+
+type QueryKey = [readonly [string, string], KeyTypes, { version: number }];
