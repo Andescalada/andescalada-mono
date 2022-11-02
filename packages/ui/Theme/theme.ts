@@ -35,6 +35,7 @@ const darkBaseTheme = {
     selectedButtonGroup: pallete.brand.primaryA,
     buttonGroup: pallete.grayscale[600],
     transitionScreen: pallete.grayscale.black,
+    zoneOptionsIcons: pallete.grayscale[500],
     ...lisItemVariantsColors,
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,

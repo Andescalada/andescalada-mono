@@ -1,6 +1,7 @@
 import zone from "@andescalada/api/schemas/zone";
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
+  A,
   ActivityIndicator,
   Box,
   Button,
@@ -23,9 +24,15 @@ import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import featureFlags from "@utils/featureFlags";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
+import {
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const { schema } = zone;
 
@@ -77,6 +84,15 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
 
+  const [openAll, setOpenAll] = useState(false);
+  const open = useSharedValue(-180);
+
+  const degs = useDerivedValue(() => withTiming(open.value));
+
+  const toggleButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${degs.value}deg` }],
+  }));
+
   if (isPaused)
     return (
       <Screen padding="m" justifyContent="center" alignItems="center">
@@ -94,23 +110,33 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         />
       </FormProvider>
       {featureFlags.offline && (
-        <Box alignItems="flex-end">
+        <Box flexDirection="row" justifyContent="flex-end">
           <Pressable
             flexDirection="row"
             alignItems="center"
             onPress={onDownloadPress}
           >
-            <Text marginRight="s">
-              {isDownloaded ? "Descargado" : "Descargar"}
-            </Text>
             <Ionicons
               name={
                 isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
               }
               size={30}
-              color={theme.colors["brand.primaryA"]}
+              color={theme.colors["zoneOptionsIcons"]}
             />
           </Pressable>
+          <A.Pressable
+            onPress={() => {
+              setOpenAll((prev) => !prev);
+              open.value = open.value === 0 ? -180 : 0;
+            }}
+            style={toggleButtonStyle}
+          >
+            <Ionicons
+              name={openAll ? "caret-down-circle" : "caret-down-circle-outline"}
+              size={30}
+              color={theme.colors["zoneOptionsIcons"]}
+            />
+          </A.Pressable>
         </Box>
       )}
       <Box flex={1}>
@@ -126,7 +152,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
               infoAccess={data?.infoAccess}
             />
           )}
-          renderItem={({ item }) => <ZoneItem item={item} />}
+          renderItem={({ item }) => (
+            <ZoneItem item={item} defaultOpen={openAll} />
+          )}
         />
       </Box>
     </Screen>

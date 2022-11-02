@@ -21,11 +21,12 @@ type Item = ArrElement<AllSectors["sectors"]>;
 
 interface Props {
   item: Item;
+  defaultOpen?: boolean;
 }
 
-const ZoneItem: FC<Props> = ({ item }) => {
+const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
   const { aRef, onOpen, style } = useAnimatedHeight({
-    defaultOpen: true,
+    defaultOpen,
   });
 
   const navigation =

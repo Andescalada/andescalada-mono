@@ -41,8 +41,8 @@ const useAnimatedHeight = ({ defaultOpen = false }: Config = {}) => {
         })();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultOpen]);
+    open.value = defaultOpen;
+  }, [aRef, defaultOpen, height, open]);
 
   const onOpen = useCallback(() => {
     if (height.value === 0) {
