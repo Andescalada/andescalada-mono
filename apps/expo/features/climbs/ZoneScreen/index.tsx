@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Box,
   Button,
-  ListItem,
   Pressable,
   Screen,
   Text,
@@ -18,6 +17,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
+import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
@@ -126,20 +126,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
               infoAccess={data?.infoAccess}
             />
           )}
-          renderItem={({ item }) => (
-            <ListItem
-              marginVertical={"s"}
-              onPress={() =>
-                navigation.navigate(ClimbsNavigationRoutes.Sector, {
-                  sectorId: item.id,
-                  sectorName: item.name,
-                  zoneId: route.params.zoneId,
-                })
-              }
-            >
-              <Text variant="p1R">{item.name}</Text>
-            </ListItem>
-          )}
+          renderItem={({ item }) => <ZoneItem item={item} />}
         />
       </Box>
     </Screen>

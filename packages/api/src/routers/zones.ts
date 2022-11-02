@@ -41,7 +41,16 @@ export const zonesRouter = t.router({
       where: { id: input.zoneId },
       select: {
         isDeleted: true,
-        sectors: { where: { isDeleted: SoftDelete.NotDeleted } },
+        sectors: {
+          where: { isDeleted: SoftDelete.NotDeleted },
+          include: {
+            walls: {
+              where: { isDeleted: SoftDelete.NotDeleted },
+              select: { name: true, id: true },
+              orderBy: { position: "asc" },
+            },
+          },
+        },
         infoAccess: true,
         DownloadedBy: { where: { email: ctx.user.email } },
       },
