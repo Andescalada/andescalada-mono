@@ -95,7 +95,12 @@ export const routesRouter = t.router({
 
       return ctx.prisma.route.update({
         where: { id: input.routeId },
-        data: { RouteGrade: { update: { ...grade } }, name, kind },
+        data: {
+          RouteGrade: { update: { ...grade } },
+          name,
+          kind,
+          version: { increment: 1 },
+        },
       });
     }),
   delete: protectedZoneProcedure

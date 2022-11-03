@@ -33,7 +33,7 @@ export const zonesRouter = t.router({
     async ({ ctx, input }) =>
       await ctx.prisma.zone.update({
         where: { id: input.zoneId },
-        data: { name: input.name },
+        data: { name: input.name, version: { increment: 1 } },
       }),
   ),
   allSectors: protectedZoneProcedure.query(async ({ ctx, input }) => {

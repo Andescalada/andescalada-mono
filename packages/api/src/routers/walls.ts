@@ -89,7 +89,7 @@ export const wallsRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.wall.update({
         where: { id: input.wallId },
-        data: { name: input.name },
+        data: { name: input.name, version: { increment: 1 } },
       });
     }),
   delete: protectedZoneProcedure

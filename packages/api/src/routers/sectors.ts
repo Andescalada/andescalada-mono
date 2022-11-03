@@ -52,7 +52,7 @@ export const sectorsRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.sector.update({
         where: { id: input.sectorId },
-        data: { name: input.name },
+        data: { name: input.name, version: { increment: 1 } },
       });
     }),
   allWalls: t.procedure
