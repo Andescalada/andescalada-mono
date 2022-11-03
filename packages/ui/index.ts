@@ -15,6 +15,7 @@ export { default as SafeAreaView } from "./SafeAreaView/SafeAreaView";
 export { default as Screen } from "./Screen/Screen";
 export { default as ScrollView } from "./ScrollView/ScrollView";
 export { default as SemanticButton } from "./SemanticButton/SemanticButton";
+export { default as SubItem } from "./SubItem/SubItem";
 export { default as Text } from "./Text/Text";
 export { default as TextInput } from "./TextInput/TextInput";
 export type { BaseTheme, Colors, Theme } from "./Theme/theme";
