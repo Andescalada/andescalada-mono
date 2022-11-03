@@ -2,6 +2,7 @@ import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
+  Button,
   ListItem,
   Pressable,
   Screen,
@@ -49,29 +50,44 @@ const UserZonesScreen = ({ navigation }: Props) => {
     );
   return (
     <Screen padding="m" safeAreaDisabled>
-      <Pressable
-        borderRadius={4}
-        backgroundColor="filledTextInputVariantBackground"
-        height={40}
-        onPress={() => {
-          Keyboard.dismiss();
-          // findZoneRef.current?.expand();
-        }}
-        alignItems="center"
-        marginBottom="m"
-        paddingLeft="s"
-        flexDirection="row"
-      >
-        <Ionicons
-          name="search"
-          size={24}
-          color={theme.colors["grayscale.600"]}
+      <Box flexDirection="row" width="100%">
+        <Pressable
+          borderRadius={4}
+          flex={2}
+          backgroundColor="filledTextInputVariantBackground"
+          height={40}
+          onPress={() => {
+            Keyboard.dismiss();
+            // findZoneRef.current?.expand();
+          }}
+          alignItems="center"
+          marginBottom="m"
+          paddingLeft="s"
+          flexDirection="row"
+        >
+          <Ionicons
+            name="search"
+            size={24}
+            color={theme.colors["grayscale.600"]}
+          />
+          <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
+            {"Buscar zonas"}
+          </Text>
+        </Pressable>
+        <Button
+          title="Ver todas"
+          flex={0.5}
+          marginLeft="s"
+          variant="transparentSimplified"
+          height={40}
+          titleVariant="p3R"
+          paddingHorizontal="s"
+          onPress={() => {
+            navigation.navigate(ClimbsNavigationRoutes.ZonesList);
+          }}
         />
-        <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
-          {"Buscar zonas"}
-        </Text>
-      </Pressable>
-      <Box flex={1 / 2}>
+      </Box>
+      <Box flex={1}>
         <Text variant="h2">Zonas favoritas</Text>
         <FlatList
           data={data?.FavoriteZones}

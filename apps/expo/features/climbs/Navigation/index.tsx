@@ -28,7 +28,6 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.ZonesList}
           component={ZonesListScreen}
-          options={{ header: () => <UserHeader />, headerShown: true }}
         />
         <Stack.Screen
           name={ClimbsNavigationRoutes.Zone}

@@ -1,6 +1,7 @@
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
+  BackButton,
   Box,
   ListItem,
   Screen,
@@ -44,8 +45,6 @@ const ZonesListScreen = ({ navigation }: Props) => {
   );
   const refresh = useRefresh(refetch, isFetching);
 
-  useSentryWithPermission();
-
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
@@ -53,8 +52,13 @@ const ZonesListScreen = ({ navigation }: Props) => {
       </Screen>
     );
   return (
-    <Screen padding="m" safeAreaDisabled>
-      <Text variant="h2">Zonas</Text>
+    <Screen padding="m">
+      <Box flexDirection="row" alignItems="center" marginBottom="s">
+        <BackButton onPress={navigation.goBack} />
+        <Text variant="h2" marginLeft="m">
+          Todas las zonas
+        </Text>
+      </Box>
       <FlatList
         data={data}
         refreshControl={refresh}
