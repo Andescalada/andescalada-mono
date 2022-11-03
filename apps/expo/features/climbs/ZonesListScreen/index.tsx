@@ -13,7 +13,6 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useRefresh from "@hooks/useRefresh";
-import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.ZonesList>;

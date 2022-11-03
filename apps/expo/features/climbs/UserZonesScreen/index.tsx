@@ -6,9 +6,12 @@ import {
   ListItem,
   Pressable,
   Screen,
+  ScrollView,
   Text,
 } from "@andescalada/ui";
 import theme from "@andescalada/ui/Theme/theme";
+import { trpc } from "@andescalada/utils/trpc";
+import { Octicons } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   ClimbsNavigationRoutes,
@@ -17,7 +20,7 @@ import {
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
-import { FlatList, Keyboard } from "react-native";
+import { Keyboard } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.UserZones>;
 
@@ -40,6 +43,41 @@ const UserZonesScreen = ({ navigation }: Props) => {
   const { data, isLoading, refetch, isFetching } = useOwnInfo();
   const refresh = useRefresh(refetch, isFetching);
 
+  const utils = trpc.useContext();
+
+  const removeAllRecentZones = trpc.user.removeAllRecentZones.useMutation({
+    onMutate: async () => {
+      await utils.user.ownInfo.cancel();
+      const previousData = utils.user.ownInfo.getData();
+      utils.user.ownInfo.setData((old) =>
+        old ? { ...old, RecentZones: [] } : undefined,
+      );
+      return { previousData };
+    },
+    onError: (_, __, context) => {
+      utils.user.ownInfo.setData(context?.previousData);
+    },
+  });
+
+  const removeRecentZone = trpc.user.removeRecentZone.useMutation({
+    onMutate: async ({ zoneId }) => {
+      await utils.user.ownInfo.cancel();
+      const previousData = utils.user.ownInfo.getData();
+      utils.user.ownInfo.setData((old) =>
+        old
+          ? {
+              ...old,
+              RecentZones: old.RecentZones.filter((z) => z.id !== zoneId),
+            }
+          : undefined,
+      );
+      return { previousData };
+    },
+    onError: (_, __, context) => {
+      utils.user.ownInfo.setData(context?.previousData);
+    },
+  });
+
   useSentryWithPermission();
 
   if (isLoading)
@@ -58,7 +96,6 @@ const UserZonesScreen = ({ navigation }: Props) => {
           height={40}
           onPress={() => {
             Keyboard.dismiss();
-            // findZoneRef.current?.expand();
           }}
           alignItems="center"
           marginBottom="m"
@@ -71,7 +108,7 @@ const UserZonesScreen = ({ navigation }: Props) => {
             color={theme.colors["grayscale.600"]}
           />
           <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
-            {"Buscar zonas"}
+            Buscar zonas
           </Text>
         </Pressable>
         <Button
@@ -87,13 +124,17 @@ const UserZonesScreen = ({ navigation }: Props) => {
           }}
         />
       </Box>
-      <Box flex={1}>
-        <Text variant="h2">Zonas favoritas</Text>
-        <FlatList
-          data={data?.FavoriteZones}
-          refreshControl={refresh}
-          renderItem={({ item }) => (
+      <ScrollView refreshControl={refresh}>
+        <Box>
+          <Box flexDirection="row" alignItems="center">
+            <Text variant="h2" marginRight="s">
+              Zonas favoritas
+            </Text>
+            <Octicons name="heart" size={24} color={theme.colors.text} />
+          </Box>
+          {data?.FavoriteZones.map((item) => (
             <ListItem
+              key={item.id}
               marginVertical={"s"}
               onPress={() =>
                 navigation.navigate(ClimbsNavigationRoutes.Zone, {
@@ -115,16 +156,35 @@ const UserZonesScreen = ({ navigation }: Props) => {
                 />
               )}
             </ListItem>
-          )}
-        />
-      </Box>
-      <Box flex={1 / 2}>
-        <Text variant="h2">Zonas recientes</Text>
-        <FlatList
-          data={data?.RecentZones}
-          refreshControl={refresh}
-          renderItem={({ item }) => (
+          ))}
+        </Box>
+        <Box>
+          <Box
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+            marginTop="m"
+          >
+            <Box flexDirection="row" alignItems="center">
+              <Text variant="h2" marginRight="s">
+                Zonas recientes
+              </Text>
+              <Octicons name="history" size={24} color={theme.colors.text} />
+            </Box>
+            <Button
+              variant="transparentSimplified"
+              title="Borrar todo"
+              titleVariant="p3R"
+              paddingHorizontal="xs"
+              height={30}
+              onPress={() => {
+                removeAllRecentZones.mutate();
+              }}
+            />
+          </Box>
+          {data?.RecentZones.map((item) => (
             <ListItem
+              key={item.id}
               marginVertical={"s"}
               onPress={() =>
                 navigation.navigate(ClimbsNavigationRoutes.Zone, {
@@ -137,6 +197,14 @@ const UserZonesScreen = ({ navigation }: Props) => {
               alignItems="flex-end"
             >
               <Text variant="p1R">{item.name}</Text>
+              <Ionicons
+                color="white"
+                name="close"
+                size={20}
+                onPress={() => {
+                  removeRecentZone.mutate({ zoneId: item.id });
+                }}
+              />
               {INFO_ACCESS_FLAG && (
                 <Box
                   width={15}
@@ -146,9 +214,9 @@ const UserZonesScreen = ({ navigation }: Props) => {
                 />
               )}
             </ListItem>
-          )}
-        />
-      </Box>
+          ))}
+        </Box>
+      </ScrollView>
     </Screen>
   );
 };

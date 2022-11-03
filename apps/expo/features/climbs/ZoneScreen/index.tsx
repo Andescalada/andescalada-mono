@@ -41,8 +41,17 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId } = route.params;
 
+  const utils = trpc.useContext();
+
   const { data, refetch, isFetching, isLoading, isError, isPaused } =
-    trpc.zones.allSectors.useQuery({ zoneId });
+    trpc.zones.allSectors.useQuery(
+      { zoneId },
+      {
+        onSuccess() {
+          utils.user.ownInfo.invalidate();
+        },
+      },
+    );
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 

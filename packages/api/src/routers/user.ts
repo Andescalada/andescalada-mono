@@ -263,7 +263,7 @@ export const userRouter = t.router({
       data: { RecentZones: { set: [] } },
     }),
   ),
-  removeRecentZones: protectedZoneProcedure.mutation(({ ctx, input }) =>
+  removeRecentZone: protectedZoneProcedure.mutation(({ ctx, input }) =>
     ctx.prisma.user.update({
       where: { email: ctx.user.email },
       data: { RecentZones: { disconnect: { id: input.zoneId } } },
