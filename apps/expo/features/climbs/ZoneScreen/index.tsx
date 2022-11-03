@@ -84,8 +84,8 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
 
-  const [openAll, setOpenAll] = useState(false);
-  const open = useSharedValue(-180);
+  const [openAll, setOpenAll] = useState(true);
+  const open = useSharedValue(0);
 
   const degs = useDerivedValue(() => withTiming(open.value));
 

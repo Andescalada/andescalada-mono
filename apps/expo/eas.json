@@ -31,7 +31,8 @@
       "channel": "production",
       "env": {
         "APP_VARIANT": "production",
-        "FF_OFFLINE": "false"
+        "FF_OFFLINE": "false",
+        "FLIPPER_DISABLE": "1"
       }
     }
   },
