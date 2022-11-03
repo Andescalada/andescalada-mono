@@ -5,7 +5,7 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
   const { data } = trpc.zones.allSectors.useQuery({ zoneId });
 
-  const addToDownloadedList = trpc.user.addToFavoriteZones.useMutation({
+  const addToFavoriteList = trpc.user.addToFavoriteZones.useMutation({
     onMutate: async () => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
@@ -23,7 +23,7 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
     },
   });
 
-  const removeToDownloadedList = trpc.user.removeToDownloadedZones.useMutation({
+  const removeToFavoriteList = trpc.user.removeToFavoriteZones.useMutation({
     onMutate: async () => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
@@ -42,10 +42,10 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
   });
 
   const onFavoritePress = () => {
-    if (!data?.isDownloaded) {
-      addToDownloadedList.mutate({ zoneId });
+    if (!data?.isFavorite) {
+      addToFavoriteList.mutate({ zoneId });
     } else {
-      removeToDownloadedList.mutate({ zoneId });
+      removeToFavoriteList.mutate({ zoneId });
     }
   };
 
