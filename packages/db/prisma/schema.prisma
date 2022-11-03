@@ -43,6 +43,7 @@ model User {
   isDeleted             SoftDelete   @default(NotDeleted)
   FavoriteZones         Zone[]       @relation("FavoriteZones")
   DownloadedZones       Zone[]       @relation("DownloadedZones")
+  RecentZones           Zone[]       @relation("RecentZones")
 
   @@index([email])
   @@index([profilePhotoId])
@@ -131,6 +132,7 @@ model Zone {
   version      Int          @default(0)
   FavoritedBy  User[]       @relation("FavoriteZones")
   DownloadedBy User[]       @relation("DownloadedZones")
+  RecentFor    User[]       @relation("RecentZones")
 }
 
 model Sector {
