@@ -3,6 +3,7 @@ import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
 import OfflineNotification from "@features/climbs/components/OfflineNotification";
+import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
 import SectorScreen from "@features/climbs/SectorScreen";
 import UserZonesScreen from "@features/climbs/UserZonesScreen";
 import WallScreen from "@features/climbs/WallScreen";
@@ -41,6 +42,10 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.Sector}
           component={SectorScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.SearchClimbs}
+          component={SearchClimbsScreen}
         />
         <Stack.Screen
           name={ClimbsNavigationRoutes.AddWall}

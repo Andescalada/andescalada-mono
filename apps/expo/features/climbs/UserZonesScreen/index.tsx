@@ -95,7 +95,7 @@ const UserZonesScreen = ({ navigation }: Props) => {
           backgroundColor="filledTextInputVariantBackground"
           height={40}
           onPress={() => {
-            Keyboard.dismiss();
+            navigation.navigate(ClimbsNavigationRoutes.SearchClimbs);
           }}
           alignItems="center"
           marginBottom="m"

@@ -7,7 +7,12 @@ import {
   useTheme,
   VariantProps,
 } from "@shopify/restyle";
-import { ComponentProps, FC, useMemo } from "react";
+import {
+  ComponentProps,
+  forwardRef,
+  ForwardRefRenderFunction,
+  useMemo,
+} from "react";
 import { TextInput as RNTextInput, TextInputProps } from "react-native";
 
 import InputAdornment from "../InputAdornment/InputAdornment";
@@ -27,13 +32,18 @@ interface Props
   adornmentProps?: Partial<ComponentProps<typeof InputAdornment>>;
 }
 
-const TextInput: FC<Props> = ({
-  containerProps,
-  variant = "filled",
-  textVariant = "p1R",
-  adornmentProps,
-  ...props
-}) => {
+export type TextInputRef = RNTextInput;
+
+const TextInput: ForwardRefRenderFunction<TextInputRef, Props> = (
+  {
+    containerProps,
+    variant = "filled",
+    textVariant = "p1R",
+    adornmentProps,
+    ...props
+  },
+  ref,
+) => {
   const color = useMemo(() => {
     if (variant === "disableAsText") return "text";
     return "textContrast";
@@ -44,6 +54,7 @@ const TextInput: FC<Props> = ({
     <TextFieldContainer variant={variant} {...containerProps}>
       <InputAdornment {...adornmentProps}>
         <OriginalTextInput
+          ref={ref}
           variant={textVariant}
           color={color}
           style={{ flex: 1 }}
@@ -55,4 +66,4 @@ const TextInput: FC<Props> = ({
   );
 };
 
-export default TextInput;
+export default forwardRef(TextInput);
