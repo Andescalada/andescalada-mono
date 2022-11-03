@@ -53,6 +53,7 @@ export const zonesRouter = t.router({
         },
         infoAccess: true,
         DownloadedBy: { where: { email: ctx.user.email } },
+        FavoritedBy: { where: { email: ctx.user.email } },
       },
     });
     if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
@@ -68,6 +69,7 @@ export const zonesRouter = t.router({
         sectors: undefined,
         hasAccess: false,
         isDownloaded: false,
+        isFavorite: false,
       };
     }
 
@@ -75,6 +77,7 @@ export const zonesRouter = t.router({
       ...res,
       hasAccess: true,
       isDownloaded: res.DownloadedBy.length > 0,
+      isFavorite: res.FavoritedBy.length > 0,
     };
   }),
   create: protectedProcedure

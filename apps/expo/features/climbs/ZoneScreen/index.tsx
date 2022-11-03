@@ -18,6 +18,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
+import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useOptionsSheet from "@hooks/useOptionsSheet";
@@ -30,7 +31,6 @@ import { Alert, FlatList } from "react-native";
 import {
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 
@@ -83,10 +83,11 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const theme = useAppTheme();
 
   const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
+  const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
 
-  const [openAll, setOpenAll] = useState(true);
-  const open = useSharedValue(0);
+  const [openAll, setOpenAll] = useState(false);
 
+  const open = useDerivedValue(() => (openAll ? 0 : -180));
   const degs = useDerivedValue(() => withTiming(open.value));
 
   const toggleButtonStyle = useAnimatedStyle(() => ({
@@ -111,11 +112,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
       </FormProvider>
       {featureFlags.offline && (
         <Box flexDirection="row" justifyContent="flex-end">
-          <Pressable
-            flexDirection="row"
-            alignItems="center"
-            onPress={onDownloadPress}
-          >
+          <Pressable onPress={onDownloadPress}>
             <Ionicons
               name={
                 isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
@@ -124,10 +121,16 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
               color={theme.colors["zoneOptionsIcons"]}
             />
           </Pressable>
+          <Pressable marginHorizontal="s" onPress={onFavoritePress}>
+            <Ionicons
+              name={isFavorite ? "heart-circle" : "heart-circle-outline"}
+              size={30}
+              color={theme.colors["zoneOptionsIcons"]}
+            />
+          </Pressable>
           <A.Pressable
             onPress={() => {
               setOpenAll((prev) => !prev);
-              open.value = open.value === 0 ? -180 : 0;
             }}
             style={toggleButtonStyle}
           >

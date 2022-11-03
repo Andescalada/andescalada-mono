@@ -1,16 +1,16 @@
 import { trpc } from "@andescalada/utils/trpc";
 import type { Zone } from "@prisma/client";
 
-const useDownloadedButton = (zoneId: Zone["id"]) => {
+const useFavoritedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
   const { data } = trpc.zones.allSectors.useQuery({ zoneId });
 
-  const addToDownloadedList = trpc.user.addToDownloadedZones.useMutation({
+  const addToDownloadedList = trpc.user.addToFavoriteZones.useMutation({
     onMutate: async () => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
       utils.zones.allSectors.setData(
-        (old) => (old ? { ...old, isDownloaded: true } : undefined),
+        (old) => (old ? { ...old, isFavorite: true } : undefined),
         { zoneId },
       );
       return { previousData };
@@ -20,9 +20,6 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     },
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
-    },
-    onSuccess: () => {
-      utils.user.getDownloadedAssets.invalidate();
     },
   });
 
@@ -31,7 +28,7 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
       utils.zones.allSectors.setData(
-        (old) => (old ? { ...old, isDownloaded: false } : undefined),
+        (old) => (old ? { ...old, isFavorite: false } : undefined),
         { zoneId },
       );
       return { previousData };
@@ -42,12 +39,9 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
-    onSuccess: () => {
-      utils.user.getDownloadedAssets.invalidate();
-    },
   });
 
-  const onDownloadPress = () => {
+  const onFavoritePress = () => {
     if (!data?.isDownloaded) {
       addToDownloadedList.mutate({ zoneId });
     } else {
@@ -55,7 +49,10 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     }
   };
 
-  return { onDownloadPress, isDownloaded: !!data?.isDownloaded };
+  return {
+    onFavoritePress,
+    isFavorite: !!data?.isFavorite,
+  };
 };
 
-export default useDownloadedButton;
+export default useFavoritedButton;

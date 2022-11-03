@@ -20,7 +20,6 @@ const useAnimatedHeight = ({ defaultOpen = false }: Config = {}) => {
     open.value ? withSpring(1) : withTiming(0),
   );
   const height = useSharedValue(0);
-  const hasHeight = useSharedValue<number | null>(0);
 
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -34,19 +33,16 @@ const useAnimatedHeight = ({ defaultOpen = false }: Config = {}) => {
   });
 
   useEffect(() => {
-    if (height.value === 0 && hasHeight.value !== null) {
+    if (height.value === 0) {
       runOnUI(() => {
         "worklet";
         height.value = measure(aRef).height;
-        hasHeight.value = null;
       })();
-    } else if (hasHeight.value !== null) {
-      hasHeight.value = hasHeight.value + 1;
     }
 
     open.value = defaultOpen;
     setIsOpen(defaultOpen);
-  }, [aRef, defaultOpen, hasHeight, height, open]);
+  }, [aRef, defaultOpen, height, open]);
 
   const onOpen = useCallback(() => {
     if (height.value === 0) {
