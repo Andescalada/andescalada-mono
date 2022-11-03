@@ -4,6 +4,7 @@ import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
 import OfflineNotification from "@features/climbs/components/OfflineNotification";
 import SectorScreen from "@features/climbs/SectorScreen";
+import UserZonesScreen from "@features/climbs/UserZonesScreen";
 import WallScreen from "@features/climbs/WallScreen";
 import ZoneScreen from "@features/climbs/ZoneScreen";
 import ZonesListScreen from "@features/climbs/ZonesListScreen";
@@ -22,7 +23,7 @@ const Navigator = () => {
     <Box flex={1}>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={ClimbsNavigationRoutes.ZonesList}
+        initialRouteName={ClimbsNavigationRoutes.UserZones}
       >
         <Stack.Screen
           name={ClimbsNavigationRoutes.ZonesList}
@@ -55,6 +56,11 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.Wall}
           component={WallScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.UserZones}
+          options={{ header: () => <UserHeader />, headerShown: true }}
+          component={UserZonesScreen}
         />
       </Stack.Navigator>
       <OfflineNotification />

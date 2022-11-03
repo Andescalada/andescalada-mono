@@ -11,10 +11,12 @@ export enum ClimbsNavigationRoutes {
   AddWall = "AddWall",
   Wall = "Wall",
   AddRoute = "AddRoute",
+  UserZones = "UserZones",
 }
 
 export type ClimbsNavigationNavigationParamList = {
   [ClimbsNavigationRoutes.ZonesList]: undefined;
+  [ClimbsNavigationRoutes.UserZones]: undefined;
   [ClimbsNavigationRoutes.Zone]: { zoneId: Zone["id"]; zoneName: Zone["name"] };
   [ClimbsNavigationRoutes.AddSector]: { zoneId: Zone["id"] };
   [ClimbsNavigationRoutes.AddWall]: { sectorId: Sector["id"] };

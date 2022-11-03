@@ -25,7 +25,9 @@ export const userRouter = t.router({
         preferredBoulderGrade: true,
         preferredSportGrade: true,
         username: true,
-        DownloadedZones: { select: { id: true, name: true } },
+        DownloadedZones: { select: { id: true, name: true, infoAccess: true } },
+        FavoriteZones: { select: { id: true, name: true, infoAccess: true } },
+        RecentZones: { select: { id: true, name: true, infoAccess: true } },
       },
     }),
   ),
@@ -235,6 +237,37 @@ export const userRouter = t.router({
         data: { DownloadedZones: { connect: { id: input.zoneId } } },
       });
     },
+  ),
+  addToRecentZones: protectedZoneProcedure.mutation(async ({ ctx, input }) => {
+    const zoneToAdd = await ctx.prisma.zone.findUnique({
+      where: { id: input.zoneId },
+      select: {
+        isDeleted: true,
+        infoAccess: true,
+      },
+    });
+    if (!zoneToAdd || zoneToAdd.isDeleted === SoftDelete.DeletedPublic) {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
+    if (!ctx.permissions.has("Read") && zoneToAdd.infoAccess !== "Public") {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return ctx.prisma.user.update({
+      where: { email: ctx.user.email },
+      data: { RecentZones: { connect: { id: input.zoneId } } },
+    });
+  }),
+  removeAllRecentZones: protectedProcedure.mutation(({ ctx }) =>
+    ctx.prisma.user.update({
+      where: { email: ctx.user.email },
+      data: { RecentZones: { set: [] } },
+    }),
+  ),
+  removeRecentZones: protectedZoneProcedure.mutation(({ ctx, input }) =>
+    ctx.prisma.user.update({
+      where: { email: ctx.user.email },
+      data: { RecentZones: { disconnect: { id: input.zoneId } } },
+    }),
   ),
   addToFavoriteZones: protectedZoneProcedure.mutation(
     async ({ ctx, input }) => {
