@@ -1,5 +1,5 @@
 import { BoxProps, createBox } from "@shopify/restyle";
-import { ComponentProps, FC } from "react";
+import { ComponentProps, FC, useMemo } from "react";
 import { Keyboard, Platform } from "react-native";
 
 import KeyBoardAvoidingBox from "../KeyboardAvoidingBox/KeyboardAvoidingBox";
@@ -10,18 +10,25 @@ interface Props extends ComponentProps<typeof KeyBoardAvoidingBox> {
   keyboardOffset?: ComponentProps<
     typeof KeyBoardAvoidingBox
   >["keyboardVerticalOffset"];
+  disableAvoiding?: boolean;
 }
 
 const BoxWithKeyboard: FC<Props> = ({
   children,
   pressableProps,
   keyboardOffset,
+  disableAvoiding = false,
   ...props
 }) => {
+  const behavior = useMemo(() => {
+    if (disableAvoiding) return undefined;
+    return Platform.OS === "ios" ? "position" : undefined;
+  }, [disableAvoiding]);
+
   return (
     <Pressable onPress={Keyboard.dismiss} flex={1} {...pressableProps}>
       <KeyBoardAvoidingBox
-        behavior={Platform.OS === "ios" ? "position" : undefined}
+        behavior={behavior}
         flex={1}
         keyboardVerticalOffset={keyboardOffset}
         {...props}

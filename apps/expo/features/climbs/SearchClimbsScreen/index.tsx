@@ -1,4 +1,11 @@
-import { BackButton, Box, Screen, Text, TextInput } from "@andescalada/ui";
+import {
+  BackButton,
+  Box,
+  BoxWithKeyboard,
+  Screen,
+  Text,
+  TextInput,
+} from "@andescalada/ui";
 import { TextInputRef } from "@andescalada/ui/TextInput/TextInput";
 import theme from "@andescalada/ui/Theme/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -19,34 +26,42 @@ const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
 
   return (
     <Screen padding="m">
-      <Box flexDirection="row" alignItems="center" marginBottom="s">
-        <BackButton onPress={navigation.goBack} />
-        <Text variant="h2" marginLeft="m">
-          Buscar
-        </Text>
-      </Box>
-      <Box marginTop="s">
-        <TextInput
-          ref={ref}
-          adornmentProps={{
-            startAdornment: (
-              <Box justifyContent="center" paddingHorizontal="xs">
-                <Ionicons
-                  name="search"
-                  size={24}
-                  color={theme.colors["grayscale.600"]}
-                />
-              </Box>
-            ),
-            startAdornmentProps: {},
-          }}
-          textVariant="p1R"
-          containerProps={{ height: 40, paddingLeft: "s" }}
-          autoCapitalize="none"
-          autoCorrect={false}
-          placeholder="Buscar zona"
-        />
-      </Box>
+      <BoxWithKeyboard disableAvoiding flex={1}>
+        <Box
+          flexDirection="row"
+          alignItems="center"
+          marginBottom="s"
+          width="100%"
+        >
+          <BackButton onPress={navigation.goBack} />
+          <TextInput
+            ref={ref}
+            adornmentProps={{
+              startAdornment: (
+                <Box justifyContent="center" paddingHorizontal="xs">
+                  <Ionicons
+                    name="search"
+                    size={24}
+                    color={theme.colors["grayscale.600"]}
+                  />
+                </Box>
+              ),
+              startAdornmentProps: {},
+            }}
+            textVariant="p1R"
+            containerProps={{
+              height: 40,
+              paddingLeft: "s",
+              flex: 1,
+              marginLeft: "s",
+            }}
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholder="Buscar zona"
+          />
+        </Box>
+        <Box marginTop="s"></Box>
+      </BoxWithKeyboard>
     </Screen>
   );
 };
