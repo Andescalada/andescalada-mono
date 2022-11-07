@@ -13,11 +13,15 @@ export enum ClimbsNavigationRoutes {
   AddRoute = "AddRoute",
   UserZones = "UserZones",
   SearchClimbs = "SearchClimbs",
+  OfflineZones = "OfflineZones",
+  Home = "Home",
 }
 
 export type ClimbsNavigationNavigationParamList = {
   [ClimbsNavigationRoutes.ZonesList]: undefined;
   [ClimbsNavigationRoutes.UserZones]: undefined;
+  [ClimbsNavigationRoutes.OfflineZones]: undefined;
+  [ClimbsNavigationRoutes.Home]: undefined;
   [ClimbsNavigationRoutes.SearchClimbs]: undefined;
   [ClimbsNavigationRoutes.Zone]: { zoneId: Zone["id"]; zoneName: Zone["name"] };
   [ClimbsNavigationRoutes.AddSector]: { zoneId: Zone["id"] };

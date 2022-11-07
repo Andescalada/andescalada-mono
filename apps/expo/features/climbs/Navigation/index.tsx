@@ -2,10 +2,10 @@ import { Box } from "@andescalada/ui";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
+import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
 import OfflineNotification from "@features/climbs/components/OfflineNotification";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
 import SectorScreen from "@features/climbs/SectorScreen";
-import UserZonesScreen from "@features/climbs/UserZonesScreen";
 import WallScreen from "@features/climbs/WallScreen";
 import ZoneScreen from "@features/climbs/ZoneScreen";
 import ZonesListScreen from "@features/climbs/ZonesListScreen";
@@ -24,8 +24,13 @@ const Navigator = () => {
     <Box flex={1}>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={ClimbsNavigationRoutes.UserZones}
+        initialRouteName={ClimbsNavigationRoutes.Home}
       >
+        <Stack.Screen
+          options={{ header: () => <UserHeader />, headerShown: true }}
+          name={ClimbsNavigationRoutes.Home}
+          component={ClimbsHomeScreen}
+        />
         <Stack.Screen
           name={ClimbsNavigationRoutes.ZonesList}
           component={ZonesListScreen}
@@ -60,11 +65,6 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.Wall}
           component={WallScreen}
-        />
-        <Stack.Screen
-          name={ClimbsNavigationRoutes.UserZones}
-          options={{ header: () => <UserHeader />, headerShown: true }}
-          component={UserZonesScreen}
         />
       </Stack.Navigator>
       <OfflineNotification />

@@ -14,14 +14,15 @@ import { trpc } from "@andescalada/utils/trpc";
 import { Octicons } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
+  ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
-  ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import OfflineZonesScreen from "@features/climbs/OfflineZonesScreen";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
-
-type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.UserZones>;
+import { useNavigation } from "@react-navigation/native";
 
 type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 
@@ -38,9 +39,15 @@ const InfoAccessColor = (infoAccess: InfoAccess) => {
   }
 };
 
-const UserZonesScreen = ({ navigation }: Props) => {
+const UserZonesScreen = () => {
+  const navigation =
+    useNavigation<
+      ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Home>
+    >();
   const { data, isLoading, refetch, isFetching } = useOwnInfo();
   const refresh = useRefresh(refetch, isFetching);
+
+  const { isOfflineMode } = useOfflineMode();
 
   const utils = trpc.useContext();
 
@@ -78,6 +85,8 @@ const UserZonesScreen = ({ navigation }: Props) => {
   });
 
   useSentryWithPermission();
+
+  if (isOfflineMode) return <OfflineZonesScreen />;
 
   if (isLoading)
     return (
