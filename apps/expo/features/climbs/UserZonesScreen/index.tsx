@@ -17,8 +17,6 @@ import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
-import OfflineZonesScreen from "@features/climbs/OfflineZonesScreen";
-import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
@@ -46,8 +44,6 @@ const UserZonesScreen = () => {
     >();
   const { data, isLoading, refetch, isFetching } = useOwnInfo();
   const refresh = useRefresh(refetch, isFetching);
-
-  const { isOfflineMode } = useOfflineMode();
 
   const utils = trpc.useContext();
 
@@ -85,8 +81,6 @@ const UserZonesScreen = () => {
   });
 
   useSentryWithPermission();
-
-  if (isOfflineMode) return <OfflineZonesScreen />;
 
   if (isLoading)
     return (
