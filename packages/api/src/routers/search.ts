@@ -1,5 +1,6 @@
 import { SearchType } from "@andescalada/api/schemas/search";
 import { isDefined } from "@andescalada/api/src/utils/isDefined";
+import { SoftDelete } from "@prisma/client";
 import { z } from "zod";
 
 import { t } from "../createRouter";
@@ -8,7 +9,7 @@ export const searchRouter = t.router({
   all: t.procedure.input(z.string().min(2)).mutation(async ({ ctx, input }) => {
     const zones = ctx.prisma.zone
       .findMany({
-        where: { name: { contains: input } },
+        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
         select: { id: true, name: true },
       })
       .then((results) =>
@@ -23,7 +24,7 @@ export const searchRouter = t.router({
 
     const sectors = ctx.prisma.sector
       .findMany({
-        where: { name: { contains: input } },
+        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
         select: {
           id: true,
           name: true,
@@ -46,7 +47,7 @@ export const searchRouter = t.router({
 
     const walls = ctx.prisma.wall
       .findMany({
-        where: { name: { contains: input } },
+        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
         select: {
           id: true,
           name: true,
@@ -76,7 +77,7 @@ export const searchRouter = t.router({
 
     const routes = ctx.prisma.route
       .findMany({
-        where: { name: { contains: input } },
+        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
         select: {
           id: true,
           name: true,
