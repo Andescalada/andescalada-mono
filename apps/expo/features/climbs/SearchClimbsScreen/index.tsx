@@ -1,11 +1,8 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
-  ActivityIndicator,
   BackButton,
   Box,
   BoxWithKeyboard,
   Screen,
-  Text,
   TextInput,
 } from "@andescalada/ui";
 import { TextInputRef } from "@andescalada/ui/TextInput/TextInput";
@@ -16,21 +13,16 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import Results from "@features/climbs/SearchClimbsScreen/Results";
 import useDebounce from "@hooks/useDebounce";
-import { inferProcedureOutput } from "@trpc/server";
-import React, { FC, RefObject, useEffect, useMemo, useRef } from "react";
-import { FlatList } from "react-native";
+import React, { FC, RefObject, useEffect, useRef } from "react";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.SearchClimbs>;
-
-type Data = inferProcedureOutput<AppRouter["search"]["all"]>;
 
 const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
   const ref = useRef<TextInputRef>() as RefObject<TextInputRef>;
 
   const search = trpc.search.all.useMutation();
-
-  console.log(search.data);
 
   const debounceSearch = useDebounce(search.mutate);
 
@@ -84,32 +76,3 @@ const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
 };
 
 export default SearchClimbsScreen;
-
-interface ResultsProps {
-  isLoading: boolean;
-  data: Data | undefined;
-}
-
-const Results = ({ data, isLoading }: ResultsProps) => {
-  if (isLoading) {
-    return (
-      <Box flex={1} marginTop="xxl">
-        <ActivityIndicator size="large" />
-      </Box>
-    );
-  }
-  if (data)
-    return (
-      <FlatList
-        data={data}
-        renderItem={({ item }) => (
-          <Box>
-            <Text variant="p1B">{item.name}</Text>
-            <Text variant="p3R">{item.detail}</Text>
-          </Box>
-        )}
-      />
-    );
-
-  return <Box />;
-};

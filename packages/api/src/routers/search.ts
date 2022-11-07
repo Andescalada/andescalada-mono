@@ -1,3 +1,4 @@
+import { SearchType } from "@andescalada/api/schemas/search";
 import { isDefined } from "@andescalada/api/src/utils/isDefined";
 import { z } from "zod";
 
@@ -14,22 +15,32 @@ export const searchRouter = t.router({
         results.map(({ id, name }) => ({
           id,
           name,
-          detail: "Chile", // TODO: Placeholder, add region to zones
-          type: "zone" as const,
+          detail: "Chile",
+          navigationParams: { zoneId: id, zoneName: name }, // TODO: Placeholder, add region to zones
+          type: SearchType.Zone,
         })),
       );
 
     const sectors = ctx.prisma.sector
       .findMany({
         where: { name: { contains: input } },
-        select: { id: true, name: true, Zone: { select: { name: true } } },
+        select: {
+          id: true,
+          name: true,
+          Zone: { select: { name: true, id: true } },
+        },
       })
       .then((results) =>
         results.map(({ id, name, ...result }) => ({
           id,
           name,
           detail: result.Zone.name,
-          type: "sector" as const,
+          navigationParams: {
+            zoneId: result.Zone.id,
+            sectorId: id,
+            sectorName: name,
+          },
+          type: SearchType.Sector,
         })),
       );
 
@@ -39,7 +50,13 @@ export const searchRouter = t.router({
         select: {
           id: true,
           name: true,
-          Sector: { select: { name: true, Zone: { select: { name: true } } } },
+          Sector: {
+            select: {
+              id: true,
+              name: true,
+              Zone: { select: { name: true, id: true } },
+            },
+          },
         },
       })
       .then((results) =>
@@ -47,7 +64,13 @@ export const searchRouter = t.router({
           id,
           name,
           detail: `${result.Sector.name}, ${result.Sector.Zone.name}`,
-          type: "wall" as const,
+          navigationParams: {
+            wallId: id,
+            wallName: name,
+            sectorId: result.Sector.id,
+            zoneId: result.Sector.Zone.id,
+          },
+          type: SearchType.Wall,
         })),
       );
 
@@ -60,8 +83,13 @@ export const searchRouter = t.router({
           Wall: {
             select: {
               name: true,
+              id: true,
               Sector: {
-                select: { name: true, Zone: { select: { name: true } } },
+                select: {
+                  id: true,
+                  name: true,
+                  Zone: { select: { name: true, id: true } },
+                },
               },
             },
           },
@@ -72,7 +100,13 @@ export const searchRouter = t.router({
           id,
           name,
           detail: `${result.Wall.name}, ${result.Wall.Sector.name}, ${result.Wall.Sector.Zone.name}`,
-          type: "route" as const,
+          navigationParams: {
+            wallId: result.Wall.id,
+            wallName: result.Wall.name,
+            sectorId: result.Wall.Sector.id,
+            zoneId: result.Wall.Sector.Zone.id,
+          },
+          type: SearchType.Route,
         })),
       );
 
