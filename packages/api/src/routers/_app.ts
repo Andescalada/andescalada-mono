@@ -2,6 +2,7 @@
  * This file contains the root router of your tRPC-backend
  */
 import { routesRouter } from "@andescalada/api/src/routers/routes";
+import { searchRouter } from "@andescalada/api/src/routers/search";
 import { sectorsRouter } from "@andescalada/api/src/routers/sectors";
 import { toposRouter } from "@andescalada/api/src/routers/topos";
 import { userRouter } from "@andescalada/api/src/routers/user";
@@ -23,6 +24,7 @@ export const appRouter = t.router({
   topos: toposRouter,
   routes: routesRouter,
   user: userRouter,
+  search: searchRouter,
 });
 
 export type AppRouter = typeof appRouter;

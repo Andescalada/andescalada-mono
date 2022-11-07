@@ -101,6 +101,7 @@ const UserZonesScreen = ({ navigation }: Props) => {
           marginBottom="m"
           paddingLeft="s"
           flexDirection="row"
+          overflow="hidden"
         >
           <Ionicons
             name="search"
@@ -108,7 +109,7 @@ const UserZonesScreen = ({ navigation }: Props) => {
             color={theme.colors["grayscale.600"]}
           />
           <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
-            Buscar zonas
+            Buscar zona, ruta ...
           </Text>
         </Pressable>
         <Button
