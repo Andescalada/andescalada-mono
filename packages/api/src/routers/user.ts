@@ -29,7 +29,7 @@ export const userRouter = t.router({
         FavoriteZones: { select: { id: true, name: true, infoAccess: true } },
         RecentZones: {
           select: { id: true, name: true, infoAccess: true },
-          orderBy: { createdAt: "asc" },
+          orderBy: { createdAt: "desc" },
         },
       },
     }),

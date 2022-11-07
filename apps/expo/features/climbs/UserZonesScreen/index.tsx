@@ -20,7 +20,6 @@ import {
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
-import { Keyboard } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.UserZones>;
 
@@ -133,6 +132,11 @@ const UserZonesScreen = ({ navigation }: Props) => {
             </Text>
             <Octicons name="heart" size={24} color={theme.colors.text} />
           </Box>
+          {data?.FavoriteZones.length === 0 && (
+            <Box marginTop={"s"}>
+              <Text>No tienes favoritas aún</Text>
+            </Box>
+          )}
           {data?.FavoriteZones.map((item) => (
             <ListItem
               key={item.id}
@@ -172,17 +176,24 @@ const UserZonesScreen = ({ navigation }: Props) => {
               </Text>
               <Octicons name="history" size={24} color={theme.colors.text} />
             </Box>
-            <Button
-              variant="transparentSimplified"
-              title="Borrar todo"
-              titleVariant="p3R"
-              paddingHorizontal="xs"
-              height={30}
-              onPress={() => {
-                removeAllRecentZones.mutate();
-              }}
-            />
+            {data?.RecentZones.length !== 0 && (
+              <Button
+                variant="transparentSimplified"
+                title="Borrar todo"
+                titleVariant="p3R"
+                paddingHorizontal="xs"
+                height={30}
+                onPress={() => {
+                  removeAllRecentZones.mutate();
+                }}
+              />
+            )}
           </Box>
+          {data?.RecentZones.length === 0 && (
+            <Box marginTop={"s"}>
+              <Text>No hay zonas recientes</Text>
+            </Box>
+          )}
           {data?.RecentZones.map((item) => (
             <ListItem
               key={item.id}
