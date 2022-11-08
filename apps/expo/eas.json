@@ -23,7 +23,8 @@
       "channel": "preview",
       "env": {
         "APP_VARIANT": "preview",
-        "FF_OFFLINE": "true"
+        "FF_OFFLINE": "true",
+        "FLIPPER_DISABLE": "1"
       }
     },
     "production": {

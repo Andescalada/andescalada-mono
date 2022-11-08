@@ -62,7 +62,7 @@
         }
       ],
       "expo-tracking-transparency",
-      "expo-community-flipper",
+      ["expo-community-flipper", {"version": "0.146.0"}],
       "react-native-flipper-performance-plugin",
       "sentry-expo",
       [

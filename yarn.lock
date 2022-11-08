@@ -9708,10 +9708,10 @@ react-native-flipper-performance-plugin@^0.3.1:
   resolved "https://registry.yarnpkg.com/react-native-flipper-performance-plugin/-/react-native-flipper-performance-plugin-0.3.1.tgz#969aea65eb6e6504ee29caab7bf546c75322f817"
   integrity sha512-NDf5VCTqYPUUihvmW5A/scJbjHWZpAxC9FE1kfgFCPsHENjH9EVJxk+7XlLN608dEtHOtZdcWY0HZZT8XLjr6Q==
 
-react-native-flipper@^0.171.1:
-  version "0.171.1"
-  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.171.1.tgz#78db3179a7ece62a2af622834867891f658e4b4c"
-  integrity sha512-L1gYtgjLQDeF4JQTbR6XCEjSKy0ffpZckK0k8/qcjqzwwB/oSgvXZ7UVbotVW0BTIWMUETyR6FX0/ChAurBI9w==
+react-native-flipper@0.146.0:
+  version "0.146.0"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.146.0.tgz#031350cb2bd9ebbc9e0e85be441c3be4b2c25356"
+  integrity sha512-v+7OKTXjmijt5kGZKrZeud7JTPogFHc8/714BLb6+4TRTp1Q3Peyen3LHphRruHIdKRjex5LfJ7v/PEW+deDbQ==
 
 react-native-gesture-handler@~2.5.0:
   version "2.5.0"
