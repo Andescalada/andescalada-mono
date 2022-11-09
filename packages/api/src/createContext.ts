@@ -25,7 +25,7 @@ export const createContext = async ({
   req,
   res,
 }: trpcNext.CreateNextContextOptions) => {
-  const user = await verifyAndDecodeToken(req);
+  const { user, verified } = await verifyAndDecodeToken(req);
 
   if (user?.email && user?.auth0Id) {
     const userExist = await prisma.user.findUnique({
@@ -66,6 +66,7 @@ export const createContext = async ({
     prisma,
     user,
     access,
+    verified,
   };
 };
 
