@@ -12,10 +12,6 @@
     "@auth0/nextjs-auth0": "^1.9.1",
     "@prisma/client": "4",
     "@tanstack/react-query-devtools": "^4.11.0",
-    "@trpc/client": "^10.0.0-proxy-beta.26",
-    "@trpc/next": "^10.0.0-proxy-beta.26",
-    "@trpc/react-query": "^10.0.0-proxy-beta.26",
-    "@trpc/server": "^10.0.0-proxy-beta.26",
     "clsx": "^1.1.1",
     "next": "^12.0.1",
     "prisma": "4",
@@ -35,7 +31,11 @@
   },
   "peerDependencies": {
     "react": "*",
-    "zod": "*"
+    "zod": "*",
+    "@trpc/client": "*",
+    "@trpc/next": "*",
+    "@trpc/react-query": "*",
+    "@trpc/server": "*"
   },
   "publishConfig": {
     "access": "restricted"

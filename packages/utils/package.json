@@ -6,12 +6,12 @@
   "license": "MIT",
   "dependencies": {
     "@andescalada/ui": "*",
-    "@trpc/react-query": "^10.0.0-proxy-beta.26",
-    "@trpc/server": "^10.0.0-proxy-beta.26",
     "deepmerge": "^4.2.2"
   },
   "peerDependencies": {
-    "@shopify/restyle": "*"
+    "@shopify/restyle": "*",
+    "@trpc/react-query": "*",
+    "@trpc/server": "*"
   },
   "devDependencies": {
     "@shopify/restyle": "*"

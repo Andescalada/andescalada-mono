@@ -10,12 +10,14 @@
   "scripts": {},
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
-    "@trpc/react-query": "^10.0.0-proxy-beta.26",
-    "@trpc/server": "^10.0.0-proxy-beta.26",
     "@upstash/redis": "^1.13.1",
     "axios": "^0.27.2",
     "jose": "^4.9.2",
     "superjson": "^1.10.0"
+  },
+  "peerDependencies": {
+    "@trpc/react-query": "*",
+    "@trpc/server": "*"
   },
   "devDependencies": {
     "next": "*"
