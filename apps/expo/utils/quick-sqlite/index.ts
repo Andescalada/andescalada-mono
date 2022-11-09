@@ -87,6 +87,28 @@ const deleteZone = async (zoneId: string) => {
   return res;
 };
 
+const allSavedZones = () => {
+  const query = `SELECT 
+      name
+    FROM 
+      sqlite_schema
+    WHERE 
+      type ='table' AND 
+      name NOT LIKE 'sqlite_%';`;
+  const db = open();
+  const res = db.execute(query);
+  db.close();
+  return res.rows?._array as string[];
+};
+
+const allAssetsOfZone = (zoneId: string) => {
+  const query = `SELECT assetId, version FROM '${zoneId}'`;
+  const db = open();
+  const res = db.execute(query);
+  db.close();
+  return res.rows?._array as { assetId: string; version: number }[];
+};
+
 const offlineDb = {
   open,
   get,
@@ -94,6 +116,8 @@ const offlineDb = {
   delete: deleteAsset,
   deleteZone,
   setOrCreate,
+  allSavedZones,
+  allAssetsOfZone,
 };
 
 export default offlineDb;

@@ -350,7 +350,7 @@ export const userRouter = t.router({
       const sectors = z.sectors.flatMap((s) => {
         const walls = s.walls.flatMap((w) => {
           const topos = w.topos.flatMap((t) => {
-            imagesToDownload.push(t.image);
+            imagesToDownload.push({ ...t.image, zoneId });
 
             return {
               router: "topos" as const,
@@ -399,22 +399,3 @@ export const userRouter = t.router({
 });
 
 const idAndVersion = { id: true, version: true };
-
-type Key = {
-  zoneId: "zoneId";
-  sectorId: "sectorId";
-  wallId: "wallId";
-  routeId: "routeId";
-  topoId: "topoId";
-  routePathId: "routePathId";
-};
-type KeyTypes = {
-  zoneId: string;
-  sectorId: string;
-  wallId: string;
-  routeId: string;
-  topoId: string;
-  routePathId: string;
-};
-
-type QueryKey = [readonly [string, string], KeyTypes, { version: number }];

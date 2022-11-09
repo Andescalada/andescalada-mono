@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 export default function IndexPage() {
   return (
     <div>
-      <h1>Api Andescalada v0.0.2-1c</h1>
+      <h1>Api Andescalada v0.0.3</h1>
       <ReactQueryDevtools />
     </div>
   );

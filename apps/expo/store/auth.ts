@@ -7,6 +7,7 @@ import {
 } from "@utils/auth0/types";
 import { isTokenExpired, tokenDecode } from "@utils/decode";
 import storage, { Storage } from "@utils/mmkv/storage";
+import offlineDb from "@utils/quick-sqlite";
 import { checkInternetConnection } from "react-native-offline";
 import { parse, stringify } from "superjson";
 
@@ -104,6 +105,8 @@ export const logoutAuth0 = createAsyncThunk(
     try {
       await logout();
       storage.clearAll();
+      const db = offlineDb.open();
+      db.delete();
       return { isAuth: false };
     } catch (error) {
       rejectWithValue(error);
