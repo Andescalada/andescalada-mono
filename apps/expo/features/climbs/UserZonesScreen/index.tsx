@@ -9,18 +9,19 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
-import theme from "@andescalada/ui/Theme/theme";
 import { trpc } from "@andescalada/utils/trpc";
-import { Octicons } from "@expo/vector-icons";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Ionicons, Octicons } from "@expo/vector-icons";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
+import { useAppTheme } from "@hooks/useAppTheme";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { useNavigation } from "@react-navigation/native";
+import { useIsConnected } from "react-native-offline";
 
 type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 
@@ -45,7 +46,11 @@ const UserZonesScreen = () => {
   const { data, isLoading, refetch, isFetching } = useOwnInfo();
   const refresh = useRefresh(refetch, isFetching);
 
+  const theme = useAppTheme();
+
   const utils = trpc.useContext();
+  const isConnected = useIsConnected();
+  const { activateOfflineMode } = useOfflineMode();
 
   const removeAllRecentZones = trpc.user.removeAllRecentZones.useMutation({
     onMutate: async () => {
@@ -86,6 +91,41 @@ const UserZonesScreen = () => {
     return (
       <Screen justifyContent="center" alignItems="center">
         <ActivityIndicator size={"large"} />
+      </Screen>
+    );
+  if (!isConnected)
+    return (
+      <Screen alignItems="center" justifyContent="center" safeAreaDisabled>
+        <Box height={60} width={60} justifyContent="center" alignItems="center">
+          {isFetching ? (
+            <ActivityIndicator size={"large"} color="text" />
+          ) : (
+            <Ionicons
+              name="cloud-offline-outline"
+              size={60}
+              color={theme.colors.text}
+            />
+          )}
+        </Box>
+        <Text variant="h2" marginBottom="xs">
+          Sin conexión
+        </Text>
+        <Text variant="p2R" paddingHorizontal={"xl"}>
+          Si tienes zonas descargadas puedes activar el modo offline para
+          verlas.
+        </Text>
+        <Button
+          variant="info"
+          titleVariant={"p2R"}
+          marginTop="xxl"
+          title="Activar modo offline"
+          onPress={activateOfflineMode}
+        />
+        <Pressable marginTop="s" onPress={() => refetch()}>
+          <Text variant={"p2R"} textDecorationLine="underline">
+            Recargar
+          </Text>
+        </Pressable>
       </Screen>
     );
   return (

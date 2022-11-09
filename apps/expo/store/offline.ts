@@ -24,9 +24,13 @@ const offlineSlice = createSlice({
         storage.set("offline", String(!toBoolean));
       }
     },
+    activateOffline: (state) => {
+      storage.set("offline", "true");
+      state.isOffline = true;
+    },
   },
 });
 
-export const { setIsOffline } = offlineSlice.actions;
+export const { setIsOffline, activateOffline } = offlineSlice.actions;
 
 export default offlineSlice;
