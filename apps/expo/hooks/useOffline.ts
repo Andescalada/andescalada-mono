@@ -1,118 +1,141 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { transformer } from "@andescalada/api/src/transformer";
 import { trpc } from "@andescalada/utils/trpc";
-import { useQueryClient } from "@tanstack/react-query";
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import useOfflineMode from "@hooks/useOfflineMode";
+import { inferProcedureOutput } from "@trpc/server";
+import allSettled from "@utils/allSetled";
 import { getThumbnail, optimizedImage } from "@utils/cloudinary";
-import Env from "@utils/env";
-import featureFlags from "@utils/featureFlags";
 import { storeImage } from "@utils/FileSystem/storeImage";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
-import Constants from "expo-constants";
+import client from "@utils/trpc/client";
+import { useCallback, useEffect, useState } from "react";
 import { parse, stringify } from "superjson";
 
-const localHost =
-  Constants.manifest2?.extra?.expoGo?.debuggerHost ||
-  Constants.manifest?.debuggerHost;
-
-const url = __DEV__
-  ? `http://${localHost?.split(":").shift()}:3000`
-  : Env.API_URL;
-
-const accessToken = () => {
-  return storage.getString(Storage.ACCESS_TOKEN);
-};
-
-const client = createTRPCProxyClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: `${url}/api/trpc`,
-
-      async headers() {
-        return {
-          Authorization: `Bearer ${accessToken()}`,
-        };
-      },
-    }),
-  ],
-  transformer,
-});
+type ListToDownload = inferProcedureOutput<
+  AppRouter["user"]["getDownloadedAssets"]
+>;
 
 const useOffline = () => {
-  console.log("useOffline disabled");
-};
+  const { isOfflineMode } = useOfflineMode();
 
-const useOffline1 = () => {
-  const queryClient = useQueryClient();
-
-  const { data } = trpc.user.getDownloadedAssets.useQuery(undefined, {
-    enabled: featureFlags.offline,
-  });
+  const { mutateAsync } = trpc.user.getDownloadedAssets.useMutation();
+  const [progress, setProgress] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isError, setIsError] = useState<{ [key: string]: string }[]>([]);
   const utils = trpc.useContext();
 
-  if (!data) return;
+  const setAssetsToDb = useCallback(
+    async (assetsToDownload: ListToDownload["assetsToDownload"]) => {
+      if (!assetsToDownload) return;
 
-  storage.set(Storage.DOWNLOADED_ASSETS, stringify(data));
+      storage.set(Storage.DOWNLOADED_ASSETS, stringify(assetsToDownload));
 
-  data.forEach(async (asset) => {
-    const { params, path, version, zoneId } = asset;
-    Object.defineProperty;
-    const selectedUtils = lookup(utils, path);
-    const selectedClient = lookup(client, path);
+      const totalAssets = assetsToDownload.length;
 
-    const savedData = offlineDb.get(
-      stringify({ path, params, version }),
-      zoneId,
-    );
-    if (savedData) {
-      const parsedData = parse(savedData);
-      selectedUtils.setData(parsedData);
-    } else {
-      const data = await selectedClient.query(params);
-      await offlineDb.set(stringify({ path, params, version }), zoneId, data);
+      setIsDownloading(true);
+      setIsError([]);
 
-      storage.set(stringify({ path, params }), stringify(data));
-      selectedUtils.setData(data);
-      if ("image" in data) {
-        if (data.image.publicId === undefined || data.image.publicId === null)
-          return;
-        const optimizedUrl = optimizedImage(data.image.publicId);
-        const thumbnailUrl = getThumbnail(data.image.publicId);
-        optimizedUrl && storeImage(optimizedUrl, "permanent");
-        thumbnailUrl && storeImage(thumbnailUrl, "permanent");
-      }
-    }
+      assetsToDownload.forEach(async (asset, index) => {
+        const { params, router, procedure, version, zoneId } = asset;
+        const queryKey = stringify({ router, procedure, params });
+        try {
+          setProgress((index + 1) / totalAssets);
 
-    // const data = await selectedUtils.fetch(params);
-  });
+          //@ts-ignore
+          const selectedClient = client[router][procedure];
+
+          const savedData = offlineDb.get(queryKey, zoneId);
+
+          if (!savedData || savedData.version < version) {
+            // @ts-ignore
+            const data = await selectedClient.query(params);
+            await offlineDb.setOrCreate(queryKey, zoneId, data, version);
+          }
+        } catch (error) {
+          let message = "Unknown Error";
+          if (error instanceof Error) message = error.message;
+          setIsError((prev) => [...prev, { [queryKey]: message }]);
+        }
+      });
+      setIsDownloading(false);
+    },
+    [],
+  );
+
+  const setImagesToFileSystem = useCallback(
+    async (assetsToDownload: ListToDownload["imagesToDownload"]) => {
+      if (!assetsToDownload) return;
+      storage.set(Storage.DOWNLOADED_IMAGES, stringify(assetsToDownload));
+      assetsToDownload.forEach(async (asset) => {
+        const { publicId } = asset;
+        if (!publicId) return;
+        const thumbnail = getThumbnail(publicId);
+
+        const cachedThumbnail = async () =>
+          thumbnail &&
+          storeImage(
+            {
+              url: thumbnail.url,
+              uniqueId: thumbnail.uniqueId,
+            },
+            "permanent",
+          );
+
+        const mainImage = optimizedImage(publicId);
+        const cachedMainImage = async () =>
+          mainImage &&
+          storeImage(
+            {
+              url: mainImage.url,
+              uniqueId: mainImage.uniqueId,
+            },
+            "permanent",
+          );
+        allSettled([cachedThumbnail(), cachedMainImage()]);
+      });
+    },
+    [],
+  );
+
+  const downloadAll = useCallback(async () => {
+    const { assetsToDownload, imagesToDownload } = await mutateAsync();
+
+    allSettled([
+      setImagesToFileSystem(imagesToDownload),
+      setAssetsToDb(assetsToDownload),
+    ]);
+  }, [mutateAsync, setAssetsToDb, setImagesToFileSystem]);
+
+  const hydrate = useCallback(() => {
+    const res = storage.getString(Storage.DOWNLOADED_ASSETS);
+    if (!res) return;
+    const downloadedList = parse<ListToDownload["assetsToDownload"]>(res);
+    downloadedList.forEach((asset) => {
+      const { params, router, procedure, zoneId } = asset;
+
+      // @ts-ignore
+      const selectedUtil = utils[router][procedure];
+
+      const savedData = offlineDb.get(
+        stringify({ router, procedure, params }),
+        zoneId,
+      );
+
+      if (!savedData) return;
+
+      selectedUtil.setData(savedData.data, params);
+    });
+  }, [utils]);
+
+  useEffect(() => {
+    if (isOfflineMode) hydrate();
+  }, [isOfflineMode, hydrate]);
+
+  useEffect(() => {
+    downloadAll();
+  }, [downloadAll]);
+
+  return { isDownloading, progress, isError, setAssetsToDb };
 };
 
-// const AppRouter = lookup(appRouter, "sectors.allWall");
-
 export default useOffline;
-
-type PathImpl<T, Key extends keyof T> = Key extends string
-  ? T[Key] extends Record<string, any>
-    ?
-        | `${Key}.${PathImpl<T[Key], Exclude<keyof T[Key], keyof any[]>> &
-            string}`
-        | `${Key}.${Exclude<keyof T[Key], keyof any[]> & string}`
-    : never
-  : never;
-
-type PathImpl2<T> = PathImpl<T, keyof T> | keyof T;
-
-type Path<T> = PathImpl2<T> extends string | keyof T ? PathImpl2<T> : keyof T;
-
-type PathValue<T, P extends Path<T>> = P extends `${infer Key}.${infer Rest}`
-  ? Key extends keyof T
-    ? Rest extends Path<T[Key]>
-      ? PathValue<T[Key], Rest>
-      : never
-    : never
-  : P extends keyof T
-  ? T[P]
-  : never;
-
-declare function lookup<T, P extends Path<T>>(obj: T, path: P): PathValue<T, P>;

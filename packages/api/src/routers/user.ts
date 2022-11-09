@@ -4,7 +4,7 @@ import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { SoftDelete } from "@prisma/client";
+import { Image, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 import { z } from "zod";
@@ -309,7 +309,7 @@ export const userRouter = t.router({
       });
     },
   ),
-  getDownloadedAssets: protectedProcedure.query(async ({ ctx }) => {
+  getDownloadedAssets: protectedProcedure.mutation(async ({ ctx }) => {
     const list = await ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },
       select: {
@@ -329,7 +329,7 @@ export const userRouter = t.router({
                         RouteGrade: { select: idAndVersion },
                       },
                     },
-                    topos: { select: idAndVersion },
+                    topos: { select: { ...idAndVersion, image: true } },
                   },
                 },
               },
@@ -343,13 +343,18 @@ export const userRouter = t.router({
       throw new TRPCError({ code: "NOT_FOUND" });
     }
 
-    const ids = list.DownloadedZones.flatMap((z) => {
+    const imagesToDownload: Image[] = [];
+
+    const assetsToDownload = list.DownloadedZones.flatMap((z) => {
       const zoneId = z.id;
       const sectors = z.sectors.flatMap((s) => {
         const walls = s.walls.flatMap((w) => {
           const topos = w.topos.flatMap((t) => {
+            imagesToDownload.push(t.image);
+
             return {
-              path: "topos.byId" as const,
+              router: "topos" as const,
+              procedure: "byId" as const,
               params: { topoId: t.id },
               version: t.version,
               zoneId,
@@ -357,7 +362,8 @@ export const userRouter = t.router({
           });
           return [
             {
-              path: "walls.byId" as const,
+              router: "walls" as const,
+              procedure: "byId" as const,
               params: { wallId: w.id },
               version: w.version,
               zoneId,
@@ -367,7 +373,8 @@ export const userRouter = t.router({
         });
         return [
           {
-            path: "sectors.allWalls" as const,
+            router: "sectors" as const,
+            procedure: "allWalls" as const,
             params: { sectorId: s.id },
             version: s.version,
             zoneId,
@@ -377,7 +384,8 @@ export const userRouter = t.router({
       });
       return [
         {
-          path: "zones.allSectors" as const,
+          router: "zones" as const,
+          procedure: "allSectors" as const,
           params: { zoneId: z.id },
           version: z.version,
           zoneId,
@@ -386,13 +394,7 @@ export const userRouter = t.router({
       ];
     });
 
-    const recorrer = ids.map((item) => {
-      const { path, params, version } = item;
-      const router = path[0];
-      const param = path[1];
-    });
-
-    return ids;
+    return { assetsToDownload, imagesToDownload };
   }),
 });
 
