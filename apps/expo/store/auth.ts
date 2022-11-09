@@ -7,6 +7,7 @@ import {
 } from "@utils/auth0/types";
 import { isTokenExpired, tokenDecode } from "@utils/decode";
 import storage, { Storage } from "@utils/mmkv/storage";
+import { checkInternetConnection } from "react-native-offline";
 import { parse, stringify } from "superjson";
 
 export interface AuthState {
@@ -62,6 +63,7 @@ export const autoLoginAuth0 = createAsyncThunk(
   "auth/autoLoginAuth0",
   async (_, { rejectWithValue }) => {
     try {
+      const isConnected = await checkInternetConnection();
       const token = storage.getString(Storage.ACCESS_TOKEN);
       const decodedIdToken = parse<DecodedIdToken>(
         storage.getString(Storage.DECODED_ID_TOKEN) || "{}",
@@ -71,7 +73,7 @@ export const autoLoginAuth0 = createAsyncThunk(
       const decodedToken = tokenDecode<DecodedAccessToken>(token);
       const hasExpired = isTokenExpired(decodedToken.exp);
 
-      if (!hasExpired)
+      if (!hasExpired || !isConnected)
         return {
           isAuth: true,
           accessToken: token,
