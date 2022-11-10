@@ -21,6 +21,7 @@ import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
@@ -93,6 +94,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
   const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
+  const { isOfflineMode } = useOfflineMode();
 
   const [openAll, setOpenAll] = useState(false);
 
@@ -103,7 +105,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     transform: [{ rotate: `${degs.value}deg` }],
   }));
 
-  if (isPaused)
+  if (isPaused && !isOfflineMode)
     return (
       <Screen padding="m" justifyContent="center" alignItems="center">
         <Text>Sin conexión a internet</Text>
