@@ -20,6 +20,9 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
+    onSuccess: () => {
+      utils.user.getDownloadedAssets.invalidate();
+    },
   });
 
   const removeToDownloadedList = trpc.user.removeToDownloadedZones.useMutation({
@@ -37,7 +40,9 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
-    // onSuccess: () => {},
+    onSuccess: () => {
+      utils.user.getDownloadedAssets.invalidate();
+    },
   });
 
   const onDownloadPress = () => {

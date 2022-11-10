@@ -309,7 +309,7 @@ export const userRouter = t.router({
       });
     },
   ),
-  getDownloadedAssets: protectedProcedure.mutation(async ({ ctx }) => {
+  getDownloadedAssets: protectedProcedure.query(async ({ ctx }) => {
     const list = await ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },
       select: {

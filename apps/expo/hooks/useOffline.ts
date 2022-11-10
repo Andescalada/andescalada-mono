@@ -18,7 +18,16 @@ type ListToDownload = inferProcedureOutput<
 const useOffline = () => {
   const { isOfflineMode } = useOfflineMode();
 
-  const { mutateAsync } = trpc.user.getDownloadedAssets.useMutation();
+  trpc.user.getDownloadedAssets.useQuery(undefined, {
+    onSuccess: (data) => {
+      const { assetsToDownload, imagesToDownload } = data;
+      allSettled([
+        setAssetsToDb(assetsToDownload),
+        setImagesToFileSystem(imagesToDownload),
+      ]);
+    },
+  });
+
   const [progress, setProgress] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isError, setIsError] = useState<{ [key: string]: string }[]>([]);
@@ -97,15 +106,6 @@ const useOffline = () => {
     [],
   );
 
-  const downloadAll = useCallback(async () => {
-    const { assetsToDownload, imagesToDownload } = await mutateAsync();
-
-    allSettled([
-      setImagesToFileSystem(imagesToDownload),
-      setAssetsToDb(assetsToDownload),
-    ]);
-  }, [mutateAsync, setAssetsToDb, setImagesToFileSystem]);
-
   const hydrate = useCallback(() => {
     const res = storage.getString(Storage.DOWNLOADED_ASSETS);
     if (!res) return;
@@ -122,18 +122,19 @@ const useOffline = () => {
       );
 
       if (!savedData) return;
+      console.log({ router, procedure, params });
+      // console.log(savedData.data);
 
-      selectedUtil.setData(savedData.data, params);
+      selectedUtil.setData(params, savedData.data);
     });
   }, [utils]);
 
   useEffect(() => {
-    if (isOfflineMode) hydrate();
+    if (isOfflineMode) {
+      console.log("hydrating");
+      hydrate();
+    }
   }, [isOfflineMode, hydrate]);
-
-  useEffect(() => {
-    downloadAll();
-  }, [downloadAll]);
 
   return { isDownloading, progress, isError, setAssetsToDb };
 };
