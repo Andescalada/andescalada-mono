@@ -32,9 +32,10 @@ const localHost =
   Constants.manifest2?.extra?.expoGo?.debuggerHost ||
   Constants.manifest?.debuggerHost;
 
-const url = __DEV__
-  ? `http://${localHost?.split(":").shift()}:3000`
-  : Env.API_URL;
+const url =
+  process.env.APP_VARIANT === "development"
+    ? `http://${localHost?.split(":").shift()}:3000`
+    : Env.API_URL;
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [queryClient] = useState(() => {
