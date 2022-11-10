@@ -9,20 +9,16 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onMutate: async () => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
-      utils.zones.allSectors.setData(
-        (old) => (old ? { ...old, isDownloaded: true } : undefined),
-        { zoneId },
+      utils.zones.allSectors.setData({ zoneId }, (old) =>
+        old ? { ...old, isDownloaded: true } : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.zones.allSectors.setData(context?.previousData);
+      utils.zones.allSectors.setData({ zoneId }, context?.previousData);
     },
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
-    },
-    onSuccess: () => {
-      utils.user.getDownloadedAssets.invalidate();
     },
   });
 
@@ -30,21 +26,18 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onMutate: async () => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
-      utils.zones.allSectors.setData(
-        (old) => (old ? { ...old, isDownloaded: false } : undefined),
-        { zoneId },
+      utils.zones.allSectors.setData({ zoneId }, (old) =>
+        old ? { ...old, isDownloaded: false } : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.zones.allSectors.setData(context?.previousData);
+      utils.zones.allSectors.setData({ zoneId }, context?.previousData);
     },
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
-    onSuccess: () => {
-      utils.user.getDownloadedAssets.invalidate();
-    },
+    // onSuccess: () => {},
   });
 
   const onDownloadPress = () => {

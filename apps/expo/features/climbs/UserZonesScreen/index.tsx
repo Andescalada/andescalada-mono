@@ -56,13 +56,13 @@ const UserZonesScreen = () => {
     onMutate: async () => {
       await utils.user.ownInfo.cancel();
       const previousData = utils.user.ownInfo.getData();
-      utils.user.ownInfo.setData((old) =>
+      utils.user.ownInfo.setData(undefined, (old) =>
         old ? { ...old, RecentZones: [] } : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.user.ownInfo.setData(context?.previousData);
+      utils.user.ownInfo.setData(undefined, context?.previousData);
     },
   });
 
@@ -70,7 +70,7 @@ const UserZonesScreen = () => {
     onMutate: async ({ zoneId }) => {
       await utils.user.ownInfo.cancel();
       const previousData = utils.user.ownInfo.getData();
-      utils.user.ownInfo.setData((old) =>
+      utils.user.ownInfo.setData(undefined, (old) =>
         old
           ? {
               ...old,
@@ -81,7 +81,7 @@ const UserZonesScreen = () => {
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.user.ownInfo.setData(context?.previousData);
+      utils.user.ownInfo.setData(undefined, context?.previousData);
     },
   });
 

@@ -9,14 +9,13 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
     onMutate: async () => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
-      utils.zones.allSectors.setData(
-        (old) => (old ? { ...old, isFavorite: true } : undefined),
-        { zoneId },
+      utils.zones.allSectors.setData({ zoneId }, (old) =>
+        old ? { ...old, isFavorite: true } : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.zones.allSectors.setData(context?.previousData);
+      utils.zones.allSectors.setData({ zoneId }, context?.previousData);
     },
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
@@ -27,14 +26,13 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
     onMutate: async () => {
       await utils.zones.allSectors.cancel();
       const previousData = utils.zones.allSectors.getData({ zoneId });
-      utils.zones.allSectors.setData(
-        (old) => (old ? { ...old, isFavorite: false } : undefined),
-        { zoneId },
+      utils.zones.allSectors.setData({ zoneId }, (old) =>
+        old ? { ...old, isFavorite: false } : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.zones.allSectors.setData(context?.previousData);
+      utils.zones.allSectors.setData({ zoneId }, context?.previousData);
     },
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });

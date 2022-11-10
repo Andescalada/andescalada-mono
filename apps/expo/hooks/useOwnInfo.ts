@@ -33,7 +33,7 @@ const useOwnInfo = () => {
         dispatch(logoutAuth0());
       }
       if (noNetwork(err)) {
-        utils.user.ownInfo.setData(parsedStoredOwnInfo);
+        utils.user.ownInfo.setData(undefined, parsedStoredOwnInfo);
       }
     },
   });

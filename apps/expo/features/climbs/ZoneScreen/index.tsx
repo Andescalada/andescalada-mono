@@ -41,6 +41,7 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId } = route.params;
+  console.log({ zoneId }, "zone Screen");
 
   const utils = trpc.useContext();
 
