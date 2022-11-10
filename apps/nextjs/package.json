@@ -23,19 +23,21 @@
     "@types/jest": "^27.0.1",
     "@types/node": "^16.0.0",
     "@types/react": "~18.0.0",
+    "@types/react-dom": "^18.0.8",
     "jest": "^27.1.0",
     "npm-run-all": "^4.1.5",
     "playwright": "^1.14.1",
     "ts-jest": "^27.0.5",
-    "typescript": "4.4.2"
+    "typescript": "^4.8.4"
   },
   "peerDependencies": {
-    "react": "*",
-    "zod": "*",
     "@trpc/client": "*",
     "@trpc/next": "*",
     "@trpc/react-query": "*",
-    "@trpc/server": "*"
+    "@trpc/server": "*",
+    "react": "*",
+    "react-dom": "*",
+    "zod": "*"
   },
   "publishConfig": {
     "access": "restricted"
