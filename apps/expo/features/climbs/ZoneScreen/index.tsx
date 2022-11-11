@@ -53,7 +53,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     trpc.zones.allSectors.useQuery(
       { zoneId },
       {
-        enabled: false,
+        enabled: !isOfflineMode,
+        refetchOnMount: !isOfflineMode,
+        retryOnMount: !isOfflineMode,
         onSuccess() {
           console.log("onSuccess");
           utils.user.ownInfo.invalidate();

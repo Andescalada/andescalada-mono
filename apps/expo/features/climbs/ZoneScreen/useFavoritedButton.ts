@@ -1,5 +1,6 @@
 import { trpc } from "@andescalada/utils/trpc";
 import type { Zone } from "@prisma/client";
+import { Alert } from "react-native";
 
 const useFavoritedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
@@ -16,8 +17,9 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
     },
     onError: (_, __, context) => {
       utils.zones.allSectors.setData({ zoneId }, context?.previousData);
+      Alert.alert("Error", "No se pudo agregar a favoritos");
     },
-    onSettled: () => {
+    onSuccess: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
   });
@@ -32,9 +34,10 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
       return { previousData };
     },
     onError: (_, __, context) => {
+      Alert.alert("Error", "No se pudo eliminar de favoritos");
       utils.zones.allSectors.setData({ zoneId }, context?.previousData);
     },
-    onSettled: () => {
+    onSuccess: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
   });

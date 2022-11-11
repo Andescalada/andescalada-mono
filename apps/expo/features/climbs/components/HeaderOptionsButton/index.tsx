@@ -5,6 +5,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import { CompositeScreenProps, useRoute } from "@react-navigation/native";
 import { ComponentProps, FC, useMemo } from "react";
@@ -34,6 +35,7 @@ const HeaderOptionsButton: FC<Props> = ({
   onOptions,
 }) => {
   const route = useRoute<Route>();
+  const { isOfflineMode } = useOfflineMode();
   const theme = useAppTheme();
   const { permission } = usePermissions({ zoneId: route.params.zoneId });
 
@@ -48,7 +50,7 @@ const HeaderOptionsButton: FC<Props> = ({
     return undefined;
   }, [editing, cancel]);
 
-  if (permission === undefined) return <Box />;
+  if (permission === undefined || isOfflineMode) return <Box />;
   return permission.has("Create") ? (
     <Pressable
       onPress={editing ? onSave : onOptions}

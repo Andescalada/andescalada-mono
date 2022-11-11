@@ -20,10 +20,8 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onError: (_, __, context) => {
       utils.zones.allSectors.setData({ zoneId }, context?.previousData);
     },
-    onSettled: () => {
-      utils.zones.allSectors.invalidate({ zoneId });
-    },
     onSuccess: () => {
+      utils.zones.allSectors.invalidate({ zoneId });
       utils.user.getDownloadedAssets.invalidate();
       utils.user.ownInfo.invalidate();
     },
@@ -41,11 +39,9 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onError: (_, __, context) => {
       utils.zones.allSectors.setData({ zoneId }, context?.previousData);
     },
-    onSettled: () => {
-      utils.zones.allSectors.invalidate({ zoneId });
-    },
     onSuccess: () => {
       utils.user.getDownloadedAssets.invalidate();
+      utils.zones.allSectors.invalidate({ zoneId });
       utils.user.ownInfo.invalidate();
     },
   });
