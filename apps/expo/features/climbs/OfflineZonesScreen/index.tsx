@@ -33,12 +33,12 @@ const OfflineZonesScreen = () => {
             />
           </Box>
         </Box>
-        {data?.RecentZones.length === 0 && (
+        {data?.DownloadedZones.length === 0 && (
           <Box marginTop={"s"}>
             <Text>No tienes zonas descargadas</Text>
           </Box>
         )}
-        {data?.RecentZones.map((item) => (
+        {data?.DownloadedZones.map((item) => (
           <ListItem
             key={item.id}
             marginVertical={"s"}

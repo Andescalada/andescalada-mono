@@ -5,7 +5,7 @@ const documentImageDir = FileSystem.documentDirectory + "imageDir/";
 const cacheImageFileUri = (uniqueId: string) => cachedImageDir + `${uniqueId}`;
 const imageFileUri = (uniqueId: string) => documentImageDir + `${uniqueId}`;
 
-export const storeImage = async (
+const storeImage = async (
   {
     uniqueId,
     url,
@@ -49,3 +49,13 @@ const ensureDirExists = async () => {
     });
   }
 };
+
+export const deleteImage = async (uniqueId: string) => {
+  const fileUri = imageFileUri(uniqueId);
+  const fileInfo = await FileSystem.getInfoAsync(fileUri);
+  if (fileInfo.exists) {
+    await FileSystem.deleteAsync(fileUri);
+  }
+};
+
+export default { storeImage, deleteImage };

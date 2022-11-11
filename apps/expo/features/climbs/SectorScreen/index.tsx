@@ -14,6 +14,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
@@ -30,8 +31,10 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const { sectorId, zoneId } = route.params;
 
+  const { isOfflineMode } = useOfflineMode();
+
   const { data, refetch, isFetching, isLoading } =
-    trpc.sectors.allWalls.useQuery({ sectorId });
+    trpc.sectors.allWalls.useQuery({ sectorId }, { enabled: !isOfflineMode });
 
   const editSector = trpc.sectors.edit.useMutation({
     onSuccess: () => {

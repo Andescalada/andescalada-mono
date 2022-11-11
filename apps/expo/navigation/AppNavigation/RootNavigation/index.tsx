@@ -20,7 +20,7 @@ const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 const Navigator = () => {
   const { data, isLoading } = useOwnInfo();
 
-  useOffline();
+  useOffline({ fetchAssets: true });
 
   if (isLoading)
     return (

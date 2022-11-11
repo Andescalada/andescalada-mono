@@ -293,13 +293,11 @@ export const userRouter = t.router({
       });
     },
   ),
-  removeToDownloadedZones: protectedZoneProcedure.mutation(
-    async ({ ctx, input }) => {
-      return ctx.prisma.user.update({
-        where: { email: ctx.user.email },
-        data: { DownloadedZones: { disconnect: { id: input.zoneId } } },
-      });
-    },
+  removeToDownloadedZones: protectedZoneProcedure.mutation(({ ctx, input }) =>
+    ctx.prisma.user.update({
+      where: { email: ctx.user.email },
+      data: { DownloadedZones: { disconnect: { id: input.zoneId } } },
+    }),
   ),
   removeToFavoriteZones: protectedZoneProcedure.mutation(
     async ({ ctx, input }) => {

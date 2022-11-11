@@ -1,5 +1,8 @@
 import { trpc } from "@andescalada/utils/trpc";
 import type { Zone } from "@prisma/client";
+import deleteSavedImages from "@utils/deleteSavedImages";
+import offlineDb from "@utils/quick-sqlite";
+import { Alert } from "react-native";
 
 const useDownloadedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
@@ -22,6 +25,7 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     },
     onSuccess: () => {
       utils.user.getDownloadedAssets.invalidate();
+      utils.user.ownInfo.invalidate();
     },
   });
 
@@ -42,6 +46,7 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     },
     onSuccess: () => {
       utils.user.getDownloadedAssets.invalidate();
+      utils.user.ownInfo.invalidate();
     },
   });
 
@@ -49,7 +54,21 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     if (!data?.isDownloaded) {
       addToDownloadedList.mutate({ zoneId });
     } else {
-      removeToDownloadedList.mutate({ zoneId });
+      Alert.alert("Borrar de descargas", "¿Estás seguro?", [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Borrar",
+          style: "destructive",
+          onPress: async () => {
+            await offlineDb.deleteZone(zoneId);
+            await deleteSavedImages(zoneId);
+            removeToDownloadedList.mutateAsync({ zoneId });
+          },
+        },
+      ]);
     }
   };
 

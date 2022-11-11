@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { images } from "@assets/images";
-import { storeImage } from "@utils/FileSystem/storeImage";
+import fileSystem from "@utils/FileSystem";
 import { useCallback, useEffect, useState } from "react";
 
 const useCachedImage = (args: { url: string; uniqueId: string } | null) => {
@@ -9,7 +9,7 @@ const useCachedImage = (args: { url: string; uniqueId: string } | null) => {
   const getCachedImage = useCallback(async () => {
     if (!args) return;
     const { uniqueId, url } = args;
-    const res = await storeImage({ url, uniqueId });
+    const res = await fileSystem.storeImage({ url, uniqueId });
     setFileUrl(res);
   }, [args]);
 

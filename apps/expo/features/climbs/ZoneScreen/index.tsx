@@ -45,11 +45,17 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const utils = trpc.useContext();
 
+  const { isOfflineMode } = useOfflineMode();
+
+  console.log(isOfflineMode, "isOfflineMode");
+
   const { data, refetch, isFetching, isLoading, isError, isPaused } =
     trpc.zones.allSectors.useQuery(
       { zoneId },
       {
+        enabled: false,
         onSuccess() {
+          console.log("onSuccess");
           utils.user.ownInfo.invalidate();
         },
       },
@@ -95,7 +101,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
   const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
-  const { isOfflineMode } = useOfflineMode();
 
   const [openAll, setOpenAll] = useState(false);
 

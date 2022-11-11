@@ -4,7 +4,7 @@ import useOfflineMode from "@hooks/useOfflineMode";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
 import { getThumbnail, optimizedImage } from "@utils/cloudinary";
-import { storeImage } from "@utils/FileSystem/storeImage";
+import fileSystem from "@utils/FileSystem";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
 import client from "@utils/trpc/client";
@@ -15,10 +15,15 @@ type ListToDownload = inferProcedureOutput<
   AppRouter["user"]["getDownloadedAssets"]
 >;
 
-const useOffline = () => {
+interface Args {
+  fetchAssets?: boolean;
+}
+
+const useOffline = ({ fetchAssets = false }: Args = {}) => {
   const { isOfflineMode } = useOfflineMode();
 
   trpc.user.getDownloadedAssets.useQuery(undefined, {
+    enabled: fetchAssets,
     onSuccess: (data) => {
       const { assetsToDownload, imagesToDownload } = data;
       allSettled([
@@ -82,7 +87,7 @@ const useOffline = () => {
 
         const cachedThumbnail = async () =>
           thumbnail &&
-          storeImage(
+          fileSystem.storeImage(
             {
               url: thumbnail.url,
               uniqueId: thumbnail.uniqueId,
@@ -93,7 +98,7 @@ const useOffline = () => {
         const mainImage = optimizedImage(publicId);
         const cachedMainImage = async () =>
           mainImage &&
-          storeImage(
+          fileSystem.storeImage(
             {
               url: mainImage.url,
               uniqueId: mainImage.uniqueId,
