@@ -1,5 +1,4 @@
 import { transformer } from "@andescalada/api/src/transformer";
-import useOfflineMode from "@hooks/useOfflineMode";
 import NetInfo from "@react-native-community/netinfo";
 import {
   onlineManager,
