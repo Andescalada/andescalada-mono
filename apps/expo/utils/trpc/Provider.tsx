@@ -44,6 +44,8 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
       defaultOptions: {
         queries: {
           retry: false,
+          cacheTime: Infinity,
+          staleTime: Infinity,
         },
       },
     });
