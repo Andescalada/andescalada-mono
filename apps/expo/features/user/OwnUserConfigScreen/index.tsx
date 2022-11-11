@@ -133,7 +133,7 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
         <>
           <Text>{`Ultima actualización: ${new Date(
             Updates.manifest?.createdAt,
-          ).toLocaleDateString()}`}</Text>
+          ).toLocaleString()}`}</Text>
           <Text>{`Id actualización: ${Updates.updateId}`}</Text>
           <Text>{`Version: ${Constants.expoConfig?.version}`}</Text>
           <Text>{`SDK: ${Updates.runtimeVersion}`}</Text>
