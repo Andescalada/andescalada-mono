@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import { logoutAuth0 } from "@store/auth";
 import { GlobalPermissions } from "@utils/auth0/types";
+import * as Updates from "expo-updates";
 import { ComponentProps, FC } from "react";
 import { Alert } from "react-native";
 
@@ -127,6 +128,13 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
           );
         }}
       />
+      {globalPermissions.includes(GlobalPermissions.DEVELOP_INFO) && (
+        <>
+          <Text>{`Ultima actualización: ${Updates.manifest?.createdAt}`}</Text>
+          <Text>{`Id actualización: ${Updates.updateId}`}</Text>
+          <Text>{`Versión: ${Updates.runtimeVersion}`}</Text>
+        </>
+      )}
     </Screen>
   );
 };

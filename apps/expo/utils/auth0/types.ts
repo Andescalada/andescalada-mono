@@ -29,4 +29,5 @@ export interface DecodedAccessToken {
 export enum GlobalPermissions {
   CRUD_ZONES = "crud:zones",
   CRUD_ROLES = "crud:roles",
+  DEVELOP_INFO = "develop:info",
 }
