@@ -54,8 +54,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
       { zoneId },
       {
         enabled: !isOfflineMode,
-        refetchOnMount: !isOfflineMode,
-        retryOnMount: !isOfflineMode,
         onSuccess() {
           console.log("onSuccess");
           utils.user.ownInfo.invalidate();

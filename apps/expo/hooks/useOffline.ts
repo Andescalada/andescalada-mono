@@ -1,6 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import useOfflineMode from "@hooks/useOfflineMode";
+import { onlineManager } from "@tanstack/react-query";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
 import { getThumbnail, optimizedImage } from "@utils/cloudinary";
@@ -9,6 +10,7 @@ import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
 import client from "@utils/trpc/client";
 import { useCallback, useEffect, useState } from "react";
+import { useIsConnected } from "react-native-offline";
 import { parse, stringify } from "superjson";
 
 type ListToDownload = inferProcedureOutput<
@@ -21,6 +23,7 @@ interface Args {
 
 const useOffline = ({ fetchAssets = false }: Args = {}) => {
   const { isOfflineMode } = useOfflineMode();
+  const isConnected = useIsConnected();
 
   trpc.user.getDownloadedAssets.useQuery(undefined, {
     enabled: fetchAssets,
@@ -138,8 +141,10 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     if (isOfflineMode) {
       console.log("hydrating");
       hydrate();
+      onlineManager.setOnline(false);
     }
-  }, [isOfflineMode, hydrate]);
+    onlineManager.setOnline(!!isConnected);
+  }, [isOfflineMode, hydrate, isConnected]);
 
   return { isDownloading, progress, isError, setAssetsToDb };
 };
