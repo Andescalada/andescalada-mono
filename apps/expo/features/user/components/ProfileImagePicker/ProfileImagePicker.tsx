@@ -24,6 +24,7 @@ const ProfileImagePicker: FC<Props> = ({
     defaultValue,
     isTablet ? responsiveImageSize.tablet : responsiveImageSize.mobile,
   );
+
   return (
     <Pressable
       borderColor="semantic.info"
@@ -40,7 +41,7 @@ const ProfileImagePicker: FC<Props> = ({
       <Text variant={{ mobile: "p2R", tablet: "p1R" }}>
         Agregar foto de perfil
       </Text>
-      {(selectedImage?.localUri || defaultImage.url) && (
+      {(selectedImage?.localUri || defaultImage?.url) && (
         <Image
           position={"absolute"}
           height={responsiveImageSize}
@@ -49,7 +50,7 @@ const ProfileImagePicker: FC<Props> = ({
           source={{
             uri: selectedImage?.localUri
               ? selectedImage?.localUri
-              : defaultImage.url || "",
+              : defaultImage?.url || "",
           }}
         />
       )}
