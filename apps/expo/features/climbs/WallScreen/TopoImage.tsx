@@ -140,7 +140,9 @@ const TopoImage: FC = () => {
         >
           <Image
             style={{ flex: 1, width: "100%", height: 1000 }}
-            source={{ uri: getThumbnail(mainTopo.image.publicId).url || "" }}
+            source={{
+              uri: getThumbnail(mainTopo.image.publicId || undefined).url || "",
+            }}
           />
         </Pressable>
       )}
