@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "expo start --dev-client -c",
+    "start": "expo start --dev-client",
     "build": "expo export --output-dir ./build --platform all",
     "android": "expo run:android",
     "ios": "expo run:ios",
