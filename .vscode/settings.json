@@ -1,0 +1,22 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": [
+    "javascript"
+  ],
+  "cSpell.words": [
+    "CLOUDINARY",
+    "hget",
+    "houm",
+    "Houmbox",
+    "Houmer",
+    "mmkv",
+    "MMKV",
+    "UPSTASH"
+  ],
+  "workbench.colorTheme": "Dracula Soft",
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "main"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+	"React Navigation Stack Type": {
+		"prefix": "stackTypeTemplate",
+		"body": [
+		"import { RouteProp } from \"@react-navigation/native\";",
+		"import { StackNavigationProp } from \"@react-navigation/stack\";",
+		"",
+		"export enum ${TM_DIRECTORY/^.+\\/(.*)$/$1/}Routes {",
+			"Placeholder =\"Placeholder\"",
+		"}",
+		"",
+		"export type ${TM_DIRECTORY/^.+\\/(.*)$/$1/}NavigationParamList = {",
+			"[${TM_DIRECTORY/^.+\\/(.*)$/$1/}Routes.Placeholder]: undefined" ,
+		"}",
+		"",
+		"export type ${TM_DIRECTORY/^.+\\/(.*)$/$1/}RouteProps<T extends ${TM_DIRECTORY/^.+\\/(.*)$/$1/}Routes> = RouteProp<${TM_DIRECTORY/^.+\\/(.*)$/$1/}NavigationParamList,T>;",
+			"",
+			"export type ${TM_DIRECTORY/^.+\\/(.*)$/$1/}NavigationProps<T extends ${TM_DIRECTORY/^.+\\/(.*)$/$1/}Routes> = StackNavigationProp<${TM_DIRECTORY/^.+\\/(.*)$/$1/}NavigationParamList, T>;",
+			"",
+			"export interface  ${TM_DIRECTORY/^.+\\/(.*)$/$1/}ScreenProps<T extends  ${TM_DIRECTORY/^.+\\/(.*)$/$1/}Routes> {",
+				"navigation:  ${TM_DIRECTORY/^.+\\/(.*)$/$1/}NavigationProps<T>;",
+				"route:  ${TM_DIRECTORY/^.+\\/(.*)$/$1/}RouteProps<T>;",
+			"}",
+			""
+		],
+		"description": "Template for stack navigation types"
+	},
+}
+

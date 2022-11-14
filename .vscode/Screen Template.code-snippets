@@ -1,0 +1,23 @@
+{
+	"React Native Houm Screen": {
+		"prefix": "screenTemplate",
+		"body": [
+		"import { Screen, Text } from \"@andescalada/ui\";",
+		"import { FC } from \"react\";",
+		"",
+		"interface Props {}",
+		"",
+			"const ${TM_DIRECTORY/^.+\\/(.*)$/$1/}: FC<Props> = props => {",
+			"return (",
+    		"<Screen>",
+      	"<Text>$1</Text>",
+    		"</Screen>",
+  			");",
+			"};",
+			"",
+			"export default ${TM_DIRECTORY/^.+\\/(.*)$/$1/};",
+			""
+		],
+		"description": "Template to start a screen for a react native Houm app"
+	},
+}

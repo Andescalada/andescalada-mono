@@ -12,8 +12,5 @@ yalc.lock
 coverage/
 *.db
 
-.vscode
-
 .env
-.vscode
 .env.production
