@@ -12,7 +12,7 @@
     "@auth0/nextjs-auth0": "^1.9.1",
     "@upstash/redis": "^1.13.1",
     "axios": "^0.27.2",
-    "jose": "^4.9.2",
+    "jose": "^4.11.0",
     "superjson": "^1.10.0"
   },
   "peerDependencies": {

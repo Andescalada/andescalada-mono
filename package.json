@@ -28,9 +28,7 @@
     ],
     "nohoist": [
       "**/@shopify/react-native-skia/**",
-      "**/@shopify/react-native-skia",
-      "**/react-native-reanimated",
-      "**/react-native-reanimated/**"
+      "**/@shopify/react-native-skia"
     ]
   },
   "prisma": {
@@ -44,8 +42,8 @@
     "@trpc/next": "^10.0.0-rc.7",
     "@trpc/react-query": "^10.0.0-rc.7",
     "@trpc/server": "^10.0.0-rc.7",
-    "react": "18.0.0",
-    "react-dom": "18.0.0",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {
