@@ -4,7 +4,6 @@ const allSettled = <T extends Promise<any>>(promises: T[]) => {
       promise
         .then((value) => ({ status: "fulfilled", value }))
         .catch((reason) => {
-          console.log(reason);
           return { status: "rejected", reason };
         }),
     ),

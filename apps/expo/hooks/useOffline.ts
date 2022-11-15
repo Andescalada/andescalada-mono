@@ -130,8 +130,6 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       );
 
       if (!savedData) return;
-      console.log({ router, procedure, params });
-      // console.log(savedData.data);
 
       selectedUtil.setData(params, savedData.data);
     });
@@ -139,7 +137,6 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
 
   useEffect(() => {
     if (isOfflineMode) {
-      console.log("hydrating");
       hydrate();
       onlineManager.setOnline(false);
     }

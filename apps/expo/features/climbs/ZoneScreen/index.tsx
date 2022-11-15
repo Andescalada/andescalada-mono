@@ -41,13 +41,10 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId } = route.params;
-  console.log({ zoneId }, "zone Screen");
 
   const utils = trpc.useContext();
 
   const { isOfflineMode } = useOfflineMode();
-
-  console.log(isOfflineMode, "isOfflineMode");
 
   const { data, refetch, isFetching, isLoading, isError, isPaused } =
     trpc.zones.allSectors.useQuery(
@@ -55,7 +52,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
       {
         enabled: !isOfflineMode,
         onSuccess() {
-          console.log("onSuccess");
           utils.user.ownInfo.invalidate();
         },
       },
