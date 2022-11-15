@@ -1,5 +1,5 @@
 import { SkRect } from "@shopify/react-native-skia";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
@@ -29,34 +29,45 @@ export const GestureHandler = ({
   const matrix = useSharedValue(initialValue);
   const offset = useSharedValue(initialValue);
 
-  const pan = Gesture.Pan()
-    .onChange((e) => {
-      matrix.value = multiply4(
-        Matrix4.translate(e.changeX, e.changeY, 0),
-        matrix.value,
-      );
-    })
-    .onEnd(() => {
-      const currentScale = matrix.value[0];
-      if (currentScale <= 1) {
-        matrix.value = initialValue;
-      }
-    });
+  const pan = useMemo(
+    () =>
+      Gesture.Pan()
+        .onChange((e) => {
+          if (e.numberOfPointers > 1) return;
+          matrix.value = multiply4(
+            Matrix4.translate(e.changeX, e.changeY, 0),
+            matrix.value,
+          );
+        })
+        .onEnd(() => {
+          const currentScale = matrix.value[0];
+          if (currentScale <= 1) {
+            matrix.value = initialValue;
+          }
+        }),
+    [initialValue, matrix],
+  );
 
-  const scale = Gesture.Pinch()
-    .onBegin((e) => {
-      origin.value = [e.focalX, e.focalY, 0];
-      offset.value = matrix.value;
-    })
-    .onChange((e) => {
-      matrix.value = concat(offset.value, origin.value, [{ scale: e.scale }]);
-    })
-    .onEnd(() => {
-      const currentScale = matrix.value[0];
-      if (currentScale < 1) {
-        matrix.value = concat(initialValue, [0, 0, 0], [{ scale: 1 }]);
-      }
-    });
+  const scale = useMemo(
+    () =>
+      Gesture.Pinch()
+        .onStart((e) => {
+          origin.value = [e.focalX, e.focalY, 0];
+          offset.value = matrix.value;
+        })
+        .onChange((e) => {
+          matrix.value = concat(offset.value, origin.value, [
+            { scale: e.scale },
+          ]);
+        })
+        .onEnd(() => {
+          const currentScale = matrix.value[0];
+          if (currentScale < 1) {
+            matrix.value = concat(initialValue, [0, 0, 0], [{ scale: 1 }]);
+          }
+        }),
+    [initialValue, matrix, offset, origin],
+  );
 
   const style = useAnimatedStyle(() => ({
     position: "absolute",
@@ -73,8 +84,9 @@ export const GestureHandler = ({
       { translateY: height / 2 },
     ],
   }));
+
   return (
-    <GestureDetector gesture={Gesture.Race(pan, scale)}>
+    <GestureDetector gesture={Gesture.Simultaneous(scale, pan)}>
       <Animated.View style={style}>{children}</Animated.View>
     </GestureDetector>
   );

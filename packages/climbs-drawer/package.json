@@ -2,7 +2,9 @@
   "name": "@andescalada/climbs-drawer",
   "version": "1.0.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json"
+  },
   "license": "MIT",
   "dependencies": {
     "@andescalada/ui": "*",
@@ -12,12 +14,14 @@
     "@shopify/restyle": "*",
     "@shopify/react-native-skia": "*",
     "react-native-redash": "*",
-    "@openspacelabs/react-native-zoomable-view": "*"
+    "@openspacelabs/react-native-zoomable-view": "*",
+    "react-native-reanimated": "*"
   },
   "devDependencies": {
     "@shopify/restyle": "*",
     "react-native-redash": "*",
     "@shopify/react-native-skia": "0.1.141",
-    "@types/react-native": "~0.69.5"
+    "@types/react-native": "~0.69.5",
+    "react-native-reanimated": "*"
   }
 }
