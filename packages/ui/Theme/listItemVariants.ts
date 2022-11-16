@@ -15,26 +15,15 @@ const listItemVariants = createBoxVariant({
   },
   fill: {
     backgroundColor: "listItemBackground",
-    alignItems: "stretch",
-    padding: "m",
   },
   accent: {
     borderColor: "brand.primaryA",
-    borderWidth: 3,
-    alignItems: "stretch",
-    padding: "m",
   },
   danger: {
     borderColor: "semantic.transparent.50.error",
-    borderWidth: 3,
-    alignItems: "stretch",
-    padding: "m",
   },
   warning: {
     borderColor: "semantic.transparent.50.warning",
-    borderWidth: 3,
-    alignItems: "stretch",
-    padding: "m",
   },
 });
 

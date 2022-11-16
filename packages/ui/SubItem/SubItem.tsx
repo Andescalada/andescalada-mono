@@ -2,7 +2,7 @@ import { ComponentProps, FC } from "react";
 
 import A from "../Animated/Animated";
 
-interface Props extends ComponentProps<typeof A.Pressable> {
+interface Props extends Omit<ComponentProps<typeof A.Pressable>, "key"> {
   index?: number;
   maxIndex?: number;
 }
@@ -22,8 +22,8 @@ const SubItem: FC<Props> = ({
       borderLeftWidth={2}
       borderRightWidth={2}
       borderColor="grayscale.400"
-      borderBottomLeftRadius={index === maxIndex ? 10 : 0}
-      borderBottomRightRadius={index === maxIndex ? 10 : 0}
+      borderBottomLeftRadius={index === maxIndex ? 5 : 0}
+      borderBottomRightRadius={index === maxIndex ? 5 : 0}
       borderBottomWidth={index === maxIndex ? 2 : 1}
       {...props}
     >

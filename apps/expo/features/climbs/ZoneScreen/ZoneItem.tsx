@@ -1,5 +1,5 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { A, Box, ListItem, SubItem, Text } from "@andescalada/ui";
+import { A, Box, ListItem, Pressable, SubItem, Text } from "@andescalada/ui";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   ClimbsNavigationNavigationProps,
@@ -50,12 +50,18 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
         flexDirection="row"
         justifyContent="space-between"
         onPress={onOpen}
+        borderRadius={10}
+        overflow="hidden"
+        style={{ padding: 0 }}
       >
-        <Text variant="p1R">{item.name}</Text>
-        <Ionicons
-          name="chevron-forward"
-          size={24}
-          color="white"
+        <Box justifyContent="center" flex={1} padding="m">
+          <Text variant="p1R">{item.name}</Text>
+        </Box>
+        <Pressable
+          flex={0.15}
+          justifyContent="center"
+          alignItems="center"
+          paddingRight="s"
           onPress={() =>
             navigation.navigate(ClimbsNavigationRoutes.Sector, {
               sectorId: item.id,
@@ -63,7 +69,15 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
               zoneId: route.params.zoneId,
             })
           }
-        />
+        >
+          <Box
+            backgroundColor="grayscale.white"
+            borderRadius={100}
+            padding="xs"
+          >
+            <Ionicons name="information" size={24} color="black" />
+          </Box>
+        </Pressable>
       </ListItem>
       <A.Box style={style} overflow="hidden">
         <Box ref={aRef} collapsable={disableForAndroid}>
