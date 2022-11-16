@@ -10,6 +10,7 @@ import useAnimatedHeight from "@hooks/useAnimatedHeight";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import { FC, memo } from "react";
+import { Platform } from "react-native";
 
 type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[]
   ? ElementType
@@ -18,6 +19,8 @@ type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[]
 type AllSectors = inferProcedureOutput<AppRouter["zones"]["allSectors"]>;
 
 type Item = ArrElement<AllSectors["sectors"]>;
+
+const disableForAndroid = Platform.OS !== "android";
 
 interface Props {
   item: Item;
@@ -63,7 +66,7 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
         />
       </ListItem>
       <A.Box style={style} overflow="hidden">
-        <Box ref={aRef}>
+        <Box ref={aRef} collapsable={disableForAndroid}>
           {wallCount > 0 ? (
             item.walls.map((wall, index) => (
               <SubItem
