@@ -33,13 +33,9 @@ const SkiaRouteCanvas: FC<Props> = ({
   children,
   coords,
 }) => {
-  const ids = useValue<number[]>([]);
-
   const touchHandler = useMultiTouchHandler({
     onEnd: ({ x, y, id }) => {
-      console.log(ids.current);
       if (coords) {
-        console.log({ id });
         const isXOutOfBound = Math.abs(x) > width;
         const isYOutOfBound = Math.abs(y) > height;
 
