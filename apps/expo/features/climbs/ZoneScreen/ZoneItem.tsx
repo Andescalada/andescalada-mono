@@ -58,10 +58,9 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
           <Text variant="p1R">{item.name}</Text>
         </Box>
         <Pressable
-          flex={0.15}
-          justifyContent="center"
-          alignItems="center"
-          paddingRight="s"
+          flex={0.25}
+          flexDirection="row"
+          overflow="hidden"
           onPress={() =>
             navigation.navigate(ClimbsNavigationRoutes.Sector, {
               sectorId: item.id,
@@ -70,12 +69,9 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
             })
           }
         >
-          <Box
-            backgroundColor="grayscale.white"
-            borderRadius={100}
-            padding="xs"
-          >
-            <Ionicons name="information" size={24} color="black" />
+          <DottedBorder />
+          <Box flex={1} justifyContent="center" alignItems="center">
+            <Ionicons name="information-circle" size={24} color="white" />
           </Box>
         </Pressable>
       </ListItem>
@@ -111,3 +107,13 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
 };
 
 export default memo(ZoneItem);
+
+const DottedBorder = () => (
+  <Box
+    flex={1}
+    maxWidth={1}
+    borderWidth={1}
+    borderColor="brand.primaryA"
+    borderStyle="dotted"
+  />
+);
