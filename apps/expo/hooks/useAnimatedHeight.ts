@@ -36,7 +36,11 @@ const useAnimatedHeight = ({ defaultOpen = false }: Config = {}) => {
     if (height.value === 0) {
       runOnUI(() => {
         "worklet";
-        height.value = measure(aRef).height;
+        try {
+          height.value = measure(aRef).height;
+        } catch {
+          height.value = 0;
+        }
       })();
     }
 
