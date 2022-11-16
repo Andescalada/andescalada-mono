@@ -4,7 +4,7 @@ import {
   Box,
   BoxWithKeyboard,
   Button,
-  Screen,
+  ScrollView,
   Text,
   TextInput,
 } from "@andescalada/ui";
@@ -21,6 +21,7 @@ import useUploadImage from "@hooks/useUploadImage";
 import useZodForm from "@hooks/useZodForm";
 import { FC, useMemo, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
+import { Alert } from "react-native";
 import { z } from "zod";
 
 type Props = UserNavigationScreenProps<UserNavigationRoutes.PersonalInfo>;
@@ -103,7 +104,7 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
   ]);
 
   return (
-    <Screen margin={{ mobile: "m", tablet: "xxl" }} safeAreaDisabled>
+    <ScrollView margin={{ mobile: "m", tablet: "xxl" }}>
       <BoxWithKeyboard>
         <Box marginVertical={"ll"}>
           <Text variant="h3">Edita tu información personal</Text>
@@ -115,6 +116,18 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
               pickImage={pickImage}
               selectedImage={selectedImage}
               defaultValue={data?.profilePhoto?.publicId || undefined}
+            />
+          </Box>
+          <Box>
+            <Text variant="p1R" marginBottom="s">
+              Correo
+            </Text>
+            <TextInput
+              value={data?.email}
+              onPressIn={() => Alert.alert("No es posible editar el correo")}
+              color="grayscale.500"
+              editable={false}
+              containerProps={{ height: 40, paddingLeft: "s" }}
             />
           </Box>
           <FormProvider {...form}>
@@ -159,7 +172,7 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
           }
         />
       </BoxWithKeyboard>
-    </Screen>
+    </ScrollView>
   );
 };
 
