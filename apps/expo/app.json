@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
@@ -34,7 +34,7 @@
         ],
         "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
       },
-      "buildNumber": "11"
+      "buildNumber": "12"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -43,7 +43,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 12
+      "versionCode": 13
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
@@ -62,7 +62,12 @@
         }
       ],
       "expo-tracking-transparency",
-      ["expo-community-flipper", {"version": "0.146.0"}],
+      [
+        "expo-community-flipper",
+        {
+          "version": "0.146.0"
+        }
+      ],
       "react-native-flipper-performance-plugin",
       "sentry-expo",
       [
