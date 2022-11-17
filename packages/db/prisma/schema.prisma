@@ -15,37 +15,35 @@ datasource db {
 }
 
 model User {
-  id                     String           @id @default(uuid())
-  createdAt              DateTime         @default(now())
-  updatedAt              DateTime         @updatedAt
-  name                   String
-  username               String           @unique
-  email                  String           @unique
-  profilePhoto           Image?           @relation(fields: [profilePhotoId], references: [id])
-  profilePhotoId         String?
-  firstLogin             Boolean          @default(true)
-  auth0id                String?
-  authorSector           Sector[]         @relation("AuthorSector")
-  coAuthorSector         Sector[]         @relation("CoAuthorSector")
-  authorWall             Wall[]           @relation("AuthorWall")
-  coAuthorWall           Wall[]           @relation("CoAuthorWall")
-  authorRoute            Route[]          @relation("AuthorRoute")
-  authorTopo             Topo[]           @relation("AuthorTopo")
-  coAuthorTopo           Topo[]           @relation("CoAuthorTopo")
-  coAuthorRoute          Route[]          @relation("CoAuthorRoute")
-  authorRoutePath        RoutePath[]      @relation("AuthorRoutePath")
-  coAuthorRoutePath      RoutePath[]      @relation("CoAuthorRoutePath")
-  RoleByZone             RoleByZone[]
-  preferredSportGrade    GradeSystems     @default(French)
-  preferredTradGrade     GradeSystems     @default(Yosemite)
-  preferredBoulderGrade  GradeSystems     @default(Hueco)
-  AssignedRoles          RoleByZone[]     @relation("AssignedBy")
-  isDeleted              SoftDelete       @default(NotDeleted)
-  FavoriteZones          Zone[]           @relation("FavoriteZones")
-  DownloadedZones        Zone[]           @relation("DownloadedZones")
-  RecentZones            Zone[]           @relation("RecentZones")
-  authorRouteExtension   RouteExtension[] @relation("AuthorRouteExtension")
-  coAuthorRouteExtension RouteExtension[] @relation("CoAuthorRouteExtension")
+  id                    String       @id @default(uuid())
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  name                  String
+  username              String       @unique
+  email                 String       @unique
+  profilePhoto          Image?       @relation(fields: [profilePhotoId], references: [id])
+  profilePhotoId        String?
+  firstLogin            Boolean      @default(true)
+  auth0id               String?
+  authorSector          Sector[]     @relation("AuthorSector")
+  coAuthorSector        Sector[]     @relation("CoAuthorSector")
+  authorWall            Wall[]       @relation("AuthorWall")
+  coAuthorWall          Wall[]       @relation("CoAuthorWall")
+  authorRoute           Route[]      @relation("AuthorRoute")
+  authorTopo            Topo[]       @relation("AuthorTopo")
+  coAuthorTopo          Topo[]       @relation("CoAuthorTopo")
+  coAuthorRoute         Route[]      @relation("CoAuthorRoute")
+  authorRoutePath       RoutePath[]  @relation("AuthorRoutePath")
+  coAuthorRoutePath     RoutePath[]  @relation("CoAuthorRoutePath")
+  RoleByZone            RoleByZone[]
+  preferredSportGrade   GradeSystems @default(French)
+  preferredTradGrade    GradeSystems @default(Yosemite)
+  preferredBoulderGrade GradeSystems @default(Hueco)
+  AssignedRoles         RoleByZone[] @relation("AssignedBy")
+  isDeleted             SoftDelete   @default(NotDeleted)
+  FavoriteZones         Zone[]       @relation("FavoriteZones")
+  DownloadedZones       Zone[]       @relation("DownloadedZones")
+  RecentZones           Zone[]       @relation("RecentZones")
 
   @@index([email])
   @@index([profilePhotoId])
@@ -204,47 +202,36 @@ model Topo {
 }
 
 model Route {
-  id             String           @id @default(uuid())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  name           String
-  slug           String
-  position       Int              @default(0)
-  leftRouteId    String?
-  rightRouteId   String?
-  classic        Boolean          @default(false)
-  kind           RouteKind
-  Wall           Wall             @relation(fields: [wallId], references: [id], onDelete: Cascade)
-  wallId         String
-  description    String?          @db.LongText
-  RoutePath      RoutePath[]
-  RouteGrade     RouteGrade?
-  Author         User             @relation("AuthorRoute", fields: [authorId], references: [id])
-  authorId       String
-  coAuthors      User[]           @relation("CoAuthorRoute")
-  isDeleted      SoftDelete       @default(NotDeleted)
-  version        Int              @default(0)
-  RouteExtension RouteExtension[]
+  id              String      @id @default(uuid())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  name            String
+  slug            String
+  position        Int         @default(0)
+  leftRouteId     String?
+  rightRouteId    String?
+  classic         Boolean     @default(false)
+  kind            RouteKind
+  Wall            Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  wallId          String
+  description     String?     @db.LongText
+  RoutePath       RoutePath[]
+  RouteGrade      RouteGrade?
+  Author          User        @relation("AuthorRoute", fields: [authorId], references: [id])
+  authorId        String
+  coAuthors       User[]      @relation("CoAuthorRoute")
+  isDeleted       SoftDelete  @default(NotDeleted)
+  version         Int         @default(0)
+  isExtension     Boolean?    @default(false)
+  extendedRouteId String?     @unique
+  ExtendedRoute   Route?      @relation("ExtensionOf", fields: [extendedRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Extension       Route[]     @relation("ExtensionOf")
+  isVariant       Boolean?    @default(false)
+  variantRouteId  String?     @unique
+  VariantRoute    Route?      @relation("VariantOf", fields: [variantRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Variant         Route[]     @relation("VariantOf")
 
   @@index([wallId])
-  @@index([authorId])
-}
-
-model RouteExtension {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  name      String
-  Route     Route       @relation(fields: [routeId], references: [id])
-  routeId   String
-  RoutePath RoutePath[]
-  Author    User        @relation("AuthorRouteExtension", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]      @relation("CoAuthorRouteExtension")
-  isDeleted SoftDelete  @default(NotDeleted)
-  version   Int         @default(0)
-
-  @@index([routeId])
   @@index([authorId])
 }
 
@@ -264,21 +251,19 @@ model RouteGrade {
 }
 
 model RoutePath {
-  id               String          @id @default(uuid())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  path             String          @db.LongText
-  Topo             Topo            @relation(fields: [topoId], references: [id], onDelete: Cascade)
-  topoId           String
-  Route            Route           @relation(fields: [routeId], references: [id], onDelete: Cascade)
-  routeId          String
-  Author           User            @relation("AuthorRoutePath", fields: [authorId], references: [id])
-  authorId         String
-  coAuthors        User[]          @relation("CoAuthorRoutePath")
-  isDeleted        SoftDelete      @default(NotDeleted)
-  version          Int             @default(0)
-  RouteExtension   RouteExtension? @relation(fields: [routeExtensionId], references: [id])
-  routeExtensionId String?
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  path      String     @db.LongText
+  Topo      Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
+  topoId    String
+  Route     Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  routeId   String
+  Author    User       @relation("AuthorRoutePath", fields: [authorId], references: [id])
+  authorId  String
+  coAuthors User[]     @relation("CoAuthorRoutePath")
+  isDeleted SoftDelete @default(NotDeleted)
+  version   Int        @default(0)
 
   @@index([topoId])
   @@index([routeId])
