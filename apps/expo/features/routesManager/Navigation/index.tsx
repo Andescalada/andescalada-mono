@@ -1,3 +1,5 @@
+import { BackButton } from "@andescalada/ui";
+import textVariants from "@andescalada/ui/Theme/textVariants";
 import RouteDrawer from "@features/routesManager/RouteDrawer";
 import SelectRouteToDrawScreen from "@features/routesManager/SelectRouteToDrawScreen";
 import { TopoViewer } from "@features/routesManager/TopoViewer/index";
@@ -8,6 +10,8 @@ import {
   RoutesManagerNavigationRoutes,
 } from "./types";
 
+const { fontFamily, fontSize, lineHeight } = textVariants.p1R;
+
 const Stack = createStackNavigator<RoutesManagerNavigationParamList>();
 
 const Navigator = () => {
@@ -16,6 +20,14 @@ const Navigator = () => {
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.SelectRouteToDraw}
         component={SelectRouteToDrawScreen}
+        options={{
+          title: "Editar topo",
+          headerShown: true,
+          headerTitleStyle: { fontFamily, fontSize, lineHeight },
+          headerLeft({ onPress }) {
+            return <BackButton onPress={onPress} marginLeft="s" />;
+          },
+        }}
       />
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.DrawRoute}

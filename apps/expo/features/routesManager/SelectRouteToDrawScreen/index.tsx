@@ -31,7 +31,7 @@ const SelectRouteToDrawScreen: FC<Props> = ({ route, navigation }) => {
 
   if (!data) return null;
   return (
-    <Screen padding="m">
+    <Screen padding="m" safeAreaDisabled>
       <Text variant="h3">Selecciona una ruta</Text>
       <Box flex={1}>
         <FlatList
