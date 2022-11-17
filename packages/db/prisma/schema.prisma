@@ -30,11 +30,13 @@ model User {
   authorWall            Wall[]       @relation("AuthorWall")
   coAuthorWall          Wall[]       @relation("CoAuthorWall")
   authorRoute           Route[]      @relation("AuthorRoute")
+  coAuthorRoute         Route[]      @relation("CoAuthorRoute")
   authorTopo            Topo[]       @relation("AuthorTopo")
   coAuthorTopo          Topo[]       @relation("CoAuthorTopo")
-  coAuthorRoute         Route[]      @relation("CoAuthorRoute")
   authorRoutePath       RoutePath[]  @relation("AuthorRoutePath")
   coAuthorRoutePath     RoutePath[]  @relation("CoAuthorRoutePath")
+  authorMultiPitch      MultiPitch[] @relation("AuthorMultiPitch")
+  coAuthorMultiPitch    MultiPitch[] @relation("CoAuthorMultiPitch")
   RoleByZone            RoleByZone[]
   preferredSportGrade   GradeSystems @default(French)
   preferredTradGrade    GradeSystems @default(Yosemite)
@@ -156,21 +158,22 @@ model Sector {
 }
 
 model Wall {
-  id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String       @id @default(uuid())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
   name      String
   slug      String
-  position  Int        @default(0)
-  Sector    Sector     @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  position  Int          @default(0)
+  Sector    Sector       @relation(fields: [sectorId], references: [id], onDelete: Cascade)
   sectorId  String
   topos     Topo[]
   routes    Route[]
-  Author    User       @relation("AuthorWall", fields: [authorId], references: [id])
+  Author    User         @relation("AuthorWall", fields: [authorId], references: [id])
   authorId  String
-  coAuthors User[]     @relation("CoAuthorWall")
-  isDeleted SoftDelete @default(NotDeleted)
-  version   Int        @default(0)
+  coAuthors User[]       @relation("CoAuthorWall")
+  isDeleted SoftDelete   @default(NotDeleted)
+  version   Int          @default(0)
+  MuliPitch MultiPitch[]
 
   @@index([sectorId])
   @@index([authorId])
@@ -230,9 +233,47 @@ model Route {
   variantRouteId  String?     @unique
   VariantRoute    Route?      @relation("VariantOf", fields: [variantRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Variant         Route[]     @relation("VariantOf")
+  Pitch           Pitch?
 
   @@index([wallId])
   @@index([authorId])
+}
+
+model MultiPitch {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  name        String
+  slug        String
+  Pitches     Pitch[]
+  kind        RouteKind
+  Wall        Wall       @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  wallId      String
+  description String?    @db.LongText
+  Author      User       @relation("AuthorMultiPitch", fields: [authorId], references: [id])
+  authorId    String
+  coAuthors   User[]     @relation("CoAuthorMultiPitch")
+  isDeleted   SoftDelete @default(NotDeleted)
+  version     Int        @default(0)
+
+  @@index([wallId])
+  @@index([authorId])
+}
+
+model Pitch {
+  id             String      @id @default(uuid())
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  number         Decimal     @db.Decimal(5, 2)
+  Route          Route       @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  routeId        String      @unique
+  MuliPitch      MultiPitch? @relation(fields: [muliPitchId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  muliPitchId    String?
+  isDeleted      SoftDelete  @default(NotDeleted)
+  version        Int         @default(0)
+  variantPitchId String?     @unique
+  VariantPitch   Pitch?      @relation("VariantPitchOf", fields: [variantPitchId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Variant        Pitch[]     @relation("VariantPitchOf")
 }
 
 model RouteGrade {
