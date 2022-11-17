@@ -15,11 +15,14 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@shopify/restyle";
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
@@ -41,17 +44,36 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId, ...rest } = route.params;
   const utils = trpc.useContext();
 
-  const onSuccess = useCallback(() => {
-    navigation.goBack();
-    utils.walls.byId.invalidate({ wallId });
-  }, [navigation, utils.walls.byId, wallId]);
+  const rootNavigation = useRootNavigation();
+
+  const mainTopo = trpc.walls.mainTopo.useQuery({
+    zoneId: rest.zoneId,
+    wallId,
+  });
 
   const { mutate, isLoading } = trpc.routes.add.useMutation({
-    onSuccess,
+    onSuccess: ({ id, position }) => {
+      if (mainTopo.data) {
+        rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+          screen: RoutesManagerNavigationRoutes.DrawRoute,
+          params: {
+            route: { id, position },
+            wallId,
+            topoId: mainTopo.data,
+          },
+        });
+      } else {
+        navigation.goBack();
+      }
+      utils.walls.byId.invalidate({ wallId });
+    },
   });
   const { mutate: mutateEdit, isLoading: isLoadingEdit } =
     trpc.routes.edit.useMutation({
-      onSuccess,
+      onSuccess: () => {
+        navigation.goBack();
+        utils.walls.byId.invalidate({ wallId });
+      },
     });
 
   const {

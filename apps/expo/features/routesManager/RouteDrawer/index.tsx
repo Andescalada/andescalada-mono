@@ -14,11 +14,14 @@ import {
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import useCachedImage from "@hooks/useCachedImage";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import type { Route, RoutePath } from "@prisma/client";
 import { useValue } from "@shopify/react-native-skia";
 import { useTheme } from "@shopify/restyle";
@@ -71,11 +74,14 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   }, [topos?.selectedRoute]);
 
   const utils = trpc.useContext();
+
   const { mutate, isLoading } = trpc.routes.addPath.useMutation();
 
   const [canSave, setCanSave] = useState(false);
 
   const routeRef = useRef<SkiaRouteRef>(null);
+
+  const rootNavigation = useRootNavigation();
 
   const onFinishOrSave = () => {
     if (!canSave) {
@@ -104,7 +110,19 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
         {
           onSuccess: () => {
             utils.topos.byId.invalidate({ topoId });
-            setTimeout(() => navigation.popToTop(), 500);
+            setTimeout(
+              () =>
+                rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+                  screen: ClimbsNavigationRoutes.Wall,
+                  params: {
+                    wallId,
+                    wallName: data?.name || "",
+                    sectorId: data?.sectorId || "",
+                    zoneId: data?.Sector.zoneId || "",
+                  },
+                }),
+              500,
+            );
           },
         },
       );

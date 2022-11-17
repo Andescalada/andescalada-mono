@@ -19,6 +19,7 @@ export const wallsRouter = t.router({
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input.wallId },
       include: {
+        Sector: { select: { zoneId: true } },
         routes: {
           orderBy: { position: "asc" },
 
@@ -112,5 +113,22 @@ export const wallsRouter = t.router({
         where: { id: input.wallId },
         data: { isDeleted: input.isDeleted },
       });
+    }),
+  mainTopo: protectedZoneProcedure
+    .input(wall.id)
+    .query(async ({ ctx, input }) => {
+      const mainTopo = await ctx.prisma.wall.findUnique({
+        where: { id: input.wallId },
+        select: {
+          topos: {
+            where: { main: true },
+            select: { id: true },
+          },
+        },
+      });
+      if (!mainTopo) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      return mainTopo.topos[0].id;
     }),
 });

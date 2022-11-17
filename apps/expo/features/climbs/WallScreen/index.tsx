@@ -11,7 +11,6 @@ import {
 import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
-import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
@@ -27,12 +26,7 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 const WallScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId, zoneId, sectorId } = route.params;
 
-  const { isOfflineMode } = useOfflineMode();
-
-  const { data } = trpc.walls.byId.useQuery(
-    { wallId },
-    { enabled: !isOfflineMode },
-  );
+  const { data } = trpc.walls.byId.useQuery({ wallId });
 
   const editWall = trpc.walls.edit.useMutation();
   const methods = useZodForm({ schema });
