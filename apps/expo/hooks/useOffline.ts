@@ -42,7 +42,10 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
   const utils = trpc.useContext();
 
   const setAssetsToDb = useCallback(
-    async (assetsToDownload: ListToDownload["assetsToDownload"]) => {
+    async (
+      assetsToDownload: ListToDownload["assetsToDownload"],
+      checkVersion = true,
+    ) => {
       if (!assetsToDownload) return;
 
       storage.set(Storage.DOWNLOADED_ASSETS, stringify(assetsToDownload));
@@ -63,7 +66,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
 
           const savedData = offlineDb.get(queryKey, zoneId);
 
-          if (!savedData || savedData.version < version) {
+          if (!savedData || (checkVersion && savedData.version < version)) {
             // @ts-ignore
             const data = await selectedClient.query(params);
             await offlineDb.setOrCreate(queryKey, zoneId, data, version);
