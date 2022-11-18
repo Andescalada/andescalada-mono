@@ -1,6 +1,13 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
+import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import useOfflineMode from "@hooks/useOfflineMode";
+import {
+  clearErrors,
+  setError,
+  setIsDownloading,
+  setProgress,
+} from "@store/offline";
 import { onlineManager } from "@tanstack/react-query";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
@@ -25,69 +32,72 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
   const { isOfflineMode } = useOfflineMode();
   const isConnected = useIsConnected();
 
-  const [progress, setProgress] = useState(0);
-  const [totalAssets, setTotalAssets] = useState(1);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [isError, setIsError] = useState<{ [key: string]: string }[]>([]);
   const utils = trpc.useContext();
+  const { isDownloading, progress, errors } = useAppSelector(
+    (state) => state.offline,
+  );
+  const dispatch = useAppDispatch();
 
-  const setAssetsToDb = async (
-    assetsToDownload: ListToDownload["assetsToDownload"],
-    {
-      checkVersion,
-      forceUpdate,
-    }: {
-      checkVersion?: boolean;
-      forceUpdate?: boolean;
-    } = {
-      checkVersion: true,
-      forceUpdate: false,
-    },
-  ) => {
-    if (!assetsToDownload) return;
+  const setAssetsToDb = useCallback(
+    async (
+      assetsToDownload: ListToDownload["assetsToDownload"],
+      {
+        checkVersion,
+        forceUpdate,
+      }: {
+        checkVersion?: boolean;
+        forceUpdate?: boolean;
+      } = {
+        checkVersion: true,
+        forceUpdate: false,
+      },
+    ) => {
+      if (!assetsToDownload) return;
 
-    storage.set(Storage.DOWNLOADED_ASSETS, stringify(assetsToDownload));
+      storage.set(Storage.DOWNLOADED_ASSETS, stringify(assetsToDownload));
 
-    setTotalAssets(assetsToDownload.length);
+      const totalAssets = assetsToDownload.length;
 
-    setIsError([]);
-    const db = offlineDb.open();
+      dispatch(clearErrors());
+      const db = offlineDb.open();
 
-    setIsDownloading(true);
-    await assetsToDownload.reduce(async (prevAsset, asset, index) => {
-      const { params, router, procedure, version, zoneId } = asset;
-      const queryKey = stringify({ router, procedure, params });
+      dispatch(setIsDownloading(true));
+      await assetsToDownload.reduce(async (prevAsset, asset, index) => {
+        const { params, router, procedure, version, zoneId } = asset;
+        const queryKey = stringify({ router, procedure, params });
 
-      try {
-        //@ts-ignore
-        const selectedClient = client[router][procedure];
-        const savedData = offlineDb.get(db, queryKey, zoneId);
-        if (
-          !savedData ||
-          (checkVersion && savedData.version < version) ||
-          forceUpdate
-        ) {
+        try {
           //@ts-ignore
-          const data = await selectedClient.query(params);
+          const selectedClient = client[router][procedure];
+          const savedData = offlineDb.get(db, queryKey, zoneId);
+          if (
+            !savedData ||
+            (checkVersion && savedData.version < version) ||
+            forceUpdate
+          ) {
+            //@ts-ignore
+            const data = await selectedClient.query(params);
 
-          await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
+            await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
+          }
+        } catch (error) {
+          console.log(error);
+          let message = "Unknown Error";
+          if (error instanceof Error) message = error.message;
+          dispatch(setError({ [queryKey]: message }));
         }
-      } catch (error) {
-        console.log(error);
-        let message = "Unknown Error";
-        if (error instanceof Error) message = error.message;
-        setIsError((prev) => [...prev, { [queryKey]: message }]);
-      }
-      const r = (await prevAsset) + 1;
-      setProgress((index + 1) / assetsToDownload.length);
+        const r = (await prevAsset) + 1;
+        dispatch(setProgress((index + 1) / totalAssets));
 
-      return r;
-    }, Promise.resolve(0));
+        return r;
+      }, Promise.resolve(0));
 
-    setIsDownloading(false);
+      dispatch(setIsDownloading(false));
 
-    db.close();
-  };
+      db.close();
+    },
+    [dispatch],
+  );
 
   const setImagesToFileSystem = useCallback(
     async (assetsToDownload: ListToDownload["imagesToDownload"]) => {
@@ -130,7 +140,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       const { assetsToDownload, imagesToDownload } = data;
 
       await allSettled([
-        setAssetsToDb(assetsToDownload),
+        setAssetsToDb(assetsToDownload, { forceUpdate: true }),
         setImagesToFileSystem(imagesToDownload),
       ]);
     },
@@ -166,9 +176,16 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       onlineManager.setOnline(false);
     }
     onlineManager.setOnline(!!isConnected);
-  }, [isOfflineMode, hydrate, isConnected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOfflineMode, hydrate]);
 
-  return { isDownloading, progress, isError, setAssetsToDb, totalAssets };
+  return {
+    isDownloading,
+    progress,
+    errors,
+    setAssetsToDb,
+    setImagesToFileSystem,
+  };
 };
 
 export default useOffline;
