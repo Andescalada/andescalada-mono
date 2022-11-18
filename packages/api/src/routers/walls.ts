@@ -65,6 +65,11 @@ export const wallsRouter = t.router({
           Author: { connect: { email: ctx.user.email } },
         },
       });
+
+      await ctx.prisma.sector.update({
+        where: { id: input.sectorId },
+        data: { version: { increment: 1 } },
+      });
       return newWall;
     }),
   allRoutes: t.procedure
@@ -88,10 +93,15 @@ export const wallsRouter = t.router({
   edit: t.procedure
     .input(wall.schema.merge(z.object({ wallId: z.string() })))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.wall.update({
+      const wall = await ctx.prisma.wall.update({
         where: { id: input.wallId },
         data: { name: input.name, version: { increment: 1 } },
       });
+      await ctx.prisma.sector.update({
+        where: { id: wall.sectorId },
+        data: { version: { increment: 1 } },
+      });
+      return wall;
     }),
   delete: protectedZoneProcedure
     .input(
@@ -109,10 +119,17 @@ export const wallsRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      return ctx.prisma.wall.update({
+      const wall = await ctx.prisma.wall.update({
         where: { id: input.wallId },
         data: { isDeleted: input.isDeleted },
       });
+
+      await ctx.prisma.sector.update({
+        where: { id: wall.sectorId },
+        data: { version: { increment: 1 } },
+      });
+
+      return wall;
     }),
   mainTopo: protectedZoneProcedure
     .input(wall.id)
