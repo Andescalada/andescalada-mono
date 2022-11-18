@@ -45,15 +45,25 @@ export const sectorsRouter = t.router({
         },
       });
 
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
+      });
+
       return newSector;
     }),
   edit: t.procedure
     .input(sector.schema.merge(z.object({ sectorId: z.string() })))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.sector.update({
+      const sector = await ctx.prisma.sector.update({
         where: { id: input.sectorId },
         data: { name: input.name, version: { increment: 1 } },
       });
+      await ctx.prisma.zone.update({
+        where: { id: sector.zoneId },
+        data: { version: { increment: 1 } },
+      });
+      return sector;
     }),
   allWalls: t.procedure
     .input(z.object({ sectorId: z.string() }))
@@ -83,20 +93,27 @@ export const sectorsRouter = t.router({
         .merge(sector.id),
     )
     .mutation(async ({ ctx, input }) => {
-      const route = await ctx.prisma.sector.findUnique({
+      const sector = await ctx.prisma.sector.findUnique({
         where: { id: input.sectorId },
         select: { Author: { select: { email: true } } },
       });
       if (
         !ctx.permissions.has("Update") &&
-        route?.Author.email !== ctx.user.email
+        sector?.Author.email !== ctx.user.email
       ) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      return ctx.prisma.sector.update({
+      const updatedSector = ctx.prisma.sector.update({
         where: { id: input.sectorId },
-        data: { isDeleted: input.isDeleted },
+        data: { isDeleted: input.isDeleted, version: { increment: 1 } },
       });
+
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
+      });
+
+      return updatedSector;
     }),
 });
