@@ -44,9 +44,15 @@ export const routesRouter = t.router({
           Author: { connect: { email: ctx.user.email } },
         },
       });
+
+      await ctx.prisma.wall.update({
+        where: { id: input.wallId },
+        data: { version: { increment: 1 } },
+      });
+
       return newRoute;
     }),
-  addPath: protectedProcedure
+  updateOrCreatePath: protectedProcedure
     .input(
       z.object({
         routeId: z.string(),
@@ -56,33 +62,42 @@ export const routesRouter = t.router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.routePathId) {
-        const path = await ctx.prisma.routePath.findUnique({
-          where: { id: input.routePathId },
-        });
-        if (path) {
-          return ctx.prisma.routePath.update({
+      const updateOrCreate = async () => {
+        if (input.routePathId) {
+          const path = await ctx.prisma.routePath.findUnique({
             where: { id: input.routePathId },
-            data: { path: input.path },
+          });
+          if (path) {
+            return ctx.prisma.routePath.update({
+              where: { id: input.routePathId },
+              data: { path: input.path },
+            });
+          }
+        } else {
+          return ctx.prisma.routePath.create({
+            data: {
+              Topo: { connect: { id: input.topoId } },
+              Route: { connect: { id: input.routeId } },
+              Author: { connect: { email: ctx.user.email } },
+              path: input.path,
+            },
           });
         }
-      } else {
-        return ctx.prisma.routePath.create({
-          data: {
-            Topo: { connect: { id: input.topoId } },
-            Route: { connect: { id: input.routeId } },
-            Author: { connect: { email: ctx.user.email } },
-            path: input.path,
-          },
-        });
-      }
+      };
+
+      const routePath = await updateOrCreate();
+      await ctx.prisma.topo.update({
+        where: { id: input.topoId },
+        data: { version: { increment: 1 } },
+      });
+      return routePath;
     }),
   edit: protectedZoneProcedure
     .input(routeSchema.schema.omit({ wallId: true }).merge(routeSchema.routeId))
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.route.findUnique({
         where: { id: input.routeId },
-        select: { Author: { select: { email: true } } },
+        select: { Author: { select: { email: true } }, wallId: true },
       });
       if (
         !ctx.permissions.has("Update") &&
@@ -92,6 +107,11 @@ export const routesRouter = t.router({
       }
 
       const { grade, kind, name } = input;
+
+      await ctx.prisma.wall.update({
+        where: { id: route?.wallId },
+        data: { version: { increment: 1 } },
+      });
 
       return ctx.prisma.route.update({
         where: { id: input.routeId },
@@ -108,7 +128,7 @@ export const routesRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.route.findUnique({
         where: { id: input.routeId },
-        select: { Author: { select: { email: true } } },
+        select: { Author: { select: { email: true } }, wallId: true },
       });
       if (
         !ctx.permissions.has("Update") &&
@@ -116,6 +136,11 @@ export const routesRouter = t.router({
       ) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
+
+      await ctx.prisma.wall.update({
+        where: { id: route?.wallId },
+        data: { version: { increment: 1 } },
+      });
 
       return ctx.prisma.route.update({
         where: { id: input.routeId },

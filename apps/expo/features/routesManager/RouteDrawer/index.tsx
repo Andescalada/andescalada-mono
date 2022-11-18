@@ -75,7 +75,7 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
 
   const utils = trpc.useContext();
 
-  const { mutate, isLoading } = trpc.routes.addPath.useMutation();
+  const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation();
 
   const [canSave, setCanSave] = useState(false);
 
