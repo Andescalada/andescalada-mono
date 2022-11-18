@@ -25,62 +25,69 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
   const { isOfflineMode } = useOfflineMode();
   const isConnected = useIsConnected();
 
-  trpc.user.getDownloadedAssets.useQuery(undefined, {
-    enabled: fetchAssets,
-    onSuccess: (data) => {
-      const { assetsToDownload, imagesToDownload } = data;
-      allSettled([
-        setAssetsToDb(assetsToDownload),
-        setImagesToFileSystem(imagesToDownload),
-      ]);
-    },
-  });
-
   const [progress, setProgress] = useState(0);
+  const [totalAssets, setTotalAssets] = useState(1);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isError, setIsError] = useState<{ [key: string]: string }[]>([]);
   const utils = trpc.useContext();
 
-  const setAssetsToDb = useCallback(
-    async (
-      assetsToDownload: ListToDownload["assetsToDownload"],
-      checkVersion = true,
-    ) => {
-      if (!assetsToDownload) return;
-
-      storage.set(Storage.DOWNLOADED_ASSETS, stringify(assetsToDownload));
-
-      const totalAssets = assetsToDownload.length;
-
-      setIsDownloading(true);
-      setIsError([]);
-
-      assetsToDownload.forEach(async (asset, index) => {
-        const { params, router, procedure, version, zoneId } = asset;
-        const queryKey = stringify({ router, procedure, params });
-        try {
-          setProgress((index + 1) / totalAssets);
-
-          //@ts-ignore
-          const selectedClient = client[router][procedure];
-
-          const savedData = offlineDb.get(queryKey, zoneId);
-
-          if (!savedData || (checkVersion && savedData.version < version)) {
-            // @ts-ignore
-            const data = await selectedClient.query(params);
-            await offlineDb.setOrCreate(queryKey, zoneId, data, version);
-          }
-        } catch (error) {
-          let message = "Unknown Error";
-          if (error instanceof Error) message = error.message;
-          setIsError((prev) => [...prev, { [queryKey]: message }]);
-        }
-      });
-      setIsDownloading(false);
+  const setAssetsToDb = async (
+    assetsToDownload: ListToDownload["assetsToDownload"],
+    {
+      checkVersion,
+      forceUpdate,
+    }: {
+      checkVersion?: boolean;
+      forceUpdate?: boolean;
+    } = {
+      checkVersion: true,
+      forceUpdate: false,
     },
-    [],
-  );
+  ) => {
+    if (!assetsToDownload) return;
+
+    storage.set(Storage.DOWNLOADED_ASSETS, stringify(assetsToDownload));
+
+    setTotalAssets(assetsToDownload.length);
+
+    setIsError([]);
+    const db = offlineDb.open();
+
+    setIsDownloading(true);
+    await assetsToDownload.reduce(async (prevAsset, asset, index) => {
+      const { params, router, procedure, version, zoneId } = asset;
+      const queryKey = stringify({ router, procedure, params });
+
+      try {
+        //@ts-ignore
+        const selectedClient = client[router][procedure];
+        const savedData = offlineDb.get(db, queryKey, zoneId);
+        if (
+          !savedData ||
+          (checkVersion && savedData.version < version) ||
+          forceUpdate
+        ) {
+          //@ts-ignore
+          const data = await selectedClient.query(params);
+
+          await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
+        }
+      } catch (error) {
+        console.log(error);
+        let message = "Unknown Error";
+        if (error instanceof Error) message = error.message;
+        setIsError((prev) => [...prev, { [queryKey]: message }]);
+      }
+      const r = (await prevAsset) + 1;
+      setProgress((index + 1) / assetsToDownload.length);
+
+      return r;
+    }, Promise.resolve(0));
+
+    setIsDownloading(false);
+
+    db.close();
+  };
 
   const setImagesToFileSystem = useCallback(
     async (assetsToDownload: ListToDownload["imagesToDownload"]) => {
@@ -117,6 +124,18 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     [],
   );
 
+  trpc.user.getDownloadedAssets.useQuery(undefined, {
+    enabled: fetchAssets,
+    onSuccess: async (data) => {
+      const { assetsToDownload, imagesToDownload } = data;
+
+      await allSettled([
+        setAssetsToDb(assetsToDownload),
+        setImagesToFileSystem(imagesToDownload),
+      ]);
+    },
+  });
+
   const hydrate = useCallback(() => {
     const res = storage.getString(Storage.DOWNLOADED_ASSETS);
     if (!res) return;
@@ -127,7 +146,9 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       // @ts-ignore
       const selectedUtil = utils[router][procedure];
 
+      const db = offlineDb.open();
       const savedData = offlineDb.get(
+        db,
         stringify({ router, procedure, params }),
         zoneId,
       );
@@ -135,6 +156,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       if (!savedData) return;
 
       selectedUtil.setData(params, savedData.data);
+      db.close();
     });
   }, [utils]);
 
@@ -146,7 +168,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     onlineManager.setOnline(!!isConnected);
   }, [isOfflineMode, hydrate, isConnected]);
 
-  return { isDownloading, progress, isError, setAssetsToDb };
+  return { isDownloading, progress, isError, setAssetsToDb, totalAssets };
 };
 
 export default useOffline;

@@ -1,4 +1,7 @@
-import { open as openDb } from "react-native-quick-sqlite";
+import {
+  open as openDb,
+  QuickSQLiteConnection,
+} from "react-native-quick-sqlite";
 import { parse, stringify } from "superjson";
 
 const open = () => openDb({ name: "offlineAssets.db", location: "default" });
@@ -13,15 +16,15 @@ const createZoneTable = async (zoneId: string) => {
     );`;
 
   const res = await db.executeAsync(query);
-  db.close();
+  // db.close();
   return res;
 };
 
 const get = <Return>(
+  db: QuickSQLiteConnection,
   assetId: string,
   zoneId: string,
 ): { data: Return; version: number } | undefined => {
-  const db = open();
   const query = `SELECT data, version FROM '${zoneId}' WHERE assetId = '${assetId}' LIMIT 1`;
 
   let results;
@@ -40,11 +43,12 @@ const get = <Return>(
   } catch {
     results = undefined;
   }
-  db.close();
+  // db.close();
   return results;
 };
 
 const set = async (
+  db: QuickSQLiteConnection,
   assetId: string,
   zoneId: string,
   data: unknown,
@@ -54,40 +58,42 @@ const set = async (
 
   const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
 
-  const db = open();
   await db.executeAsync(query);
-  db.close();
+  // db.close();
   return serializedData;
 };
 
 const setOrCreate = async (
+  db: QuickSQLiteConnection,
   assetId: string,
   zoneId: string,
   data: unknown,
   version: number,
 ) => {
   await createZoneTable(zoneId);
-  return await set(assetId, zoneId, data, version);
+  return await set(db, assetId, zoneId, data, version);
 };
 
-const deleteAsset = async (assetId: string, zoneId: string) => {
-  const db = open();
+const deleteAsset = async (
+  db: QuickSQLiteConnection,
+  assetId: string,
+  zoneId: string,
+) => {
   const query = `DELETE FROM ? WHERE assetId = ?`;
 
   const res = await db.executeAsync(query, [`${zoneId}`, `${assetId}`]);
-  db.close();
+  // db.close();
   return res;
 };
 
-const deleteZone = async (zoneId: string) => {
-  const db = open();
+const deleteZone = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `DROP TABLE '${zoneId}';`;
   const res = await db.executeAsync(query);
-  db.close();
+  // db.close();
   return res;
 };
 
-const allSavedZones = () => {
+const allSavedZones = (db: QuickSQLiteConnection) => {
   const query = `SELECT 
       name
     FROM 
@@ -95,17 +101,17 @@ const allSavedZones = () => {
     WHERE 
       type ='table' AND 
       name NOT LIKE 'sqlite_%';`;
-  const db = open();
+
   const res = db.execute(query);
-  db.close();
+  // db.close();
   return res.rows?._array as string[];
 };
 
-const allAssetsOfZone = (zoneId: string) => {
+const allAssetsOfZone = (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `SELECT assetId, version FROM '${zoneId}'`;
-  const db = open();
+
   const res = db.execute(query);
-  db.close();
+  // db.close();
   return res.rows?._array as { assetId: string; version: number }[];
 };
 
