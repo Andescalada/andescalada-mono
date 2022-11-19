@@ -8,7 +8,6 @@ import {
 } from "@features/routesManager/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
-import useOfflineMode from "@hooks/useOfflineMode";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
 import { FC } from "react";
@@ -18,12 +17,7 @@ type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.TopoViewer>;
 const TopoViewer: FC<Props> = ({ route: navRoute, navigation }) => {
   const { topoId, routeId } = navRoute.params;
 
-  const { isOfflineMode } = useOfflineMode();
-
-  const { data } = trpc.topos.byId.useQuery(
-    { topoId },
-    { enabled: !isOfflineMode },
-  );
+  const { data } = trpc.topos.byId.useQuery({ topoId });
 
   const theme = useAppTheme();
 
