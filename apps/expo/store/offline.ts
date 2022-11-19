@@ -37,7 +37,6 @@ const offlineSlice = createSlice({
       state.isOffline = true;
     },
     setProgress: (state, action: PayloadAction<number>) => {
-      console.log(action.payload, "payload");
       state.progress = action.payload;
     },
     setIsDownloading: (state, action: PayloadAction<boolean>) => {
