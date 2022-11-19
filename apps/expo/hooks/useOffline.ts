@@ -16,7 +16,7 @@ import fileSystem from "@utils/FileSystem";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
 import client from "@utils/trpc/client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useIsConnected } from "react-native-offline";
 import { parse, stringify } from "superjson";
 
@@ -81,7 +81,6 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
             await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
           }
         } catch (error) {
-          console.log(error);
           let message = "Unknown Error";
           if (error instanceof Error) message = error.message;
           dispatch(setError({ [queryKey]: message }));
@@ -137,10 +136,12 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
   trpc.user.getDownloadedAssets.useQuery(undefined, {
     enabled: fetchAssets,
     onSuccess: async (data) => {
+      if (!fetchAssets) return;
+
       const { assetsToDownload, imagesToDownload } = data;
 
       await allSettled([
-        setAssetsToDb(assetsToDownload, { forceUpdate: true }),
+        setAssetsToDb(assetsToDownload),
         setImagesToFileSystem(imagesToDownload),
       ]);
     },
