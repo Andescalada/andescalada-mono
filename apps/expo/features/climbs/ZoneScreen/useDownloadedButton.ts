@@ -61,7 +61,9 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
           text: "Borrar",
           style: "destructive",
           onPress: async () => {
-            await offlineDb.deleteZone(zoneId);
+            const db = offlineDb.open();
+            await offlineDb.deleteZone(db, zoneId);
+            db.close();
             await deleteSavedImages(zoneId);
             removeToDownloadedList.mutateAsync({ zoneId });
           },
