@@ -61,7 +61,6 @@ const setAssetsToDb = async (
     try {
       //@ts-ignore
       const selectedClient = client[router][procedure];
-      const savedData = offlineDb.get(db, queryKey, zoneId);
 
       //@ts-ignore
       const data = await selectedClient.query(params);
