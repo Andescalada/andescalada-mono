@@ -122,7 +122,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
       </FormProvider>
-      {featureFlags.offline && (
+      {!!data && (
         <Box flexDirection="row" justifyContent="flex-end">
           <Pressable onPress={onDownloadPress}>
             <Ionicons
