@@ -24,7 +24,7 @@ const { schema } = wall;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId, zoneId, sectorId } = route.params;
+  const { wallId, zoneId, sectorId, wallName } = route.params;
 
   const { data } = trpc.walls.byId.useQuery({ wallId });
 
@@ -32,12 +32,20 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   const methods = useZodForm({ schema });
   const onSubmit = methods.handleSubmit(
     (input) => {
-      if (methods.formState.isDirty)
-        editWall.mutate({
-          name: input.name,
-          wallId: route.params.wallId,
-          zoneId,
-        });
+      if (input.name !== wallName)
+        editWall.mutate(
+          {
+            name: input.name,
+            wallId: route.params.wallId,
+            zoneId,
+          },
+          {
+            onSuccess: () => {
+              utils.zones.allSectors.invalidate({ zoneId });
+              utils.sectors.allWalls.invalidate({ sectorId });
+            },
+          },
+        );
       headerMethods.setEditing(false);
     },
     (error) => {
@@ -112,7 +120,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     <Screen padding={"m"}>
       <FormProvider {...methods}>
         <Header
-          title={route.params.wallName}
+          title={wallName}
           editingTitle={headerMethods.editing}
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
