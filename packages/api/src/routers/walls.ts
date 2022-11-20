@@ -48,9 +48,12 @@ export const wallsRouter = t.router({
     }
     return wall;
   }),
-  add: protectedProcedure
+  add: protectedZoneProcedure
     .input(z.object({ sectorId: z.string(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("Create")) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
       const result = await ctx.prisma.wall.aggregate({
         _max: { position: true },
       });
@@ -70,6 +73,11 @@ export const wallsRouter = t.router({
         where: { id: input.sectorId },
         data: { version: { increment: 1 } },
       });
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
+      });
+
       return newWall;
     }),
   allRoutes: t.procedure
@@ -90,15 +98,30 @@ export const wallsRouter = t.router({
         });
       return res.routes;
     }),
-  edit: t.procedure
+  edit: protectedZoneProcedure
     .input(wall.schema.merge(z.object({ wallId: z.string() })))
     .mutation(async ({ ctx, input }) => {
+      const wallToUpdate = await ctx.prisma.wall.findUnique({
+        where: { id: input.wallId },
+        select: { Author: { select: { email: true } } },
+      });
+      if (
+        !ctx.permissions.has("Update") &&
+        wallToUpdate?.Author.email !== ctx.user.email
+      ) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const wall = await ctx.prisma.wall.update({
         where: { id: input.wallId },
         data: { name: input.name, version: { increment: 1 } },
       });
       await ctx.prisma.sector.update({
         where: { id: wall.sectorId },
+        data: { version: { increment: 1 } },
+      });
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
         data: { version: { increment: 1 } },
       });
       return wall;
@@ -126,6 +149,10 @@ export const wallsRouter = t.router({
 
       await ctx.prisma.sector.update({
         where: { id: wall.sectorId },
+        data: { version: { increment: 1 } },
+      });
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
         data: { version: { increment: 1 } },
       });
 

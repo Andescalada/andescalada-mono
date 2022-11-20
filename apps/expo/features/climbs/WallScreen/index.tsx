@@ -36,6 +36,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         editWall.mutate({
           name: input.name,
           wallId: route.params.wallId,
+          zoneId,
         });
       headerMethods.setEditing(false);
     },

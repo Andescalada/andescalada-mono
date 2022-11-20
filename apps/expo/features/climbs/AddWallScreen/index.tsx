@@ -27,7 +27,7 @@ const schema = z.object({
 });
 
 const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
-  const { sectorId } = route.params;
+  const { sectorId, zoneId } = route.params;
   const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.walls.add.useMutation({
     onSuccess: () => {
@@ -49,7 +49,7 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   });
 
   const onSubmit = handleSubmit((input) => {
-    mutate({ sectorId, name: input.wallName });
+    mutate({ zoneId, sectorId, name: input.wallName });
   });
 
   const onCancel = () => {

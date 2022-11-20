@@ -81,6 +81,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
       "Agregar Pared": () =>
         navigation.navigate(ClimbsNavigationRoutes.AddWall, {
           sectorId,
+          zoneId,
         }),
       "Cambiar Nombre": () => {
         headerMethods.setEditing(true);
