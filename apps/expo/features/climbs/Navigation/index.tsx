@@ -9,6 +9,7 @@ import SectorScreen from "@features/climbs/SectorScreen";
 import WallScreen from "@features/climbs/WallScreen";
 import ZoneScreen from "@features/climbs/ZoneScreen";
 import ZonesListScreen from "@features/climbs/ZonesListScreen";
+import OfflineUpdateNotification from "@features/offline/OfflineUpdateNotification";
 import UserHeader from "@features/user/components/UserHeader/UserHeader";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -22,6 +23,7 @@ const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 const Navigator = () => {
   return (
     <Box flex={1}>
+      <OfflineUpdateNotification />
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName={ClimbsNavigationRoutes.Home}

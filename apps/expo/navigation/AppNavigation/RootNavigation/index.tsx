@@ -1,9 +1,9 @@
 import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
+import useOffline from "@features/offline/useOffline";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import UserStackNavigation from "@features/user/Navigation";
-import useOffline from "@hooks/useOffline";
 import useOwnInfo from "@hooks/useOwnInfo";
 import {
   RootNavigationNavigationParamList,

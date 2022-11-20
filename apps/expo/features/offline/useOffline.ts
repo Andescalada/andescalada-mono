@@ -42,8 +42,8 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     async (
       assetsToDownload: ListToDownload["assetsToDownload"],
       {
-        checkVersion,
-        forceUpdate,
+        checkVersion = true,
+        forceUpdate = false,
       }: {
         checkVersion?: boolean;
         forceUpdate?: boolean;
@@ -56,13 +56,28 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
 
       storage.set(Storage.DOWNLOADED_ASSETS, stringify(assetsToDownload));
 
-      const totalAssets = assetsToDownload.length;
-
+      dispatch(setProgress(0));
       dispatch(clearErrors());
       const db = offlineDb.open();
 
+      const filteredAssets = assetsToDownload.filter((asset) => {
+        const { params, router, procedure, version, zoneId } = asset;
+        const queryKey = stringify({ router, procedure, params });
+        const savedData = offlineDb.get(db, queryKey, zoneId);
+
+        return (
+          !savedData ||
+          (checkVersion && savedData.version < version) ||
+          forceUpdate
+        );
+      });
+
+      if (filteredAssets.length === 0) return;
+
+      const totalAssets = filteredAssets.length;
+
       dispatch(setIsDownloading(true));
-      await assetsToDownload.reduce(async (prevAsset, asset, index) => {
+      await filteredAssets.reduce(async (prevAsset, asset, index) => {
         const { params, router, procedure, version, zoneId } = asset;
         const queryKey = stringify({ router, procedure, params });
 
@@ -70,16 +85,11 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
           //@ts-ignore
           const selectedClient = client[router][procedure];
           const savedData = offlineDb.get(db, queryKey, zoneId);
-          if (
-            !savedData ||
-            (checkVersion && savedData.version < version) ||
-            forceUpdate
-          ) {
-            //@ts-ignore
-            const data = await selectedClient.query(params);
 
-            await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
-          }
+          //@ts-ignore
+          const data = await selectedClient.query(params);
+
+          await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
         } catch (error) {
           let message = "Unknown Error";
           if (error instanceof Error) message = error.message;
@@ -101,6 +111,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
   const setImagesToFileSystem = useCallback(
     async (assetsToDownload: ListToDownload["imagesToDownload"]) => {
       if (!assetsToDownload) return;
+
       storage.set(Storage.DOWNLOADED_IMAGES, stringify(assetsToDownload));
       assetsToDownload.forEach(async (asset) => {
         const { publicId } = asset;
@@ -141,7 +152,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       const { assetsToDownload, imagesToDownload } = data;
 
       await allSettled([
-        setAssetsToDb(assetsToDownload),
+        setAssetsToDb(assetsToDownload, { forceUpdate: true }),
         setImagesToFileSystem(imagesToDownload),
       ]);
     },

@@ -28,6 +28,7 @@ const darkBaseTheme = {
     private: pallete.brand.primaryA,
     drawingRoutePath: pallete.contrast.green,
     routePath: pallete.contrast.red,
+    background: pallete.grayscale.black,
     text: pallete.grayscale[100],
     textContrast: pallete.grayscale.black,
     filledTextInputVariantBackground: pallete.grayscale[300],
