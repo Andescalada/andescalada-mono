@@ -57,7 +57,7 @@ const TopoImage: FC = () => {
   const rootNavigation = useRootNavigation();
 
   return (
-    <Box flex={1 / 2}>
+    <Box flex={0.5}>
       {isLoadingWall && (
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator />

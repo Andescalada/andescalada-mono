@@ -2,7 +2,7 @@ import { BackButton } from "@andescalada/ui";
 import textVariants from "@andescalada/ui/Theme/textVariants";
 import RouteDrawer from "@features/routesManager/RouteDrawer";
 import SelectRouteToDrawScreen from "@features/routesManager/SelectRouteToDrawScreen";
-import { TopoViewer } from "@features/routesManager/TopoViewer/index";
+import { TopoViewerScreen } from "@features/routesManager/TopoViewerScreen/index";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -35,7 +35,7 @@ const Navigator = () => {
       />
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.TopoViewer}
-        component={TopoViewer}
+        component={TopoViewerScreen}
       />
     </Stack.Navigator>
   );
