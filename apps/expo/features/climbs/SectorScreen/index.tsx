@@ -60,10 +60,18 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const onSubmit = methods.handleSubmit(
     (input) => {
-      editSector.mutate({
-        name: input.name,
-        sectorId,
-      });
+      if (input.name !== route.params.sectorName)
+        editSector.mutate(
+          {
+            name: input.name,
+            sectorId,
+          },
+          {
+            onSuccess: () => {
+              utils.zones.allSectors.invalidate({ zoneId });
+            },
+          },
+        );
       headerMethods.setEditing(false);
     },
     (error) => {

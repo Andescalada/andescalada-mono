@@ -23,9 +23,9 @@ import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
-import featureFlags from "@utils/featureFlags";
 import { FC, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -40,7 +40,7 @@ const { schema } = zone;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
 const ZoneScreen: FC<Props> = ({ route, navigation }) => {
-  const { zoneId } = route.params;
+  const { zoneId, zoneName } = route.params;
 
   const utils = trpc.useContext();
 
@@ -63,11 +63,18 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const onSubmit = methods.handleSubmit(
     (input) => {
-      if (methods.formState.isDirty)
-        editZone.mutate({
-          name: input.name,
-          zoneId,
-        });
+      if (input.name !== zoneName)
+        editZone.mutate(
+          {
+            name: input.name,
+            zoneId,
+          },
+          {
+            onSuccess: () => {
+              utils.user.ownInfo.invalidate();
+            },
+          },
+        );
       headerMethods.setEditing(false);
     },
     (error) => {
@@ -80,6 +87,8 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
 
+  const { permission } = usePermissions({ zoneId });
+
   const onOptions = useOptionsSheet({
     "Agregar Sector": {
       action: () =>
@@ -87,8 +96,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           zoneId,
         }),
     },
-    "Cambiar Nombre": () => {
-      headerMethods.setEditing(true);
+    "Cambiar Nombre": {
+      action: () => headerMethods.setEditing(true),
+      hide: !permission?.has("Update"),
     },
   });
 
