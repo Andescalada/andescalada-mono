@@ -1,6 +1,5 @@
 import global from "@andescalada/api/schemas/global";
 import wall from "@andescalada/api/schemas/wall";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
