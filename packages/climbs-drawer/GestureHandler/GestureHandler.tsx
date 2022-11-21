@@ -14,16 +14,20 @@ interface GestureHandlerProps {
   children: ReactNode;
   height: number;
   width: number;
+  center?: boolean;
+  disableGesture?: boolean;
 }
 
 export const GestureHandler = ({
   children,
   height,
   width,
+  center = true,
+  disableGesture = false,
 }: GestureHandlerProps) => {
   const x = 0;
   const y = 0;
-  const initialValue = initial4({ height, width });
+  const initialValue = initial4({ height, width, skipTransformation: !center });
 
   const origin = useSharedValue(vec3(0, 0, 0));
   const matrix = useSharedValue(initialValue);
@@ -32,6 +36,7 @@ export const GestureHandler = ({
   const pan = useMemo(
     () =>
       Gesture.Pan()
+        .enabled(!disableGesture)
         .onChange((e) => {
           if (e.numberOfPointers > 1) return;
           matrix.value = multiply4(
@@ -45,12 +50,13 @@ export const GestureHandler = ({
             matrix.value = initialValue;
           }
         }),
-    [initialValue, matrix],
+    [initialValue, matrix, disableGesture],
   );
 
   const scale = useMemo(
     () =>
       Gesture.Pinch()
+        .enabled(!disableGesture)
         .onStart((e) => {
           origin.value = [e.focalX, e.focalY, 0];
           offset.value = matrix.value;
@@ -66,7 +72,7 @@ export const GestureHandler = ({
             matrix.value = concat(initialValue, [0, 0, 0], [{ scale: 1 }]);
           }
         }),
-    [initialValue, matrix, offset, origin],
+    [initialValue, matrix, offset, origin, disableGesture],
   );
 
   const style = useAnimatedStyle(() => ({

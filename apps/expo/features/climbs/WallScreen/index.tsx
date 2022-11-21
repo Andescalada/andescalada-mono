@@ -117,12 +117,13 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
   );
 
   return (
-    <Screen padding={"m"}>
+    <Screen>
       <FormProvider {...methods}>
         <Header
           title={wallName}
           editingTitle={headerMethods.editing}
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
+          padding="m"
         />
       </FormProvider>
       <TopoImage />

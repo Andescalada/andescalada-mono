@@ -9,9 +9,13 @@ import { FC } from "react";
 interface Props {
   topoId: string;
   routeId?: string | undefined;
+  height?: number;
+  width?: number;
+  center?: boolean;
+  disableGesture?: boolean;
 }
 
-const TopoViewer: FC<Props> = ({ routeId, topoId }) => {
+const TopoViewer: FC<Props> = ({ routeId, topoId, center, disableGesture }) => {
   const { data } = trpc.topos.byId.useQuery({ topoId });
 
   const theme = useAppTheme();
@@ -29,6 +33,8 @@ const TopoViewer: FC<Props> = ({ routeId, topoId }) => {
         imageUrl={fileUrl}
         height={fitted.height}
         width={fitted.width}
+        center={center}
+        disableGesture={disableGesture}
       >
         {data.RoutePath.map((path) => {
           return (

@@ -115,7 +115,14 @@ const RoutesList: FC = () => {
     );
 
   return (
-    <ScrollView flex={1} refreshControl={refresh}>
+    <ScrollView
+      flex={1}
+      refreshControl={refresh}
+      padding="m"
+      borderTopLeftRadius={5}
+      borderTopRightRadius={5}
+      backgroundColor="background"
+    >
       {routes?.map((item, index) => {
         const n = item.RouteGrade?.grade;
         const grade = typeof n === "number" ? gradeSystem(n, item.kind) : "?";

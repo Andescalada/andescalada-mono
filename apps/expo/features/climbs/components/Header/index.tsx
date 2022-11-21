@@ -3,13 +3,18 @@ import HeaderOptionsButton from "@features/climbs/components/HeaderOptionsButton
 import { useNavigation } from "@react-navigation/native";
 import { ComponentProps, FC } from "react";
 
-interface Props {
+interface Props extends ComponentProps<typeof Box> {
   title: string;
   editingTitle: boolean;
   headerOptionsProps: ComponentProps<typeof HeaderOptionsButton>;
 }
 
-const Header: FC<Props> = ({ title, editingTitle, headerOptionsProps }) => {
+const Header: FC<Props> = ({
+  title,
+  editingTitle,
+  headerOptionsProps,
+  ...props
+}) => {
   const navigation = useNavigation();
 
   return (
@@ -18,6 +23,7 @@ const Header: FC<Props> = ({ title, editingTitle, headerOptionsProps }) => {
       alignItems="center"
       justifyContent="space-between"
       marginBottom="s"
+      {...props}
     >
       <BackButton onPress={navigation.goBack} />
       <EditableTitle

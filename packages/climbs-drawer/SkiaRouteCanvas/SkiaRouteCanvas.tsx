@@ -18,6 +18,8 @@ interface Props {
   imageUrl: string;
   height: number;
   width: number;
+  center?: boolean;
+  disableGesture?: boolean;
   scale?: number;
   canvas?: { height: number; width: number };
   coords?: SkiaMutableValue<{
@@ -32,6 +34,8 @@ const SkiaRouteCanvas: FC<Props> = ({
   width,
   children,
   coords,
+  disableGesture,
+  center,
 }) => {
   const touchHandler = useMultiTouchHandler({
     onEnd: ({ x, y, id }) => {
@@ -55,7 +59,12 @@ const SkiaRouteCanvas: FC<Props> = ({
 
   if (image)
     return (
-      <GestureHandler height={height} width={width}>
+      <GestureHandler
+        height={height}
+        width={width}
+        disableGesture={disableGesture}
+        center={center}
+      >
         <Canvas
           style={{
             height,
