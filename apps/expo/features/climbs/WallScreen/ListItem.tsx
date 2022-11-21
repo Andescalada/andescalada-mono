@@ -1,4 +1,5 @@
 import { A, Text } from "@andescalada/ui";
+import Conditional from "@utils/conditionalVars";
 import {
   ComponentProps,
   forwardRef,
@@ -6,8 +7,13 @@ import {
   ReactNode,
   useImperativeHandle,
   useMemo,
+  useRef,
 } from "react";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  GestureType,
+} from "react-native-gesture-handler";
 import {
   FadeInDown,
   FadeOutLeft,
@@ -28,6 +34,7 @@ interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
   onEdit?: () => void;
   index: number;
   allowEdit?: boolean;
+  containerProps?: Omit<ComponentProps<typeof A.Box>, "key">;
 }
 
 const SNAP_PERCENTAGE = 0.2;
@@ -41,14 +48,19 @@ const WITH_SPRING_CONFIG: WithSpringConfig = {
 export interface ListItemRef {
   undoDelete: () => void;
   undoEdit: () => void;
+  panRef: GestureType | undefined;
+  panRef2: GestureType | undefined;
 }
 
 const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
-  { children, onDelete, onEdit, index, allowEdit, ...props },
+  { children, onDelete, onEdit, index, allowEdit, containerProps, ...props },
   ref,
 ) => {
   const width = useSharedValue(0);
   const translateX = useSharedValue(0);
+
+  const panRef = useRef<GestureType | undefined>(undefined);
+  const panRef2 = useRef<GestureType | undefined>(undefined);
 
   const rangeLeft = useDerivedValue(() => {
     return {
@@ -69,6 +81,12 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
     undoEdit: () => {
       translateX.value = withSpring(0, WITH_SPRING_CONFIG);
     },
+    get panRef() {
+      return panRef.current;
+    },
+    get panRef2() {
+      return panRef2.current;
+    },
   }));
 
   const rangeRight = useDerivedValue(() => {
@@ -88,6 +106,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       Gesture.Pan()
         .enabled(!!allowEdit)
         .runOnJS(true)
+        .withRef(panRef2)
         .onEnd(() => {
           if (rangeLeft.value.third) {
             onDelete && onDelete();
@@ -109,6 +128,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
     () =>
       Gesture.Pan()
         .enabled(!!allowEdit)
+        .withRef(panRef)
         .shouldCancelWhenOutside(true)
         .onChange((e) => {
           translateX.value += e.changeX;
@@ -199,6 +219,8 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
         layout={Layout.delay(500).springify()}
         marginVertical="s"
         minHeight={MIN_HEIGHT}
+        collapsable={Conditional.disableForAndroid}
+        {...containerProps}
       >
         <A.Pressable
           style={[rightStyle]}

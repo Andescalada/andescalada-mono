@@ -11,7 +11,8 @@
     "react-native": "0.69.5"
   },
   "devDependencies": {
-    "@shopify/react-native-skia": "0.1.141"
+    "@shopify/react-native-skia": "*",
+    "react-native-gesture-handler": "*"
   },
   "peerDependencies": {
     "@andescalada/ui": "*",
@@ -21,6 +22,7 @@
     "zod": "*",
     "react-native-reanimated": "*",
     "expo": "*",
-    "@shopify/react-native-skia": "*"
+    "@shopify/react-native-skia": "*",
+    "react-native-gesture-handler": "*"
   }
 }

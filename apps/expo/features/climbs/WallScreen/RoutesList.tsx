@@ -16,7 +16,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { Route } from "@prisma/client";
 import { useRoute } from "@react-navigation/native";
 import parseGrade, { ParseGrade } from "@utils/parseGrade";
-import { FC, useRef, useState } from "react";
+import { FC, useMemo, useRef } from "react";
 import { Alert } from "react-native";
 
 type NavigationRoute =
@@ -33,24 +33,27 @@ const RoutesList: FC = () => {
     refetch,
     isFetching,
     isLoading: isLoadingWall,
-  } = trpc.walls.byId.useQuery(
-    { wallId },
-    {
-      onSuccess(data) {
-        if (data) {
-          setRoutes(data.routes);
-        }
-      },
-    },
-  );
+  } = trpc.walls.byId.useQuery({ wallId });
 
   const { mutate } = trpc.routes.delete.useMutation({
-    onSuccess() {
-      utils.walls.byId.invalidate({ wallId });
+    onMutate: async ({ routeId }) => {
+      await utils.walls.byId.cancel({ wallId });
+      const previousData = utils.walls.byId.getData({ wallId });
+
+      utils.walls.byId.setData({ wallId }, (old) => {
+        if (!old) return undefined;
+        const routes = old.routes?.filter((route) => route.id !== routeId);
+        return { ...old, routes };
+      });
+      return { previousData };
     },
-    onError() {
-      Alert.alert("Error", "No pudimos borrar la ruta");
-      setRoutes(data?.routes);
+    onError: (_, __, context) => {
+      utils.walls.byId.setData({ wallId }, context?.previousData);
+    },
+    onSettled: () => {
+      utils.walls.byId.invalidate({ wallId });
+      if (data?.topos[0]?.id)
+        utils.topos.byId.invalidate({ topoId: data?.topos[0]?.id });
     },
   });
   const refresh = useRefresh(refetch, isFetching);
@@ -61,13 +64,9 @@ const RoutesList: FC = () => {
 
   const rootNavigation = useRootNavigation();
 
-  const [routes, setRoutes] = useState(data?.routes);
-
   const listItemRef = useRef<ListItemRef>(null);
 
   const onDelete = (id: string) => {
-    const r = routes?.filter((route) => route.id !== id);
-    if (r) setRoutes([...r]);
     mutate({
       isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
       routeId: id,
@@ -98,9 +97,13 @@ const RoutesList: FC = () => {
       },
     ]);
   };
+  const routesCount = useMemo(
+    () => data?.routes.length || 0,
+    [data?.routes.length],
+  );
 
   if (isLoadingWall) return null;
-  if (!route)
+  if (!data?.routes || routesCount === 0)
     return (
       <ScrollView
         refreshControl={refresh}
@@ -115,15 +118,18 @@ const RoutesList: FC = () => {
     );
 
   return (
-    <ScrollView
+    <ScrollView.Gesture
       flex={1}
       refreshControl={refresh}
-      padding="m"
+      paddingHorizontal="m"
+      paddingTop="m"
       borderTopLeftRadius={5}
       borderTopRightRadius={5}
       backgroundColor="background"
+      simultaneousHandlers={[listItemRef]}
+      nestedScrollEnabled
     >
-      {routes?.map((item, index) => {
+      {data?.routes.map((item, index) => {
         const n = item.RouteGrade?.grade;
         const grade = typeof n === "number" ? gradeSystem(n, item.kind) : "?";
         return (
@@ -131,6 +137,9 @@ const RoutesList: FC = () => {
             key={item.id}
             ref={listItemRef}
             index={index}
+            containerProps={{
+              marginBottom: index === routesCount - 1 ? "xl" : "none",
+            }}
             allowEdit={
               permission?.has("Update") || item.Author.email === user?.email
             }
@@ -162,7 +171,7 @@ const RoutesList: FC = () => {
           </ListItem>
         );
       })}
-    </ScrollView>
+    </ScrollView.Gesture>
   );
 };
 

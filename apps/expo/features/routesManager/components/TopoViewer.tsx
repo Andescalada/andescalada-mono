@@ -4,7 +4,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 interface Props {
   topoId: string;
@@ -57,4 +57,4 @@ const TopoViewer: FC<Props> = ({ routeId, topoId, center, disableGesture }) => {
   return null;
 };
 
-export default TopoViewer;
+export default memo(TopoViewer);
