@@ -5,6 +5,7 @@ import {
 } from "@andescalada/climbs-drawer";
 import { SkiaRouteRef } from "@andescalada/climbs-drawer/SkiaRoutePathDrawer/SkiaRoutePathDrawer";
 import {
+  A,
   ActivityIndicator,
   Box,
   Button,
@@ -15,10 +16,12 @@ import {
 import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
+import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
+import { useAppSelector } from "@hooks/redux";
 import useCachedImage from "@hooks/useCachedImage";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -28,6 +31,7 @@ import { useTheme } from "@shopify/restyle";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
 import { FC, useEffect, useRef, useState } from "react";
+import { FadeIn, FadeOut } from "react-native-reanimated";
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
 
@@ -42,6 +46,12 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   const theme = useTheme<Theme>();
   const { wallId, route: routeParams, topoId } = navRoute.params;
   const { data } = trpc.walls.byId.useQuery({ wallId });
+
+  const [showConfig, setShowConfig] = useState(false);
+
+  const { routeStrokeWidth, showRoutes } = useAppSelector(
+    (state) => state.localConfig,
+  );
 
   const [route, setRoute] = useState<SelectedRoute>({
     id: routeParams?.id,
@@ -161,17 +171,21 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
             withStart={!!route.path}
             withEnd={!!route.path}
             scale={fitted.scale}
+            strokeWidth={routeStrokeWidth}
           />
-          {topos?.otherRoutes?.map((route) => (
-            <SkiaRoutePath
-              key={route.id}
-              label={route.Route.position.toString()}
-              path={route.path}
-              scale={fitted.scale}
-              color={theme.colors.routePath}
-            />
-          ))}
+          {showRoutes &&
+            topos?.otherRoutes?.map((route) => (
+              <SkiaRoutePath
+                key={route.id}
+                label={route.Route.position.toString()}
+                path={route.path}
+                scale={fitted.scale}
+                color={theme.colors.routePath}
+                strokeWidth={routeStrokeWidth}
+              />
+            ))}
         </SkiaRouteCanvas>
+        <RoutePathConfig show={showConfig} setShow={setShowConfig} />
         <Box position="absolute" top={50} left={0} margin="l" marginLeft={"s"}>
           <Pressable
             backgroundColor={"transparentButtonBackground"}
@@ -182,35 +196,53 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
             <Ionicons name="arrow-back" size={30} />
           </Pressable>
         </Box>
-        <Box position="absolute" top={50} right={0} margin="l">
-          <Button
-            title={canSave ? "Guardar" : "Finalizar"}
-            variant={canSave ? "success" : "error"}
-            titleVariant={"p1R"}
-            isLoading={isLoading}
-            onPress={onFinishOrSave}
-          />
-          <Button
-            title="Deshacer"
-            variant={"transparent"}
-            titleVariant={"p1R"}
-            marginTop="s"
-            onPress={() => {
-              routeRef?.current?.undo();
-              setCanSave(false);
-            }}
-          />
-          <Button
-            title="Borrar"
-            variant={"transparent"}
-            titleVariant={"p1R"}
-            marginTop="s"
-            onPress={() => {
-              routeRef?.current?.reset();
-              setCanSave(false);
-            }}
-          />
-        </Box>
+        {!showConfig && (
+          <A.Box
+            position="absolute"
+            top={50}
+            right={0}
+            margin="l"
+            entering={FadeIn}
+            exiting={FadeOut}
+          >
+            <Button
+              title={canSave ? "Guardar" : "Finalizar"}
+              variant={canSave ? "success" : "error"}
+              titleVariant={"p1R"}
+              isLoading={isLoading}
+              onPress={onFinishOrSave}
+            />
+            <Button
+              title="Deshacer"
+              variant={"transparent"}
+              titleVariant={"p1R"}
+              marginTop="s"
+              onPress={() => {
+                routeRef?.current?.undo();
+                setCanSave(false);
+              }}
+            />
+            <Button
+              title="Borrar"
+              variant={"transparent"}
+              titleVariant={"p1R"}
+              marginTop="s"
+              onPress={() => {
+                routeRef?.current?.reset();
+                setCanSave(false);
+              }}
+            />
+            <Button
+              title="Config"
+              variant={"transparent"}
+              titleVariant={"p1R"}
+              marginTop="s"
+              onPress={() => {
+                setShowConfig(true);
+              }}
+            />
+          </A.Box>
+        )}
       </Screen>
     );
 

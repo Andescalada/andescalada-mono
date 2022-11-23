@@ -30,6 +30,7 @@ interface Props {
   label?: string;
   color?: string;
   scale?: number;
+  strokeWidth?: number;
 }
 
 interface Ref {
@@ -40,7 +41,16 @@ interface Ref {
 }
 
 const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
-  { coords, path, withEnd, withStart, label = "?", color, scale = 1 },
+  {
+    coords,
+    path,
+    withEnd,
+    withStart,
+    label = "?",
+    color,
+    scale = 1,
+    strokeWidth: strokeWidthProp = 1,
+  },
   ref,
 ) => {
   const { points, start, end } = usePathToPoints(path, scale);
@@ -100,7 +110,10 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     return stringifyPoints;
   }, [points, scale]);
 
-  const strokeWidth = useMemo(() => 21.5 * scale, [scale]);
+  const strokeWidth = useMemo(
+    () => 21.5 * scale * strokeWidthProp,
+    [scale, strokeWidthProp],
+  );
 
   useImperativeHandle(ref, () => ({
     undo,
@@ -121,9 +134,16 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
         strokeMiter={1}
         strokeWidth={strokeWidth}
       />
-      {hasEnd && <EndPointer c={end} color={color} scale={scale} />}
+      {hasEnd && (
+        <EndPointer c={end} color={color} scale={scale * strokeWidthProp} />
+      )}
       {hasStart && (
-        <StartPointer c={start} label={label} color={color} scale={scale} />
+        <StartPointer
+          c={start}
+          label={label}
+          color={color}
+          scale={scale * strokeWidthProp}
+        />
       )}
     </Group>
   );
