@@ -13,9 +13,18 @@ interface Props {
   width?: number;
   center?: boolean;
   disableGesture?: boolean;
+  strokeWidth?: number;
+  hide?: boolean;
 }
 
-const TopoViewer: FC<Props> = ({ routeId, topoId, center, disableGesture }) => {
+const TopoViewer: FC<Props> = ({
+  routeId,
+  topoId,
+  center,
+  disableGesture,
+  strokeWidth = 1,
+  hide = false,
+}) => {
   const { data } = trpc.topos.byId.useQuery({ topoId });
 
   const theme = useAppTheme();
@@ -36,21 +45,23 @@ const TopoViewer: FC<Props> = ({ routeId, topoId, center, disableGesture }) => {
         center={center}
         disableGesture={disableGesture}
       >
-        {data.RoutePath.map((path) => {
-          return (
-            <SkiaRoutePath
-              label={path.Route.position.toString()}
-              path={path.path}
-              key={path.id}
-              color={
-                path.Route.id === routeId
-                  ? theme.colors["contrast.green"]
-                  : theme.colors.routePath
-              }
-              scale={fitted.scale}
-            />
-          );
-        })}
+        {!hide &&
+          data.RoutePath.map((path) => {
+            return (
+              <SkiaRoutePath
+                label={path.Route.position.toString()}
+                path={path.path}
+                key={path.id}
+                color={
+                  path.Route.id === routeId
+                    ? theme.colors["contrast.green"]
+                    : theme.colors.routePath
+                }
+                scale={fitted.scale}
+                strokeWidth={strokeWidth}
+              />
+            );
+          })}
       </SkiaRouteCanvas>
     );
   }

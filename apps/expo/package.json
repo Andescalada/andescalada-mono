@@ -68,6 +68,7 @@
     "expo-tracking-transparency": "~3.0.1",
     "expo-updates": "~0.15.5",
     "jwt-decode": "^3.1.2",
+    "react": "18.1.0",
     "react-devtools-core": "^4.26.0",
     "react-hook-form": "^7.35.0",
     "react-native": "0.70.5",
@@ -84,10 +85,10 @@
     "react-native-svg": "13.4.0",
     "react-native-web": "~0.18.7",
     "react-redux": "^8.0.2",
+    "rn-vertical-slider": "^2.0.2",
     "sentry-expo": "~5.0.0",
     "superjson": "^1.10.0",
-    "yarn": "^1.22.19",
-    "react": "18.1.0"
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

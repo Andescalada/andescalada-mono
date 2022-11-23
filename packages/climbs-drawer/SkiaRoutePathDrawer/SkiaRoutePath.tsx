@@ -10,6 +10,7 @@ interface Props {
   label: string;
   color?: string;
   scale?: number;
+  strokeWidth?: number;
 }
 
 const SkiaRoutePath: FC<Props> = ({
@@ -17,10 +18,14 @@ const SkiaRoutePath: FC<Props> = ({
   path,
   color = "red",
   scale = 1,
+  strokeWidth: strokeWidthProp = 1,
 }) => {
   const { points, start, end } = usePathToPoints(path, scale);
 
-  const strokeWidth = useMemo(() => 21.5 * scale, [scale]);
+  const strokeWidth = useMemo(
+    () => 21.5 * scale * strokeWidthProp,
+    [scale, strokeWidthProp],
+  );
 
   return (
     <Group>
@@ -34,8 +39,13 @@ const SkiaRoutePath: FC<Props> = ({
         strokeMiter={1}
         strokeWidth={strokeWidth}
       />
-      <EndPointer c={end} color={color} scale={scale} />
-      <StartPointer c={start} label={label} scale={scale} color={color} />
+      <EndPointer c={end} color={color} scale={scale * strokeWidthProp} />
+      <StartPointer
+        c={start}
+        label={label}
+        scale={scale * strokeWidthProp}
+        color={color}
+      />
     </Group>
   );
 };

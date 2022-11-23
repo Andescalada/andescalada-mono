@@ -6,12 +6,12 @@ import {
 } from "@features/climbs/Navigation/types";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import { useAppSelector } from "@hooks/redux";
 import usePickImage from "@hooks/usePickImage";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useUploadImage from "@hooks/useUploadImage";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
-import { getThumbnail } from "@utils/cloudinary";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, useState } from "react";
 import { Image } from "react-native";
@@ -28,6 +28,7 @@ const TopoImage: FC = () => {
   });
 
   const mainTopo = data?.topos[0];
+  const { routeStrokeWidth } = useAppSelector((state) => state.localConfig);
 
   const { pickImage, selectedImage } = usePickImage();
 
@@ -128,12 +129,8 @@ const TopoImage: FC = () => {
           flex={1}
           height={100}
           width={SCREEN_WIDTH}
-          // position="absolute"
-          // borderRadius={10}
           justifyContent="center"
           alignItems={"center"}
-          // marginVertical="s"
-          // overflow="hidden"
           onPress={() => {
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
               screen: RoutesManagerNavigationRoutes.TopoViewer,
@@ -143,7 +140,12 @@ const TopoImage: FC = () => {
             });
           }}
         >
-          <TopoViewer topoId={mainTopo.id} center={false} disableGesture />
+          <TopoViewer
+            topoId={mainTopo.id}
+            center={false}
+            disableGesture
+            strokeWidth={routeStrokeWidth}
+          />
         </Pressable>
       )}
     </Box>
