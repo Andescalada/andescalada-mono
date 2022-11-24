@@ -1,3 +1,4 @@
+import NetInfo from "@react-native-community/netinfo";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { auth0Tokens, logout } from "@utils/auth0";
 import {
@@ -8,7 +9,6 @@ import {
 import { isTokenExpired, tokenDecode } from "@utils/decode";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
-import { checkInternetConnection } from "react-native-offline";
 import { parse, stringify } from "superjson";
 
 export interface AuthState {
@@ -71,7 +71,7 @@ export const autoLoginAuth0 = createAsyncThunk(
   "auth/autoLoginAuth0",
   async (_, { rejectWithValue }) => {
     try {
-      const isConnected = await checkInternetConnection();
+      const { isConnected } = await NetInfo.fetch();
       const token = storage.getString(Storage.ACCESS_TOKEN);
       const decodedIdToken = parse<DecodedIdToken>(
         storage.getString(Storage.DECODED_ID_TOKEN) || "{}",

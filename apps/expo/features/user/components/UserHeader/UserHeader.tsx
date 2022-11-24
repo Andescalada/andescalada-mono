@@ -145,15 +145,13 @@ const UserHeader = () => {
         height="100%"
         style={styles.header}
       >
-        {featureFlags.offline && (
-          <Ionicons
-            name={isOfflineMode ? "md-airplane-sharp" : "md-airplane-outline"}
-            color={theme.colors["grayscale.600"]}
-            size={30}
-            style={{ paddingRight: 8 }}
-            onPress={setIsOfflineMode}
-          />
-        )}
+        <Ionicons
+          name={isOfflineMode ? "md-airplane-sharp" : "md-airplane-outline"}
+          color={theme.colors["grayscale.600"]}
+          size={30}
+          style={{ paddingRight: 8 }}
+          onPress={setIsOfflineMode}
+        />
         <Pressable
           justifyContent="center"
           alignItems={"center"}

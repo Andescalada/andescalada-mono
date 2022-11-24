@@ -10,7 +10,6 @@ import allSettled from "@utils/allSetled";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
 import { useCallback, useEffect } from "react";
-import { useIsConnected } from "react-native-offline";
 import { parse, stringify } from "superjson";
 
 type ListToDownload = inferProcedureOutput<
@@ -23,7 +22,6 @@ interface Args {
 
 const useOffline = ({ fetchAssets = false }: Args = {}) => {
   const { isOfflineMode } = useOfflineMode();
-  const isConnected = useIsConnected();
 
   const utils = trpc.useContext();
   const { isDownloading, progress, errors } = useAppSelector(
@@ -73,7 +71,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       hydrate();
       onlineManager.setOnline(false);
     }
-    onlineManager.setOnline(!!isConnected);
+    onlineManager.setOnline(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOfflineMode, hydrate]);
 

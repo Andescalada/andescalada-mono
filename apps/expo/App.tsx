@@ -12,7 +12,6 @@ import { StatusBar } from "expo-status-bar";
 import { connectToDevTools } from "react-devtools-core";
 import { LogBox } from "react-native";
 import { initializeMMKVFlipper } from "react-native-mmkv-flipper-plugin";
-import { NetworkProvider } from "react-native-offline";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
 import * as Sentry from "sentry-expo";
@@ -41,19 +40,17 @@ LogBox.ignoreLogs([
 
 export default function App() {
   return (
-    <NetworkProvider>
-      <ThemeProvider>
-        <SafeAreaProvider>
-          <StoreProvider store={Store}>
-            <ActionSheetProvider>
-              <NavigationMemoized theme={darkTheme}>
-                <StatusBar style="light" />
-                <AppNavigation />
-              </NavigationMemoized>
-            </ActionSheetProvider>
-          </StoreProvider>
-        </SafeAreaProvider>
-      </ThemeProvider>
-    </NetworkProvider>
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <StoreProvider store={Store}>
+          <ActionSheetProvider>
+            <NavigationMemoized theme={darkTheme}>
+              <StatusBar style="light" />
+              <AppNavigation />
+            </NavigationMemoized>
+          </ActionSheetProvider>
+        </StoreProvider>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }

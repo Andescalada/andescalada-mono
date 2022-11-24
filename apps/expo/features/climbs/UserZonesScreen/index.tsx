@@ -21,7 +21,7 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { useNavigation } from "@react-navigation/native";
-import { useIsConnected } from "react-native-offline";
+import { onlineManager } from "@tanstack/react-query";
 
 type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 
@@ -49,7 +49,7 @@ const UserZonesScreen = () => {
   const theme = useAppTheme();
 
   const utils = trpc.useContext();
-  const isConnected = useIsConnected();
+
   const { activateOfflineMode } = useOfflineMode();
 
   const removeAllRecentZones = trpc.user.removeAllRecentZones.useMutation({
@@ -93,7 +93,7 @@ const UserZonesScreen = () => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
-  if (!isConnected)
+  if (!onlineManager.isOnline)
     return (
       <Screen alignItems="center" justifyContent="center" safeAreaDisabled>
         <Box height={60} width={60} justifyContent="center" alignItems="center">
