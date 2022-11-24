@@ -21,7 +21,8 @@
     "build:preview": "APP_VARIANT=preview CI=1 eas build --profile preview",
     "build:dev": "APP_VARIANT=development eas build --profile development --platform all",
     "build:dev-simulator": "APP_VARIANT=development eas build --profile development-simulator --platform ios",
-    "update:preview": "yarn load-env && APP_VARIANT=preview eas update --branch preview  --platform all"
+    "update:preview": "yarn load-env && APP_VARIANT=preview eas update --branch preview  --platform all",
+    "update:production": "yarn load-env && APP_VARIANT=production eas update --branch production  --platform all"
   },
   "dependencies": {
     "@andescalada/api": "*",
