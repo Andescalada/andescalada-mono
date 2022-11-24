@@ -4,11 +4,13 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum AuthNavigationRoutes {
   Login = "Login",
   EnterEmail = "EnterEmail",
+  EnterCode = "EnterCode",
 }
 
 export type AuthNavigationNavigationParamList = {
   [AuthNavigationRoutes.Login]: undefined;
   [AuthNavigationRoutes.EnterEmail]: undefined;
+  [AuthNavigationRoutes.EnterCode]: { email: string };
 };
 
 export type AuthNavigationRouteProps<T extends AuthNavigationRoutes> =

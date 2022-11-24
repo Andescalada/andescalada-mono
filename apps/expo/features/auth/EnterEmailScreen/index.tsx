@@ -6,13 +6,13 @@ import {
   Text,
   TextInput,
 } from "@andescalada/ui";
-import useZodForm from "@hooks/useZodForm";
 import {
   AuthNavigationRoutes,
   AuthNavigationScreenProps,
-} from "@navigation/AppNavigation/AuthNavigation/types";
-import passwordless from "@utils/auth0/embebedLogin";
-import { FC } from "react";
+} from "@features/auth/Navigation/types";
+import useZodForm from "@hooks/useZodForm";
+import passwordless from "@utils/auth0/passwordless";
+import { FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 import { z } from "zod";
 
@@ -24,7 +24,7 @@ const schema = z.object({
     .email({ message: "Email inválido" }),
 });
 
-const EnterEmailScreen: FC<Props> = (props) => {
+const EnterEmailScreen: FC<Props> = ({ navigation }) => {
   const form = useZodForm({
     schema,
     criteriaMode: "firstError",
@@ -33,10 +33,15 @@ const EnterEmailScreen: FC<Props> = (props) => {
   const {
     field: { onBlur, onChange, value, ref },
     fieldState: { error },
-  } = useController({ name: "email", control: form.control });
+  } = useController({
+    name: "email",
+    control: form.control,
+  });
 
   const onNext = form.handleSubmit(async (data) => {
-    const res = await passwordless.login(data.email);
+    await passwordless.login(data.email);
+
+    navigation.navigate(AuthNavigationRoutes.EnterCode, { email: data.email });
   });
 
   return (

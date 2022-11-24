@@ -1,7 +1,7 @@
 import { Screen } from "@andescalada/ui";
 import fonts from "@assets/fonts";
+import AuthNavigation from "@features/auth/Navigation";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import AuthNavigation from "@navigation/AppNavigation/AuthNavigation";
 import RootNavigation from "@navigation/AppNavigation/RootNavigation";
 import { autoLoginAuth0 } from "@store/auth";
 import TRPCProvider from "@utils/trpc/Provider";

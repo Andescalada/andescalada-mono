@@ -3,7 +3,7 @@ import { A, AnimatedBackground, Button, Screen } from "@andescalada/ui";
 import {
   AuthNavigationRoutes,
   AuthNavigationScreenProps,
-} from "@navigation/AppNavigation/AuthNavigation/types";
+} from "@features/auth/Navigation/types";
 import React from "react";
 import { FadeIn } from "react-native-reanimated";
 

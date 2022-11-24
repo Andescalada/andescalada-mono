@@ -14,16 +14,20 @@ import {
 import { useTheme } from "@shopify/restyle";
 import { ComponentProps, FC } from "react";
 
+import Box from "../Box/Box";
 import Pressable from "../Pressable/Pressable";
 import { Theme } from "../Theme/theme";
 
 interface Props extends ComponentProps<typeof Pressable> {
-  iconProps?: ComponentProps<typeof Ionicons>;
+  iconProps?: Partial<ComponentProps<typeof Ionicons>>;
 }
 
 const SIZE = 40;
 
-const BackButton: FC<Props> = ({ iconProps, ...props }) => {
+const BackButton: FC<Props> & { Transparent: typeof Transparent } = ({
+  iconProps,
+  ...props
+}) => {
   const theme = useTheme<Theme>();
   const progress = useLoop({ duration: 1000, easing: Easing.cubic });
 
@@ -67,5 +71,23 @@ const BackButton: FC<Props> = ({ iconProps, ...props }) => {
     </Pressable>
   );
 };
+
+const Transparent = ({ iconProps, ...props }: Props) => {
+  return (
+    <Box position="absolute" top={50} left={0} margin="l" marginLeft="s">
+      <Pressable
+        backgroundColor={"transparentButtonBackground"}
+        borderRadius={100}
+        padding="s"
+        onPress={props.onPress}
+        {...props}
+      >
+        <Ionicons name="arrow-back" size={30} {...iconProps} />
+      </Pressable>
+    </Box>
+  );
+};
+
+BackButton.Transparent = Transparent;
 
 export default BackButton;

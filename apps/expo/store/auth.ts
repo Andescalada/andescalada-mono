@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { auth0Tokens, login, logout } from "@utils/auth0";
+import { auth0Tokens, logout } from "@utils/auth0";
 import {
   DecodedAccessToken,
   DecodedIdToken,
@@ -35,10 +35,17 @@ const initialState: AuthState = {
 
 export const loginAuth0 = createAsyncThunk(
   "auth/loginAuth0",
-  async (_, { dispatch, rejectWithValue }) => {
+  async (
+    {
+      accessToken,
+      idToken,
+      refreshToken,
+    }: { accessToken: string; idToken: string; refreshToken: string },
+    { dispatch, rejectWithValue },
+  ) => {
     try {
       dispatch(setLoadingAuth(true));
-      const { accessToken, decodedIdToken, refreshToken } = await login();
+      const decodedIdToken = tokenDecode(idToken);
 
       const decodedAccessToken = tokenDecode<DecodedAccessToken>(accessToken);
       storage.set(Storage.ACCESS_TOKEN, accessToken);
