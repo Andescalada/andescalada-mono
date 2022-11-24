@@ -6,9 +6,9 @@ const textVariants = {
     color: "text",
   },
   h1: {
-    fontFamily: "Rubik-700",
-    fontSize: 36,
-    lineHeight: 45,
+    fontFamily: "Rubik-300",
+    fontSize: 26,
+    lineHeight: 28,
     color: "text",
   },
   h2: {

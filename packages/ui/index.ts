@@ -1,5 +1,6 @@
 export { default as ActivityIndicator } from "./ActivityIndicator/ActivityIndicator";
 export { default as A } from "./Animated/Animated";
+export { default as AnimatedBackground } from "./AnimatedBackground/AnimatedBackground";
 export { default as BackButton } from "./BackButton/BackButton";
 export { default as Box } from "./Box/Box";
 export { default as BoxWithKeyboard } from "./BoxWithKeyboard/BoxWithKeyboard";
