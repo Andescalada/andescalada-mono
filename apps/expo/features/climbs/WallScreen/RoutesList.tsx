@@ -79,6 +79,7 @@ const RoutesList: FC = () => {
     name: Route["name"];
     kind: Route["kind"];
     grade?: ParseGrade;
+    unknownName: Route["unknownName"];
   }) => {
     listItemRef?.current?.undoEdit();
     rootNavigation.navigate(RootNavigationRoutes.Climbs, {
@@ -153,6 +154,7 @@ const RoutesList: FC = () => {
                 name: item.name,
                 kind: item.kind,
                 grade: parseGrade(item.RouteGrade),
+                unknownName: item.unknownName,
               })
             }
             onPress={() => {

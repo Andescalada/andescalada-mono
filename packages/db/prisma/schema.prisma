@@ -210,7 +210,7 @@ model Route {
   updatedAt       DateTime    @updatedAt
   name            String
   slug            String
-  unknownName     Boolean?    @default(false)
+  unknownName     Boolean     @default(false)
   position        Int         @default(0)
   leftRouteId     String?
   rightRouteId    String?

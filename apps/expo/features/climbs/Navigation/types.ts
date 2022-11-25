@@ -47,6 +47,7 @@ export type ClimbsNavigationNavigationParamList = {
     kind?: Route["kind"];
     grade?: ParseGrade;
     id?: Route["id"];
+    unknownName?: Route["unknownName"];
   };
 };
 

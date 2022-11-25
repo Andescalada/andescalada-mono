@@ -30,6 +30,7 @@ export const wallsRouter = t.router({
             position: true,
             kind: true,
             isDeleted: true,
+            unknownName: true,
             Author: { select: { email: true } },
           },
         },

@@ -1,3 +1,4 @@
+import route from "@andescalada/api/schemas/route";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import {
   Box,
@@ -23,23 +24,30 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddRoute>;
 
-const schema = z.object({
-  name: z
-    .string({ required_error: "Requerido" })
-    .min(3, "Nombre muy corto")
-    .max(50, "Nombre muy largo"),
-  kind: z.nativeEnum(RouteKindSchema.Enum, {
-    required_error: "Requerido",
-  }),
-  grade: z.union([z.number().nullable(), z.literal("project")]),
-});
+// const schema = z.object({
+//   name: z
+//     .string({ required_error: "Requerido" })
+//     .min(3, "Nombre muy corto")
+//     .max(50, "Nombre muy largo"),
+//   kind: z.nativeEnum(RouteKindSchema.Enum, {
+//     required_error: "Requerido",
+//   }),
+//   grade: z.union([z.number().nullable(), z.literal("project")]),
+// });
+
+const { schema: routeSchema } = route;
+const schema = routeSchema
+  .pick({ name: true, kind: true, unknownName: true })
+  .merge(
+    z.object({ grade: z.union([z.number().nullable(), z.literal("project")]) }),
+  );
 
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId, ...rest } = route.params;
@@ -100,6 +108,12 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     control,
     name: "kind",
   });
+  const {
+    field: { onChange: unknownNameOnChange, value: unknownName },
+  } = useController({
+    control,
+    name: "unknownName",
+  });
 
   const kindWatch = useWatch({ control, name: "kind" });
 
@@ -123,11 +137,17 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         name: input.name,
         routeId: rest.id,
         zoneId: rest.zoneId,
-        unknownName,
+        unknownName: input.unknownName,
       });
       return;
     }
-    mutate({ wallId, name: input.name, kind: input.kind, grade, unknownName });
+    mutate({
+      wallId,
+      name: input.name,
+      kind: input.kind,
+      grade,
+      unknownName: input.unknownName,
+    });
   });
 
   const onCancel = () => {
@@ -151,16 +171,16 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const theme = useAppTheme();
 
-  const [unknownName, setUnknownName] = useState(false);
+  // const [unknownName, setUnknownName] = useState(false);
 
   const onUnknownNamePress = () => {
     if (unknownName) {
       onChange("");
-      setUnknownName(false);
+      unknownNameOnChange(false);
       return;
     }
     onChange("Ruta sin nombre");
-    setUnknownName(true);
+    unknownNameOnChange(true);
   };
 
   return (
