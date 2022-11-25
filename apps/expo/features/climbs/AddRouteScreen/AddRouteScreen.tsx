@@ -1,6 +1,7 @@
 import route from "@andescalada/api/schemas/route";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import {
+  A,
   Box,
   Button,
   ButtonGroup,
@@ -27,6 +28,7 @@ import { Picker } from "@react-native-picker/picker";
 import { FC, useState } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
+import { FadeIn, FadeOut } from "react-native-reanimated";
 import { z } from "zod";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddRoute>;
@@ -183,6 +185,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     unknownNameOnChange(true);
   };
 
+  const [showNoName, setShowNoName] = useState(true);
+
   return (
     <Screen safeAreaDisabled={Platform.OS !== "android"}>
       <ScrollView
@@ -196,32 +200,52 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           <Text variant={"p1R"} marginBottom={"s"}>
             Nombre de la ruta
           </Text>
-          <Box flexDirection="row" flex={1} alignItems="center">
+          <Box flexDirection="row" flex={1}>
             <TextInput
               value={value}
               onChangeText={onChange}
               editable={!unknownName}
+              onPressIn={() => {
+                if (!unknownName) setShowNoName(false);
+              }}
+              onBlur={() => {
+                console.log(value);
+                setShowNoName(value === undefined || value === "");
+              }}
               containerProps={{ height: 50, flex: 1, paddingLeft: "s" }}
               textAlignVertical="center"
               color={!unknownName ? "textContrast" : "grayscale.600"}
             />
-            <Pressable
-              paddingHorizontal={"s"}
-              onPress={onUnknownNamePress}
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Ionicons
-                name="remove-circle"
-                size={24}
-                color={
-                  unknownName
-                    ? theme.colors["semantic.info"]
-                    : theme.colors["grayscale.transparent.50.500"]
-                }
-              />
-            </Pressable>
+            {showNoName && (
+              <A.Pressable
+                paddingHorizontal={"s"}
+                onPress={onUnknownNamePress}
+                height="100%"
+                alignItems="center"
+                justifyContent="center"
+                entering={FadeIn}
+                exiting={FadeOut}
+              >
+                <Ionicons
+                  name="remove-circle"
+                  size={24}
+                  color={
+                    unknownName
+                      ? theme.colors["semantic.info"]
+                      : theme.colors["grayscale.transparent.50.500"]
+                  }
+                />
+                <Text
+                  color={
+                    unknownName
+                      ? "semantic.info"
+                      : "grayscale.transparent.50.500"
+                  }
+                >
+                  Sin nombre
+                </Text>
+              </A.Pressable>
+            )}
           </Box>
           <Text marginTop={"xs"} color="semantic.error">
             {error?.message}
