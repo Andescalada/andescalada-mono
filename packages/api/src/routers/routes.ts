@@ -37,6 +37,7 @@ export const routesRouter = t.router({
           slug: slug(input.name),
           Wall: { connect: { id: input.wallId } },
           kind: input.kind,
+          unknownName: input.unknownName,
           position: biggestPosition + 1,
           RouteGrade: {
             create: { grade: input.grade.grade, project: input.grade.project },
@@ -106,7 +107,7 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const { grade, kind, name } = input;
+      const { grade, kind, name, unknownName } = input;
 
       await ctx.prisma.wall.update({
         where: { id: route?.wallId },
@@ -119,6 +120,7 @@ export const routesRouter = t.router({
           RouteGrade: { update: { ...grade } },
           name,
           kind,
+          unknownName,
           version: { increment: 1 },
         },
       });

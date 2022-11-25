@@ -15,6 +15,7 @@ const schema = z.object({
     grade: z.number().nullable(),
     project: z.boolean(),
   }),
+  unknownName: z.boolean().optional(),
 });
 
 const routeId = z.object({ routeId: z.string() });

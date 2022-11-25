@@ -3,26 +3,27 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Pressable,
   Screen,
   ScrollView,
   SemanticButton,
   Text,
   TextInput,
-  Theme,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { Ionicons } from "@expo/vector-icons";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import { useAppTheme } from "@hooks/useAppTheme";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
-import { useTheme } from "@shopify/restyle";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { z } from "zod";
@@ -122,10 +123,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         name: input.name,
         routeId: rest.id,
         zoneId: rest.zoneId,
+        unknownName,
       });
       return;
     }
-    mutate({ wallId, name: input.name, kind: input.kind, grade });
+    mutate({ wallId, name: input.name, kind: input.kind, grade, unknownName });
   });
 
   const onCancel = () => {
@@ -147,27 +149,60 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const { allGrades, gradeSystem } = useGradeSystem(kindValue);
 
-  const theme = useTheme<Theme>();
+  const theme = useAppTheme();
+
+  const [unknownName, setUnknownName] = useState(false);
+
+  const onUnknownNamePress = () => {
+    if (unknownName) {
+      onChange("");
+      setUnknownName(false);
+      return;
+    }
+    onChange("Ruta sin nombre");
+    setUnknownName(true);
+  };
 
   return (
-    <Screen safeAreaDisabled>
+    <Screen safeAreaDisabled={Platform.OS !== "android"}>
       <ScrollView
         padding="m"
         flex={1}
         marginBottom={"l"}
         onResponderGrant={Keyboard.dismiss}
       >
-        <Text variant="h1">{rest.id ? "Editar ruta" : "Agregar ruta"}</Text>
+        <Text variant="h2">{rest.id ? "Editar ruta" : "Agregar ruta"}</Text>
         <Box marginTop={"m"}>
           <Text variant={"p1R"} marginBottom={"s"}>
             Nombre de la ruta
           </Text>
-          <TextInput
-            value={value}
-            onChangeText={onChange}
-            containerProps={{ height: 50 }}
-            textAlignVertical="center"
-          />
+          <Box flexDirection="row" flex={1} alignItems="center">
+            <TextInput
+              value={value}
+              onChangeText={onChange}
+              editable={!unknownName}
+              containerProps={{ height: 50, flex: 1, paddingLeft: "s" }}
+              textAlignVertical="center"
+              color={!unknownName ? "textContrast" : "grayscale.600"}
+            />
+            <Pressable
+              paddingHorizontal={"s"}
+              onPress={onUnknownNamePress}
+              height="100%"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Ionicons
+                name="remove-circle"
+                size={24}
+                color={
+                  unknownName
+                    ? theme.colors["semantic.info"]
+                    : theme.colors["grayscale.transparent.50.500"]
+                }
+              />
+            </Pressable>
+          </Box>
           <Text marginTop={"xs"} color="semantic.error">
             {error?.message}
           </Text>
