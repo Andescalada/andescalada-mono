@@ -1,3 +1,4 @@
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
   SkiaRouteCanvas,
   SkiaRoutePath,
@@ -21,6 +22,7 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
+import Instructions from "@features/routesManager/RouteDrawer/Instructions";
 import { useAppSelector } from "@hooks/redux";
 import useCachedImage from "@hooks/useCachedImage";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -28,10 +30,13 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import type { Route, RoutePath } from "@prisma/client";
 import { useValue } from "@shopify/react-native-skia";
 import { useTheme } from "@shopify/restyle";
+import { inferRouterOutputs } from "@trpc/server";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
+
+type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
 
@@ -57,31 +62,29 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
     id: routeParams?.id,
     label: routeParams?.position.toString(),
   });
+
   const { data: topos } = trpc.topos.byId.useQuery(
     { topoId },
     {
-      select(topo) {
-        return {
-          otherRoutes: topo?.RoutePath.filter(
+      select: useCallback(
+        (topo: Topo) => {
+          const otherRoutes = topo?.RoutePath.filter(
             (r) => r.Route.id !== routeParams.id,
-          ),
-          selectedRoute: topo?.RoutePath?.find(
+          );
+
+          const selectedRoute = topo?.RoutePath?.find(
             (r) => r.Route.id === routeParams.id,
-          ),
-        };
-      },
+          );
+
+          return {
+            otherRoutes,
+            selectedRoute,
+          };
+        },
+        [routeParams.id],
+      ),
     },
   );
-
-  useEffect(() => {
-    if (topos?.selectedRoute) {
-      setRoute((prev) => ({
-        ...prev,
-        path: topos.selectedRoute?.path,
-        pathId: topos.selectedRoute?.id,
-      }));
-    }
-  }, [topos?.selectedRoute]);
 
   const utils = trpc.useContext();
 
@@ -153,9 +156,10 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
   const fitted = fitContent({ height, width });
   const coords = useValue({ x: 0, y: 0 });
 
-  if (route)
+  if (route && image)
     return (
       <Screen safeAreaDisabled justifyContent="center">
+        <Instructions isEditing={!!topos?.selectedRoute?.path} />
         <SkiaRouteCanvas
           coords={coords}
           imageUrl={fileUrl}
@@ -165,11 +169,11 @@ const DrawRoute: FC<Props> = ({ route: navRoute, navigation }) => {
           <SkiaRoutePathDrawer
             coords={coords}
             ref={routeRef}
-            path={route?.path}
-            label={route.label}
+            path={topos?.selectedRoute?.path}
+            label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
-            withStart={!!route.path}
-            withEnd={!!route.path}
+            withStart={!!topos?.selectedRoute?.path}
+            withEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
           />
