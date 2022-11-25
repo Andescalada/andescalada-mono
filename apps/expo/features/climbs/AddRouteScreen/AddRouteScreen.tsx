@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Pressable,
   Screen,
   ScrollView,
   SemanticButton,
@@ -209,7 +208,6 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
                 if (!unknownName) setShowNoName(false);
               }}
               onBlur={() => {
-                console.log(value);
                 setShowNoName(value === undefined || value === "");
               }}
               containerProps={{ height: 50, flex: 1, paddingLeft: "s" }}
