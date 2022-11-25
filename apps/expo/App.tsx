@@ -11,6 +11,7 @@ import storage from "@utils/mmkv/storage";
 import { StatusBar } from "expo-status-bar";
 import { connectToDevTools } from "react-devtools-core";
 import { LogBox } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { initializeMMKVFlipper } from "react-native-mmkv-flipper-plugin";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
@@ -44,10 +45,12 @@ export default function App() {
       <SafeAreaProvider>
         <StoreProvider store={Store}>
           <ActionSheetProvider>
-            <NavigationMemoized theme={darkTheme}>
-              <StatusBar style="light" />
-              <AppNavigation />
-            </NavigationMemoized>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <NavigationMemoized theme={darkTheme}>
+                <StatusBar style="light" />
+                <AppNavigation />
+              </NavigationMemoized>
+            </GestureHandlerRootView>
           </ActionSheetProvider>
         </StoreProvider>
       </SafeAreaProvider>
