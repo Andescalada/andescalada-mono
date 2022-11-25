@@ -5,9 +5,10 @@ import {
   forwardRef,
   ForwardRefRenderFunction,
   ReactNode,
+  RefObject,
+  useCallback,
   useImperativeHandle,
   useMemo,
-  useRef,
 } from "react";
 import {
   Gesture,
@@ -18,6 +19,7 @@ import {
   FadeInDown,
   FadeOutLeft,
   Layout,
+  runOnJS,
   SlideOutLeft,
   useAnimatedStyle,
   useDerivedValue,
@@ -38,18 +40,17 @@ interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
 }
 
 const SNAP_PERCENTAGE = 0.2;
-
 export const MIN_HEIGHT = 50;
+const TOUCH_SLOP = 5;
+const TIME_TO_ACTIVATE_PAN = 100;
 
 const WITH_SPRING_CONFIG: WithSpringConfig = {
   damping: 20,
 };
 
-export interface ListItemRef {
+export interface ListItemRef extends Partial<RefObject<GestureType>> {
   undoDelete: () => void;
   undoEdit: () => void;
-  panRef: GestureType | undefined;
-  panRef2: GestureType | undefined;
 }
 
 const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
@@ -59,8 +60,18 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
   const width = useSharedValue(0);
   const translateX = useSharedValue(0);
 
-  const panRef = useRef<GestureType | undefined>(undefined);
-  const panRef2 = useRef<GestureType | undefined>(undefined);
+  useImperativeHandle(
+    ref,
+    () => ({
+      undoDelete: () => {
+        translateX.value = withSpring(0, WITH_SPRING_CONFIG);
+      },
+      undoEdit: () => {
+        translateX.value = withSpring(0, WITH_SPRING_CONFIG);
+      },
+    }),
+    [translateX],
+  );
 
   const rangeLeft = useDerivedValue(() => {
     return {
@@ -74,21 +85,6 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
     };
   }, [translateX]);
 
-  useImperativeHandle(ref, () => ({
-    undoDelete: () => {
-      translateX.value = withSpring(0, WITH_SPRING_CONFIG);
-    },
-    undoEdit: () => {
-      translateX.value = withSpring(0, WITH_SPRING_CONFIG);
-    },
-    get panRef() {
-      return panRef.current;
-    },
-    get panRef2() {
-      return panRef2.current;
-    },
-  }));
-
   const rangeRight = useDerivedValue(() => {
     return {
       first: between(translateX.value, 0, SNAP_PERCENTAGE * width.value),
@@ -101,35 +97,37 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
     };
   }, [translateX]);
 
-  const deleteOnSwipe = useMemo(
-    () =>
-      Gesture.Pan()
-        .enabled(!!allowEdit)
-        .runOnJS(true)
-        .withRef(panRef2)
-        .onEnd(() => {
-          if (rangeLeft.value.third) {
-            onDelete && onDelete();
-          }
-          if (rangeRight.value.third) {
-            onEdit && onEdit();
-          }
-        }),
-    [
-      allowEdit,
-      onDelete,
-      rangeLeft.value.third,
-      onEdit,
-      rangeRight.value.third,
-    ],
-  );
+  const deleteFnProp = useCallback(() => {
+    if (onDelete) onDelete();
+  }, [onDelete]);
+  const editFnProp = useCallback(() => {
+    if (onEdit) onEdit();
+  }, [onEdit]);
+
+  const touchStart = useSharedValue({ x: 0, y: 0, time: 0 });
 
   const pan = useMemo(
     () =>
       Gesture.Pan()
         .enabled(!!allowEdit)
-        .withRef(panRef)
-        .shouldCancelWhenOutside(true)
+        .manualActivation(true)
+        .onTouchesDown((e) => {
+          touchStart.value = {
+            x: e.changedTouches[0].x,
+            y: e.changedTouches[0].y,
+            time: Date.now(),
+          };
+        })
+        .onTouchesMove((e, state) => {
+          if (Date.now() - touchStart.value.time > TIME_TO_ACTIVATE_PAN) {
+            state.activate();
+          } else if (
+            Math.abs(touchStart.value.x - e.changedTouches[0].x) > TOUCH_SLOP ||
+            Math.abs(touchStart.value.y - e.changedTouches[0].y) > TOUCH_SLOP
+          ) {
+            state.fail();
+          }
+        })
         .onChange((e) => {
           translateX.value += e.changeX;
         })
@@ -144,6 +142,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
             );
           }
           if (rangeLeft.value.third) {
+            runOnJS(deleteFnProp)();
             translateX.value = withSpring(-width.value, WITH_SPRING_CONFIG);
           }
           if (rangeRight.value.first) {
@@ -156,6 +155,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
             );
           }
           if (rangeRight.value.third) {
+            runOnJS(editFnProp)();
             translateX.value = withSpring(width.value, WITH_SPRING_CONFIG);
             translateX.value = withDelay(
               1000,
@@ -165,12 +165,15 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
         }),
     [
       allowEdit,
+      deleteFnProp,
+      editFnProp,
       rangeLeft.value.first,
       rangeLeft.value.second,
       rangeLeft.value.third,
       rangeRight.value.first,
       rangeRight.value.second,
       rangeRight.value.third,
+      touchStart,
       translateX,
       width.value,
     ],
@@ -209,10 +212,8 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
     };
   });
 
-  const panGestures = Gesture.Simultaneous(pan, deleteOnSwipe);
-
   return (
-    <GestureDetector gesture={panGestures}>
+    <GestureDetector gesture={pan}>
       <A.Box
         entering={FadeInDown.delay(100 * index)}
         exiting={SlideOutLeft}

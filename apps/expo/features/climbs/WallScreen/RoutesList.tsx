@@ -16,7 +16,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { Route } from "@prisma/client";
 import { useRoute } from "@react-navigation/native";
 import parseGrade, { ParseGrade } from "@utils/parseGrade";
-import { FC, useMemo, useRef } from "react";
+import { createRef, FC, RefObject, useMemo, useRef } from "react";
 import { Alert } from "react-native";
 
 type NavigationRoute =
@@ -33,7 +33,21 @@ const RoutesList: FC = () => {
     refetch,
     isFetching,
     isLoading: isLoadingWall,
-  } = trpc.walls.byId.useQuery({ wallId });
+  } = trpc.walls.byId.useQuery(
+    { wallId },
+    {
+      select: (wall) => {
+        const routesWithRef = wall.routes.map((route) => ({
+          ...route,
+          routeRef: createRef<ListItemRef>(),
+        }));
+        return {
+          ...wall,
+          routes: routesWithRef,
+        };
+      },
+    },
+  );
 
   const { mutate } = trpc.routes.delete.useMutation({
     onMutate: async ({ routeId }) => {
@@ -88,12 +102,14 @@ const RoutesList: FC = () => {
     });
   };
 
-  const onDeleteTry = (id: string) => {
+  const onDeleteTry = (id: string, ref: RefObject<ListItemRef>) => {
     Alert.alert("Eliminar ruta", "¿Seguro que quieres eliminar esta ruta?", [
       { text: "Borrar", onPress: () => onDelete(id), style: "destructive" },
       {
         text: "Cancelar",
-        onPress: () => listItemRef?.current?.undoDelete(),
+        onPress: () => {
+          ref?.current?.undoDelete();
+        },
         style: "cancel",
       },
     ]);
@@ -127,16 +143,15 @@ const RoutesList: FC = () => {
       borderTopLeftRadius={5}
       borderTopRightRadius={5}
       backgroundColor="background"
-      simultaneousHandlers={[listItemRef]}
-      nestedScrollEnabled
     >
       {data?.routes.map((item, index) => {
         const n = item.RouteGrade?.grade;
         const grade = typeof n === "number" ? gradeSystem(n, item.kind) : "?";
+
         return (
           <ListItem
             key={item.id}
-            ref={listItemRef}
+            ref={item.routeRef}
             index={index}
             containerProps={{
               marginBottom: index === routesCount - 1 ? "xl" : "none",
@@ -147,7 +162,7 @@ const RoutesList: FC = () => {
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-            onDelete={() => onDeleteTry(item.id)}
+            onDelete={() => onDeleteTry(item.id, item.routeRef)}
             onEdit={() =>
               onEdit({
                 id: item.id,
