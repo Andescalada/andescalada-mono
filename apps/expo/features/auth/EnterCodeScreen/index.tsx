@@ -1,9 +1,7 @@
 import {
-  A,
   AnimatedBackground,
   BackButton,
   Box,
-  Button,
   Pressable,
   Screen,
   Text,
@@ -12,7 +10,7 @@ import {
   AuthNavigationRoutes,
   AuthNavigationScreenProps,
 } from "@features/auth/Navigation/types";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
+import { useAppDispatch } from "@hooks/redux";
 import { loginAuth0 } from "@store/auth";
 import passwordless from "@utils/auth0/passwordless";
 import { FC, useMemo, useState } from "react";
@@ -23,7 +21,6 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import { FadeIn } from "react-native-reanimated";
 import { useTimer } from "react-timing-hooks";
 
 const TIMEOUT = 3 * 60;
@@ -44,9 +41,8 @@ const EnterCodeScreen: FC<Props> = ({
   });
 
   const dispatch = useAppDispatch();
-  const { loadingAuth } = useAppSelector((state) => state.auth);
 
-  const onSubmit = async () => {
+  const onSubmit = async (value: string) => {
     if (value.length < 4) return;
     try {
       const { access_token, id_token, refresh_token } =
@@ -88,7 +84,10 @@ const EnterCodeScreen: FC<Props> = ({
           ref={ref}
           {...props}
           value={value}
-          onChangeText={setValue}
+          onChangeText={(t) => {
+            setValue(t);
+            if (t.length === 4) onSubmit(t);
+          }}
           cellCount={4}
           keyboardType="number-pad"
           textContentType="oneTimeCode"
@@ -122,18 +121,6 @@ const EnterCodeScreen: FC<Props> = ({
           )}
         </Box>
       </Box>
-      {value.length === 4 && (
-        <A.Box entering={FadeIn}>
-          <Button
-            title="Enviar"
-            onPress={onSubmit}
-            variant="transparent"
-            paddingHorizontal="l"
-            isLoading={loadingAuth}
-            titleProps={{ color: "grayscale.white" }}
-          />
-        </A.Box>
-      )}
     </Screen>
   );
 };

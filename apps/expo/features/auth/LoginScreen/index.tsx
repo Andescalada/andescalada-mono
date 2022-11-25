@@ -13,7 +13,7 @@ type Props = AuthNavigationScreenProps<AuthNavigationRoutes.Login>;
 
 const LoginScreen = ({ navigation }: Props) => {
   return (
-    <Screen alignItems="center" justifyContent="center">
+    <Screen alignItems="center" justifyContent="center" safeAreaDisabled>
       <AnimatedBackground withLogo />
       <A.Box
         entering={FadeIn.duration(500).delay(DURATION + 500)}

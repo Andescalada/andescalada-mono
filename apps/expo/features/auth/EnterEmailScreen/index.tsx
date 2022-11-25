@@ -1,7 +1,7 @@
 import {
   AnimatedBackground,
   Box,
-  Button,
+  BoxWithKeyboard,
   Screen,
   Text,
   TextInput,
@@ -12,7 +12,7 @@ import {
 } from "@features/auth/Navigation/types";
 import useZodForm from "@hooks/useZodForm";
 import passwordless from "@utils/auth0/passwordless";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { useController } from "react-hook-form";
 import { z } from "zod";
 
@@ -45,43 +45,44 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
   });
 
   return (
-    <Screen
-      padding="m"
-      backgroundColor="brand.primaryA"
-      justifyContent="space-evenly"
-      alignItems="center"
-    >
-      <AnimatedBackground />
-      <Box flex={0.25} justifyContent="space-between">
-        <Text variant="h1">Ingresa tu correo electrónico</Text>
-        <Box>
-          <TextInput
-            value={value}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            ref={ref}
-            placeholder="Correo electrónico"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="email-address"
-            autoFocus
-            onSubmitEditing={onNext}
-            containerProps={{ height: 40, paddingLeft: "s" }}
-          />
-          {error ? (
-            <Text variant="error">{error.message}</Text>
-          ) : (
-            <Text variant="error" />
-          )}
+    <Screen>
+      <BoxWithKeyboard
+        justifyContent="flex-start"
+        alignItems="center"
+        padding="m"
+        paddingTop="xxxl"
+        disableAvoiding
+      >
+        <AnimatedBackground />
+        <Box flex={0.25} justifyContent="space-between">
+          <Box>
+            <Text variant="h1">Ingresa tu correo electrónico</Text>
+            <Text variant="p2R" marginTop="xs">
+              para recibir un código de verificación
+            </Text>
+          </Box>
+          <Box>
+            <TextInput
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              ref={ref}
+              placeholder="Correo electrónico"
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              autoFocus
+              onSubmitEditing={onNext}
+              containerProps={{ height: 40, paddingLeft: "s" }}
+            />
+            {error ? (
+              <Text variant="error">{error.message}</Text>
+            ) : (
+              <Text variant="error" />
+            )}
+          </Box>
         </Box>
-      </Box>
-      <Button
-        title="Siguiente"
-        onPress={onNext}
-        variant="transparent"
-        paddingHorizontal="l"
-        titleProps={{ color: "grayscale.white" }}
-      />
+      </BoxWithKeyboard>
     </Screen>
   );
 };

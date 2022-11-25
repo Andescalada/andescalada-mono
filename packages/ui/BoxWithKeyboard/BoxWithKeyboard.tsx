@@ -1,12 +1,11 @@
-import { BoxProps, createBox } from "@shopify/restyle";
 import { ComponentProps, FC, useMemo } from "react";
 import { Keyboard, Platform } from "react-native";
 
 import KeyBoardAvoidingBox from "../KeyboardAvoidingBox/KeyboardAvoidingBox";
 import Pressable from "../Pressable/Pressable";
 
-interface Props extends ComponentProps<typeof KeyBoardAvoidingBox> {
-  pressableProps?: ComponentProps<typeof Pressable>;
+interface Props extends ComponentProps<typeof Pressable> {
+  keyboardAvoidingProps?: ComponentProps<typeof KeyBoardAvoidingBox>;
   keyboardOffset?: ComponentProps<
     typeof KeyBoardAvoidingBox
   >["keyboardVerticalOffset"];
@@ -15,7 +14,7 @@ interface Props extends ComponentProps<typeof KeyBoardAvoidingBox> {
 
 const BoxWithKeyboard: FC<Props> = ({
   children,
-  pressableProps,
+  keyboardAvoidingProps,
   keyboardOffset,
   disableAvoiding = false,
   ...props
@@ -26,16 +25,20 @@ const BoxWithKeyboard: FC<Props> = ({
   }, [disableAvoiding]);
 
   return (
-    <Pressable onPress={Keyboard.dismiss} flex={1} {...pressableProps}>
-      <KeyBoardAvoidingBox
-        behavior={behavior}
-        flex={1}
-        keyboardVerticalOffset={keyboardOffset}
-        {...props}
-      >
+    <KeyBoardAvoidingBox
+      behavior={behavior}
+      enabled
+      contentContainerStyle={{
+        flex: 1,
+      }}
+      flex={1}
+      keyboardVerticalOffset={keyboardOffset}
+      {...keyboardAvoidingProps}
+    >
+      <Pressable onPress={Keyboard.dismiss} flex={1} {...props}>
         {children}
-      </KeyBoardAvoidingBox>
-    </Pressable>
+      </Pressable>
+    </KeyBoardAvoidingBox>
   );
 };
 
