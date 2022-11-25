@@ -65,6 +65,7 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
             autoCorrect={false}
             keyboardType="email-address"
             autoFocus
+            onSubmitEditing={onNext}
             containerProps={{ height: 40, paddingLeft: "s" }}
           />
           {error ? (
