@@ -22,9 +22,12 @@ export const routesRouter = t.router({
     }
     return route;
   }),
-  add: protectedProcedure
+  add: protectedZoneProcedure
     .input(routeSchema.schema)
     .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("Create")) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
       const result = await ctx.prisma.route.aggregate({
         where: { wallId: input.wallId },
         _max: { position: true },

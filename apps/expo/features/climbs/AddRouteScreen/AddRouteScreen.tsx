@@ -148,6 +148,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       kind: input.kind,
       grade,
       unknownName: input.unknownName,
+      zoneId: rest.zoneId,
     });
   });
 
