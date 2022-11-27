@@ -13,6 +13,10 @@ export const routesRouter = t.router({
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
     const route = await ctx.prisma.route.findUnique({
       where: { id: input },
+      include: {
+        RouteGrade: true,
+        Wall: { select: { topos: { select: { id: true } } } },
+      },
     });
     if (!route || route.isDeleted !== SoftDelete.NotDeleted) {
       throw new TRPCError({

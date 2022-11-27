@@ -32,17 +32,6 @@ import { z } from "zod";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddRoute>;
 
-// const schema = z.object({
-//   name: z
-//     .string({ required_error: "Requerido" })
-//     .min(3, "Nombre muy corto")
-//     .max(50, "Nombre muy largo"),
-//   kind: z.nativeEnum(RouteKindSchema.Enum, {
-//     required_error: "Requerido",
-//   }),
-//   grade: z.union([z.number().nullable(), z.literal("project")]),
-// });
-
 const { schema: routeSchema } = route;
 const schema = routeSchema
   .pick({ name: true, kind: true, unknownName: true })
@@ -215,7 +204,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               textAlignVertical="center"
               color={!unknownName ? "textContrast" : "grayscale.600"}
             />
-            {showNoName && (
+            {showNoName && !value && (
               <A.Pressable
                 paddingHorizontal={"s"}
                 onPress={onUnknownNamePress}

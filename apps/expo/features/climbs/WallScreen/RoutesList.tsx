@@ -16,7 +16,15 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { Route } from "@prisma/client";
 import { useRoute } from "@react-navigation/native";
 import parseGrade, { ParseGrade } from "@utils/parseGrade";
-import { createRef, FC, RefObject, useCallback, useMemo, useRef } from "react";
+import {
+  createRef,
+  FC,
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Alert } from "react-native";
 
 type NavigationRoute =
@@ -88,7 +96,7 @@ const RoutesList: FC = () => {
     });
   };
 
-  const onEdit = (params: {
+  const onOptions = (params: {
     id: Route["id"];
     name: Route["name"];
     kind: Route["kind"];
@@ -97,8 +105,8 @@ const RoutesList: FC = () => {
   }) => {
     listItemRef?.current?.reset();
     rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-      screen: ClimbsNavigationRoutes.AddRoute,
-      params: { ...params, zoneId, wallId },
+      screen: ClimbsNavigationRoutes.RouteOptions,
+      params: { routeId: params.id, zoneId, wallId },
     });
   };
 
@@ -124,6 +132,8 @@ const RoutesList: FC = () => {
       route.routeRef?.current?.reset();
     });
   }, [data?.routes]);
+
+  const [touchedRouteId, setTouchRouteId] = useState<string | null>(null);
 
   if (isLoadingWall) return null;
   if (!data?.routes || routesCount === 0)
@@ -170,9 +180,16 @@ const RoutesList: FC = () => {
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-            onDelete={() => onDeleteTry(item.id, item.routeRef)}
-            onEdit={() =>
-              onEdit({
+            onTouch={() => {
+              setTouchRouteId((prev) => {
+                if (prev !== item.id) reset();
+                return item.id;
+              });
+              utils.routes.byId.prefetch(item.id);
+            }}
+            onRightAction={() => onDeleteTry(item.id, item.routeRef)}
+            onLeftAction={() =>
+              onOptions({
                 id: item.id,
                 name: item.name,
                 kind: item.kind,

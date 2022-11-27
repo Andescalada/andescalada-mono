@@ -1,8 +1,10 @@
-import { Box } from "@andescalada/ui";
+import { BackButton, Box } from "@andescalada/ui";
+import textVariants from "@andescalada/ui/Theme/textVariants";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
 import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
+import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
 import SectorScreen from "@features/climbs/SectorScreen";
 import WallScreen from "@features/climbs/WallScreen";
@@ -17,6 +19,8 @@ import {
   ClimbsNavigationNavigationParamList,
   ClimbsNavigationRoutes,
 } from "./types";
+
+const { fontFamily, fontSize, lineHeight } = textVariants.p1R;
 
 const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 
@@ -67,6 +71,18 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.Wall}
           component={WallScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.RouteOptions}
+          component={RouteOptionsScreen}
+          options={{
+            title: "Opciones",
+            headerShown: true,
+            headerTitleStyle: { fontFamily, fontSize, lineHeight },
+            headerLeft({ onPress }) {
+              return <BackButton onPress={onPress} marginLeft="s" />;
+            },
+          }}
         />
       </Stack.Navigator>
       <OfflineNotification />

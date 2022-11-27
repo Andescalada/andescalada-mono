@@ -33,13 +33,14 @@ import { between } from "react-native-redash";
 
 interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
   children: ReactNode;
-  onDelete?: () => void;
-  onEdit?: () => void;
+  onRightAction?: () => void;
+  onLeftAction?: () => void;
   index: number;
   allowEdit?: boolean;
   containerProps?: Omit<ComponentProps<typeof A.Box>, "key">;
   routeName: string;
   hasFailed?: SharedValue<boolean>;
+  onTouch?: () => void;
 }
 
 const SNAP_PERCENTAGE = 0.2;
@@ -56,7 +57,16 @@ export interface ListItemRef extends Partial<RefObject<GestureType>> {
 }
 
 const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
-  { children, onDelete, onEdit, index, allowEdit, containerProps, ...props },
+  {
+    children,
+    onRightAction: onRightAction,
+    onLeftAction,
+    onTouch,
+    index,
+    allowEdit,
+    containerProps,
+    ...props
+  },
   ref,
 ) => {
   const width = useSharedValue(0);
@@ -99,11 +109,15 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
   }, [translateX]);
 
   const deleteFnProp = useCallback(() => {
-    if (onDelete) onDelete();
-  }, [onDelete]);
+    if (onRightAction) onRightAction();
+  }, [onRightAction]);
   const editFnProp = useCallback(() => {
-    if (onEdit) onEdit();
-  }, [onEdit]);
+    if (onLeftAction) onLeftAction();
+  }, [onLeftAction]);
+
+  const touchFnProp = useCallback(() => {
+    if (onTouch) onTouch();
+  }, [onTouch]);
 
   const touchStart = useSharedValue({ x: 0, y: 0, time: 0 });
 
@@ -119,6 +133,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
             y: e.changedTouches[0].y,
             time: Date.now(),
           };
+          runOnJS(touchFnProp)();
         })
         .onTouchesMove((e, state) => {
           if (Date.now() - touchStart.value.time > TIME_TO_ACTIVATE_PAN) {
@@ -179,6 +194,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       rangeRight.value.first,
       rangeRight.value.second,
       rangeRight.value.third,
+      touchFnProp,
       touchStart,
       translateX,
       width.value,
@@ -241,7 +257,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           left={0}
           layout={FadeOutLeft}
           onPress={() => {
-            onDelete && onDelete();
+            onRightAction && onRightAction();
           }}
           justifyContent="center"
           alignItems="flex-end"
@@ -260,13 +276,13 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           left={0}
           layout={FadeOutLeft}
           onPress={() => {
-            onEdit && onEdit();
+            onLeftAction && onLeftAction();
             reset();
           }}
           justifyContent="center"
           paddingLeft="s"
         >
-          <Text variant="p3B">Editar</Text>
+          <Text variant="p3B">Opciones</Text>
         </A.Pressable>
 
         <A.ListItem
