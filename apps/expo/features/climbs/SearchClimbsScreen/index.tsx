@@ -32,7 +32,7 @@ const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
 
   return (
     <Screen padding="m">
-      <BoxWithKeyboard disableAvoiding flex={1}>
+      <BoxWithKeyboard flex={1}>
         <Box
           flexDirection="row"
           alignItems="center"

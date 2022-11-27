@@ -4,6 +4,7 @@ import {
   Box,
   BoxWithKeyboard,
   Button,
+  KeyboardAvoidingBox,
   Screen,
   Text,
   TextInput,
@@ -58,24 +59,25 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   });
 
   return (
-    <Screen margin={{ mobile: "m", tablet: "xxl" }}>
-      <BoxWithKeyboard>
-        <Box marginVertical={"ll"}>
-          <Text variant={"h1"}>Comencemos</Text>
-          <Text>
-            Para comenzar ingresa tu nombre y elige una foto de perfil
-          </Text>
-        </Box>
-
-        <Box marginTop={{ mobile: "m", tablet: "xxl" }}>
-          <Box justifyContent="center" alignItems="center">
-            <ProfileImagePicker
-              pickImage={pickImage}
-              selectedImage={selectedImage}
-            />
+    <KeyboardAvoidingBox>
+      <Screen margin={{ mobile: "m", tablet: "xxl" }}>
+        <BoxWithKeyboard>
+          <Box marginVertical={"ll"}>
+            <Text variant={"h1"}>Comencemos</Text>
+            <Text>
+              Para comenzar ingresa tu nombre y elige una foto de perfil
+            </Text>
           </Box>
-          <FormProvider {...form}>
-            <Box marginTop={"m"}>
+
+          <Box marginTop={{ mobile: "m", tablet: "xxl" }}>
+            <Box justifyContent="center" alignItems="center">
+              <ProfileImagePicker
+                pickImage={pickImage}
+                selectedImage={selectedImage}
+              />
+            </Box>
+            <FormProvider {...form}>
+              {/* <KeyboardAvoidingBox marginTop={"m"} behavior="padding"> */}
               <Text variant="p1R" marginBottom="s">
                 Nombre
               </Text>
@@ -88,29 +90,28 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               <Text marginTop={"xs"} color="semantic.error">
                 {error?.message}
               </Text>
-            </Box>
+              {/* </KeyboardAvoidingBox> */}
 
-            <Box>
               <Text variant="p1R" marginBottom="s">
                 Usuario
               </Text>
               <UsernameInput />
-            </Box>
-          </FormProvider>
-        </Box>
-        <Button
-          variant={"info"}
-          title="Continuar"
-          alignSelf={"center"}
-          marginTop="xxl"
-          onPress={onSubmit}
-          isLoading={loading}
-          disabled={
-            loading || !form.formState.isDirty || !form.formState.isValid
-          }
-        />
-      </BoxWithKeyboard>
-    </Screen>
+            </FormProvider>
+          </Box>
+          <Button
+            variant={"info"}
+            title="Continuar"
+            alignSelf={"center"}
+            marginTop="xxl"
+            onPress={onSubmit}
+            isLoading={loading}
+            disabled={
+              loading || !form.formState.isDirty || !form.formState.isValid
+            }
+          />
+        </BoxWithKeyboard>
+      </Screen>
+    </KeyboardAvoidingBox>
   );
 };
 

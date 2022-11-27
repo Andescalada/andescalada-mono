@@ -4,6 +4,7 @@ import {
   Box,
   BoxWithKeyboard,
   Button,
+  KeyboardAvoidingBox,
   ScrollView,
   Text,
   TextInput,
@@ -104,75 +105,77 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
   ]);
 
   return (
-    <ScrollView margin={{ mobile: "m", tablet: "xxl" }}>
-      <BoxWithKeyboard>
-        <Box marginVertical={"ll"}>
-          <Text variant="h3">Edita tu información personal</Text>
-        </Box>
+    <KeyboardAvoidingBox>
+      <ScrollView margin={{ mobile: "m", tablet: "xxl" }}>
+        <BoxWithKeyboard>
+          <Box marginVertical={"ll"}>
+            <Text variant="h3">Edita tu información personal</Text>
+          </Box>
 
-        <Box marginTop={{ mobile: "m", tablet: "xxl" }}>
-          <Box justifyContent="center" alignItems="center">
-            <ProfileImagePicker
-              pickImage={pickImage}
-              selectedImage={selectedImage}
-              defaultValue={data?.profilePhoto?.publicId || undefined}
-            />
-          </Box>
-          <Box>
-            <Text variant="p1R" marginBottom="s">
-              Correo
-            </Text>
-            <TextInput
-              value={data?.email}
-              onPressIn={() => Alert.alert("No es posible editar el correo")}
-              color="grayscale.500"
-              editable={false}
-              containerProps={{ height: 40, paddingLeft: "s" }}
-            />
-          </Box>
-          <FormProvider {...form}>
-            <Box marginTop={"m"}>
-              <Text variant="p1R" marginBottom="s">
-                Nombre
-              </Text>
-              <TextInput
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                containerProps={{ height: 40, paddingLeft: "s" }}
+          <Box marginTop={{ mobile: "m", tablet: "xxl" }}>
+            <Box justifyContent="center" alignItems="center">
+              <ProfileImagePicker
+                pickImage={pickImage}
+                selectedImage={selectedImage}
+                defaultValue={data?.profilePhoto?.publicId || undefined}
               />
-              <Text marginTop={"xs"} color="semantic.error">
-                {error?.message}
-              </Text>
             </Box>
-
             <Box>
               <Text variant="p1R" marginBottom="s">
-                Usuario
+                Correo
               </Text>
-              <UsernameInput
-                defaultValue={data?.username}
-                onLoading={setIsUsernameValidationLoading}
+              <TextInput
+                value={data?.email}
+                onPressIn={() => Alert.alert("No es posible editar el correo")}
+                color="grayscale.500"
+                editable={false}
+                containerProps={{ height: 40, paddingLeft: "s" }}
               />
             </Box>
-          </FormProvider>
-        </Box>
-        <Button
-          title={saveButton.title}
-          variant={saveButton.variant}
-          alignSelf={"center"}
-          marginTop="s"
-          onPress={onSubmit}
-          isLoading={loading}
-          disabled={
-            loading ||
-            (!form.formState.isDirty && !selectedImage) ||
-            isSuccess ||
-            isUsernameValidationLoading
-          }
-        />
-      </BoxWithKeyboard>
-    </ScrollView>
+            <FormProvider {...form}>
+              <Box marginTop={"m"}>
+                <Text variant="p1R" marginBottom="s">
+                  Nombre
+                </Text>
+                <TextInput
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  containerProps={{ height: 40, paddingLeft: "s" }}
+                />
+                <Text marginTop={"xs"} color="semantic.error">
+                  {error?.message}
+                </Text>
+              </Box>
+
+              <Box>
+                <Text variant="p1R" marginBottom="s">
+                  Usuario
+                </Text>
+                <UsernameInput
+                  defaultValue={data?.username}
+                  onLoading={setIsUsernameValidationLoading}
+                />
+              </Box>
+            </FormProvider>
+          </Box>
+          <Button
+            title={saveButton.title}
+            variant={saveButton.variant}
+            alignSelf={"center"}
+            marginTop="s"
+            onPress={onSubmit}
+            isLoading={loading}
+            disabled={
+              loading ||
+              (!form.formState.isDirty && !selectedImage) ||
+              isSuccess ||
+              isUsernameValidationLoading
+            }
+          />
+        </BoxWithKeyboard>
+      </ScrollView>
+    </KeyboardAvoidingBox>
   );
 };
 

@@ -85,7 +85,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
     >
-      <BoxWithKeyboard flex={1} behavior={undefined} padding={"m"}>
+      <BoxWithKeyboard padding={"m"}>
         <Text variant="h3" marginBottom="s">
           Buscar usuario
         </Text>

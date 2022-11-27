@@ -51,7 +51,6 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
         alignItems="center"
         padding="m"
         paddingTop="xxxl"
-        disableAvoiding
       >
         <AnimatedBackground />
         <Box flex={0.25} justifyContent="space-between">

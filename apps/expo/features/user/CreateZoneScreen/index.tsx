@@ -82,7 +82,7 @@ const CreateZoneScreen: FC<Props> = () => {
 
   return (
     <Screen safeAreaDisabled padding="m">
-      <BoxWithKeyboard behavior="height">
+      <BoxWithKeyboard>
         <Box marginVertical={"ll"}>
           <Text variant="h3">Crea una nueva zona pública de escalada</Text>
         </Box>
