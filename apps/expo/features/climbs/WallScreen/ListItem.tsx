@@ -20,6 +20,7 @@ import {
   FadeOutLeft,
   Layout,
   runOnJS,
+  SharedValue,
   SlideOutLeft,
   useAnimatedStyle,
   useDerivedValue,
@@ -37,6 +38,8 @@ interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
   index: number;
   allowEdit?: boolean;
   containerProps?: Omit<ComponentProps<typeof A.Box>, "key">;
+  routeName: string;
+  hasFailed?: SharedValue<boolean>;
 }
 
 const SNAP_PERCENTAGE = 0.2;
@@ -49,8 +52,7 @@ const WITH_SPRING_CONFIG: WithSpringConfig = {
 };
 
 export interface ListItemRef extends Partial<RefObject<GestureType>> {
-  undoDelete: () => void;
-  undoEdit: () => void;
+  reset: () => void;
 }
 
 const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
@@ -60,17 +62,16 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
   const width = useSharedValue(0);
   const translateX = useSharedValue(0);
 
+  const reset = useCallback(() => {
+    translateX.value = withSpring(0, WITH_SPRING_CONFIG);
+  }, [translateX]);
+
   useImperativeHandle(
     ref,
     () => ({
-      undoDelete: () => {
-        translateX.value = withSpring(0, WITH_SPRING_CONFIG);
-      },
-      undoEdit: () => {
-        translateX.value = withSpring(0, WITH_SPRING_CONFIG);
-      },
+      reset,
     }),
-    [translateX],
+    [reset],
   );
 
   const rangeLeft = useDerivedValue(() => {
@@ -111,6 +112,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       Gesture.Pan()
         .enabled(!!allowEdit)
         .manualActivation(true)
+        .shouldCancelWhenOutside(true)
         .onTouchesDown((e) => {
           touchStart.value = {
             x: e.changedTouches[0].x,
@@ -121,11 +123,14 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
         .onTouchesMove((e, state) => {
           if (Date.now() - touchStart.value.time > TIME_TO_ACTIVATE_PAN) {
             state.activate();
+            if (props.hasFailed) props.hasFailed.value = false;
           } else if (
             Math.abs(touchStart.value.x - e.changedTouches[0].x) > TOUCH_SLOP ||
             Math.abs(touchStart.value.y - e.changedTouches[0].y) > TOUCH_SLOP
           ) {
+            translateX.value = withSpring(0, WITH_SPRING_CONFIG);
             state.fail();
+            if (props.hasFailed) props.hasFailed.value = true;
           }
         })
         .onChange((e) => {
@@ -167,6 +172,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       allowEdit,
       deleteFnProp,
       editFnProp,
+      props.hasFailed,
       rangeLeft.value.first,
       rangeLeft.value.second,
       rangeLeft.value.third,
@@ -225,6 +231,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       >
         <A.Pressable
           style={[rightStyle]}
+          collapsable={false}
           backgroundColor="semantic.error"
           borderRadius={5}
           position="absolute"
@@ -254,6 +261,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           layout={FadeOutLeft}
           onPress={() => {
             onEdit && onEdit();
+            reset();
           }}
           justifyContent="center"
           paddingLeft="s"
@@ -264,6 +272,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
         <A.ListItem
           layout={FadeOutLeft}
           style={[props.style, style]}
+          collapsable={false}
           zIndex={1000}
           onLayout={(e) => {
             width.value = e.nativeEvent.layout.width;

@@ -16,7 +16,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { Route } from "@prisma/client";
 import { useRoute } from "@react-navigation/native";
 import parseGrade, { ParseGrade } from "@utils/parseGrade";
-import { createRef, FC, RefObject, useMemo, useRef } from "react";
+import { createRef, FC, RefObject, useCallback, useMemo, useRef } from "react";
 import { Alert } from "react-native";
 
 type NavigationRoute =
@@ -95,7 +95,7 @@ const RoutesList: FC = () => {
     grade?: ParseGrade;
     unknownName: Route["unknownName"];
   }) => {
-    listItemRef?.current?.undoEdit();
+    listItemRef?.current?.reset();
     rootNavigation.navigate(RootNavigationRoutes.Climbs, {
       screen: ClimbsNavigationRoutes.AddRoute,
       params: { ...params, zoneId, wallId },
@@ -108,7 +108,7 @@ const RoutesList: FC = () => {
       {
         text: "Cancelar",
         onPress: () => {
-          ref?.current?.undoDelete();
+          ref?.current?.reset();
         },
         style: "cancel",
       },
@@ -118,6 +118,12 @@ const RoutesList: FC = () => {
     () => data?.routes.length || 0,
     [data?.routes.length],
   );
+
+  const reset = useCallback(() => {
+    data?.routes.forEach((route) => {
+      route.routeRef?.current?.reset();
+    });
+  }, [data?.routes]);
 
   if (isLoadingWall) return null;
   if (!data?.routes || routesCount === 0)
@@ -137,6 +143,7 @@ const RoutesList: FC = () => {
   return (
     <ScrollView.Gesture
       flex={1}
+      onScrollBeginDrag={reset}
       refreshControl={refresh}
       paddingHorizontal="m"
       paddingTop="m"
@@ -152,6 +159,7 @@ const RoutesList: FC = () => {
           <ListItem
             key={item.id}
             ref={item.routeRef}
+            routeName={item.name}
             index={index}
             containerProps={{
               marginBottom: index === routesCount - 1 ? "xl" : "none",
