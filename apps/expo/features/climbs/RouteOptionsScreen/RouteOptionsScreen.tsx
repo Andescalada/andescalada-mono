@@ -44,8 +44,6 @@ const EditOptions: FC<Props> = ({
   const { name, id, kind, RouteGrade, unknownName, position, Wall } =
     route.data;
 
-  console.log(Wall);
-
   return (
     <Screen safeAreaDisabled padding="m">
       <Text variant="h1" marginBottom="m">
