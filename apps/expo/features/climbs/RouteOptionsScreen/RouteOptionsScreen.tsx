@@ -80,7 +80,17 @@ const EditOptions: FC<Props> = ({
           Editar topo
         </ListItemOptions>
       )}
-      <ListItemOptions>Agregar extensión</ListItemOptions>
+      <ListItemOptions
+        onPress={() =>
+          navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+            wallId,
+            zoneId,
+            extendedRouteId: id,
+          })
+        }
+      >
+        Agregar extensión
+      </ListItemOptions>
     </Screen>
   );
 };

@@ -24,7 +24,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
@@ -40,10 +40,27 @@ const schema = routeSchema
   );
 
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId, ...rest } = route.params;
+  const { wallId, extendedRouteId, ...rest } = route.params;
   const utils = trpc.useContext();
 
   const rootNavigation = useRootNavigation();
+
+  const isExtension = useMemo(() => !!extendedRouteId, [extendedRouteId]);
+
+  const inputLabel = useMemo(
+    () => (isExtension ? "Nombre de la extensión" : "Nombre de la ruta"),
+    [isExtension],
+  );
+
+  const title = useMemo(() => {
+    if (isExtension) {
+      return "Añadir extensión";
+    }
+    if (rest.id) {
+      return "Editar ruta";
+    }
+    return "Añadir ruta";
+  }, [isExtension, rest.id]);
 
   const mainTopo = trpc.walls.mainTopo.useQuery({
     zoneId: rest.zoneId,
@@ -67,6 +84,26 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       utils.walls.byId.invalidate({ wallId });
     },
   });
+
+  const { mutate: mutateExtension, isLoading: isExtensionLoading } =
+    trpc.routes.addExtension.useMutation({
+      onSuccess: ({ id, position }) => {
+        if (mainTopo.data) {
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.DrawRoute,
+            params: {
+              route: { id, position },
+              wallId,
+              topoId: mainTopo.data,
+            },
+          });
+        } else {
+          navigation.goBack();
+        }
+        utils.walls.byId.invalidate({ wallId });
+      },
+    });
+
   const { mutate: mutateEdit, isLoading: isLoadingEdit } =
     trpc.routes.edit.useMutation({
       onSuccess: () => {
@@ -131,6 +168,17 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       });
       return;
     }
+    if (!!extendedRouteId) {
+      mutateExtension({
+        name: input.name,
+        kind: input.kind,
+        grade,
+        unknownName: input.unknownName,
+        zoneId: rest.zoneId,
+        extendedRouteId,
+      });
+      return;
+    }
     mutate({
       wallId,
       name: input.name,
@@ -162,8 +210,6 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const theme = useAppTheme();
 
-  // const [unknownName, setUnknownName] = useState(false);
-
   const onUnknownNamePress = () => {
     if (unknownName) {
       onChange("");
@@ -180,14 +226,15 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     <Screen safeAreaDisabled={Platform.OS !== "android"}>
       <ScrollView
         padding="m"
+        paddingTop="l"
         flex={1}
         marginBottom={"l"}
         onResponderGrant={Keyboard.dismiss}
       >
-        <Text variant="h2">{rest.id ? "Editar ruta" : "Agregar ruta"}</Text>
+        <Text variant="h1">{title}</Text>
         <Box marginTop={"m"}>
           <Text variant={"p1R"} marginBottom={"s"}>
-            Nombre de la ruta
+            {inputLabel}
           </Text>
           <Box flexDirection="row" flex={1}>
             <TextInput
@@ -266,11 +313,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             {kindError?.message}
           </Text>
         </ButtonGroup>
-        <Box>
-          <Text variant={"p1R"} marginBottom={"s"}>
-            Grado
-          </Text>
-          {kindWatch && (
+        {kindWatch && (
+          <Box>
+            <Text variant={"p1R"} marginBottom={"s"}>
+              Grado
+            </Text>
             <Picker
               onValueChange={onGradeChange}
               selectedValue={gradeValue}
@@ -306,13 +353,13 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               />
               <Picker.Item />
             </Picker>
-          )}
-        </Box>
+          </Box>
+        )}
         <Button
           variant="primary"
           title={rest.name ? "Editar" : "Agregar"}
           onPress={onSubmit}
-          isLoading={isLoading || isLoadingEdit}
+          isLoading={isLoading || isLoadingEdit || isExtensionLoading}
           marginVertical="s"
         />
         <SemanticButton

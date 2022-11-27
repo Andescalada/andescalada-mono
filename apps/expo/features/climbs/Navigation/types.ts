@@ -49,6 +49,7 @@ export type ClimbsNavigationNavigationParamList = {
     grade?: ParseGrade;
     id?: Route["id"];
     unknownName?: Route["unknownName"];
+    extendedRouteId?: Route["id"];
   };
   [ClimbsNavigationRoutes.RouteOptions]: {
     routeId: Route["id"];
