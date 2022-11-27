@@ -2841,14 +2841,6 @@
     react-reconciler "^0.27.0"
     ws "^8.11.0"
 
-"@shopify/react-native-skia@0.1.141":
-  version "0.1.141"
-  resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.141.tgz#6af1163785ce8274eb4924e5c46673cd87e343d2"
-  integrity sha512-jiCSsa930y7i1t4dwgQcD4+Z0/BMN4+NIdFsyzagFrr4EBENO9/ECFDGVRvchUD2cn/NSZwtHq83PiqQjY6Agg==
-  dependencies:
-    canvaskit-wasm "^0.35.0"
-    react-reconciler "^0.26.2"
-
 "@shopify/react-native-skia@^0.1.157":
   version "0.1.157"
   resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.157.tgz#85f7f5859aa06639fc780fb57af19e55ad10da35"
@@ -3423,11 +3415,6 @@
   dependencies:
     "@urql/core" ">=2.3.1"
     wonka "^4.0.14"
-
-"@webgpu/types@^0.1.20":
-  version "0.1.23"
-  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.23.tgz#de1f1a9b4c6cc91c1b7b45198d19fd912076a738"
-  integrity sha512-SxHrhOTH1C7EcbnVZ3DzzliQs10QJO19GoUtzVJLIqDD0VeAdtxLEoNnP5zkCDKyMFvx3ptU7jESdaOIUqAuJg==
 
 "@xmldom/xmldom@~0.7.0":
   version "0.7.9"
@@ -4346,13 +4333,6 @@ canvaskit-wasm@0.36.1:
   version "0.36.1"
   resolved "https://registry.yarnpkg.com/canvaskit-wasm/-/canvaskit-wasm-0.36.1.tgz#341df38ce7894a925064beaf9eeacbf7699c6633"
   integrity sha512-6IHlBBc9zDQBTHiGuz4Rf0j/P/ulW24q/yW+QY517e7jwQoM0nJ1+L3h4wUpfC4eQrcpVPQY8ZFbqMbUCzDxTw==
-
-canvaskit-wasm@^0.35.0:
-  version "0.35.0"
-  resolved "https://registry.yarnpkg.com/canvaskit-wasm/-/canvaskit-wasm-0.35.0.tgz#90afc625958367f4a27907fb8c03240045933a46"
-  integrity sha512-y/eTJ4xoIBkKzD37aQAvBL451LIp9YiB8Vs1e8J3Qwe7WcTHsAD00E5WocPzZo+0+XaSCkJ6cS/BxBDXTSnW1g==
-  dependencies:
-    "@webgpu/types" "^0.1.20"
 
 caseless@^0.12.0:
   version "0.12.0"
@@ -10418,15 +10398,6 @@ react-query-native-devtools@^4.0.0:
   dependencies:
     flatted "^3.2.4"
 
-react-reconciler@^0.26.2:
-  version "0.26.2"
-  resolved "https://registry.yarnpkg.com/react-reconciler/-/react-reconciler-0.26.2.tgz#bbad0e2d1309423f76cf3c3309ac6c96e05e9d91"
-  integrity sha512-nK6kgY28HwrMNwDnMui3dvm3rCFjZrcGiuwLc5COUipBK5hWHLOxMJhSnSomirqWwjPBJKV1QcbkI0VJr7Gl1Q==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    scheduler "^0.20.2"
-
 react-reconciler@^0.27.0:
   version "0.27.0"
   resolved "https://registry.yarnpkg.com/react-reconciler/-/react-reconciler-0.27.0.tgz#360124fdf2d76447c7491ee5f0e04503ed9acf5b"
@@ -10908,14 +10879,6 @@ saxes@^5.0.1:
   integrity sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==
   dependencies:
     xmlchars "^2.2.0"
-
-scheduler@^0.20.2:
-  version "0.20.2"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
-  integrity sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 scheduler@^0.21.0:
   version "0.21.0"
