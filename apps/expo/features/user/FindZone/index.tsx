@@ -2,7 +2,7 @@ import zone from "@andescalada/api/schemas/zone";
 import {
   ActivityIndicator,
   Box,
-  BoxWithKeyboard,
+  KeyboardDismiss,
   Pressable,
   Text,
   TextInput,
@@ -75,7 +75,7 @@ const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
     >
-      <BoxWithKeyboard padding={"m"}>
+      <KeyboardDismiss padding={"m"}>
         <Text variant="h3" marginBottom="s">
           Buscar zona
         </Text>
@@ -131,7 +131,7 @@ const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
             )}
           </Box>
         )}
-      </BoxWithKeyboard>
+      </KeyboardDismiss>
     </BottomSheet>
   );
 };

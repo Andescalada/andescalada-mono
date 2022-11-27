@@ -3,7 +3,7 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
   ActivityIndicator,
   Box,
-  BoxWithKeyboard,
+  KeyboardDismiss,
   Pressable,
   Text,
   TextInput,
@@ -85,7 +85,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
     >
-      <BoxWithKeyboard padding={"m"}>
+      <KeyboardDismiss padding={"m"}>
         <Text variant="h3" marginBottom="s">
           Buscar usuario
         </Text>
@@ -156,7 +156,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
             />
           )}
         </Box>
-      </BoxWithKeyboard>
+      </KeyboardDismiss>
     </BottomSheet>
   );
 };

@@ -1,7 +1,7 @@
 import {
   AnimatedBackground,
   Box,
-  BoxWithKeyboard,
+  KeyboardDismiss,
   Screen,
   Text,
   TextInput,
@@ -46,7 +46,7 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
 
   return (
     <Screen>
-      <BoxWithKeyboard
+      <KeyboardDismiss
         justifyContent="flex-start"
         alignItems="center"
         padding="m"
@@ -81,7 +81,7 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
             )}
           </Box>
         </Box>
-      </BoxWithKeyboard>
+      </KeyboardDismiss>
     </Screen>
   );
 };

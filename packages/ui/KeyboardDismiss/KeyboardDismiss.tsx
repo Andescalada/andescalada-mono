@@ -5,7 +5,7 @@ import Pressable from "../Pressable/Pressable";
 
 type Props = ComponentProps<typeof Pressable>;
 
-const BoxWithKeyboard: FC<Props> = ({ children, ...props }) => {
+const KeyboardDismiss: FC<Props> = ({ children, ...props }) => {
   return (
     <Pressable onPress={Keyboard.dismiss} flex={1} {...props}>
       {children}
@@ -13,4 +13,4 @@ const BoxWithKeyboard: FC<Props> = ({ children, ...props }) => {
   );
 };
 
-export default BoxWithKeyboard;
+export default KeyboardDismiss;

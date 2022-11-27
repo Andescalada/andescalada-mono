@@ -2,9 +2,9 @@ import imageSchema from "@andescalada/api/schemas/image";
 import user from "@andescalada/api/schemas/user";
 import {
   Box,
-  BoxWithKeyboard,
   Button,
   KeyboardAvoidingBox,
+  KeyboardDismiss,
   ScrollView,
   Text,
   TextInput,
@@ -107,7 +107,7 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
   return (
     <KeyboardAvoidingBox>
       <ScrollView margin={{ mobile: "m", tablet: "xxl" }}>
-        <BoxWithKeyboard>
+        <KeyboardDismiss>
           <Box marginVertical={"ll"}>
             <Text variant="h3">Edita tu información personal</Text>
           </Box>
@@ -173,7 +173,7 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
               isUsernameValidationLoading
             }
           />
-        </BoxWithKeyboard>
+        </KeyboardDismiss>
       </ScrollView>
     </KeyboardAvoidingBox>
   );

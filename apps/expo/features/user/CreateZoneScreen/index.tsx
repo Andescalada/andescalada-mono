@@ -1,8 +1,8 @@
 import zone from "@andescalada/api/schemas/zone";
 import {
   Box,
-  BoxWithKeyboard,
   Button,
+  KeyboardDismiss,
   Pressable,
   Screen,
   Text,
@@ -82,7 +82,7 @@ const CreateZoneScreen: FC<Props> = () => {
 
   return (
     <Screen safeAreaDisabled padding="m">
-      <BoxWithKeyboard>
+      <KeyboardDismiss>
         <Box marginVertical={"ll"}>
           <Text variant="h3">Crea una nueva zona pública de escalada</Text>
         </Box>
@@ -142,7 +142,7 @@ const CreateZoneScreen: FC<Props> = () => {
           disabled={isLoading || !user || !isDirty || isSuccess}
           marginVertical="m"
         />
-      </BoxWithKeyboard>
+      </KeyboardDismiss>
       <FindUser ref={bottomSheetRef} onSetUser={setUser} />
     </Screen>
   );

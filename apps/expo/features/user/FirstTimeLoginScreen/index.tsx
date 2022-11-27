@@ -2,9 +2,9 @@ import imageSchema from "@andescalada/api/schemas/image";
 import user from "@andescalada/api/schemas/user";
 import {
   Box,
-  BoxWithKeyboard,
   Button,
   KeyboardAvoidingBox,
+  KeyboardDismiss,
   Screen,
   Text,
   TextInput,
@@ -61,7 +61,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   return (
     <KeyboardAvoidingBox>
       <Screen margin={{ mobile: "m", tablet: "xxl" }}>
-        <BoxWithKeyboard>
+        <KeyboardDismiss>
           <Box marginVertical={"ll"}>
             <Text variant={"h1"}>Comencemos</Text>
             <Text>
@@ -109,7 +109,7 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               loading || !form.formState.isDirty || !form.formState.isValid
             }
           />
-        </BoxWithKeyboard>
+        </KeyboardDismiss>
       </Screen>
     </KeyboardAvoidingBox>
   );

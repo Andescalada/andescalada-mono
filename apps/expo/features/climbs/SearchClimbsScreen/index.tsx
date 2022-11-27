@@ -1,7 +1,7 @@
 import {
   BackButton,
   Box,
-  BoxWithKeyboard,
+  KeyboardDismiss,
   Screen,
   TextInput,
 } from "@andescalada/ui";
@@ -32,7 +32,7 @@ const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
 
   return (
     <Screen padding="m">
-      <BoxWithKeyboard flex={1}>
+      <KeyboardDismiss flex={1}>
         <Box
           flexDirection="row"
           alignItems="center"
@@ -70,7 +70,7 @@ const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
         <Box marginTop="s">
           <Results isLoading={search.isLoading} data={search.data} />
         </Box>
-      </BoxWithKeyboard>
+      </KeyboardDismiss>
     </Screen>
   );
 };
