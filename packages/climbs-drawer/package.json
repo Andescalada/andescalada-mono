@@ -20,7 +20,7 @@
   "devDependencies": {
     "@shopify/restyle": "*",
     "react-native-redash": "*",
-    "@shopify/react-native-skia": "0.1.141",
+    "@shopify/react-native-skia": "*",
     "@types/react-native": "~0.69.5",
     "react-native-reanimated": "*"
   }

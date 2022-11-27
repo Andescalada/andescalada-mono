@@ -2,7 +2,6 @@ import {
   Canvas,
   SkiaMutableValue,
   useMultiTouchHandler,
-  useValue,
 } from "@shopify/react-native-skia";
 import { FC } from "react";
 import { Dimensions, Platform } from "react-native";
