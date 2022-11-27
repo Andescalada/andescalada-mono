@@ -27,7 +27,6 @@ import {
 import { useResponsiveProp } from "@shopify/restyle";
 import { logoutAuth0 } from "@store/auth";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
-import featureFlags from "@utils/featureFlags";
 import { useCallback, useMemo } from "react";
 import { Alert, StyleSheet } from "react-native";
 
