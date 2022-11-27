@@ -60,6 +60,45 @@ export const routesRouter = t.router({
 
       return newRoute;
     }),
+  addExtension: protectedZoneProcedure
+    .input(
+      routeSchema.schema
+        .omit({ wallId: true })
+        .merge(routeSchema.extensionParams),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("Create")) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const extendedRoute = await ctx.prisma.route.findUnique({
+        where: { id: input.extendedRouteId },
+      });
+
+      if (!extendedRoute) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `No route with id '${input.extendedRouteId}'`,
+        });
+      }
+
+      return ctx.prisma.route.create({
+        data: {
+          name: input.name,
+          slug: slug(input.name),
+          Wall: { connect: { id: extendedRoute.wallId } },
+          kind: input.kind,
+          unknownName: input.unknownName,
+          position: extendedRoute.position,
+          RouteGrade: {
+            create: { grade: input.grade.grade, project: input.grade.project },
+          },
+          ExtendedRoute: { connect: { id: input.extendedRouteId } },
+          isExtension: true,
+          Author: { connect: { email: ctx.user.email } },
+        },
+      });
+    }),
   updateOrCreatePath: protectedProcedure
     .input(
       z.object({

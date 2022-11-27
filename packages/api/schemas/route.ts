@@ -20,4 +20,8 @@ const schema = z.object({
 
 const routeId = z.object({ routeId: z.string() });
 
-export default { schema, routeId };
+const extensionParams = z.object({
+  extendedRouteId: z.string(),
+});
+
+export default { schema, routeId, extensionParams };
