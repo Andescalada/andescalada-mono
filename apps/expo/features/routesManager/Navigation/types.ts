@@ -5,11 +5,24 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum RoutesManagerNavigationRoutes {
   DrawRoute = "DrawRoute",
   TopoViewer = "TopoViewer",
+  RouteExtension = "RouteExtension",
 }
 
 export type RoutesManagerNavigationParamList = {
   [RoutesManagerNavigationRoutes.DrawRoute]: {
-    route: { id: Route["id"]; position: Route["position"] };
+    route: {
+      id: Route["id"];
+      position: Route["position"];
+    };
+    wallId: Wall["id"];
+    topoId: Topo["id"];
+  };
+  [RoutesManagerNavigationRoutes.RouteExtension]: {
+    route: {
+      id: Route["id"];
+      position: Route["position"];
+      extendedRouteId?: Route["extendedRouteId"];
+    };
     wallId: Wall["id"];
     topoId: Topo["id"];
   };

@@ -1,5 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
+  pathToArray,
   SkiaRouteCanvas,
   SkiaRoutePath,
   SkiaRoutePathDrawer,
@@ -19,11 +20,12 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import useTopoImage from "@hooks/useTopoImage";
 import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
-type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
+type Props =
+  RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteExtension>;
 
 const DrawRoute: FC<Props> = ({
   route: {
@@ -32,6 +34,24 @@ const DrawRoute: FC<Props> = ({
   navigation,
 }) => {
   const theme = useAppTheme();
+
+  const extendedRoute =
+    !!routeParams.extendedRouteId &&
+    trpc.routes.byId.useQuery(routeParams.extendedRouteId);
+
+  const extendedRoutePath = useMemo(() => {
+    if (!extendedRoute) return undefined;
+    const prevPath = extendedRoute?.data?.Wall.topos.find(
+      (t) => t.id === topoId,
+    )?.RoutePath[0].path;
+
+    if (prevPath) {
+      const arrayPath = pathToArray(prevPath).pop();
+      if (!arrayPath) return undefined;
+      return `${arrayPath[0]},${arrayPath[1]}`;
+    }
+    return undefined;
+  }, [extendedRoute, topoId]);
 
   const [showConfig, setShowConfig] = useState(false);
 
@@ -86,7 +106,11 @@ const DrawRoute: FC<Props> = ({
     setCanSave(false);
   };
 
-  if (route && isImageLoaded)
+  if (
+    route &&
+    isImageLoaded &&
+    (!routeParams.extendedRouteId || !!extendedRoutePath)
+  )
     return (
       <Screen safeAreaDisabled justifyContent="center">
         <SkiaRouteCanvas
@@ -98,10 +122,10 @@ const DrawRoute: FC<Props> = ({
           <SkiaRoutePathDrawer
             coords={coords}
             ref={routeRef}
-            path={topos?.selectedRoute?.path}
+            path={topos?.selectedRoute?.path || extendedRoutePath}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
-            withStart={!!topos?.selectedRoute?.path}
+            withStart={!!topos?.selectedRoute?.path || !!extendedRoutePath}
             withEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}

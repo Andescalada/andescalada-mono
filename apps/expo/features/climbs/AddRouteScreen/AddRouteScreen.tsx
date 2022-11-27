@@ -92,7 +92,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
             screen: RoutesManagerNavigationRoutes.DrawRoute,
             params: {
-              route: { id, position },
+              route: { id, position, extendedRouteId },
               wallId,
               topoId: mainTopo.data,
             },

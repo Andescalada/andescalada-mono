@@ -15,7 +15,20 @@ export const routesRouter = t.router({
       where: { id: input },
       include: {
         RouteGrade: true,
-        Wall: { select: { topos: { select: { id: true } } } },
+        Wall: {
+          select: {
+            topos: {
+              select: {
+                id: true,
+                RoutePath: {
+                  where: { routeId: input },
+                  select: { path: true },
+                  take: 1,
+                },
+              },
+            },
+          },
+        },
       },
     });
     if (!route || route.isDeleted !== SoftDelete.NotDeleted) {

@@ -41,8 +41,16 @@ const EditOptions: FC<Props> = ({
     );
   }
 
-  const { name, id, kind, RouteGrade, unknownName, position, Wall } =
-    route.data;
+  const {
+    name,
+    id,
+    kind,
+    RouteGrade,
+    unknownName,
+    position,
+    Wall,
+    extendedRouteId,
+  } = route.data;
 
   return (
     <Screen safeAreaDisabled padding="m">
