@@ -3,15 +3,11 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum RoutesManagerNavigationRoutes {
-  SelectRouteToDraw = "SelectRouteToDraw",
   DrawRoute = "DrawRoute",
   TopoViewer = "TopoViewer",
 }
 
 export type RoutesManagerNavigationParamList = {
-  [RoutesManagerNavigationRoutes.SelectRouteToDraw]: {
-    wallId: Wall["id"];
-  };
   [RoutesManagerNavigationRoutes.DrawRoute]: {
     route: { id: Route["id"]; position: Route["position"] };
     wallId: Wall["id"];

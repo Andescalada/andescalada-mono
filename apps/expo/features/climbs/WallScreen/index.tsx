@@ -10,11 +10,9 @@ import {
 } from "@features/climbs/Navigation/types";
 import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
-import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
-import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert } from "react-native";
@@ -79,16 +77,6 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           wallId,
           zoneId,
         }),
-      "Editar Topo": {
-        action: () =>
-          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-            screen: RoutesManagerNavigationRoutes.SelectRouteToDraw,
-            params: {
-              wallId,
-            },
-          }),
-        hide: !data || data.topos.length === 0,
-      },
       "Cambiar Nombre": () => {
         headerMethods.setEditing(true);
       },
@@ -113,7 +101,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         );
       },
     },
-    { destructiveButtonIndex: !data || data.topos.length === 0 ? 2 : 3 },
+    { destructiveButtonIndex: 2 },
   );
 
   return (

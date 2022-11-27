@@ -133,7 +133,7 @@ const RoutesList: FC = () => {
     });
   }, [data?.routes]);
 
-  const [touchedRouteId, setTouchRouteId] = useState<string | null>(null);
+  const [_, setTouchRouteId] = useState<string | null>(null);
 
   if (isLoadingWall) return null;
   if (!data?.routes || routesCount === 0)
