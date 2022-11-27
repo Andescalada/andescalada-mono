@@ -71,7 +71,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     onSuccess: ({ id, position }) => {
       if (mainTopo.data) {
         rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-          screen: RoutesManagerNavigationRoutes.DrawRoute,
+          screen: RoutesManagerNavigationRoutes.RouteDrawer,
           params: {
             route: { id, position },
             wallId,
@@ -90,7 +90,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       onSuccess: ({ id, position }) => {
         if (mainTopo.data) {
           rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-            screen: RoutesManagerNavigationRoutes.DrawRoute,
+            screen: RoutesManagerNavigationRoutes.RouteDrawer,
             params: {
               route: { id, position, extendedRouteId },
               wallId,

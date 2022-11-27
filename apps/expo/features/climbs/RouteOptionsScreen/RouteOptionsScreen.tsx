@@ -76,7 +76,7 @@ const EditOptions: FC<Props> = ({
         <ListItemOptions
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-              screen: RoutesManagerNavigationRoutes.DrawRoute,
+              screen: RoutesManagerNavigationRoutes.RouteDrawer,
               params: {
                 route: { id, position },
                 wallId,

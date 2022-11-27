@@ -13,7 +13,7 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
-import Instructions from "@features/routesManager/RouteDrawer/Instructions";
+import Instructions from "@features/routesManager/RouteDrawerScreen/Instructions";
 import { useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
@@ -23,7 +23,8 @@ import { FC, useCallback, useState } from "react";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
-type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.DrawRoute>;
+type Props =
+  RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteDrawer>;
 
 const DrawRoute: FC<Props> = ({
   route: {

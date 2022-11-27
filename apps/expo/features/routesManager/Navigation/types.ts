@@ -3,13 +3,13 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum RoutesManagerNavigationRoutes {
-  DrawRoute = "DrawRoute",
+  RouteDrawer = "RouteDrawer",
   TopoViewer = "TopoViewer",
   RouteExtension = "RouteExtension",
 }
 
 export type RoutesManagerNavigationParamList = {
-  [RoutesManagerNavigationRoutes.DrawRoute]: {
+  [RoutesManagerNavigationRoutes.RouteDrawer]: {
     route: {
       id: Route["id"];
       position: Route["position"];

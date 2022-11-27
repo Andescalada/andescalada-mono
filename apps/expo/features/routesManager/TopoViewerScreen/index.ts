@@ -1,1 +1,1 @@
-export { default as TopoViewerScreen } from "./TopoViewerScreen";
+export { default } from "./TopoViewerScreen";
