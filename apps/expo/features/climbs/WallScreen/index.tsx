@@ -11,7 +11,6 @@ import {
 import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
 import useOptionsSheet from "@hooks/useOptionsSheet";
-import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";
@@ -23,8 +22,6 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId, zoneId, sectorId, wallName } = route.params;
-
-  const { data } = trpc.walls.byId.useQuery({ wallId });
 
   const editWall = trpc.walls.edit.useMutation();
   const methods = useZodForm({ schema });
@@ -54,7 +51,6 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     },
   );
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
-  const rootNavigation = useRootNavigation();
 
   const utils = trpc.useContext();
   const deleteWall = trpc.walls.delete.useMutation({
