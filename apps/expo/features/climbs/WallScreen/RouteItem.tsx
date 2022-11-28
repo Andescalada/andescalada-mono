@@ -162,8 +162,12 @@ const RouteItem = ({
       onLeftAction={onOptions}
       onPress={onPress}
     >
-      <Text variant="p2R">{routeTitle}</Text>
-      <Box flexDirection="row">
+      <Box flex={0.75}>
+        <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
+          {routeTitle}
+        </Text>
+      </Box>
+      <Box flexDirection="row" flex={0.25}>
         <RouteKindBadge kind={item.kind} />
         <Text variant="p2R">{grade}</Text>
       </Box>
