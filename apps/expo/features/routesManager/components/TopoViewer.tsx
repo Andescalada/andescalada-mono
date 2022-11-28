@@ -58,6 +58,7 @@ const TopoViewer: FC<Props> = ({
                     : theme.colors.routePath
                 }
                 scale={fitted.scale}
+                routeFromTheGround={!path.Route.extendedRouteId}
                 strokeWidth={strokeWidth}
               />
             );

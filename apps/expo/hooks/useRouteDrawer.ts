@@ -26,6 +26,8 @@ const useRouteDrawer = ({ routeId, position, topoId, wallId }: Args) => {
 
   const utils = trpc.useContext();
 
+  const [showConfig, setShowConfig] = useState(false);
+
   const { data } = trpc.walls.byId.useQuery({ wallId });
 
   const [route, setRoute] = useState<SelectedRoute>({
@@ -103,6 +105,8 @@ const useRouteDrawer = ({ routeId, position, topoId, wallId }: Args) => {
     onFinishOrSave,
     route,
     routeRef,
+    showConfig,
+    setShowConfig,
   };
 };
 

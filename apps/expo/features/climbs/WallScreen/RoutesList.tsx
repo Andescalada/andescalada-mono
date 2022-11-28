@@ -103,7 +103,6 @@ const RoutesList: FC = () => {
     grade?: ParseGrade;
     unknownName: Route["unknownName"];
   }) => {
-    console.log(wallId);
     listItemRef?.current?.reset();
     rootNavigation.navigate(RootNavigationRoutes.Climbs, {
       screen: ClimbsNavigationRoutes.RouteOptions,

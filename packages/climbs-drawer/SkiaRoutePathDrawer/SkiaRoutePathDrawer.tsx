@@ -33,10 +33,11 @@ interface Props {
   color?: string;
   scale?: number;
   strokeWidth?: number;
+  withoutStart?: boolean;
 }
 
 interface Ref {
-  undo: () => void;
+  undo: (softReset?: boolean) => void;
   finishRoute: (onFinish?: () => void) => void;
   reset: () => void;
   pointsToString: () => string;
@@ -52,6 +53,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     label = "?",
     color,
     scale = 1,
+    withoutStart = false,
     strokeWidth: strokeWidthProp = 1,
   },
   ref,
@@ -69,7 +71,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
       ...points.current,
       vec(coords.current.x, coords.current.y),
     ];
-    if (points.current.length > 0 && !drawStart.current) {
+    if (points.current.length > 0 && !drawStart.current && !withoutStart) {
       setHasStart(true);
       drawStart.current = true;
       start.current = points.current[0];
@@ -84,18 +86,23 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     drawEnd.current = true;
   }, [drawEnd, end, points]);
 
-  const undo = useCallback(() => {
-    if (hasEnd) {
-      setHasEnd(false);
-      drawEnd.current = false;
-    } else if (points.current && points.current.length > 1) {
-      points.current = points.current.splice(0, points.current.length - 1);
-    } else {
-      points.current = [];
-      drawStart.current = false;
-      setHasStart(false);
-    }
-  }, [drawEnd, hasEnd, points, drawStart]);
+  const undo = useCallback(
+    (softReset = false) => {
+      if (hasEnd) {
+        setHasEnd(false);
+        drawEnd.current = false;
+      } else if (points.current && points.current.length > 1) {
+        points.current = points.current.splice(0, points.current.length - 1);
+      } else if (points.current.length === 1 && softReset) {
+        points.current = [points.current[0]];
+      } else {
+        points.current = [];
+        drawStart.current = false;
+        setHasStart(false);
+      }
+    },
+    [drawEnd, hasEnd, points, drawStart],
+  );
 
   const reset = useCallback(() => {
     setHasStart(false);

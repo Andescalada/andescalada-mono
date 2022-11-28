@@ -1,34 +1,29 @@
 import { SCREEN_HEIGHT } from "@andescalada/climbs-drawer/SkiaRouteCanvas/SkiaRouteCanvas";
 import { A, Box, Text } from "@andescalada/ui";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface InstructionProps {
-  isEditing: boolean;
+  children: ReactNode;
 }
 
-const Instructions = ({ isEditing }: InstructionProps) => {
+const Instructions = ({ children }: InstructionProps) => {
   const [showInstruction, setShowInstructions] = useState(true);
+
+  const timeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (showInstruction) {
-      setTimeout(() => setShowInstructions(false), 3000);
+      timeRef.current = setTimeout(() => setShowInstructions(false), 3000);
     }
   }, [showInstruction]);
 
-  const text = useMemo(() => {
-    if (isEditing) {
-      return 'Pulsa "deshacer" para borrar el último punto o "borrar" para borrar todo';
-    }
-    return "Pulsa sobre la imagen para dibujar la ruta";
-  }, [isEditing]);
-
   if (showInstruction)
     return (
-      <A.Box
+      <A.Pressable
         position="absolute"
         bottom={SCREEN_HEIGHT * 0.25}
-        backgroundColor="grayscale.transparent.50.400"
+        backgroundColor="overPhotoOverlay"
         right={16}
         left={16}
         justifyContent="center"
@@ -37,9 +32,13 @@ const Instructions = ({ isEditing }: InstructionProps) => {
         borderRadius={10}
         entering={FadeIn}
         exiting={FadeOut}
+        onPressIn={() => {
+          if (timeRef.current) clearTimeout(timeRef.current);
+          setShowInstructions(false);
+        }}
       >
-        <Text variant="p2R">{text}</Text>
-      </A.Box>
+        <Text variant="p2R">{children}</Text>
+      </A.Pressable>
     );
 
   return <Box />;

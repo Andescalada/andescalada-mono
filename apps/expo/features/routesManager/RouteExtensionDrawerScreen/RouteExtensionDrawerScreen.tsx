@@ -20,7 +20,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import useTopoImage from "@hooks/useTopoImage";
 import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo } from "react";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
@@ -41,6 +41,7 @@ const DrawRoute: FC<Props> = ({
 
   const extendedRouteStart = useMemo(() => {
     if (!extendedRoute) return undefined;
+
     const prevPath = extendedRoute?.data?.Wall.topos.find(
       (t) => t.id === topoId,
     )?.RoutePath[0].path;
@@ -51,9 +52,7 @@ const DrawRoute: FC<Props> = ({
       return `${arrayPath[0]},${arrayPath[1]}`;
     }
     return undefined;
-  }, [extendedRoute, topoId]);
-
-  const [showConfig, setShowConfig] = useState(false);
+  }, [extendedRoute, routeParams.extendedRouteId, topoId]);
 
   const { routeStrokeWidth, showRoutes } = useAppSelector(
     (state) => state.localConfig,
@@ -90,6 +89,8 @@ const DrawRoute: FC<Props> = ({
     route,
     routeRef,
     setCanSave,
+    setShowConfig,
+    showConfig,
   } = useRouteDrawer({
     position: routeParams.position,
     routeId: routeParams.id,
@@ -102,12 +103,11 @@ const DrawRoute: FC<Props> = ({
   });
 
   const onUndo = () => {
-    routeRef?.current?.undo();
+    routeRef?.current?.undo(true);
     setCanSave(false);
   };
 
   const onReset = () => {
-    console.log("onReset");
     if (!extendedRouteStart) return;
     routeRef?.current?.softReset(extendedRouteStart);
     setCanSave(false);
@@ -132,7 +132,8 @@ const DrawRoute: FC<Props> = ({
             path={topos?.selectedRoute?.path || extendedRouteStart}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
-            withStart={true}
+            withStart={false}
+            withoutStart={true}
             withEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
@@ -144,7 +145,11 @@ const DrawRoute: FC<Props> = ({
                 label={route.Route.position.toString()}
                 path={route.path}
                 scale={fitted.scale}
-                color={theme.colors.routePath}
+                color={
+                  route.routeId === routeParams.extendedRouteId
+                    ? theme.colors.drawingRoutePath
+                    : theme.colors.routePath
+                }
                 strokeWidth={routeStrokeWidth}
               />
             ))}
@@ -159,7 +164,11 @@ const DrawRoute: FC<Props> = ({
             <Ionicons name="arrow-back" size={30} />
           </Pressable>
         </Box>
-        <Instructions isEditing={!!topos?.selectedRoute?.path} />
+        <Instructions>
+          {
+            "Comienza a dibujar la extensión de la ruta, comenzará desde el punto donde termina la ruta anterior."
+          }
+        </Instructions>
         <RoutePathConfig show={showConfig} setShow={setShowConfig} />
         <DrawingTools
           canSave={canSave}

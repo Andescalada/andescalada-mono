@@ -19,7 +19,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import useTopoImage from "@hooks/useTopoImage";
 import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback } from "react";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
@@ -33,8 +33,6 @@ const DrawRoute: FC<Props> = ({
   navigation,
 }) => {
   const theme = useAppTheme();
-
-  const [showConfig, setShowConfig] = useState(false);
 
   const { routeStrokeWidth, showRoutes } = useAppSelector(
     (state) => state.localConfig,
@@ -71,6 +69,8 @@ const DrawRoute: FC<Props> = ({
     route,
     routeRef,
     setCanSave,
+    showConfig,
+    setShowConfig,
   } = useRouteDrawer({
     position: routeParams.position,
     routeId: routeParams.id,
@@ -134,7 +134,11 @@ const DrawRoute: FC<Props> = ({
             <Ionicons name="arrow-back" size={30} />
           </Pressable>
         </Box>
-        <Instructions isEditing={!!topos?.selectedRoute?.path} />
+        <Instructions>
+          {!!topos?.selectedRoute?.path
+            ? 'Pulsa "deshacer" para borrar el último punto o "borrar" para borrar todo'
+            : "Pulsa sobre la imagen para dibujar la ruta"}
+        </Instructions>
         <RoutePathConfig show={showConfig} setShow={setShowConfig} />
         <DrawingTools
           canSave={canSave}

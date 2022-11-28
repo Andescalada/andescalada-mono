@@ -70,14 +70,25 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const { mutate, isLoading } = trpc.routes.add.useMutation({
     onSuccess: ({ id, position }) => {
       if (mainTopo.data) {
-        rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-          screen: RoutesManagerNavigationRoutes.RouteDrawer,
-          params: {
-            route: { id, position },
-            wallId,
-            topoId: mainTopo.data,
-          },
-        });
+        if (isExtension) {
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
+            params: {
+              route: { id, position, extendedRouteId },
+              wallId,
+              topoId: mainTopo.data,
+            },
+          });
+        } else {
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.RouteDrawer,
+            params: {
+              route: { id, position },
+              wallId,
+              topoId: mainTopo.data,
+            },
+          });
+        }
       } else {
         navigation.goBack();
       }

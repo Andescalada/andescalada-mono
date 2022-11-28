@@ -50,12 +50,10 @@ const EditOptions: FC<Props> = ({
     position,
     Wall,
     extendedRouteId,
-    isExtension,
   } = route.data;
 
   const navigateToDrawRoute = () => {
-    if (isExtension) {
-      console.log("here");
+    if (!!extendedRouteId) {
       rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
         screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
         params: {

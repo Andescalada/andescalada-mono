@@ -1,5 +1,5 @@
 import { Group, Points } from "@shopify/react-native-skia";
-import { FC, useMemo } from "react";
+import { FC, memo, useCallback, useMemo } from "react";
 
 import usePathToPoints from "../usePathToPoints/usePathToPoints";
 import EndPointer from "./EndPointer";
@@ -11,6 +11,7 @@ interface Props {
   color?: string;
   scale?: number;
   strokeWidth?: number;
+  routeFromTheGround?: boolean;
 }
 
 const SkiaRoutePath: FC<Props> = ({
@@ -19,12 +20,28 @@ const SkiaRoutePath: FC<Props> = ({
   color = "red",
   scale = 1,
   strokeWidth: strokeWidthProp = 1,
+  routeFromTheGround = true,
 }) => {
   const { points, start, end } = usePathToPoints(path, scale);
 
   const strokeWidth = useMemo(
     () => 21.5 * scale * strokeWidthProp,
     [scale, strokeWidthProp],
+  );
+
+  const StartComponent = useCallback(
+    () =>
+      routeFromTheGround ? (
+        <StartPointer
+          c={start}
+          label={label}
+          scale={scale * strokeWidthProp}
+          color={color}
+        />
+      ) : (
+        <EndPointer c={start} color={color} scale={scale * strokeWidthProp} />
+      ),
+    [color, label, routeFromTheGround, scale, start, strokeWidthProp],
   );
 
   return (
@@ -40,14 +57,9 @@ const SkiaRoutePath: FC<Props> = ({
         strokeWidth={strokeWidth}
       />
       <EndPointer c={end} color={color} scale={scale * strokeWidthProp} />
-      <StartPointer
-        c={start}
-        label={label}
-        scale={scale * strokeWidthProp}
-        color={color}
-      />
+      {StartComponent()}
     </Group>
   );
 };
 
-export default SkiaRoutePath;
+export default memo(SkiaRoutePath);
