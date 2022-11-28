@@ -55,11 +55,11 @@
     "expo-community-flipper": "^47.0.0",
     "expo-constants": "~14.0.2",
     "expo-crypto": "~12.0.0",
-    "expo-dev-client": "~2.0.0",
+    "expo-dev-client": "~2.0.1",
     "expo-device": "~5.0.0",
     "expo-file-system": "~15.1.1",
     "expo-font": "~11.0.1",
-    "expo-image-picker": "~14.0.1",
+    "expo-image-picker": "~14.0.2",
     "expo-notifications": "~0.17.0",
     "expo-random": "~13.0.0",
     "expo-screen-orientation": "~5.0.1",
@@ -67,7 +67,7 @@
     "expo-status-bar": "~1.4.0",
     "expo-system-ui": "~2.0.1",
     "expo-tracking-transparency": "~3.0.1",
-    "expo-updates": "~0.15.5",
+    "expo-updates": "~0.15.6",
     "jwt-decode": "^3.1.2",
     "react": "18.1.0",
     "react-devtools-core": "^4.26.0",
@@ -90,7 +90,6 @@
     "rn-vertical-slider": "^2.0.2",
     "sentry-expo": "~5.0.0",
     "superjson": "^1.10.0",
-    "typescript": "^4.9.3",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
@@ -105,7 +104,7 @@
     "react-native-mmkv-flipper-plugin": "^1.0.0",
     "react-query-native-devtools": "^4.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.6.3"
+    "typescript": "^4.9.3"
   },
   "peerDependencies": {
     "react": "*",
