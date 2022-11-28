@@ -226,12 +226,11 @@ model Route {
   coAuthors       User[]      @relation("CoAuthorRoute")
   isDeleted       SoftDelete  @default(NotDeleted)
   version         Int         @default(0)
-  isExtension     Boolean?    @default(false)
-  extendedRouteId String?     @unique
+  extendedRouteId String?
   ExtendedRoute   Route?      @relation("ExtensionOf", fields: [extendedRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Extension       Route[]     @relation("ExtensionOf")
   isVariant       Boolean?    @default(false)
-  variantRouteId  String?     @unique
+  variantRouteId  String?
   VariantRoute    Route?      @relation("VariantOf", fields: [variantRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Variant         Route[]     @relation("VariantOf")
   Pitch           Pitch?
@@ -272,7 +271,7 @@ model Pitch {
   muliPitchId    String?
   isDeleted      SoftDelete  @default(NotDeleted)
   version        Int         @default(0)
-  variantPitchId String?     @unique
+  variantPitchId String?
   VariantPitch   Pitch?      @relation("VariantPitchOf", fields: [variantPitchId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Variant        Pitch[]     @relation("VariantPitchOf")
 }

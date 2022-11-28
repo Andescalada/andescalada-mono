@@ -36,7 +36,7 @@ export const wallsRouter = t.router({
 
           where: {
             isDeleted: { equals: SoftDelete.NotDeleted },
-            isExtension: false,
+            extendedRouteId: { equals: null },
           },
           select: {
             ...Route,

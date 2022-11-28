@@ -107,7 +107,6 @@ export const routesRouter = t.router({
             create: { grade: input.grade.grade, project: input.grade.project },
           },
           ExtendedRoute: { connect: { id: input.extendedRouteId } },
-          isExtension: true,
           Author: { connect: { email: ctx.user.email } },
         },
       });
