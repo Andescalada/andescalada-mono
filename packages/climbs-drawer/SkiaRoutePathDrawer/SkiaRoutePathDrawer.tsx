@@ -15,7 +15,9 @@ import {
   useState,
 } from "react";
 
-import usePathToPoints from "../usePathToPoints/usePathToPoints";
+import usePathToPoints, {
+  pathToVector,
+} from "../usePathToPoints/usePathToPoints";
 import EndPointer from "./EndPointer";
 import StartPointer from "./StartPointer";
 
@@ -38,6 +40,7 @@ interface Ref {
   finishRoute: (onFinish?: () => void) => void;
   reset: () => void;
   pointsToString: () => string;
+  softReset: (path: string) => void;
 }
 
 const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
@@ -102,6 +105,20 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     points.current = [];
   }, [drawEnd, drawStart, points]);
 
+  const softReset = useCallback(
+    (pathToReset: string) => {
+      const path = pathToVector(pathToReset, scale);
+
+      points.current = path;
+      start.current = path[0];
+      setHasStart(true);
+      setHasEnd(false);
+      drawStart.current = true;
+      drawEnd.current = false;
+    },
+    [drawEnd, drawStart, points, scale, start],
+  );
+
   const pointsToString = useCallback(() => {
     if (points.current.length < 1) return "0,0";
     const stringifyPoints = points.current
@@ -120,6 +137,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     finishRoute,
     reset,
     pointsToString,
+    softReset,
   }));
 
   return (

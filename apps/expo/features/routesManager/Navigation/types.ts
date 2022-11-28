@@ -5,7 +5,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum RoutesManagerNavigationRoutes {
   RouteDrawer = "RouteDrawer",
   TopoViewer = "TopoViewer",
-  RouteExtension = "RouteExtension",
+  RouteExtensionDrawer = "RouteExtension",
 }
 
 export type RoutesManagerNavigationParamList = {
@@ -17,7 +17,7 @@ export type RoutesManagerNavigationParamList = {
     wallId: Wall["id"];
     topoId: Topo["id"];
   };
-  [RoutesManagerNavigationRoutes.RouteExtension]: {
+  [RoutesManagerNavigationRoutes.RouteExtensionDrawer]: {
     route: {
       id: Route["id"];
       position: Route["position"];

@@ -1,26 +1,22 @@
-import { SkiaRouteRef } from "@andescalada/climbs-drawer/SkiaRoutePathDrawer/SkiaRoutePathDrawer";
 import { A, Box, Button } from "@andescalada/ui";
-import { RefObject } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface Props {
-  routeRef: RefObject<SkiaRouteRef>;
   canSave: boolean;
-  setCanSave: (canSave: boolean) => void;
   showConfig: boolean;
   setShowConfig: (show: boolean) => void;
   onFinishOrSave: () => void;
   isLoading: boolean;
   onUndo: () => void;
+  onReset: () => void;
 }
 
 const DrawingTools = ({
   showConfig,
   canSave,
-  setCanSave,
   isLoading,
   onFinishOrSave,
-  routeRef,
+  onReset,
   setShowConfig,
   onUndo,
 }: Props) => {
@@ -53,10 +49,7 @@ const DrawingTools = ({
           variant={"transparent"}
           titleVariant={"p1R"}
           marginTop="s"
-          onPress={() => {
-            routeRef?.current?.reset();
-            setCanSave(false);
-          }}
+          onPress={onReset}
         />
         <Button
           title="Config"

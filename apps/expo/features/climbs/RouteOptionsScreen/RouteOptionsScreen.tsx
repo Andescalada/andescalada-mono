@@ -50,7 +50,31 @@ const EditOptions: FC<Props> = ({
     position,
     Wall,
     extendedRouteId,
+    isExtension,
   } = route.data;
+
+  const navigateToDrawRoute = () => {
+    if (isExtension) {
+      console.log("here");
+      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+        screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
+        params: {
+          route: { id, position, extendedRouteId },
+          wallId,
+          topoId: Wall.topos[0].id,
+        },
+      });
+    } else {
+      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+        screen: RoutesManagerNavigationRoutes.RouteDrawer,
+        params: {
+          route: { id, position },
+          wallId,
+          topoId: Wall.topos[0].id,
+        },
+      });
+    }
+  };
 
   return (
     <Screen safeAreaDisabled padding="m">
@@ -73,18 +97,7 @@ const EditOptions: FC<Props> = ({
         Editar ruta
       </ListItemOptions>
       {Wall.topos.length > 0 && (
-        <ListItemOptions
-          onPress={() =>
-            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-              screen: RoutesManagerNavigationRoutes.RouteDrawer,
-              params: {
-                route: { id, position },
-                wallId,
-                topoId: Wall.topos[0].id,
-              },
-            })
-          }
-        >
+        <ListItemOptions onPress={navigateToDrawRoute}>
           Editar topo
         </ListItemOptions>
       )}

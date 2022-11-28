@@ -9,12 +9,12 @@ import { ActivityIndicator, Box, Pressable, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
+import Instructions from "@features/routesManager/components/Instructions";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
-import Instructions from "@features/routesManager/RouteDrawerScreen/Instructions";
 import { useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
@@ -25,7 +25,7 @@ import { FC, useCallback, useMemo, useState } from "react";
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
 type Props =
-  RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteExtension>;
+  RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteExtensionDrawer>;
 
 const DrawRoute: FC<Props> = ({
   route: {
@@ -39,7 +39,7 @@ const DrawRoute: FC<Props> = ({
     !!routeParams.extendedRouteId &&
     trpc.routes.byId.useQuery(routeParams.extendedRouteId);
 
-  const extendedRoutePath = useMemo(() => {
+  const extendedRouteStart = useMemo(() => {
     if (!extendedRoute) return undefined;
     const prevPath = extendedRoute?.data?.Wall.topos.find(
       (t) => t.id === topoId,
@@ -106,10 +106,17 @@ const DrawRoute: FC<Props> = ({
     setCanSave(false);
   };
 
+  const onReset = () => {
+    console.log("onReset");
+    if (!extendedRouteStart) return;
+    routeRef?.current?.softReset(extendedRouteStart);
+    setCanSave(false);
+  };
+
   if (
     route &&
     isImageLoaded &&
-    (!routeParams.extendedRouteId || !!extendedRoutePath)
+    (!routeParams.extendedRouteId || !!extendedRouteStart)
   )
     return (
       <Screen safeAreaDisabled justifyContent="center">
@@ -122,10 +129,10 @@ const DrawRoute: FC<Props> = ({
           <SkiaRoutePathDrawer
             coords={coords}
             ref={routeRef}
-            path={topos?.selectedRoute?.path || extendedRoutePath}
+            path={topos?.selectedRoute?.path || extendedRouteStart}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
-            withStart={!!topos?.selectedRoute?.path || !!extendedRoutePath}
+            withStart={true}
             withEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
@@ -159,10 +166,9 @@ const DrawRoute: FC<Props> = ({
           onFinishOrSave={onFinishOrSave}
           isLoading={isLoading}
           setShowConfig={setShowConfig}
-          setCanSave={setCanSave}
-          routeRef={routeRef}
           showConfig={showConfig}
           onUndo={onUndo}
+          onReset={onReset}
         />
       </Screen>
     );

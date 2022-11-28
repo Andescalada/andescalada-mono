@@ -8,12 +8,12 @@ import { ActivityIndicator, Box, Pressable, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
+import Instructions from "@features/routesManager/components/Instructions";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
-import Instructions from "@features/routesManager/RouteDrawerScreen/Instructions";
 import { useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
@@ -87,6 +87,11 @@ const DrawRoute: FC<Props> = ({
     setCanSave(false);
   };
 
+  const onReset = () => {
+    routeRef?.current?.reset();
+    setCanSave(false);
+  };
+
   if (route && isImageLoaded)
     return (
       <Screen safeAreaDisabled justifyContent="center">
@@ -136,10 +141,9 @@ const DrawRoute: FC<Props> = ({
           onFinishOrSave={onFinishOrSave}
           isLoading={isLoading}
           setShowConfig={setShowConfig}
-          setCanSave={setCanSave}
-          routeRef={routeRef}
           showConfig={showConfig}
           onUndo={onUndo}
+          onReset={onReset}
         />
       </Screen>
     );

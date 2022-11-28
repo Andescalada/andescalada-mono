@@ -13,6 +13,11 @@ export const pathToArray = (path: string | undefined | null) => {
     .map((s) => s.map((j) => parseInt(j, 10)));
 };
 
+export const pathToVector = (path: string | undefined, scale = 1) => {
+  const points = pathToArray(path);
+  return points.map((p) => vec(p[0] * scale, p[1] * scale));
+};
+
 const usePathToPoints = (path: string | undefined, scale = 1) => {
   const points = useValue<SkPoint[]>([]);
   const start = useValue<SkPoint>(vec(0, 0));
@@ -20,9 +25,8 @@ const usePathToPoints = (path: string | undefined, scale = 1) => {
 
   useComputedValue(() => {
     if (!path) return points;
-    const array = pathToArray(path);
 
-    points.current = array.map((p) => vec(p[0] * scale, p[1] * scale));
+    points.current = pathToVector(path, scale);
   }, [path]);
 
   useComputedValue(() => {
