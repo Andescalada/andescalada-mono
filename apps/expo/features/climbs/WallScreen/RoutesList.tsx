@@ -1,31 +1,18 @@
-import { SoftDeleteSchema } from "@andescalada/db/zod";
-import { ScrollView, Text } from "@andescalada/ui";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { A, ScrollView, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
-import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
-import useGradeSystem from "@hooks/useGradeSystem";
-import useOwnInfo from "@hooks/useOwnInfo";
-import usePermissions from "@hooks/usePermissions";
+import { ListItemRef } from "@features/climbs/WallScreen/ListItem";
+import RouteItem from "@features/climbs/WallScreen/RouteItem";
 import useRefresh from "@hooks/useRefresh";
-import useRootNavigation from "@hooks/useRootNavigation";
-import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { Route } from "@prisma/client";
 import { useRoute } from "@react-navigation/native";
-import parseGrade, { ParseGrade } from "@utils/parseGrade";
-import {
-  createRef,
-  FC,
-  RefObject,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Alert } from "react-native";
+import type { inferProcedureOutput } from "@trpc/server";
+import { createRef, FC, useCallback, useMemo } from "react";
+
+type Wall = inferProcedureOutput<AppRouter["walls"]["byId"]>;
 
 type NavigationRoute =
   ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>["route"];
@@ -33,9 +20,7 @@ type NavigationRoute =
 const RoutesList: FC = () => {
   const route = useRoute<NavigationRoute>();
   const { zoneId, wallId } = route.params;
-  const { permission } = usePermissions({ zoneId });
-  const { data: user } = useOwnInfo();
-  const utils = trpc.useContext();
+
   const {
     data,
     refetch,
@@ -44,84 +29,27 @@ const RoutesList: FC = () => {
   } = trpc.walls.byId.useQuery(
     { wallId },
     {
-      select: (wall) => {
+      select: useCallback((wall: Wall) => {
         const routesWithRef = wall.routes.map((route) => ({
           ...route,
           routeRef: createRef<ListItemRef>(),
+          Extension: route.Extension.map((extension) => ({
+            ...extension,
+            routeRef: createRef<ListItemRef>(),
+          })),
         }));
         return {
           ...wall,
           routes: routesWithRef,
         };
-      },
+      }, []),
     },
   );
 
-  const { mutate } = trpc.routes.delete.useMutation({
-    onMutate: async ({ routeId }) => {
-      await utils.walls.byId.cancel({ wallId });
-      const previousData = utils.walls.byId.getData({ wallId });
-
-      utils.walls.byId.setData({ wallId }, (old) => {
-        if (!old) return undefined;
-        const routes = old.routes?.filter((route) => route.id !== routeId);
-        return { ...old, routes };
-      });
-      return { previousData };
-    },
-    onError: (_, __, context) => {
-      utils.walls.byId.setData({ wallId }, context?.previousData);
-    },
-    onSettled: () => {
-      utils.walls.byId.invalidate({ wallId });
-      if (data?.topos[0]?.id)
-        utils.topos.byId.invalidate({ topoId: data?.topos[0]?.id });
-    },
-  });
   const refresh = useRefresh(refetch, isFetching);
 
-  const { gradeSystem } = useGradeSystem();
+  const mainTopo = useMemo(() => data?.topos[0], [data?.topos]);
 
-  const mainTopo = data?.topos[0];
-
-  const rootNavigation = useRootNavigation();
-
-  const listItemRef = useRef<ListItemRef>(null);
-
-  const onDelete = (id: string) => {
-    mutate({
-      isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
-      routeId: id,
-      zoneId,
-    });
-  };
-
-  const onOptions = (params: {
-    id: Route["id"];
-    name: Route["name"];
-    kind: Route["kind"];
-    grade?: ParseGrade;
-    unknownName: Route["unknownName"];
-  }) => {
-    listItemRef?.current?.reset();
-    rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-      screen: ClimbsNavigationRoutes.RouteOptions,
-      params: { routeId: params.id, zoneId, wallId },
-    });
-  };
-
-  const onDeleteTry = (id: string, ref: RefObject<ListItemRef>) => {
-    Alert.alert("Eliminar ruta", "¿Seguro que quieres eliminar esta ruta?", [
-      { text: "Borrar", onPress: () => onDelete(id), style: "destructive" },
-      {
-        text: "Cancelar",
-        onPress: () => {
-          ref?.current?.reset();
-        },
-        style: "cancel",
-      },
-    ]);
-  };
   const routesCount = useMemo(
     () => data?.routes.length || 0,
     [data?.routes.length],
@@ -132,8 +60,6 @@ const RoutesList: FC = () => {
       route.routeRef?.current?.reset();
     });
   }, [data?.routes]);
-
-  const [_, setTouchRouteId] = useState<string | null>(null);
 
   if (isLoadingWall) return null;
   if (!data?.routes || routesCount === 0)
@@ -157,60 +83,52 @@ const RoutesList: FC = () => {
       refreshControl={refresh}
       paddingHorizontal="m"
       paddingTop="m"
-      borderTopLeftRadius={5}
-      borderTopRightRadius={5}
+      borderTopLeftRadius={10}
+      borderTopRightRadius={10}
       backgroundColor="background"
     >
       {data?.routes.map((item, index) => {
-        const n = item.RouteGrade?.grade;
-        const grade = typeof n === "number" ? gradeSystem(n, item.kind) : "?";
-
+        const maxIndex = item.Extension.length - 1;
         return (
-          <ListItem
+          <A.Box
             key={item.id}
-            ref={item.routeRef}
-            routeName={item.name}
-            index={index}
-            containerProps={{
-              marginBottom: index === routesCount - 1 ? "xl" : "none",
-            }}
-            allowEdit={
-              permission?.has("Update") || item.Author.email === user?.email
-            }
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            onTouch={() => {
-              setTouchRouteId((prev) => {
-                if (prev !== item.id) reset();
-                return item.id;
-              });
-              utils.routes.byId.prefetch(item.id);
-            }}
-            onRightAction={() => onDeleteTry(item.id, item.routeRef)}
-            onLeftAction={() =>
-              onOptions({
-                id: item.id,
-                name: item.name,
-                kind: item.kind,
-                grade: parseGrade(item.RouteGrade),
-                unknownName: item.unknownName,
-              })
-            }
-            onPress={() => {
-              if (!mainTopo?.id) return;
-              rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-                screen: RoutesManagerNavigationRoutes.TopoViewer,
-                params: {
-                  topoId: mainTopo?.id,
-                  routeId: item.id,
-                },
-              });
-            }}
+            marginBottom={index === routesCount - 1 ? "xl" : "none"}
+            flex={1}
+            marginVertical="s"
           >
-            <Text variant="p2R">{`${item.position} - ${item.name}`}</Text>
-            <Text variant="p2R">{grade}</Text>
-          </ListItem>
+            <RouteItem
+              item={item}
+              zoneId={zoneId}
+              topoId={mainTopo?.id}
+              ref={item.routeRef}
+              index={index}
+              resetOthers={reset}
+            />
+            {item.Extension.map((extension, extensionIndex) => (
+              <RouteItem
+                hidePosition
+                key={extension.id}
+                item={extension}
+                zoneId={zoneId}
+                topoId={mainTopo?.id}
+                ref={extension.routeRef}
+                index={index + extensionIndex}
+                resetOthers={reset}
+                variant="plain"
+                containerProps={{
+                  width: "90%",
+                  alignSelf: "center",
+                  margin: "none",
+                  borderLeftWidth: 3,
+                  borderRightWidth: 3,
+                  borderColor: "grayscale.400",
+                  borderBottomLeftRadius: extensionIndex === maxIndex ? 5 : 0,
+                  borderBottomRightRadius: extensionIndex === maxIndex ? 5 : 0,
+                  borderBottomWidth: extensionIndex === maxIndex ? 3 : 1,
+                }}
+              />
+            ))}
+          </A.Box>
         );
       })}
     </ScrollView.Gesture>

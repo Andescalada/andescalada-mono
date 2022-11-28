@@ -25,6 +25,9 @@ const listItemVariants = createBoxVariant({
   warning: {
     borderColor: "semantic.transparent.50.warning",
   },
+  plain: {
+    borderWidth: 0,
+  },
 });
 
 export default listItemVariants;

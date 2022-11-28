@@ -44,7 +44,6 @@ interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
 }
 
 const SNAP_PERCENTAGE = 0.2;
-export const MIN_HEIGHT = 50;
 const TOUCH_SLOP = 5;
 const TIME_TO_ACTIVATE_PAN = 100;
 
@@ -221,6 +220,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       ],
     };
   });
+
   const rightStyle = useAnimatedStyle(() => {
     return {
       opacity: opacityRight.value,
@@ -240,8 +240,6 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
         entering={FadeInDown.delay(100 * index)}
         exiting={SlideOutLeft}
         layout={Layout.delay(500).springify()}
-        marginVertical="s"
-        minHeight={MIN_HEIGHT}
         collapsable={Conditional.disableForAndroid}
         {...containerProps}
       >

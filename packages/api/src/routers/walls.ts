@@ -8,6 +8,18 @@ import { z } from "zod";
 
 import { t } from "../createRouter";
 
+const Route = {
+  name: true,
+  id: true,
+  RouteGrade: true,
+  position: true,
+  kind: true,
+  isDeleted: true,
+  unknownName: true,
+  wallId: true,
+  Author: { select: { email: true } },
+};
+
 export const wallsRouter = t.router({
   all: t.procedure.query(({ ctx }) =>
     ctx.prisma.wall.findMany({
@@ -22,16 +34,13 @@ export const wallsRouter = t.router({
         routes: {
           orderBy: { position: "asc" },
 
-          where: { isDeleted: { equals: SoftDelete.NotDeleted } },
+          where: {
+            isDeleted: { equals: SoftDelete.NotDeleted },
+            isExtension: false,
+          },
           select: {
-            name: true,
-            id: true,
-            RouteGrade: true,
-            position: true,
-            kind: true,
-            isDeleted: true,
-            unknownName: true,
-            Author: { select: { email: true } },
+            ...Route,
+            Extension: { select: Route },
           },
         },
         topos: {
