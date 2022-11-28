@@ -96,6 +96,7 @@ const DrawRoute: FC<Props> = ({
     routeId: routeParams.id,
     topoId,
     wallId,
+    routePathId: topos?.selectedRoute?.id,
   });
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({

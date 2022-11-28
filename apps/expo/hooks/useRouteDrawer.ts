@@ -19,10 +19,34 @@ interface Args {
   topoId: Topo["id"];
   wallId: Wall["id"];
   position: number;
+  routePathId?: RoutePath["id"];
 }
 
-const useRouteDrawer = ({ routeId, position, topoId, wallId }: Args) => {
-  const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation();
+const useRouteDrawer = ({
+  routeId,
+  position,
+  topoId,
+  wallId,
+  routePathId,
+}: Args) => {
+  const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation({
+    onSuccess: () => {
+      utils.topos.byId.invalidate({ topoId });
+      setTimeout(
+        () =>
+          rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+            screen: ClimbsNavigationRoutes.Wall,
+            params: {
+              wallId,
+              wallName: data?.name || "",
+              sectorId: data?.sectorId || "",
+              zoneId: data?.Sector.zoneId || "",
+            },
+          }),
+        500,
+      );
+    },
+  });
 
   const utils = trpc.useContext();
 
@@ -66,32 +90,12 @@ const useRouteDrawer = ({ routeId, position, topoId, wallId }: Args) => {
         });
         return;
       }
-      mutate(
-        {
-          path: route.path,
-          routeId: route.id,
-          topoId,
-          routePathId: route.pathId,
-        },
-        {
-          onSuccess: () => {
-            utils.topos.byId.invalidate({ topoId });
-            setTimeout(
-              () =>
-                rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-                  screen: ClimbsNavigationRoutes.Wall,
-                  params: {
-                    wallId,
-                    wallName: data?.name || "",
-                    sectorId: data?.sectorId || "",
-                    zoneId: data?.Sector.zoneId || "",
-                  },
-                }),
-              500,
-            );
-          },
-        },
-      );
+      mutate({
+        path: route.path,
+        routeId: route.id,
+        topoId,
+        routePathId,
+      });
     }
   };
 
