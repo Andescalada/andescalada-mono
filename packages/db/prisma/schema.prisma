@@ -343,6 +343,7 @@ enum RouteKind {
   Boulder
   Mixed
   Ice
+  Aid
 }
 
 enum StorageService {

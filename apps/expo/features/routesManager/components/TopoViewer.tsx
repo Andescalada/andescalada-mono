@@ -4,6 +4,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
+import { routeKindLabel } from "@utils/routeKind";
 import { FC, memo } from "react";
 
 interface Props {
@@ -54,8 +55,8 @@ const TopoViewer: FC<Props> = ({
                 key={path.id}
                 color={
                   path.Route.id === routeId
-                    ? theme.colors["contrast.green"]
-                    : theme.colors.routePath
+                    ? theme.colors["contrast.bright.blue"]
+                    : theme.colors[routeKindLabel(path.Route.kind).color]
                 }
                 scale={fitted.scale}
                 routeFromTheGround={!path.Route.extendedRouteId}

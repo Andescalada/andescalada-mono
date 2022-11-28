@@ -15,7 +15,12 @@ export const toposRouter = t.router({
           where: { Route: { isDeleted: SoftDelete.NotDeleted } },
           include: {
             Route: {
-              select: { id: true, position: true, extendedRouteId: true },
+              select: {
+                id: true,
+                position: true,
+                extendedRouteId: true,
+                kind: true,
+              },
             },
           },
         },

@@ -1,6 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { SoftDeleteSchema } from "@andescalada/db/zod";
-import { Text } from "@andescalada/ui";
+import { RouteKindSchema, SoftDeleteSchema } from "@andescalada/db/zod";
+import { Box, Pressable, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
@@ -12,6 +12,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import type { Topo, Zone } from "@prisma/client";
 import { inferProcedureOutput } from "@trpc/server";
+import { routeKindLabel } from "@utils/routeKind";
 import { ComponentProps, FC, useCallback, useMemo, useState } from "react";
 import { Alert } from "react-native";
 
@@ -33,7 +34,7 @@ interface Props extends CustomListItemProps {
   hidePosition?: boolean;
 }
 
-const RouteItem: FC<Props> = ({
+const RouteItem = ({
   item,
   index,
   resetOthers,
@@ -41,7 +42,7 @@ const RouteItem: FC<Props> = ({
   topoId,
   hidePosition = false,
   ...props
-}) => {
+}: Props) => {
   const { gradeSystem } = useGradeSystem();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -162,9 +163,31 @@ const RouteItem: FC<Props> = ({
       onPress={onPress}
     >
       <Text variant="p2R">{routeTitle}</Text>
-      <Text variant="p2R">{grade}</Text>
+      <Box flexDirection="row">
+        <RouteKindBadge kind={item.kind} />
+        <Text variant="p2R">{grade}</Text>
+      </Box>
     </ListItem>
   );
 };
 
 export default RouteItem;
+
+interface RouteKindBadgeProps {
+  kind: typeof RouteKindSchema._type;
+}
+
+const RouteKindBadge = ({ kind }: RouteKindBadgeProps) => {
+  const [expand, setExpand] = useState<"long" | "short">("short");
+  return (
+    <Pressable
+      paddingHorizontal="xs"
+      marginRight="xs"
+      borderRadius={100}
+      backgroundColor={routeKindLabel(kind).color}
+      onPress={() => setExpand((prev) => (prev === "long" ? "short" : "long"))}
+    >
+      <Text>{routeKindLabel(kind)[expand]}</Text>
+    </Pressable>
+  );
+};

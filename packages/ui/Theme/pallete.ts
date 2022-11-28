@@ -71,11 +71,21 @@ export const pallete = {
     },
   },
   contrast: {
-    purple: "#8931EF",
-    yellow: "#F2CA19",
-    pink: "#FF00BD",
-    blue: "#0057E9",
-    green: "#87E911",
-    red: " #E11845",
+    bright: {
+      purple: "#8931EF",
+      yellow: "#F2CA19",
+      pink: "#FF00BD",
+      blue: "#0057E9",
+      green: "#87E911",
+      red: "#E11845",
+    },
+    opaque: {
+      purple: "#8931EF95",
+      yellow: "#F2CA1995",
+      pink: "#FF00BD95",
+      blue: "#0057E995",
+      green: "#87E91195",
+      red: "#E1184595",
+    },
   },
 };

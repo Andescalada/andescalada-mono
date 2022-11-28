@@ -24,6 +24,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
+import { routeKindLabel } from "@utils/routeKind";
 import { FC, useMemo, useState } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";
@@ -302,23 +303,13 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         </Text>
         <ButtonGroup value={kindValue} onChange={onKindChange}>
           <Box flexWrap="wrap" flexDirection="row">
-            <ButtonGroup.Item
-              value={RouteKindSchema.Enum.Sport}
-              label="Deportiva"
-            />
-            <ButtonGroup.Item
-              value={RouteKindSchema.Enum.Boulder}
-              label="Boulder"
-            />
-            <ButtonGroup.Item
-              value={RouteKindSchema.Enum.Trad}
-              label="Tradicional"
-            />
-            <ButtonGroup.Item
-              value={RouteKindSchema.Enum.Mixed}
-              label="Mixta"
-            />
-            <ButtonGroup.Item value={RouteKindSchema.Enum.Ice} label="Hielo" />
+            {Object.values(RouteKindSchema.Enum).map((kind) => (
+              <ButtonGroup.Item
+                key={kind}
+                value={kind}
+                label={routeKindLabel(kind).long}
+              />
+            ))}
           </Box>
           <Text marginTop={"xs"} color="semantic.error">
             {kindError?.message}
