@@ -13,7 +13,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import type { Topo, Zone } from "@prisma/client";
 import { inferProcedureOutput } from "@trpc/server";
 import { routeKindLabel } from "@utils/routeKind";
-import { ComponentProps, FC, useCallback, useMemo, useState } from "react";
+import { ComponentProps, useCallback, useMemo, useState } from "react";
 import { Alert } from "react-native";
 
 type Wall = inferProcedureOutput<AppRouter["walls"]["byId"]>;
