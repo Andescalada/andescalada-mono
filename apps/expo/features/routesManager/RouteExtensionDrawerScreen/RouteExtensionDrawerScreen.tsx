@@ -166,9 +166,8 @@ const DrawRoute: FC<Props> = ({
           </Pressable>
         </Box>
         <Instructions>
-          {
-            "Comienza a dibujar la extensión de la ruta, comenzará desde el punto donde termina la ruta anterior."
-          }
+          Comienza a dibujar la extensión de la ruta, comenzará desde el punto
+          donde termina la ruta anterior.
         </Instructions>
         <RoutePathConfig show={showConfig} setShow={setShowConfig} />
         <DrawingTools
