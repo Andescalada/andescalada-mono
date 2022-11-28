@@ -36,7 +36,7 @@ const EditableTitle = <T extends FieldValues>({
       onChangeText={onChange}
       onBlur={onBlur}
       multiline
-      textAlignVertical="top"
+      textAlignVertical="center"
       containerProps={{
         justifyContent: "center",
         flex: 1,
