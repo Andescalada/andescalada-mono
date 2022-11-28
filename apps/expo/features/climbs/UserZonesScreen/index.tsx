@@ -175,7 +175,7 @@ const UserZonesScreen = () => {
             </Text>
             <Octicons name="heart" size={24} color={theme.colors.text} />
           </Box>
-          {data?.FavoriteZones.length === 0 && (
+          {data?.FavoriteZones?.length === 0 && (
             <Box marginTop={"s"}>
               <Text>No tienes favoritas aún</Text>
             </Box>
@@ -219,7 +219,7 @@ const UserZonesScreen = () => {
               </Text>
               <Octicons name="history" size={24} color={theme.colors.text} />
             </Box>
-            {data?.RecentZones.length !== 0 && (
+            {data?.RecentZones?.length !== 0 && (
               <Button
                 variant="transparentSimplified"
                 title="Borrar todo"
