@@ -52,7 +52,7 @@ const DrawRoute: FC<Props> = ({
       return `${arrayPath[0]},${arrayPath[1]}`;
     }
     return undefined;
-  }, [extendedRoute, routeParams.extendedRouteId, topoId]);
+  }, [extendedRoute, topoId]);
 
   const { routeStrokeWidth, showRoutes } = useAppSelector(
     (state) => state.localConfig,
