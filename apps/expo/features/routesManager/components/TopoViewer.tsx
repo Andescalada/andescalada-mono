@@ -55,7 +55,7 @@ const TopoViewer: FC<Props> = ({
                 key={path.id}
                 color={
                   path.Route.id === routeId
-                    ? theme.colors["contrast.bright.blue"]
+                    ? theme.colors["contrast.bright.green"]
                     : theme.colors[routeKindLabel(path.Route.kind).color]
                 }
                 scale={fitted.scale}
