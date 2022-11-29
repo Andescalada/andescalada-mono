@@ -35,6 +35,7 @@ const Header: FC<Props> = ({
         containerProps={{
           alignSelf: "center",
           paddingHorizontal: "s",
+          paddingLeft: "m",
           flex: 1,
         }}
         textAlignVertical="center"
