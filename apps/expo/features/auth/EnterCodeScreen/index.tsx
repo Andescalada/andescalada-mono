@@ -72,14 +72,21 @@ const EnterCodeScreen: FC<Props> = ({
   }, [seconds]);
 
   return (
-    <Screen padding="m" justifyContent="space-evenly" alignItems="center">
+    <Screen
+      justifyContent="flex-start"
+      alignItems="center"
+      padding="m"
+      paddingTop="xxxl"
+    >
       <AnimatedBackground />
       <BackButton.Transparent
         onPress={navigation.goBack}
         iconProps={{ color: "white" }}
       />
       <Box flex={0.2} justifyContent="space-evenly" alignItems="center">
-        <Text variant="h1">Ingresa el código</Text>
+        <Text variant="h1" marginBottom="m">
+          Ingresa el código
+        </Text>
         <CodeField
           ref={ref}
           {...props}

@@ -1,7 +1,6 @@
 import {
   AnimatedBackground,
   Box,
-  KeyboardDismiss,
   Screen,
   Text,
   TextInput,
@@ -45,43 +44,41 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
   });
 
   return (
-    <Screen>
-      <KeyboardDismiss
-        justifyContent="flex-start"
-        alignItems="center"
-        padding="m"
-        paddingTop="xxxl"
-      >
-        <AnimatedBackground />
-        <Box flex={0.25} justifyContent="space-between">
-          <Box>
-            <Text variant="h1">Ingresa tu correo electrónico</Text>
-            <Text variant="p2R" marginTop="xs">
-              para recibir un código de verificación
-            </Text>
-          </Box>
-          <Box>
-            <TextInput
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              ref={ref}
-              placeholder="Correo electrónico"
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-              autoFocus
-              onSubmitEditing={onNext}
-              containerProps={{ height: 40, paddingLeft: "s" }}
-            />
-            {error ? (
-              <Text variant="error">{error.message}</Text>
-            ) : (
-              <Text variant="error" />
-            )}
-          </Box>
+    <Screen
+      justifyContent="flex-start"
+      alignItems="center"
+      padding="m"
+      paddingTop="xxxl"
+    >
+      <AnimatedBackground />
+      <Box flex={0.25} justifyContent="space-between">
+        <Box>
+          <Text variant="h1">Ingresa tu correo electrónico</Text>
+          <Text variant="p2R" marginTop="xs">
+            para recibir un código de verificación
+          </Text>
         </Box>
-      </KeyboardDismiss>
+        <Box>
+          <TextInput
+            value={value}
+            onChangeText={onChange}
+            onBlur={onBlur}
+            ref={ref}
+            placeholder="Correo electrónico"
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+            autoFocus
+            onSubmitEditing={onNext}
+            containerProps={{ height: 40, paddingLeft: "s" }}
+          />
+          {error ? (
+            <Text variant="error">{error.message}</Text>
+          ) : (
+            <Text variant="error" />
+          )}
+        </Box>
+      </Box>
     </Screen>
   );
 };
