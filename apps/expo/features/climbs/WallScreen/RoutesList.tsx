@@ -122,7 +122,7 @@ const RoutesList: FC = () => {
                 }}
                 borderLeftWidth={3}
                 borderRightWidth={3}
-                borderColor="grayscale.400"
+                borderColor="grayscale.900"
                 borderTopEndRadius={0}
                 borderTopLeftRadius={0}
                 borderBottomLeftRadius={extensionIndex === maxIndex ? 5 : 0}

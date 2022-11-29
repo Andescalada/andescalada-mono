@@ -174,13 +174,13 @@ const RouteItem = ({
       onLeftAction={onOptions}
       onPress={onPress}
     >
-      <Box flex={0.75}>
+      <Box flex={1}>
         <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
           {routeTitle}
         </Text>
       </Box>
-      <Box flexDirection="row" flex={0.25}>
-        <RouteKindBadge kind={item.kind} />
+      <Box flexDirection="row">
+        <Text paddingHorizontal="xs">{routeKindLabel(item.kind).short}</Text>
         <Text variant="p2R">{grade}</Text>
       </Box>
     </ListItem>
@@ -188,22 +188,3 @@ const RouteItem = ({
 };
 
 export default RouteItem;
-
-interface RouteKindBadgeProps {
-  kind: typeof RouteKindSchema._type;
-}
-
-const RouteKindBadge = ({ kind }: RouteKindBadgeProps) => {
-  const [expand, setExpand] = useState<"long" | "short">("short");
-  return (
-    <Pressable
-      paddingHorizontal="xs"
-      marginRight="xs"
-      borderRadius={100}
-      backgroundColor={routeKindLabel(kind).color}
-      onPress={() => setExpand((prev) => (prev === "long" ? "short" : "long"))}
-    >
-      <Text>{routeKindLabel(kind)[expand]}</Text>
-    </Pressable>
-  );
-};
