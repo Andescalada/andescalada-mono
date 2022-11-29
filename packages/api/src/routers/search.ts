@@ -1,5 +1,5 @@
 import { SearchType } from "@andescalada/api/schemas/search";
-import { isDefined } from "@andescalada/api/src/utils/isDefined";
+import { isDefined } from "@andescalada/api/src/utils/filterGuards";
 import { SoftDelete } from "@prisma/client";
 import { z } from "zod";
 

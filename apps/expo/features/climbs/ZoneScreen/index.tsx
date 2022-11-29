@@ -26,7 +26,8 @@ import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
-import { FC, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 import {
@@ -46,12 +47,25 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const { isOfflineMode } = useOfflineMode();
 
+  const recentZones = trpc.user.addToRecentZones.useMutation({
+    onSuccess: () => {
+      utils.user.zoneHistory.invalidate();
+    },
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      recentZones.mutate({ zoneId });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [zoneId]),
+  );
+
   const { data, refetch, isFetching, isLoading, isError, isPaused } =
     trpc.zones.allSectors.useQuery(
       { zoneId },
       {
         onSuccess() {
-          utils.user.ownInfo.invalidate();
+          utils.user.zoneHistory.invalidate();
         },
       },
     );

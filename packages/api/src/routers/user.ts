@@ -1,10 +1,11 @@
 import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
+import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { Image, SoftDelete } from "@prisma/client";
+import { Actions, Image, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 import { z } from "zod";
@@ -12,7 +13,7 @@ import { z } from "zod";
 import { t } from "../createRouter";
 
 export const userRouter = t.router({
-  ownInfo: protectedProcedure.query(({ ctx }) =>
+  ownInfo: protectedProcedure.query(async ({ ctx }) =>
     ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },
       select: {
@@ -27,10 +28,6 @@ export const userRouter = t.router({
         username: true,
         DownloadedZones: { select: { id: true, name: true, infoAccess: true } },
         FavoriteZones: { select: { id: true, name: true, infoAccess: true } },
-        RecentZones: {
-          select: { id: true, name: true, infoAccess: true },
-          orderBy: { createdAt: "desc" },
-        },
       },
     }),
   ),
@@ -57,6 +54,24 @@ export const userRouter = t.router({
         },
       });
     }),
+  zoneHistory: protectedProcedure.query(async ({ ctx }) => {
+    const rawHistory = await ctx.prisma.user.findUnique({
+      where: { email: ctx.user.email },
+      select: {
+        History: {
+          where: {
+            AND: { action: Actions.Visited, isDeleted: SoftDelete.NotDeleted },
+          },
+          select: {
+            zone: { select: { id: true, name: true, infoAccess: true } },
+          },
+          orderBy: { updatedAt: "desc" },
+        },
+      },
+    });
+
+    return rawHistory?.History.map((h) => h.zone).filter(notNull);
+  }),
   zonePermissions: protectedProcedure
     .input(zone.id)
     .query(async ({ ctx, input }) => {
@@ -242,6 +257,7 @@ export const userRouter = t.router({
     },
   ),
   addToRecentZones: protectedZoneProcedure.mutation(async ({ ctx, input }) => {
+    console.log("HERE HERE");
     const zoneToAdd = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
       select: {
@@ -255,23 +271,40 @@ export const userRouter = t.router({
     if (!ctx.permissions.has("Read") && zoneToAdd.infoAccess !== "Public") {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
-    return ctx.prisma.user.update({
-      where: { email: ctx.user.email },
-      data: { RecentZones: { connect: { id: input.zoneId } } },
+
+    return ctx.prisma.history.upsert({
+      where: {
+        history_unique: {
+          action: Actions.Visited,
+          email: ctx.user.email,
+          zoneId: input.zoneId,
+        },
+      },
+      create: {
+        user: { connect: { email: ctx.user.email } },
+        action: Actions.Visited,
+        zone: { connect: { id: input.zoneId } },
+        counter: 1,
+      },
+      update: {
+        isDeleted: SoftDelete.NotDeleted,
+        counter: { increment: 1 },
+      },
     });
   }),
   removeAllRecentZones: protectedProcedure.mutation(({ ctx }) =>
-    ctx.prisma.user.update({
+    ctx.prisma.history.updateMany({
       where: { email: ctx.user.email },
-      data: { RecentZones: { set: [] } },
+      data: { isDeleted: SoftDelete.DeletedPublic },
     }),
   ),
-  removeRecentZone: protectedZoneProcedure.mutation(({ ctx, input }) =>
-    ctx.prisma.user.update({
-      where: { email: ctx.user.email },
-      data: { RecentZones: { disconnect: { id: input.zoneId } } },
-    }),
-  ),
+  removeRecentZone: protectedZoneProcedure.mutation(({ ctx, input }) => {
+    console.log("HERE!!");
+    return ctx.prisma.history.updateMany({
+      where: { AND: { zoneId: input.zoneId, email: ctx.user.email } },
+      data: { isDeleted: SoftDelete.DeletedPublic },
+    });
+  }),
   addToFavoriteZones: protectedZoneProcedure.mutation(
     async ({ ctx, input }) => {
       const zoneToAdd = await ctx.prisma.zone.findUnique({

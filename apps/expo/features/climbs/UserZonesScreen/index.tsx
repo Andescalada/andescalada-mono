@@ -52,36 +52,33 @@ const UserZonesScreen = () => {
 
   const { activateOfflineMode } = useOfflineMode();
 
+  const recentZones = trpc.user.zoneHistory.useQuery();
+
   const removeAllRecentZones = trpc.user.removeAllRecentZones.useMutation({
     onMutate: async () => {
-      await utils.user.ownInfo.cancel();
-      const previousData = utils.user.ownInfo.getData();
-      utils.user.ownInfo.setData(undefined, (old) =>
-        old ? { ...old, RecentZones: [] } : undefined,
+      await utils.user.zoneHistory.cancel();
+      const previousData = utils.user.zoneHistory.getData();
+      utils.user.zoneHistory.setData(undefined, (old) =>
+        old ? [] : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.user.ownInfo.setData(undefined, context?.previousData);
+      utils.user.zoneHistory.setData(undefined, context?.previousData);
     },
   });
 
   const removeRecentZone = trpc.user.removeRecentZone.useMutation({
     onMutate: async ({ zoneId }) => {
-      await utils.user.ownInfo.cancel();
-      const previousData = utils.user.ownInfo.getData();
-      utils.user.ownInfo.setData(undefined, (old) =>
-        old
-          ? {
-              ...old,
-              RecentZones: old.RecentZones.filter((z) => z.id !== zoneId),
-            }
-          : undefined,
+      await utils.user.zoneHistory.cancel();
+      const previousData = utils.user.zoneHistory.getData();
+      utils.user.zoneHistory.setData(undefined, (old) =>
+        old ? old.filter((z) => z.id !== zoneId) : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.user.ownInfo.setData(undefined, context?.previousData);
+      utils.user.zoneHistory.setData(undefined, context?.previousData);
     },
   });
 
@@ -219,7 +216,7 @@ const UserZonesScreen = () => {
               </Text>
               <Octicons name="history" size={24} color={theme.colors.text} />
             </Box>
-            {data?.RecentZones?.length !== 0 && (
+            {recentZones.data?.length !== 0 && (
               <Button
                 variant="transparentSimplified"
                 title="Borrar todo"
@@ -232,12 +229,17 @@ const UserZonesScreen = () => {
               />
             )}
           </Box>
-          {data?.RecentZones.length === 0 && (
+          {recentZones?.data?.length === 0 && (
             <Box marginTop={"s"}>
               <Text>No hay zonas recientes</Text>
             </Box>
           )}
-          {data?.RecentZones.map((item) => (
+          {recentZones.isLoading && (
+            <Box marginTop={"xl"} justifyContent="center" alignItems="center">
+              <ActivityIndicator size="large" />
+            </Box>
+          )}
+          {recentZones.data?.map((item) => (
             <ListItem
               key={item.id}
               marginVertical={"s"}

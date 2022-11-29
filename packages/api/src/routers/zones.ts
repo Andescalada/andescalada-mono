@@ -1,6 +1,5 @@
 import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
-import { appRouter } from "@andescalada/api/src/routers/_app";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -63,10 +62,6 @@ export const zonesRouter = t.router({
         message: `No sectors found for the zone with id '${input.zoneId}'`,
       });
     }
-
-    const caller = appRouter.createCaller({ ...ctx });
-
-    caller.user.addToRecentZones({ zoneId: input.zoneId });
 
     if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
       return {
