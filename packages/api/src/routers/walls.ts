@@ -40,7 +40,10 @@ export const wallsRouter = t.router({
           },
           select: {
             ...Route,
-            Extension: { select: Route },
+            Extension: {
+              where: { isDeleted: SoftDelete.NotDeleted },
+              select: Route,
+            },
           },
         },
         topos: {

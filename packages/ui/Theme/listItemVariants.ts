@@ -27,6 +27,7 @@ const listItemVariants = createBoxVariant({
   },
   plain: {
     borderWidth: 0,
+    borderColor: undefined,
   },
 });
 

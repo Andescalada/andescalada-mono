@@ -32,6 +32,7 @@ interface Props extends CustomListItemProps {
   zoneId: Zone["id"];
   topoId: Topo["id"] | undefined;
   hidePosition?: boolean;
+  isExtension?: boolean;
 }
 
 const RouteItem = ({
@@ -41,6 +42,7 @@ const RouteItem = ({
   zoneId,
   topoId,
   hidePosition = false,
+  isExtension,
   ...props
 }: Props) => {
   const { gradeSystem } = useGradeSystem();
@@ -61,7 +63,17 @@ const RouteItem = ({
 
       utils.walls.byId.setData({ wallId }, (old) => {
         if (!old) return undefined;
-        const routes = old.routes?.filter((route) => route.id !== routeId);
+
+        let routes;
+
+        if (isExtension) {
+          routes = old.routes?.map((r) => {
+            const Extension = r.Extension?.filter((e) => e.id !== routeId);
+            return { ...r, Extension };
+          });
+        } else {
+          routes = old.routes?.filter((route) => route.id !== routeId);
+        }
         return { ...old, routes };
       });
       return { previousData };

@@ -107,6 +107,7 @@ const RoutesList: FC = () => {
             {item.Extension.map((extension, extensionIndex) => (
               <RouteItem
                 hidePosition
+                isExtension
                 key={extension.id}
                 item={extension}
                 zoneId={zoneId}
@@ -118,14 +119,15 @@ const RoutesList: FC = () => {
                 containerProps={{
                   width: "90%",
                   alignSelf: "center",
-                  margin: "none",
-                  borderLeftWidth: 3,
-                  borderRightWidth: 3,
-                  borderColor: "grayscale.400",
-                  borderBottomLeftRadius: extensionIndex === maxIndex ? 5 : 0,
-                  borderBottomRightRadius: extensionIndex === maxIndex ? 5 : 0,
-                  borderBottomWidth: extensionIndex === maxIndex ? 3 : 1,
                 }}
+                borderLeftWidth={3}
+                borderRightWidth={3}
+                borderColor="grayscale.400"
+                borderTopEndRadius={0}
+                borderTopLeftRadius={0}
+                borderBottomLeftRadius={extensionIndex === maxIndex ? 5 : 0}
+                borderBottomRightRadius={extensionIndex === maxIndex ? 5 : 0}
+                borderBottomWidth={extensionIndex === maxIndex ? 3 : 1}
               />
             ))}
           </A.Box>
