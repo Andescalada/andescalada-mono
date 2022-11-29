@@ -42,7 +42,7 @@
     "@react-navigation/stack": "^6.2.3",
     "@reduxjs/toolkit": "^1.8.5",
     "@sentry/react-native": "4.2.2",
-    "@shopify/react-native-skia": "^0.1.157",
+    "@shopify/react-native-skia": "^0.1.163",
     "@shopify/restyle": "^2.1.0",
     "@tanstack/react-query-persist-client": "^4.10.3",
     "add": "^2.0.6",

@@ -20,6 +20,7 @@ import {
   mix,
   Rect,
   rect,
+  Skia,
   useComputedValue,
   useLoop,
   vec,
@@ -102,6 +103,9 @@ const UserHeader = () => {
     { destructiveButtonIndex: 1 },
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const andescaladaPath = Skia.Path.MakeFromSVGString(pathTitle.path)!;
+
   const { isOfflineMode, setIsOfflineMode } = useOfflineMode();
 
   return (
@@ -125,7 +129,7 @@ const UserHeader = () => {
             responsiveCanvasHeight,
           )}
         >
-          <Group clip={pathTitle.path}>
+          <Group clip={andescaladaPath}>
             <Rect x={0} y={0} width={CANVAS_WIDTH} height={16}>
               <LinearGradient
                 start={start}
