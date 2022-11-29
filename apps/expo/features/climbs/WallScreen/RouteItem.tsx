@@ -1,6 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { RouteKindSchema, SoftDeleteSchema } from "@andescalada/db/zod";
-import { Box, Pressable, Text } from "@andescalada/ui";
+import { SoftDeleteSchema } from "@andescalada/db/zod";
+import { Box, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";

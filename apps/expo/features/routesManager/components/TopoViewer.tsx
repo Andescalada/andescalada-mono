@@ -48,16 +48,20 @@ const TopoViewer: FC<Props> = ({
       >
         {!hide &&
           data.RoutePath.map((path) => {
+            const color = () => {
+              if (path.routeId === routeId)
+                return theme.colors["contrast.bright.green"];
+              if (!!routeId && path.routeId !== routeId)
+                return theme.colors["grayscale.transparent.80.600"];
+              return theme.colors[routeKindLabel(path.Route.kind).color];
+            };
+
             return (
               <SkiaRoutePath
                 label={path.Route.position.toString()}
                 path={path.path}
                 key={path.id}
-                color={
-                  path.Route.id === routeId
-                    ? theme.colors["contrast.bright.green"]
-                    : theme.colors[routeKindLabel(path.Route.kind).color]
-                }
+                color={color()}
                 scale={fitted.scale}
                 routeFromTheGround={!path.Route.extendedRouteId}
                 strokeWidth={strokeWidth}

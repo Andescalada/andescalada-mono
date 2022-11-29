@@ -1,4 +1,12 @@
-import { A, Box, Pressable, Screen } from "@andescalada/ui";
+import {
+  A,
+  ActivityIndicator,
+  Box,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
@@ -7,6 +15,8 @@ import {
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import { useAppSelector } from "@hooks/redux";
+import useGradeSystem from "@hooks/useGradeSystem";
+import { routeKindLabel } from "@utils/routeKind";
 import { FC, useState } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
@@ -18,6 +28,12 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
   const { routeStrokeWidth, showRoutes } = useAppSelector(
     (state) => state.localConfig,
   );
+
+  const { data: route } = trpc.routes.byId.useQuery(routeId, {
+    enabled: !!routeId,
+  });
+
+  const { gradeLabel } = useGradeSystem();
 
   const [showConfig, setShowConfig] = useState(false);
 
@@ -61,6 +77,72 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
       )}
       {showConfig && (
         <RoutePathConfig show={showConfig} setShow={setShowConfig} />
+      )}
+      {routeId && (
+        <A.Pressable
+          position="absolute"
+          backgroundColor={"grayscale.transparent.50.black"}
+          borderWidth={3}
+          borderColor="listItemBackground"
+          bottom="5%"
+          marginHorizontal="m"
+          padding="s"
+          borderRadius={5}
+          left={0}
+          right={0}
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          flex={1}
+        >
+          {route ? (
+            <>
+              <Box flexDirection="row" alignItems="center" flex={1}>
+                <Box
+                  marginRight="m"
+                  backgroundColor="grayscale.white"
+                  borderRadius={20}
+                  height={30}
+                  width={30}
+                  justifyContent="center"
+                  alignItems="center"
+                  borderWidth={3}
+                  borderColor="drawingRoutePath"
+                >
+                  <Text
+                    lineHeight={20}
+                    fontSize={16}
+                    textAlign="center"
+                    fontFamily="Rubik-700"
+                    color="grayscale.black"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {route.position}
+                  </Text>
+                </Box>
+                <Box flex={1}>
+                  <Text variant="h4">{route.name}</Text>
+                  <Text>{routeKindLabel(route.kind).long}</Text>
+                </Box>
+              </Box>
+              <Box>
+                <Text variant="p2B">
+                  {gradeLabel(route.RouteGrade, route.kind)}
+                </Text>
+              </Box>
+            </>
+          ) : (
+            <Box
+              flex={1}
+              justifyContent="center"
+              alignItems="center"
+              padding="m"
+            >
+              <ActivityIndicator />
+            </Box>
+          )}
+        </A.Pressable>
       )}
     </Screen>
   );

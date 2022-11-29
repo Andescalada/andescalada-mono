@@ -10,35 +10,38 @@ import { z } from "zod";
 import { t } from "../createRouter";
 
 export const routesRouter = t.router({
-  byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
-    const route = await ctx.prisma.route.findUnique({
-      where: { id: input },
-      include: {
-        RouteGrade: true,
-        Wall: {
-          select: {
-            topos: {
-              select: {
-                id: true,
-                RoutePath: {
-                  where: { routeId: input },
-                  select: { path: true },
-                  take: 1,
+  byId: t.procedure
+    .input(z.string().optional())
+    .query(async ({ ctx, input }) => {
+      if (!input) return null;
+      const route = await ctx.prisma.route.findUnique({
+        where: { id: input },
+        include: {
+          RouteGrade: true,
+          Wall: {
+            select: {
+              topos: {
+                select: {
+                  id: true,
+                  RoutePath: {
+                    where: { routeId: input },
+                    select: { path: true },
+                    take: 1,
+                  },
                 },
               },
             },
           },
         },
-      },
-    });
-    if (!route || route.isDeleted !== SoftDelete.NotDeleted) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `No route with id '${input}'`,
       });
-    }
-    return route;
-  }),
+      if (!route || route.isDeleted !== SoftDelete.NotDeleted) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `No route with id '${input}'`,
+        });
+      }
+      return route;
+    }),
   add: protectedZoneProcedure
     .input(routeSchema.schema)
     .mutation(async ({ ctx, input }) => {

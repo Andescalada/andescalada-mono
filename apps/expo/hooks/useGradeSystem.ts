@@ -1,9 +1,10 @@
 import { RouteKindSchema } from "@andescalada/db/zod";
 import useOwnInfo from "@hooks/useOwnInfo";
+import { RouteGrade } from "@prisma/client";
 import { gradeUnits } from "@utils/climbingGrades";
 import { useCallback, useEffect, useState } from "react";
 
-const useGradeSystem = (kind?: keyof typeof RouteKindSchema.Enum) => {
+const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
   const { data } = useOwnInfo();
 
   const [allGrades, setAllGrades] = useState<number[]>([]);
@@ -30,11 +31,22 @@ const useGradeSystem = (kind?: keyof typeof RouteKindSchema.Enum) => {
   );
 
   const gradeSystem = useCallback(
-    (grade: number, kind: keyof typeof RouteKindSchema.Enum) => {
+    (grade: number, kind: typeof RouteKindSchema._type) => {
       const system = getGradeSystem(kind);
       return system[grade];
     },
     [getGradeSystem],
+  );
+
+  const gradeLabel = useCallback(
+    (grade: RouteGrade | null, kind: typeof RouteKindSchema._type) => {
+      if (!grade) return "?";
+      const n = grade.grade;
+      const project = grade.project;
+      if (project) return "Proyecto";
+      return typeof n === "number" ? gradeSystem(n, kind) : "?";
+    },
+    [gradeSystem],
   );
 
   const getAllGrades = useCallback(
@@ -49,7 +61,7 @@ const useGradeSystem = (kind?: keyof typeof RouteKindSchema.Enum) => {
     if (kind) getAllGrades(kind), [kind];
   }, [getAllGrades, kind]);
 
-  return { gradeSystem, getAllGrades, allGrades, getGradeSystem };
+  return { gradeSystem, getAllGrades, allGrades, getGradeSystem, gradeLabel };
 };
 
 export default useGradeSystem;
