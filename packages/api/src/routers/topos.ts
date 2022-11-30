@@ -1,5 +1,6 @@
 import topo from "@andescalada/api/schemas/topo";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -7,7 +8,7 @@ import { TRPCError } from "@trpc/server";
 import { t } from "../createRouter";
 
 export const toposRouter = t.router({
-  byId: t.procedure.input(topo.id).query(async ({ ctx, input }) => {
+  byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({
       where: { id: input.topoId },
       include: {
@@ -20,6 +21,8 @@ export const toposRouter = t.router({
                 position: true,
                 extendedRouteId: true,
                 kind: true,
+                name: true,
+                RouteGrade: true,
               },
             },
           },

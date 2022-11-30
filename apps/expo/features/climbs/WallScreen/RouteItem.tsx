@@ -83,7 +83,7 @@ const RouteItem = ({
     },
     onSettled: () => {
       utils.walls.byId.invalidate({ wallId });
-      if (topoId) utils.topos.byId.invalidate({ topoId });
+      if (topoId) utils.topos.byId.invalidate({ topoId, zoneId });
     },
   });
 
@@ -129,6 +129,7 @@ const RouteItem = ({
       params: {
         topoId,
         routeId: item.id,
+        zoneId,
       },
     });
   }, [item.id, rootNavigation, topoId]);

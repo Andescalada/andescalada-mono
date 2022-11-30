@@ -1,4 +1,4 @@
-import type { Route, Topo, Wall } from "@prisma/client";
+import type { Route, Topo, Wall, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -16,6 +16,7 @@ export type RoutesManagerNavigationParamList = {
     };
     wallId: Wall["id"];
     topoId: Topo["id"];
+    zoneId: Zone["id"];
   };
   [RoutesManagerNavigationRoutes.RouteExtensionDrawer]: {
     route: {
@@ -23,12 +24,14 @@ export type RoutesManagerNavigationParamList = {
       position: Route["position"];
       extendedRouteId?: Route["extendedRouteId"];
     };
+    zoneId: Zone["id"];
     wallId: Wall["id"];
     topoId: Topo["id"];
   };
   [RoutesManagerNavigationRoutes.TopoViewer]: {
     topoId: Topo["id"];
     routeId?: Route["id"];
+    zoneId: Zone["id"];
   };
 };
 

@@ -60,6 +60,7 @@ const EditOptions: FC<Props> = ({
           route: { id, position, extendedRouteId },
           wallId,
           topoId: Wall.topos[0].id,
+          zoneId,
         },
       });
     } else {
@@ -69,6 +70,7 @@ const EditOptions: FC<Props> = ({
           route: { id, position },
           wallId,
           topoId: Wall.topos[0].id,
+          zoneId,
         },
       });
     }

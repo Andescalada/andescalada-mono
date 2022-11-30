@@ -21,7 +21,7 @@ type NavigationRoute =
 
 const TopoImage: FC = () => {
   const route = useRoute<NavigationRoute>();
-  const { wallId } = route.params;
+  const { wallId, zoneId } = route.params;
   const utils = trpc.useContext();
   const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
     wallId,
@@ -136,12 +136,14 @@ const TopoImage: FC = () => {
               screen: RoutesManagerNavigationRoutes.TopoViewer,
               params: {
                 topoId: mainTopo.id,
+                zoneId,
               },
             });
           }}
         >
           <TopoViewer
             topoId={mainTopo.id}
+            zoneId={zoneId}
             center={false}
             disableGesture
             strokeWidth={routeStrokeWidth}

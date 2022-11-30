@@ -87,6 +87,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               route: { id, position },
               wallId,
               topoId: mainTopo.data,
+              zoneId: rest.zoneId,
             },
           });
         }

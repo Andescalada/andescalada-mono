@@ -1,11 +1,4 @@
-import {
-  A,
-  ActivityIndicator,
-  Box,
-  Pressable,
-  Screen,
-  Text,
-} from "@andescalada/ui";
+import { A, Box, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
@@ -17,21 +10,30 @@ import {
 import { useAppSelector } from "@hooks/redux";
 import useGradeSystem from "@hooks/useGradeSystem";
 import { routeKindLabel } from "@utils/routeKind";
-import { FC, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 type Props = RoutesManagerScreenProps<RoutesManagerNavigationRoutes.TopoViewer>;
 
 const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
-  const { topoId, routeId } = navRoute.params;
+  const { topoId, routeId, zoneId } = navRoute.params;
+
+  const [selectedRoute, setSelectedRoute] = useState<string | undefined>(
+    routeId || undefined,
+  );
 
   const { routeStrokeWidth, showRoutes } = useAppSelector(
     (state) => state.localConfig,
   );
 
-  const { data: route } = trpc.routes.byId.useQuery(routeId, {
-    enabled: !!routeId,
-  });
+  const { data } = trpc.topos.byId.useQuery({ topoId, zoneId });
+
+  const route = useMemo(
+    () => data?.RoutePath.find((r) => r.Route.id === selectedRoute)?.Route,
+    [data, selectedRoute],
+  );
+
+  useEffect(() => () => setSelectedRoute(undefined), []);
 
   const { gradeLabel } = useGradeSystem();
 
@@ -42,8 +44,10 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
       <TopoViewer
         routeId={routeId}
         topoId={topoId}
+        zoneId={zoneId}
         strokeWidth={routeStrokeWidth}
         hide={!showRoutes}
+        onSelectedRoute={setSelectedRoute}
       />
       <Box position="absolute" top={50} left={0} margin="l" marginLeft="s">
         <Pressable
@@ -78,7 +82,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
       {showConfig && (
         <RoutePathConfig show={showConfig} setShow={setShowConfig} />
       )}
-      {routeId && (
+      {selectedRoute && route && (
         <A.Pressable
           position="absolute"
           backgroundColor={"grayscale.transparent.50.black"}
@@ -95,53 +99,42 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
           justifyContent="space-between"
           flex={1}
         >
-          {route ? (
-            <>
-              <Box flexDirection="row" alignItems="center" flex={1}>
-                <Box
-                  marginRight="m"
-                  backgroundColor="grayscale.white"
-                  borderRadius={20}
-                  height={30}
-                  width={30}
-                  justifyContent="center"
-                  alignItems="center"
-                  borderWidth={3}
-                  borderColor="drawingRoutePath"
+          <>
+            <Box flexDirection="row" alignItems="center" flex={1}>
+              <Box
+                marginRight="m"
+                backgroundColor="grayscale.white"
+                borderRadius={20}
+                height={30}
+                width={30}
+                justifyContent="center"
+                alignItems="center"
+                borderWidth={3}
+                borderColor="drawingRoutePath"
+              >
+                <Text
+                  lineHeight={20}
+                  fontSize={16}
+                  textAlign="center"
+                  fontFamily="Rubik-700"
+                  color="grayscale.black"
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
                 >
-                  <Text
-                    lineHeight={20}
-                    fontSize={16}
-                    textAlign="center"
-                    fontFamily="Rubik-700"
-                    color="grayscale.black"
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {route.position}
-                  </Text>
-                </Box>
-                <Box flex={1}>
-                  <Text variant="h4">{route.name}</Text>
-                  <Text>{routeKindLabel(route.kind).long}</Text>
-                </Box>
-              </Box>
-              <Box>
-                <Text variant="p2B">
-                  {gradeLabel(route.RouteGrade, route.kind)}
+                  {route.position}
                 </Text>
               </Box>
-            </>
-          ) : (
-            <Box
-              flex={1}
-              justifyContent="center"
-              alignItems="center"
-              padding="m"
-            >
-              <ActivityIndicator />
+              <Box flex={1}>
+                <Text variant="h4">{route.name}</Text>
+                <Text>{routeKindLabel(route.kind).long}</Text>
+              </Box>
             </Box>
-          )}
+            <Box>
+              <Text variant="p2B">
+                {gradeLabel(route.RouteGrade, route.kind)}
+              </Text>
+            </Box>
+          </>
         </A.Pressable>
       )}
     </Screen>

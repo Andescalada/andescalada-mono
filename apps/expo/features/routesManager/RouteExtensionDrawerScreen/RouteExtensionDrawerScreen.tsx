@@ -29,7 +29,7 @@ type Props =
 
 const DrawRoute: FC<Props> = ({
   route: {
-    params: { wallId, route: routeParams, topoId },
+    params: { wallId, route: routeParams, topoId, zoneId },
   },
   navigation,
 }) => {
@@ -59,7 +59,7 @@ const DrawRoute: FC<Props> = ({
   );
 
   const { data: topos } = trpc.topos.byId.useQuery(
-    { topoId },
+    { topoId, zoneId },
     {
       select: useCallback(
         (topo: Topo) => {
