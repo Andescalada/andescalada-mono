@@ -132,7 +132,7 @@ const RouteItem = ({
         zoneId,
       },
     });
-  }, [item.id, rootNavigation, topoId]);
+  }, [item.id, rootNavigation, topoId, zoneId]);
 
   const onOptions = useCallback(() => {
     item.routeRef?.current?.reset();
