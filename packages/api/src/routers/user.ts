@@ -257,7 +257,6 @@ export const userRouter = t.router({
     },
   ),
   addToRecentZones: protectedZoneProcedure.mutation(async ({ ctx, input }) => {
-    console.log("HERE HERE");
     const zoneToAdd = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
       select: {
@@ -299,7 +298,6 @@ export const userRouter = t.router({
     }),
   ),
   removeRecentZone: protectedZoneProcedure.mutation(({ ctx, input }) => {
-    console.log("HERE!!");
     return ctx.prisma.history.updateMany({
       where: { AND: { zoneId: input.zoneId, email: ctx.user.email } },
       data: { isDeleted: SoftDelete.DeletedPublic },
