@@ -166,7 +166,10 @@ const RouteItem = ({
       allowEdit={permission?.has("Update") || item.Author.email === user?.email}
       onTouch={() => {
         setTouchRouteId((prev) => {
-          if (prev !== item.id) resetOthers();
+          if (prev !== item.id) {
+            console.log("here");
+            resetOthers();
+          }
           return item.id;
         });
         utils.routes.byId.prefetch(item.id);

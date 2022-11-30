@@ -43,9 +43,9 @@ interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
   onTouch?: () => void;
 }
 
-const SNAP_PERCENTAGE = 0.2;
-const TOUCH_SLOP = 5;
-const TIME_TO_ACTIVATE_PAN = 100;
+const SNAP_PERCENTAGE = 0.25;
+const TOUCH_SLOP = 4;
+const TIME_TO_ACTIVATE_PAN = 80;
 
 const WITH_SPRING_CONFIG: WithSpringConfig = {
   damping: 20,

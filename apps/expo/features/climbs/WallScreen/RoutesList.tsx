@@ -58,6 +58,9 @@ const RoutesList: FC = () => {
   const reset = useCallback(() => {
     data?.routes.forEach((route) => {
       route.routeRef?.current?.reset();
+      route.Extension.forEach((extension) => {
+        extension.routeRef?.current?.reset();
+      });
     });
   }, [data?.routes]);
 
@@ -100,7 +103,6 @@ const RoutesList: FC = () => {
               item={item}
               zoneId={zoneId}
               topoId={mainTopo?.id}
-              ref={item.routeRef}
               index={index}
               resetOthers={reset}
             />
@@ -112,7 +114,6 @@ const RoutesList: FC = () => {
                 item={extension}
                 zoneId={zoneId}
                 topoId={mainTopo?.id}
-                ref={extension.routeRef}
                 index={index + extensionIndex}
                 resetOthers={reset}
                 variant="plain"
