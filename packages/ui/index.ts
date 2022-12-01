@@ -10,6 +10,7 @@ export { default as Image } from "./Image/Image";
 export { default as KeyboardAvoidingBox } from "./KeyboardAvoidingBox/KeyboardAvoidingBox";
 export { default as KeyboardDismiss } from "./KeyboardDismiss/KeyboardDismiss";
 export { default as ListItem } from "./ListItem/ListItem";
+export { default as ListItemOption } from "./ListItemOption/ListItemOption";
 export { default as LoadingScreen } from "./LoadingScreen/LoadingScreen";
 export { default as Pressable } from "./Pressable/Pressable";
 export { default as SafeAreaView } from "./SafeAreaView/SafeAreaView";

@@ -1,4 +1,9 @@
-import { ActivityIndicator, ListItem, Screen, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  ListItemOption,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
@@ -8,20 +13,9 @@ import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigatio
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import parseGrade from "@utils/parseGrade";
-import { ComponentProps, FC, ReactNode } from "react";
+import { FC } from "react";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.RouteOptions>;
-
-const ListItemOptions = ({
-  children,
-  ...props
-}: ComponentProps<typeof ListItem> & { children: ReactNode }) => {
-  return (
-    <ListItem marginVertical="s" {...props}>
-      <Text variant="p2R">{children}</Text>
-    </ListItem>
-  );
-};
 
 const EditOptions: FC<Props> = ({
   route: {
@@ -81,7 +75,7 @@ const EditOptions: FC<Props> = ({
       <Text variant="h1" marginBottom="m">
         {name}
       </Text>
-      <ListItemOptions
+      <ListItemOption
         onPress={() =>
           navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
             wallId,
@@ -95,13 +89,13 @@ const EditOptions: FC<Props> = ({
         }
       >
         Editar ruta
-      </ListItemOptions>
+      </ListItemOption>
       {Wall.topos.length > 0 && (
-        <ListItemOptions onPress={navigateToDrawRoute}>
+        <ListItemOption onPress={navigateToDrawRoute}>
           Editar topo
-        </ListItemOptions>
+        </ListItemOption>
       )}
-      <ListItemOptions
+      <ListItemOption
         onPress={() =>
           navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
             wallId,
@@ -111,7 +105,7 @@ const EditOptions: FC<Props> = ({
         }
       >
         Agregar extensión
-      </ListItemOptions>
+      </ListItemOption>
     </Screen>
   );
 };
