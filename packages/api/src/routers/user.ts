@@ -1,6 +1,7 @@
 import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
+import error from "@andescalada/api/src/utils/errors";
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
@@ -268,7 +269,7 @@ export const userRouter = t.router({
       throw new TRPCError({ code: "NOT_FOUND" });
     }
     if (!ctx.permissions.has("Read") && zoneToAdd.infoAccess !== "Public") {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      throw new TRPCError(error.noAccessToZone(input.zoneId));
     }
 
     return ctx.prisma.history.upsert({

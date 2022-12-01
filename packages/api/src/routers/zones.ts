@@ -1,5 +1,6 @@
 import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
+import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -57,10 +58,7 @@ export const zonesRouter = t.router({
       },
     });
     if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `No sectors found for the zone with id '${input.zoneId}'`,
-      });
+      throw new TRPCError(error.sectorNotFound(input.zoneId));
     }
 
     if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
