@@ -9,6 +9,10 @@ import {
 import { isTokenExpired, tokenDecode } from "@utils/decode";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
+import {
+  registerNotificationTokenInServer,
+  unregisterNotificationTokenInServer,
+} from "@utils/requestNotificationToken";
 import { parse, stringify } from "superjson";
 
 export interface AuthState {
@@ -53,6 +57,9 @@ export const loginAuth0 = createAsyncThunk(
       storage.set(Storage.DECODED_ID_TOKEN, stringify(decodedIdToken));
       dispatch(setLoadingAuth(false));
       dispatch(setAutoLoginCompleted(true));
+
+      registerNotificationTokenInServer();
+
       return {
         isAuth: true,
         accessToken,
@@ -110,6 +117,7 @@ export const logoutAuth0 = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
+      await unregisterNotificationTokenInServer();
       await logout();
       storage.clearAll();
       const db = offlineDb.open();

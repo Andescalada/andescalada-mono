@@ -5,6 +5,7 @@ import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import UserStackNavigation from "@features/user/Navigation";
 import useOwnInfo from "@hooks/useOwnInfo";
+import usePushNotification from "@hooks/usePushNotification";
 import {
   RootNavigationNavigationParamList,
   RootNavigationRoutes,
@@ -21,6 +22,7 @@ const Navigator = () => {
   const { data, isLoading } = useOwnInfo();
 
   useOffline({ fetchAssets: true });
+  usePushNotification();
 
   if (isLoading)
     return (

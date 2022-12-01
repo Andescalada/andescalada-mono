@@ -79,9 +79,9 @@ const Navigator = () => {
             title: "Opciones",
             headerShown: true,
             headerTitleStyle: { fontFamily, fontSize, lineHeight },
-            headerLeft({ onPress }) {
-              return <BackButton onPress={onPress} marginLeft="s" />;
-            },
+            headerLeft: ({ onPress }) => (
+              <BackButton onPress={onPress} marginLeft="s" />
+            ),
           }}
         />
       </Stack.Navigator>

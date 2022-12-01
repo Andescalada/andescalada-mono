@@ -20,7 +20,7 @@
     "build:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1  eas build --profile production --non-interactive --platform all",
     "build:preview": "APP_VARIANT=preview CI=1 eas build --profile preview",
     "build:dev": "APP_VARIANT=development eas build --profile development --platform all",
-    "build:dev-simulator": "APP_VARIANT=development eas build --profile development-simulator --platform ios",
+    "build:dev-simulator": "APP_VARIANT=development eas build --profile development-simulator",
     "update:preview": "yarn load-env && APP_VARIANT=preview eas update --branch preview  --platform all --auto",
     "update:production": "yarn load-env && APP_VARIANT=production eas update --branch production  --platform all --auto"
   },
