@@ -146,7 +146,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
       </FormProvider>
-      {!!data && (
+      {!!data && data.hasAccess && (
         <Box flexDirection="row" justifyContent="flex-end">
           <Pressable onPress={onDownloadPress}>
             <Ionicons
