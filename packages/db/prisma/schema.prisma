@@ -9,9 +9,9 @@ generator zod {
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -45,8 +45,7 @@ model User {
   isDeleted             SoftDelete   @default(NotDeleted)
   FavoriteZones         Zone[]       @relation("FavoriteZones")
   DownloadedZones       Zone[]       @relation("DownloadedZones")
-
-  History History[]
+  History               History[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -101,6 +100,8 @@ model RoleByZone {
   @@index([id])
   @@index([assignedById])
   @@index([userId, zoneId, roleId])
+  @@index([zoneId])
+  @@index([roleId])
 }
 
 model Role {
@@ -160,6 +161,27 @@ model Zone {
   FavoritedBy  User[]       @relation("FavoriteZones")
   DownloadedBy User[]       @relation("DownloadedZones")
   History      History[]
+  agreements   Agreement[]
+}
+
+model Agreement {
+  id          String         @id @default(uuid())
+  name        String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  description String
+  level       AgreementLevel
+  position    Int            @default(0)
+  Zone        Zone?          @relation(fields: [zoneId], references: [id])
+  zoneId      String?
+
+  @@index([zoneId])
+}
+
+enum AgreementLevel {
+  Critical
+  Important
+  Optional
 }
 
 model Sector {
@@ -262,6 +284,8 @@ model Route {
 
   @@index([wallId])
   @@index([authorId])
+  @@index([extendedRouteId])
+  @@index([variantRouteId])
 }
 
 model MultiPitch {
@@ -299,6 +323,9 @@ model Pitch {
   variantPitchId String?
   VariantPitch   Pitch?      @relation("VariantPitchOf", fields: [variantPitchId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Variant        Pitch[]     @relation("VariantPitchOf")
+
+  @@index([muliPitchId])
+  @@index([variantPitchId])
 }
 
 model RouteGrade {
@@ -354,6 +381,8 @@ model Image {
   Zone           Zone?          @relation(fields: [zoneId], references: [id])
   zoneId         String?
   isDeleted      SoftDelete     @default(NotDeleted)
+
+  @@index([zoneId])
 }
 
 enum InfoAccess {
