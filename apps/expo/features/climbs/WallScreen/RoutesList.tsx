@@ -69,6 +69,9 @@ const RoutesList: FC = () => {
     return (
       <ScrollView
         refreshControl={refresh}
+        backgroundColor="background"
+        borderTopLeftRadius={10}
+        borderTopRightRadius={10}
         contentContainerStyle={{
           justifyContent: "center",
           alignItems: "center",
