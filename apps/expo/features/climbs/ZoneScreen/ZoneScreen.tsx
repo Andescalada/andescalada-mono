@@ -104,10 +104,11 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { permission } = usePermissions({ zoneId });
 
   const onOptions = useOptionsSheet({
-    "Agregar Sector": {
+    "Editar zona": {
       action: () =>
-        navigation.navigate(ClimbsNavigationRoutes.AddSector, {
+        navigation.navigate(ClimbsNavigationRoutes.AdminZoneOptions, {
           zoneId,
+          zoneName,
         }),
     },
     "Cambiar Nombre": {

@@ -3,6 +3,7 @@ import textVariants from "@andescalada/ui/Theme/textVariants";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
+import AdminZoneOptionsScreen from "@features/climbs/AdminZoneOptionsScreen";
 import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
 import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
@@ -77,6 +78,18 @@ const Navigator = () => {
           component={RouteOptionsScreen}
           options={{
             title: "Opciones",
+            headerShown: true,
+            headerTitleStyle: { fontFamily, fontSize, lineHeight },
+            headerLeft: ({ onPress }) => (
+              <BackButton onPress={onPress} marginLeft="s" />
+            ),
+          }}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.AdminZoneOptions}
+          component={AdminZoneOptionsScreen}
+          options={{
+            title: `Opciones`,
             headerShown: true,
             headerTitleStyle: { fontFamily, fontSize, lineHeight },
             headerLeft: ({ onPress }) => (
