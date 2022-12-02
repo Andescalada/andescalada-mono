@@ -8,6 +8,11 @@ generator zod {
   output   = "../zod"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../ERD.pdf"
+}
+
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
@@ -46,6 +51,8 @@ model User {
   FavoriteZones         Zone[]       @relation("FavoriteZones")
   DownloadedZones       Zone[]       @relation("DownloadedZones")
   History               History[]
+  AuthorAgreements      Agreement[]  @relation("AuthorAgreements")
+  coAuthorAgreements    Agreement[]  @relation("CoAuthorAgreements")
 
   @@index([email])
   @@index([profilePhotoId])
@@ -147,41 +154,61 @@ enum PermissionActions {
 }
 
 model Zone {
-  id           String       @id @default(uuid())
+  id           String          @id @default(uuid())
   name         String
   slug         String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  infoAccess   InfoAccess   @default(Public)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  infoAccess   InfoAccess      @default(Public)
   sectors      Sector[]
   photos       Image[]
   RoleByZone   RoleByZone[]
-  isDeleted    SoftDelete   @default(NotDeleted)
-  version      Int          @default(0)
-  FavoritedBy  User[]       @relation("FavoriteZones")
-  DownloadedBy User[]       @relation("DownloadedZones")
+  isDeleted    SoftDelete      @default(NotDeleted)
+  version      Int             @default(0)
+  FavoritedBy  User[]          @relation("FavoriteZones")
+  DownloadedBy User[]          @relation("DownloadedZones")
   History      History[]
-  agreements   Agreement[]
+  agreements   ZoneAgreement[]
+}
+
+model ZoneAgreement {
+  id          String     @id @default(uuid())
+  position    Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Zone        Zone       @relation(fields: [zoneId], references: [id])
+  zoneId      String
+  Agreement   Agreement  @relation(fields: [agreementId], references: [id])
+  agreementId String
+  isDeleted   SoftDelete @default(NotDeleted)
+  version     Int        @default(0)
+
+  @@index([zoneId])
+  @@index([agreementId])
 }
 
 model Agreement {
-  id          String         @id @default(uuid())
-  name        String
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  title       String
-  description String
-  level       AgreementLevel @default(Optional)
-  position    Int            @default(0)
-  Zone        Zone?          @relation(fields: [zoneId], references: [id])
-  zoneId      String?
+  id            String          @id @default(uuid())
+  name          String
+  description   String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  level         AgreementLevel  @default(Recommended)
+  Author        User            @relation("AuthorAgreements", fields: [authorId], references: [id])
+  authorId      String
+  coAuthors     User[]          @relation("CoAuthorAgreements")
+  isDeleted     SoftDelete      @default(NotDeleted)
+  version       Int             @default(0)
+  common        Boolean         @default(false)
+  ZoneAgreement ZoneAgreement[]
 
-  @@index([zoneId])
+  @@index([authorId])
 }
 
 enum AgreementLevel {
   Critical
   Important
+  Recommended
   Optional
 }
 
