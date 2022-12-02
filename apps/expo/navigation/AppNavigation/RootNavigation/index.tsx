@@ -4,6 +4,7 @@ import useOffline from "@features/offline/useOffline";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import UserStackNavigation from "@features/user/Navigation";
+import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation";
 import useOwnInfo from "@hooks/useOwnInfo";
 import usePushNotification from "@hooks/usePushNotification";
 import {
@@ -65,6 +66,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.User}
             component={UserStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.ZoneAgreementsManager}
+            component={ZoneAgreementsNavigation}
           />
         </Stack.Group>
       )}

@@ -1,6 +1,7 @@
 import { ClimbsNavigationNavigationParamList } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
+import { ZoneAgreementsNavigationParamList } from "@features/zoneAgreementManager/Navigation/types";
 import { NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -10,6 +11,7 @@ export enum RootNavigationRoutes {
   User = "UserStack",
   FirstTimeLogin = "FirstTimeLogin",
   Loading = "RootLoading",
+  ZoneAgreementsManager = "ZoneAgreementsManager",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -18,6 +20,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.FirstTimeLogin]: undefined;
   [RootNavigationRoutes.User]: NavigatorScreenParams<UserNavigationParamList>;
   [RootNavigationRoutes.Loading]: undefined;
+  [RootNavigationRoutes.ZoneAgreementsManager]: NavigatorScreenParams<ZoneAgreementsNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =

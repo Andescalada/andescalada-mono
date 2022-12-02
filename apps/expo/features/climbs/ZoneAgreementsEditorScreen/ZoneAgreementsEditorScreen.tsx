@@ -5,7 +5,10 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { ZoneAgreementsRoutes } from "@features/zoneAgreementManager/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC } from "react";
 import { FlatList } from "react-native";
 
@@ -19,6 +22,14 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
 }) => {
   const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
 
+  const rootNavigation = useRootNavigation();
+
+  const onAddAgreement = () => {
+    rootNavigation.navigate(RootNavigationRoutes.ZoneAgreementsManager, {
+      screen: ZoneAgreementsRoutes.AgreementsIntro,
+    });
+  };
+
   const theme = useAppTheme();
   return (
     <Screen safeAreaDisabled padding="m">
@@ -28,7 +39,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
         alignItems="center"
       >
         <Text variant="h1">{zoneName}</Text>
-        <Pressable>
+        <Pressable onPress={onAddAgreement}>
           <Ionicons
             name="add-circle-sharp"
             size={40}
@@ -47,7 +58,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
         ListEmptyComponent={() => (
           <Box alignItems="center">
             <Text variant="h2">Sin acuerdos</Text>
-            <Pressable>
+            <Pressable onPress={onAddAgreement}>
               <Text variant="p2R" marginTop="l" color="semantic.info">
                 Agregar
               </Text>
