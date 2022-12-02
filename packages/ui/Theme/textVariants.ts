@@ -12,7 +12,7 @@ const textVariants = {
     color: "text",
   },
   h2: {
-    fontFamily: "Rubik-700",
+    fontFamily: "Rubik-500",
     fontSize: 24,
     lineHeight: 33,
     color: "text",

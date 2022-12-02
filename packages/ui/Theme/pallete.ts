@@ -4,6 +4,12 @@ export const pallete = {
     primaryB: "#c75f3d",
     secondaryA: "#e7b061",
     secondaryB: "#8cbae7",
+    transparent: {
+      primaryA: "#413d7680",
+      primaryB: "#c75f3d80",
+      secondaryA: "#e7b06180",
+      secondaryB: "#8cbae780",
+    },
   },
   shadesA: {
     "100": "#BA883B",
