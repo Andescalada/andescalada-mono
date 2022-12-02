@@ -30,6 +30,7 @@
     "@andescalada/db": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
+    "@andescalada/icons": "*",
     "@cloudinary/url-gen": "^1.8.6",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@gorhom/bottom-sheet": "^4",

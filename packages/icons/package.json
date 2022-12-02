@@ -1,0 +1,16 @@
+{
+  "name": "@andescalada/icons",
+  "version": "1.0.0",
+  "description": "Svg Icons for Andescalada ",
+  "main": "index.tsx",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "transform": "sh transform.sh"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^6.2.1",
+    "@svgr/core": "^6.2.1",
+    "svgo": "^2.8.0"
+  }
+}

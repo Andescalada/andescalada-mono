@@ -1,0 +1,1 @@
+export { default as NoCampingColor } from './no-camping-color'
