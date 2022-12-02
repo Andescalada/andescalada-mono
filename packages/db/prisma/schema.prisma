@@ -169,8 +169,9 @@ model Agreement {
   name        String
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+  title       String
   description String
-  level       AgreementLevel
+  level       AgreementLevel @default(Optional)
   position    Int            @default(0)
   Zone        Zone?          @relation(fields: [zoneId], references: [id])
   zoneId      String?
