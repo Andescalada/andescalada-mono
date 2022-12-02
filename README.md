@@ -69,20 +69,25 @@ prisma studio
 
 
 
-## Techs
+## Main Techs 
 
-- PlanetScale
-- Cloudinary
-- Auth0 -> Passwordless
-- TRPC V10
-- React Query
-- Restyle 
-- Zod 
-- Realm (?)
-- Yarn Workspaces
-- Prisma
-- Vercel
-- NextJS
-- Turborepo
-- Redis
-- Upstash
+- Typescript as main source code language
+- TRPC V10 for API
+- React Query for Front End state management
+- Restyle for UI and Front End styling
+- React Native SKIA for graphics rendering
+- Zod for validation and typing
+- React Native Quick SQLite for local databases
+- Yarn Workspaces for monorepo management
+- Turborepo for monorepo cache management
+- Prisma for database schema management
+- NextJS for web app (Coming soon...)
+
+## Main Services 
+- Expo Application Services (EAS) for app builds and updates
+- Expo Notification Server for push notifications
+- Vercel for web and api hosting
+- PlanetScale for main MySql database
+- Upstash for Back End cache Redis DB
+- Cloudinary for Image management and DB
+- Auth0 with Passwordless for Login 
