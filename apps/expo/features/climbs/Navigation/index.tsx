@@ -9,6 +9,7 @@ import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
 import SectorScreen from "@features/climbs/SectorScreen";
 import WallScreen from "@features/climbs/WallScreen";
+import ZoneAgreementsEditorScreen from "@features/climbs/ZoneAgreementsEditorScreen";
 import ZoneScreen from "@features/climbs/ZoneScreen";
 import ZonesListScreen from "@features/climbs/ZonesListScreen";
 import OfflineNotification from "@features/offline/OfflineNotification";
@@ -73,6 +74,7 @@ const Navigator = () => {
           name={ClimbsNavigationRoutes.Wall}
           component={WallScreen}
         />
+
         <Stack.Screen
           name={ClimbsNavigationRoutes.RouteOptions}
           component={RouteOptionsScreen}
@@ -90,6 +92,18 @@ const Navigator = () => {
           component={AdminZoneOptionsScreen}
           options={{
             title: `Opciones`,
+            headerShown: true,
+            headerTitleStyle: { fontFamily, fontSize, lineHeight },
+            headerLeft: ({ onPress }) => (
+              <BackButton onPress={onPress} marginLeft="s" />
+            ),
+          }}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.ZoneAgreementsEditor}
+          component={ZoneAgreementsEditorScreen}
+          options={{
+            title: `Acuerdos`,
             headerShown: true,
             headerTitleStyle: { fontFamily, fontSize, lineHeight },
             headerLeft: ({ onPress }) => (

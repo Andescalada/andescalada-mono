@@ -78,6 +78,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               route: { id, position, extendedRouteId },
               wallId,
               topoId: mainTopo.data,
+              zoneId: rest.zoneId,
             },
           });
         } else {
@@ -108,6 +109,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               route: { id, position, extendedRouteId },
               wallId,
               topoId: mainTopo.data,
+              zoneId: rest.zoneId,
             },
           });
         } else {

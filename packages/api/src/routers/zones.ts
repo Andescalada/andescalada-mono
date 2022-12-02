@@ -116,4 +116,10 @@ export const zonesRouter = t.router({
       select: { name: true, id: true },
     }),
   ),
+  agreementsList: protectedZoneProcedure.query(async ({ ctx, input }) =>
+    ctx.prisma.zoneAgreement.findMany({
+      where: { zoneId: input.zoneId, isDeleted: SoftDelete.NotDeleted },
+      include: { Agreement: true },
+    }),
+  ),
 });

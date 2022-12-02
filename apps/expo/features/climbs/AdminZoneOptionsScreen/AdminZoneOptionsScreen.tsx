@@ -30,8 +30,9 @@ const AdminZoneOptionsScreen: FC<Props> = ({
       </ListItemOption>
       <ListItemOption
         onPress={() =>
-          navigation.navigate(ClimbsNavigationRoutes.AddSector, {
+          navigation.navigate(ClimbsNavigationRoutes.ZoneAgreementsEditor, {
             zoneId,
+            zoneName,
           })
         }
       >
