@@ -1,15 +1,12 @@
-import { BackButton } from "@andescalada/ui";
-import textVariants from "@andescalada/ui/Theme/textVariants";
 import CreateZoneScreen from "@features/user/CreateZoneScreen";
 import GradingSystemConfigScreen from "@features/user/GradingSystemConfigScreen";
 import ManageUserRolesScreen from "@features/user/ManageUserRolesScreen";
 import OwnUserConfigScreen from "@features/user/OwnUserConfigScreen";
 import PersonalInfoConfigScreen from "@features/user/PersonalInfoConfigScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import backHeader from "@utils/navigationBackHeader";
 
 import { UserNavigationParamList, UserNavigationRoutes } from "./types";
-
-const { fontFamily, fontSize, lineHeight } = textVariants.p1R;
 
 const Stack = createStackNavigator<UserNavigationParamList>();
 
@@ -17,10 +14,7 @@ const Navigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitleStyle: { fontFamily, fontSize, lineHeight },
-        headerLeft({ onPress }) {
-          return <BackButton onPress={onPress} marginLeft="s" />;
-        },
+        ...backHeader,
       }}
     >
       <Stack.Screen

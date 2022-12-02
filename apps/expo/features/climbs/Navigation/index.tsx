@@ -1,5 +1,4 @@
-import { BackButton, Box } from "@andescalada/ui";
-import textVariants from "@andescalada/ui/Theme/textVariants";
+import { Box } from "@andescalada/ui";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
@@ -16,13 +15,12 @@ import OfflineNotification from "@features/offline/OfflineNotification";
 import OfflineUpdateNotification from "@features/offline/OfflineUpdateNotification";
 import UserHeader from "@features/user/components/UserHeader/UserHeader";
 import { createStackNavigator } from "@react-navigation/stack";
+import backHeader from "@utils/navigationBackHeader";
 
 import {
   ClimbsNavigationNavigationParamList,
   ClimbsNavigationRoutes,
 } from "./types";
-
-const { fontFamily, fontSize, lineHeight } = textVariants.p1R;
 
 const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 
@@ -80,11 +78,7 @@ const Navigator = () => {
           component={RouteOptionsScreen}
           options={{
             title: "Opciones",
-            headerShown: true,
-            headerTitleStyle: { fontFamily, fontSize, lineHeight },
-            headerLeft: ({ onPress }) => (
-              <BackButton onPress={onPress} marginLeft="s" />
-            ),
+            ...backHeader,
           }}
         />
         <Stack.Screen
@@ -92,11 +86,7 @@ const Navigator = () => {
           component={AdminZoneOptionsScreen}
           options={{
             title: `Opciones`,
-            headerShown: true,
-            headerTitleStyle: { fontFamily, fontSize, lineHeight },
-            headerLeft: ({ onPress }) => (
-              <BackButton onPress={onPress} marginLeft="s" />
-            ),
+            ...backHeader,
           }}
         />
         <Stack.Screen
@@ -104,11 +94,7 @@ const Navigator = () => {
           component={ZoneAgreementsEditorScreen}
           options={{
             title: `Acuerdos`,
-            headerShown: true,
-            headerTitleStyle: { fontFamily, fontSize, lineHeight },
-            headerLeft: ({ onPress }) => (
-              <BackButton onPress={onPress} marginLeft="s" />
-            ),
+            ...backHeader,
           }}
         />
       </Stack.Navigator>
