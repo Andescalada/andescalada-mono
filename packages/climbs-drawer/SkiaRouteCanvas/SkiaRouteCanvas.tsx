@@ -36,23 +36,27 @@ const SkiaRouteCanvas: FC<Props> = ({
   disableGesture,
   center,
 }) => {
-  const touchHandler = useMultiTouchHandler({
-    onEnd: ({ x, y, id }) => {
-      if (coords) {
-        const isXOutOfBound = Math.abs(x) > width;
-        const isYOutOfBound = Math.abs(y) > height;
+  const touchHandler = useMultiTouchHandler(
+    {
+      onEnd: ({ x, y, id }) => {
+        if (disableGesture) return;
+        if (coords) {
+          const isXOutOfBound = Math.abs(x) > width;
+          const isYOutOfBound = Math.abs(y) > height;
 
-        if (
-          isXOutOfBound ||
-          isYOutOfBound ||
-          (Platform.OS === "android" && id > 0)
-        ) {
-          return;
+          if (
+            isXOutOfBound ||
+            isYOutOfBound ||
+            (Platform.OS === "android" && id > 0)
+          ) {
+            return;
+          }
+          coords.current = { x, y };
         }
-        coords.current = { x, y };
-      }
+      },
     },
-  });
+    [disableGesture],
+  );
 
   const image = useCacheImage(imageUrl);
 
