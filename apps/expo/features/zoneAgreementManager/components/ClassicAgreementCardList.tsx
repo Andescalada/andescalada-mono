@@ -21,7 +21,7 @@ const ClassicAgreementCardList: FC<Props> = ({ classic }) => {
           id={agreement.id}
           title={agreement.title.originalText}
           subTitle={agreement.description.originalText}
-          iconName={(agreement?.icon || "dog") as IconNames}
+          iconName={(agreement?.icon || "question-mark") as IconNames}
           marginBottom="xl"
         />
       ))}

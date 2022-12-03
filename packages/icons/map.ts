@@ -17,6 +17,8 @@ export const Icons = {
   "paid-hands": require(base + "paid-hands").default,
   "poop-bag-color": require(base + "poop-bag-color").default,
   "poop-bag": require(base + "poop-bag").default,
+  "question-mark-color": require(base + "question-mark-color").default,
+  "question-mark": require(base + "question-mark").default,
   "shake-hands-color": require(base + "shake-hands-color").default,
   "shake-hands": require(base + "shake-hands").default,
   "toilet-color": require(base + "toilet-color").default,
