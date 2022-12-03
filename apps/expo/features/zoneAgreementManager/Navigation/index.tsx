@@ -1,5 +1,6 @@
 import AgreementsIntroScreen from "@features/zoneAgreementManager/AgreementsIntroScreen";
 import CampingAgreementScreen from "@features/zoneAgreementManager/CampingAgreementScreen";
+import FireAgreementScreen from "@features/zoneAgreementManager/FireAgreementScreen";
 import PetsAgreement from "@features/zoneAgreementManager/PetsAgreementScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
@@ -29,6 +30,14 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneAgreementsRoutes.CampingAgreement}
         component={CampingAgreementScreen}
+        options={{
+          title: "Acuerdos clásicos",
+          ...backHeader,
+        }}
+      />
+      <Stack.Screen
+        name={ZoneAgreementsRoutes.FireAgreement}
+        component={FireAgreementScreen}
         options={{
           title: "Acuerdos clásicos",
           ...backHeader,

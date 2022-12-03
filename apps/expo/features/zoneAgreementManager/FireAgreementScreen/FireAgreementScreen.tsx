@@ -7,32 +7,30 @@ import {
 } from "@features/zoneAgreementManager/Navigation/types";
 import { FC, useState } from "react";
 
-type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.CampingAgreement>;
+type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.FireAgreement>;
 
-const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
+const PetsAgreementScreen: FC<Props> = (props) => {
   const [selected, setSelected] = useState<string>();
   return (
     <Screen safeAreaDisabled padding="m">
-      <Text variant="h2">Sobre acampar:</Text>
+      <Text variant="h2">Sobre hacer fuego:</Text>
       <ClassicAgreementContainer
         value={selected}
         onChange={(v) => setSelected(v as string)}
-        onSubmit={(id) =>
-          navigation.navigate(ZoneAgreementsRoutes.FireAgreement)
-        }
+        onSubmit={(id) => console.log(id)}
       >
         <ClassicAgreementCard
           id="2"
-          title="No se permite acampar"
-          subTitle="No esta permitido acampar en esta zona de escalada"
-          iconName="no-camping"
+          title="No se hacer fuego"
+          subTitle="No esta permitido hacer fuego en esta zona de escalada."
+          iconName="no-fire"
           marginBottom="xl"
         />
         <ClassicAgreementCard
           id="1"
-          title="Permitido acampar"
-          subTitle="Es posible acampar en esta zona de escalada respetando las reglas."
-          iconName="camping"
+          title="Permitido hacer fuego"
+          subTitle="Está permitido hacer fuego, recuerda dejarlo bien apagado."
+          iconName="fire"
           marginBottom="xl"
         />
       </ClassicAgreementContainer>
