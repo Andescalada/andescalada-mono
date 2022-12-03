@@ -197,8 +197,8 @@ model ZoneAgreement {
 
 model Agreement {
   id            String            @id @default(uuid())
-  name          TextContent       @relation("AgreementName", fields: [nameId], references: [id])
-  nameId        String
+  title         TextContent       @relation("AgreementName", fields: [titleId], references: [id])
+  titleId       String
   description   TextContent       @relation("AgreementDescription", fields: [descriptionId], references: [id])
   descriptionId String
   createdAt     DateTime          @default(now())
@@ -213,7 +213,7 @@ model Agreement {
   ZoneAgreement ZoneAgreement[]
 
   @@index([authorId])
-  @@index([nameId])
+  @@index([titleId])
   @@index([descriptionId])
 }
 
@@ -464,14 +464,14 @@ model TextContent {
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
   originalText         String        @db.LongText
-  originalLang         Languague     @relation(fields: [languagueId], references: [languagueId])
+  originalLang         Language      @relation(fields: [languageId], references: [languageId])
   isDeleted            SoftDelete    @default(NotDeleted)
   Translation          Translation[]
-  languagueId          String
+  languageId           String
   AgreementName        Agreement[]   @relation("AgreementName")
   AgreementDescription Agreement[]   @relation("AgreementDescription")
 
-  @@index([languagueId])
+  @@index([languageId])
 }
 
 model Translation {
@@ -482,21 +482,21 @@ model Translation {
   textContentId String
   translation   String      @db.LongText
   isDeleted     SoftDelete  @default(NotDeleted)
-  language      Languague   @relation(fields: [languageId], references: [languagueId])
+  language      Language    @relation(fields: [languageId], references: [languageId])
   languageId    String
 
   @@index([textContentId])
   @@index([languageId])
 }
 
-model Languague {
-  languagueId   String        @id @unique
-  languagueName String
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  isDeleted     SoftDelete    @default(NotDeleted)
-  TextContent   TextContent[]
-  Translation   Translation[]
+model Language {
+  languageId   String        @id @unique
+  languageName String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  isDeleted    SoftDelete    @default(NotDeleted)
+  TextContent  TextContent[]
+  Translation  Translation[]
 
-  @@index([languagueId])
+  @@index([languageId])
 }
