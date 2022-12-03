@@ -7,7 +7,7 @@ import { z } from "zod";
 const schema = z.object({
   agreementId: z.string(),
   level: AgreementLevelSchema,
-  comment: z.string().max(280),
+  comment: z.string().max(280).optional(),
 });
 
 const classic = z.object({ classic: ClassicAgreementSchema });

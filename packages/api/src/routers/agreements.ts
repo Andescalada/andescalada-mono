@@ -22,14 +22,16 @@ export const agreementsRouter = t.router({
           Zone: { connect: { id: input.zoneId } },
           Agreement: { connect: { id: input.agreementId } },
           level: input.level,
-          comment: {
-            create: {
-              originalText: input.comment,
-              originalLang: {
-                connect: { languageId: "es" },
-              },
-            },
-          },
+          comment: !!input.comment
+            ? {
+                create: {
+                  originalText: input.comment,
+                  originalLang: {
+                    connect: { languageId: "es" },
+                  },
+                },
+              }
+            : undefined,
         },
       }),
     ),

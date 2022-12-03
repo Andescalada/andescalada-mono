@@ -27,6 +27,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
   const onAddAgreement = () => {
     rootNavigation.navigate(RootNavigationRoutes.ZoneAgreementsManager, {
       screen: ZoneAgreementsRoutes.AgreementsIntro,
+      params: { zoneId },
     });
   };
 
@@ -65,7 +66,9 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
             </Pressable>
           </Box>
         )}
-        renderItem={({ item }) => <Text>{item.Agreement.name}</Text>}
+        renderItem={({ item }) => (
+          <Text>{item.Agreement.title.originalText}</Text>
+        )}
       />
     </Screen>
   );

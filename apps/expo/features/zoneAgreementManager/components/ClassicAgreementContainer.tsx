@@ -1,4 +1,7 @@
-import { ClassicAgreementSchema } from "@andescalada/db/zod";
+import {
+  AgreementLevelSchema,
+  ClassicAgreementSchema,
+} from "@andescalada/db/zod";
 import {
   A,
   ActivityIndicator,
@@ -16,18 +19,34 @@ import {
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { Ionicons } from "@expo/vector-icons";
-import { ComponentProps, FC, ReactNode, useRef, useState } from "react";
+import { Zone } from "@prisma/client";
+import {
+  ComponentProps,
+  FC,
+  ReactNode,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { ScrollView as ScrollViewRef } from "react-native";
 import { FadeIn, FadeOut, Layout } from "react-native-reanimated";
+
+type AgreementLevel = typeof AgreementLevelSchema._type;
+interface SubmitArgs {
+  id: string | undefined;
+  level?: AgreementLevel;
+  comment?: string;
+}
 
 interface Props
   extends ComponentProps<typeof ButtonGroup>,
     ComponentProps<typeof Box> {
   children: ReactNode;
-  onSubmit: (id: string) => void;
+  onSubmit: (args: SubmitArgs) => void;
   submitLabel?: string;
   title: string;
   classic: typeof ClassicAgreementSchema._type;
+  zoneId: Zone["id"];
 }
 
 const UNDEFINED_AGREEMENT = "UNDEFINED_AGREEMENT";
@@ -41,16 +60,38 @@ const ClassicAgreementContainer: FC<Props> = ({
   allowUndefined,
   title,
   classic,
+  zoneId,
   ...props
 }) => {
   const { isLoading } = trpc.agreements.classic.useQuery({
     classic,
   });
 
+  const utils = trpc.useContext();
+
+  const zoneAgreementList = trpc.agreements.addToZoneList.useMutation({
+    onSuccess: () => {
+      utils.zones.agreementsList.invalidate({ zoneId });
+    },
+  });
+
   const scrollRef = useRef<ScrollViewRef>(null);
 
-  const [level, setLevel] = useState<number | undefined>();
+  const [level, setLevel] = useState<AgreementLevel>();
   const [comment, setComment] = useState("");
+
+  const handleSubmit = ({ id, comment, level }: SubmitArgs) => {
+    if (id && level) {
+      zoneAgreementList.mutate({
+        agreementId: id,
+        level,
+        zoneId,
+        classic,
+        ...(comment && { comment }),
+      });
+    }
+    onSubmit({ id, comment, level });
+  };
 
   if (isLoading)
     return (
@@ -88,8 +129,10 @@ const ClassicAgreementContainer: FC<Props> = ({
               show={!!level}
             />
             <SubmitButton
-              onSubmit={onSubmit}
+              onSubmit={handleSubmit}
               submitLabel={submitLabel}
+              level={level}
+              comment={comment}
               show={
                 value !== undefined &&
                 (level !== undefined || value === UNDEFINED_AGREEMENT) &&
@@ -126,35 +169,39 @@ const UndefinedAgreementButton = () => {
 };
 
 interface SubmitButtonProps {
-  onSubmit: (id: string) => void;
+  onSubmit: (args: SubmitArgs) => void;
   submitLabel?: string;
-
   show: boolean;
+  level: AgreementLevel | undefined;
+  comment: string;
 }
 
 const SubmitButton = ({
   onSubmit,
   submitLabel = "Continuar",
   show,
+  level,
+  comment,
 }: SubmitButtonProps) => {
   const { value } = useButtonGroup();
+
+  const handleSubmit = useCallback(() => {
+    const id = value === UNDEFINED_AGREEMENT ? undefined : (value as string);
+    onSubmit({ id, level, comment });
+  }, [comment, level, onSubmit, value]);
 
   if (show)
     return (
       <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="xl">
-        <Button
-          variant="success"
-          title={submitLabel}
-          onPress={() => onSubmit(value as string)}
-        />
+        <Button variant="success" title={submitLabel} onPress={handleSubmit} />
       </A.Box>
     );
   return <Box />;
 };
 
 interface AgreementGradeProps {
-  level: number | undefined;
-  setLevel: (level: number | undefined) => void;
+  level: AgreementLevel | undefined;
+  setLevel: (level: AgreementLevel | undefined) => void;
 }
 
 const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
@@ -168,12 +215,12 @@ const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
         </Text>
         <ButtonGroup
           value={level}
-          onChange={(v) => setLevel(v as number)}
+          onChange={(v) => setLevel(v as AgreementLevel)}
           allowUndefined
         >
           <Box flexWrap="wrap" flexDirection="row">
             <ButtonGroup.Item
-              value={2}
+              value={AgreementLevelSchema.enum.Critical}
               label="Crítico"
               selectedBackgroundColor={"semantic.error"}
               backgroundColor={
@@ -181,7 +228,7 @@ const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
               }
             />
             <ButtonGroup.Item
-              value={1}
+              value={AgreementLevelSchema.enum.Important}
               label="Importante"
               selectedBackgroundColor={"semantic.warning"}
               backgroundColor={
@@ -193,7 +240,7 @@ const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
               selectedTextColor="grayscale.black"
             />
             <ButtonGroup.Item
-              value={0}
+              value={AgreementLevelSchema.enum.Recommended}
               label="Recomendado"
               selectedBackgroundColor={"semantic.info"}
               backgroundColor={
@@ -201,7 +248,7 @@ const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
               }
             />
             <ButtonGroup.Item
-              value={-1}
+              value={AgreementLevelSchema.enum.NotAplicable}
               label="No aplica"
               selectedBackgroundColor={"grayscale.800"}
               backgroundColor={

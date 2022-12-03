@@ -41,6 +41,7 @@ export const zonesRouter = t.router({
     const res = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
       select: {
+        name: true,
         isDeleted: true,
         sectors: {
           where: { isDeleted: SoftDelete.NotDeleted },
@@ -119,7 +120,9 @@ export const zonesRouter = t.router({
   agreementsList: protectedZoneProcedure.query(async ({ ctx, input }) =>
     ctx.prisma.zoneAgreement.findMany({
       where: { zoneId: input.zoneId, isDeleted: SoftDelete.NotDeleted },
-      include: { Agreement: true },
+      include: {
+        Agreement: { include: { title: { select: { originalText: true } } } },
+      },
     }),
   ),
 });

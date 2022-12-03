@@ -1,4 +1,6 @@
+import { ClassicAgreementSchema } from "@andescalada/db/zod";
 import { A, Box, Button, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneAgreementsRoutes,
   ZoneAgreementsScreenProps,
@@ -10,7 +12,16 @@ type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.AgreementsIntro>;
 
 const DELAY = 1800;
 
-const AgreementsIntroScreen: FC<Props> = ({ navigation }) => {
+const AgreementsIntroScreen: FC<Props> = ({
+  navigation,
+  route: {
+    params: { zoneId },
+  },
+}) => {
+  trpc.agreements.classic.useQuery({
+    classic: ClassicAgreementSchema.enum.Pets,
+  });
+
   return (
     <Screen backgroundColor="brand.primaryA">
       <Box padding="m">
@@ -89,7 +100,9 @@ const AgreementsIntroScreen: FC<Props> = ({ navigation }) => {
                     variant="transparent"
                     title="Continuar"
                     onPress={() =>
-                      navigation.navigate(ZoneAgreementsRoutes.PetsAgreement)
+                      navigation.navigate(ZoneAgreementsRoutes.PetsAgreement, {
+                        zoneId,
+                      })
                     }
                   />
                 </Box>

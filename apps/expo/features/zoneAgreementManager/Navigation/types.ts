@@ -1,3 +1,4 @@
+import type { Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -11,12 +12,12 @@ export enum ZoneAgreementsRoutes {
 }
 
 export type ZoneAgreementsNavigationParamList = {
-  [ZoneAgreementsRoutes.AgreementsIntro]: undefined;
-  [ZoneAgreementsRoutes.PetsAgreement]: undefined;
-  [ZoneAgreementsRoutes.CampingAgreement]: undefined;
-  [ZoneAgreementsRoutes.FireAgreement]: undefined;
-  [ZoneAgreementsRoutes.PayAgreement]: undefined;
-  [ZoneAgreementsRoutes.ToiletAgreement]: undefined;
+  [ZoneAgreementsRoutes.AgreementsIntro]: { zoneId: Zone["id"] };
+  [ZoneAgreementsRoutes.PetsAgreement]: { zoneId: Zone["id"] };
+  [ZoneAgreementsRoutes.CampingAgreement]: { zoneId: Zone["id"] };
+  [ZoneAgreementsRoutes.FireAgreement]: { zoneId: Zone["id"] };
+  [ZoneAgreementsRoutes.PayAgreement]: { zoneId: Zone["id"] };
+  [ZoneAgreementsRoutes.ToiletAgreement]: { zoneId: Zone["id"] };
 };
 
 export type ZoneAgreementsRouteProps<T extends ZoneAgreementsRoutes> =
