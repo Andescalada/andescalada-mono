@@ -176,7 +176,8 @@ model Zone {
 model ZoneAgreement {
   id          String         @id @default(uuid())
   position    Int            @default(0)
-  comment     String?
+  comment     TextContent?   @relation(fields: [commentId], references: [id])
+  commentId   String?
   level       AgreementLevel @default(Recommended)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -193,6 +194,7 @@ model ZoneAgreement {
   @@index([zoneId])
   @@index([agreementId])
   @@index([authorId])
+  @@index([commentId])
 }
 
 model Agreement {
@@ -460,16 +462,17 @@ enum SoftDelete {
 }
 
 model TextContent {
-  id                   String        @id @default(uuid())
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
-  originalText         String        @db.LongText
-  originalLang         Language      @relation(fields: [languageId], references: [languageId])
-  isDeleted            SoftDelete    @default(NotDeleted)
+  id                   String          @id @default(uuid())
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  originalText         String          @db.LongText
+  originalLang         Language        @relation(fields: [languageId], references: [languageId])
+  isDeleted            SoftDelete      @default(NotDeleted)
   Translation          Translation[]
   languageId           String
-  AgreementName        Agreement[]   @relation("AgreementName")
-  AgreementDescription Agreement[]   @relation("AgreementDescription")
+  AgreementName        Agreement[]     @relation("AgreementName")
+  AgreementDescription Agreement[]     @relation("AgreementDescription")
+  ZoneAgreementComment ZoneAgreement[]
 
   @@index([languageId])
 }
