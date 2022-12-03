@@ -2,8 +2,10 @@ import { FC, useMemo } from "react";
 
 import { Icons } from "./map";
 
+export type IconNames = keyof typeof Icons;
+
 interface Props {
-  name: keyof typeof Icons;
+  name: IconNames;
   size?: number;
   color?: string;
   style?: [{ color: string }];
