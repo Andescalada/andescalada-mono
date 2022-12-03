@@ -199,7 +199,8 @@ model Agreement {
   coAuthors     User[]          @relation("CoAuthorAgreements")
   isDeleted     SoftDelete      @default(NotDeleted)
   version       Int             @default(0)
-  common        Boolean         @default(false)
+  classic       Boolean         @default(false)
+  icon          String?
   ZoneAgreement ZoneAgreement[]
 
   @@index([authorId])
