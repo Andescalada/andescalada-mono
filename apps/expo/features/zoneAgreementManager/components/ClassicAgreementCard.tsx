@@ -23,12 +23,11 @@ const ClassicAgreementCard = ({
 
   return (
     <Box
-      height={150}
       width="100%"
       borderRadius={30}
       backgroundColor="grayscale.100"
       flexDirection="row"
-      padding="s"
+      padding="l"
       alignItems="center"
       justifyContent="space-between"
       {...props}
@@ -42,7 +41,7 @@ const ClassicAgreementCard = ({
           color="grayscale.500"
         />
       </Box>
-      <Box padding="s" flex={1}>
+      <Box padding="s" flex={1} height="100%">
         <Text
           variant="p1B"
           color={isSelected === false ? "grayscale.500" : "grayscale.black"}

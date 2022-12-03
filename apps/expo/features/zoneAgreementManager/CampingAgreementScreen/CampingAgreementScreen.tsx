@@ -13,7 +13,7 @@ const PetsAgreementScreen: FC<Props> = (props) => {
   const [selected, setSelected] = useState<string>();
   return (
     <Screen safeAreaDisabled padding="m">
-      <Text variant="h2">Sobre mascotas:</Text>
+      <Text variant="h2">Sobre acampar:</Text>
       <ClassicAgreementContainer
         value={selected}
         onChange={(v) => setSelected(v as string)}
