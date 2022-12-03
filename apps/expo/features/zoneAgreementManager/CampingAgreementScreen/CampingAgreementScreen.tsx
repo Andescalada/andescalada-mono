@@ -1,5 +1,6 @@
+import { ClassicAgreementSchema } from "@andescalada/db/zod";
 import { Screen } from "@andescalada/ui";
-import ClassicAgreementCard from "@features/zoneAgreementManager/components/ClassicAgreementCard";
+import ClassicAgreementCardList from "@features/zoneAgreementManager/components/ClassicAgreementCardList";
 import ClassicAgreementContainer from "@features/zoneAgreementManager/components/ClassicAgreementContainer";
 import {
   ZoneAgreementsRoutes,
@@ -20,20 +21,10 @@ const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
         onSubmit={(id) =>
           navigation.navigate(ZoneAgreementsRoutes.FireAgreement)
         }
+        classic={ClassicAgreementSchema.Enum.Camping}
       >
-        <ClassicAgreementCard
-          id="2"
-          title="No se permite acampar"
-          subTitle="No esta permitido acampar en esta zona de escalada"
-          iconName="no-camping"
-          marginBottom="xl"
-        />
-        <ClassicAgreementCard
-          id="1"
-          title="Permitido acampar"
-          subTitle="Es posible acampar en esta zona de escalada respetando las reglas."
-          iconName="camping"
-          marginBottom="xl"
+        <ClassicAgreementCardList
+          classic={ClassicAgreementSchema.Enum.Camping}
         />
       </ClassicAgreementContainer>
     </Screen>

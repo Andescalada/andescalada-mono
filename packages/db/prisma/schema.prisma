@@ -229,7 +229,7 @@ enum AgreementLevel {
   Critical
   Important
   Recommended
-  Optional
+  NotAplicable
 }
 
 model Sector {

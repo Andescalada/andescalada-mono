@@ -1,5 +1,6 @@
+import { ClassicAgreementSchema } from "@andescalada/db/zod";
 import { Screen } from "@andescalada/ui";
-import ClassicAgreementCard from "@features/zoneAgreementManager/components/ClassicAgreementCard";
+import ClassicAgreementCardList from "@features/zoneAgreementManager/components/ClassicAgreementCardList";
 import ClassicAgreementContainer from "@features/zoneAgreementManager/components/ClassicAgreementContainer";
 import {
   ZoneAgreementsRoutes,
@@ -18,20 +19,10 @@ const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
         value={selected}
         onChange={(v) => setSelected(v as string)}
         onSubmit={(id) => console.log(id)}
+        classic={ClassicAgreementSchema.Enum.Toilet}
       >
-        <ClassicAgreementCard
-          id="2"
-          title="Usa el baño habilitado"
-          subTitle="Existe un baño habilitado para que hagas tus necesidades."
-          iconName="toilet"
-          marginBottom="xl"
-        />
-        <ClassicAgreementCard
-          id="1"
-          title="No dejes rastro"
-          subTitle="No existe un baño habilitado, por favor no dejes rastro. Entierra o llévate tus caca."
-          iconName="poop-bag"
-          marginBottom="xl"
+        <ClassicAgreementCardList
+          classic={ClassicAgreementSchema.Enum.Toilet}
         />
       </ClassicAgreementContainer>
     </Screen>

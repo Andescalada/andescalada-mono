@@ -1,5 +1,6 @@
+import { ClassicAgreementSchema } from "@andescalada/db/zod";
 import { Screen } from "@andescalada/ui";
-import ClassicAgreementCard from "@features/zoneAgreementManager/components/ClassicAgreementCard";
+import ClassicAgreementCardList from "@features/zoneAgreementManager/components/ClassicAgreementCardList";
 import ClassicAgreementContainer from "@features/zoneAgreementManager/components/ClassicAgreementContainer";
 import {
   ZoneAgreementsRoutes,
@@ -20,20 +21,10 @@ const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
         onSubmit={(id) =>
           navigation.navigate(ZoneAgreementsRoutes.ToiletAgreement)
         }
+        classic={ClassicAgreementSchema.Enum.Payment}
       >
-        <ClassicAgreementCard
-          id="2"
-          title="Pagado"
-          subTitle="Es necesario pagar para acceder a esta zona de escalada."
-          iconName="paid-hands"
-          marginBottom="xl"
-        />
-        <ClassicAgreementCard
-          id="1"
-          title="Libre"
-          subTitle="No es necesario pagar para acceder a esta zona de escalada."
-          iconName="shake-hands"
-          marginBottom="xl"
+        <ClassicAgreementCardList
+          classic={ClassicAgreementSchema.Enum.Payment}
         />
       </ClassicAgreementContainer>
     </Screen>

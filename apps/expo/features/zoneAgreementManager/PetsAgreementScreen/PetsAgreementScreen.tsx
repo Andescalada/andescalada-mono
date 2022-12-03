@@ -1,5 +1,6 @@
+import { ClassicAgreementSchema } from "@andescalada/db/zod";
 import { Screen } from "@andescalada/ui";
-import ClassicAgreementCard from "@features/zoneAgreementManager/components/ClassicAgreementCard";
+import ClassicAgreementCardList from "@features/zoneAgreementManager/components/ClassicAgreementCardList";
 import ClassicAgreementContainer from "@features/zoneAgreementManager/components/ClassicAgreementContainer";
 import {
   ZoneAgreementsRoutes,
@@ -11,6 +12,7 @@ type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.PetsAgreement>;
 
 const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
   const [selected, setSelected] = useState<string>();
+
   return (
     <Screen safeAreaDisabled>
       <ClassicAgreementContainer
@@ -20,22 +22,9 @@ const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
         onSubmit={(id) =>
           navigation.navigate(ZoneAgreementsRoutes.CampingAgreement)
         }
+        classic={ClassicAgreementSchema.Enum.Pets}
       >
-        <ClassicAgreementCard
-          id="2"
-          title="Se permiten mascotas"
-          subTitle="Tus mascotas son bienvenidas en esta zona de escalada. Se responsable y respetuoso."
-          iconName="dog"
-          marginBottom="xl"
-        />
-        <ClassicAgreementCard
-          id="1"
-          title="No se permiten mascotas"
-          subTitle=" Lamentamos que tus mascotas no puedan acompañarte en esta zona de
-        escalada."
-          iconName="no-dog"
-          marginBottom="xl"
-        />
+        <ClassicAgreementCardList classic={ClassicAgreementSchema.Enum.Pets} />
       </ClassicAgreementContainer>
     </Screen>
   );

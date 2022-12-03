@@ -1,16 +1,20 @@
+import { ClassicAgreementSchema } from "@andescalada/db/zod";
 import {
   A,
+  ActivityIndicator,
   Box,
   Button,
   ButtonGroup,
   KeyboardAvoidingBox,
   KeyboardDismiss,
   Pressable,
+  Screen,
   ScrollView,
   Text,
   TextInput,
   useButtonGroup,
 } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import { Ionicons } from "@expo/vector-icons";
 import { ComponentProps, FC, ReactNode, useRef, useState } from "react";
 import { ScrollView as ScrollViewRef } from "react-native";
@@ -23,6 +27,7 @@ interface Props
   onSubmit: (id: string) => void;
   submitLabel?: string;
   title: string;
+  classic: typeof ClassicAgreementSchema._type;
 }
 
 const UNDEFINED_AGREEMENT = "UNDEFINED_AGREEMENT";
@@ -35,13 +40,24 @@ const ClassicAgreementContainer: FC<Props> = ({
   submitLabel,
   allowUndefined,
   title,
+  classic,
   ...props
 }) => {
-  const [level, setLevel] = useState<number | undefined>();
+  const { isLoading } = trpc.agreements.classic.useQuery({
+    classic,
+  });
 
   const scrollRef = useRef<ScrollViewRef>(null);
 
+  const [level, setLevel] = useState<number | undefined>();
   const [comment, setComment] = useState("");
+
+  if (isLoading)
+    return (
+      <Screen justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" />
+      </Screen>
+    );
   return (
     <KeyboardAvoidingBox>
       <KeyboardDismiss>
