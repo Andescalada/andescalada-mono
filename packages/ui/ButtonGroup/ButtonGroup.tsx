@@ -30,7 +30,7 @@ const ButtonItem: FC<ButtonItemProps> = ({ label, value: localValue }) => {
   );
 };
 
-interface ButtonGroupProps {
+export interface ButtonGroupProps {
   value: string | number | undefined;
   onChange: (v: string | number | undefined) => void;
   children: ReactNode;

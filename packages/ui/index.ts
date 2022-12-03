@@ -4,7 +4,11 @@ export { default as AnimatedBackground } from "./AnimatedBackground/AnimatedBack
 export { default as BackButton } from "./BackButton/BackButton";
 export { default as Box } from "./Box/Box";
 export { default as Button } from "./Button/Button";
-export { default as ButtonGroup } from "./ButtonGroup/ButtonGroup";
+export {
+  default as ButtonGroup,
+  ButtonGroupProps,
+  useButtonGroup,
+} from "./ButtonGroup/ButtonGroup";
 export { default as EditableTitle } from "./EditableTitle/EditableTitle";
 export { default as Icon } from "./Icon/Icon";
 export { default as Image } from "./Image/Image";
