@@ -13,6 +13,10 @@ export const Icons = {
   "no-dog": require(base + "no-dog").default,
   "no-fire-color": require(base + "no-fire-color").default,
   "no-fire": require(base + "no-fire").default,
+  "paid-hands-color": require(base + "paid-hands-color").default,
+  "paid-hands": require(base + "paid-hands").default,
   "poop-bag-color": require(base + "poop-bag-color").default,
   "poop-bag": require(base + "poop-bag").default,
+  "shake-hands-color": require(base + "shake-hands-color").default,
+  "shake-hands": require(base + "shake-hands").default,
 };

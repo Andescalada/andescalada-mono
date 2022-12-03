@@ -7,32 +7,30 @@ import {
 } from "@features/zoneAgreementManager/Navigation/types";
 import { FC, useState } from "react";
 
-type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.FireAgreement>;
+type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.PayAgreement>;
 
-const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
+const PetsAgreementScreen: FC<Props> = (props) => {
   const [selected, setSelected] = useState<string>();
   return (
     <Screen safeAreaDisabled padding="m">
-      <Text variant="h2">Sobre hacer fuego:</Text>
+      <Text variant="h2">Sobre el acceso:</Text>
       <ClassicAgreementContainer
         value={selected}
         onChange={(v) => setSelected(v as string)}
-        onSubmit={(id) =>
-          navigation.navigate(ZoneAgreementsRoutes.PayAgreement)
-        }
+        onSubmit={(id) => console.log(id)}
       >
         <ClassicAgreementCard
           id="2"
-          title="No se hacer fuego"
-          subTitle="No esta permitido hacer fuego en esta zona de escalada."
-          iconName="no-fire"
+          title="Pagado"
+          subTitle="Es necesario pagar para acceder a esta zona de escalada."
+          iconName="paid-hands"
           marginBottom="xl"
         />
         <ClassicAgreementCard
           id="1"
-          title="Permitido hacer fuego"
-          subTitle="Está permitido hacer fuego, recuerda dejarlo bien apagado."
-          iconName="fire"
+          title="Libre"
+          subTitle="No es necesario pagar para acceder a esta zona de escalada."
+          iconName="shake-hands"
           marginBottom="xl"
         />
       </ClassicAgreementContainer>

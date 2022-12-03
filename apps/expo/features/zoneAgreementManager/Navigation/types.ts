@@ -6,6 +6,7 @@ export enum ZoneAgreementsRoutes {
   PetsAgreement = "PetsAgreement",
   CampingAgreement = "CampingAgreement",
   FireAgreement = "FireAgreement",
+  PayAgreement = "PayAgreement",
 }
 
 export type ZoneAgreementsNavigationParamList = {
@@ -13,6 +14,7 @@ export type ZoneAgreementsNavigationParamList = {
   [ZoneAgreementsRoutes.PetsAgreement]: undefined;
   [ZoneAgreementsRoutes.CampingAgreement]: undefined;
   [ZoneAgreementsRoutes.FireAgreement]: undefined;
+  [ZoneAgreementsRoutes.PayAgreement]: undefined;
 };
 
 export type ZoneAgreementsRouteProps<T extends ZoneAgreementsRoutes> =
