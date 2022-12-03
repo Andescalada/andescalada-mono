@@ -3,12 +3,18 @@ import {
   Box,
   Button,
   ButtonGroup,
+  KeyboardAvoidingBox,
+  KeyboardDismiss,
+  Pressable,
   ScrollView,
   Text,
+  TextInput,
   useButtonGroup,
 } from "@andescalada/ui";
-import { ComponentProps, FC, ReactNode, useState } from "react";
-import { FadeIn, FadeOut } from "react-native-reanimated";
+import { Ionicons } from "@expo/vector-icons";
+import { ComponentProps, FC, ReactNode, useRef, useState } from "react";
+import { ScrollView as ScrollViewRef } from "react-native";
+import { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 
 interface Props
   extends ComponentProps<typeof ButtonGroup>,
@@ -16,6 +22,7 @@ interface Props
   children: ReactNode;
   onSubmit: (id: string) => void;
   submitLabel?: string;
+  title: string;
 }
 
 const UNDEFINED_AGREEMENT = "UNDEFINED_AGREEMENT";
@@ -27,31 +34,56 @@ const ClassicAgreementContainer: FC<Props> = ({
   onSubmit,
   submitLabel,
   allowUndefined,
+  title,
   ...props
 }) => {
   const [level, setLevel] = useState<number | undefined>();
+
+  const scrollRef = useRef<ScrollViewRef>(null);
+
+  const [comment, setComment] = useState("");
   return (
-    <ScrollView
-      flex={1}
-      marginTop="m"
-      {...props}
-      showsVerticalScrollIndicator={false}
-    >
-      <ButtonGroup
-        value={value}
-        allowUndefined={allowUndefined}
-        onChange={onChange}
-      >
-        {children}
-        <UndefinedAgreementButton />
-        <AgreementGrade level={level} setLevel={setLevel} />
-        <SubmitButton
-          onSubmit={onSubmit}
-          level={level}
-          submitLabel={submitLabel}
-        />
-      </ButtonGroup>
-    </ScrollView>
+    <KeyboardAvoidingBox>
+      <KeyboardDismiss>
+        <ScrollView
+          ref={scrollRef}
+          onContentSizeChange={() =>
+            scrollRef.current?.scrollToEnd({ animated: true })
+          }
+          flex={1}
+          padding="m"
+          {...props}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text variant="h2" marginBottom="s">
+            {title}
+          </Text>
+          <ButtonGroup
+            value={value}
+            allowUndefined={allowUndefined}
+            onChange={onChange}
+          >
+            {children}
+            <UndefinedAgreementButton />
+            <AgreementGrade level={level} setLevel={setLevel} />
+            <AgreementComment
+              comment={comment}
+              setComment={setComment}
+              show={!!level}
+            />
+            <SubmitButton
+              onSubmit={onSubmit}
+              submitLabel={submitLabel}
+              show={
+                value !== undefined &&
+                (level !== undefined || value === UNDEFINED_AGREEMENT) &&
+                comment.length <= 280
+              }
+            />
+          </ButtonGroup>
+        </ScrollView>
+      </KeyboardDismiss>
+    </KeyboardAvoidingBox>
   );
 };
 
@@ -80,22 +112,20 @@ const UndefinedAgreementButton = () => {
 interface SubmitButtonProps {
   onSubmit: (id: string) => void;
   submitLabel?: string;
-  level: number | undefined;
+
+  show: boolean;
 }
 
 const SubmitButton = ({
   onSubmit,
   submitLabel = "Continuar",
-  level,
+  show,
 }: SubmitButtonProps) => {
   const { value } = useButtonGroup();
 
-  if (
-    value !== undefined &&
-    (level !== undefined || value === UNDEFINED_AGREEMENT)
-  )
+  if (show)
     return (
-      <A.Box entering={FadeIn} exiting={FadeOut}>
+      <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="xl">
         <Button
           variant="success"
           title={submitLabel}
@@ -117,7 +147,9 @@ const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
   if (value && value !== UNDEFINED_AGREEMENT)
     return (
       <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="m">
-        <Text variant="p2R">Grado de relevancia:</Text>
+        <Text variant="p1B" marginBottom="xs">
+          Grado de relevancia:
+        </Text>
         <ButtonGroup
           value={level}
           onChange={(v) => setLevel(v as number)}
@@ -165,5 +197,61 @@ const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
       </A.Box>
     );
 
+  return <Box />;
+};
+
+interface AgreementCommentProps {
+  comment: string;
+  setComment: (comment: string) => void;
+  show: boolean;
+}
+
+const AgreementComment = ({
+  comment,
+  setComment,
+  show,
+}: AgreementCommentProps) => {
+  const [isAddComment, setIsAddComment] = useState(false);
+  if (show)
+    return (
+      <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="m">
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          marginBottom="m"
+        >
+          <Text variant="p1B">Agregar comentario</Text>
+          <Pressable
+            backgroundColor="semantic.info"
+            borderRadius={30}
+            padding="xs"
+            onPress={() => setIsAddComment((prev) => !prev)}
+          >
+            {isAddComment ? (
+              <Text padding="s">Cancelar</Text>
+            ) : (
+              <Ionicons name={"add-sharp"} size={30} color="white" />
+            )}
+          </Pressable>
+        </Box>
+        {isAddComment && (
+          <A.Box entering={FadeIn} exiting={FadeOut} layout={Layout.delay(250)}>
+            <TextInput
+              containerProps={{ height: 250, padding: "s" }}
+              multiline
+              textAlignVertical="top"
+              value={comment}
+              onChangeText={setComment}
+            />
+            <Box alignSelf="flex-end">
+              <Text color={comment.length > 280 ? "semantic.error" : "text"}>
+                {comment.length}/280
+              </Text>
+            </Box>
+          </A.Box>
+        )}
+      </A.Box>
+    );
   return <Box />;
 };

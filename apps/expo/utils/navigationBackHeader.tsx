@@ -7,7 +7,10 @@ const { fontFamily, fontSize, lineHeight } = textVariants.p1R;
 const backHeader: StackNavigationOptions = {
   headerShown: true,
   headerTitleStyle: { fontFamily, fontSize, lineHeight },
-  headerLeft: ({ onPress }) => <BackButton onPress={onPress} marginLeft="s" />,
+
+  headerLeft: ({ onPress }) => (
+    <BackButton onPress={onPress} marginLeft="s" marginBottom="s" />
+  ),
 };
 
 export default backHeader;

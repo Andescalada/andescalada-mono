@@ -1,4 +1,4 @@
-import { Screen, Text } from "@andescalada/ui";
+import { Screen } from "@andescalada/ui";
 import ClassicAgreementCard from "@features/zoneAgreementManager/components/ClassicAgreementCard";
 import ClassicAgreementContainer from "@features/zoneAgreementManager/components/ClassicAgreementContainer";
 import {
@@ -12,9 +12,9 @@ type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.FireAgreement>;
 const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
   const [selected, setSelected] = useState<string>();
   return (
-    <Screen safeAreaDisabled padding="m">
-      <Text variant="h2">Sobre hacer fuego:</Text>
+    <Screen safeAreaDisabled>
       <ClassicAgreementContainer
+        title="Sobre hacer fuego:"
         value={selected}
         onChange={(v) => setSelected(v as string)}
         onSubmit={(id) =>
