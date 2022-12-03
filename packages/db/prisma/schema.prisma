@@ -196,21 +196,33 @@ model ZoneAgreement {
 }
 
 model Agreement {
-  id            String          @id @default(uuid())
-  name          String
-  description   String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  Author        User            @relation("AuthorAgreements", fields: [authorId], references: [id])
+  id            String            @id @default(uuid())
+  name          TextContent       @relation("AgreementName", fields: [nameId], references: [id])
+  nameId        String
+  description   TextContent       @relation("AgreementDescription", fields: [descriptionId], references: [id])
+  descriptionId String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  Author        User              @relation("AuthorAgreements", fields: [authorId], references: [id])
   authorId      String
-  coAuthors     User[]          @relation("CoAuthorAgreements")
-  isDeleted     SoftDelete      @default(NotDeleted)
-  version       Int             @default(0)
-  classic       Boolean         @default(false)
+  coAuthors     User[]            @relation("CoAuthorAgreements")
+  isDeleted     SoftDelete        @default(NotDeleted)
+  version       Int               @default(0)
+  classic       ClassicAgreement?
   icon          String?
   ZoneAgreement ZoneAgreement[]
 
   @@index([authorId])
+  @@index([nameId])
+  @@index([descriptionId])
+}
+
+enum ClassicAgreement {
+  Toilet
+  Fire
+  Camping
+  Pets
+  Payment
 }
 
 enum AgreementLevel {
@@ -445,4 +457,46 @@ enum SoftDelete {
   DeletedPublic
   DeletedDev
   NotDeleted
+}
+
+model TextContent {
+  id                   String        @id @default(uuid())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  originalText         String        @db.LongText
+  originalLang         Languague     @relation(fields: [languagueId], references: [languagueId])
+  isDeleted            SoftDelete    @default(NotDeleted)
+  Translation          Translation[]
+  languagueId          String
+  AgreementName        Agreement[]   @relation("AgreementName")
+  AgreementDescription Agreement[]   @relation("AgreementDescription")
+
+  @@index([languagueId])
+}
+
+model Translation {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  textContent   TextContent @relation(fields: [textContentId], references: [id])
+  textContentId String
+  translation   String      @db.LongText
+  isDeleted     SoftDelete  @default(NotDeleted)
+  language      Languague   @relation(fields: [languageId], references: [languagueId])
+  languageId    String
+
+  @@index([textContentId])
+  @@index([languageId])
+}
+
+model Languague {
+  languagueId   String        @id @unique
+  languagueName String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  isDeleted     SoftDelete    @default(NotDeleted)
+  TextContent   TextContent[]
+  Translation   Translation[]
+
+  @@index([languagueId])
 }
