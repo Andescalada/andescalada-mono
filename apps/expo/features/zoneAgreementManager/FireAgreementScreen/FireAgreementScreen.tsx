@@ -31,7 +31,7 @@ const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
         <ClassicAgreementCard
           id="1"
           title="Permitido hacer fuego"
-          subTitle="Está permitido hacer fuego, recuerda dejarlo bien apagado."
+          subTitle="Está permitido hacer fuego en zonas designadas, recuerda dejarlo bien apagado."
           iconName="fire"
           marginBottom="xl"
         />

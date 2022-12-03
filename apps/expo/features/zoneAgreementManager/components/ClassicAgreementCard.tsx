@@ -59,6 +59,7 @@ const ClassicAgreementCard = ({
         </Text>
         <Text
           color={isSelected === false ? "grayscale.500" : "grayscale.black"}
+          marginTop="xs"
         >
           {subTitle}
         </Text>

@@ -1,4 +1,10 @@
-import { createContext, FC, ReactNode, useContext } from "react";
+import {
+  ComponentProps,
+  createContext,
+  FC,
+  ReactNode,
+  useContext,
+} from "react";
 
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
@@ -6,9 +12,20 @@ import Text from "../Text/Text";
 interface ButtonItemProps {
   label: string;
   value: string | number | undefined;
+  backgroundColor?: ComponentProps<typeof Pressable>["backgroundColor"];
+  selectedBackgroundColor?: ComponentProps<typeof Pressable>["backgroundColor"];
+  textColor?: ComponentProps<typeof Text>["color"];
+  selectedTextColor?: ComponentProps<typeof Text>["color"];
 }
 
-const ButtonItem: FC<ButtonItemProps> = ({ label, value: localValue }) => {
+const ButtonItem: FC<ButtonItemProps> = ({
+  label,
+  value: localValue,
+  backgroundColor = "buttonGroup",
+  selectedBackgroundColor = "selectedButtonGroup",
+  textColor,
+  selectedTextColor = "grayscale.white",
+}) => {
   const { value, onChange, allowUndefined } = useButtonGroup();
   const isSelected = value === localValue;
   return (
@@ -21,11 +38,16 @@ const ButtonItem: FC<ButtonItemProps> = ({ label, value: localValue }) => {
         onChange(localValue);
       }}
       padding="m"
-      margin={"s"}
-      backgroundColor={isSelected ? "selectedButtonGroup" : "buttonGroup"}
+      margin="s"
+      backgroundColor={isSelected ? selectedBackgroundColor : backgroundColor}
       borderRadius={100}
     >
-      <Text variant={isSelected ? "p2B" : "p2R"}>{label}</Text>
+      <Text
+        variant={isSelected ? "p2B" : "p2R"}
+        color={isSelected ? selectedTextColor : textColor}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 };
