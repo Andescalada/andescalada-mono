@@ -174,6 +174,7 @@ model Zone {
 model ZoneAgreement {
   id          String     @id @default(uuid())
   position    Int        @default(0)
+  comment     String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   Zone        Zone       @relation(fields: [zoneId], references: [id])
