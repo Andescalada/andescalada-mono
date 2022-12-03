@@ -7,9 +7,9 @@ import {
 } from "@features/zoneAgreementManager/Navigation/types";
 import { FC, useState } from "react";
 
-type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.PetsAgreement>;
+type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.CampingAgreement>;
 
-const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
+const PetsAgreementScreen: FC<Props> = (props) => {
   const [selected, setSelected] = useState<string>();
   return (
     <Screen safeAreaDisabled padding="m">
@@ -17,23 +17,20 @@ const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
       <ClassicAgreementContainer
         value={selected}
         onChange={(v) => setSelected(v as string)}
-        onSubmit={(id) =>
-          navigation.navigate(ZoneAgreementsRoutes.CampingAgreement)
-        }
+        onSubmit={(id) => console.log(id)}
       >
         <ClassicAgreementCard
           id="2"
-          title="Se permiten mascotas"
-          subTitle="Tus mascotas son bienvenidas en esta zona de escalada. Se responsable y respetuoso."
-          iconName="dog"
+          title="No se permite acampar"
+          subTitle="No esta permitido acampar en esta zona de escalada"
+          iconName="no-camping"
           marginBottom="xl"
         />
         <ClassicAgreementCard
           id="1"
-          title="No se permiten mascotas"
-          subTitle=" Lamentamos que tus mascotas no puedan acompañarte en esta zona de
-        escalada."
-          iconName="no-dog"
+          title="Permitido acampar"
+          subTitle="Es posible acampar en esta zona de escalada respetando las reglas."
+          iconName="camping"
           marginBottom="xl"
         />
       </ClassicAgreementContainer>
