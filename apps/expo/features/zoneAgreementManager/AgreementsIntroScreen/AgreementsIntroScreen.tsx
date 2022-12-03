@@ -85,7 +85,13 @@ const AgreementsIntroScreen: FC<Props> = ({ navigation }) => {
                 entering={SlideInDown.delay(DELAY * 4)}
               >
                 <Box padding="m" paddingHorizontal="xxl">
-                  <Button variant="transparent" title="Continuar" />
+                  <Button
+                    variant="transparent"
+                    title="Continuar"
+                    onPress={() =>
+                      navigation.navigate(ZoneAgreementsRoutes.PetsAgreement)
+                    }
+                  />
                 </Box>
               </A.Box>
             </A.Box>

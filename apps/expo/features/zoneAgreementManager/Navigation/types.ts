@@ -3,10 +3,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum ZoneAgreementsRoutes {
   AgreementsIntro = "AgreementsIntro",
+  PetsAgreement = "PetsAgreement",
 }
 
 export type ZoneAgreementsNavigationParamList = {
   [ZoneAgreementsRoutes.AgreementsIntro]: undefined;
+  [ZoneAgreementsRoutes.PetsAgreement]: undefined;
 };
 
 export type ZoneAgreementsRouteProps<T extends ZoneAgreementsRoutes> =

@@ -30,6 +30,7 @@ const darkBaseTheme = {
     routePath: pallete.contrast.opaque.red,
     extensionRoutePath: pallete.contrast.opaque.blue,
     background: pallete.grayscale.black,
+    backgroundContrast: pallete.grayscale["100"],
     text: pallete.grayscale[100],
     textContrast: pallete.grayscale.black,
     filledTextInputVariantBackground: pallete.grayscale[300],

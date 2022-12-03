@@ -17,6 +17,7 @@
   "peerDependencies": {
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
+    "@andescalada/icons": "*",
     "react": "*",
     "react-hook-form": "*",
     "zod": "*",

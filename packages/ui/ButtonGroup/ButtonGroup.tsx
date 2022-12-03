@@ -39,12 +39,9 @@ interface ButtonGroupProps {
 
 const ButtonGroupContext = createContext<ButtonGroupProps | null>(null);
 
-const ButtonGroup: FC<ButtonGroupProps> & { Item: FC<ButtonItemProps> } = ({
-  children,
-  value,
-  allowUndefined = true,
-  onChange,
-}) => {
+export const ButtonGroup: FC<ButtonGroupProps> & {
+  Item: FC<ButtonItemProps>;
+} = ({ children, value, allowUndefined = true, onChange }) => {
   return (
     <ButtonGroupContext.Provider
       value={{ value, onChange, children, allowUndefined }}
@@ -54,7 +51,7 @@ const ButtonGroup: FC<ButtonGroupProps> & { Item: FC<ButtonItemProps> } = ({
   );
 };
 
-const useButtonGroup = () => {
+export const useButtonGroup = () => {
   const methods = useContext(ButtonGroupContext);
 
   return methods as unknown as ButtonGroupProps;

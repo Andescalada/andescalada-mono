@@ -1,5 +1,7 @@
 import AgreementsIntroScreen from "@features/zoneAgreementManager/AgreementsIntroScreen";
+import CommonAgreementsScreen from "@features/zoneAgreementManager/PetsAgreementScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import backHeader from "@utils/navigationBackHeader";
 
 import {
   ZoneAgreementsNavigationParamList,
@@ -14,6 +16,14 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneAgreementsRoutes.AgreementsIntro}
         component={AgreementsIntroScreen}
+      />
+      <Stack.Screen
+        name={ZoneAgreementsRoutes.PetsAgreement}
+        component={CommonAgreementsScreen}
+        options={{
+          title: "Acuerdos clásicos",
+          ...backHeader,
+        }}
       />
     </Stack.Navigator>
   );
