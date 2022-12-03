@@ -23,7 +23,7 @@ const PetsAgreementScreen: FC<Props> = ({ navigation }) => {
       >
         <ClassicAgreementCard
           id="2"
-          title="No se hacer fuego"
+          title="No hacer fuego"
           subTitle="No esta permitido hacer fuego en esta zona de escalada."
           iconName="no-fire"
           marginBottom="xl"

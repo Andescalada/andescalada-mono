@@ -1,7 +1,7 @@
 import type { IconNames } from "@andescalada/icons";
 import { Box, Icon, Pressable, Text, useButtonGroup } from "@andescalada/ui";
 import { Ionicons } from "@expo/vector-icons";
-import { ComponentProps } from "react";
+import { ComponentProps, useCallback } from "react";
 
 interface Props extends ComponentProps<typeof Box> {
   id: string;
@@ -21,8 +21,16 @@ const ClassicAgreementCard = ({
 
   const isSelected = value !== undefined ? value === id : undefined;
 
+  const onSelect = useCallback(() => {
+    if (isSelected && allowUndefined) {
+      onChange(undefined);
+      return;
+    }
+    onChange(id);
+  }, [allowUndefined, id, isSelected, onChange]);
+
   return (
-    <Box
+    <Pressable
       width="100%"
       borderRadius={30}
       backgroundColor="grayscale.100"
@@ -30,6 +38,7 @@ const ClassicAgreementCard = ({
       padding="l"
       alignItems="center"
       justifyContent="space-between"
+      onPress={onSelect}
       {...props}
     >
       <Box flex={0.25} height="100%" alignItems="center" paddingTop="s">
@@ -72,13 +81,7 @@ const ClassicAgreementCard = ({
         right={32}
         justifyContent="center"
         alignItems="center"
-        onPress={() => {
-          if (isSelected && allowUndefined) {
-            onChange(undefined);
-            return;
-          }
-          onChange(id);
-        }}
+        onPress={onSelect}
       >
         <Ionicons
           name={
@@ -91,7 +94,7 @@ const ClassicAgreementCard = ({
           size={25}
         />
       </Pressable>
-    </Box>
+    </Pressable>
   );
 };
 
