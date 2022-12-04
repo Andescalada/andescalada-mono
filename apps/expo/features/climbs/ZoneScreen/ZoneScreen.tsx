@@ -27,6 +27,7 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import { useFocusEffect } from "@react-navigation/native";
+import { captureMessage } from "@sentry/react-native";
 import { FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -60,7 +61,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     }, [zoneId]),
   );
 
-  const { data, refetch, isFetching, isLoading, isError, isPaused } =
+  const { data, refetch, isFetching, isLoading, isError, isPaused, status } =
     trpc.zones.allSectors.useQuery(
       { zoneId },
       {
@@ -69,7 +70,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         },
       },
     );
-
+  captureMessage(`status ${status}, isPaused ${isPaused}`);
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
   const editZone = trpc.zones.edit.useMutation();

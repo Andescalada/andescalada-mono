@@ -1,3 +1,4 @@
+import { captureMessage } from "@sentry/react-native";
 import * as FileSystem from "expo-file-system";
 
 const cachedImageDir = FileSystem.cacheDirectory + "imageDir/";
@@ -23,7 +24,10 @@ const storeImage = async (
     await FileSystem.downloadAsync(url, fileUri);
   }
 
-  if (fileInfo.exists) return fileUri;
+  if (fileInfo.exists) {
+    captureMessage(`local file exists ${fileUri}`);
+    return fileUri;
+  }
 
   const cacheFileUri = cacheImageFileUri(uniqueId);
   const cacheFileInfo = await FileSystem.getInfoAsync(cacheFileUri);

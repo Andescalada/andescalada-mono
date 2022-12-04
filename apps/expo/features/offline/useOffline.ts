@@ -4,6 +4,7 @@ import setAssetsToDb from "@features/offline/utils/setAssetsToDb";
 import setImagesToFileSystem from "@features/offline/utils/setImagesToFileSystem";
 import { useAppSelector } from "@hooks/redux";
 import useOfflineMode from "@hooks/useOfflineMode";
+import { captureMessage } from "@sentry/react-native";
 import { onlineManager } from "@tanstack/react-query";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
@@ -60,6 +61,10 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       );
 
       if (!savedData) return;
+
+      captureMessage(
+        `Hydrating ${router}.${procedure}: ${params} - ${savedData.data}`,
+      );
 
       selectedUtil.setData(params, savedData.data);
       db.close();
