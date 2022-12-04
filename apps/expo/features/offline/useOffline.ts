@@ -63,7 +63,9 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       if (!savedData) return;
 
       captureMessage(
-        `Hydrating ${router}.${procedure}: ${params} - ${savedData.data}`,
+        `Hydrating ${router}.${procedure}: ${JSON.stringify(
+          params,
+        )} - ${JSON.stringify(savedData.data)}`,
       );
 
       selectedUtil.setData(params, savedData.data);
