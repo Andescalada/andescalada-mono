@@ -35,7 +35,7 @@ Sentry.init({
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
   "The native module for Flipper seems unavailable. Please verify that `react-native-flipper` is installed as yarn dependency to your project and, for iOS, that `pod install` is run in the `ios` directory.",
-  // Comming from React Query Devtools
+  // Coming from React Query Devtools
   "JSON.stringify cannot serialize BigInt",
 ]);
 
