@@ -1,14 +1,6 @@
 import { AgreementLevelSchema } from "@andescalada/db/zod";
 import { IconNames } from "@andescalada/icons";
-import {
-  Box,
-  Colors,
-  Icon,
-  ListItem,
-  Pressable,
-  Screen,
-  Text,
-} from "@andescalada/ui";
+import { Box, Icon, ListItem, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { Ionicons } from "@expo/vector-icons";
 import {
