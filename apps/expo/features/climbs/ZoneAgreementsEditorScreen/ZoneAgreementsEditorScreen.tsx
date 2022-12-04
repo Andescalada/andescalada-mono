@@ -1,4 +1,5 @@
-import { Box, Pressable, Screen, Text } from "@andescalada/ui";
+import { IconNames } from "@andescalada/icons";
+import { Box, Icon, ListItem, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -53,11 +54,9 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
         keyExtractor={(item) => item.id}
         contentContainerStyle={{
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
         }}
         ListEmptyComponent={() => (
-          <Box alignItems="center">
+          <Box flex={1} justifyContent="center" alignItems="center">
             <Text variant="h2">Sin acuerdos</Text>
             <Pressable onPress={onAddAgreement}>
               <Text variant="p2R" marginTop="l" color="semantic.info">
@@ -66,8 +65,25 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
             </Pressable>
           </Box>
         )}
-        renderItem={({ item }) => (
-          <Text>{item.Agreement.title.originalText}</Text>
+        renderItem={({ item, index }) => (
+          <ListItem
+            variant="plain"
+            flexDirection="row"
+            alignItems="center"
+            marginBottom="l"
+            marginTop={index === 0 ? "l" : "none"}
+            backgroundColor="backgroundContrast"
+          >
+            <Icon
+              name={`${item.Agreement.icon}-color` as IconNames}
+              color="background"
+            />
+            <Box marginLeft="m" alignItems="center">
+              <Text variant="p2R" color="textContrast">
+                {item.Agreement.title.originalText}
+              </Text>
+            </Box>
+          </ListItem>
         )}
       />
     </Screen>
