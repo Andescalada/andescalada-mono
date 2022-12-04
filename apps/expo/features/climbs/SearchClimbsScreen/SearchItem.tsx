@@ -21,8 +21,11 @@ const SearchItem = ({ item }: { item: Data[0] }) => {
   );
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    <Pressable padding={"s"} onPress={() => navigate(item.navigationParams)}>
+
+    <Pressable
+      padding={"s"}
+      onPress={() => navigate(item.navigationParams as any)}
+    >
       <Box
         marginBottom={"xs"}
         flexDirection="row"

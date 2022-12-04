@@ -60,7 +60,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     }, [zoneId]),
   );
 
-  const { data, refetch, isFetching, isLoading, isError, isPaused, status } =
+  const { data, refetch, isFetching, isLoading, isError, isPaused } =
     trpc.zones.allSectors.useQuery(
       { zoneId },
       {
