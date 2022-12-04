@@ -1,14 +1,16 @@
-import { Icon as AndescaladaIcon } from "@andescalada/icons";
+import { Icon as AndescaladaIcon, IconNames } from "@andescalada/icons";
 import { useTheme } from "@shopify/restyle";
 import { ComponentProps, FC, useMemo } from "react";
 
 import { Theme } from "../Theme/theme";
 
-interface Props extends Omit<ComponentProps<typeof AndescaladaIcon>, "color"> {
+interface Props
+  extends Omit<ComponentProps<typeof AndescaladaIcon>, "color" | "name"> {
   color?: keyof Theme["colors"];
+  name?: IconNames;
 }
 
-const Icon: FC<Props> = (props) => {
+const Icon: FC<Props> = ({ name = "question-mark", ...props }) => {
   const theme = useTheme<Theme>();
 
   const themeColor = useMemo(
@@ -16,7 +18,7 @@ const Icon: FC<Props> = (props) => {
     [props.color, theme.colors],
   );
 
-  return <AndescaladaIcon {...props} color={themeColor} />;
+  return <AndescaladaIcon name={name} {...props} color={themeColor} />;
 };
 
 export default Icon;
