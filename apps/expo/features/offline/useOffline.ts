@@ -36,7 +36,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
       const { assetsToDownload, imagesToDownload } = data;
 
       await allSettled([
-        setAssetsToDb(assetsToDownload, { forceUpdate: true }),
+        setAssetsToDb(assetsToDownload),
         setImagesToFileSystem(imagesToDownload),
       ]);
     },

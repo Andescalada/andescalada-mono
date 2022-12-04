@@ -19,7 +19,7 @@ const storeImage = async (
 
   const fileUri = imageFileUri(uniqueId);
   const fileInfo = await FileSystem.getInfoAsync(fileUri);
-  if (directory === "permanent" && fileInfo.exists) {
+  if (directory === "permanent" && !fileInfo.exists) {
     await FileSystem.downloadAsync(url, fileUri);
   }
 

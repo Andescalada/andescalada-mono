@@ -385,7 +385,7 @@ export const userRouter = t.router({
             return {
               router: "topos" as const,
               procedure: "byId" as const,
-              params: { topoId: t.id },
+              params: { topoId: t.id, zoneId },
               version: t.version,
               zoneId,
             };
