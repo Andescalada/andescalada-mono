@@ -23,6 +23,10 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   const [initialState, setInitialState] = useState<InitialState | undefined>();
 
   useEffect(() => {
+    if (process.env.AVOID_MEMOIZED_NAVIGATION === "true") {
+      setIsNavigationReady(true);
+      return;
+    }
     const restoreState = async () => {
       try {
         const savedStateString = storage.getString(NAVIGATION_STATE_KEY);

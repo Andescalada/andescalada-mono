@@ -9,6 +9,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "dev": "APP_VARIANT=development yarn start",
+    "dev:clean": "AVOID_MEMOIZED_NAVIGATION=true yarn dev -c",
     "dev:offline": "yarn dev --offline",
     "dev:preview": "APP_VARIANT=preview yarn start",
     "debug": "yarn dev --force-manifest-type=classic",
