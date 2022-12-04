@@ -2,7 +2,7 @@ const textVariants = {
   defaults: {
     fontFamily: "Rubik-400",
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 0,
     color: "text",
   },
   h1: {
