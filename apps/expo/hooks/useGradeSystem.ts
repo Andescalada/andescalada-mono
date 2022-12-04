@@ -22,6 +22,8 @@ const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
           return gradeUnits.Mixed;
         case RouteKindSchema.Enum.Ice:
           return gradeUnits.Ice;
+        case RouteKindSchema.Enum.Aid:
+          return gradeUnits.Aid;
         default:
           console.warn("No grade system found for kind", kind);
           return [];

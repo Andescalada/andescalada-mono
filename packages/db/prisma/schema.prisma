@@ -91,6 +91,7 @@ enum GradeSystems {
   Hueco
   Ice
   Mixed
+  Aid
 }
 
 model RoleByZone {

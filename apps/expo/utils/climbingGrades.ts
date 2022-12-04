@@ -120,4 +120,17 @@ export const gradeUnits = {
     "M11",
     "M12",
   ],
+  [GradeSystemsSchema.Enum.Aid]: [
+    "A0",
+    "A1",
+    "A2",
+    "A2+",
+    "A3",
+    "A3+",
+    "A4",
+    "A4+",
+    "A5",
+    "A5+",
+    "A6",
+  ],
 };
