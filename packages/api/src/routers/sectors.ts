@@ -65,6 +65,7 @@ export const sectorsRouter = t.router({
       });
       return sector;
     }),
+  // Asset being downloaded
   allWalls: t.procedure
     .input(z.object({ sectorId: z.string() }))
     .query(async ({ ctx, input }) => {

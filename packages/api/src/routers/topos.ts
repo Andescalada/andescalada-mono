@@ -8,6 +8,7 @@ import { TRPCError } from "@trpc/server";
 import { t } from "../createRouter";
 
 export const toposRouter = t.router({
+  // Asset being downloaded
   byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({
       where: { id: input.topoId },

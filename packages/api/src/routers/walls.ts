@@ -26,6 +26,7 @@ export const wallsRouter = t.router({
       orderBy: { position: "asc" },
     }),
   ),
+  // Asset being downloaded
   byId: t.procedure.input(wall.id).query(async ({ ctx, input }) => {
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input.wallId },

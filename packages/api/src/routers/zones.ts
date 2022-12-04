@@ -37,6 +37,7 @@ export const zonesRouter = t.router({
         data: { name: input.name, version: { increment: 1 } },
       }),
   ),
+  // Asset being downloaded
   allSectors: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const res = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
