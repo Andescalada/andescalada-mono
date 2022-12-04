@@ -6,7 +6,6 @@ import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import { Zone } from "@prisma/client";
-import { captureMessage } from "@sentry/react-native";
 import {
   dist,
   useComputedValue,
@@ -52,8 +51,6 @@ const TopoViewer: FC<Props> = ({
   const image = optimizedImage(data?.image.publicId || undefined);
 
   const { fileUrl } = useCachedImage(image);
-
-  captureMessage(`TopoViewer: ${fileUrl}`);
 
   const coords = useValue({ x: 0, y: 0 });
 

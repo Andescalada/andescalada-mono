@@ -167,7 +167,6 @@ const RouteItem = ({
       onTouch={() => {
         setTouchRouteId((prev) => {
           if (prev !== item.id) {
-            console.log("here");
             resetOthers();
           }
           return item.id;

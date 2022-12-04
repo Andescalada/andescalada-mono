@@ -4,13 +4,13 @@ import setAssetsToDb from "@features/offline/utils/setAssetsToDb";
 import setImagesToFileSystem from "@features/offline/utils/setImagesToFileSystem";
 import { useAppSelector } from "@hooks/redux";
 import useOfflineMode from "@hooks/useOfflineMode";
-import { captureMessage } from "@sentry/react-native";
 import { onlineManager } from "@tanstack/react-query";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
 import { useCallback, useEffect } from "react";
+import { AppState } from "react-native";
 import { parse, stringify } from "superjson";
 
 type ListToDownload = inferProcedureOutput<
@@ -62,25 +62,30 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
 
       if (!savedData) return;
 
-      captureMessage(
-        `Hydrating ${router}.${procedure}: ${JSON.stringify(
-          params,
-        )} - ${JSON.stringify(savedData.data)}`,
-      );
-
       selectedUtil.setData(params, savedData.data);
       db.close();
     });
   }, [utils]);
 
-  useEffect(() => {
+  const shouldHydrate = useCallback(() => {
     if (isOfflineMode) {
-      hydrate();
       onlineManager.setOnline(false);
+
+      hydrate();
+    } else {
+      onlineManager.setOnline(undefined);
     }
-    onlineManager.setOnline(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOfflineMode, hydrate]);
+  }, [hydrate, isOfflineMode]);
+
+  useEffect(() => {
+    shouldHydrate();
+  }, [shouldHydrate]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", shouldHydrate);
+
+    return () => subscription.remove();
+  }, []);
 
   return {
     isDownloading,

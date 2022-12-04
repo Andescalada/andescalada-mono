@@ -1,5 +1,4 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import * as Sentry from "@sentry/react-native";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
 import { getThumbnail, optimizedImage } from "@utils/cloudinary";
@@ -59,8 +58,8 @@ const setImagesToFileSystem = async (
         "permanent",
       ));
 
-    const res = await allSettled([cachedThumbnail(), cachedMainImage()]);
-    Sentry.captureMessage(JSON.stringify(res));
+    await allSettled([cachedThumbnail(), cachedMainImage()]);
+
     return (await prevAsset) + 1;
   }, Promise.resolve(0));
 
