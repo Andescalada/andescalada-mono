@@ -1,5 +1,14 @@
+import { AgreementLevelSchema } from "@andescalada/db/zod";
 import { IconNames } from "@andescalada/icons";
-import { Box, Icon, ListItem, Pressable, Screen, Text } from "@andescalada/ui";
+import {
+  Box,
+  Colors,
+  Icon,
+  ListItem,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -83,11 +92,60 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
                 {item.Agreement.title.originalText}
               </Text>
             </Box>
+
+            {item.level !== AgreementLevelSchema.Enum.NotAplicable && (
+              <Box
+                backgroundColor={
+                  agreementLevelHandler(item.level).backgroundColor
+                }
+                justifyContent="center"
+                position="absolute"
+                paddingHorizontal="s"
+                height={30}
+                bottom={-15}
+                right={16}
+                borderRadius={15}
+                borderWidth={3}
+                borderColor="background"
+              >
+                <Text color={agreementLevelHandler(item.level).color}>
+                  {agreementLevelHandler(item.level).label}
+                </Text>
+              </Box>
+            )}
           </ListItem>
         )}
       />
     </Screen>
   );
+};
+
+const agreementLevelHandler = (
+  level: typeof AgreementLevelSchema._type,
+): { color: Colors; backgroundColor: Colors; label: string } => {
+  switch (level) {
+    case AgreementLevelSchema.Enum.Critical:
+      return {
+        color: "grayscale.white",
+        backgroundColor: "semantic.error",
+        label: "Crítico",
+      };
+    case AgreementLevelSchema.Enum.Important:
+      return {
+        color: "grayscale.black",
+        backgroundColor: "semantic.warning",
+        label: "Importante",
+      };
+    case AgreementLevelSchema.Enum.Recommended:
+      return {
+        color: "grayscale.white",
+        backgroundColor: "semantic.info",
+        label: "Recomendado",
+      };
+
+    default:
+      throw new Error("Agreement level not valid");
+  }
 };
 
 export default ZoneAgreementsEditorScreen;
