@@ -6,7 +6,6 @@
 
 
 - [ ] This code is hidden by a Feature Flag 🏁?
-- [ ] Should I worried about I18n 🇨🇱🇲🇽🇨🇴?
 - [ ] Should I care about navigation 🧭?
 - [ ] Did you touch local storage structure 💾?
 - [ ] Does this need documentation 📕?

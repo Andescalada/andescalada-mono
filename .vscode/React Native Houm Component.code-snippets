@@ -1,23 +1,23 @@
 {
-	"React Native Houm Screen": {
-		"prefix": "componentTemplate",
-		"body": [
-		"import { Box, Text } from \"@andescalada/ui\";",
-		"import { FC } from \"react\";",
-		"",
-		"interface Props {}",
-		"",
-			"const ${TM_FILENAME_BASE}: FC<Props> = props => {",
-			"return (",
-    		"<Box>",
-      	"<Text>$1</Text>",
-    		"</Box>",
-  			");",
-			"};",
-			"",
-			"export default ${TM_FILENAME_BASE};",
-			""
-		],
-		"description": "Template to start a screen for a react native Houm app"
-	},
+  "React Native Screen": {
+    "prefix": "componentTemplate",
+    "body": [
+      "import { Box, Text } from \"@andescalada/ui\";",
+      "import { FC } from \"react\";",
+      "",
+      "interface Props {}",
+      "",
+      "const ${TM_FILENAME_BASE}: FC<Props> = props => {",
+      "return (",
+      "<Box>",
+      "<Text>$1</Text>",
+      "</Box>",
+      ");",
+      "};",
+      "",
+      "export default ${TM_FILENAME_BASE};",
+      ""
+    ],
+    "description": "Template to start a component fro andescalada app"
+  }
 }
