@@ -1,4 +1,5 @@
 import { ClimbsNavigationNavigationParamList } from "@features/climbs/Navigation/types";
+import { ImageManagerNavigationParamList } from "@features/imageManager/Navigation/types";
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
 import { ZoneAgreementsNavigationParamList } from "@features/zoneAgreementManager/Navigation/types";
@@ -12,6 +13,7 @@ export enum RootNavigationRoutes {
   FirstTimeLogin = "FirstTimeLogin",
   Loading = "RootLoading",
   ZoneAgreementsManager = "ZoneAgreementsManager",
+  ImageManager = "ImageManager",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -21,6 +23,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.User]: NavigatorScreenParams<UserNavigationParamList>;
   [RootNavigationRoutes.Loading]: undefined;
   [RootNavigationRoutes.ZoneAgreementsManager]: NavigatorScreenParams<ZoneAgreementsNavigationParamList>;
+  [RootNavigationRoutes.ImageManager]: NavigatorScreenParams<ImageManagerNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =
