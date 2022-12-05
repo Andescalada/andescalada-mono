@@ -1,5 +1,6 @@
 import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
+import ImageManagerNavigation from "@features/imageManager/Navigation";
 import useOffline from "@features/offline/useOffline";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
@@ -70,6 +71,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.ZoneAgreementsManager}
             component={ZoneAgreementsNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.ImageManager}
+            component={ImageManagerNavigation}
           />
         </Stack.Group>
       )}

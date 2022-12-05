@@ -1,5 +1,5 @@
 import { Image, Pressable, Text } from "@andescalada/ui";
-import { SelectedImage } from "@hooks/usePickImage";
+import { PickImage, SelectedImage } from "@hooks/usePickImage";
 import { useResponsiveProp } from "@shopify/restyle";
 import { getProfileImage } from "@utils/cloudinary";
 import { FC } from "react";
@@ -7,7 +7,7 @@ import { FadeIn } from "react-native-reanimated";
 
 interface Props {
   selectedImage: SelectedImage | undefined;
-  pickImage: () => void;
+  pickImage: PickImage;
   defaultValue?: string;
 }
 
@@ -36,7 +36,7 @@ const ProfileImagePicker: FC<Props> = ({
       overflow="hidden"
       height={responsiveImageSize}
       width={responsiveImageSize}
-      onPress={pickImage}
+      onPress={() => pickImage(selectedImage)}
     >
       <Text variant={{ mobile: "p2R", tablet: "p1R" }}>
         Agregar foto de perfil

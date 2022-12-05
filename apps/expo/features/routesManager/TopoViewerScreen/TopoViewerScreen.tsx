@@ -1,4 +1,4 @@
-import { A, Box, Pressable, Screen, Text } from "@andescalada/ui";
+import { A, BackButton, Box, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
@@ -49,16 +49,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         hide={!showRoutes}
         onSelectedRoute={setSelectedRoute}
       />
-      <Box position="absolute" top={50} left={0} margin="l" marginLeft="s">
-        <Pressable
-          backgroundColor={"transparentButtonBackground"}
-          borderRadius={100}
-          padding="s"
-          onPress={navigation.goBack}
-        >
-          <Ionicons name="arrow-back" size={30} />
-        </Pressable>
-      </Box>
+      <BackButton.Transparent onPress={navigation.goBack} />
       {!showConfig && (
         <A.Box
           position="absolute"
