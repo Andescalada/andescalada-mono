@@ -1,4 +1,4 @@
-import { A, ActivityIndicator, Box, Pressable } from "@andescalada/ui";
+import { A, ActivityIndicator, Box } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
