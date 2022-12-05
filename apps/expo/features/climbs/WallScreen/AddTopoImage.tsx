@@ -5,6 +5,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import usePickImage from "@hooks/usePickImage";
 import useUploadImage from "@hooks/useUploadImage";
@@ -19,6 +20,7 @@ type NavigationRoute =
 
 const AddTopoImage: FC = () => {
   const route = useRoute<NavigationRoute>();
+  const { isOfflineMode } = useOfflineMode();
   const { wallId, zoneId } = route.params;
   const utils = trpc.useContext();
   const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
@@ -59,9 +61,17 @@ const AddTopoImage: FC = () => {
   };
 
   const noTopoAndPermission =
-    !mainTopo && !selectedImage && !isLoadingWall && permission?.has("Create");
+    !mainTopo &&
+    !selectedImage &&
+    !isLoadingWall &&
+    permission?.has("Create") &&
+    !isOfflineMode;
+
   const noTopoAndNoPermission =
-    !mainTopo && !selectedImage && !isLoadingWall && !permission?.has("Create");
+    !mainTopo &&
+    !selectedImage &&
+    !isLoadingWall &&
+    (!permission?.has("Create") || isOfflineMode);
 
   const imageSelectedButNotUploaded = selectedImage && !isSuccess;
 
