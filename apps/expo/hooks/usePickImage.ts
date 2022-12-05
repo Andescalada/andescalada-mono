@@ -25,13 +25,13 @@ const usePickImage = (args?: Args) => {
       base64: true,
       ...args,
     });
-    if (result.cancelled === true) {
+    if (result.canceled === true) {
       return;
     }
 
-    const base64Img = `data:image/jpg;base64,${result.base64}`;
+    const base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
-    setSelectedImage({ localUri: result.uri, base64Img });
+    setSelectedImage({ localUri: result.assets[0].uri, base64Img });
   }, [args]);
   const pickFromCamera = useCallback(async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -42,13 +42,15 @@ const usePickImage = (args?: Args) => {
         base64: true,
         ...args,
       });
-      if (result.cancelled === true) {
+      if (result.canceled === true) {
         return;
       }
 
-      const base64Img = `data:image/jpg;base64,${result.base64}`;
+      const base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
-      setSelectedImage({ localUri: result.uri, base64Img });
+      if (result.assets) {
+        setSelectedImage({ localUri: result.assets[0]?.uri, base64Img });
+      }
     }
   }, [args]);
   const pickImage = useCallback(() => {
