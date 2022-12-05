@@ -67,7 +67,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     });
   }, [utils]);
 
-  const shouldHydrate = useCallback(() => {
+  const shouldHydrate = useCallback(async () => {
     if (isOfflineMode) {
       onlineManager.setOnline(false);
 
