@@ -8,7 +8,6 @@ import {
   getRandomBytes,
   getShortUUID,
   sha256,
-  tokenDecode,
   toQueryString,
   URLEncode,
 } from "../decode";
