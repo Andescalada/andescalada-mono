@@ -95,6 +95,12 @@ const textVariants = {
     lineHeight: 0,
     color: "text",
   },
+  button: {
+    fontFamily: "Rubik-500",
+    fontSize: 20,
+    lineHeight: 0,
+    color: "text",
+  },
 };
 
 export default textVariants;

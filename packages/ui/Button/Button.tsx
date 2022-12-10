@@ -29,7 +29,7 @@ const restyleFunction = composeRestyleFunctions<Theme, RestyleProps>([
 const Button: FC<Props> = ({
   isLoading,
   title,
-  titleVariant = "h3",
+  titleVariant = "button",
   titleProps,
   variant,
   ...rest

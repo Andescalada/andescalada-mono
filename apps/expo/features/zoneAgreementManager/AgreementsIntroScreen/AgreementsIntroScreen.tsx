@@ -75,6 +75,7 @@ const AgreementsIntroScreen: FC<Props> = ({
             </Box>
             <A.Box
               marginTop="xs"
+              paddingBottom="s"
               flex={1}
               backgroundColor="brand.secondaryB"
               borderTopLeftRadius={10}
