@@ -1,6 +1,6 @@
 import NetInfo from "@react-native-community/netinfo";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { auth0Tokens, logout } from "@utils/auth0";
+import { auth0Tokens, login, logout } from "@utils/auth0";
 import {
   DecodedAccessToken,
   DecodedIdToken,
@@ -110,6 +110,19 @@ export const autoLoginAuth0 = createAsyncThunk(
       rejectWithValue(err);
     }
     return { isAuth: false };
+  },
+);
+
+export const loginWithPassword = createAsyncThunk(
+  "auth/loginWithPassword",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const { accessToken, idToken, refreshToken } = await login();
+
+      dispatch(loginAuth0({ accessToken, idToken, refreshToken }));
+    } catch (err) {
+      rejectWithValue(err);
+    }
   },
 );
 

@@ -16,7 +16,7 @@ import {
 const auth0Domain = Env.AUTH0_DOMAIN;
 
 export interface LoginResponse {
-  decodedIdToken: unknown;
+  idToken: string;
   accessToken: string;
   refreshToken: string;
 }
@@ -42,9 +42,8 @@ const onLoginResponse = async (
     response.params.code,
     codeVerifier,
   );
-  const decodedJwtIdToken = tokenDecode(idToken);
 
-  return { decodedIdToken: decodedJwtIdToken, accessToken, refreshToken };
+  return { idToken, accessToken, refreshToken };
 };
 
 export const login = async (): Promise<LoginResponse> => {
@@ -76,7 +75,7 @@ export const login = async (): Promise<LoginResponse> => {
     response.params?.error_description === errorMsg
   ) {
     return {
-      decodedIdToken: "",
+      idToken: "",
       accessToken: "",
       refreshToken: "",
     };

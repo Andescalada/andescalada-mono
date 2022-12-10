@@ -1,6 +1,6 @@
 import EnterCodeScreen from "@features/auth/EnterCodeScreen";
 import EnterEmailScreen from "@features/auth/EnterEmailScreen";
-import LoginScreen from "@features/auth/LoginScreen";
+import LoginScreen from "@features/auth/LoginScreen/";
 import {
   AuthNavigationNavigationParamList,
   AuthNavigationRoutes,
