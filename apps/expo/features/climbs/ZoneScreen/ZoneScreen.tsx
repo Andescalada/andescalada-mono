@@ -1,14 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
-import { InfoAccessSchema } from "@andescalada/db/zod";
-import {
-  A,
-  ActivityIndicator,
-  Box,
-  Button,
-  Pressable,
-  Screen,
-  Text,
-} from "@andescalada/ui";
+import { A, Box, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Header from "@features/climbs/components/Header";
@@ -17,6 +8,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import NoSectors from "@features/climbs/ZoneScreen/NoSectors";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
@@ -147,43 +139,51 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
         />
       </FormProvider>
-      {!!data && data.hasAccess && (
-        <Box flexDirection="row" justifyContent="flex-end">
-          <Pressable onPress={onDownloadPress}>
-            <Ionicons
-              name={
-                isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
-              }
-              size={30}
-              color={theme.colors["zoneOptionsIcons"]}
-            />
-          </Pressable>
-          <Pressable marginHorizontal="s" onPress={onFavoritePress}>
-            <Ionicons
-              name={isFavorite ? "heart-circle" : "heart-circle-outline"}
-              size={30}
-              color={theme.colors["zoneOptionsIcons"]}
-            />
-          </Pressable>
-          <A.Pressable
-            onPress={() => {
-              setOpenAll((prev) => !prev);
-            }}
-            style={toggleButtonStyle}
-          >
-            <Ionicons
-              name={openAll ? "caret-down-circle" : "caret-down-circle-outline"}
-              size={30}
-              color={theme.colors["zoneOptionsIcons"]}
-            />
-          </A.Pressable>
-        </Box>
-      )}
       <Box flex={1}>
         <FlatList
           data={data?.sectors}
           refreshControl={refresh}
           contentContainerStyle={{ flex: 1 }}
+          ListHeaderComponent={() =>
+            !!data && data.hasAccess ? (
+              <Box flexDirection="row" justifyContent="flex-end">
+                <Pressable onPress={onDownloadPress}>
+                  <Ionicons
+                    name={
+                      isDownloaded
+                        ? "arrow-down-circle"
+                        : "arrow-down-circle-outline"
+                    }
+                    size={30}
+                    color={theme.colors["zoneOptionsIcons"]}
+                  />
+                </Pressable>
+                <Pressable marginHorizontal="s" onPress={onFavoritePress}>
+                  <Ionicons
+                    name={isFavorite ? "heart-circle" : "heart-circle-outline"}
+                    size={30}
+                    color={theme.colors["zoneOptionsIcons"]}
+                  />
+                </Pressable>
+                <A.Pressable
+                  onPress={() => {
+                    setOpenAll((prev) => !prev);
+                  }}
+                  style={toggleButtonStyle}
+                >
+                  <Ionicons
+                    name={
+                      openAll
+                        ? "caret-down-circle"
+                        : "caret-down-circle-outline"
+                    }
+                    size={30}
+                    color={theme.colors["zoneOptionsIcons"]}
+                  />
+                </A.Pressable>
+              </Box>
+            ) : null
+          }
           ListEmptyComponent={() => (
             <NoSectors
               isLoading={isLoading}
@@ -198,57 +198,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         />
       </Box>
     </Screen>
-  );
-};
-
-interface NoZonesProps {
-  isLoading: boolean;
-  isError: boolean;
-  hasAccess: boolean;
-  infoAccess: keyof typeof InfoAccessSchema.Enum | undefined;
-}
-
-const NoSectors = ({
-  isLoading,
-  hasAccess,
-  infoAccess,
-  isError,
-}: NoZonesProps) => {
-  const title =
-    infoAccess === InfoAccessSchema.Enum.Private
-      ? "Acceso Privado"
-      : "Acceso Comunitario";
-  const description =
-    infoAccess === InfoAccessSchema.Enum.Private
-      ? "Solo los y las administradoras de la zona pueden darte acceso."
-      : "Cualquier persona que ya tenga acceso a estos topos puede entregarte acceso.";
-  if (isLoading)
-    return (
-      <Screen justifyContent="center" alignItems="center">
-        <ActivityIndicator size={"large"} />
-      </Screen>
-    );
-
-  if (!hasAccess && !isError)
-    return (
-      <Box flex={1} justifyContent={"flex-start"}>
-        <Box flex={1 / 3} justifyContent="center">
-          <Text variant="h2" marginBottom="l">
-            {title}
-          </Text>
-          <Text variant="p1R" marginBottom="m">
-            No tienes permiso para ver esta zona
-          </Text>
-          <Text marginBottom="s">{description}</Text>
-        </Box>
-        <Button variant="info" title="Solicitar acceso" alignSelf="center" />
-      </Box>
-    );
-
-  return (
-    <Box flex={1} justifyContent="center" alignItems="center">
-      <Text variant={"h3"}>Sin sectores</Text>
-    </Box>
   );
 };
 
