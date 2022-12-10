@@ -42,7 +42,7 @@ const AgreementsIntroScreen: FC<Props> = ({
             </Text>
           </Box>
           <A.Box
-            marginTop="m"
+            marginTop="s"
             flex={1}
             backgroundColor="brand.primaryB"
             borderTopLeftRadius={10}
@@ -74,39 +74,24 @@ const AgreementsIntroScreen: FC<Props> = ({
               </Box>
             </Box>
             <A.Box
-              marginTop="s"
+              marginTop="xs"
               flex={1}
               backgroundColor="brand.secondaryB"
               borderTopLeftRadius={10}
               borderTopRightRadius={10}
               entering={SlideInDown.delay(DELAY * 3)}
             >
-              <Box padding="m">
-                <Text variant="p1R" color="grayscale.black">
-                  Se recomienda que los acuerdos sean claros y concisos, y que
-                  se puedan resumir en una frase.
-                </Text>
+              <Box padding="m" paddingHorizontal="xxl">
+                <Button
+                  variant="transparent"
+                  title="Continuar"
+                  onPress={() =>
+                    navigation.navigate(ZoneAgreementsRoutes.PetsAgreement, {
+                      zoneId,
+                    })
+                  }
+                />
               </Box>
-              <A.Box
-                marginTop="s"
-                flex={1}
-                backgroundColor="brand.primaryA"
-                borderTopLeftRadius={10}
-                borderTopRightRadius={10}
-                entering={SlideInDown.delay(DELAY * 4)}
-              >
-                <Box padding="m" paddingHorizontal="xxl">
-                  <Button
-                    variant="transparent"
-                    title="Continuar"
-                    onPress={() =>
-                      navigation.navigate(ZoneAgreementsRoutes.PetsAgreement, {
-                        zoneId,
-                      })
-                    }
-                  />
-                </Box>
-              </A.Box>
             </A.Box>
           </A.Box>
         </A.Box>

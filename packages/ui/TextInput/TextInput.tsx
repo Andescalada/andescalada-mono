@@ -38,7 +38,7 @@ const TextInput: ForwardRefRenderFunction<TextInputRef, Props> = (
   {
     containerProps,
     variant = "filled",
-    textVariant = "p1R",
+    textVariant = "textInput",
     adornmentProps,
     ...props
   },

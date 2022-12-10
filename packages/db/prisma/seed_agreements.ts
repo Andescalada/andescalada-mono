@@ -116,7 +116,7 @@ const agreements: Prisma.AgreementCreateInput[] = [
   {
     title: {
       create: {
-        originalText: "Pagado",
+        originalText: "Acceso pagado",
         originalLang: { connect: { languageId: "es" } },
       },
     },
@@ -134,7 +134,7 @@ const agreements: Prisma.AgreementCreateInput[] = [
   {
     title: {
       create: {
-        originalText: "Libre",
+        originalText: "Acceso libre",
         originalLang: { connect: { languageId: "es" } },
       },
     },
@@ -170,7 +170,7 @@ const agreements: Prisma.AgreementCreateInput[] = [
   {
     title: {
       create: {
-        originalText: "No dejes rastro",
+        originalText: "No hay baño, no dejes rastro",
         originalLang: { connect: { languageId: "es" } },
       },
     },
