@@ -2,7 +2,7 @@ const textVariants = {
   defaults: {
     fontFamily: "Rubik-400",
     fontSize: 14,
-    lineHeight: 0,
+    lineHeight: 14,
     color: "text",
   },
   h1: {
@@ -92,13 +92,13 @@ const textVariants = {
   textInput: {
     fontFamily: "Rubik-400",
     fontSize: 20,
-    lineHeight: 0,
+    lineHeight: 20,
     color: "text",
   },
   button: {
     fontFamily: "Rubik-500",
     fontSize: 20,
-    lineHeight: 0,
+    lineHeight: 20,
     color: "text",
   },
 };
