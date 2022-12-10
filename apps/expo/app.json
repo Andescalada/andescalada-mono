@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
@@ -34,7 +34,7 @@
         ],
         "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
       },
-      "buildNumber": "12"
+      "buildNumber": "14"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -43,7 +43,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 13
+      "versionCode": 15
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
