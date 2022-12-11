@@ -512,7 +512,7 @@ model Language {
 model Location {
   id        String     @id @default(uuid())
   latitude  Decimal    @db.Decimal(10, 8)
-  longitude Decimal    @db.Decimal(10, 8)
+  longitude Decimal    @db.Decimal(11, 8)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   isDeleted SoftDelete @default(NotDeleted)
