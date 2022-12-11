@@ -172,6 +172,10 @@ model Zone {
   DownloadedBy User[]          @relation("DownloadedZones")
   History      History[]
   agreements   ZoneAgreement[]
+  Location     Location?       @relation(fields: [locationId], references: [id])
+  locationId   String?
+
+  @@index([locationId])
 }
 
 model ZoneAgreement {
@@ -503,4 +507,15 @@ model Language {
   Translation  Translation[]
 
   @@index([languageId])
+}
+
+model Location {
+  id        String     @id @default(uuid())
+  latitude  Decimal    @db.Decimal(10, 8)
+  longitude Decimal    @db.Decimal(10, 8)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  isDeleted SoftDelete @default(NotDeleted)
+  note      String?    @db.LongText
+  Zone      Zone[]
 }
