@@ -1,5 +1,5 @@
 export interface FeatureFlag {
-  offline: boolean;
+  storyBar: boolean;
 }
 
 const featureFlags: Record<
@@ -7,13 +7,13 @@ const featureFlags: Record<
   FeatureFlag
 > = {
   preview: {
-    offline: true,
+    storyBar: true,
   },
   development: {
-    offline: true,
+    storyBar: true,
   },
   production: {
-    offline: false,
+    storyBar: false,
   },
 };
 

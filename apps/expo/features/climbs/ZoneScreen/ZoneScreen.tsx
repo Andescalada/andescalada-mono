@@ -18,6 +18,7 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import { useFocusEffect } from "@react-navigation/native";
+import featureFlags from "@utils/featureFlags";
 import { FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -129,18 +130,29 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           data={data?.sectors}
           refreshControl={refresh}
           contentContainerStyle={{ flex: 1 }}
-          ListHeaderComponent={() =>
-            !!data && data.hasAccess ? (
-              <ToolBar
-                isDownloaded={isDownloaded}
-                isFavorite={isFavorite}
-                onDownloadPress={onDownloadPress}
-                onFavoritePress={onFavoritePress}
-                openAll={openAll}
-                setOpenAll={setOpenAll}
-              />
-            ) : null
-          }
+          ListHeaderComponent={() => {
+            return (
+              <Box marginTop="s">
+                {featureFlags.storyBar && (
+                  <Box flexDirection="row" marginBottom="m">
+                    <StoryButton title="Acuerdos" />
+                    <StoryButton title="Como llegar" />
+                    <StoryButton title="Flora y fauna" />
+                  </Box>
+                )}
+                {!!data && data.hasAccess ? (
+                  <ToolBar
+                    isDownloaded={isDownloaded}
+                    isFavorite={isFavorite}
+                    onDownloadPress={onDownloadPress}
+                    onFavoritePress={onFavoritePress}
+                    openAll={openAll}
+                    setOpenAll={setOpenAll}
+                  />
+                ) : null}
+              </Box>
+            );
+          }}
           ListEmptyComponent={() => (
             <NoSectors
               isLoading={isLoading}
@@ -159,3 +171,22 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 };
 
 export default ZoneScreen;
+
+interface StoryButtonProps {
+  title: string;
+}
+
+const StoryButton = ({ title }: StoryButtonProps) => (
+  <Box alignItems="center" marginHorizontal="xs" height={60} width={60}>
+    <Box
+      height={60}
+      width={60}
+      borderRadius={30}
+      borderWidth={2}
+      borderColor="brand.primaryA"
+    />
+    <Text variant="caption" marginTop="xs" textAlign="center" fontSize={10}>
+      {title}
+    </Text>
+  </Box>
+);
