@@ -13,6 +13,10 @@ const previewConfig = (config: ConfigContext["config"]): ExpoConfig => ({
   ios: {
     ...config.ios,
     bundleIdentifier: "com.andescalada-preview.app",
+    config: {
+      ...config.ios?.config,
+      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
+    },
   },
   android: {
     ...config.android,
@@ -22,6 +26,12 @@ const previewConfig = (config: ConfigContext["config"]): ExpoConfig => ({
         "./assets/expoConfig/android-foregroundImage-adaptiveIcon_preview.png",
       backgroundImage:
         "./assets/expoConfig/android-backgroundImage-adaptiveIcon_preview.png",
+    },
+    config: {
+      ...config.android?.config,
+      googleMaps: {
+        apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID,
+      },
     },
   },
   runtimeVersion: {

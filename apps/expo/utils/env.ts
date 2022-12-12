@@ -1,9 +1,9 @@
-import { SENTRY_DNS } from "@env";
 import Constants from "expo-constants";
 
 const Env = {
   API_URL: Constants.expoConfig?.extra?.API_URL as string,
-  SENTRY_DNS: SENTRY_DNS,
+  SENTRY_DNS:
+    "https://d7792e58e4f94138aa7c6303aa7f2c79@o1423499.ingest.sentry.io/6771037",
   SENTRY_DEPLOY_ENV: Constants.expoConfig?.extra?.SENTRY_DEPLOY_ENV as string,
   CLOUDINARY_UPLOAD_PRESET: Constants?.expoConfig?.extra
     ?.CLOUDINARY_UPLOAD_PRESET as string,
