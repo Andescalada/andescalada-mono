@@ -1,5 +1,5 @@
 {
-  "name": "iNaturalist",
+  "name": "@andescalada/iNaturalist",
   "version": "0.0.1",
   "description": "Package to manage and show information from iNaturalist",
   "main": "index.ts",
