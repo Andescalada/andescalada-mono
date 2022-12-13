@@ -22,7 +22,6 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { useNavigation } from "@react-navigation/native";
-import { onlineManager } from "@tanstack/react-query";
 
 type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 
@@ -254,17 +253,19 @@ const UserZonesScreen = () => {
               }
               flexDirection="row"
               justifyContent="space-between"
-              alignItems="flex-end"
+              alignItems="center"
             >
               <Text variant="p1R">{item.name}</Text>
-              <Ionicons
-                color="white"
-                name="close"
-                size={20}
-                onPress={() => {
-                  removeRecentZone.mutate({ zoneId: item.id });
-                }}
-              />
+              <Box justifyContent="center">
+                <Ionicons
+                  color="white"
+                  name="close"
+                  size={20}
+                  onPress={() => {
+                    removeRecentZone.mutate({ zoneId: item.id });
+                  }}
+                />
+              </Box>
               {INFO_ACCESS_FLAG && (
                 <Box
                   width={15}

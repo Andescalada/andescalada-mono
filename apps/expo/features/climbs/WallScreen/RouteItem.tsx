@@ -117,11 +117,6 @@ const RouteItem = ({
 
   const rootNavigation = useRootNavigation();
 
-  const routeTitle = useMemo(
-    () => (hidePosition ? item.name : `${item.position} - ${item.name}`),
-    [hidePosition, item.name, item.position],
-  );
-
   const onPress = useCallback(() => {
     if (!topoId) return;
     rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
@@ -177,13 +172,39 @@ const RouteItem = ({
       onLeftAction={onOptions}
       onPress={onPress}
     >
-      <Box flex={1}>
-        <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
-          {routeTitle}
-        </Text>
+      <Box flex={1} flexDirection="row" alignItems="center">
+        {!hidePosition && (
+          <Box
+            borderWidth={1}
+            borderColor="text"
+            borderRadius={15}
+            height={30}
+            width={30}
+            justifyContent="center"
+            alignItems="center"
+            marginRight="s"
+          >
+            <Text
+              variant="p2B"
+              paddingHorizontal="xs"
+              textAlign="center"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {item.position}
+            </Text>
+          </Box>
+        )}
+        <Box>
+          <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
+            {item.name}
+          </Text>
+          <Text variant="caption" color="grayscale.400">
+            {routeKindLabel(item.kind).long}
+          </Text>
+        </Box>
       </Box>
-      <Box flexDirection="row">
-        <Text paddingHorizontal="xs">{routeKindLabel(item.kind).short}</Text>
+      <Box flexDirection="row" alignItems="center">
         <Text variant="p2R">{grade}</Text>
       </Box>
     </ListItem>
