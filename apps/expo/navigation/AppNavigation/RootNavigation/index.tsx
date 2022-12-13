@@ -6,6 +6,7 @@ import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import UserStackNavigation from "@features/user/Navigation";
 import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation";
+import ZoneLocationStackNavigation from "@features/zoneLocation/Navigation";
 import useOwnInfo from "@hooks/useOwnInfo";
 import usePushNotification from "@hooks/usePushNotification";
 import {
@@ -75,6 +76,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.ImageManager}
             component={ImageManagerNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.ZoneLocation}
+            component={ZoneLocationStackNavigation}
           />
         </Stack.Group>
       )}

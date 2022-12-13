@@ -1,5 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
-import { Box, Screen, Text } from "@andescalada/ui";
+import { Box, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -12,14 +12,17 @@ import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
+import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
+import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useFocusEffect } from "@react-navigation/native";
 import featureFlags from "@utils/featureFlags";
-import { FC, useCallback, useState } from "react";
+import { ComponentProps, FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 
@@ -31,6 +34,8 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId, zoneName } = route.params;
 
   const utils = trpc.useContext();
+
+  const rootNavigation = useRootNavigation();
 
   const { isOfflineMode } = useOfflineMode();
 
@@ -136,7 +141,15 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                 {featureFlags.storyBar && (
                   <Box flexDirection="row" marginBottom="m">
                     <StoryButton title="Acuerdos" />
-                    <StoryButton title="Como llegar" />
+                    <StoryButton
+                      title="Como llegar"
+                      onPress={() =>
+                        rootNavigation.navigate(
+                          RootNavigationRoutes.ZoneLocation,
+                          { screen: ZoneLocationRoutes.ZoneMap },
+                        )
+                      }
+                    />
                     <StoryButton title="Flora y fauna" />
                   </Box>
                 )}
@@ -172,12 +185,18 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
 export default ZoneScreen;
 
-interface StoryButtonProps {
+interface StoryButtonProps extends ComponentProps<typeof Pressable> {
   title: string;
 }
 
-const StoryButton = ({ title }: StoryButtonProps) => (
-  <Box alignItems="center" marginHorizontal="xs" height={60} width={60}>
+const StoryButton = ({ title, ...props }: StoryButtonProps) => (
+  <Pressable
+    alignItems="center"
+    marginHorizontal="xs"
+    height={60}
+    width={60}
+    {...props}
+  >
     <Box
       height={60}
       width={60}
@@ -188,5 +207,5 @@ const StoryButton = ({ title }: StoryButtonProps) => (
     <Text variant="caption" marginTop="xs" textAlign="center" fontSize={10}>
       {title}
     </Text>
-  </Box>
+  </Pressable>
 );

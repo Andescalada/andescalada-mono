@@ -3,6 +3,7 @@ import { ImageManagerNavigationParamList } from "@features/imageManager/Navigati
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
 import { ZoneAgreementsNavigationParamList } from "@features/zoneAgreementManager/Navigation/types";
+import { ZoneLocationNavigationParamList } from "@features/zoneLocation/Navigation/types";
 import { NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -14,6 +15,7 @@ export enum RootNavigationRoutes {
   Loading = "RootLoading",
   ZoneAgreementsManager = "ZoneAgreementsManager",
   ImageManager = "ImageManager",
+  ZoneLocation = "ZoneLocation",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -24,6 +26,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.Loading]: undefined;
   [RootNavigationRoutes.ZoneAgreementsManager]: NavigatorScreenParams<ZoneAgreementsNavigationParamList>;
   [RootNavigationRoutes.ImageManager]: NavigatorScreenParams<ImageManagerNavigationParamList>;
+  [RootNavigationRoutes.ZoneLocation]: NavigatorScreenParams<ZoneLocationNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =
