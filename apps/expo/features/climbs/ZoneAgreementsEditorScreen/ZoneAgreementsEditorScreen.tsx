@@ -1,6 +1,14 @@
 import { AgreementLevelSchema } from "@andescalada/db/zod";
 import { IconNames } from "@andescalada/icons";
-import { Box, Icon, ListItem, Pressable, Screen, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  Box,
+  Icon,
+  ListItem,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -43,13 +51,15 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
         alignItems="center"
       >
         <Text variant="h1">{zoneName}</Text>
-        <Pressable onPress={onAddAgreement}>
-          <Ionicons
-            name="add-circle-sharp"
-            size={40}
-            color={theme.colors["semantic.info"]}
-          />
-        </Pressable>
+        {false && (
+          <Pressable onPress={onAddAgreement}>
+            <Ionicons
+              name="add-circle-sharp"
+              size={40}
+              color={theme.colors["semantic.info"]}
+            />
+          </Pressable>
+        )}
       </Box>
       <FlatList
         data={agreements.data}
@@ -59,12 +69,18 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
         }}
         ListEmptyComponent={() => (
           <Box flex={1} justifyContent="center" alignItems="center">
-            <Text variant="h2">Sin acuerdos</Text>
-            <Pressable onPress={onAddAgreement}>
-              <Text variant="p2R" marginTop="l" color="semantic.info">
-                Agregar
-              </Text>
-            </Pressable>
+            {agreements.isLoading ? (
+              <ActivityIndicator size="large" />
+            ) : (
+              <>
+                <Text variant="h2">Sin acuerdos</Text>
+                <Pressable onPress={onAddAgreement}>
+                  <Text variant="p2R" marginTop="l" color="semantic.info">
+                    Agregar
+                  </Text>
+                </Pressable>
+              </>
+            )}
           </Box>
         )}
         renderItem={({ item, index }) => (
