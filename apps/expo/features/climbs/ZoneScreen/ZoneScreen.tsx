@@ -142,7 +142,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                   <Box flexDirection="row" marginBottom="m">
                     <StoryButton title="Acuerdos" />
                     <StoryButton
-                      title="Como llegar"
+                      title="Mapa"
                       onPress={() =>
                         rootNavigation.navigate(
                           RootNavigationRoutes.ZoneLocation,
@@ -150,6 +150,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                         )
                       }
                     />
+                    <StoryButton title="Como llegar" />
                     <StoryButton title="Flora y fauna" />
                   </Box>
                 )}

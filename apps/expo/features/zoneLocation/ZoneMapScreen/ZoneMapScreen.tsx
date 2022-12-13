@@ -1,5 +1,5 @@
 import { MapView } from "@andescalada/maps";
-import { Screen, Text } from "@andescalada/ui";
+import { BackButton, Screen } from "@andescalada/ui";
 import {
   ZoneLocationRoutes,
   ZoneLocationScreenProps,
@@ -15,7 +15,7 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const ZoneMapScreen: FC<Props> = (props) => {
+const ZoneMapScreen: FC<Props> = ({ navigation }) => {
   return (
     <Screen safeAreaDisabled>
       <MapView
@@ -28,6 +28,7 @@ const ZoneMapScreen: FC<Props> = (props) => {
         }}
         // customMapStyle={MapStyle}
       />
+      <BackButton.Transparent onPress={() => navigation.goBack()} />
     </Screen>
   );
 };
