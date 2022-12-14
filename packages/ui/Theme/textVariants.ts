@@ -92,13 +92,13 @@ const textVariants = {
   textInput: {
     fontFamily: "Rubik-400",
     fontSize: 20,
-    lineHeight: 20,
+    lineHeight: undefined,
     color: "text",
   },
   button: {
     fontFamily: "Rubik-500",
     fontSize: 20,
-    lineHeight: 20,
+    lineHeight: undefined,
     color: "text",
   },
 };

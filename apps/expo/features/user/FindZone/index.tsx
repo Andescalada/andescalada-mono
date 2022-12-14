@@ -81,7 +81,6 @@ const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
         </Text>
         <Box>
           <TextInput
-            textVariant="p1R"
             onChangeText={onChange}
             containerProps={{ height: 40, paddingLeft: "s" }}
             autoCapitalize="none"

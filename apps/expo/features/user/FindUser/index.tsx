@@ -91,7 +91,6 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
         </Text>
         <Box>
           <TextInput
-            textVariant="p1R"
             onChangeText={onChange}
             containerProps={{ height: 40 }}
             autoCapitalize="none"
@@ -99,7 +98,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
             placeholder="nombre de usuario"
             adornmentProps={{
               startAdornment: "@",
-              startAdornmentContainerProps: { alignSelf: "center" },
+              startAdornmentContainerProps: { justifyContent: "center" },
               startAdornmentProps: { fontSize: 20, marginHorizontal: "s" },
             }}
           />

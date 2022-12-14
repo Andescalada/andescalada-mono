@@ -54,7 +54,6 @@ const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
               ),
               startAdornmentProps: {},
             }}
-            textVariant="p1R"
             containerProps={{
               height: 40,
               paddingLeft: "s",

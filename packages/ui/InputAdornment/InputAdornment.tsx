@@ -26,8 +26,9 @@ const InputAdornment: FC<Props> = ({
       return (
         <Box {...startAdornmentContainerProps}>
           <Text
-            color="grayscale.black"
             marginRight="xs"
+            variant="textInput"
+            color="grayscale.600"
             {...startAdornmentProps}
           >
             {startAdornment}
@@ -41,7 +42,12 @@ const InputAdornment: FC<Props> = ({
     if (typeof endAdornment === "string")
       return (
         <Box {...endAdornmentContainerProps}>
-          <Text color="grayscale.black" marginRight="xs" {...endAdornmentProps}>
+          <Text
+            color="grayscale.600"
+            marginRight="xs"
+            variant="textInput"
+            {...endAdornmentProps}
+          >
             {endAdornment}
           </Text>
         </Box>
