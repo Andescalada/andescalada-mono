@@ -3,6 +3,7 @@ import pathTitle from "@assets/andescaladaPathTitle";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
+import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useOfflineMode from "@hooks/useOfflineMode";
@@ -96,11 +97,18 @@ const UserHeader = () => {
             screen: UserNavigationRoutes.OwnUserConfig,
           }),
       },
+      "Crear una zona": {
+        action: () => {
+          rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+            screen: ZoneManagerRoutes.AddNewZoneScreen,
+          });
+        },
+      },
       "Cerrar Sesión": {
         action: onLogout,
       },
     },
-    { destructiveButtonIndex: 1 },
+    { destructiveButtonIndex: 2 },
   );
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

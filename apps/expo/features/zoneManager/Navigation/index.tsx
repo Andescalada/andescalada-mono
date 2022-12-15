@@ -4,6 +4,7 @@ import {
   ZoneManagerRoutes,
 } from "@features/zoneManager/Navigation/types";
 import { createStackNavigator } from "@react-navigation/stack";
+import backHeader from "@utils/navigationBackHeader";
 
 const Stack = createStackNavigator<ZoneManagerNavigationParamList>();
 
@@ -13,6 +14,10 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneManagerRoutes.AddNewZoneScreen}
         component={AddNewZoneScreen}
+        options={{
+          title: "Crea una nueva zona",
+          ...backHeader,
+        }}
       />
     </Stack.Navigator>
   );

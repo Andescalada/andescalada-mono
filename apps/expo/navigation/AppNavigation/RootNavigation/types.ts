@@ -4,6 +4,7 @@ import { RoutesManagerNavigationParamList } from "@features/routesManager/Naviga
 import { UserNavigationParamList } from "@features/user/Navigation/types";
 import { ZoneAgreementsNavigationParamList } from "@features/zoneAgreementManager/Navigation/types";
 import { ZoneLocationNavigationParamList } from "@features/zoneLocation/Navigation/types";
+import { ZoneManagerNavigationParamList } from "@features/zoneManager/Navigation/types";
 import { NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -16,6 +17,7 @@ export enum RootNavigationRoutes {
   ZoneAgreementsManager = "ZoneAgreementsManager",
   ImageManager = "ImageManager",
   ZoneLocation = "ZoneLocation",
+  ZoneManager = "ZoneManager",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -27,6 +29,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.ZoneAgreementsManager]: NavigatorScreenParams<ZoneAgreementsNavigationParamList>;
   [RootNavigationRoutes.ImageManager]: NavigatorScreenParams<ImageManagerNavigationParamList>;
   [RootNavigationRoutes.ZoneLocation]: NavigatorScreenParams<ZoneLocationNavigationParamList>;
+  [RootNavigationRoutes.ZoneManager]: NavigatorScreenParams<ZoneManagerNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =
