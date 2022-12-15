@@ -9,7 +9,11 @@ export const searchRouter = t.router({
   all: t.procedure.input(z.string().min(2)).mutation(async ({ ctx, input }) => {
     const zones = ctx.prisma.zone
       .findMany({
-        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
+        where: {
+          name: { contains: input },
+          isDeleted: SoftDelete.NotDeleted,
+          currentStatus: "Published",
+        },
         select: { id: true, name: true },
       })
       .then((results) =>
@@ -24,7 +28,11 @@ export const searchRouter = t.router({
 
     const sectors = ctx.prisma.sector
       .findMany({
-        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
+        where: {
+          name: { contains: input },
+          isDeleted: SoftDelete.NotDeleted,
+          Zone: { currentStatus: "Published" },
+        },
         select: {
           id: true,
           name: true,
@@ -47,7 +55,11 @@ export const searchRouter = t.router({
 
     const walls = ctx.prisma.wall
       .findMany({
-        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
+        where: {
+          name: { contains: input },
+          isDeleted: SoftDelete.NotDeleted,
+          Sector: { Zone: { currentStatus: "Published" } },
+        },
         select: {
           id: true,
           name: true,
@@ -77,7 +89,11 @@ export const searchRouter = t.router({
 
     const routes = ctx.prisma.route
       .findMany({
-        where: { name: { contains: input }, isDeleted: SoftDelete.NotDeleted },
+        where: {
+          name: { contains: input },
+          isDeleted: SoftDelete.NotDeleted,
+          Wall: { Sector: { Zone: { currentStatus: "Published" } } },
+        },
         select: {
           id: true,
           name: true,

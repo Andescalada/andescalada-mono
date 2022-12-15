@@ -17,6 +17,7 @@ export const zonesRouter = t.router({
       where: {
         isDeleted: SoftDelete.NotDeleted,
         infoAccess: InfoAccess.Public,
+        currentStatus: "Published",
       },
     }),
   ),
@@ -91,7 +92,27 @@ export const zonesRouter = t.router({
           Role: { connect: { name: "Admin" } },
           User: { connect: { username: input.username } },
           Zone: {
-            create: { name: input.name, slug: slug(input.name) },
+            create: {
+              name: input.name,
+              slug: slug(input.name),
+              statusHistory: {
+                create: {
+                  status: "Unpublished",
+                  message: {
+                    create: {
+                      originalText: "Just created",
+                      originalLang: { connect: { languageId: "en" } },
+                      Translation: {
+                        create: {
+                          translation: "Recién creada",
+                          language: { connect: { languageId: "es" } },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           AssignedBy: { connect: { email: ctx.user.email } },
         },

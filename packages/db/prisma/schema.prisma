@@ -157,25 +157,47 @@ enum PermissionActions {
 }
 
 model Zone {
-  id           String          @id @default(uuid())
-  name         String
-  slug         String
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  infoAccess   InfoAccess      @default(Public)
-  sectors      Sector[]
-  photos       Image[]
-  RoleByZone   RoleByZone[]
-  isDeleted    SoftDelete      @default(NotDeleted)
-  version      Int             @default(0)
-  FavoritedBy  User[]          @relation("FavoriteZones")
-  DownloadedBy User[]          @relation("DownloadedZones")
-  History      History[]
-  agreements   ZoneAgreement[]
-  Location     Location?       @relation(fields: [locationId], references: [id])
-  locationId   String?
+  id            String          @id @default(uuid())
+  name          String
+  slug          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  infoAccess    InfoAccess      @default(Public)
+  sectors       Sector[]
+  photos        Image[]
+  RoleByZone    RoleByZone[]
+  isDeleted     SoftDelete      @default(NotDeleted)
+  version       Int             @default(0)
+  FavoritedBy   User[]          @relation("FavoriteZones")
+  DownloadedBy  User[]          @relation("DownloadedZones")
+  History       History[]
+  agreements    ZoneAgreement[]
+  Location      Location?       @relation(fields: [locationId], references: [id])
+  locationId    String?
+  currentStatus Status          @default(Unpublished)
+  statusHistory ZoneStatus[]
 
   @@index([locationId])
+}
+
+model ZoneStatus {
+  id            String       @id @default(uuid())
+  status        Status
+  message       TextContent? @relation(fields: [textContentId], references: [id])
+  createdAt     DateTime     @default(now())
+  Zone          Zone[]
+  textContentId String?
+
+  @@index([textContentId])
+}
+
+enum Status {
+  Paused
+  Published
+  Rejected
+  Approved
+  InReview
+  Unpublished
 }
 
 model ZoneAgreement {
@@ -472,12 +494,13 @@ model TextContent {
   updatedAt            DateTime        @updatedAt
   originalText         String          @db.LongText
   originalLang         Language        @relation(fields: [languageId], references: [languageId])
+  languageId           String
   isDeleted            SoftDelete      @default(NotDeleted)
   Translation          Translation[]
-  languageId           String
   AgreementName        Agreement[]     @relation("AgreementName")
   AgreementDescription Agreement[]     @relation("AgreementDescription")
   ZoneAgreementComment ZoneAgreement[]
+  ZoneStatus           ZoneStatus[]
 
   @@index([languageId])
 }
