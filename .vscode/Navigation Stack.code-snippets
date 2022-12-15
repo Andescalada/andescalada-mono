@@ -1,27 +1,26 @@
 {
-	"React Navigation Stack ": {
-		"prefix": "stackTemplate",
-		"body": [
-		"import { createStackNavigator } from \"@react-navigation/stack\";",
-		"",
-		"import {",
-			"${TM_DIRECTORY/^.+\\/(.*)$/$1/}Routes,",
-			"${TM_DIRECTORY/^.+\\/(.*)$/$1/}NavigationParamList,",
-		"} from \"navigation/stacks/${TM_DIRECTORY/^.+\\/(.*)$/$1/}/types\";",
-		"",
-		"const Stack = createStackNavigator<${TM_DIRECTORY/^.+\\/(.*)$/$1/}NavigationParamList>();",
-		"",
-		"const Navigator = () => {",
-			"return (",
-				"<Stack.Navigator screenOptions={{ headerShown: false }}>",
-					"<Stack.Screen />",
-				"</Stack.Navigator>",
-			");",
-		"};",
-		"",
-		"export default Navigator;"
-		],
-		"description": "Template for stack navigation"
-	},
+  "React Navigation Stack ": {
+    "prefix": "stackTemplate",
+    "body": [
+      "import { createStackNavigator } from \"@react-navigation/stack\";",
+      "",
+      "import {",
+      "$1Routes,",
+      "$1NavigationParamList,",
+      "} from \"navigation/stacks/${TM_DIRECTORY/^.+\\/(.*)$/$1/}/types\";",
+      "",
+      "const Stack = createStackNavigator<$1NavigationParamList>();",
+      "",
+      "const Navigator = () => {",
+      "return (",
+      "<Stack.Navigator screenOptions={{ headerShown: false }}>",
+      "<Stack.Screen />",
+      "</Stack.Navigator>",
+      ");",
+      "};",
+      "",
+      "export default Navigator;"
+    ],
+    "description": "Template for stack navigation"
+  }
 }
-
