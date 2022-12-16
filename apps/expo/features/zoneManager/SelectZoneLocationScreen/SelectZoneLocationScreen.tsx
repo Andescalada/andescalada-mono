@@ -122,6 +122,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
           title="Continuar"
           disabled={!region}
           onPress={handleContinue}
+          isLoading={editZone.isLoading}
         />
       </Box>
     </Screen>

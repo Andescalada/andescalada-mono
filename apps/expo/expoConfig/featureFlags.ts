@@ -1,5 +1,6 @@
 export interface FeatureFlag {
   storyBar: boolean;
+  addZoneFlow: boolean;
 }
 
 const featureFlags: Record<
@@ -8,12 +9,15 @@ const featureFlags: Record<
 > = {
   preview: {
     storyBar: true,
+    addZoneFlow: true,
   },
   development: {
     storyBar: true,
+    addZoneFlow: true,
   },
   production: {
     storyBar: false,
+    addZoneFlow: false,
   },
 };
 
