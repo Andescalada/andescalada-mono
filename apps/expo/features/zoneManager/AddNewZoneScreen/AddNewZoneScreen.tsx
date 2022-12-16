@@ -22,7 +22,7 @@ const { schema } = zone;
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.AddNewZoneScreen>;
 
-const AddNewZoneScreen: FC<Props> = (props) => {
+const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
   const { control, ...form } = useZodForm({ schema, mode: "onChange" });
 
   const zoneName = useController({ control, name: "name" });
@@ -103,6 +103,9 @@ const AddNewZoneScreen: FC<Props> = (props) => {
           <Button
             variant={form.formState.isValid ? "success" : "transparent"}
             title="Continuar"
+            onPress={() =>
+              navigation.navigate(ZoneManagerRoutes.SelectZoneLocationScreen)
+            }
           />
         </Box>
       </KeyboardDismiss>

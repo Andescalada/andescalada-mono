@@ -20,7 +20,7 @@ const useCachedImage = (args: { url: string; uniqueId: string } | null) => {
   return {
     fileUrl,
     getCachedImage,
-    uri: fileUrl ? { uri: fileUrl } : images.placeholder,
+    uri: fileUrl ? { uri: fileUrl } : images.placeholder.file,
   };
 };
 

@@ -5,7 +5,7 @@ import {
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
 import { FC } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
 
 type Props = ZoneLocationScreenProps<ZoneLocationRoutes.ZoneMap>;
 const { width, height } = Dimensions.get("window");
@@ -19,7 +19,6 @@ const ZoneMapScreen: FC<Props> = ({ navigation }) => {
   return (
     <Screen safeAreaDisabled>
       <MapView
-        style={styles.map}
         initialRegion={{
           latitude: LATITUDE,
           longitude: LONGITUDE,
@@ -34,9 +33,3 @@ const ZoneMapScreen: FC<Props> = ({ navigation }) => {
 };
 
 export default ZoneMapScreen;
-
-const styles = StyleSheet.create({
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-});
