@@ -5,6 +5,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum ZoneManagerRoutes {
   AddNewZoneScreen = "AddNewZoneScreen",
   SelectZoneLocationScreen = "SelectZoneLocationScreen",
+  ZoneOnboarding = "ZoneOnboarding",
 }
 
 export type ZoneManagerNavigationParamList = {
@@ -13,6 +14,7 @@ export type ZoneManagerNavigationParamList = {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };
+  [ZoneManagerRoutes.ZoneOnboarding]: undefined;
 };
 
 export type ZoneManagerRouteProps<T extends ZoneManagerRoutes> = RouteProp<

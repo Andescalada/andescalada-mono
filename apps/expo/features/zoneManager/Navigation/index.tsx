@@ -4,6 +4,7 @@ import {
   ZoneManagerRoutes,
 } from "@features/zoneManager/Navigation/types";
 import SelectZoneLocationScreen from "@features/zoneManager/SelectZoneLocationScreen";
+import ZoneOnboardingScreen from "@features/zoneManager/ZoneOnboardingScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
 
@@ -23,6 +24,10 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneManagerRoutes.SelectZoneLocationScreen}
         component={SelectZoneLocationScreen}
+      />
+      <Stack.Screen
+        name={ZoneManagerRoutes.ZoneOnboarding}
+        component={ZoneOnboardingScreen}
       />
     </Stack.Navigator>
   );

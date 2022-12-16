@@ -1,10 +1,17 @@
 const base = "./components/";
 
 export const Icons = {
+  "backpacker-color": require(base + "backpacker-color").default,
+  "backpacker-exporer-color": require(base + "backpacker-exporer-color").default,
+  "backpacker-exporer": require(base + "backpacker-exporer").default,
+  "backpacker-senior-color": require(base + "backpacker-senior-color").default,
+  "backpacker-senior": require(base + "backpacker-senior").default,
   "camping-color": require(base + "camping-color").default,
   "camping": require(base + "camping").default,
   "dog-color": require(base + "dog-color").default,
   "dog": require(base + "dog").default,
+  "eyes-color": require(base + "eyes-color").default,
+  "eyes": require(base + "eyes").default,
   "fire-color": require(base + "fire-color").default,
   "fire": require(base + "fire").default,
   "no-camping-color": require(base + "no-camping-color").default,
@@ -21,6 +28,10 @@ export const Icons = {
   "question-mark": require(base + "question-mark").default,
   "shake-hands-color": require(base + "shake-hands-color").default,
   "shake-hands": require(base + "shake-hands").default,
+  "thumb-up-color": require(base + "thumb-up-color").default,
+  "thumb-up": require(base + "thumb-up").default,
   "toilet-color": require(base + "toilet-color").default,
   "toilet": require(base + "toilet").default,
+  "united-color": require(base + "united-color").default,
+  "united": require(base + "united").default,
 };
