@@ -1,3 +1,4 @@
+import { Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -8,7 +9,10 @@ export enum ZoneManagerRoutes {
 
 export type ZoneManagerNavigationParamList = {
   [ZoneManagerRoutes.AddNewZoneScreen]: undefined;
-  [ZoneManagerRoutes.SelectZoneLocationScreen]: undefined;
+  [ZoneManagerRoutes.SelectZoneLocationScreen]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
+  };
 };
 
 export type ZoneManagerRouteProps<T extends ZoneManagerRoutes> = RouteProp<

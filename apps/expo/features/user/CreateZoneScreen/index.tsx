@@ -23,6 +23,8 @@ import { Keyboard } from "react-native";
 
 type Props = UserNavigationScreenProps<UserNavigationRoutes.CreateZone>;
 
+// TODO: Refactor this
+
 const CreateZoneScreen: FC<Props> = () => {
   const {
     handleSubmit,
@@ -68,7 +70,7 @@ const CreateZoneScreen: FC<Props> = () => {
     if (!user) return;
     mutate({
       name: input.name,
-      username: user?.username,
+
       infoAccess: InfoAccessSchema.Enum.Public,
     });
   });

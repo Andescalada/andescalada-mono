@@ -1,4 +1,3 @@
-import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
@@ -32,12 +31,21 @@ export const zonesRouter = t.router({
     return zone;
   }),
   edit: t.procedure
-    .input(zone.schema.pick({ name: true }).merge(zone.id))
+    .input(
+      z
+        .object({
+          name: zone.schema.shape.name.optional(),
+        })
+        .merge(zone.id),
+    )
     .mutation(
       async ({ ctx, input }) =>
         await ctx.prisma.zone.update({
           where: { id: input.zoneId },
-          data: { name: input.name, version: { increment: 1 } },
+          data: {
+            ...(input.name && { name: input.name }),
+            version: { increment: 1 },
+          },
         }),
     ),
   // Asset being downloaded
@@ -84,7 +92,7 @@ export const zonesRouter = t.router({
     };
   }),
   create: protectedProcedure
-    .input(zone.schema.merge(user.schema.pick({ username: true })))
+    .input(zone.schema)
     .mutation(async ({ ctx, input }) => {
       if (!ctx.user.permissions.includes("crud:zones"))
         throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -92,7 +100,7 @@ export const zonesRouter = t.router({
       const roleByZone = await ctx.prisma.roleByZone.create({
         data: {
           Role: { connect: { name: "Admin" } },
-          User: { connect: { username: input.username } },
+          User: { connect: { email: ctx.user.email } },
           Zone: {
             create: {
               name: input.name,
@@ -103,14 +111,8 @@ export const zonesRouter = t.router({
                   status: "Unpublished",
                   message: {
                     create: {
-                      originalText: "Just created",
-                      originalLang: { connect: { languageId: "en" } },
-                      Translation: {
-                        create: {
-                          translation: "Recién creada",
-                          language: { connect: { languageId: "es" } },
-                        },
-                      },
+                      originalText: "Recién creada",
+                      originalLang: { connect: { languageId: "es" } },
                     },
                   },
                 },

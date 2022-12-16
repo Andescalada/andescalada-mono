@@ -9,6 +9,7 @@ import {
   Text,
   TextInput,
 } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
@@ -27,6 +28,19 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
 
   const zoneName = useController({ control, name: "name" });
   const access = useController({ control, name: "infoAccess" });
+
+  const addZone = trpc.zones.create.useMutation({
+    onSuccess: ({ zoneId }) => {
+      navigation.navigate(ZoneManagerRoutes.SelectZoneLocationScreen, {
+        zoneId,
+        zoneName: zoneName.field.value,
+      });
+    },
+  });
+
+  const handleContinue = form.handleSubmit((data) => {
+    addZone.mutate(data);
+  });
 
   return (
     <Screen padding="m" safeAreaDisabled>
@@ -103,9 +117,9 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
           <Button
             variant={form.formState.isValid ? "success" : "transparent"}
             title="Continuar"
-            onPress={() =>
-              navigation.navigate(ZoneManagerRoutes.SelectZoneLocationScreen)
-            }
+            disabled={!form.formState.isValid}
+            onPress={handleContinue}
+            isLoading={addZone.isLoading}
           />
         </Box>
       </KeyboardDismiss>
