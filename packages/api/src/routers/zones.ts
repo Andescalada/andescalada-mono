@@ -97,6 +97,7 @@ export const zonesRouter = t.router({
             create: {
               name: input.name,
               slug: slug(input.name),
+              infoAccess: input.infoAccess,
               statusHistory: {
                 create: {
                   status: "Unpublished",
