@@ -1,3 +1,4 @@
+import global from "@andescalada/api/schemas/global";
 import { r } from "@andescalada/api/src/utils/regex";
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import { z } from "zod";
@@ -15,6 +16,7 @@ const schema = z.object({
     required_error: "Requerido",
     invalid_type_error: "Requerido",
   }),
+  coordinates: global.coordinates.optional(),
 });
 
 const nameSearch = z

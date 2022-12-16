@@ -3,6 +3,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import usePermissions from "@hooks/usePermissions";
 import { FC } from "react";
 
 type Props =
@@ -14,6 +15,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
+  const { permission } = usePermissions({ zoneId });
   return (
     <Screen padding="m" safeAreaDisabled>
       <Text variant="h1" marginBottom="m">
@@ -36,7 +38,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
           })
         }
       >
-        Modificar acuerdos
+        Acuerdos
       </ListItemOption>
     </Screen>
   );

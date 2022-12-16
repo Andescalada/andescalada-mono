@@ -35,6 +35,7 @@ export const zonesRouter = t.router({
       z
         .object({
           name: zone.schema.shape.name.optional(),
+          coordinates: zone.schema.shape.coordinates,
         })
         .merge(zone.id),
     )
@@ -44,6 +45,9 @@ export const zonesRouter = t.router({
           where: { id: input.zoneId },
           data: {
             ...(input.name && { name: input.name }),
+            ...(input.coordinates && {
+              Location: { create: input.coordinates },
+            }),
             version: { increment: 1 },
           },
         }),

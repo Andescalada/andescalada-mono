@@ -1,5 +1,6 @@
 import { MapView } from "@andescalada/maps";
 import { BackButton, Box, Button, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
 import {
   ZoneManagerRoutes,
@@ -19,11 +20,29 @@ const LONGITUDE = -122.4555;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const SelectZoneLocationScreen: FC<Props> = ({ navigation }) => {
+const SelectZoneLocationScreen: FC<Props> = ({
+  navigation,
+  route: {
+    params: { zoneId },
+  },
+}) => {
   const { location } = useLocation();
   const mapRef = useRef<MapRefType | null>(null);
 
   const [region, setRegion] = useState<Region>();
+
+  const editZone = trpc.zones.edit.useMutation({
+    onSuccess: () => {},
+  });
+
+  const handleContinue = () => {
+    if (region) {
+      editZone.mutate({
+        zoneId,
+        coordinates: { latitude: region.latitude, longitude: region.longitude },
+      });
+    }
+  };
 
   useEffect(() => {
     if (location) {
@@ -74,7 +93,7 @@ const SelectZoneLocationScreen: FC<Props> = ({ navigation }) => {
       <Box
         position="absolute"
         top={50}
-        left={55}
+        left={0}
         right={0}
         margin="m"
         padding="m"
@@ -86,7 +105,6 @@ const SelectZoneLocationScreen: FC<Props> = ({ navigation }) => {
         </Text>
       </Box>
 
-      <BackButton.Transparent onPress={() => navigation.goBack()} />
       <Box
         position="absolute"
         bottom={50}
@@ -97,9 +115,8 @@ const SelectZoneLocationScreen: FC<Props> = ({ navigation }) => {
         <Button
           variant={region ? "success" : "transparent"}
           title="Continuar"
-          onPress={() =>
-            navigation.navigate(ZoneManagerRoutes.SelectZoneLocationScreen)
-          }
+          disabled={!region}
+          onPress={handleContinue}
         />
       </Box>
     </Screen>
