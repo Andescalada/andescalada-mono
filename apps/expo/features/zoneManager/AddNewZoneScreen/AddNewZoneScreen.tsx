@@ -3,6 +3,7 @@ import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
   Box,
   Button,
+  ButtonGroup,
   KeyboardDismiss,
   Screen,
   Text,
@@ -12,13 +13,10 @@ import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
-import { useAppTheme } from "@hooks/useAppTheme";
 import useZodForm from "@hooks/useZodForm";
-import { Picker } from "@react-native-picker/picker";
 import infoAccess from "@utils/infoAccess";
 import { FC } from "react";
 import { useController } from "react-hook-form";
-import { Platform } from "react-native";
 
 const { schema } = zone;
 
@@ -26,8 +24,6 @@ type Props = ZoneManagerScreenProps<ZoneManagerRoutes.AddNewZoneScreen>;
 
 const AddNewZoneScreen: FC<Props> = (props) => {
   const { control, ...form } = useZodForm({ schema, mode: "onChange" });
-
-  const theme = useAppTheme();
 
   const zoneName = useController({ control, name: "name" });
   const access = useController({ control, name: "infoAccess" });
@@ -51,35 +47,38 @@ const AddNewZoneScreen: FC<Props> = (props) => {
           </Box>
           <Box>
             <Text variant="h3">Privacidad de la guía</Text>
-            <Picker
-              onValueChange={access.field.onChange}
-              selectedValue={access.field.value}
-              style={{
-                backgroundColor:
-                  Platform.OS === "android"
-                    ? theme.colors.filledTextInputVariantBackground
-                    : undefined,
-                borderRadius: Platform.OS === "android" ? 10 : undefined,
-                overflow: Platform.OS === "android" ? "hidden" : undefined,
-              }}
-              itemStyle={{ fontFamily: "Rubik-400", color: "red" }}
+            <ButtonGroup
+              onChange={access.field.onChange}
+              value={access.field.value}
+              allowUndefined
             >
-              <Picker.Item
-                color={theme.colors["filledTextInputVariantPlaceholder"]}
-                fontFamily="Rubik-400"
-                label={"Seleccionar privacidad"}
-                value={null}
-              />
-              {InfoAccessSchema.options.map((access) => (
-                <Picker.Item
-                  key={access}
-                  label={infoAccess(access).label}
-                  value={access}
-                  color={Platform.OS === "android" ? "black" : "white"}
-                  fontFamily="Rubik-400"
-                />
-              ))}
-            </Picker>
+              <Box flexDirection="row">
+                {InfoAccessSchema.options.map((access) => (
+                  <ButtonGroup.Item
+                    key={access}
+                    label={infoAccess(access).label}
+                    value={access}
+                    justifyContent="center"
+                    alignItems="center"
+                    textColor={({ hasSelection, isSelected }) =>
+                      hasSelection && !isSelected
+                        ? undefined
+                        : infoAccess(access).color
+                    }
+                    selectedTextColor={infoAccess(access).color}
+                    textProps={{
+                      textAlign: "center",
+                    }}
+                    backgroundColor={({ hasSelection, isSelected }) =>
+                      hasSelection && !isSelected
+                        ? "grayscale.600"
+                        : infoAccess(access).backgroundColor
+                    }
+                    selectedBackgroundColor={infoAccess(access).backgroundColor}
+                  />
+                ))}
+              </Box>
+            </ButtonGroup>
             <Text marginTop="xs" color="semantic.error">
               {access.fieldState.error?.message}
             </Text>

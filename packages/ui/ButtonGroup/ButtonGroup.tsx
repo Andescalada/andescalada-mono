@@ -9,13 +9,31 @@ import {
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
 
-interface ButtonItemProps {
+interface ButtonItemProps
+  extends Omit<ComponentProps<typeof Pressable>, "backgroundColor"> {
   label: string;
   value: string | number | undefined;
-  backgroundColor?: ComponentProps<typeof Pressable>["backgroundColor"];
+  backgroundColor?:
+    | ComponentProps<typeof Pressable>["backgroundColor"]
+    | (({
+        hasSelection,
+        isSelected,
+      }: {
+        isSelected: boolean;
+        hasSelection: boolean;
+      }) => ComponentProps<typeof Pressable>["backgroundColor"]);
   selectedBackgroundColor?: ComponentProps<typeof Pressable>["backgroundColor"];
-  textColor?: ComponentProps<typeof Text>["color"];
+  textColor?:
+    | ComponentProps<typeof Text>["color"]
+    | (({
+        hasSelection,
+        isSelected,
+      }: {
+        isSelected: boolean;
+        hasSelection: boolean;
+      }) => ComponentProps<typeof Text>["color"]);
   selectedTextColor?: ComponentProps<typeof Text>["color"];
+  textProps?: ComponentProps<typeof Text>;
 }
 
 const ButtonItem: FC<ButtonItemProps> = ({
@@ -25,9 +43,26 @@ const ButtonItem: FC<ButtonItemProps> = ({
   selectedBackgroundColor = "selectedButtonGroup",
   textColor,
   selectedTextColor = "grayscale.white",
+  textProps,
+  ...props
 }) => {
   const { value, onChange, allowUndefined } = useButtonGroup();
   const isSelected = value === localValue;
+
+  const backgroundColorHandler = () => {
+    if (typeof backgroundColor === "function") {
+      return backgroundColor({ isSelected, hasSelection: value !== undefined });
+    }
+    return backgroundColor;
+  };
+
+  const textColorHandler = () => {
+    if (typeof textColor === "function") {
+      return textColor({ isSelected, hasSelection: value !== undefined });
+    }
+    return textColor;
+  };
+
   return (
     <Pressable
       onPress={() => {
@@ -39,12 +74,16 @@ const ButtonItem: FC<ButtonItemProps> = ({
       }}
       padding="m"
       margin="s"
-      backgroundColor={isSelected ? selectedBackgroundColor : backgroundColor}
+      backgroundColor={
+        isSelected ? selectedBackgroundColor : backgroundColorHandler()
+      }
       borderRadius={100}
+      {...props}
     >
       <Text
         variant={isSelected ? "p2B" : "p2R"}
-        color={isSelected ? selectedTextColor : textColor}
+        color={isSelected ? selectedTextColor : textColorHandler()}
+        {...textProps}
       >
         {label}
       </Text>
