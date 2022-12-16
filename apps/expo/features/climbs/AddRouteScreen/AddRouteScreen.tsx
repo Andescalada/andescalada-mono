@@ -306,7 +306,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         </Text>
         <ButtonGroup value={kindValue} onChange={onKindChange}>
           <Box flexWrap="wrap" flexDirection="row">
-            {Object.values(RouteKindSchema.Enum).map((kind) => (
+            {RouteKindSchema.options.map((kind) => (
               <ButtonGroup.Item
                 key={kind}
                 value={kind}

@@ -1,4 +1,5 @@
 import { r } from "@andescalada/api/src/utils/regex";
+import { InfoAccessSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 
 const id = z.object({ zoneId: z.string() });
@@ -10,6 +11,10 @@ const schema = z.object({
     .min(3, "Nombre muy corto")
     .max(50, "Nombre muy largo")
     .regex(r.numbersAndLettersOnly, "Solo se permite letras y números"),
+  infoAccess: z.nativeEnum(InfoAccessSchema.Enum, {
+    required_error: "Requerido",
+    invalid_type_error: "Requerido",
+  }),
 });
 
 const nameSearch = z

@@ -31,13 +31,15 @@ export const zonesRouter = t.router({
     }
     return zone;
   }),
-  edit: t.procedure.input(zone.schema.merge(zone.id)).mutation(
-    async ({ ctx, input }) =>
-      await ctx.prisma.zone.update({
-        where: { id: input.zoneId },
-        data: { name: input.name, version: { increment: 1 } },
-      }),
-  ),
+  edit: t.procedure
+    .input(zone.schema.pick({ name: true }).merge(zone.id))
+    .mutation(
+      async ({ ctx, input }) =>
+        await ctx.prisma.zone.update({
+          where: { id: input.zoneId },
+          data: { name: input.name, version: { increment: 1 } },
+        }),
+    ),
   // Asset being downloaded
   allSectors: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const res = await ctx.prisma.zone.findUnique({

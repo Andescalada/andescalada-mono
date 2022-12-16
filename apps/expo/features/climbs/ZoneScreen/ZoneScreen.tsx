@@ -65,7 +65,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
   const editZone = trpc.zones.edit.useMutation();
-  const methods = useZodForm({ schema });
+  const methods = useZodForm({ schema: schema.pick({ name: true }) });
 
   const onSubmit = methods.handleSubmit(
     (input) => {

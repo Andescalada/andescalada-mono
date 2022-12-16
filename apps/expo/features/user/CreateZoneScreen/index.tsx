@@ -1,4 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
+import { InfoAccessSchema } from "@andescalada/db/zod";
 import {
   Box,
   Button,
@@ -65,7 +66,11 @@ const CreateZoneScreen: FC<Props> = () => {
 
   const onSubmit = handleSubmit((input) => {
     if (!user) return;
-    mutate({ name: input.name, username: user?.username });
+    mutate({
+      name: input.name,
+      username: user?.username,
+      infoAccess: InfoAccessSchema.Enum.Public,
+    });
   });
 
   const bottomSheetRef = useRef<BottomSheet>(null);
