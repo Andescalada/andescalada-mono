@@ -32,7 +32,12 @@ const SelectZoneLocationScreen: FC<Props> = ({
   const [region, setRegion] = useState<Region>();
 
   const editZone = trpc.zones.edit.useMutation({
-    onSuccess: () => {},
+    onSuccess: ({ name }) => {
+      navigation.navigate(ZoneManagerRoutes.ZoneOnboarding, {
+        zoneId,
+        zoneName: name,
+      });
+    },
   });
 
   const handleContinue = () => {

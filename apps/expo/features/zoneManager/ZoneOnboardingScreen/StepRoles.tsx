@@ -1,7 +1,8 @@
-import { Box, Icon, Screen, Text } from "@andescalada/ui";
+import { A, Box, Icon, Screen, Text } from "@andescalada/ui";
 import NextButton from "@features/zoneManager/components/NextButton";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, ReactNode } from "react";
+import { FadeIn } from "react-native-reanimated";
 
 interface Props {
   onNext: () => void;
@@ -16,7 +17,7 @@ const StepRoles: FC<Props> = ({ onNext }) => {
       justifyContent="space-between"
       paddingHorizontal="m"
     >
-      <Box flex={1}>
+      <A.Box flex={1} entering={FadeIn}>
         <Text variant="h1">Documenta en equipo</Text>
         <Box alignSelf="center" marginVertical="l">
           <Icon name="united-color" size={80} />
@@ -50,7 +51,7 @@ const StepRoles: FC<Props> = ({ onNext }) => {
             size={50}
           />
         </RoleContainer>
-      </Box>
+      </A.Box>
       <NextButton onPress={onNext} alignSelf="center" marginBottom="xxl" />
     </Screen>
   );

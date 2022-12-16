@@ -1,6 +1,8 @@
 const base = "./components/";
 
 export const Icons = {
+  "approve-color": require(base + "approve-color").default,
+  "approve": require(base + "approve").default,
   "backpacker-color": require(base + "backpacker-color").default,
   "backpacker-exporer-color": require(base + "backpacker-exporer-color").default,
   "backpacker-exporer": require(base + "backpacker-exporer").default,
@@ -8,12 +10,16 @@ export const Icons = {
   "backpacker-senior": require(base + "backpacker-senior").default,
   "camping-color": require(base + "camping-color").default,
   "camping": require(base + "camping").default,
+  "checklist-color": require(base + "checklist-color").default,
+  "checklist": require(base + "checklist").default,
   "dog-color": require(base + "dog-color").default,
   "dog": require(base + "dog").default,
   "eyes-color": require(base + "eyes-color").default,
   "eyes": require(base + "eyes").default,
   "fire-color": require(base + "fire-color").default,
   "fire": require(base + "fire").default,
+  "megaphone-color": require(base + "megaphone-color").default,
+  "megaphone": require(base + "megaphone").default,
   "no-camping-color": require(base + "no-camping-color").default,
   "no-camping": require(base + "no-camping").default,
   "no-dog-color": require(base + "no-dog-color").default,

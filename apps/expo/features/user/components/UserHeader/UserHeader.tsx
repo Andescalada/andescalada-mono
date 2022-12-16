@@ -100,7 +100,7 @@ const UserHeader = () => {
       "Crear una zona": {
         action: () => {
           rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
-            screen: ZoneManagerRoutes.ZoneOnboarding,
+            screen: ZoneManagerRoutes.AddNewZoneScreen,
           });
         },
       },

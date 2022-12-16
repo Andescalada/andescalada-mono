@@ -14,7 +14,10 @@ export type ZoneManagerNavigationParamList = {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };
-  [ZoneManagerRoutes.ZoneOnboarding]: undefined;
+  [ZoneManagerRoutes.ZoneOnboarding]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
+  };
 };
 
 export type ZoneManagerRouteProps<T extends ZoneManagerRoutes> = RouteProp<

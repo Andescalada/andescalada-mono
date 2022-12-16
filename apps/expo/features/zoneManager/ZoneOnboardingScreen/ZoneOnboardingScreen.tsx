@@ -1,20 +1,16 @@
-import { Box, Colors, Icon, Pressable, Screen, Text } from "@andescalada/ui";
-import { Ionicons } from "@expo/vector-icons";
-import NextButton from "@features/zoneManager/components/NextButton";
+import { Screen } from "@andescalada/ui";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
+import StepHowToPublish from "@features/zoneManager/ZoneOnboardingScreen/StepHowToPublish";
 import StepRoles from "@features/zoneManager/ZoneOnboardingScreen/StepRoles";
 import StepSuccess from "@features/zoneManager/ZoneOnboardingScreen/StepSuccess";
-import { useAppTheme } from "@hooks/useAppTheme";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, useRef } from "react";
 import { FlatList } from "react-native";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.ZoneOnboarding>;
-
-const BUTTON_SIZE = 50;
 
 const data = [
   {
@@ -25,16 +21,21 @@ const data = [
     id: "2",
     screen: (onPress: () => void) => <StepRoles onNext={onPress} />,
   },
+  {
+    id: "3",
+    screen: (onPress: () => void) => <StepHowToPublish onNext={onPress} />,
+  },
 ];
 
-const ZoneOnboardingScreen: FC<Props> = (props) => {
+const ZoneOnboardingScreen: FC<Props> = () => {
   const ref = useRef<FlatList>(null);
-  const theme = useAppTheme();
+
   return (
     <Screen safeAreaDisabled>
       <FlatList
         ref={ref}
         data={data}
+        initialNumToRender={1}
         horizontal
         snapToInterval={SCREEN_WIDTH}
         showsHorizontalScrollIndicator={false}

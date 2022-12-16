@@ -16,7 +16,7 @@ const NextButton: FC<ComponentProps<typeof Pressable>> = (props) => {
       justifyContent="center"
       alignItems={"center"}
       flexDirection="row"
-      marginBottom="xxxl"
+      marginBottom="xxl"
       {...props}
     >
       <Text variant="h4" marginRight="s">
