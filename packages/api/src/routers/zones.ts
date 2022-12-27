@@ -30,6 +30,19 @@ export const zonesRouter = t.router({
     }
     return zone;
   }),
+  location: protectedZoneProcedure.query(async ({ ctx, input }) => {
+    const zone = await ctx.prisma.zone.findUnique({
+      where: { id: input.zoneId },
+      select: { Location: true, name: true },
+    });
+    if (!zone) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: `No zone with id '${input}'`,
+      });
+    }
+    return zone;
+  }),
   edit: t.procedure
     .input(
       z

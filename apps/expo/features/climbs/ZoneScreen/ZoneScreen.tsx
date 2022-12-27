@@ -1,5 +1,6 @@
 import zone from "@andescalada/api/schemas/zone";
-import { Box, Pressable, Screen, Text } from "@andescalada/ui";
+import { IconNames } from "@andescalada/icons";
+import { Box, Icon, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -143,10 +144,14 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                     <StoryButton title="Acuerdos" />
                     <StoryButton
                       title="Mapa"
+                      iconName="pin"
                       onPress={() =>
                         rootNavigation.navigate(
                           RootNavigationRoutes.ZoneLocation,
-                          { screen: ZoneLocationRoutes.ZoneMap },
+                          {
+                            screen: ZoneLocationRoutes.ZoneMap,
+                            params: { zoneId },
+                          },
                         )
                       }
                     />
@@ -188,9 +193,10 @@ export default ZoneScreen;
 
 interface StoryButtonProps extends ComponentProps<typeof Pressable> {
   title: string;
+  iconName?: IconNames;
 }
 
-const StoryButton = ({ title, ...props }: StoryButtonProps) => (
+const StoryButton = ({ title, iconName, ...props }: StoryButtonProps) => (
   <Pressable
     alignItems="center"
     marginHorizontal="xs"
@@ -204,7 +210,12 @@ const StoryButton = ({ title, ...props }: StoryButtonProps) => (
       borderRadius={30}
       borderWidth={2}
       borderColor="brand.primaryA"
-    />
+      justifyContent="center"
+      alignItems="center"
+      overflow="hidden"
+    >
+      <Icon name={iconName} />
+    </Box>
     <Text variant="caption" marginTop="xs" textAlign="center" fontSize={10}>
       {title}
     </Text>
