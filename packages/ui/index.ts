@@ -25,6 +25,7 @@ export { default as ScrollView } from "./ScrollView/ScrollView";
 export { default as SemanticButton } from "./SemanticButton/SemanticButton";
 export { default as SubItem } from "./SubItem/SubItem";
 export { default as Text } from "./Text/Text";
+export { default as TextFieldAccordion } from "./TextFieldAccordion/TextFieldAccordion";
 export { default as TextInput } from "./TextInput/TextInput";
 export type { BaseTheme, Colors, Theme } from "./Theme/theme";
 export { default as ThemeProvider } from "./Theme/ThemeProvider";

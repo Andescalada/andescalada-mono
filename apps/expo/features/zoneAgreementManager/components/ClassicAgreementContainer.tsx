@@ -8,14 +8,12 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Ionicons,
   KeyboardAvoidingBox,
   KeyboardDismiss,
-  Pressable,
   Screen,
   ScrollView,
   Text,
-  TextInput,
+  TextFieldAccordion,
   useButtonGroup,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -29,7 +27,7 @@ import {
   useState,
 } from "react";
 import { ScrollView as ScrollViewRef } from "react-native";
-import { FadeIn, FadeOut, Layout } from "react-native-reanimated";
+import { FadeIn, FadeOut } from "react-native-reanimated";
 
 type AgreementLevel = typeof AgreementLevelSchema._type;
 interface SubmitArgs {
@@ -123,7 +121,8 @@ const ClassicAgreementContainer: FC<Props> = ({
             {children}
             <UndefinedAgreementButton />
             <AgreementGrade level={level} setLevel={setLevel} />
-            <AgreementComment
+            <TextFieldAccordion
+              label="Agregar comentario"
               comment={comment}
               setComment={setComment}
               show={!!level}
@@ -260,61 +259,5 @@ const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
       </A.Box>
     );
 
-  return <Box />;
-};
-
-interface AgreementCommentProps {
-  comment: string;
-  setComment: (comment: string) => void;
-  show: boolean;
-}
-
-const AgreementComment = ({
-  comment,
-  setComment,
-  show,
-}: AgreementCommentProps) => {
-  const [isAddComment, setIsAddComment] = useState(false);
-  if (show)
-    return (
-      <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="m">
-        <Box
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-          marginBottom="m"
-        >
-          <Text variant="p1B">Agregar comentario</Text>
-          <Pressable
-            backgroundColor="semantic.info"
-            borderRadius={30}
-            padding="xs"
-            onPress={() => setIsAddComment((prev) => !prev)}
-          >
-            {isAddComment ? (
-              <Text padding="s">Cancelar</Text>
-            ) : (
-              <Ionicons name={"add-sharp"} size={30} color="grayscale.white" />
-            )}
-          </Pressable>
-        </Box>
-        {isAddComment && (
-          <A.Box entering={FadeIn} exiting={FadeOut} layout={Layout.delay(250)}>
-            <TextInput
-              containerProps={{ height: 250, padding: "s" }}
-              multiline
-              textAlignVertical="top"
-              value={comment}
-              onChangeText={setComment}
-            />
-            <Box alignSelf="flex-end">
-              <Text color={comment.length > 280 ? "semantic.error" : "text"}>
-                {comment.length}/280
-              </Text>
-            </Box>
-          </A.Box>
-        )}
-      </A.Box>
-    );
   return <Box />;
 };
