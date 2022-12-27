@@ -1,6 +1,5 @@
-import { Box, Pressable, Screen } from "@andescalada/ui";
+import { Box, Ionicons, Pressable, Screen } from "@andescalada/ui";
 import pathTitle from "@assets/andescaladaPathTitle";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
@@ -160,7 +159,7 @@ const UserHeader = () => {
       >
         <Ionicons
           name={isOfflineMode ? "md-airplane-sharp" : "md-airplane-outline"}
-          color={theme.colors["grayscale.600"]}
+          color="grayscale.600"
           size={30}
           style={{ paddingRight: 8 }}
           onPress={setIsOfflineMode}

@@ -1,12 +1,10 @@
-import { Box, ListItem, Screen, Text } from "@andescalada/ui";
+import { Box, Ionicons, ListItem, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { useAppTheme } from "@hooks/useAppTheme";
 import { logoutAuth0 } from "@store/auth";
 import { GlobalPermissions } from "@utils/auth0/types";
 import Constants from "expo-constants";
@@ -21,7 +19,6 @@ const ListItemConfig = ({
   subtitle,
   ...props
 }: ComponentProps<typeof ListItem> & { title: string; subtitle?: string }) => {
-  const theme = useAppTheme();
   return (
     <ListItem
       flexDirection="row"
@@ -38,11 +35,7 @@ const ListItemConfig = ({
           </Text>
         )}
       </Box>
-      <Ionicons
-        name="chevron-forward-circle"
-        size={30}
-        color={theme.colors["grayscale.300"]}
-      />
+      <Ionicons name="chevron-forward-circle" size={30} color="grayscale.300" />
     </ListItem>
   );
 };

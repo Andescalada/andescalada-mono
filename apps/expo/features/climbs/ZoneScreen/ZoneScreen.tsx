@@ -1,8 +1,7 @@
 import zone from "@andescalada/api/schemas/zone";
 import { IconNames } from "@andescalada/icons";
-import { Box, Icon, Pressable, Screen, Text } from "@andescalada/ui";
+import { Box, Icon, Ionicons, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { Ionicons } from "@expo/vector-icons";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {

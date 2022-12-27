@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Ionicons,
   KeyboardAvoidingBox,
   KeyboardDismiss,
   Pressable,
@@ -18,7 +19,6 @@ import {
   useButtonGroup,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { Ionicons } from "@expo/vector-icons";
 import { Zone } from "@prisma/client";
 import {
   ComponentProps,
@@ -294,7 +294,7 @@ const AgreementComment = ({
             {isAddComment ? (
               <Text padding="s">Cancelar</Text>
             ) : (
-              <Ionicons name={"add-sharp"} size={30} color="white" />
+              <Ionicons name={"add-sharp"} size={30} color="grayscale.white" />
             )}
           </Pressable>
         </Box>

@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Ionicons,
   Screen,
   ScrollView,
   SemanticButton,
@@ -12,7 +13,6 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { Ionicons } from "@expo/vector-icons";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -281,8 +281,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
                   size={24}
                   color={
                     unknownName
-                      ? theme.colors["semantic.info"]
-                      : theme.colors["grayscale.transparent.50.500"]
+                      ? "semantic.info"
+                      : "grayscale.transparent.50.500"
                   }
                 />
                 <Text

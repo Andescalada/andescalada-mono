@@ -1,6 +1,11 @@
-import { Box, ListItem, Screen, ScrollView, Text } from "@andescalada/ui";
-import theme from "@andescalada/ui/Theme/theme";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  Box,
+  Ionicons,
+  ListItem,
+  Screen,
+  ScrollView,
+  Text,
+} from "@andescalada/ui";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
@@ -26,11 +31,7 @@ const OfflineZonesScreen = () => {
             <Text variant="h2" marginRight="s">
               Zonas descargadas
             </Text>
-            <Ionicons
-              name="arrow-down-circle-sharp"
-              size={24}
-              color={theme.colors.text}
-            />
+            <Ionicons name="arrow-down-circle-sharp" size={24} color="text" />
           </Box>
         </Box>
         {data?.DownloadedZones.length === 0 && (

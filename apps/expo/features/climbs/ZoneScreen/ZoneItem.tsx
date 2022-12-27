@@ -1,6 +1,13 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { A, Box, ListItem, Pressable, SubItem, Text } from "@andescalada/ui";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  A,
+  Box,
+  Ionicons,
+  ListItem,
+  Pressable,
+  SubItem,
+  Text,
+} from "@andescalada/ui";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRouteProps,
@@ -69,7 +76,11 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
         >
           <DottedBorder />
           <Box flex={1} justifyContent="center" alignItems="center">
-            <Ionicons name="information-circle" size={24} color="white" />
+            <Ionicons
+              name="information-circle"
+              size={24}
+              color="grayscale.white"
+            />
           </Box>
         </Pressable>
       </ListItem>

@@ -1,5 +1,4 @@
-import { A, Box, Pressable } from "@andescalada/ui";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import { setRouteStrokeWidth, setShowRoutes } from "@store/localConfigs";
@@ -37,7 +36,7 @@ const RoutePathConfig: FC<Props> = ({ show, setShow }) => {
           <Ionicons
             name="close-sharp"
             size={30}
-            color={theme.colors["grayscale.transparent.80.200"]}
+            color="grayscale.transparent.80.200"
           />
         </Pressable>
         <Box alignItems="center" justifyContent="center">
@@ -55,7 +54,7 @@ const RoutePathConfig: FC<Props> = ({ show, setShow }) => {
             <Ionicons
               name={showRoutes ? "eye-off" : "eye"}
               size={30}
-              color={theme.colors["grayscale.transparent.80.200"]}
+              color="grayscale.transparent.80.200"
             />
           </Pressable>
         </Box>

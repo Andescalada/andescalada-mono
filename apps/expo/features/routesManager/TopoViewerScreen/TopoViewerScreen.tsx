@@ -1,6 +1,13 @@
-import { A, BackButton, Box, Pressable, Screen, Text } from "@andescalada/ui";
+import {
+  A,
+  BackButton,
+  Box,
+  Ionicons,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import {
@@ -66,7 +73,11 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
             padding="s"
             onPress={() => setShowConfig(true)}
           >
-            <Ionicons name="options-outline" size={30} />
+            <Ionicons
+              name="options-outline"
+              size={30}
+              color="grayscale.black"
+            />
           </Pressable>
         </A.Box>
       )}

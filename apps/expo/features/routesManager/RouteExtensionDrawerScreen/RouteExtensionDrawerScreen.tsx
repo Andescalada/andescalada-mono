@@ -5,9 +5,8 @@ import {
   SkiaRoutePath,
   SkiaRoutePathDrawer,
 } from "@andescalada/climbs-drawer";
-import { ActivityIndicator, Box, Pressable, Screen } from "@andescalada/ui";
+import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
@@ -155,16 +154,7 @@ const DrawRoute: FC<Props> = ({
               />
             ))}
         </SkiaRouteCanvas>
-        <Box position="absolute" top={50} left={0} margin="l" marginLeft={"s"}>
-          <Pressable
-            backgroundColor={"transparentButtonBackground"}
-            borderRadius={100}
-            padding="s"
-            onPress={navigation.goBack}
-          >
-            <Ionicons name="arrow-back" size={30} />
-          </Pressable>
-        </Box>
+        <BackButton.Transparent onPress={navigation.goBack} />
         <Instructions>
           Comienza a dibujar la extensión de la ruta, comenzará desde el punto
           donde termina la ruta anterior.

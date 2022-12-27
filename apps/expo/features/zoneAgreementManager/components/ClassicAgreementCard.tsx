@@ -1,6 +1,12 @@
 import type { IconNames } from "@andescalada/icons";
-import { Box, Icon, Pressable, Text, useButtonGroup } from "@andescalada/ui";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Box,
+  Icon,
+  Ionicons,
+  Pressable,
+  Text,
+  useButtonGroup,
+} from "@andescalada/ui";
 import { ComponentProps, useCallback } from "react";
 
 interface Props extends ComponentProps<typeof Box> {
@@ -93,6 +99,7 @@ const ClassicAgreementCard = ({
               : "add-sharp"
           }
           size={25}
+          color="grayscale.black"
         />
       </Pressable>
     </Pressable>

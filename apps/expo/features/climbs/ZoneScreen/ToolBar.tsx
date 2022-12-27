@@ -1,6 +1,4 @@
-import { A, Box, Pressable } from "@andescalada/ui";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useAppTheme } from "@hooks/useAppTheme";
+import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
 import { Dispatch, SetStateAction } from "react";
 import {
   useAnimatedStyle,
@@ -25,8 +23,6 @@ const ToolBar = ({
   openAll,
   setOpenAll,
 }: ToolBarProps) => {
-  const theme = useAppTheme();
-
   const open = useDerivedValue(() => (openAll ? 0 : -180));
   const degrees = useDerivedValue(() => withTiming(open.value));
 
@@ -41,14 +37,14 @@ const ToolBar = ({
             isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
           }
           size={30}
-          color={theme.colors["zoneOptionsIcons"]}
+          color={"zoneOptionsIcons"}
         />
       </Pressable>
       <Pressable marginHorizontal="s" onPress={onFavoritePress}>
         <Ionicons
           name={isFavorite ? "heart-circle" : "heart-circle-outline"}
           size={30}
-          color={theme.colors["zoneOptionsIcons"]}
+          color={"zoneOptionsIcons"}
         />
       </Pressable>
       <A.Pressable
@@ -60,7 +56,7 @@ const ToolBar = ({
         <Ionicons
           name={openAll ? "caret-down-circle" : "caret-down-circle-outline"}
           size={30}
-          color={theme.colors["zoneOptionsIcons"]}
+          color={"zoneOptionsIcons"}
         />
       </A.Pressable>
     </Box>

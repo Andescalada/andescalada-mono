@@ -1,6 +1,12 @@
-import { A, ActivityIndicator, Box, Pressable, Text } from "@andescalada/ui";
+import {
+  A,
+  ActivityIndicator,
+  Box,
+  Ionicons,
+  Pressable,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { Ionicons } from "@expo/vector-icons";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -156,7 +162,11 @@ const AddTopoImage: FC = () => {
                 borderRadius={32}
                 onPress={() => pickImage(selectedImage)}
               >
-                <Ionicons name="ios-image-outline" color="white" size={16} />
+                <Ionicons
+                  name="ios-image-outline"
+                  color="grayscale.white"
+                  size={16}
+                />
                 <Text>Cambiar</Text>
               </Pressable>
               <Pressable
@@ -167,7 +177,7 @@ const AddTopoImage: FC = () => {
                 borderRadius={32}
                 onPress={onUpload}
               >
-                <Ionicons name="checkmark" color="white" size={16} />
+                <Ionicons name="checkmark" color="grayscale.white" size={16} />
                 <Text>Confirmar</Text>
               </Pressable>
               <Pressable
@@ -186,7 +196,11 @@ const AddTopoImage: FC = () => {
                   })
                 }
               >
-                <Ionicons name="arrow-forward-sharp" color="white" size={16} />
+                <Ionicons
+                  name="arrow-forward-sharp"
+                  color="grayscale.white"
+                  size={16}
+                />
                 <Text>Ver</Text>
               </Pressable>
             </Box>

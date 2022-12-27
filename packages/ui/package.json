@@ -5,6 +5,7 @@
   "scripts": {},
   "license": "MIT",
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
     "@shopify/restyle": "^2.1.0",
     "@types/react-native": "^0.70.2",
     "deepmerge": "^4.2.2",
@@ -15,15 +16,15 @@
     "react-native-gesture-handler": "*"
   },
   "peerDependencies": {
+    "@andescalada/icons": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
-    "@andescalada/icons": "*",
+    "@shopify/react-native-skia": "*",
+    "expo": "*",
     "react": "*",
     "react-hook-form": "*",
-    "zod": "*",
+    "react-native-gesture-handler": "*",
     "react-native-reanimated": "*",
-    "expo": "*",
-    "@shopify/react-native-skia": "*",
-    "react-native-gesture-handler": "*"
+    "zod": "*"
   }
 }

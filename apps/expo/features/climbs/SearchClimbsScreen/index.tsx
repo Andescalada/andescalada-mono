@@ -1,14 +1,13 @@
 import {
   BackButton,
   Box,
+  Ionicons,
   KeyboardDismiss,
   Screen,
   TextInput,
 } from "@andescalada/ui";
 import { TextInputRef } from "@andescalada/ui/TextInput/TextInput";
-import theme from "@andescalada/ui/Theme/theme";
 import { trpc } from "@andescalada/utils/trpc";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -45,11 +44,7 @@ const SearchClimbsScreen: FC<Props> = ({ navigation }) => {
             adornmentProps={{
               startAdornment: (
                 <Box justifyContent="center" paddingHorizontal="xs">
-                  <Ionicons
-                    name="search"
-                    size={24}
-                    color={theme.colors["grayscale.600"]}
-                  />
+                  <Ionicons name="search" size={24} color="grayscale.600" />
                 </Box>
               ),
               startAdornmentProps: {},

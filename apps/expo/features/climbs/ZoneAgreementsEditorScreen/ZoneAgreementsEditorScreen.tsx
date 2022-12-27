@@ -4,20 +4,19 @@ import {
   ActivityIndicator,
   Box,
   Icon,
+  Ionicons,
   ListItem,
   Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { Ionicons } from "@expo/vector-icons";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import AgreementLevelBadge from "@features/climbs/ZoneAgreementsEditorScreen/AgreementLevelBadge";
 import { ZoneAgreementsRoutes } from "@features/zoneAgreementManager/Navigation/types";
-import { useAppTheme } from "@hooks/useAppTheme";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC } from "react";
@@ -42,7 +41,6 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
     });
   };
 
-  const theme = useAppTheme();
   return (
     <Screen safeAreaDisabled padding="m">
       <Box
@@ -56,7 +54,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
             <Ionicons
               name="add-circle-sharp"
               size={40}
-              color={theme.colors["semantic.info"]}
+              color={"semantic.info"}
             />
           </Pressable>
         )}

@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Box,
   Button,
+  Ionicons,
   ListItem,
   Pressable,
   Screen,
@@ -10,7 +11,7 @@ import {
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
@@ -99,11 +100,7 @@ const UserZonesScreen = () => {
           {isFetching ? (
             <ActivityIndicator size={"large"} color="text" />
           ) : (
-            <Ionicons
-              name="cloud-offline-outline"
-              size={60}
-              color={theme.colors.text}
-            />
+            <Ionicons name="cloud-offline-outline" size={60} />
           )}
         </Box>
         <Text variant="h2" marginBottom="xs">
@@ -144,11 +141,7 @@ const UserZonesScreen = () => {
           flexDirection="row"
           overflow="hidden"
         >
-          <Ionicons
-            name="search"
-            size={24}
-            color={theme.colors["grayscale.600"]}
-          />
+          <Ionicons name="search" size={24} color="grayscale.600" />
           <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
             Buscar zona, ruta ...
           </Text>
@@ -258,7 +251,7 @@ const UserZonesScreen = () => {
               <Text variant="p1R">{item.name}</Text>
               <Box justifyContent="center">
                 <Ionicons
-                  color="white"
+                  color="grayscale.white"
                   name="close"
                   size={20}
                   onPress={() => {
