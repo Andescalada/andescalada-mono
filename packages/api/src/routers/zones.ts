@@ -169,6 +169,16 @@ export const zonesRouter = t.router({
       },
     }),
   ),
+  statusById: protectedZoneProcedure.query(async ({ ctx, input }) => {
+    const zone = await ctx.prisma.zone.findUnique({
+      where: { id: input.zoneId },
+      select: { currentStatus: true, statusHistory: true },
+    });
+    if (!zone) {
+      throw new TRPCError(error.zoneNotFound(input.zoneId));
+    }
+    return zone;
+  }),
   updateStatus: protectedProcedure
     .input(
       z.object({ status: StatusSchema, message: z.string() }).merge(zone.id),

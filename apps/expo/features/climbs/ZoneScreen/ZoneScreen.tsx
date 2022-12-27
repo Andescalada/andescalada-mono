@@ -14,6 +14,7 @@ import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
+import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
@@ -141,7 +142,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
             return (
               <Box marginTop="s">
                 {data && permission?.has("Update") && (
-                  <Box
+                  <Pressable
                     marginBottom="s"
                     padding="s"
                     backgroundColor={
@@ -151,6 +152,15 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                     flexDirection="row"
                     justifyContent="space-between"
                     alignItems="center"
+                    onPress={() =>
+                      rootNavigation.navigate(
+                        RootNavigationRoutes.ZoneManager,
+                        {
+                          screen: ZoneManagerRoutes.EditZoneStatus,
+                          params: { zoneId, zoneName },
+                        },
+                      )
+                    }
                   >
                     <Text color={zoneStatus(data.currentStatus).color}>
                       {zoneStatus(data.currentStatus).label}
@@ -160,7 +170,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                       size={20}
                       color={zoneStatus(data.currentStatus).color}
                     />
-                  </Box>
+                  </Pressable>
                 )}
                 {featureFlags.storyBar && (
                   <Box flexDirection="row" marginBottom="l">

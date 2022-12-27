@@ -30,7 +30,7 @@ if (__DEV__) {
 Sentry.init({
   dsn: Env.SENTRY_DNS,
   debug: __DEV__,
-  enableInExpoDevelopment: true,
+  enableInExpoDevelopment: false,
   environment: Env.SENTRY_DEPLOY_ENV,
 });
 

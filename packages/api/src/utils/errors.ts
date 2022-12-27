@@ -18,6 +18,10 @@ const error = satisfies<Record<string, Value>>()({
     code: "NOT_FOUND",
     message: `No sectors found for the zone with id '${zoneId}'`,
   }),
+  zoneNotFound: (zoneId: string) => ({
+    code: "NOT_FOUND",
+    message: `No sectors found for the zone with id '${zoneId}'`,
+  }),
 });
 
 export default error;

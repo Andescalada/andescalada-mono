@@ -6,6 +6,7 @@ export enum ZoneManagerRoutes {
   AddNewZoneScreen = "AddNewZoneScreen",
   SelectZoneLocationScreen = "SelectZoneLocationScreen",
   ZoneOnboarding = "ZoneOnboarding",
+  EditZoneStatus = "EditZoneStatus",
 }
 
 export type ZoneManagerNavigationParamList = {
@@ -15,6 +16,10 @@ export type ZoneManagerNavigationParamList = {
     zoneName: Zone["name"];
   };
   [ZoneManagerRoutes.ZoneOnboarding]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
+  };
+  [ZoneManagerRoutes.EditZoneStatus]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };
