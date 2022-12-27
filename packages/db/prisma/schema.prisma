@@ -55,6 +55,7 @@ model User {
   coAuthorAgreements         Agreement[]     @relation("CoAuthorAgreements")
   AuthorZoneListAgreements   ZoneAgreement[] @relation("AuthorZoneAgreements")
   coAuthorZoneListAgreements ZoneAgreement[] @relation("CoAuthorZoneAgreements")
+  ZoneStatusModifications    ZoneStatus[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -187,8 +188,11 @@ model ZoneStatus {
   createdAt     DateTime     @default(now())
   Zone          Zone[]
   textContentId String?
+  modifiedBy    User         @relation(fields: [modifiedById], references: [id])
+  modifiedById  String
 
   @@index([textContentId])
+  @@index([modifiedById])
 }
 
 enum Status {
