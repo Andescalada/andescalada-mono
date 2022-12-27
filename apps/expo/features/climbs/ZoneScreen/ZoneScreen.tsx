@@ -2,6 +2,7 @@ import zone from "@andescalada/api/schemas/zone";
 import { IconNames } from "@andescalada/icons";
 import { Box, Icon, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { Ionicons } from "@expo/vector-icons";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
@@ -23,6 +24,7 @@ import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useFocusEffect } from "@react-navigation/native";
 import featureFlags from "@utils/featureFlags";
+import zoneStatus from "@utils/zoneStatus";
 import { ComponentProps, FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -48,9 +50,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      recentZones.mutate({ zoneId });
+      if (!isOfflineMode) recentZones.mutate({ zoneId });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [zoneId]),
+    }, [zoneId, isOfflineMode]),
   );
 
   const { data, refetch, isFetching, isLoading, isError, isPaused } =
@@ -139,8 +141,30 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           ListHeaderComponent={() => {
             return (
               <Box marginTop="s">
+                {data && permission?.has("Update") && (
+                  <Box
+                    marginBottom="s"
+                    padding="s"
+                    backgroundColor={
+                      zoneStatus(data.currentStatus).backgroundColor
+                    }
+                    borderRadius={16}
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Text color={zoneStatus(data.currentStatus).color}>
+                      {zoneStatus(data.currentStatus).label}
+                    </Text>
+                    <Ionicons
+                      name="information"
+                      size={20}
+                      color={zoneStatus(data.currentStatus).color}
+                    />
+                  </Box>
+                )}
                 {featureFlags.storyBar && (
-                  <Box flexDirection="row" marginBottom="m">
+                  <Box flexDirection="row" marginBottom="l">
                     <StoryButton title="Acuerdos" />
                     <StoryButton
                       title="Mapa"

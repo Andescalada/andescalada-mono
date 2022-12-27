@@ -83,6 +83,7 @@ export const zonesRouter = t.router({
           },
         },
         infoAccess: true,
+        currentStatus: true,
         DownloadedBy: { where: { email: ctx.user.email } },
         FavoritedBy: { where: { email: ctx.user.email } },
       },
