@@ -155,6 +155,11 @@ enum PermissionActions {
   GrantAccess
   RevokeAccess
   DenyAccess
+  PublishZone
+  PauseZonePlubication
+  UnplubishZone
+  ApproveZone
+  RejectZone
 }
 
 model Zone {
