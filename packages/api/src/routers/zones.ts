@@ -98,9 +98,6 @@ export const zonesRouter = t.router({
   create: protectedProcedure
     .input(zone.schema)
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user.permissions.includes("crud:zones"))
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-
       const roleByZone = await ctx.prisma.roleByZone.create({
         data: {
           Role: { connect: { name: "Admin" } },
