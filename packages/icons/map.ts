@@ -12,6 +12,8 @@ export const Icons = {
   "camping": require(base + "camping").default,
   "checklist-color": require(base + "checklist-color").default,
   "checklist": require(base + "checklist").default,
+  "climber-rappeling-color": require(base + "climber-rappeling-color").default,
+  "climber-rappeling": require(base + "climber-rappeling").default,
   "dog-color": require(base + "dog-color").default,
   "dog": require(base + "dog").default,
   "eyes-color": require(base + "eyes-color").default,

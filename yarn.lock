@@ -10681,6 +10681,11 @@ react-native-dotenv@^3.3.1:
   dependencies:
     dotenv "^16.0.3"
 
+react-native-error-boundary@^1.1.16:
+  version "1.1.16"
+  resolved "https://registry.yarnpkg.com/react-native-error-boundary/-/react-native-error-boundary-1.1.16.tgz#a95334b932982965fcab33d4f1a7d2aa75bcf551"
+  integrity sha512-yCbKhjGo2kMJBoUdy503L3oaInrLo1gychGr5e/IrezfPhfUGhfr8EtG2EKgZDcSfmvodBXvARq942hWis5sUA==
+
 react-native-flipper-performance-plugin@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/react-native-flipper-performance-plugin/-/react-native-flipper-performance-plugin-0.3.1.tgz#969aea65eb6e6504ee29caab7bf546c75322f817"

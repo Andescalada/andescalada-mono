@@ -1,5 +1,6 @@
 import "expo-dev-client";
 
+import { Box, Icon, Screen, Text } from "@andescalada/ui";
 import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
 import ThemeProvider from "@andescalada/ui/Theme/ThemeProvider";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
@@ -11,6 +12,7 @@ import storage from "@utils/mmkv/storage";
 import { StatusBar } from "expo-status-bar";
 import { connectToDevTools } from "react-devtools-core";
 import { LogBox } from "react-native";
+import ErrorBoundary from "react-native-error-boundary";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { initializeMMKVFlipper } from "react-native-mmkv-flipper-plugin";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -43,17 +45,43 @@ export default function App() {
   return (
     <ThemeProvider>
       <SafeAreaProvider>
-        <StoreProvider store={Store}>
-          <ActionSheetProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <NavigationMemoized theme={darkTheme}>
-                <StatusBar style="light" />
-                <AppNavigation />
-              </NavigationMemoized>
-            </GestureHandlerRootView>
-          </ActionSheetProvider>
-        </StoreProvider>
+        <ErrorBoundary
+          onError={(error) => Sentry.Native.captureException(error)}
+          FallbackComponent={FallbackErrorScreen}
+        >
+          <StoreProvider store={Store}>
+            <ActionSheetProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <NavigationMemoized theme={darkTheme}>
+                  <StatusBar style="light" />
+                  <AppNavigation />
+                </NavigationMemoized>
+              </GestureHandlerRootView>
+            </ActionSheetProvider>
+          </StoreProvider>
+        </ErrorBoundary>
       </SafeAreaProvider>
     </ThemeProvider>
   );
 }
+
+const FallbackErrorScreen = () => {
+  return (
+    <Screen padding="m" backgroundColor="brand.primaryA">
+      <Text variant="h1" color="brand.secondaryA">
+        ¡Tuvimos un error!
+      </Text>
+      <Box flex={1} marginTop="xl">
+        <Text variant="h4" marginTop="m" color="grayscale.white">
+          Se nos cayó el ATC en la mitad de un multi-largo.
+        </Text>
+        <Box marginVertical="m" alignSelf="center">
+          <Icon name="climber-rappeling" size={100} />
+        </Box>
+        <Text variant="p1R" marginTop="m" color="grayscale.white">
+          Reinicia la app, si el error persiste bórrala y vuelve a descargarla.
+        </Text>
+      </Box>
+    </Screen>
+  );
+};
