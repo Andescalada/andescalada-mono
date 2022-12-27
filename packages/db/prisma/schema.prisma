@@ -271,20 +271,21 @@ enum AgreementLevel {
 }
 
 model Sector {
-  id        String     @id @default(uuid())
-  name      String
-  slug      String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  position  Int        @default(0)
-  Zone      Zone       @relation(fields: [zoneId], references: [id], onDelete: Cascade)
-  zoneId    String
-  walls     Wall[]
-  Author    User       @relation("AuthorSector", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]     @relation("CoAuthorSector")
-  isDeleted SoftDelete @default(NotDeleted)
-  version   Int        @default(0)
+  id         String     @id @default(uuid())
+  name       String
+  slug       String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  position   Int        @default(0)
+  Zone       Zone       @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  zoneId     String
+  singleWall Boolean    @default(false)
+  walls      Wall[]
+  Author     User       @relation("AuthorSector", fields: [authorId], references: [id])
+  authorId   String
+  coAuthors  User[]     @relation("CoAuthorSector")
+  isDeleted  SoftDelete @default(NotDeleted)
+  version    Int        @default(0)
 
   @@index([zoneId])
   @@index([authorId])
