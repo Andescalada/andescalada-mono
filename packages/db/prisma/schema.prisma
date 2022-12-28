@@ -133,6 +133,7 @@ enum RoleNames {
   Collaborator
   Editor
   Reader
+  Reviewer
 }
 
 model Permissions {
@@ -156,10 +157,11 @@ enum PermissionActions {
   RevokeAccess
   DenyAccess
   PublishZone
-  PauseZonePlubication
-  UnplubishZone
+  PauseZonePublication
+  UnpublishZone
   ApproveZone
   RejectZone
+  RequestZoneReview
 }
 
 model Zone {
