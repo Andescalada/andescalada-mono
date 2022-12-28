@@ -46,7 +46,7 @@ const zoneStatus = (
       };
     case StatusSchema.Enum.InReview:
       return {
-        label: "Pausada",
+        label: "En revisión",
         color: "grayscale.white",
         backgroundColor: "brand.primaryA",
       };

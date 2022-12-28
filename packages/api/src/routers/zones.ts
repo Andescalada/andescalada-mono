@@ -4,6 +4,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
+import updateZoneStatus from "@andescalada/api/src/utils/updateZoneStatus";
 import { StatusSchema } from "@andescalada/db/zod";
 import { InfoAccess, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -29,6 +30,7 @@ export const zonesRouter = t.router({
         message: `No zone with id '${input}'`,
       });
     }
+
     return zone;
   }),
   location: protectedZoneProcedure.query(async ({ ctx, input }) => {
@@ -179,29 +181,19 @@ export const zonesRouter = t.router({
     }
     return zone;
   }),
-  updateStatus: protectedProcedure
-    .input(
-      z.object({ status: StatusSchema, message: z.string() }).merge(zone.id),
-    )
-    .mutation(async ({ ctx, input }) =>
-      ctx.prisma.zone.update({
-        where: { id: input.zoneId },
-        data: {
-          currentStatus: input.status,
-          statusHistory: {
-            create: {
-              status: input.status,
-              modifiedBy: { connect: { email: ctx.user.email } },
-              message: {
-                create: {
-                  originalText: input.message,
-                  // TODO: Get Language from user
-                  originalLang: { connect: { languageId: "es" } },
-                },
-              },
-            },
-          },
-        },
-      }),
-    ),
+  requestRevision: protectedZoneProcedure
+    .input(zone.status.pick({ message: true }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("RequestZoneReview")) {
+        throw new TRPCError(
+          error.unauthorized(input.zoneId, "RequestZoneReview"),
+        );
+      }
+      const status = await updateZoneStatus(ctx, {
+        status: StatusSchema.Enum.InReview,
+        message: input.message,
+        zoneId: input.zoneId,
+      });
+      return status;
+    }),
 });

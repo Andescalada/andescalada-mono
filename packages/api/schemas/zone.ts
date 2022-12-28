@@ -1,6 +1,6 @@
 import global from "@andescalada/api/schemas/global";
 import { r } from "@andescalada/api/src/utils/regex";
-import { InfoAccessSchema } from "@andescalada/db/zod";
+import { InfoAccessSchema, StatusSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 
 const id = z.object({ zoneId: z.string() });
@@ -19,6 +19,10 @@ const schema = z.object({
   coordinates: global.coordinates.optional(),
 });
 
+const status = z
+  .object({ status: StatusSchema, message: z.string() })
+  .merge(id);
+
 const nameSearch = z
   .string()
   .trim()
@@ -27,4 +31,4 @@ const nameSearch = z
     "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",
   );
 
-export default { schema, id, nameSearch };
+export default { schema, id, nameSearch, status };

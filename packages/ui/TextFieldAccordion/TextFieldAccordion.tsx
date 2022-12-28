@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ComponentProps, useState } from "react";
 import { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 
 import A from "../Animated/Animated";
@@ -8,32 +8,34 @@ import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
 import TextInput from "../TextInput/TextInput";
 
-interface TextFieldAccordionProps {
+interface TextFieldAccordionProps
+  extends Omit<ComponentProps<typeof A.Box>, "key"> {
   label: string;
   cancelButtonLabel?: string;
   maxCharacters?: number;
-  comment: string;
-  setComment: (comment: string) => void;
-  show: boolean;
+  value: string;
+  onChangeText: (comment: string) => void;
+  show?: boolean;
 }
 
 const TextFieldAccordion = ({
   label,
   cancelButtonLabel = "Cancelar",
   maxCharacters = 280,
-  comment,
-  setComment,
-  show,
+  value: comment,
+  onChangeText: setComment,
+  show = true,
+  ...props
 }: TextFieldAccordionProps) => {
   const [isAddComment, setIsAddComment] = useState(false);
   if (show)
     return (
-      <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="m">
+      <A.Box entering={FadeIn} exiting={FadeOut} {...props}>
         <Box
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
-          marginBottom="m"
+          marginBottom={isAddComment ? "m" : "none"}
         >
           <Text variant="p1B">{label}</Text>
           <Pressable

@@ -123,9 +123,10 @@ const ClassicAgreementContainer: FC<Props> = ({
             <AgreementGrade level={level} setLevel={setLevel} />
             <TextFieldAccordion
               label="Agregar comentario"
-              comment={comment}
-              setComment={setComment}
+              value={comment}
+              onChangeText={setComment}
               show={!!level}
+              marginBottom="m"
             />
             <SubmitButton
               onSubmit={handleSubmit}
