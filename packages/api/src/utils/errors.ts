@@ -26,6 +26,10 @@ const error = satisfies<Record<string, Value>>()({
     code: "UNAUTHORIZED",
     message: `You don't have permission to ${action} for zone with id '${zoneId}'`,
   }),
+  userNotFound: (email: string) => ({
+    code: "NOT_FOUND",
+    message: `No user found with email '${email}'`,
+  }),
 });
 
 export default error;

@@ -1,7 +1,9 @@
 import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
+import pushNotification from "@andescalada/api/src/utils/notificationEntityType";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import sendPushNotification from "@andescalada/api/src/utils/sendPushNotification";
 import { slug } from "@andescalada/api/src/utils/slug";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import updateZoneStatus from "@andescalada/api/src/utils/updateZoneStatus";
@@ -194,6 +196,49 @@ export const zonesRouter = t.router({
         message: input.message,
         zoneId: input.zoneId,
       });
+
+      const reviewers = await ctx.prisma.roleByZone.findMany({
+        where: { zoneId: input.zoneId, Role: { name: "Reviewer" } },
+        select: { User: { select: { email: true, id: true } } },
+      });
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.user.email },
+        select: { username: true },
+      });
+
+      if (!user) {
+        throw new TRPCError(error.userNotFound(ctx.user.email));
+      }
+
+      const body = pushNotification.RequestZoneReview.template.es({
+        user: user.username,
+        zoneName: status.name,
+      });
+
+      await ctx.prisma.notificationObject.create({
+        data: {
+          entityId: input.zoneId,
+          Entity: pushNotification.RequestZoneReview.entity,
+          entityTypeId: pushNotification.RequestZoneReview.id,
+          messageSent: body,
+          NotificationSender: {
+            create: { Sender: { connect: { email: ctx.user.email } } },
+          },
+          NotificationReceiver: {
+            createMany: {
+              data: reviewers.map((r) => ({ receiverId: r.User.id })),
+            },
+          },
+        },
+      });
+
+      await sendPushNotification(
+        ctx,
+        { body },
+        reviewers.map((r) => r.User.email),
+      );
+
       return status;
     }),
 });
