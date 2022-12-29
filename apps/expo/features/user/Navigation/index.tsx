@@ -3,6 +3,7 @@ import GradingSystemConfigScreen from "@features/user/GradingSystemConfigScreen"
 import ManageUserRolesScreen from "@features/user/ManageUserRolesScreen";
 import OwnUserConfigScreen from "@features/user/OwnUserConfigScreen";
 import PersonalInfoConfigScreen from "@features/user/PersonalInfoConfigScreen";
+import ZoneReviewManagerScreen from "@features/user/ZoneReviewManagerScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
 
@@ -41,6 +42,11 @@ const Navigator = () => {
         name={UserNavigationRoutes.ManageUserRoles}
         component={ManageUserRolesScreen}
         options={{ title: "Gestionar roles" }}
+      />
+      <Stack.Screen
+        name={UserNavigationRoutes.ZoneReviewManager}
+        component={ZoneReviewManagerScreen}
+        options={{ title: "Solicitudes de revisión" }}
       />
     </Stack.Navigator>
   );

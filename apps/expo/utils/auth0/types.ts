@@ -30,4 +30,5 @@ export enum GlobalPermissions {
   CRUD_ZONES = "crud:zones",
   CRUD_ROLES = "crud:roles",
   DEVELOP_INFO = "develop:info",
+  REVIEW_ZONE = "review:zone",
 }

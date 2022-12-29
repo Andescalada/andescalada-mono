@@ -7,6 +7,7 @@ export enum UserNavigationRoutes {
   PersonalInfo = "PersonalInfo",
   CreateZone = "CreateZone",
   ManageUserRoles = "ManageUserRoles",
+  ZoneReviewManager = "ZoneReviewManager",
 }
 
 export type UserNavigationParamList = {
@@ -15,6 +16,7 @@ export type UserNavigationParamList = {
   [UserNavigationRoutes.PersonalInfo]: undefined;
   [UserNavigationRoutes.CreateZone]: undefined;
   [UserNavigationRoutes.ManageUserRoles]: undefined;
+  [UserNavigationRoutes.ZoneReviewManager]: undefined;
 };
 
 export type UserRouteProps<T extends UserNavigationRoutes> = RouteProp<
