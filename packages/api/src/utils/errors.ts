@@ -22,9 +22,13 @@ const error = satisfies<Record<string, Value>>()({
     code: "NOT_FOUND",
     message: `No sectors found for the zone with id '${zoneId}'`,
   }),
-  unauthorized: (zoneId: string, action: string) => ({
+  unauthorizedActionForZone: (zoneId: string, action: string) => ({
     code: "UNAUTHORIZED",
     message: `You don't have permission to ${action} for zone with id '${zoneId}'`,
+  }),
+  unauthorizedAction: (action: string) => ({
+    code: "UNAUTHORIZED",
+    message: `You don't have permission to ${action}`,
   }),
   userNotFound: (email: string) => ({
     code: "NOT_FOUND",
