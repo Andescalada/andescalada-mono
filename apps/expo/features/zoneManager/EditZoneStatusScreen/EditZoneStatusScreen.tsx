@@ -76,22 +76,29 @@ const EditZoneStatus: FC<Props> = ({
               </Text>
             </Box>
 
-            <TextFieldAccordion
-              label="Agregar mensaje"
-              value={message}
-              onChangeText={setMessage}
-              marginVertical="s"
-            />
-            <Button
-              marginTop="m"
-              title={zoneStatus(data.currentStatus).nextStepTitle || ""}
-              variant="info"
-              onPress={() => {
-                const isValid = z.string().max(280).safeParse(message).success;
-                if (!isValid) return;
-                editStatus.mutate({ zoneId, message });
-              }}
-            />
+            {zoneStatus(data.currentStatus).nextStepTitle && (
+              <>
+                <TextFieldAccordion
+                  label="Agregar mensaje"
+                  value={message}
+                  onChangeText={setMessage}
+                  marginVertical="s"
+                />
+                <Button
+                  marginTop="m"
+                  title={zoneStatus(data.currentStatus).nextStepTitle || ""}
+                  variant="info"
+                  onPress={() => {
+                    const isValid = z
+                      .string()
+                      .max(280)
+                      .safeParse(message).success;
+                    if (!isValid) return;
+                    editStatus.mutate({ zoneId, message });
+                  }}
+                />
+              </>
+            )}
             <Pressable
               marginTop="s"
               flexDirection="row"

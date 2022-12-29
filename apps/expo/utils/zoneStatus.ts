@@ -49,6 +49,8 @@ const zoneStatus = (
         label: "En revisión",
         color: "grayscale.white",
         backgroundColor: "brand.primaryA",
+        about:
+          "El equipo Andescalada está revisando la información de la zona para que la puedas publicar, en particular revisamos: \n\n - Que la zona no esté duplicada \n\n - No sea una zona con algún conflicto que conozcamos. \n\n - Se cumplan con los términos y condiciones de la Fundación.",
       };
     default:
       throw new Error(`Invalid zone status: ${status}`);
