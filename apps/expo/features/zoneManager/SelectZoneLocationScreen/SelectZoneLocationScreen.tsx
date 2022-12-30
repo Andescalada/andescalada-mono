@@ -1,5 +1,12 @@
 import { MapView } from "@andescalada/maps";
-import { BackButton, Box, Button, Screen, Text } from "@andescalada/ui";
+import {
+  Box,
+  Button,
+  MapTypeToolbar,
+  Screen,
+  Text,
+  useMapType,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
 import {
@@ -30,6 +37,8 @@ const SelectZoneLocationScreen: FC<Props> = ({
   const mapRef = useRef<MapRefType | null>(null);
 
   const [region, setRegion] = useState<Region>();
+
+  const mapTypeProps = useMapType();
 
   const editZone = trpc.zones.edit.useMutation({
     onSuccess: ({ name }) => {
@@ -69,7 +78,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
   return (
     <Screen safeAreaDisabled justifyContent={"center"} alignItems="center">
       <MapView
-        mapType="satellite"
+        mapType={mapTypeProps.mapType}
         ref={mapRef}
         initialRegion={{
           latitude: LATITUDE,
@@ -101,11 +110,13 @@ const SelectZoneLocationScreen: FC<Props> = ({
         left={0}
         right={0}
         margin="m"
-        padding="m"
+        justifyContent="center"
+        alignItems="center"
+        height={100}
         borderRadius={10}
         backgroundColor="transparentButtonBackground"
       >
-        <Text variant="p1R" color="grayscale.black">
+        <Text variant="p1R" color={mapTypeProps.mapTypeIconsColor}>
           Selecciona la ubicación de la zona de escalada
         </Text>
       </Box>
@@ -125,6 +136,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
           isLoading={editZone.isLoading}
         />
       </Box>
+      <MapTypeToolbar {...mapTypeProps} top={150} />
     </Screen>
   );
 };

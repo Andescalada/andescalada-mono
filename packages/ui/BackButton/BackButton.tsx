@@ -1,4 +1,3 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   add,
   Canvas,
@@ -15,6 +14,7 @@ import { useTheme } from "@shopify/restyle";
 import { ComponentProps, FC } from "react";
 
 import Box from "../Box/Box";
+import Ionicons from "../Ionicons/Ionicons";
 import Pressable from "../Pressable/Pressable";
 import { Theme } from "../Theme/theme";
 
@@ -64,7 +64,7 @@ const BackButton: FC<Props> & { Transparent: typeof Transparent } = ({
       <Ionicons
         name="arrow-back"
         size={SIZE - 10}
-        color="black"
+        color="grayscale.black"
         style={{ position: "absolute", left: 5, top: 5 }}
         {...iconProps}
       />
@@ -82,7 +82,12 @@ const Transparent = ({ iconProps, ...props }: Props) => {
         onPress={props.onPress}
         {...props}
       >
-        <Ionicons name="arrow-back" size={30} {...iconProps} />
+        <Ionicons
+          name="arrow-back"
+          color="grayscale.white"
+          size={30}
+          {...iconProps}
+        />
       </Pressable>
     </Box>
   );

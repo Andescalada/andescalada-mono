@@ -3,8 +3,10 @@ import {
   ActivityIndicator,
   BackButton,
   Box,
+  MapTypeToolbar,
   Screen,
   Text,
+  useMapType,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
@@ -33,6 +35,8 @@ const ZoneMapScreen: FC<Props> = ({
   const markerRef = useRef<MapMarker>(null);
   const { data, isLoading } = trpc.zones.location.useQuery({ zoneId });
 
+  const mapTypeProps = useMapType();
+
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
@@ -57,7 +61,7 @@ const ZoneMapScreen: FC<Props> = ({
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         }}
-        mapType="satellite"
+        mapType={mapTypeProps.mapType}
       >
         <Marker
           ref={markerRef}
@@ -72,7 +76,11 @@ const ZoneMapScreen: FC<Props> = ({
           <CalloutContent title={data?.name} />
         </Marker>
       </MapView>
-      <BackButton.Transparent onPress={navigation.goBack} />
+      <BackButton.Transparent
+        onPress={navigation.goBack}
+        iconProps={{ color: mapTypeProps.mapTypeIconsColor }}
+      />
+      <MapTypeToolbar {...mapTypeProps} />
     </Screen>
   );
 };
