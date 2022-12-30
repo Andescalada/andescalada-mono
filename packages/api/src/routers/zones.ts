@@ -183,7 +183,16 @@ export const zonesRouter = t.router({
   statusById: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
-      select: { currentStatus: true, statusHistory: true },
+      select: {
+        currentStatus: true,
+        statusHistory: true,
+        RoleByZone: {
+          where: { Role: { name: "Reviewer" } },
+          include: {
+            User: { select: { name: true, id: true, username: true } },
+          },
+        },
+      },
     });
     if (!zone) {
       throw new TRPCError(error.zoneNotFound(input.zoneId));

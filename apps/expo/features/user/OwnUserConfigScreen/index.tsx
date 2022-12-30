@@ -11,7 +11,8 @@ import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
+import { useAppDispatch } from "@hooks/redux";
+import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import { logoutAuth0 } from "@store/auth";
 import { GlobalPermissions } from "@utils/auth0/types";
 import Constants from "expo-constants";
@@ -54,7 +55,7 @@ const ListItemConfig = ({
 };
 
 const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
-  const { globalPermissions } = useAppSelector((state) => state.auth);
+  const globalPermissions = useGlobalPermissions();
   const permanentDelete = trpc.user.permanentDelete.useMutation();
   const deactivate = trpc.user.deactivate.useMutation();
   const dispatch = useAppDispatch();

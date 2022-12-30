@@ -14,8 +14,11 @@ import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
+import useGlobalPermissions from "@hooks/useGlobalPermissions";
+import usePermissions from "@hooks/usePermissions";
+import { GlobalPermissions } from "@utils/auth0/types";
 import zoneStatus from "@utils/zoneStatus";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { z } from "zod";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.EditZoneStatus>;
@@ -25,7 +28,16 @@ const EditZoneStatus: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
-  const { data, isLoading } = trpc.zones.statusById.useQuery({ zoneId });
+  const { data, isLoading, isFetching } = trpc.zones.statusById.useQuery({
+    zoneId,
+  });
+
+  const globalPermissions = useGlobalPermissions();
+
+  const reviewers = useMemo(
+    () => data?.RoleByZone.map((r) => r.User),
+    [data?.RoleByZone],
+  );
 
   const utils = trpc.useContext();
 
@@ -35,10 +47,21 @@ const EditZoneStatus: FC<Props> = ({
     },
   });
 
+  const selfAssignZoneToReview = trpc.user.selfAssignZoneToReview.useMutation({
+    onSuccess: () => {
+      utils.user.invalidate();
+      utils.zones.invalidate();
+    },
+  });
+
+  const { permission } = usePermissions({ zoneId });
+
+  console.log(permission);
+
   const [showMore, setShowMore] = useState(false);
   const [message, setMessage] = useState("");
 
-  if (isLoading)
+  if (isLoading || isFetching)
     return (
       <Screen safeAreaDisabled padding="m">
         <Text variant="h1" marginBottom="m">
@@ -119,6 +142,70 @@ const EditZoneStatus: FC<Props> = ({
               </Text>
             )}
           </>
+        )}
+        {globalPermissions?.includes(GlobalPermissions.REVIEW_ZONE) && (
+          <Box
+            borderWidth={2}
+            borderColor="brand.primaryA"
+            borderRadius={16}
+            padding="m"
+            marginVertical="m"
+            borderStyle="dashed"
+          >
+            <Text variant="h3" color="brand.primaryA">
+              Sección para revisores
+            </Text>
+            {reviewers?.length === 0 && (
+              <Box>
+                <Text variant="h4">Sin revisores</Text>
+              </Box>
+            )}
+            {reviewers && reviewers?.length > 0 && (
+              <Box>
+                <Text variant="h4">Revisores:</Text>
+                {reviewers.map((item) => (
+                  <Box key={item.id}>
+                    <Text variant="p1R">{`• ${item.username}`}</Text>
+                  </Box>
+                ))}
+              </Box>
+            )}
+            {!permission?.has("ApproveZone") && (
+              <Button
+                marginTop="m"
+                variant="info"
+                title="Revisar zona"
+                isLoading={selfAssignZoneToReview.isLoading}
+                disabled={selfAssignZoneToReview.isLoading}
+                onPress={() => {
+                  selfAssignZoneToReview.mutate({ zoneId });
+                }}
+              />
+            )}
+            <Box>
+              {(permission?.has("ApproveZone") ||
+                permission?.has("RejectZone")) && (
+                <TextFieldAccordion
+                  label="Agregar mensaje"
+                  value={message}
+                  onChangeText={setMessage}
+                  marginBottom="m"
+                />
+              )}
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-evenly"
+              >
+                {permission?.has("ApproveZone") && (
+                  <Button variant="success" title="Aprobar" />
+                )}
+                {permission?.has("RejectZone") && (
+                  <Button variant="error" title="Rechazar" />
+                )}
+              </Box>
+            </Box>
+          </Box>
         )}
       </ScrollView>
     </Screen>

@@ -15,6 +15,7 @@ import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
@@ -23,6 +24,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useFocusEffect } from "@react-navigation/native";
+import { GlobalPermissions } from "@utils/auth0/types";
 import featureFlags from "@utils/featureFlags";
 import zoneStatus from "@utils/zoneStatus";
 import { ComponentProps, FC, useCallback, useState } from "react";
@@ -97,6 +99,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
 
   const { permission } = usePermissions({ zoneId });
+  const globalPermissions = useGlobalPermissions();
 
   const onOptions = useOptionsSheet({
     "Editar zona": {
@@ -141,37 +144,41 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           ListHeaderComponent={() => {
             return (
               <Box marginTop="s">
-                {data && permission?.has("Update") && (
-                  <Pressable
-                    marginBottom="s"
-                    padding="s"
-                    backgroundColor={
-                      zoneStatus(data.currentStatus).backgroundColor
-                    }
-                    borderRadius={16}
-                    flexDirection="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    onPress={() =>
-                      rootNavigation.navigate(
-                        RootNavigationRoutes.ZoneManager,
-                        {
-                          screen: ZoneManagerRoutes.EditZoneStatus,
-                          params: { zoneId, zoneName },
-                        },
-                      )
-                    }
-                  >
-                    <Text color={zoneStatus(data.currentStatus).color}>
-                      {zoneStatus(data.currentStatus).label}
-                    </Text>
-                    <Ionicons
-                      name="information"
-                      size={20}
-                      color={zoneStatus(data.currentStatus).color}
-                    />
-                  </Pressable>
-                )}
+                {data &&
+                  (permission?.has("Update") ||
+                    globalPermissions.includes(
+                      GlobalPermissions.REVIEW_ZONE,
+                    )) && (
+                    <Pressable
+                      marginBottom="s"
+                      padding="s"
+                      backgroundColor={
+                        zoneStatus(data.currentStatus).backgroundColor
+                      }
+                      borderRadius={16}
+                      flexDirection="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      onPress={() =>
+                        rootNavigation.navigate(
+                          RootNavigationRoutes.ZoneManager,
+                          {
+                            screen: ZoneManagerRoutes.EditZoneStatus,
+                            params: { zoneId, zoneName },
+                          },
+                        )
+                      }
+                    >
+                      <Text color={zoneStatus(data.currentStatus).color}>
+                        {zoneStatus(data.currentStatus).label}
+                      </Text>
+                      <Ionicons
+                        name="information"
+                        size={20}
+                        color={zoneStatus(data.currentStatus).color}
+                      />
+                    </Pressable>
+                  )}
                 {featureFlags.storyBar && (
                   <Box flexDirection="row" marginBottom="l">
                     <StoryButton title="Acuerdos" />

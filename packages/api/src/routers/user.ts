@@ -162,21 +162,7 @@ export const userRouter = t.router({
           Zone: { connect: { id: input.zoneId } },
           AssignedBy: { connect: { email: ctx.user.email } },
         },
-        select: {
-          User: {
-            select: {
-              email: true,
-              RoleByZone: {
-                select: {
-                  id: true,
-                  Role: {
-                    select: { permissions: { select: { action: true } } },
-                  },
-                },
-              },
-            },
-          },
-        },
+        select: selectAllUsersPermissions,
       });
 
       const newPermissions = roles.User.RoleByZone.flatMap(
@@ -479,6 +465,50 @@ export const userRouter = t.router({
 
     return { assetsToDownload, imagesToDownload };
   }),
+  selfAssignZoneToReview: protectedProcedure
+    .input(zone.id)
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.user.permissions.includes("review:zone")) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      const roles = await ctx.prisma.roleByZone.create({
+        data: {
+          AssignedBy: { connect: { email: ctx.user.email } },
+          Zone: { connect: { id: input.zoneId } },
+          User: { connect: { email: ctx.user.email } },
+          Role: { connect: { name: "Reviewer" } },
+        },
+        select: selectAllUsersPermissions,
+      });
+
+      const newPermissions = roles.User.RoleByZone.flatMap(
+        (r) => r.Role.permissions,
+      ).flatMap((p) => p.action);
+
+      await updateRedisPermissions(
+        ctx.access,
+        roles.User.email,
+        input.zoneId,
+        newPermissions,
+      );
+      return roles;
+    }),
 });
 
 const idAndVersion = { id: true, version: true };
+
+const selectAllUsersPermissions = {
+  User: {
+    select: {
+      email: true,
+      RoleByZone: {
+        select: {
+          id: true,
+          Role: {
+            select: { permissions: { select: { action: true } } },
+          },
+        },
+      },
+    },
+  },
+};
