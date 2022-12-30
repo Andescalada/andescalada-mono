@@ -1,5 +1,9 @@
+import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { setIsNewNotification } from "@store/localConfigs";
+import { useNotifications } from "@utils/notificated";
 import {
   addNotificationReceivedListener,
   removeNotificationSubscription,
@@ -16,18 +20,19 @@ export type Subscription = {
 
 const usePushNotification = () => {
   const notificationListener = useRef<Subscription>();
+  const { notify } = useNotifications();
 
   const lastNotificationResponse = useLastNotificationResponse();
+  const rootNavigation = useRootNavigation();
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (
-      lastNotificationResponse &&
-      lastNotificationResponse.notification.request.content &&
-      lastNotificationResponse.actionIdentifier === DEFAULT_ACTION_IDENTIFIER
-    ) {
-      console.log(lastNotificationResponse.notification.request.content);
+    if (lastNotificationResponse) {
+      console.log(
+        lastNotificationResponse.notification.request.content.title,
+        "lastNotification",
+      );
     }
   }, [lastNotificationResponse]);
 
@@ -35,7 +40,16 @@ const usePushNotification = () => {
     notificationListener.current = addNotificationReceivedListener(
       (response) => {
         dispatch(setIsNewNotification(true));
-        console.log(response);
+        notify("info", {
+          params: {
+            title: response.request.content.body || "Notification nueva",
+            hideCloseButton: true,
+            onPress: () =>
+              rootNavigation.navigate(RootNavigationRoutes.User, {
+                screen: UserNavigationRoutes.Notifications,
+              }),
+          },
+        });
       },
     );
 
@@ -44,7 +58,7 @@ const usePushNotification = () => {
         removeNotificationSubscription(notificationListener.current);
       }
     };
-  }, []);
+  }, [dispatch]);
 };
 
 export default usePushNotification;

@@ -9,6 +9,7 @@ import NavigationMemoized from "@navigation/NavigationMemoized";
 import { Store } from "@store/index";
 import Env from "@utils/env";
 import storage from "@utils/mmkv/storage";
+import { NotificationsProvider } from "@utils/notificated";
 import { StatusBar } from "expo-status-bar";
 import { connectToDevTools } from "react-devtools-core";
 import { LogBox } from "react-native";
@@ -49,16 +50,18 @@ export default function App() {
           onError={(error) => Sentry.Native.captureException(error)}
           FallbackComponent={FallbackErrorScreen}
         >
-          <StoreProvider store={Store}>
-            <ActionSheetProvider>
-              <GestureHandlerRootView style={{ flex: 1 }}>
-                <NavigationMemoized theme={darkTheme}>
-                  <StatusBar style="light" />
-                  <AppNavigation />
-                </NavigationMemoized>
-              </GestureHandlerRootView>
-            </ActionSheetProvider>
-          </StoreProvider>
+          <NotificationsProvider>
+            <StoreProvider store={Store}>
+              <ActionSheetProvider>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <NavigationMemoized theme={darkTheme}>
+                    <StatusBar style="light" />
+                    <AppNavigation />
+                  </NavigationMemoized>
+                </GestureHandlerRootView>
+              </ActionSheetProvider>
+            </StoreProvider>
+          </NotificationsProvider>
         </ErrorBoundary>
       </SafeAreaProvider>
     </ThemeProvider>

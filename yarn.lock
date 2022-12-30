@@ -10726,6 +10726,11 @@ react-native-mmkv@^2.4.3:
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.5.1.tgz#29fc462077fab16a5e1b79570fbf8acaac9d87b4"
   integrity sha512-5eQu25z3H6zf6w0NkJoTuFEFrbOu6luZxZ6+rK1W+XwY/rjPSFZFQPVtMaz3im90RbILFXXM/KrFGZrpaJJRoQ==
 
+react-native-notificated@^0.0.1-beta.2:
+  version "0.0.1-beta.2"
+  resolved "https://registry.yarnpkg.com/react-native-notificated/-/react-native-notificated-0.0.1-beta.2.tgz#9a49508c85400d3137b5f6d03c4fc5a3e121c652"
+  integrity sha512-nOztCH/ja+Qb3bxtzSTmKv9FzOQS0pnfeS5s88wCjNbYiLFFi7RxMXKThkf8ONDLk0rA/PICdtzQvZkmxd9gXg==
+
 react-native-quick-sqlite@^5.0.3:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-native-quick-sqlite/-/react-native-quick-sqlite-5.1.0.tgz#70c27df191b2397dcbf0fa112e16d97707e2431f"
