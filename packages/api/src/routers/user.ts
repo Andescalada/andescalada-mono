@@ -3,8 +3,10 @@ import zone from "@andescalada/api/schemas/zone";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import error from "@andescalada/api/src/utils/errors";
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
+import pushNotification from "@andescalada/api/src/utils/notificationEntityType";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import sendPushNotification from "@andescalada/api/src/utils/sendPushNotification";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { Actions, Entity, Image, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -491,6 +493,56 @@ export const userRouter = t.router({
         input.zoneId,
         newPermissions,
       );
+
+      const admins = await ctx.prisma.roleByZone.findMany({
+        where: { Role: { name: "Admin" }, zoneId: input.zoneId },
+        select: {
+          User: { select: { email: true, id: true } },
+          Zone: { select: { name: true } },
+        },
+      });
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.user.email },
+        select: { username: true },
+      });
+
+      if (!user) {
+        throw new TRPCError(error.userNotFound(ctx.user.email));
+      }
+
+      const body = pushNotification.ZoneReviewAssigned.template.es({
+        user: user.username,
+        zoneName: admins[0].Zone.name,
+      });
+
+      try {
+        if (admins.length <= 0) {
+          throw new Error("No reviewers found to notify");
+        }
+        await ctx.prisma.notificationObject.create({
+          data: {
+            entityId: input.zoneId,
+            Entity: pushNotification.RequestZoneReview.entity,
+            entityTypeId: pushNotification.RequestZoneReview.id,
+            messageSent: body,
+            NotificationSender: {
+              create: { Sender: { connect: { email: ctx.user.email } } },
+            },
+            NotificationReceiver: {
+              createMany: {
+                data: admins.map((r) => ({ receiverId: r.User.id })),
+              },
+            },
+          },
+        });
+        await sendPushNotification(
+          ctx,
+          { body },
+          admins.map((r) => r.User.email),
+        );
+      } catch (err) {}
+
       return roles;
     }),
 });

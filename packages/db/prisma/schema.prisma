@@ -597,6 +597,7 @@ model NotificationSender {
 enum EntityTypeId {
   RequestZoneReview
   RequestCommunityAccess
+  ZoneReviewAssigned
 }
 
 enum Entity {

@@ -30,6 +30,14 @@ const pushNotification = {
         `${user} ha solicitado la revisión de la zona ${zoneName}`,
     },
   },
+  [EntityTypeId.ZoneReviewAssigned]: {
+    id: EntityTypeId.ZoneReviewAssigned,
+    entity: Entity.Zone,
+    template: {
+      es: ({ user, zoneName }: { user: string; zoneName: string }) =>
+        `Ya comenzó la revisión de la zona ${zoneName} por parte de ${user}`,
+    },
+  },
 } satisfies NotificationEntityTypes;
 
 export default pushNotification;
