@@ -86,6 +86,8 @@ const EditZoneStatus: FC<Props> = ({
                 />
                 <Button
                   marginTop="m"
+                  isLoading={editStatus.isLoading}
+                  disabled={editStatus.isLoading}
                   title={zoneStatus(data.currentStatus).nextStepTitle || ""}
                   variant="info"
                   onPress={() => {
