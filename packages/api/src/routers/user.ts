@@ -518,13 +518,13 @@ export const userRouter = t.router({
 
       try {
         if (admins.length <= 0) {
-          throw new Error("No reviewers found to notify");
+          throw new Error("No admins found to notify");
         }
         await ctx.prisma.notificationObject.create({
           data: {
             entityId: input.zoneId,
-            Entity: pushNotification.RequestZoneReview.entity,
-            entityTypeId: pushNotification.RequestZoneReview.id,
+            Entity: pushNotification.ZoneReviewAssigned.entity,
+            entityTypeId: pushNotification.ZoneReviewAssigned.id,
             messageSent: body,
             NotificationSender: {
               create: { Sender: { connect: { email: ctx.user.email } } },

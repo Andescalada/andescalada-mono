@@ -20,7 +20,7 @@ import { FlatList } from "react-native";
 type Props = UserNavigationScreenProps<UserNavigationRoutes.ZoneReviewManager>;
 
 const ZoneReviewManagerScreen: FC<Props> = () => {
-  const zonesToReview = trpc.zones.currentStatus.useQuery({
+  const zonesToReview = trpc.zoneReview.currentStatus.useQuery({
     status: StatusSchema.Enum.InReview,
   });
   const rootNavigation = useRootNavigation();

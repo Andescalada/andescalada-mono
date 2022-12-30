@@ -1,3 +1,4 @@
+import { StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
@@ -41,7 +42,7 @@ const EditZoneStatus: FC<Props> = ({
 
   const utils = trpc.useContext();
 
-  const editStatus = trpc.zones.requestRevision.useMutation({
+  const editStatus = trpc.zoneReview.requestRevision.useMutation({
     onSuccess: () => {
       utils.zones.statusById.invalidate({ zoneId });
     },
@@ -54,9 +55,13 @@ const EditZoneStatus: FC<Props> = ({
     },
   });
 
-  const { permission } = usePermissions({ zoneId });
+  const approveOrRejectZone = trpc.zoneReview.approveOrRejectZone.useMutation({
+    onSuccess: () => {
+      utils.invalidate();
+    },
+  });
 
-  console.log(permission);
+  const { permission } = usePermissions({ zoneId });
 
   const [showMore, setShowMore] = useState(false);
   const [message, setMessage] = useState("");
@@ -198,10 +203,44 @@ const EditZoneStatus: FC<Props> = ({
                 justifyContent="space-evenly"
               >
                 {permission?.has("ApproveZone") && (
-                  <Button variant="success" title="Aprobar" />
+                  <Button
+                    variant="success"
+                    title="Aprobar"
+                    disabled={approveOrRejectZone.isLoading}
+                    isLoading={approveOrRejectZone.isLoading}
+                    onPress={() => {
+                      const isValid = z
+                        .string()
+                        .max(280)
+                        .safeParse(message).success;
+                      if (!isValid) return;
+                      approveOrRejectZone.mutate({
+                        zoneId,
+                        status: StatusSchema.Enum.Approved,
+                        message: message,
+                      });
+                    }}
+                  />
                 )}
                 {permission?.has("RejectZone") && (
-                  <Button variant="error" title="Rechazar" />
+                  <Button
+                    variant="error"
+                    title="Rechazar"
+                    isLoading={approveOrRejectZone.isLoading}
+                    disabled={approveOrRejectZone.isLoading}
+                    onPress={() => {
+                      const isValid = z
+                        .string()
+                        .max(280)
+                        .safeParse(message).success;
+                      if (!isValid) return;
+                      approveOrRejectZone.mutate({
+                        zoneId,
+                        status: StatusSchema.Enum.Rejected,
+                        message: message,
+                      });
+                    }}
+                  />
                 )}
               </Box>
             </Box>

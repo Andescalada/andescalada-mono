@@ -38,6 +38,22 @@ const pushNotification = {
         `Ya comenzó la revisión de la zona ${zoneName} por parte de ${user}`,
     },
   },
+  [EntityTypeId.ApproveZoneReview]: {
+    id: EntityTypeId.ApproveZoneReview,
+    entity: Entity.Zone,
+    template: {
+      es: ({ zoneName }: { zoneName: string }) =>
+        `La revisión de la zona ${zoneName} ha sido aprobada, ya puedes publicar la zona`,
+    },
+  },
+  [EntityTypeId.RejectZoneReview]: {
+    id: EntityTypeId.ApproveZoneReview,
+    entity: Entity.Zone,
+    template: {
+      es: ({ zoneName }: { zoneName: string }) =>
+        `La revisión de la zona ${zoneName} ha sido rechazada, revisa las correcciones y vuele a solicitar la revisión`,
+    },
+  },
 } satisfies NotificationEntityTypes;
 
 export default pushNotification;

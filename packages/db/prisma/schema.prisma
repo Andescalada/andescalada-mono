@@ -598,6 +598,8 @@ enum EntityTypeId {
   RequestZoneReview
   RequestCommunityAccess
   ZoneReviewAssigned
+  ApproveZoneReview
+  RejectZoneReview 
 }
 
 enum Entity {

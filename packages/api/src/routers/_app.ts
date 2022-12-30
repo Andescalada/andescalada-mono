@@ -9,6 +9,7 @@ import { sectorsRouter } from "@andescalada/api/src/routers/sectors";
 import { toposRouter } from "@andescalada/api/src/routers/topos";
 import { userRouter } from "@andescalada/api/src/routers/user";
 import { wallsRouter } from "@andescalada/api/src/routers/walls";
+import { zoneReviewRouter } from "@andescalada/api/src/routers/zoneReview";
 
 import { t } from "../createRouter";
 import { zonesRouter } from "./zones";
@@ -29,6 +30,7 @@ export const appRouter = t.router({
   search: searchRouter,
   notifications: notificationsRouter,
   agreements: agreementsRouter,
+  zoneReview: zoneReviewRouter,
 });
 
 export type AppRouter = typeof appRouter;
