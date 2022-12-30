@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@hooks/redux";
+import { setIsNewNotification } from "@store/localConfigs";
 import {
   addNotificationReceivedListener,
   removeNotificationSubscription,
@@ -17,6 +19,8 @@ const usePushNotification = () => {
 
   const lastNotificationResponse = useLastNotificationResponse();
 
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (
       lastNotificationResponse &&
@@ -30,6 +34,7 @@ const usePushNotification = () => {
   useEffect(() => {
     notificationListener.current = addNotificationReceivedListener(
       (response) => {
+        dispatch(setIsNewNotification(true));
         console.log(response);
       },
     );

@@ -3,7 +3,7 @@ import pathTitle from "@assets/andescaladaPathTitle";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
-import { useAppDispatch } from "@hooks/redux";
+import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
@@ -117,6 +117,8 @@ const UserHeader = () => {
 
   const { isOfflineMode, setIsOfflineMode } = useOfflineMode();
 
+  const { newNotification } = useAppSelector((state) => state.localConfig);
+
   return (
     <Screen
       flex={0}
@@ -164,6 +166,31 @@ const UserHeader = () => {
           style={{ paddingRight: 8 }}
           onPress={setIsOfflineMode}
         />
+        <Box alignItems="center" justifyContent="center">
+          <Ionicons
+            name="notifications-outline"
+            color="grayscale.600"
+            size={30}
+            onPress={() =>
+              rootNavigation.navigate(RootNavigationRoutes.User, {
+                screen: UserNavigationRoutes.Notifications,
+              })
+            }
+          />
+          {newNotification && (
+            <Box
+              height={10}
+              width={10}
+              borderRadius={5}
+              borderColor="background"
+              borderWidth={2}
+              position="absolute"
+              top={5}
+              right={5}
+              backgroundColor="semantic.error"
+            />
+          )}
+        </Box>
         <Pressable
           justifyContent="center"
           alignItems={"center"}

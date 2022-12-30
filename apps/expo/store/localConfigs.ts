@@ -4,6 +4,7 @@ import storage, { Storage } from "@utils/mmkv/storage";
 interface LocalConfigState {
   routeStrokeWidth: number;
   showRoutes: boolean;
+  newNotification: boolean;
 }
 
 const initialState: LocalConfigState = {
@@ -11,6 +12,9 @@ const initialState: LocalConfigState = {
     ? Number(storage.getString(Storage.ROUTE_STROKE_WIDTH))
     : 1,
   showRoutes: true,
+  newNotification: storage.getString(Storage.NEW_NOTIFICATION)
+    ? Boolean(storage.getString(Storage.NEW_NOTIFICATION))
+    : false,
 };
 
 const localConfigSlice = createSlice({
@@ -24,9 +28,14 @@ const localConfigSlice = createSlice({
     setShowRoutes: (state) => {
       state.showRoutes = !state.showRoutes;
     },
+    setIsNewNotification: (state, action: PayloadAction<boolean>) => {
+      storage.set(Storage.NEW_NOTIFICATION, action.payload);
+      state.newNotification = action.payload;
+    },
   },
 });
 
-export const { setRouteStrokeWidth, setShowRoutes } = localConfigSlice.actions;
+export const { setRouteStrokeWidth, setShowRoutes, setIsNewNotification } =
+  localConfigSlice.actions;
 
 export default localConfigSlice;

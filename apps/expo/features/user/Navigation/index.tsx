@@ -1,6 +1,7 @@
 import CreateZoneScreen from "@features/user/CreateZoneScreen";
 import GradingSystemConfigScreen from "@features/user/GradingSystemConfigScreen";
 import ManageUserRolesScreen from "@features/user/ManageUserRolesScreen";
+import NotificationsScreen from "@features/user/NotificationsScreen";
 import OwnUserConfigScreen from "@features/user/OwnUserConfigScreen";
 import PersonalInfoConfigScreen from "@features/user/PersonalInfoConfigScreen";
 import ZoneReviewManagerScreen from "@features/user/ZoneReviewManagerScreen";
@@ -47,6 +48,11 @@ const Navigator = () => {
         name={UserNavigationRoutes.ZoneReviewManager}
         component={ZoneReviewManagerScreen}
         options={{ title: "Solicitudes de revisión" }}
+      />
+      <Stack.Screen
+        name={UserNavigationRoutes.Notifications}
+        component={NotificationsScreen}
+        options={{ title: "Notificaciones" }}
       />
     </Stack.Navigator>
   );

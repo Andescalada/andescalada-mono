@@ -6,7 +6,7 @@ import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { Actions, Image, SoftDelete } from "@prisma/client";
+import { Actions, Entity, Image, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 import { z } from "zod";
@@ -29,9 +29,58 @@ export const userRouter = t.router({
         username: true,
         DownloadedZones: { select: { id: true, name: true, infoAccess: true } },
         FavoriteZones: { select: { id: true, name: true, infoAccess: true } },
+        NotificationReceived: {
+          select: { Object: { select: { createdAt: true } }, id: true },
+        },
       },
     }),
   ),
+  notifications: protectedProcedure
+    .input(
+      z.object({ filterReadNotifications: z.boolean().optional() }).optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      const notifications = await ctx.prisma.user.findUnique({
+        where: { email: ctx.user.email },
+        select: {
+          NotificationReceived: {
+            include: {
+              Object: {
+                include: {
+                  NotificationSender: {
+                    include: {
+                      Sender: { include: { profilePhoto: true } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      const promiseRes = notifications?.NotificationReceived.filter((n) =>
+        input?.filterReadNotifications ? !n.isRead : true,
+      ).map(async (n) => {
+        if (n.Object.Entity === Entity.Zone) {
+          const zone = await ctx.prisma.zone.findUnique({
+            where: { id: n.Object.entityId },
+            select: { name: true, id: true },
+          });
+          return { ...n, zone };
+        }
+        return n;
+      });
+      const res = await Promise.all(promiseRes ?? []);
+      return res;
+    }),
+  setNotificationToRead: protectedProcedure
+    .input(z.string())
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.notificationReceiver.update({
+        where: { id: input },
+        data: { isRead: true },
+      });
+    }),
   edit: protectedProcedure.input(user.schema).mutation(({ ctx, input }) =>
     ctx.prisma.user.update({
       where: { email: ctx.user.email },
