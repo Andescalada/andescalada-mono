@@ -58,7 +58,7 @@ const usePushNotification = () => {
         removeNotificationSubscription(notificationListener.current);
       }
     };
-  }, [dispatch]);
+  }, [dispatch, notify, rootNavigation]);
 };
 
 export default usePushNotification;
