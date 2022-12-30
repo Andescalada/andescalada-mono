@@ -100,7 +100,11 @@ export const zonesRouter = t.router({
       throw new TRPCError(error.sectorNotFound(input.zoneId));
     }
 
-    if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
+    if (
+      res.infoAccess !== "Public" &&
+      !ctx.permissions.has("Read") &&
+      !ctx.user.permissions.includes("review:zone")
+    ) {
       return {
         ...res,
         sectors: undefined,
