@@ -6,6 +6,7 @@ import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import pushNotification from "@andescalada/api/src/utils/notificationEntityType";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import sendPushNotification from "@andescalada/api/src/utils/sendPushNotification";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { Actions, Entity, Image, SoftDelete } from "@prisma/client";
@@ -494,13 +495,21 @@ export const userRouter = t.router({
         newPermissions,
       );
 
-      const admins = await ctx.prisma.roleByZone.findMany({
-        where: { Role: { name: "Admin" }, zoneId: input.zoneId },
-        select: {
-          User: { select: { email: true, id: true } },
-          Zone: { select: { name: true } },
-        },
-      });
+      const admins = await ctx.prisma.roleByZone
+        .findMany({
+          where: { Role: { name: "Admin" }, zoneId: input.zoneId },
+          select: {
+            User: { select: { email: true, id: true } },
+            Zone: { select: { name: true } },
+          },
+        })
+        .then((r) =>
+          r.map((r) => ({
+            id: r.User.id,
+            email: r.User.email,
+            zoneName: r.Zone.name,
+          })),
+        );
 
       const user = await ctx.prisma.user.findUnique({
         where: { email: ctx.user.email },
@@ -511,37 +520,18 @@ export const userRouter = t.router({
         throw new TRPCError(error.userNotFound(ctx.user.email));
       }
 
-      const body = pushNotification.ZoneReviewAssigned.template.es({
-        user: user.username,
-        zoneName: admins[0].Zone.name,
-      });
+      const { entity, id, template } = pushNotification.ZoneReviewAssigned;
 
-      try {
-        if (admins.length <= 0) {
-          throw new Error("No admins found to notify");
-        }
-        await ctx.prisma.notificationObject.create({
-          data: {
-            entityId: input.zoneId,
-            Entity: pushNotification.ZoneReviewAssigned.entity,
-            entityTypeId: pushNotification.ZoneReviewAssigned.id,
-            messageSent: body,
-            NotificationSender: {
-              create: { Sender: { connect: { email: ctx.user.email } } },
-            },
-            NotificationReceiver: {
-              createMany: {
-                data: admins.map((r) => ({ receiverId: r.User.id })),
-              },
-            },
-          },
-        });
-        await sendPushNotification(
-          ctx,
-          { body },
-          admins.map((r) => r.User.email),
-        );
-      } catch (err) {}
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({
+          zoneName: admins[0].zoneName,
+          user: user.username,
+        }),
+        receivers: admins,
+      });
 
       return roles;
     }),

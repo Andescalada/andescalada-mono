@@ -29,9 +29,12 @@ const EditZoneStatus: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
-  const { data, isLoading, isFetching } = trpc.zones.statusById.useQuery({
-    zoneId,
-  });
+  const { data, isLoading, isFetching } = trpc.zones.statusById.useQuery(
+    {
+      zoneId,
+    },
+    { staleTime: 1000 * 60, cacheTime: 1000 },
+  );
 
   const globalPermissions = useGlobalPermissions();
 
@@ -55,9 +58,16 @@ const EditZoneStatus: FC<Props> = ({
     },
   });
 
-  const approveOrRejectZone = trpc.zoneReview.approveOrRejectZone.useMutation({
+  const approveZone = trpc.zoneReview.approveZoneReview.useMutation({
     onSuccess: () => {
-      utils.invalidate();
+      utils.zoneReview.invalidate();
+      utils.zones.invalidate();
+    },
+  });
+  const rejectZone = trpc.zoneReview.rejectZoneReview.useMutation({
+    onSuccess: () => {
+      utils.zoneReview.invalidate();
+      utils.zones.invalidate();
     },
   });
 
@@ -187,63 +197,67 @@ const EditZoneStatus: FC<Props> = ({
                 }}
               />
             )}
-            <Box>
-              {(permission?.has("ApproveZone") ||
-                permission?.has("RejectZone")) && (
-                <TextFieldAccordion
-                  label="Agregar mensaje"
-                  value={message}
-                  onChangeText={setMessage}
-                  marginBottom="m"
-                />
-              )}
-              <Box
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-evenly"
-              >
-                {permission?.has("ApproveZone") && (
-                  <Button
-                    variant="success"
-                    title="Aprobar"
-                    disabled={approveOrRejectZone.isLoading}
-                    isLoading={approveOrRejectZone.isLoading}
-                    onPress={() => {
-                      const isValid = z
-                        .string()
-                        .max(280)
-                        .safeParse(message).success;
-                      if (!isValid) return;
-                      approveOrRejectZone.mutate({
-                        zoneId,
-                        status: StatusSchema.Enum.Approved,
-                        message: message,
-                      });
-                    }}
+            {data?.currentStatus === StatusSchema.Enum.InReview && (
+              <Box>
+                {(permission?.has("ApproveZone") ||
+                  permission?.has("RejectZone")) && (
+                  <TextFieldAccordion
+                    label="Agregar mensaje"
+                    value={message}
+                    onChangeText={setMessage}
+                    marginBottom="m"
                   />
                 )}
-                {permission?.has("RejectZone") && (
-                  <Button
-                    variant="error"
-                    title="Rechazar"
-                    isLoading={approveOrRejectZone.isLoading}
-                    disabled={approveOrRejectZone.isLoading}
-                    onPress={() => {
-                      const isValid = z
-                        .string()
-                        .max(280)
-                        .safeParse(message).success;
-                      if (!isValid) return;
-                      approveOrRejectZone.mutate({
-                        zoneId,
-                        status: StatusSchema.Enum.Rejected,
-                        message: message,
-                      });
-                    }}
-                  />
-                )}
+                <Box
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="space-evenly"
+                >
+                  {permission?.has("ApproveZone") && (
+                    <Button
+                      variant="success"
+                      title="Aprobar"
+                      disabled={rejectZone.isLoading || approveZone.isLoading}
+                      isLoading={approveZone.isLoading}
+                      onPress={() => {
+                        const isValid = z
+                          .string()
+                          .max(280)
+                          .optional()
+                          .safeParse(message).success;
+                        if (!isValid) return;
+                        approveZone.mutate({
+                          zoneId,
+                          status: StatusSchema.Enum.Approved,
+                          message: message,
+                        });
+                      }}
+                    />
+                  )}
+                  {permission?.has("RejectZone") && (
+                    <Button
+                      variant="error"
+                      title="Rechazar"
+                      disabled={rejectZone.isLoading || approveZone.isLoading}
+                      isLoading={rejectZone.isLoading}
+                      onPress={() => {
+                        const isValid = z
+                          .string()
+                          .min(10)
+                          .max(280)
+                          .safeParse(message).success;
+                        if (!isValid) return;
+                        rejectZone.mutate({
+                          zoneId,
+                          status: StatusSchema.Enum.Rejected,
+                          message: message,
+                        });
+                      }}
+                    />
+                  )}
+                </Box>
               </Box>
-            </Box>
+            )}
           </Box>
         )}
       </ScrollView>

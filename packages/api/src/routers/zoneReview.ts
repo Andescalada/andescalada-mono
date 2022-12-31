@@ -5,7 +5,7 @@ import getAuth0UsersByRole from "@andescalada/api/src/utils/getAuth0UsersByRole"
 import pushNotification from "@andescalada/api/src/utils/notificationEntityType";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import sendPushNotification from "@andescalada/api/src/utils/sendPushNotification";
+import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateZoneStatus from "@andescalada/api/src/utils/updateZoneStatus";
 import { StatusSchema } from "@andescalada/db/zod";
 import Auth0Roles from "@andescalada/utils/Auth0Roles";
@@ -22,7 +22,7 @@ export const zoneReviewRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "RequestZoneReview"),
         );
       }
-      const status = await updateZoneStatus(ctx, {
+      const zone = await updateZoneStatus(ctx, {
         status: StatusSchema.Enum.InReview,
         message: input.message,
         zoneId: input.zoneId,
@@ -51,40 +51,17 @@ export const zoneReviewRouter = t.router({
         throw new TRPCError(error.userNotFound(ctx.user.email));
       }
 
-      const body = pushNotification.RequestZoneReview.template.es({
-        user: user.username,
-        zoneName: status.name,
+      const { entity, id, template } = pushNotification.RequestZoneReview;
+
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name, user: user.username }),
+        receivers: reviewers,
       });
 
-      try {
-        if (reviewers.length <= 0) {
-          throw new Error("No reviewers found to notify");
-        }
-        await ctx.prisma.notificationObject.create({
-          data: {
-            entityId: input.zoneId,
-            Entity: pushNotification.RequestZoneReview.entity,
-            entityTypeId: pushNotification.RequestZoneReview.id,
-            messageSent: body,
-            NotificationSender: {
-              create: { Sender: { connect: { email: ctx.user.email } } },
-            },
-            NotificationReceiver: {
-              createMany: {
-                data: reviewers.map((r) => ({ receiverId: r.id })),
-              },
-            },
-          },
-        });
-
-        await sendPushNotification(
-          ctx,
-          { body },
-          reviewers.map((r) => r.email),
-        );
-      } catch (err) {}
-
-      return status;
+      return zone;
     }),
   currentStatus: protectedProcedure
     .input(zone.status.pick({ status: true }))
@@ -115,74 +92,85 @@ export const zoneReviewRouter = t.router({
 
       return res;
     }),
-  approveOrRejectZone: protectedZoneProcedure
-    .input(zone.approveOrRejectStatus)
+  approveZoneReview: protectedZoneProcedure
+    .input(zone.approveStatus)
     .mutation(async ({ ctx, input }) => {
-      if (
-        input.status === StatusSchema.Enum.Approved &&
-        !ctx.permissions.has("ApproveZone")
-      ) {
+      if (!ctx.permissions.has("ApproveZone")) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "approve"),
         );
       }
+      const zone = await updateZoneStatus(ctx, {
+        status: input.status,
+        zoneId: input.zoneId,
+        message: input.message ? input.message : "",
+      });
 
-      if (
-        input.status === StatusSchema.Enum.Rejected &&
-        !ctx.permissions.has("RejectZone")
-      ) {
+      const admins = await ctx.prisma.roleByZone
+        .findMany({
+          where: { Role: { name: "Admin" }, zoneId: input.zoneId },
+          select: {
+            User: { select: { email: true, id: true } },
+            Zone: { select: { name: true } },
+          },
+        })
+        .then((r) =>
+          r.map((r) => ({
+            id: r.User.id,
+            email: r.User.email,
+          })),
+        );
+
+      const { entity, id, template } = pushNotification.ApproveZoneReview;
+
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name }),
+        receivers: admins,
+      });
+
+      return zone;
+    }),
+  rejectZoneReview: protectedZoneProcedure
+    .input(zone.rejectStatus)
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("RejectZone")) {
         throw new TRPCError(
-          error.unauthorizedActionForZone(input.zoneId, "reject"),
+          error.unauthorizedActionForZone(input.zoneId, "approve"),
         );
       }
-
       const zone = await updateZoneStatus(ctx, {
         status: input.status,
         zoneId: input.zoneId,
         message: input.message,
       });
 
-      const admins = await ctx.prisma.roleByZone.findMany({
-        where: { Role: { name: "Admin" }, zoneId: input.zoneId },
-        select: {
-          User: { select: { email: true, id: true } },
-          Zone: { select: { name: true } },
-        },
-      });
-
-      const notification = () => {
-        if (input.status === StatusSchema.Enum.Approved)
-          return pushNotification.ApproveZoneReview;
-        else return pushNotification.RejectZoneReview;
-      };
-
-      try {
-        if (admins.length <= 0) {
-          throw new Error("No admins found to notify");
-        }
-        await ctx.prisma.notificationObject.create({
-          data: {
-            entityId: input.zoneId,
-            Entity: notification().entity,
-            entityTypeId: notification().id,
-            messageSent: notification().template.es({ zoneName: zone.name }),
-            NotificationSender: {
-              create: { Sender: { connect: { email: ctx.user.email } } },
-            },
-            NotificationReceiver: {
-              createMany: {
-                data: admins.map((r) => ({ receiverId: r.User.id })),
-              },
-            },
+      const admins = await ctx.prisma.roleByZone
+        .findMany({
+          where: { Role: { name: "Admin" }, zoneId: input.zoneId },
+          select: {
+            User: { select: { email: true, id: true } },
+            Zone: { select: { name: true } },
           },
-        });
-
-        await sendPushNotification(
-          ctx,
-          { body: notification().template.es({ zoneName: zone.name }) },
-          admins.map((r) => r.User.email),
+        })
+        .then((r) =>
+          r.map((r) => ({
+            id: r.User.id,
+            email: r.User.email,
+          })),
         );
-      } catch (err) {}
+
+      const { entity, id, template } = pushNotification.RejectZoneReview;
+
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name }),
+        receivers: admins,
+      });
 
       return zone;
     }),

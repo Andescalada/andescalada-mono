@@ -23,9 +23,13 @@ const status = z
   .object({ status: StatusSchema, message: z.string() })
   .merge(id);
 
-const approveOrRejectStatus = z.object({
+const approveStatus = z.object({
   status: z.enum([StatusSchema.Enum.Approved, StatusSchema.Enum.Rejected]),
   message: z.string().optional(),
+});
+const rejectStatus = z.object({
+  status: z.enum([StatusSchema.Enum.Approved, StatusSchema.Enum.Rejected]),
+  message: z.string(),
 });
 
 const nameSearch = z
@@ -36,4 +40,4 @@ const nameSearch = z
     "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",
   );
 
-export default { schema, id, nameSearch, status, approveOrRejectStatus };
+export default { schema, id, nameSearch, status, approveStatus, rejectStatus };

@@ -36,7 +36,9 @@ const zoneStatus = (
       return {
         label: "Rechazada",
         color: "grayscale.white",
-        backgroundColor: "semantic.success",
+        backgroundColor: "semantic.error",
+        nextStepTitle: "Solicitar revisión",
+        about: "",
       };
     case StatusSchema.Enum.Paused:
       return {
