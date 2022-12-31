@@ -10,6 +10,7 @@ import {
 import { trpc } from "@andescalada/utils/trpc";
 import ActionByStatus from "@features/zoneManager/EditZoneStatusScreen/ActionByStatus";
 import ApproveOrRejectZone from "@features/zoneManager/EditZoneStatusScreen/ApproveOrRejectZone";
+import UnpublishedZone from "@features/zoneManager/EditZoneStatusScreen/UnpublishedZone";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
@@ -120,7 +121,8 @@ const EditZoneStatus: FC<Props> = ({
               setMessage={setMessage}
               visible={
                 !!permission?.has("RequestZoneReview") &&
-                data.currentStatus === StatusSchema.Enum.InReview
+                (data.currentStatus === StatusSchema.Enum.Unpublished ||
+                  data.currentStatus === StatusSchema.Enum.Rejected)
               }
               isLoading={requestRevision.isLoading}
               disabled={requestRevision.isLoading}
@@ -207,6 +209,7 @@ const EditZoneStatus: FC<Props> = ({
                 />
               )}
             <ApproveOrRejectZone status={data?.currentStatus} />
+            <UnpublishedZone status={data?.currentStatus} />
           </Box>
         )}
       </ScrollView>
