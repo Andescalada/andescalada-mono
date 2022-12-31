@@ -2,7 +2,6 @@ import { StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
-  Button,
   Screen,
   ScrollView,
   Text,
@@ -10,6 +9,8 @@ import {
 import { trpc } from "@andescalada/utils/trpc";
 import ActionByStatus from "@features/zoneManager/EditZoneStatusScreen/ActionByStatus";
 import ApproveOrRejectZone from "@features/zoneManager/EditZoneStatusScreen/ApproveOrRejectZone";
+import ReviewersList from "@features/zoneManager/EditZoneStatusScreen/ReviewersList";
+import SelfAssignReview from "@features/zoneManager/EditZoneStatusScreen/SelfAssignReview";
 import UnpublishedZone from "@features/zoneManager/EditZoneStatusScreen/UnpublishedZone";
 import {
   ZoneManagerRoutes,
@@ -49,13 +50,6 @@ const EditZoneStatus: FC<Props> = ({
   const requestRevision = trpc.zoneReview.requestRevision.useMutation({
     onSuccess: () => {
       utils.zones.statusById.invalidate({ zoneId });
-    },
-  });
-
-  const selfAssignZoneToReview = trpc.user.selfAssignZoneToReview.useMutation({
-    onSuccess: () => {
-      utils.user.invalidate();
-      utils.zones.invalidate();
     },
   });
 
@@ -179,35 +173,8 @@ const EditZoneStatus: FC<Props> = ({
             <Text variant="h3" color="brand.primaryA">
               Sección para revisores
             </Text>
-            {reviewers?.length === 0 && (
-              <Box>
-                <Text variant="h4">Sin revisores</Text>
-              </Box>
-            )}
-            {reviewers && reviewers?.length > 0 && (
-              <Box>
-                <Text variant="h4">Revisores:</Text>
-                {reviewers.map((item) => (
-                  <Box key={item.id}>
-                    <Text variant="p1R">{`• ${item.username}`}</Text>
-                  </Box>
-                ))}
-              </Box>
-            )}
-            {(!permission?.has("ApproveZone") ||
-              !permission?.has("RejectZone")) &&
-              data?.currentStatus === StatusSchema.Enum.InReview && (
-                <Button
-                  marginTop="m"
-                  variant="info"
-                  title="Revisar zona"
-                  isLoading={selfAssignZoneToReview.isLoading}
-                  disabled={selfAssignZoneToReview.isLoading}
-                  onPress={() => {
-                    selfAssignZoneToReview.mutate({ zoneId });
-                  }}
-                />
-              )}
+            <ReviewersList reviewers={reviewers} />
+            <SelfAssignReview status={data?.currentStatus} />
             <ApproveOrRejectZone status={data?.currentStatus} />
             <UnpublishedZone status={data?.currentStatus} />
           </Box>

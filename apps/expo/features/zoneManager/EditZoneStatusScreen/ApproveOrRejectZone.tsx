@@ -21,6 +21,7 @@ const ApproveOrRejectZone: FC<Props> = ({ status }) => {
   const {
     params: { zoneId },
   } = useRoute<ZoneManagerRouteProps<ZoneManagerRoutes.EditZoneStatus>>();
+  const { permission } = usePermissions({ zoneId });
   const utils = trpc.useContext();
   const approveZone = trpc.zoneReview.approveZoneReview.useMutation({
     onSuccess: () => {
@@ -40,8 +41,6 @@ const ApproveOrRejectZone: FC<Props> = ({ status }) => {
   const textFieldAccordionRef = useRef<TextFieldAccordionRef>(null);
 
   const { notify } = useNotifications();
-
-  const { permission } = usePermissions({ zoneId });
 
   if (!status || status !== StatusSchema.Enum.InReview) return <Box />;
 
