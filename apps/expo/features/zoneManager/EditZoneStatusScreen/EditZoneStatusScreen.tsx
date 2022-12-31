@@ -192,18 +192,20 @@ const EditZoneStatus: FC<Props> = ({
                 ))}
               </Box>
             )}
-            {!permission?.has("ApproveZone") && (
-              <Button
-                marginTop="m"
-                variant="info"
-                title="Revisar zona"
-                isLoading={selfAssignZoneToReview.isLoading}
-                disabled={selfAssignZoneToReview.isLoading}
-                onPress={() => {
-                  selfAssignZoneToReview.mutate({ zoneId });
-                }}
-              />
-            )}
+            {(!permission?.has("ApproveZone") ||
+              !permission?.has("RejectZone")) &&
+              data?.currentStatus === StatusSchema.Enum.InReview && (
+                <Button
+                  marginTop="m"
+                  variant="info"
+                  title="Revisar zona"
+                  isLoading={selfAssignZoneToReview.isLoading}
+                  disabled={selfAssignZoneToReview.isLoading}
+                  onPress={() => {
+                    selfAssignZoneToReview.mutate({ zoneId });
+                  }}
+                />
+              )}
             <ApproveOrRejectZone status={data?.currentStatus} />
           </Box>
         )}
