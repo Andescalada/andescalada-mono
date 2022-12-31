@@ -602,7 +602,6 @@ enum EntityTypeId {
   RejectZoneReview
   PublishZoneByAdmin
   PausePublicationByAdmin
-  ResumePublicationByAdmin
   UnpublishZoneByReviewer
 }
 
