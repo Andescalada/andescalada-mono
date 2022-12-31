@@ -16,6 +16,7 @@ export const { NotificationsProvider, useNotifications } = createNotifications({
       borderWidth: 3,
       borderRadius: 5,
       defaultIconType: "no-icon",
+      multiline: 3,
     },
     successConfig: {
       accentColor: pallete.semantic.success,

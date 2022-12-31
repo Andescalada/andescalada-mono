@@ -31,6 +31,9 @@ const zoneStatus = (
         label: "Aprobada",
         color: "grayscale.white",
         backgroundColor: "semantic.success",
+        nextStepTitle: "Publicar",
+        about:
+          "Publica la guía de la zona para que todos la puedan encontrar y disfrutar.",
       };
     case StatusSchema.Enum.Rejected:
       return {

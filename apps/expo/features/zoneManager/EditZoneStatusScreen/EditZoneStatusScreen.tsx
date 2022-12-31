@@ -3,14 +3,14 @@ import {
   ActivityIndicator,
   Box,
   Button,
-  Ionicons,
-  Pressable,
   Screen,
   ScrollView,
   Text,
   TextFieldAccordion,
 } from "@andescalada/ui";
+import { TextFieldAccordionRef } from "@andescalada/ui/TextFieldAccordion/TextFieldAccordion";
 import { trpc } from "@andescalada/utils/trpc";
+import ActionByStatus from "@features/zoneManager/EditZoneStatusScreen/ActionByStatus";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
@@ -18,8 +18,9 @@ import {
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import usePermissions from "@hooks/usePermissions";
 import { GlobalPermissions } from "@utils/auth0/types";
+import { useNotifications } from "@utils/notificated";
 import zoneStatus from "@utils/zoneStatus";
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.EditZoneStatus>;
@@ -37,6 +38,7 @@ const EditZoneStatus: FC<Props> = ({
   );
 
   const globalPermissions = useGlobalPermissions();
+  const { permission } = usePermissions({ zoneId });
 
   const reviewers = useMemo(
     () => data?.RoleByZone.map((r) => r.User),
@@ -45,7 +47,7 @@ const EditZoneStatus: FC<Props> = ({
 
   const utils = trpc.useContext();
 
-  const editStatus = trpc.zoneReview.requestRevision.useMutation({
+  const requestRevision = trpc.zoneReview.requestRevision.useMutation({
     onSuccess: () => {
       utils.zones.statusById.invalidate({ zoneId });
     },
@@ -71,10 +73,16 @@ const EditZoneStatus: FC<Props> = ({
     },
   });
 
-  const { permission } = usePermissions({ zoneId });
+  const publishZone = trpc.zoneReview.publishZone.useMutation({
+    onSuccess: () => {
+      utils.zoneReview.invalidate();
+      utils.zones.invalidate();
+    },
+  });
 
-  const [showMore, setShowMore] = useState(false);
   const [message, setMessage] = useState("");
+  const textFieldAccordionRef = useRef<TextFieldAccordionRef>(null);
+  const { notify } = useNotifications();
 
   if (isLoading || isFetching)
     return (
@@ -99,6 +107,7 @@ const EditZoneStatus: FC<Props> = ({
             <Text variant="h4" marginBottom="s">
               La zona se encuentra:
             </Text>
+
             <Box
               marginBottom="s"
               padding="s"
@@ -113,49 +122,38 @@ const EditZoneStatus: FC<Props> = ({
                 {zoneStatus(data.currentStatus).label}
               </Text>
             </Box>
-
-            {zoneStatus(data.currentStatus).nextStepTitle && (
-              <>
-                <TextFieldAccordion
-                  label="Agregar mensaje"
-                  value={message}
-                  onChangeText={setMessage}
-                  marginVertical="s"
-                />
-                <Button
-                  marginTop="m"
-                  isLoading={editStatus.isLoading}
-                  disabled={editStatus.isLoading}
-                  title={zoneStatus(data.currentStatus).nextStepTitle || ""}
-                  variant="info"
-                  onPress={() => {
-                    const isValid = z
-                      .string()
-                      .max(280)
-                      .safeParse(message).success;
-                    if (!isValid) return;
-                    editStatus.mutate({ zoneId, message });
-                  }}
-                />
-              </>
-            )}
-            <Pressable
-              marginTop="s"
-              flexDirection="row"
-              alignItems="center"
-              onPress={() => setShowMore((prev) => !prev)}
-              justifyContent="center"
-            >
-              <Ionicons name="information-circle-sharp" size={20} />
-              <Text variant="h4" marginLeft="s" textDecorationLine="underline">
-                Sobre el siguiente paso
-              </Text>
-            </Pressable>
-            {showMore && (
-              <Text variant="p2R" textAlign="center">
-                {zoneStatus(data.currentStatus).about}
-              </Text>
-            )}
+            <ActionByStatus
+              status={data.currentStatus}
+              message={message}
+              setMessage={setMessage}
+              visible={
+                !!permission?.has("RequestZoneReview") &&
+                data.currentStatus === StatusSchema.Enum.InReview
+              }
+              isLoading={requestRevision.isLoading}
+              disabled={requestRevision.isLoading}
+              onPress={() => {
+                const isValid = z.string().max(280).safeParse(message).success;
+                if (!isValid) return;
+                requestRevision.mutate({ zoneId, message });
+              }}
+            />
+            <ActionByStatus
+              status={data.currentStatus}
+              message={message}
+              setMessage={setMessage}
+              visible={
+                !!permission?.has("PublishZone") &&
+                data.currentStatus === StatusSchema.Enum.Approved
+              }
+              isLoading={publishZone.isLoading}
+              disabled={publishZone.isLoading}
+              onPress={() => {
+                const isValid = z.string().max(280).safeParse(message).success;
+                if (!isValid) return;
+                publishZone.mutate({ zoneId, message });
+              }}
+            />
           </>
         )}
         {globalPermissions?.includes(GlobalPermissions.REVIEW_ZONE) && (
@@ -206,6 +204,7 @@ const EditZoneStatus: FC<Props> = ({
                     value={message}
                     onChangeText={setMessage}
                     marginBottom="m"
+                    ref={textFieldAccordionRef}
                   />
                 )}
                 <Box
@@ -246,7 +245,19 @@ const EditZoneStatus: FC<Props> = ({
                           .min(10)
                           .max(280)
                           .safeParse(message).success;
-                        if (!isValid) return;
+                        if (!isValid) {
+                          textFieldAccordionRef.current?.expand();
+                          textFieldAccordionRef.current?.focus();
+                          notify("error", {
+                            params: {
+                              title: "Ingresar correcciones",
+                              description:
+                                "Indica al admin de esta zona las correcciones que debe realizar, mínimo 10 caracteres y máximo 280",
+                              hideCloseButton: true,
+                            },
+                          });
+                          return;
+                        }
                         rejectZone.mutate({
                           zoneId,
                           status: StatusSchema.Enum.Rejected,

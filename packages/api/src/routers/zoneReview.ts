@@ -9,7 +9,9 @@ import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRec
 import updateZoneStatus from "@andescalada/api/src/utils/updateZoneStatus";
 import { StatusSchema } from "@andescalada/db/zod";
 import Auth0Roles from "@andescalada/utils/Auth0Roles";
+import { Status } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { t } from "../createRouter";
 
@@ -169,6 +171,52 @@ export const zoneReviewRouter = t.router({
         entityId: input.zoneId,
         entityTypeId: id,
         message: template.es({ zoneName: zone.name }),
+        receivers: admins,
+      });
+
+      return zone;
+    }),
+  publishZone: protectedZoneProcedure
+    .input(z.object({ message: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("PublishZone"))
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "PublishZone"),
+        );
+
+      const zone = await updateZoneStatus(ctx, {
+        status: Status.Published,
+        zoneId: input.zoneId,
+        message: input.message || "",
+      });
+
+      const admins = await ctx.prisma.roleByZone
+        .findMany({
+          where: { Role: { name: "Admin" }, zoneId: input.zoneId },
+          select: {
+            User: { select: { email: true, id: true } },
+            Zone: { select: { name: true } },
+          },
+        })
+        .then((r) =>
+          r.map((r) => ({
+            id: r.User.id,
+            email: r.User.email,
+          })),
+        );
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.user.email },
+        select: { username: true },
+      });
+
+      const { entity, id, template } = pushNotification.PublishZoneByAdmin;
+
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name, user: user!.username! }),
         receivers: admins,
       });
 

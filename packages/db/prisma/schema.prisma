@@ -599,7 +599,8 @@ enum EntityTypeId {
   RequestCommunityAccess
   ZoneReviewAssigned
   ApproveZoneReview
-  RejectZoneReview 
+  RejectZoneReview
+  PublishZoneByAdmin
 }
 
 enum Entity {

@@ -1,4 +1,12 @@
-import { ComponentProps, useState } from "react";
+import {
+  ComponentProps,
+  forwardRef,
+  ForwardRefRenderFunction,
+  RefObject,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 
 import A from "../Animated/Animated";
@@ -6,7 +14,7 @@ import Box from "../Box/Box";
 import Ionicons from "../Ionicons/Ionicons";
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
-import TextInput from "../TextInput/TextInput";
+import TextInput, { TextInputRef } from "../TextInput/TextInput";
 
 interface TextFieldAccordionProps
   extends Omit<ComponentProps<typeof A.Box>, "key"> {
@@ -18,16 +26,37 @@ interface TextFieldAccordionProps
   show?: boolean;
 }
 
-const TextFieldAccordion = ({
-  label,
-  cancelButtonLabel = "Cancelar",
-  maxCharacters = 280,
-  value: comment,
-  onChangeText: setComment,
-  show = true,
-  ...props
-}: TextFieldAccordionProps) => {
+export interface TextFieldAccordionRef {
+  expand: () => void;
+  focus: () => void;
+}
+
+const TextFieldAccordion: ForwardRefRenderFunction<
+  TextFieldAccordionRef,
+  TextFieldAccordionProps
+> = (
+  {
+    label,
+    cancelButtonLabel = "Cancelar",
+    maxCharacters = 280,
+    value: comment,
+    onChangeText: setComment,
+    show = true,
+    ...props
+  },
+  ref,
+) => {
   const [isAddComment, setIsAddComment] = useState(false);
+
+  const textRef = useRef<TextInputRef>() as RefObject<TextInputRef>;
+
+  useImperativeHandle(ref, () => ({
+    expand: () => setIsAddComment(true),
+    focus: () => {
+      textRef.current?.focus();
+    },
+  }));
+
   if (show)
     return (
       <A.Box entering={FadeIn} exiting={FadeOut} {...props}>
@@ -54,6 +83,7 @@ const TextFieldAccordion = ({
         {isAddComment && (
           <A.Box entering={FadeIn} exiting={FadeOut} layout={Layout.delay(250)}>
             <TextInput
+              ref={textRef}
               containerProps={{ height: 250, padding: "s" }}
               multiline
               textAlignVertical="top"
@@ -76,4 +106,4 @@ const TextFieldAccordion = ({
   return <Box />;
 };
 
-export default TextFieldAccordion;
+export default forwardRef(TextFieldAccordion);

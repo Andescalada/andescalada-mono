@@ -54,6 +54,14 @@ const pushNotification = {
         `La revisión de la zona ${zoneName} ha sido rechazada, revisa las correcciones y vuele a solicitar la revisión`,
     },
   },
+  [EntityTypeId.PublishZoneByAdmin]: {
+    id: EntityTypeId.PublishZoneByAdmin,
+    entity: Entity.Zone,
+    template: {
+      es: ({ zoneName, user }: { zoneName: string; user: string }) =>
+        `La zona ${zoneName} ha sido publicada por ${user}`,
+    },
+  },
 } satisfies NotificationEntityTypes;
 
 export default pushNotification;
