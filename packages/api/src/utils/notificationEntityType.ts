@@ -62,6 +62,22 @@ const pushNotification = {
         `La zona ${zoneName} ha sido publicada por ${user}`,
     },
   },
+  [EntityTypeId.PausePublicationByAdmin]: {
+    id: EntityTypeId.PausePublicationByAdmin,
+    entity: Entity.Zone,
+    template: {
+      es: ({ zoneName, user }: { zoneName: string; user: string }) =>
+        `La publicación de la zona ${zoneName} ha sido pausada por ${user}`,
+    },
+  },
+  [EntityTypeId.UnpublishZoneByReviewer]: {
+    id: EntityTypeId.UnpublishZoneByReviewer,
+    entity: Entity.Zone,
+    template: {
+      es: ({ zoneName, user }: { zoneName: string; user: string }) =>
+        `La publicación de la zona ${zoneName} ha sido pausada por ${user}, revisa las razones y vuelve a publicar la zona`,
+    },
+  },
 } satisfies NotificationEntityTypes;
 
 export default pushNotification;

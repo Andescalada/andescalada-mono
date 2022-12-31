@@ -222,4 +222,96 @@ export const zoneReviewRouter = t.router({
 
       return zone;
     }),
+  pauseZonePublication: protectedZoneProcedure
+    .input(z.object({ message: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("PauseZonePublication"))
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "PauseZonePublication"),
+        );
+
+      const zone = await updateZoneStatus(ctx, {
+        status: Status.Paused,
+        zoneId: input.zoneId,
+        message: input.message || "",
+      });
+
+      const admins = await ctx.prisma.roleByZone
+        .findMany({
+          where: { Role: { name: "Admin" }, zoneId: input.zoneId },
+          select: {
+            User: { select: { email: true, id: true } },
+            Zone: { select: { name: true } },
+          },
+        })
+        .then((r) =>
+          r.map((r) => ({
+            id: r.User.id,
+            email: r.User.email,
+          })),
+        );
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.user.email },
+        select: { username: true },
+      });
+
+      const { entity, id, template } = pushNotification.PausePublicationByAdmin;
+
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name, user: user!.username! }),
+        receivers: admins,
+      });
+
+      return zone;
+    }),
+  unpublishZone: protectedZoneProcedure
+    .input(z.object({ message: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("UnpublishZone"))
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "UnpublishZone"),
+        );
+
+      const zone = await updateZoneStatus(ctx, {
+        status: Status.Unpublished,
+        zoneId: input.zoneId,
+        message: input.message || "",
+      });
+
+      const admins = await ctx.prisma.roleByZone
+        .findMany({
+          where: { Role: { name: "Admin" }, zoneId: input.zoneId },
+          select: {
+            User: { select: { email: true, id: true } },
+            Zone: { select: { name: true } },
+          },
+        })
+        .then((r) =>
+          r.map((r) => ({
+            id: r.User.id,
+            email: r.User.email,
+          })),
+        );
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: ctx.user.email },
+        select: { username: true },
+      });
+
+      const { entity, id, template } = pushNotification.UnpublishZoneByReviewer;
+
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name, user: user!.username! }),
+        receivers: admins,
+      });
+
+      return zone;
+    }),
 });
