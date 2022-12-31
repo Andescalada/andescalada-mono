@@ -7,7 +7,6 @@ import pushNotification from "@andescalada/api/src/utils/notificationEntityType"
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
-import sendPushNotification from "@andescalada/api/src/utils/sendPushNotification";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { Actions, Entity, Image, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
