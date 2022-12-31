@@ -25,6 +25,9 @@ const zoneStatus = (
         label: "Publicada",
         color: "grayscale.white",
         backgroundColor: "semantic.info",
+        nextStepTitle: "Pausar publicación",
+        about:
+          "Puedes pausar la publicación de la zona y dejará de aparecer en la lista de zonas. \n\n Si la zona está pausada, puedes volver a publicarla cuando quieras.",
       };
     case StatusSchema.Enum.Approved:
       return {
@@ -48,6 +51,9 @@ const zoneStatus = (
         label: "Pausada",
         color: "grayscale.white",
         backgroundColor: "grayscale.600",
+        nextStepTitle: "Publicar",
+        about:
+          "Publica la guía de la zona para que todos la puedan encontrar y disfrutar.",
       };
     case StatusSchema.Enum.InReview:
       return {

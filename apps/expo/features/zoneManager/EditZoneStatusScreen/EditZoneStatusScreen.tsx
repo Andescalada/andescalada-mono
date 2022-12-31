@@ -80,6 +80,15 @@ const EditZoneStatus: FC<Props> = ({
     },
   });
 
+  const pauseZonePublication = trpc.zoneReview.pauseZonePublication.useMutation(
+    {
+      onSuccess: () => {
+        utils.zoneReview.invalidate();
+        utils.zones.invalidate();
+      },
+    },
+  );
+
   const [message, setMessage] = useState("");
   const textFieldAccordionRef = useRef<TextFieldAccordionRef>(null);
   const { notify } = useNotifications();
@@ -144,7 +153,8 @@ const EditZoneStatus: FC<Props> = ({
               setMessage={setMessage}
               visible={
                 !!permission?.has("PublishZone") &&
-                data.currentStatus === StatusSchema.Enum.Approved
+                (data.currentStatus === StatusSchema.Enum.Approved ||
+                  data.currentStatus === StatusSchema.Enum.Paused)
               }
               isLoading={publishZone.isLoading}
               disabled={publishZone.isLoading}
@@ -152,6 +162,22 @@ const EditZoneStatus: FC<Props> = ({
                 const isValid = z.string().max(280).safeParse(message).success;
                 if (!isValid) return;
                 publishZone.mutate({ zoneId, message });
+              }}
+            />
+            <ActionByStatus
+              status={data.currentStatus}
+              message={message}
+              setMessage={setMessage}
+              visible={
+                !!permission?.has("PauseZonePublication") &&
+                data.currentStatus === StatusSchema.Enum.Published
+              }
+              isLoading={pauseZonePublication.isLoading}
+              disabled={pauseZonePublication.isLoading}
+              onPress={() => {
+                const isValid = z.string().max(280).safeParse(message).success;
+                if (!isValid) return;
+                pauseZonePublication.mutate({ zoneId, message });
               }}
             />
           </>
