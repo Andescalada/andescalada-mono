@@ -601,6 +601,9 @@ enum EntityTypeId {
   ApproveZoneReview
   RejectZoneReview
   PublishZoneByAdmin
+  PausePublicationByAdmin
+  ResumePublicationByAdmin
+  UnpublishZoneByReviewer
 }
 
 enum Entity {
