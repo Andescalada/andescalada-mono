@@ -24,11 +24,15 @@ export const zoneReviewRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "RequestZoneReview"),
         );
       }
-      const zone = await updateZoneStatus(ctx, {
-        status: StatusSchema.Enum.InReview,
-        message: input.message,
-        zoneId: input.zoneId,
-      });
+      const zone = await updateZoneStatus(
+        ctx,
+        {
+          status: StatusSchema.Enum.InReview,
+          message: input.message,
+          zoneId: input.zoneId,
+        },
+        { allowedPreviousSteps: [Status.Unpublished, Status.Rejected] },
+      );
 
       const globalReviewers = await getAuth0UsersByRole(
         Auth0Roles.ZonePublicationManager,
@@ -102,11 +106,15 @@ export const zoneReviewRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "approve"),
         );
       }
-      const zone = await updateZoneStatus(ctx, {
-        status: input.status,
-        zoneId: input.zoneId,
-        message: input.message ? input.message : "",
-      });
+      const zone = await updateZoneStatus(
+        ctx,
+        {
+          status: input.status,
+          zoneId: input.zoneId,
+          message: input.message ? input.message : "",
+        },
+        { allowedPreviousSteps: [Status.InReview] },
+      );
 
       const admins = await ctx.prisma.roleByZone
         .findMany({
@@ -143,11 +151,15 @@ export const zoneReviewRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "approve"),
         );
       }
-      const zone = await updateZoneStatus(ctx, {
-        status: input.status,
-        zoneId: input.zoneId,
-        message: input.message,
-      });
+      const zone = await updateZoneStatus(
+        ctx,
+        {
+          status: input.status,
+          zoneId: input.zoneId,
+          message: input.message,
+        },
+        { allowedPreviousSteps: [Status.InReview] },
+      );
 
       const admins = await ctx.prisma.roleByZone
         .findMany({
@@ -184,11 +196,15 @@ export const zoneReviewRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "PublishZone"),
         );
 
-      const zone = await updateZoneStatus(ctx, {
-        status: Status.Published,
-        zoneId: input.zoneId,
-        message: input.message || "",
-      });
+      const zone = await updateZoneStatus(
+        ctx,
+        {
+          status: Status.Published,
+          zoneId: input.zoneId,
+          message: input.message || "",
+        },
+        { allowedPreviousSteps: [Status.Approved] },
+      );
 
       const admins = await ctx.prisma.roleByZone
         .findMany({
@@ -230,11 +246,15 @@ export const zoneReviewRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "PauseZonePublication"),
         );
 
-      const zone = await updateZoneStatus(ctx, {
-        status: Status.Paused,
-        zoneId: input.zoneId,
-        message: input.message || "",
-      });
+      const zone = await updateZoneStatus(
+        ctx,
+        {
+          status: Status.Paused,
+          zoneId: input.zoneId,
+          message: input.message || "",
+        },
+        { allowedPreviousSteps: [Status.Published] },
+      );
 
       const admins = await ctx.prisma.roleByZone
         .findMany({
@@ -276,11 +296,15 @@ export const zoneReviewRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "UnpublishZone"),
         );
 
-      const zone = await updateZoneStatus(ctx, {
-        status: Status.Unpublished,
-        zoneId: input.zoneId,
-        message: input.message || "",
-      });
+      const zone = await updateZoneStatus(
+        ctx,
+        {
+          status: Status.Unpublished,
+          zoneId: input.zoneId,
+          message: input.message || "",
+        },
+        { allowedPreviousSteps: [Status.Published] },
+      );
 
       const admins = await ctx.prisma.roleByZone
         .findMany({

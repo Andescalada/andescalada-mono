@@ -1,8 +1,30 @@
 import zone from "@andescalada/api/schemas/zone";
 import { Context } from "@andescalada/api/src/createContext";
+import { Status } from "@prisma/client";
 
-const updateZoneStatus = (ctx: Context, input: typeof zone.status._type) =>
-  ctx.prisma.zone.update({
+const updateZoneStatus = async (
+  ctx: Context,
+  input: typeof zone.status._type,
+  { allowedPreviousSteps }: { allowedPreviousSteps: Status[] },
+) => {
+  const currentStatus = await ctx.prisma.zone
+    .findUnique({
+      where: { id: input.zoneId },
+      select: { currentStatus: true },
+    })
+    .then((res) => res?.currentStatus);
+
+  if (!currentStatus) {
+    throw new Error(`Zone ${input.zoneId} not found`);
+  }
+
+  if (!allowedPreviousSteps.includes(currentStatus)) {
+    throw new Error(
+      `Zone ${input.zoneId} is in status ${currentStatus} and cannot be updated to ${input.status}`,
+    );
+  }
+
+  const res = await ctx.prisma.zone.update({
     where: { id: input.zoneId },
     data: {
       currentStatus: input.status,
@@ -21,5 +43,7 @@ const updateZoneStatus = (ctx: Context, input: typeof zone.status._type) =>
       },
     },
   });
+  return res;
+};
 
 export default updateZoneStatus;
