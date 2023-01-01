@@ -15,7 +15,7 @@ import {
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
 import { FC, useRef } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Image } from "react-native";
 import { Callout, MapMarker, Marker } from "react-native-maps";
 
 type Props = ZoneLocationScreenProps<ZoneLocationRoutes.ZoneMap>;
@@ -25,6 +25,8 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.5;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+const r = Image.resolveAssetSource(images.marker.file);
 
 const ZoneMapScreen: FC<Props> = ({
   navigation,
@@ -70,7 +72,7 @@ const ZoneMapScreen: FC<Props> = ({
             longitude: Number(data?.Location?.longitude) || LONGITUDE,
           }}
           identifier={zoneId}
-          image={images.marker.file}
+          image={{ uri: r.uri, scale: 0.5 }}
           onLayout={() => markerRef.current?.showCallout()}
         >
           <CalloutContent title={data?.name} />
