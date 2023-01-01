@@ -70,8 +70,6 @@ const NotificationsScreen: FC<Props> = () => {
       </Box>
       <FlatList
         data={data}
-        // contentContainerStyle={{ flex: 1 }}
-
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <Box
@@ -105,7 +103,11 @@ const NotificationsScreen: FC<Props> = () => {
               style={styles.image}
               marginRight="s"
             />
-            <Text variant="p2R">{item.Object.messageSent}</Text>
+            <Box flex={1}>
+              <Text variant="p2R" numberOfLines={3} ellipsizeMode="tail">
+                {item.Object.messageSent}
+              </Text>
+            </Box>
           </Pressable>
         )}
       />
