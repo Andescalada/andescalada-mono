@@ -1,6 +1,8 @@
 import zone from "@andescalada/api/schemas/zone";
 import { Context } from "@andescalada/api/src/createContext";
+import error from "@andescalada/api/src/utils/errors";
 import { Status } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
 const updateZoneStatus = async (
   ctx: Context,
@@ -15,12 +17,12 @@ const updateZoneStatus = async (
     .then((res) => res?.currentStatus);
 
   if (!currentStatus) {
-    throw new Error(`Zone ${input.zoneId} not found`);
+    throw new TRPCError(error.zoneNotFound(input.zoneId));
   }
 
   if (!allowedPreviousSteps.includes(currentStatus)) {
-    throw new Error(
-      `Zone ${input.zoneId} is in status ${currentStatus} and cannot be updated to ${input.status}`,
+    throw new TRPCError(
+      error.notValidStatusFlow(input.zoneId, currentStatus, input.status),
     );
   }
 

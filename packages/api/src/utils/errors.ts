@@ -34,6 +34,14 @@ const error = satisfies<Record<string, Value>>()({
     code: "NOT_FOUND",
     message: `No user found with email '${email}'`,
   }),
+  notValidStatusFlow: (
+    zoneId: string,
+    currentStatus: string,
+    updateStatus: string,
+  ) => ({
+    code: "BAD_REQUEST",
+    message: `Zone ${zoneId} is in status ${currentStatus} and cannot be updated to ${updateStatus}`,
+  }),
 });
 
 export default error;
