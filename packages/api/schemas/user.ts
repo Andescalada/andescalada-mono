@@ -14,7 +14,7 @@ const schema = z.object({
     .string()
     .trim()
     .min(3, "Nombre de usuario muy corto, mínimo 3 caracteres y máximo 15")
-    .max(15, "Nombre de usuario muy corto, mínimo 3 caracteres y máximo 15")
+    .max(15, "Nombre de usuario muy largo, mínimo 3 caracteres y máximo 15")
     .regex(
       r.username,
       "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",

@@ -33,8 +33,8 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   const { uploadImage } = useUploadImage();
   const form = useZodForm({
     schema: user.schema,
-    mode: "onBlur",
-    reValidateMode: "onBlur",
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
   const {
     field: { onChange, onBlur, value },
@@ -77,7 +77,6 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               />
             </Box>
             <FormProvider {...form}>
-              {/* <KeyboardAvoidingBox marginTop={"m"} behavior="padding"> */}
               <Text variant="p1R" marginBottom="s">
                 Nombre
               </Text>
@@ -90,7 +89,6 @@ const FirstTimeLoginScreen: FC<Props> = () => {
               <Text marginTop={"xs"} color="semantic.error">
                 {error?.message}
               </Text>
-              {/* </KeyboardAvoidingBox> */}
 
               <Text variant="p1R" marginBottom="s">
                 Usuario

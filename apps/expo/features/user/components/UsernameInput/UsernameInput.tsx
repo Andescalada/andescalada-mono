@@ -1,8 +1,8 @@
 import { ActivityIndicator, Box, Text, TextInput } from "@andescalada/ui";
+import useDebounce from "@hooks/useDebounce";
 import useUsernameValidation from "@hooks/useUsernameValidation";
 import { ComponentProps, FC, useEffect, useMemo } from "react";
 import { useController, useFormContext } from "react-hook-form";
-import { NativeSyntheticEvent, TextInputFocusEventData } from "react-native";
 
 interface Props extends ComponentProps<typeof Box> {
   defaultValue?: string;
@@ -31,19 +31,11 @@ const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
     if (onLoading) onLoading(isLoadingUsernameValidation);
   }, [isLoadingUsernameValidation, onLoading]);
 
-  const onUserNameBlur = async (
-    e: NativeSyntheticEvent<TextInputFocusEventData>,
-  ) => {
-    onBlurUsername();
-    if (defaultValue === valueUsername) {
-      form.clearErrors("username");
-
-      return;
-    }
-
-    const res = await validateUsername(e.nativeEvent.text);
+  const userNameCheck = async (text: string) => {
+    const res = await validateUsername(text);
     if (!res?.isValid) {
       form.setError("username", {
+        type: "validate",
         message: res?.errorMessage,
       });
     } else {
@@ -67,6 +59,19 @@ const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
     };
   }, [isLoadingUsernameValidation, isTouched, isUsernameValid]);
 
+  const debounceUserNameCheck = useDebounce(userNameCheck, 500);
+
+  const onChangeHandler = async (text: string) => {
+    onChangeUsername(text);
+    await debounceUserNameCheck(text);
+  };
+
+  const errorMessage = useMemo(
+    () =>
+      typeof errorUsername?.message === "string" ? errorUsername?.message : "",
+    [errorUsername?.message],
+  );
+
   return (
     <Box {...props}>
       <Box
@@ -76,8 +81,8 @@ const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
       >
         <TextInput
           value={valueUsername}
-          onChangeText={onChangeUsername}
-          onBlur={onUserNameBlur}
+          onChangeText={onChangeHandler}
+          // onBlur={onBlurUsername}
           autoCapitalize="none"
           autoCorrect={false}
           containerProps={{
@@ -93,7 +98,7 @@ const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
         )}
       </Box>
       <Text marginTop={"xs"} color="semantic.error">
-        {errorUsername?.message}
+        {errorMessage}
       </Text>
     </Box>
   );
