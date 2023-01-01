@@ -1,6 +1,7 @@
 import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
+import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import pushNotification from "@andescalada/api/src/utils/notificationEntityType";
@@ -8,7 +9,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { Actions, Entity, Image, SoftDelete } from "@prisma/client";
+import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 import { z } from "zod";
@@ -141,42 +142,7 @@ export const userRouter = t.router({
       if (!ctx.user.permissions.includes("crud:roles")) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-
-      const roleExist = await ctx.prisma.roleByZone.findMany({
-        where: {
-          User: { username: input.username },
-          Zone: { id: input.zoneId },
-          Role: { name: input.role },
-        },
-      });
-
-      if (roleExist.length > 0) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: `User ${input.username} already has role ${input.role} in zone ${input.zoneId}`,
-        });
-      }
-
-      const roles = await ctx.prisma.roleByZone.create({
-        data: {
-          User: { connect: { username: input.username } },
-          Role: { connect: { name: input.role } },
-          Zone: { connect: { id: input.zoneId } },
-          AssignedBy: { connect: { email: ctx.user.email } },
-        },
-        select: selectAllUsersPermissions,
-      });
-
-      const newPermissions = roles.User.RoleByZone.flatMap(
-        (r) => r.Role.permissions,
-      ).flatMap((p) => p.action);
-
-      await updateRedisPermissions(
-        ctx.access,
-        roles.User.email,
-        input.zoneId,
-        newPermissions,
-      );
+      const roles = await assignAndCacheRole(ctx, input);
       return roles;
     }),
   deleteRoleByUser: protectedProcedure
@@ -473,26 +439,11 @@ export const userRouter = t.router({
       if (!ctx.user.permissions.includes("review:zone")) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-      const roles = await ctx.prisma.roleByZone.create({
-        data: {
-          AssignedBy: { connect: { email: ctx.user.email } },
-          Zone: { connect: { id: input.zoneId } },
-          User: { connect: { email: ctx.user.email } },
-          Role: { connect: { name: "Reviewer" } },
-        },
-        select: selectAllUsersPermissions,
+      const roles = await assignAndCacheRole(ctx, {
+        role: RoleNames.Reviewer,
+        zoneId: input.zoneId,
+        email: ctx.user.email,
       });
-
-      const newPermissions = roles.User.RoleByZone.flatMap(
-        (r) => r.Role.permissions,
-      ).flatMap((p) => p.action);
-
-      await updateRedisPermissions(
-        ctx.access,
-        roles.User.email,
-        input.zoneId,
-        newPermissions,
-      );
 
       const admins = await ctx.prisma.roleByZone
         .findMany({
@@ -537,19 +488,3 @@ export const userRouter = t.router({
 });
 
 const idAndVersion = { id: true, version: true };
-
-const selectAllUsersPermissions = {
-  User: {
-    select: {
-      email: true,
-      RoleByZone: {
-        select: {
-          id: true,
-          Role: {
-            select: { permissions: { select: { action: true } } },
-          },
-        },
-      },
-    },
-  },
-};

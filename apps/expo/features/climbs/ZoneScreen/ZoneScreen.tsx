@@ -67,8 +67,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
       },
     );
 
-  const refresh = useRefresh(refetch, isFetching && !isLoading);
-
   const editZone = trpc.zones.edit.useMutation();
   const methods = useZodForm({ schema: schema.pick({ name: true }) });
 
@@ -98,8 +96,17 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
 
-  const { permission } = usePermissions({ zoneId });
+  const {
+    permission,
+    getPermissions,
+    isLoading: isLoadingPermissions,
+  } = usePermissions({ zoneId });
   const globalPermissions = useGlobalPermissions();
+
+  const refresh = useRefresh(() => {
+    refetch();
+    getPermissions();
+  }, (isFetching || isLoadingPermissions) && !isLoading);
 
   const onOptions = useOptionsSheet({
     "Editar zona": {

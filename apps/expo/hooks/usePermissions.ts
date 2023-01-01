@@ -29,7 +29,11 @@ const usePermissions = ({ zoneId }: Args) => {
     },
   );
 
-  return { permission: permissions.data, getPermissions: permissions.refetch };
+  return {
+    permission: permissions.data,
+    getPermissions: permissions.refetch,
+    isLoading: permissions.isLoading,
+  };
 };
 
 export default usePermissions;
