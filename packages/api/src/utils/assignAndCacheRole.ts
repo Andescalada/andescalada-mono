@@ -24,7 +24,9 @@ const assignAndCacheRole = async (
 
   const createRole = ctx.prisma.roleByZone.create({
     data: {
-      User: { connect: { username: input.username } },
+      User: {
+        connect: { email: input.email, username: input.username },
+      },
       Role: { connect: { name: input.role } },
       Zone: { connect: { id: input.zoneId } },
       AssignedBy: { connect: { email: ctx.user!.email } },
