@@ -30,11 +30,13 @@
           "waze"
         ],
         "UIBackgroundModes": [
-          "location"
+          "location",
+          "background-notification-task"
         ],
         "NSLocationWhenInUseUsageDescription": "Necesitamos tu ubicación para mostrar las zonas de escalada más cercanas a ti.",
         "NSLocationAlwaysUsageDescription": "Necesitamos tu ubicación para mostrar las zonas de escalada más cercanas a ti.",
-        "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
+        "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas",
+        
       },
       "buildNumber": "16"
     },

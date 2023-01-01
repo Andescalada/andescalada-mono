@@ -3,6 +3,7 @@ import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { Store } from "@store/index";
 import { setIsNewNotification } from "@store/localConfigs";
 import { useNotifications } from "@utils/notificated";
 import {
@@ -10,6 +11,8 @@ import {
   removeNotificationSubscription,
   useLastNotificationResponse,
 } from "expo-notifications";
+import * as Notifications from "expo-notifications";
+import * as TaskManager from "expo-task-manager";
 import { useEffect, useRef } from "react";
 
 export const DEFAULT_ACTION_IDENTIFIER =
@@ -18,6 +21,16 @@ export const DEFAULT_ACTION_IDENTIFIER =
 export type Subscription = {
   remove: () => void;
 };
+
+const BACKGROUND_NOTIFICATION_TASK = "background-notification-task";
+
+const { dispatch } = Store;
+
+TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, () => {
+  dispatch(setIsNewNotification(true));
+});
+
+Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 
 const usePushNotification = () => {
   const notificationListener = useRef<Subscription>();
@@ -31,6 +44,7 @@ const usePushNotification = () => {
   const utils = trpc.useContext();
 
   useEffect(() => {
+    console.log(lastNotificationResponse, "lastNotificationResponse");
     if (lastNotificationResponse) {
       console.log(
         lastNotificationResponse.notification.request.content.title,
