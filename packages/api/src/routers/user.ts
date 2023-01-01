@@ -74,7 +74,12 @@ export const userRouter = t.router({
         return n;
       });
       const res = await Promise.all(promiseRes ?? []);
-      return res;
+
+      const ordered = res.sort(
+        (prev, current) =>
+          current.Object.createdAt.getTime() - prev.Object.createdAt.getTime(),
+      );
+      return ordered;
     }),
   setNotificationToRead: protectedProcedure
     .input(z.string())

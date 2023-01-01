@@ -70,10 +70,16 @@ const NotificationsScreen: FC<Props> = () => {
       </Box>
       <FlatList
         data={data}
-        contentContainerStyle={{ flex: 1 }}
+        // contentContainerStyle={{ flex: 1 }}
+
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
-          <Box flex={1} justifyContent="center" alignItems="center">
+          <Box
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
+            marginTop="xxxl"
+          >
             {isLoading ? (
               <ActivityIndicator size="large" />
             ) : (
