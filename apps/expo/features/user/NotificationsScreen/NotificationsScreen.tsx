@@ -1,5 +1,3 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { EntityTypeIdSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
@@ -9,27 +7,20 @@ import {
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
+import useNotificationPress from "@features/user/NotificationsScreen/useNotificationPress";
 import { useAppDispatch } from "@hooks/redux";
 import useRefresh from "@hooks/useRefresh";
-import useRootNavigation from "@hooks/useRootNavigation";
-import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useFocusEffect } from "@react-navigation/native";
 import { setIsNewNotification } from "@store/localConfigs";
-import { inferProcedureOutput } from "@trpc/server";
 import { FC, useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
 type Props = UserNavigationScreenProps<UserNavigationRoutes.Notifications>;
-
-type NotificationType = inferProcedureOutput<
-  AppRouter["user"]["notifications"]
->[0];
 
 const NotificationsScreen: FC<Props> = () => {
   const [viewAll, setViewAll] = useState(false);
@@ -46,7 +37,7 @@ const NotificationsScreen: FC<Props> = () => {
 
   const clearAll = trpc.user.setManyNotificationsToRead.useMutation({
     onMutate: () => {
-      utils.user.notifications.setData([]);
+      utils.user.notifications.setData(undefined, []);
     },
     onSuccess: () => {
       utils.user.notifications.invalidate();
@@ -55,7 +46,7 @@ const NotificationsScreen: FC<Props> = () => {
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
-  const onPressHandler = useOnPressHandler();
+  const onPressHandler = useNotificationPress();
 
   const dispatch = useAppDispatch();
 
@@ -144,31 +135,3 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-
-const useOnPressHandler = () => {
-  const rootNavigation = useRootNavigation();
-  const utils = trpc.useContext();
-  const setNotificationToRead = trpc.user.setNotificationToRead.useMutation({
-    onSuccess: () => {
-      utils.user.notifications.invalidate();
-    },
-  });
-  const onPressHandler = useCallback(async (item: NotificationType) => {
-    if (!item.isRead) setNotificationToRead.mutate(item.id);
-
-    switch (item.Object.entityTypeId) {
-      case EntityTypeIdSchema.Enum.RequestZoneReview: {
-        if ("zone" in item && item.zone?.id && item.zone?.name) {
-          rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-            screen: ClimbsNavigationRoutes.Zone,
-            params: { zoneId: item.zone?.id, zoneName: item.zone?.name },
-          });
-        }
-        break;
-      }
-      default:
-        throw new Error("Not implemented");
-    }
-  }, []);
-  return onPressHandler;
-};
