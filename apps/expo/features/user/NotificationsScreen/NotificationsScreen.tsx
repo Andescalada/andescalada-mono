@@ -34,6 +34,7 @@ type NotificationType = inferProcedureOutput<
 const NotificationsScreen: FC<Props> = () => {
   const [viewAll, setViewAll] = useState(false);
 
+  const utils = trpc.useContext();
   const {
     data = [],
     isLoading,
@@ -41,6 +42,15 @@ const NotificationsScreen: FC<Props> = () => {
     isFetching,
   } = trpc.user.notifications.useQuery({
     filterReadNotifications: !viewAll,
+  });
+
+  const clearAll = trpc.user.setManyNotificationsToRead.useMutation({
+    onMutate: () => {
+      utils.user.notifications.setData([]);
+    },
+    onSuccess: () => {
+      utils.user.notifications.invalidate();
+    },
   });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
@@ -66,6 +76,16 @@ const NotificationsScreen: FC<Props> = () => {
           alignSelf="stretch"
           titleVariant={"p2R"}
           onPress={() => setViewAll((prev) => !prev)}
+        />
+        <Button
+          variant={clearAll.isLoading ? "infoSmall" : "infoSmallOutline"}
+          title="Borrar todas"
+          paddingVertical="xs"
+          marginLeft="xs"
+          paddingHorizontal="s"
+          alignSelf="stretch"
+          titleVariant={"p2R"}
+          onPress={() => clearAll.mutate()}
         />
       </Box>
       <FlatList

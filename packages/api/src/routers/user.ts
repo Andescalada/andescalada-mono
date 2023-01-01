@@ -89,6 +89,16 @@ export const userRouter = t.router({
         data: { isRead: true },
       });
     }),
+  setManyNotificationsToRead: protectedProcedure.mutation(
+    async ({ ctx, input }) => {
+      const res = await ctx.prisma.notificationReceiver.updateMany({
+        where: { Receiver: { email: ctx.user.email }, isRead: false },
+        data: { isRead: true },
+      });
+
+      return res;
+    },
+  ),
   edit: protectedProcedure.input(user.schema).mutation(({ ctx, input }) =>
     ctx.prisma.user.update({
       where: { email: ctx.user.email },
