@@ -1,3 +1,4 @@
+import { trpc } from "@andescalada/utils/trpc";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { useAppDispatch } from "@hooks/redux";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -26,6 +27,8 @@ const usePushNotification = () => {
   const rootNavigation = useRootNavigation();
 
   const dispatch = useAppDispatch();
+
+  const utils = trpc.useContext();
 
   useEffect(() => {
     if (lastNotificationResponse) {
@@ -56,9 +59,10 @@ const usePushNotification = () => {
     return () => {
       if (notificationListener.current) {
         removeNotificationSubscription(notificationListener.current);
+        utils.user.notifications.prefetch();
       }
     };
-  }, [dispatch, notify, rootNavigation]);
+  }, [dispatch, notify, rootNavigation, utils.user.notifications]);
 };
 
 export default usePushNotification;
