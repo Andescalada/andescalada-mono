@@ -2,6 +2,8 @@ import { StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
+  KeyboardAvoidingBox,
+  KeyboardDismiss,
   Screen,
   ScrollView,
   Text,
@@ -18,6 +20,7 @@ import {
 } from "@features/zoneManager/Navigation/types";
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import usePermissions from "@hooks/usePermissions";
+import useRefresh from "@hooks/useRefresh";
 import { GlobalPermissions } from "@utils/auth0/types";
 import zoneStatus from "@utils/zoneStatus";
 import { FC, useMemo, useState } from "react";
@@ -30,12 +33,13 @@ const EditZoneStatus: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
-  const { data, isLoading, isFetching } = trpc.zones.statusById.useQuery(
-    {
-      zoneId,
-    },
-    { staleTime: 1000 * 60, cacheTime: 1000 },
-  );
+  const { data, isLoading, isFetching, refetch } =
+    trpc.zones.statusById.useQuery(
+      {
+        zoneId,
+      },
+      { staleTime: 1000 * 60, cacheTime: 1000 },
+    );
 
   const globalPermissions = useGlobalPermissions();
   const { permission } = usePermissions({ zoneId });
@@ -71,7 +75,9 @@ const EditZoneStatus: FC<Props> = ({
 
   const [message, setMessage] = useState("");
 
-  if (isLoading || isFetching)
+  const refresh = useRefresh(refetch, isFetching && !isLoading);
+
+  if (isLoading)
     return (
       <Screen safeAreaDisabled padding="m">
         <Text variant="h1" marginBottom="m">
@@ -85,101 +91,119 @@ const EditZoneStatus: FC<Props> = ({
 
   return (
     <Screen safeAreaDisabled padding="m">
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Text variant="h1" marginBottom="m">
-          {zoneName}
-        </Text>
-        {data && (
-          <>
-            <Text variant="h4" marginBottom="s">
-              La zona se encuentra:
+      <KeyboardAvoidingBox>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={refresh}
+        >
+          <KeyboardDismiss>
+            <Text variant="h1" marginBottom="m">
+              {zoneName}
             </Text>
+            {data && (
+              <>
+                <Text variant="h4" marginBottom="s">
+                  La zona se encuentra:
+                </Text>
 
-            <Box
-              marginBottom="s"
-              padding="s"
-              backgroundColor={zoneStatus(data.currentStatus).backgroundColor}
-              borderRadius={16}
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="center"
-              paddingVertical="m"
-            >
-              <Text color={zoneStatus(data.currentStatus).color}>
-                {zoneStatus(data.currentStatus).label}
-              </Text>
-            </Box>
-            <ActionByStatus
-              status={data.currentStatus}
-              message={message}
-              setMessage={setMessage}
-              visible={
-                !!permission?.has("RequestZoneReview") &&
-                (data.currentStatus === StatusSchema.Enum.Unpublished ||
-                  data.currentStatus === StatusSchema.Enum.Rejected)
-              }
-              isLoading={requestRevision.isLoading}
-              disabled={requestRevision.isLoading}
-              onPress={() => {
-                const isValid = z.string().max(280).safeParse(message).success;
-                if (!isValid) return;
-                requestRevision.mutate({ zoneId, message });
-              }}
-            />
-            <ActionByStatus
-              status={data.currentStatus}
-              message={message}
-              setMessage={setMessage}
-              visible={
-                !!permission?.has("PublishZone") &&
-                (data.currentStatus === StatusSchema.Enum.Approved ||
-                  data.currentStatus === StatusSchema.Enum.Paused)
-              }
-              isLoading={publishZone.isLoading}
-              disabled={publishZone.isLoading}
-              onPress={() => {
-                const isValid = z.string().max(280).safeParse(message).success;
-                if (!isValid) return;
-                publishZone.mutate({ zoneId, message });
-              }}
-            />
-            <ActionByStatus
-              status={data.currentStatus}
-              message={message}
-              setMessage={setMessage}
-              visible={
-                !!permission?.has("PauseZonePublication") &&
-                data.currentStatus === StatusSchema.Enum.Published
-              }
-              isLoading={pauseZonePublication.isLoading}
-              disabled={pauseZonePublication.isLoading}
-              onPress={() => {
-                const isValid = z.string().max(280).safeParse(message).success;
-                if (!isValid) return;
-                pauseZonePublication.mutate({ zoneId, message });
-              }}
-            />
-          </>
-        )}
-        {globalPermissions?.includes(GlobalPermissions.REVIEW_ZONE) && (
-          <Box
-            borderWidth={2}
-            borderColor="brand.primaryA"
-            borderRadius={16}
-            padding="m"
-            marginVertical="m"
-            borderStyle="dashed"
-          >
-            <Text variant="h3" color="brand.primaryA">
-              Sección para revisores
-            </Text>
-            <ReviewersList reviewers={reviewers} />
-            <SelfAssignReview status={data?.currentStatus} />
-            <ApproveOrRejectZone status={data?.currentStatus} />
-            <UnpublishedZone status={data?.currentStatus} />
-          </Box>
-        )}
-      </ScrollView>
+                <Box
+                  marginBottom="s"
+                  padding="s"
+                  backgroundColor={
+                    zoneStatus(data.currentStatus).backgroundColor
+                  }
+                  borderRadius={16}
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  paddingVertical="m"
+                >
+                  <Text color={zoneStatus(data.currentStatus).color}>
+                    {zoneStatus(data.currentStatus).label}
+                  </Text>
+                </Box>
+                <ActionByStatus
+                  status={data.currentStatus}
+                  message={message}
+                  setMessage={setMessage}
+                  visible={
+                    !!permission?.has("RequestZoneReview") &&
+                    (data.currentStatus === StatusSchema.Enum.Unpublished ||
+                      data.currentStatus === StatusSchema.Enum.Rejected)
+                  }
+                  isLoading={requestRevision.isLoading}
+                  disabled={requestRevision.isLoading}
+                  onPress={() => {
+                    const isValid = z
+                      .string()
+                      .max(280)
+                      .safeParse(message).success;
+                    if (!isValid) return;
+                    requestRevision.mutate({ zoneId, message });
+                  }}
+                />
+                <ActionByStatus
+                  status={data.currentStatus}
+                  message={message}
+                  setMessage={setMessage}
+                  visible={
+                    !!permission?.has("PublishZone") &&
+                    (data.currentStatus === StatusSchema.Enum.Approved ||
+                      data.currentStatus === StatusSchema.Enum.Paused)
+                  }
+                  isLoading={publishZone.isLoading}
+                  disabled={publishZone.isLoading}
+                  onPress={() => {
+                    const isValid = z
+                      .string()
+                      .max(280)
+                      .safeParse(message).success;
+                    if (!isValid) return;
+                    publishZone.mutate({ zoneId, message });
+                  }}
+                />
+                <ActionByStatus
+                  status={data.currentStatus}
+                  message={message}
+                  setMessage={setMessage}
+                  visible={
+                    !!permission?.has("PauseZonePublication") &&
+                    data.currentStatus === StatusSchema.Enum.Published
+                  }
+                  isLoading={pauseZonePublication.isLoading}
+                  disabled={pauseZonePublication.isLoading}
+                  onPress={() => {
+                    const isValid = z
+                      .string()
+                      .max(280)
+                      .safeParse(message).success;
+                    if (!isValid) return;
+                    pauseZonePublication.mutate({ zoneId, message });
+                  }}
+                />
+              </>
+            )}
+            {globalPermissions?.includes(GlobalPermissions.REVIEW_ZONE) && (
+              <Box
+                borderWidth={2}
+                borderColor="brand.primaryA"
+                borderRadius={16}
+                padding="m"
+                marginVertical="m"
+                borderStyle="dashed"
+              >
+                <Text variant="h3" color="brand.primaryA">
+                  Sección para revisores
+                </Text>
+                <ReviewersList reviewers={reviewers} />
+                <SelfAssignReview status={data?.currentStatus} />
+                <ApproveOrRejectZone status={data?.currentStatus} />
+                <UnpublishedZone status={data?.currentStatus} />
+              </Box>
+            )}
+          </KeyboardDismiss>
+        </ScrollView>
+      </KeyboardAvoidingBox>
     </Screen>
   );
 };
