@@ -44,7 +44,6 @@ const usePushNotification = () => {
   const utils = trpc.useContext();
 
   useEffect(() => {
-    console.log(lastNotificationResponse, "lastNotificationResponse");
     if (lastNotificationResponse) {
       console.log(
         lastNotificationResponse.notification.request.content.title,
