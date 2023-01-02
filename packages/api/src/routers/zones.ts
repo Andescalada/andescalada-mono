@@ -177,7 +177,10 @@ export const zonesRouter = t.router({
       where: { id: input.zoneId },
       select: {
         currentStatus: true,
-        statusHistory: true,
+        statusHistory: {
+          include: { message: { select: { originalText: true } } },
+        },
+
         RoleByZone: {
           where: { Role: { name: "Reviewer" } },
           include: {

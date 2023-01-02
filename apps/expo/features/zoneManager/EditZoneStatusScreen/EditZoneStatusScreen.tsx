@@ -51,6 +51,14 @@ const EditZoneStatus: FC<Props> = ({
 
   const utils = trpc.useContext();
 
+  const latestStatus = useMemo(
+    () =>
+      data?.statusHistory.reduce((prev, current) =>
+        prev.createdAt.getTime() > current.createdAt.getTime() ? prev : current,
+      ),
+    [data?.statusHistory],
+  );
+
   const requestRevision = trpc.zoneReview.requestRevision.useMutation({
     onSuccess: () => {
       utils.zones.statusById.invalidate({ zoneId });
@@ -122,6 +130,17 @@ const EditZoneStatus: FC<Props> = ({
                     {zoneStatus(data.currentStatus).label}
                   </Text>
                 </Box>
+                {latestStatus?.message?.originalText && (
+                  <Box>
+                    <Text variant="h4" marginBottom="s">
+                      Mensaje:
+                    </Text>
+
+                    <Text variant="p2R">
+                      {latestStatus?.message?.originalText}
+                    </Text>
+                  </Box>
+                )}
                 <ActionByStatus
                   status={data.currentStatus}
                   message={message}
@@ -146,10 +165,20 @@ const EditZoneStatus: FC<Props> = ({
                   status={data.currentStatus}
                   message={message}
                   setMessage={setMessage}
-                  visible={data.currentStatus === StatusSchema.Enum.InReview}
+                  visible={
+                    !!permission?.has("RequestZoneReview") &&
+                    data.currentStatus === StatusSchema.Enum.InReview
+                  }
                   isLoading={requestRevision.isLoading}
                   disabled={requestRevision.isLoading}
-                  onPress={() => undefined}
+                  onPress={() => {
+                    const isValid = z
+                      .string()
+                      .max(280)
+                      .safeParse(message).success;
+                    if (!isValid) return;
+                    requestRevision.mutate({ zoneId, message });
+                  }}
                 />
                 <ActionByStatus
                   status={data.currentStatus}

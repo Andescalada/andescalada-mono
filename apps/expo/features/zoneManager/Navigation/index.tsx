@@ -26,7 +26,7 @@ const Navigator = () => {
         name={ZoneManagerRoutes.EditZoneStatus}
         component={EditZoneStatusScreen}
         options={{
-          title: "Estatus de publicación",
+          title: "Estado de publicación",
           ...backHeader,
         }}
       />

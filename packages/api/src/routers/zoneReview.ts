@@ -31,7 +31,13 @@ export const zoneReviewRouter = t.router({
           message: input.message,
           zoneId: input.zoneId,
         },
-        { allowedPreviousSteps: [Status.Unpublished, Status.Rejected] },
+        {
+          allowedPreviousSteps: [
+            Status.Unpublished,
+            Status.Rejected,
+            Status.InReview,
+          ],
+        },
       );
 
       const globalReviewers = await getAuth0UsersByRole(
