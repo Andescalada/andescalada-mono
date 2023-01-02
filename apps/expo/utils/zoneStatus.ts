@@ -44,7 +44,8 @@ const zoneStatus = (
         color: "grayscale.white",
         backgroundColor: "semantic.error",
         nextStepTitle: "Solicitar revisión",
-        about: "",
+        about:
+          "Revisa los comentarios del revisor, corrígelos y solicita revisión de nuevo. \n\n Si consideras que las correcciones no son necesarias, puedes solicitar una revisión de nuevo y dejar un mensaje para los revisores.",
       };
     case StatusSchema.Enum.Paused:
       return {

@@ -146,6 +146,15 @@ const EditZoneStatus: FC<Props> = ({
                   status={data.currentStatus}
                   message={message}
                   setMessage={setMessage}
+                  visible={data.currentStatus === StatusSchema.Enum.InReview}
+                  isLoading={requestRevision.isLoading}
+                  disabled={requestRevision.isLoading}
+                  onPress={() => undefined}
+                />
+                <ActionByStatus
+                  status={data.currentStatus}
+                  message={message}
+                  setMessage={setMessage}
                   visible={
                     !!permission?.has("PublishZone") &&
                     (data.currentStatus === StatusSchema.Enum.Approved ||
