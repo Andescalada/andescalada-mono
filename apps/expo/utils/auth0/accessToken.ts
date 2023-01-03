@@ -14,6 +14,15 @@ export interface Tokens {
   refreshToken: string;
 }
 
+interface RefreshTokenResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  id_token: string;
+  scope: string;
+  token_type: string;
+}
+
 const getTokens = async (
   code: string,
   codeVerifier: string,
@@ -58,21 +67,23 @@ const getRefreshData = async (refreshToken: string) => {
 
   const response = await fetch(authUrl, options);
 
-  return response.json();
+  return response.json() as Promise<RefreshTokenResponse>;
 };
 
 export const refreshTokens = async () => {
   const refreshToken = storage.getString(Storage.REFRESH_TOKEN);
+
   if (!refreshToken) return;
 
   const response = await getRefreshData(refreshToken);
-  storage.set(Storage.ACCESS_TOKEN, response.data.access_token);
-  storage.set(Storage.REFRESH_TOKEN, response.data.refresh_token);
 
-  const decodedIdToken = tokenDecode(response.data.id_token);
+  storage.set(Storage.ACCESS_TOKEN, response.access_token);
+  storage.set(Storage.REFRESH_TOKEN, response.refresh_token);
+
+  const decodedIdToken = tokenDecode(response.id_token);
   storage.set(Storage.DECODED_ID_TOKEN, stringify(decodedIdToken));
 
-  return { accessToken: response.data.access_token as string };
+  return { accessToken: response.access_token as string };
 };
 
 export default { getTokens, refreshTokens };

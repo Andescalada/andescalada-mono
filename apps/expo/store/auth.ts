@@ -109,6 +109,7 @@ export const autoLoginAuth0 = createAsyncThunk(
     } catch (err) {
       rejectWithValue(err);
     }
+    clearAllLocalData();
     return { isAuth: false };
   },
 );
@@ -132,9 +133,7 @@ export const logoutAuth0 = createAsyncThunk(
     try {
       await unregisterNotificationTokenInServer();
       await logout();
-      storage.clearAll();
-      const db = offlineDb.open();
-      db.delete();
+      clearAllLocalData();
       return { isAuth: false };
     } catch (error) {
       rejectWithValue(error);
@@ -183,3 +182,10 @@ export const { setLoadingAuth, setIsAuth, setAutoLoginCompleted } =
   authSlice.actions;
 
 export default authSlice;
+
+const clearAllLocalData = () => {
+  storage.clearAll();
+  const db = offlineDb.open();
+  db.delete();
+  db.close();
+};
