@@ -13,11 +13,7 @@ const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
   const form = useFormContext();
 
   const {
-    field: {
-      onChange: onChangeUsername,
-      onBlur: onBlurUsername,
-      value: valueUsername,
-    },
+    field: { onChange: onChangeUsername, value: valueUsername },
     fieldState: { error: errorUsername, isTouched },
   } = useController({ name: "username", defaultValue });
 

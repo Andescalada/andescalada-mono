@@ -1,5 +1,5 @@
 import { StatusSchema } from "@andescalada/db/zod";
-import { Box, Button, Text } from "@andescalada/ui";
+import { Box, Button } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneManagerRouteProps,

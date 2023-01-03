@@ -85,7 +85,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     const subscription = AppState.addEventListener("change", shouldHydrate);
 
     return () => subscription.remove();
-  }, []);
+  }, [shouldHydrate]);
 
   return {
     isDownloading,
