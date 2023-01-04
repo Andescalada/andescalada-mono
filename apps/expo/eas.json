@@ -10,7 +10,7 @@
       "env": {
         "APP_VARIANT": "development"
       },
-      channel: "development"
+      "channel": "development"
     },
     "development-simulator": {
       "extends": "development",
@@ -18,7 +18,7 @@
       "android": {
         "buildType": "apk"
       },
-      channel: "development-simulator",
+      "channel": "development-simulator"
     },
     "preview": {
       "distribution": "internal",
@@ -38,6 +38,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "elevy@andescalada.org",
+        "ascAppId": "5BGR8FBXD5",
+        "appleTeamId": "W7ZDU4P3XP"
+      }
+    }
   }
 }
