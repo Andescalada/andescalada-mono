@@ -100,7 +100,7 @@ enum GradeSystems {
 model RoleByZone {
   id           String     @id @default(uuid())
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now()) @updatedAt
+  updatedAt    DateTime   @updatedAt
   User         User       @relation(fields: [userId], references: [id])
   userId       String
   Zone         Zone       @relation(fields: [zoneId], references: [id])
