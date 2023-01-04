@@ -88,17 +88,20 @@ export const autoLoginAuth0 = createAsyncThunk(
       const decodedToken = tokenDecode<DecodedAccessToken>(token);
       const hasExpired = isTokenExpired(decodedToken.exp);
 
-      if (!hasExpired || !isConnected)
+      if (false && (!hasExpired || !isConnected)) {
+        console.log("not expired and connected");
         return {
           isAuth: true,
           accessToken: token,
           email: decodedIdToken.name,
           globalPermissions: decodedToken.permissions,
         };
+      }
 
       const res = await auth0Tokens.refreshTokens();
 
       if (res?.accessToken) {
+        console.log("refreshed token");
         return {
           isAuth: true,
           accessToken: res.accessToken,
@@ -136,6 +139,7 @@ export const logoutAuth0 = createAsyncThunk(
       clearAllLocalData();
       return { isAuth: false };
     } catch (error) {
+      console.log(error);
       rejectWithValue(error);
       return { isAuth: true };
     }
@@ -187,5 +191,4 @@ const clearAllLocalData = () => {
   storage.clearAll();
   const db = offlineDb.open();
   db.delete();
-  db.close();
 };
