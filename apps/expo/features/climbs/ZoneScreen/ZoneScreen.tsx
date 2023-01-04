@@ -186,35 +186,37 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                       />
                     </Pressable>
                   )}
-                {featureFlags.storyBar && (
-                  <Box flexDirection="row" marginBottom="l">
-                    <StoryButton
-                      title="Acuerdos"
-                      iconName="shake-hands"
-                      onPress={() =>
-                        navigation.navigate(
-                          ClimbsNavigationRoutes.ZoneAgreements,
-                          { zoneId, zoneName },
-                        )
-                      }
-                    />
-                    <StoryButton
-                      title="Mapa"
-                      iconName="pin"
-                      onPress={() =>
-                        rootNavigation.navigate(
-                          RootNavigationRoutes.ZoneLocation,
-                          {
-                            screen: ZoneLocationRoutes.ZoneMap,
-                            params: { zoneId },
-                          },
-                        )
-                      }
-                    />
-                    <StoryButton title="Como llegar" />
-                    <StoryButton title="Flora y fauna" />
-                  </Box>
-                )}
+                <Box flexDirection="row" marginBottom="l">
+                  <StoryButton
+                    title="Acuerdos"
+                    iconName="shake-hands"
+                    onPress={() =>
+                      navigation.navigate(
+                        ClimbsNavigationRoutes.ZoneAgreements,
+                        { zoneId, zoneName },
+                      )
+                    }
+                  />
+                  <StoryButton
+                    title="Mapa"
+                    iconName="pin"
+                    onPress={() =>
+                      rootNavigation.navigate(
+                        RootNavigationRoutes.ZoneLocation,
+                        {
+                          screen: ZoneLocationRoutes.ZoneMap,
+                          params: { zoneId },
+                        },
+                      )
+                    }
+                  />
+                  {featureFlags.storyBar && (
+                    <>
+                      <StoryButton title="Como llegar" />
+                      <StoryButton title="Flora y fauna" />
+                    </>
+                  )}
+                </Box>
                 {!!data && data.hasAccess ? (
                   <ToolBar
                     isDownloaded={isDownloaded}
