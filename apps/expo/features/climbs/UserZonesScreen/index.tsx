@@ -17,7 +17,7 @@ import {
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
-import useIsOnline from "@hooks/useIsOnline";
+import useIsConnected from "@hooks/useIsConnected";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
@@ -45,7 +45,7 @@ const UserZonesScreen = () => {
       ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Home>
     >();
 
-  const isOnline = useIsOnline();
+  const isConnected = useIsConnected();
   const { data, isLoading, refetch, isFetching } = useOwnInfo();
   const refresh = useRefresh(refetch, isFetching);
 
@@ -93,7 +93,7 @@ const UserZonesScreen = () => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
-  if (!isOnline)
+  if (!isConnected)
     return (
       <Screen alignItems="center" justifyContent="center" safeAreaDisabled>
         <Box height={60} width={60} justifyContent="center" alignItems="center">
