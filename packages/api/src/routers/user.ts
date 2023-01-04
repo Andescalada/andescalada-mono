@@ -4,6 +4,7 @@ import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
+import parseZonesToRole from "@andescalada/api/src/utils/parseZonesToRole";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
@@ -76,8 +77,7 @@ export const userRouter = t.router({
       const res = await Promise.all(promiseRes ?? []);
 
       const ordered = res.sort(
-        (prev, current) =>
-          current.Object.createdAt.getTime() - prev.Object.createdAt.getTime(),
+        (a, b) => b.Object.createdAt.getTime() - a.Object.createdAt.getTime(),
       );
       return ordered;
     }),
@@ -89,16 +89,14 @@ export const userRouter = t.router({
         data: { isRead: true },
       });
     }),
-  setManyNotificationsToRead: protectedProcedure.mutation(
-    async ({ ctx, input }) => {
-      const res = await ctx.prisma.notificationReceiver.updateMany({
-        where: { Receiver: { email: ctx.user.email }, isRead: false },
-        data: { isRead: true },
-      });
+  setManyNotificationsToRead: protectedProcedure.mutation(async ({ ctx }) => {
+    const res = await ctx.prisma.notificationReceiver.updateMany({
+      where: { Receiver: { email: ctx.user.email }, isRead: false },
+      data: { isRead: true },
+    });
 
-      return res;
-    },
-  ),
+    return res;
+  }),
   edit: protectedProcedure.input(user.schema).mutation(({ ctx, input }) =>
     ctx.prisma.user.update({
       where: { email: ctx.user.email },
@@ -151,6 +149,28 @@ export const userRouter = t.router({
 
       return permissions;
     }),
+  zonesByRole: protectedProcedure.query(({ ctx }) =>
+    ctx.prisma.user
+      .findUnique({
+        where: { email: ctx.user.email },
+        select: {
+          RoleByZone: {
+            select: {
+              createdAt: true,
+              Zone: {
+                select: {
+                  id: true,
+                  name: true,
+                  infoAccess: true,
+                },
+              },
+              Role: { select: { name: true } },
+            },
+          },
+        },
+      })
+      .then(parseZonesToRole),
+  ),
   assignRoleToUser: protectedProcedure
     .input(user.schema.pick({ username: true }).merge(zone.id).merge(user.role))
     .mutation(async ({ ctx, input }) => {
