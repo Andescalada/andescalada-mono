@@ -1,9 +1,6 @@
 import { createBox } from "@shopify/restyle";
 import { ComponentProps } from "react";
-import {
-  KeyboardAvoidingView as RNKeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { KeyboardAvoidingView as RNKeyboardAvoidingView } from "react-native";
 
 import { Theme } from "../Theme/theme";
 

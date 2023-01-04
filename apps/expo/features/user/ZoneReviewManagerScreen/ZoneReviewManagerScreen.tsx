@@ -28,9 +28,13 @@ const ZoneReviewManagerScreen: FC<Props> = () => {
     <Screen padding="m" safeAreaDisabled>
       <FlatList
         data={zonesToReview.data}
-        contentContainerStyle={{ flex: 1 }}
         ListEmptyComponent={() => (
-          <Box flex={1} justifyContent="center" alignItems="center">
+          <Box
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
+            marginTop="xxxl"
+          >
             {zonesToReview.isLoading ? (
               <ActivityIndicator size="large" />
             ) : (

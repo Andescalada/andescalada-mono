@@ -15,7 +15,7 @@ interface Props {
 const Results = ({ data, isLoading }: Props) => {
   if (isLoading) {
     return (
-      <Box flex={1} marginTop="xxl">
+      <Box flex={1} marginTop="xxxl">
         <ActivityIndicator size="large" />
       </Box>
     );
@@ -24,9 +24,13 @@ const Results = ({ data, isLoading }: Props) => {
     return (
       <FlatList
         data={data}
-        contentContainerStyle={{ height: "100%" }}
         ListEmptyComponent={
-          <Box flex={1} justifyContent="center" alignItems="center">
+          <Box
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
+            marginTop="xxxl"
+          >
             <Text variant="h4">Sin resultados ☹️</Text>
           </Box>
         }

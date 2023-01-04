@@ -137,9 +137,13 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         <FlatList
           data={data}
           refreshControl={refresh}
-          contentContainerStyle={{ flex: 1 }}
           ListEmptyComponent={() => (
-            <Box flex={1} justifyContent="center" alignItems="center">
+            <Box
+              flex={1}
+              justifyContent="center"
+              alignItems="center"
+              marginTop="xxxl"
+            >
               <Text variant="h3">Sin paredes</Text>
             </Box>
           )}

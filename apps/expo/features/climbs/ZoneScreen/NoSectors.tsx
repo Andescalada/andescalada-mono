@@ -26,7 +26,7 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
 
   if (!hasAccess && !isError)
     return (
-      <Box flex={1} justifyContent={"flex-start"}>
+      <Box flex={1} justifyContent={"flex-start"} marginTop="xxxl">
         <Box flex={1 / 3} justifyContent="center">
           <Text variant="h2" marginBottom="l">
             {title}
@@ -41,7 +41,7 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
     );
 
   return (
-    <Box flex={1} justifyContent="center" alignItems="center">
+    <Box flex={1} justifyContent="center" alignItems="center" marginTop="xxxl">
       <Text variant={"h3"}>Sin sectores</Text>
     </Box>
   );

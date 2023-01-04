@@ -147,7 +147,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         <FlatList
           data={data?.sectors}
           refreshControl={refresh}
-          contentContainerStyle={{ flex: 1 }}
           ListHeaderComponent={() => {
             return (
               <Box marginTop="s">
