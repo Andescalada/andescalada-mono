@@ -100,7 +100,9 @@ export const zoneReviewRouter = t.router({
           id: z.id,
           name: z.name,
         }))
-        .sort((z) => z.status.createdAt.getTime());
+        .sort(
+          (a, b) => b.status.createdAt.getTime() - a.status.createdAt.getTime(),
+        );
 
       return res;
     }),
