@@ -188,7 +188,16 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                   )}
                 {featureFlags.storyBar && (
                   <Box flexDirection="row" marginBottom="l">
-                    <StoryButton title="Acuerdos" />
+                    <StoryButton
+                      title="Acuerdos"
+                      iconName="shake-hands"
+                      onPress={() =>
+                        navigation.navigate(
+                          ClimbsNavigationRoutes.ZoneAgreements,
+                          { zoneId, zoneName },
+                        )
+                      }
+                    />
                     <StoryButton
                       title="Mapa"
                       iconName="pin"
@@ -241,9 +250,15 @@ export default ZoneScreen;
 interface StoryButtonProps extends ComponentProps<typeof Pressable> {
   title: string;
   iconName?: IconNames;
+  iconSize?: number;
 }
 
-const StoryButton = ({ title, iconName, ...props }: StoryButtonProps) => (
+const StoryButton = ({
+  title,
+  iconName,
+  iconSize,
+  ...props
+}: StoryButtonProps) => (
   <Pressable
     alignItems="center"
     marginHorizontal="xs"
@@ -261,7 +276,7 @@ const StoryButton = ({ title, iconName, ...props }: StoryButtonProps) => (
       alignItems="center"
       overflow="hidden"
     >
-      <Icon name={iconName} />
+      <Icon name={iconName} size={iconSize} />
     </Box>
     <Text variant="caption" marginTop="xs" textAlign="center" fontSize={10}>
       {title}
