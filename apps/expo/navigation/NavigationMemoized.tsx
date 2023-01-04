@@ -1,7 +1,6 @@
 import { InitialState, NavigationContainer } from "@react-navigation/native";
 import storage from "@utils/mmkv/storage";
 import Constants from "expo-constants";
-import * as SplashScreen from "expo-splash-screen";
 import React, {
   ComponentProps,
   FC,
@@ -47,11 +46,13 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   const onStateChange = useCallback((state: InitialState | undefined) => {
     if (state) storage.set(NAVIGATION_STATE_KEY, JSON.stringify(state));
   }, []);
-  useEffect(() => {
-    if (isNavigationReady) {
-      SplashScreen.hideAsync();
-    }
-  }, [isNavigationReady]);
+
+  // TODO: Delete if not necessary
+  // useEffect(() => {
+  //   if (isNavigationReady) {
+  //     // SplashScreen.hideAsync();
+  //   }
+  // }, [isNavigationReady]);
 
   const navigationRef = useRef(null);
 

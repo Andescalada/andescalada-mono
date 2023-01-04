@@ -56,7 +56,6 @@ export const loginAuth0 = createAsyncThunk(
       storage.set(Storage.REFRESH_TOKEN, refreshToken);
       storage.set(Storage.DECODED_ID_TOKEN, stringify(decodedIdToken));
       dispatch(setLoadingAuth(false));
-      dispatch(setAutoLoginCompleted(true));
 
       registerNotificationTokenInServer();
 
@@ -65,11 +64,12 @@ export const loginAuth0 = createAsyncThunk(
         accessToken,
         email: (decodedIdToken as DecodedIdToken)?.name,
         globalPermissions: decodedAccessToken.permissions,
+        autoLoginCompleted: true,
       };
     } catch (err) {
       rejectWithValue(err);
       dispatch(setAutoLoginCompleted(true));
-      return { isAuth: false };
+      return { isAuth: false, autoLoginCompleted: true };
     }
   },
 );
@@ -84,12 +84,14 @@ export const autoLoginAuth0 = createAsyncThunk(
         storage.getString(Storage.DECODED_ID_TOKEN) || "{}",
       );
 
-      if (!token) return { isAuth: false };
+      if (!token) {
+        throw new Error("No encontramos una sesión activa");
+      }
+
       const decodedToken = tokenDecode<DecodedAccessToken>(token);
       const hasExpired = isTokenExpired(decodedToken.exp);
 
-      if (false && (!hasExpired || !isConnected)) {
-        console.log("not expired and connected");
+      if (!hasExpired || !isConnected) {
         return {
           isAuth: true,
           accessToken: token,
@@ -101,19 +103,22 @@ export const autoLoginAuth0 = createAsyncThunk(
       const res = await auth0Tokens.refreshTokens();
 
       if (res?.accessToken) {
-        console.log("refreshed token");
         return {
           isAuth: true,
           accessToken: res.accessToken,
           email: decodedIdToken.name,
           globalPermissions: decodedToken.permissions,
         };
+      } else {
+        throw new Error(
+          "Duración máxima de las sesión alcanzada, debes volver a iniciar sesión",
+        );
       }
     } catch (err) {
       rejectWithValue(err);
+      clearAllLocalData();
+      return { isAuth: false };
     }
-    clearAllLocalData();
-    return { isAuth: false };
   },
 );
 
@@ -169,6 +174,7 @@ const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.email = action.payload.email;
       state.globalPermissions = action.payload.globalPermissions || [];
+      state.autoLoginCompleted = !!action.payload.autoLoginCompleted;
     });
     builder.addCase(logoutAuth0.fulfilled, (state, action) => {
       state.isAuth = action.payload.isAuth;
@@ -178,6 +184,7 @@ const authSlice = createSlice({
       state.accessToken = action.payload?.accessToken;
       state.email = action.payload.email;
       state.globalPermissions = action.payload.globalPermissions || [];
+      state.autoLoginCompleted = true;
     });
   },
 });
