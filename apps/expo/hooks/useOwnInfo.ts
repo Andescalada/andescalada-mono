@@ -31,6 +31,7 @@ const useOwnInfo = () => {
     onError(err) {
       if (err.data?.code === "UNAUTHORIZED") {
         dispatch(logoutAuth0());
+        return;
       }
       if (noNetwork(err)) {
         utils.user.ownInfo.setData(undefined, parsedStoredOwnInfo);

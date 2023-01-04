@@ -1,4 +1,5 @@
 import { ClimbsNavigationNavigationParamList } from "@features/climbs/Navigation/types";
+import { ErrorNavigationParamList } from "@features/error/Navigation/types";
 import { ImageManagerNavigationParamList } from "@features/imageManager/Navigation/types";
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
@@ -18,6 +19,7 @@ export enum RootNavigationRoutes {
   ImageManager = "ImageManager",
   ZoneLocation = "ZoneLocation",
   ZoneManager = "ZoneManager",
+  Error = "Error",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -30,6 +32,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.ImageManager]: NavigatorScreenParams<ImageManagerNavigationParamList>;
   [RootNavigationRoutes.ZoneLocation]: NavigatorScreenParams<ZoneLocationNavigationParamList>;
   [RootNavigationRoutes.ZoneManager]: NavigatorScreenParams<ZoneManagerNavigationParamList>;
+  [RootNavigationRoutes.Error]: NavigatorScreenParams<ErrorNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =

@@ -1,5 +1,7 @@
 import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
+import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
+import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
 import useOffline from "@features/offline/useOffline";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
@@ -23,10 +25,14 @@ export interface AccessToken {
 const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 
 const Navigator = () => {
-  const { data, isLoading } = useOwnInfo();
+  const { data, isLoading, isError } = useOwnInfo();
 
   useOffline({ fetchAssets: true });
   usePushNotification();
+
+  if (isError) {
+    return <FallbackErrorScreen />;
+  }
 
   if (isLoading)
     return (
@@ -85,6 +91,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.ZoneManager}
             component={ZoneManagerStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.Error}
+            component={ErrorStackNavigation}
           />
         </Stack.Group>
       )}

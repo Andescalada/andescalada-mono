@@ -16,7 +16,6 @@ export interface Tokens {
 
 interface RefreshTokenResponse {
   access_token: string;
-  refresh_token: string;
   expires_in: number;
   id_token: string;
   scope: string;
@@ -78,7 +77,6 @@ export const refreshTokens = async () => {
   const response = await getRefreshData(refreshToken);
 
   storage.set(Storage.ACCESS_TOKEN, response.access_token);
-  storage.set(Storage.REFRESH_TOKEN, response.refresh_token);
 
   const decodedIdToken = tokenDecode(response.id_token);
   storage.set(Storage.DECODED_ID_TOKEN, stringify(decodedIdToken));

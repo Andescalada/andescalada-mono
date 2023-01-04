@@ -115,6 +115,20 @@ export const autoLoginAuth0 = createAsyncThunk(
         );
       }
     } catch (err) {
+      const { isConnected } = await NetInfo.fetch();
+      const token = storage.getString(Storage.ACCESS_TOKEN);
+      if (!isConnected && token) {
+        const decodedToken = tokenDecode<DecodedAccessToken>(token);
+        const decodedIdToken = parse<DecodedIdToken>(
+          storage.getString(Storage.DECODED_ID_TOKEN) || "{}",
+        );
+        return {
+          isAuth: true,
+          accessToken: token,
+          email: decodedIdToken.name,
+          globalPermissions: decodedToken.permissions,
+        };
+      }
       rejectWithValue(err);
       clearAllLocalData();
       return { isAuth: false };
@@ -144,7 +158,6 @@ export const logoutAuth0 = createAsyncThunk(
       clearAllLocalData();
       return { isAuth: false };
     } catch (error) {
-      console.log(error);
       rejectWithValue(error);
       return { isAuth: true };
     }
