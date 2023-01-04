@@ -1,4 +1,6 @@
+import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { InitialState, NavigationContainer } from "@react-navigation/native";
+import { setIsNavigationReady } from "@store/localConfigs";
 import storage from "@utils/mmkv/storage";
 import Constants from "expo-constants";
 import React, {
@@ -18,12 +20,13 @@ interface Props extends ComponentProps<typeof NavigationContainer> {
 }
 
 const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
-  const [isNavigationReady, setIsNavigationReady] = useState(!__DEV__);
+  const dispatch = useAppDispatch();
+  const { navigationReady } = useAppSelector((state) => state.localConfig);
   const [initialState, setInitialState] = useState<InitialState | undefined>();
 
   useEffect(() => {
     if (process.env.AVOID_MEMOIZED_NAVIGATION === "true") {
-      setIsNavigationReady(true);
+      dispatch(setIsNavigationReady(true));
       return;
     }
     const restoreState = async () => {
@@ -34,29 +37,22 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
           : undefined;
         setInitialState(state);
       } finally {
-        setIsNavigationReady(true);
+        dispatch(setIsNavigationReady(true));
       }
     };
 
-    if (!isNavigationReady) {
+    if (!navigationReady) {
       restoreState();
     }
-  }, [isNavigationReady]);
+  }, [dispatch, navigationReady]);
 
   const onStateChange = useCallback((state: InitialState | undefined) => {
     if (state) storage.set(NAVIGATION_STATE_KEY, JSON.stringify(state));
   }, []);
 
-  // TODO: Delete if not necessary
-  // useEffect(() => {
-  //   if (isNavigationReady) {
-  //     // SplashScreen.hideAsync();
-  //   }
-  // }, [isNavigationReady]);
-
   const navigationRef = useRef(null);
 
-  if (!isNavigationReady) {
+  if (!navigationReady) {
     return null;
   }
   return (
