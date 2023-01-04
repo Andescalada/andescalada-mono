@@ -7,6 +7,7 @@ export enum ZoneManagerRoutes {
   SelectZoneLocationScreen = "SelectZoneLocationScreen",
   ZoneOnboarding = "ZoneOnboarding",
   EditZoneStatus = "EditZoneStatus",
+  ZonesByRole = "ZonesByRole",
 }
 
 export type ZoneManagerNavigationParamList = {
@@ -23,6 +24,7 @@ export type ZoneManagerNavigationParamList = {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };
+  [ZoneManagerRoutes.ZonesByRole]: undefined;
 };
 
 export type ZoneManagerRouteProps<T extends ZoneManagerRoutes> = RouteProp<

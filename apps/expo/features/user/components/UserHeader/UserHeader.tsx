@@ -97,10 +97,10 @@ const UserHeader = () => {
             screen: UserNavigationRoutes.OwnUserConfig,
           }),
       },
-      "Crear una zona": {
+      "Administrador de zonas": {
         action: () => {
           rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
-            screen: ZoneManagerRoutes.AddNewZoneScreen,
+            screen: ZoneManagerRoutes.ZonesByRole,
           });
         },
         hide: !featureFlags.addZoneFlow,
