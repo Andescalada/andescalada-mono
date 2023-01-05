@@ -17,7 +17,7 @@ const featureFlags: Record<
   },
   production: {
     storyBar: false,
-    addZoneFlow: false,
+    addZoneFlow: true,
   },
 };
 

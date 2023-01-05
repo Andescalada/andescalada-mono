@@ -1,3 +1,4 @@
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
@@ -21,12 +22,15 @@ import {
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
+import { inferProcedureOutput } from "@trpc/server";
 import { GlobalPermissions } from "@utils/auth0/types";
 import zoneStatus from "@utils/zoneStatus";
 import { FC, useMemo, useState } from "react";
 import { z } from "zod";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.EditZoneStatus>;
+
+type Item = inferProcedureOutput<AppRouter["zones"]["statusById"]>;
 
 const EditZoneStatus: FC<Props> = ({
   route: {
@@ -53,9 +57,12 @@ const EditZoneStatus: FC<Props> = ({
 
   const latestStatus = useMemo(
     () =>
-      data?.statusHistory.reduce((prev, current) =>
-        prev.createdAt.getTime() > current.createdAt.getTime() ? prev : current,
-      ),
+      data?.statusHistory.reduce((prev, current) => {
+        if (!prev) return current;
+        return prev?.createdAt?.getTime() > current.createdAt.getTime()
+          ? prev
+          : current;
+      }, undefined as Item["statusHistory"][0] | undefined),
     [data?.statusHistory],
   );
 
