@@ -39,7 +39,11 @@ const usePermissions = ({ zoneId }: Args) => {
 export default usePermissions;
 
 const getPermissionFromStorage = (email: string, zoneId: string) => {
-  const s = storage.getString(`${Storage.PERMISSIONS}.${email}.${zoneId}`);
-  if (!s) return undefined;
-  return parse<Permissions>(s);
+  try {
+    const s = storage.getString(`${Storage.PERMISSIONS}.${email}.${zoneId}`);
+    if (!s) return undefined;
+    return parse<Permissions>(s);
+  } catch (error) {
+    return undefined;
+  }
 };
