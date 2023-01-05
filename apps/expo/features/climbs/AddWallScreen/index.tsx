@@ -31,7 +31,7 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.walls.add.useMutation({
     onSuccess: (data, params) => {
-      navigation.navigate(ClimbsNavigationRoutes.Wall, {
+      navigation.replace(ClimbsNavigationRoutes.Wall, {
         sectorId: params.sectorId,
         wallId: data.id,
         wallName: data.name,

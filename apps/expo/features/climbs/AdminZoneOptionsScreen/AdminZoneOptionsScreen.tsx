@@ -21,7 +21,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
       </Text>
       <ListItemOption
         onPress={() =>
-          navigation.navigate(ClimbsNavigationRoutes.AddSector, {
+          navigation.replace(ClimbsNavigationRoutes.AddSector, {
             zoneId,
           })
         }
