@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  measure,
-  runOnUI,
-  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -12,54 +9,37 @@ import {
 
 interface Config {
   defaultOpen?: boolean;
+  maxHeight: number;
 }
 
-const useAnimatedHeight = ({ defaultOpen = false }: Config = {}) => {
+const useAnimatedHeight = (
+  { defaultOpen = false, maxHeight }: Config = { maxHeight: 0 },
+) => {
   const open = useSharedValue(defaultOpen);
   const progress = useDerivedValue(() =>
     open.value ? withSpring(1) : withTiming(0),
   );
-  const height = useSharedValue(0);
 
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const aRef = useAnimatedRef();
+  useEffect(() => {
+    open.value = defaultOpen;
+    setIsOpen(defaultOpen);
+  }, [defaultOpen, open]);
 
   const style = useAnimatedStyle(() => {
     return {
-      height: 1 + progress.value * height.value,
-      opacity: progress.value === 0 ? 0 : 1,
+      height: 1 + progress.value * maxHeight,
+      opacity: progress.value * maxHeight === 0 ? 0 : 1,
     };
   });
 
-  useEffect(() => {
-    if (height.value === 0) {
-      runOnUI(() => {
-        "worklet";
-        try {
-          height.value = measure(aRef).height;
-        } catch {
-          height.value = 0;
-        }
-      })();
-    }
-
-    open.value = defaultOpen;
-    setIsOpen(defaultOpen);
-  }, [aRef, defaultOpen, height, open]);
-
   const onOpen = useCallback(() => {
-    if (height.value === 0) {
-      runOnUI(() => {
-        "worklet";
-        height.value = measure(aRef).height;
-      })();
-    }
     open.value = !open.value;
     setIsOpen((prev) => !prev);
-  }, [aRef, height, open]);
+  }, [open]);
 
-  return { aRef, onOpen, style, open, progress, isOpen };
+  return { onOpen, style, open, progress, isOpen };
 };
 
 export default useAnimatedHeight;

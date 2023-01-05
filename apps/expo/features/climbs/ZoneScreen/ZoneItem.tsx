@@ -17,7 +17,8 @@ import useAnimatedHeight from "@hooks/useAnimatedHeight";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import Conditional from "@utils/conditionalVars";
-import { FC, memo } from "react";
+import { FC, memo, useMemo } from "react";
+import { StyleSheet } from "react-native";
 
 type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[]
   ? ElementType
@@ -27,14 +28,19 @@ type AllSectors = inferProcedureOutput<AppRouter["zones"]["allSectors"]>;
 
 type Item = ArrElement<AllSectors["sectors"]>;
 
+const SUBITEM_HEIGHT = 50;
+
 interface Props {
   item: Item;
   defaultOpen?: boolean;
 }
 
 const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
-  const { aRef, onOpen, style } = useAnimatedHeight({
+  const wallCount = useMemo(() => item.walls.length, [item.walls.length]);
+
+  const { onOpen, style } = useAnimatedHeight({
     defaultOpen,
+    maxHeight: SUBITEM_HEIGHT * wallCount || 50,
   });
 
   const navigation =
@@ -44,8 +50,6 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
 
   const route =
     useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Zone>>();
-
-  const wallCount = item.walls.length;
 
   return (
     <A.Box marginVertical={"s"}>
@@ -57,7 +61,7 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
         onPress={onOpen}
         borderRadius={10}
         overflow="hidden"
-        style={{ padding: 0 }}
+        style={s.noPadding}
       >
         <Box justifyContent="center" flex={1} padding="m">
           <Text variant="p1R">{item.name}</Text>
@@ -85,12 +89,13 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
         </Pressable>
       </ListItem>
       <A.Box style={style} overflow="hidden">
-        <Box ref={aRef} collapsable={Conditional.disableForAndroid}>
+        <Box collapsable={Conditional.disableForAndroid}>
           {wallCount > 0 ? (
             item.walls.map((wall, index) => (
               <SubItem
                 key={wall.id}
                 index={index}
+                height={SUBITEM_HEIGHT}
                 maxIndex={wallCount - 1}
                 onPress={() =>
                   navigation.navigate(ClimbsNavigationRoutes.Wall, {
@@ -105,8 +110,8 @@ const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
               </SubItem>
             ))
           ) : (
-            <SubItem height={50}>
-              <Text lineHeight={20}>Sin paredes 😢</Text>
+            <SubItem height={SUBITEM_HEIGHT}>
+              <Text variant="p3R">Sin paredes 😢</Text>
             </SubItem>
           )}
         </Box>
@@ -126,3 +131,7 @@ const DottedBorder = () => (
     borderStyle="dotted"
   />
 );
+
+const s = StyleSheet.create({
+  noPadding: { padding: 0 },
+});
