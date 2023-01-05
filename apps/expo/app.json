@@ -31,7 +31,7 @@
         ],
         "UIBackgroundModes": [
           "location",
-          "background-notification-task",
+          "fetch",
           "remote-notification"
         ],
         "NSLocationWhenInUseUsageDescription": "Necesitamos tu ubicación para mostrar las zonas de escalada más cercanas a ti.",
