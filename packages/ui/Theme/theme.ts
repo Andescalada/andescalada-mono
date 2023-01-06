@@ -50,6 +50,8 @@ const darkBaseTheme = {
     mixedRoutes: pallete.contrast.opaque.pink,
     aidRoutes: pallete.contrast.opaque.purple,
     boulderRoutes: pallete.contrast.opaque.red,
+    textButtonInfo: pallete.semantic.info,
+    textButtonError: pallete.semantic.error,
     ...lisItemVariantsColors,
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,
