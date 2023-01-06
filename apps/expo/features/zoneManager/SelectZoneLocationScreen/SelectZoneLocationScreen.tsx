@@ -48,10 +48,11 @@ const SelectZoneLocationScreen: FC<Props> = ({
   const editZone = trpc.zones.edit.useMutation({
     onSuccess: () => {
       if (skipOnboarding) {
-        rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+        rootNavigation.replace(RootNavigationRoutes.Climbs, {
           screen: ClimbsNavigationRoutes.Zone,
           params: { zoneId, zoneName },
         });
+
         return;
       }
       navigation.navigate(ZoneManagerRoutes.ZoneOnboarding, {
