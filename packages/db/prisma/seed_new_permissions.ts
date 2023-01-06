@@ -17,43 +17,43 @@ const permissionsData: Prisma.PermissionsCreateInput[] = [
 async function main() {
   console.log(`Start seeding ...`);
 
-  // console.log(`Creating permissions`);
-  // for (const p of permissionsData) {
-  //   await prisma.permissions.create({
-  //     data: p,
-  //   });
-  // }
-  // console.log(`All permissions created successfully`);
+  console.log(`Creating permissions`);
+  for (const p of permissionsData) {
+    await prisma.permissions.create({
+      data: p,
+    });
+  }
+  console.log(`All permissions created successfully`);
 
-  // console.log(`Updating admin role`);
+  console.log(`Updating admin role`);
 
-  // await prisma.role.update({
-  //   where: { name: RoleNames.Admin },
-  //   data: {
-  //     permissions: {
-  //       connect: [
-  //         { action: "PauseZonePublication" },
-  //         { action: "PublishZone" },
-  //         { action: "RequestZoneReview" },
-  //       ],
-  //     },
-  //   },
-  // });
+  await prisma.role.update({
+    where: { name: RoleNames.Admin },
+    data: {
+      permissions: {
+        connect: [
+          { action: "PauseZonePublication" },
+          { action: "PublishZone" },
+          { action: "RequestZoneReview" },
+        ],
+      },
+    },
+  });
 
-  // await prisma.role.create({
-  //   data: {
-  //     name: RoleNames.Reviewer,
-  //     permissions: {
-  //       connect: [
-  //         { action: "ApproveZone" },
-  //         { action: "RejectZone" },
-  //         { action: "UnpublishZone" },
-  //       ],
-  //     },
-  //   },
-  // });
+  await prisma.role.create({
+    data: {
+      name: RoleNames.Reviewer,
+      permissions: {
+        connect: [
+          { action: "ApproveZone" },
+          { action: "RejectZone" },
+          { action: "UnpublishZone" },
+        ],
+      },
+    },
+  });
 
-  // console.log(`All roles created successfully`);
+  console.log(`All roles created successfully`);
 
   const usersToUpdate = await prisma.roleByZone.findMany({
     where: { Role: { name: RoleNames.Admin } },
