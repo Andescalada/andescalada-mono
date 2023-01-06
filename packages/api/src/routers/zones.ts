@@ -1,3 +1,4 @@
+import global from "@andescalada/api/schemas/global";
 import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
@@ -43,28 +44,43 @@ export const zonesRouter = t.router({
     }
     return zone;
   }),
-  edit: t.procedure
+  edit: protectedZoneProcedure
     .input(
-      z
-        .object({
-          name: zone.schema.shape.name.optional(),
-          coordinates: zone.schema.shape.coordinates,
-        })
-        .merge(zone.id),
+      z.object({
+        name: zone.schema.shape.name.optional(),
+        coordinates: zone.schema.shape.coordinates,
+      }),
     )
-    .mutation(
-      async ({ ctx, input }) =>
-        await ctx.prisma.zone.update({
-          where: { id: input.zoneId },
-          data: {
-            ...(input.name && { name: input.name }),
-            ...(input.coordinates && {
-              Location: { create: input.coordinates },
-            }),
-            version: { increment: 1 },
-          },
-        }),
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("Update")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Update"),
+        );
+      }
+
+      const zone = await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: {
+          ...(input.name && { name: input.name }),
+          ...(input.coordinates && {
+            Location: {
+              create: input.coordinates,
+            },
+          }),
+          version: { increment: 1 },
+        },
+      });
+      return zone;
+    }),
+  editLocation: protectedProcedure
+    .input(z.object({ id: z.string(), coordinates: global.coordinates }))
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.location.update({
+        where: { id: input.id },
+        data: input.coordinates,
+      }),
     ),
+
   // Asset being downloaded
   allSectors: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const res = await ctx.prisma.zone.findUnique({

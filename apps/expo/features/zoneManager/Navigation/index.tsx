@@ -32,7 +32,7 @@ const Navigator = () => {
         }}
       />
       <Stack.Screen
-        name={ZoneManagerRoutes.SelectZoneLocationScreen}
+        name={ZoneManagerRoutes.SelectZoneLocation}
         component={SelectZoneLocationScreen}
       />
       <Stack.Screen

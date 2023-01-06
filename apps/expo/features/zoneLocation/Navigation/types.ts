@@ -7,7 +7,7 @@ export enum ZoneLocationRoutes {
 }
 
 export type ZoneLocationNavigationParamList = {
-  [ZoneLocationRoutes.ZoneMap]: { zoneId: Zone["id"] };
+  [ZoneLocationRoutes.ZoneMap]: { zoneId: Zone["id"]; zoneName: Zone["name"] };
 };
 
 export type ZoneLocationRouteProps<T extends ZoneLocationRoutes> = RouteProp<

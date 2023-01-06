@@ -6,6 +6,7 @@ import {
   MapTypeToolbar,
   Screen,
   Text,
+  TextButton,
   useMapType,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -14,6 +15,10 @@ import {
   ZoneLocationRoutes,
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
+import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import usePermissions from "@hooks/usePermissions";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useRef } from "react";
 import { Dimensions, Image } from "react-native";
 import { Callout, MapMarker, Marker } from "react-native-maps";
@@ -31,13 +36,17 @@ const r = Image.resolveAssetSource(images.marker.file);
 const ZoneMapScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { zoneId },
+    params: { zoneId, zoneName },
   },
 }) => {
   const markerRef = useRef<MapMarker>(null);
   const { data, isLoading } = trpc.zones.location.useQuery({ zoneId });
 
+  const rootNavigation = useRootNavigation();
+
   const mapTypeProps = useMapType();
+
+  const { permission } = usePermissions({ zoneId });
 
   if (isLoading)
     return (
@@ -51,6 +60,20 @@ const ZoneMapScreen: FC<Props> = ({
       <Screen justifyContent="center" alignItems="center">
         <BackButton.Transparent onPress={navigation.goBack} />
         <Text variant="p3R">No tenemos la ubicación de esta zona aún ☹️</Text>
+        {permission?.has("Create") && (
+          <TextButton
+            variant="info"
+            marginTop="m"
+            onPress={() => {
+              rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+                screen: ZoneManagerRoutes.SelectZoneLocation,
+                params: { zoneId, zoneName, skipOnboarding: true },
+              });
+            }}
+          >
+            Agregar ubicación
+          </TextButton>
+        )}
       </Screen>
     );
 

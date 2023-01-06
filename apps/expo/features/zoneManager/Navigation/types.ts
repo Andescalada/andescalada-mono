@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum ZoneManagerRoutes {
   AddNewZoneScreen = "AddNewZoneScreen",
-  SelectZoneLocationScreen = "SelectZoneLocationScreen",
+  SelectZoneLocation = "SelectZoneLocationScreen",
   ZoneOnboarding = "ZoneOnboarding",
   EditZoneStatus = "EditZoneStatus",
   ZonesByRole = "ZonesByRole",
@@ -12,9 +12,10 @@ export enum ZoneManagerRoutes {
 
 export type ZoneManagerNavigationParamList = {
   [ZoneManagerRoutes.AddNewZoneScreen]: undefined;
-  [ZoneManagerRoutes.SelectZoneLocationScreen]: {
+  [ZoneManagerRoutes.SelectZoneLocation]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
+    skipOnboarding?: boolean;
   };
   [ZoneManagerRoutes.ZoneOnboarding]: {
     zoneId: Zone["id"];

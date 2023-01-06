@@ -31,7 +31,7 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
 
   const addZone = trpc.zones.create.useMutation({
     onSuccess: ({ zoneId }) => {
-      navigation.navigate(ZoneManagerRoutes.SelectZoneLocationScreen, {
+      navigation.navigate(ZoneManagerRoutes.SelectZoneLocation, {
         zoneId,
         zoneName: zoneName.field.value,
       });

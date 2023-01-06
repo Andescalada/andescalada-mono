@@ -204,7 +204,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                         RootNavigationRoutes.ZoneLocation,
                         {
                           screen: ZoneLocationRoutes.ZoneMap,
-                          params: { zoneId },
+                          params: { zoneId, zoneName },
                         },
                       )
                     }

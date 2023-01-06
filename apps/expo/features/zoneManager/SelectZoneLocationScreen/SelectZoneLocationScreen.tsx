@@ -9,16 +9,19 @@ import {
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
+import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
 import useLocation from "@hooks/useLocation";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useEffect, useRef, useState } from "react";
 import { Dimensions, Image } from "react-native";
 import MapRefType, { Details, Region } from "react-native-maps";
 
-type Props = ZoneManagerScreenProps<ZoneManagerRoutes.SelectZoneLocationScreen>;
+type Props = ZoneManagerScreenProps<ZoneManagerRoutes.SelectZoneLocation>;
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -30,7 +33,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SelectZoneLocationScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { zoneId },
+    params: { zoneId, skipOnboarding, zoneName },
   },
 }) => {
   const { location } = useLocation();
@@ -38,13 +41,22 @@ const SelectZoneLocationScreen: FC<Props> = ({
 
   const [region, setRegion] = useState<Region>();
 
+  const rootNavigation = useRootNavigation();
+
   const mapTypeProps = useMapType();
 
   const editZone = trpc.zones.edit.useMutation({
-    onSuccess: ({ name }) => {
+    onSuccess: () => {
+      if (skipOnboarding) {
+        rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+          screen: ClimbsNavigationRoutes.Zone,
+          params: { zoneId, zoneName },
+        });
+        return;
+      }
       navigation.navigate(ZoneManagerRoutes.ZoneOnboarding, {
         zoneId,
-        zoneName: name,
+        zoneName,
       });
     },
   });
