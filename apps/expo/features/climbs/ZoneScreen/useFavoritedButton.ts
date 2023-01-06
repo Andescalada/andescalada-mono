@@ -19,8 +19,9 @@ const useFavoritedButton = (zoneId: Zone["id"]) => {
       utils.zones.allSectors.setData({ zoneId }, context?.previousData);
       Alert.alert("Error", "No se pudo agregar a favoritos");
     },
-    onSettled: () => {
+    onSuccess: () => {
       utils.zones.allSectors.invalidate({ zoneId });
+      utils.user.ownInfo.invalidate();
     },
   });
 
