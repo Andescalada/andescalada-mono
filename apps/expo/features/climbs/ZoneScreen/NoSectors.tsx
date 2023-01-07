@@ -26,7 +26,7 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
 
   if (!hasAccess && !isError)
     return (
-      <Box flex={1} justifyContent={"flex-start"} marginTop="xxxl">
+      <Box flex={1} justifyContent={"flex-start"} marginTop="m">
         <Box flex={1 / 3} justifyContent="center">
           <Text variant="h2" marginBottom="l">
             {title}
@@ -34,9 +34,16 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
           <Text variant="p1R" marginBottom="m">
             No tienes permiso para ver esta zona
           </Text>
-          <Text marginBottom="s">{description}</Text>
+          <Text marginBottom="s" variant="p3R">
+            {description}
+          </Text>
         </Box>
-        <Button variant="info" title="Solicitar acceso" alignSelf="center" />
+        <Button
+          variant="info"
+          title="Solicitar acceso"
+          alignSelf="center"
+          marginTop="l"
+        />
       </Box>
     );
 

@@ -1,6 +1,14 @@
 import zone from "@andescalada/api/schemas/zone";
 import { IconNames } from "@andescalada/icons";
-import { Box, Icon, Ionicons, Pressable, Screen, Text } from "@andescalada/ui";
+import {
+  A,
+  Box,
+  Icon,
+  Ionicons,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -26,10 +34,12 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { useFocusEffect } from "@react-navigation/native";
 import { GlobalPermissions } from "@utils/auth0/types";
 import featureFlags from "@utils/featureFlags";
+import infoAccess from "@utils/infoAccess";
 import zoneStatus from "@utils/zoneStatus";
 import { ComponentProps, FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
+import { FadeIn, FadeOut } from "react-native-reanimated";
 
 const { schema } = zone;
 
@@ -149,75 +159,91 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           data={data?.sectors}
           refreshControl={refresh}
           ListHeaderComponent={() => {
-            return (
-              <Box marginTop="s">
-                {data &&
-                  (permission?.has("Update") ||
-                    globalPermissions.includes(
-                      GlobalPermissions.REVIEW_ZONE,
-                    )) && (
-                    <Pressable
-                      marginBottom="s"
-                      padding="s"
-                      backgroundColor={
-                        zoneStatus(data.currentStatus).backgroundColor
+            if (!!data && data?.hasAccess)
+              return (
+                <A.Box marginTop="s" entering={FadeIn} exiting={FadeOut}>
+                  {data &&
+                    (permission?.has("Update") ||
+                      globalPermissions.includes(
+                        GlobalPermissions.REVIEW_ZONE,
+                      )) && (
+                      <Pressable
+                        marginBottom="s"
+                        padding="s"
+                        backgroundColor={
+                          zoneStatus(data.currentStatus).backgroundColor
+                        }
+                        borderRadius={16}
+                        flexDirection="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        onPress={() =>
+                          rootNavigation.navigate(
+                            RootNavigationRoutes.ZoneManager,
+                            {
+                              screen: ZoneManagerRoutes.EditZoneStatus,
+                              params: { zoneId, zoneName },
+                            },
+                          )
+                        }
+                      >
+                        <Text color={zoneStatus(data.currentStatus).color}>
+                          {zoneStatus(data.currentStatus).label}
+                        </Text>
+                        <Ionicons
+                          name="information"
+                          size={20}
+                          color={zoneStatus(data.currentStatus).color}
+                        />
+                      </Pressable>
+                    )}
+                  <Box flexDirection="row" marginBottom="l">
+                    <StoryButton
+                      title="Acuerdos"
+                      iconName="shake-hands"
+                      onPress={() =>
+                        navigation.navigate(
+                          ClimbsNavigationRoutes.ZoneAgreements,
+                          { zoneId, zoneName },
+                        )
                       }
-                      borderRadius={16}
-                      flexDirection="row"
-                      justifyContent="space-between"
-                      alignItems="center"
+                    />
+                    <StoryButton
+                      title="Mapa"
+                      iconName="pin"
                       onPress={() =>
                         rootNavigation.navigate(
-                          RootNavigationRoutes.ZoneManager,
+                          RootNavigationRoutes.ZoneLocation,
                           {
-                            screen: ZoneManagerRoutes.EditZoneStatus,
+                            screen: ZoneLocationRoutes.ZoneMap,
                             params: { zoneId, zoneName },
                           },
                         )
                       }
-                    >
-                      <Text color={zoneStatus(data.currentStatus).color}>
-                        {zoneStatus(data.currentStatus).label}
-                      </Text>
-                      <Ionicons
-                        name="information"
-                        size={20}
-                        color={zoneStatus(data.currentStatus).color}
-                      />
-                    </Pressable>
-                  )}
-                <Box flexDirection="row" marginBottom="l">
-                  <StoryButton
-                    title="Acuerdos"
-                    iconName="shake-hands"
-                    onPress={() =>
-                      navigation.navigate(
-                        ClimbsNavigationRoutes.ZoneAgreements,
-                        { zoneId, zoneName },
-                      )
-                    }
-                  />
-                  <StoryButton
-                    title="Mapa"
-                    iconName="pin"
-                    onPress={() =>
-                      rootNavigation.navigate(
-                        RootNavigationRoutes.ZoneLocation,
-                        {
-                          screen: ZoneLocationRoutes.ZoneMap,
-                          params: { zoneId, zoneName },
-                        },
-                      )
-                    }
-                  />
-                  {featureFlags.storyBar && (
-                    <>
-                      <StoryButton title="Como llegar" />
-                      <StoryButton title="Flora y fauna" />
-                    </>
-                  )}
-                </Box>
-                {!!data && data.hasAccess ? (
+                    />
+                    {featureFlags.storyBar && (
+                      <>
+                        <StoryButton title="Como llegar" />
+                        <StoryButton title="Flora y fauna" />
+                      </>
+                    )}
+                  </Box>
+
+                  <Box flexDirection="row">
+                    {data?.infoAccess && (
+                      <Box
+                        borderRadius={16}
+                        padding="s"
+                        backgroundColor={
+                          infoAccess(data?.infoAccess).backgroundColor
+                        }
+                      >
+                        <Text color={infoAccess(data?.infoAccess)?.color}>
+                          {infoAccess(data?.infoAccess)?.label}
+                        </Text>
+                      </Box>
+                    )}
+                  </Box>
                   <ToolBar
                     isDownloaded={isDownloaded}
                     isFavorite={isFavorite}
@@ -226,9 +252,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                     openAll={openAll}
                     setOpenAll={setOpenAll}
                   />
-                ) : null}
-              </Box>
-            );
+                </A.Box>
+              );
+            return <Box />;
           }}
           ListEmptyComponent={() => (
             <NoSectors
