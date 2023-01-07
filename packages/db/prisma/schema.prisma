@@ -20,44 +20,46 @@ datasource db {
 }
 
 model User {
-  id                         String                 @id @default(uuid())
-  createdAt                  DateTime               @default(now())
-  updatedAt                  DateTime               @updatedAt
-  name                       String
-  username                   String                 @unique
-  email                      String                 @unique
-  profilePhoto               Image?                 @relation(fields: [profilePhotoId], references: [id])
-  profilePhotoId             String?
-  firstLogin                 Boolean                @default(true)
-  auth0id                    String?
-  authorSector               Sector[]               @relation("AuthorSector")
-  coAuthorSector             Sector[]               @relation("CoAuthorSector")
-  authorWall                 Wall[]                 @relation("AuthorWall")
-  coAuthorWall               Wall[]                 @relation("CoAuthorWall")
-  authorRoute                Route[]                @relation("AuthorRoute")
-  coAuthorRoute              Route[]                @relation("CoAuthorRoute")
-  authorTopo                 Topo[]                 @relation("AuthorTopo")
-  coAuthorTopo               Topo[]                 @relation("CoAuthorTopo")
-  authorRoutePath            RoutePath[]            @relation("AuthorRoutePath")
-  coAuthorRoutePath          RoutePath[]            @relation("CoAuthorRoutePath")
-  authorMultiPitch           MultiPitch[]           @relation("AuthorMultiPitch")
-  coAuthorMultiPitch         MultiPitch[]           @relation("CoAuthorMultiPitch")
-  RoleByZone                 RoleByZone[]
-  preferredSportGrade        GradeSystems           @default(French)
-  preferredTradGrade         GradeSystems           @default(Yosemite)
-  preferredBoulderGrade      GradeSystems           @default(Hueco)
-  AssignedRoles              RoleByZone[]           @relation("AssignedBy")
-  isDeleted                  SoftDelete             @default(NotDeleted)
-  FavoriteZones              Zone[]                 @relation("FavoriteZones")
-  DownloadedZones            Zone[]                 @relation("DownloadedZones")
-  History                    History[]
-  AuthorAgreements           Agreement[]            @relation("AuthorAgreements")
-  coAuthorAgreements         Agreement[]            @relation("CoAuthorAgreements")
-  AuthorZoneListAgreements   ZoneAgreement[]        @relation("AuthorZoneAgreements")
-  coAuthorZoneListAgreements ZoneAgreement[]        @relation("CoAuthorZoneAgreements")
-  ZoneStatusModifications    ZoneStatus[]
-  NotificationSent           NotificationSender[]   @relation("Sender")
-  NotificationReceived       NotificationReceiver[] @relation("Receiver")
+  id                          String                 @id @default(uuid())
+  createdAt                   DateTime               @default(now())
+  updatedAt                   DateTime               @updatedAt
+  name                        String
+  username                    String                 @unique
+  email                       String                 @unique
+  profilePhoto                Image?                 @relation(fields: [profilePhotoId], references: [id])
+  profilePhotoId              String?
+  firstLogin                  Boolean                @default(true)
+  auth0id                     String?
+  authorSector                Sector[]               @relation("AuthorSector")
+  coAuthorSector              Sector[]               @relation("CoAuthorSector")
+  authorWall                  Wall[]                 @relation("AuthorWall")
+  coAuthorWall                Wall[]                 @relation("CoAuthorWall")
+  authorRoute                 Route[]                @relation("AuthorRoute")
+  coAuthorRoute               Route[]                @relation("CoAuthorRoute")
+  authorTopo                  Topo[]                 @relation("AuthorTopo")
+  coAuthorTopo                Topo[]                 @relation("CoAuthorTopo")
+  authorRoutePath             RoutePath[]            @relation("AuthorRoutePath")
+  coAuthorRoutePath           RoutePath[]            @relation("CoAuthorRoutePath")
+  authorMultiPitch            MultiPitch[]           @relation("AuthorMultiPitch")
+  coAuthorMultiPitch          MultiPitch[]           @relation("CoAuthorMultiPitch")
+  RoleByZone                  RoleByZone[]
+  preferredSportGrade         GradeSystems           @default(French)
+  preferredTradGrade          GradeSystems           @default(Yosemite)
+  preferredBoulderGrade       GradeSystems           @default(Hueco)
+  AssignedRoles               RoleByZone[]           @relation("AssignedBy")
+  isDeleted                   SoftDelete             @default(NotDeleted)
+  FavoriteZones               Zone[]                 @relation("FavoriteZones")
+  DownloadedZones             Zone[]                 @relation("DownloadedZones")
+  History                     History[]
+  AuthorAgreements            Agreement[]            @relation("AuthorAgreements")
+  coAuthorAgreements          Agreement[]            @relation("CoAuthorAgreements")
+  AuthorZoneListAgreements    ZoneAgreement[]        @relation("AuthorZoneAgreements")
+  coAuthorZoneListAgreements  ZoneAgreement[]        @relation("CoAuthorZoneAgreements")
+  ZoneStatusModifications     ZoneStatus[]
+  NotificationSent            NotificationSender[]   @relation("Sender")
+  NotificationReceived        NotificationReceiver[] @relation("Receiver")
+  ZoneAccessRequestHistory    ZoneAccessRequest[]
+  ZoneAccessRequestRespondend ZoneAccessRequest[]    @relation("ZoneAccessRequestModifiedBy")
 
   @@index([email])
   @@index([profilePhotoId])
@@ -168,26 +170,50 @@ enum PermissionActions {
   RequestZoneReview
 }
 
+model ZoneAccessRequest {
+  id           String        @id @default(uuid())
+  createdAt    DateTime      @default(now())
+  zone         Zone          @relation(fields: [zoneId], references: [id])
+  zoneId       String
+  user         User          @relation(fields: [userId], references: [id])
+  userId       String
+  status       RequestStatus
+  modifiedBy   User          @relation("ZoneAccessRequestModifiedBy", fields: [modifiedById], references: [id])
+  modifiedById String
+
+  @@index([zoneId])
+  @@index([userId])
+  @@index([modifiedById])
+}
+
+enum RequestStatus {
+  Pending
+  Accepted
+  Rejected
+  Paused
+}
+
 model Zone {
-  id            String          @id @default(uuid())
-  name          String
-  slug          String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  infoAccess    InfoAccess      @default(Public)
-  sectors       Sector[]
-  photos        Image[]
-  RoleByZone    RoleByZone[]
-  isDeleted     SoftDelete      @default(NotDeleted)
-  version       Int             @default(0)
-  FavoritedBy   User[]          @relation("FavoriteZones")
-  DownloadedBy  User[]          @relation("DownloadedZones")
-  History       History[]
-  agreements    ZoneAgreement[]
-  Location      Location?       @relation(fields: [locationId], references: [id])
-  locationId    String?
-  currentStatus Status          @default(Unpublished)
-  statusHistory ZoneStatus[]
+  id                String              @id @default(uuid())
+  name              String
+  slug              String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  infoAccess        InfoAccess          @default(Public)
+  sectors           Sector[]
+  photos            Image[]
+  RoleByZone        RoleByZone[]
+  isDeleted         SoftDelete          @default(NotDeleted)
+  version           Int                 @default(0)
+  FavoritedBy       User[]              @relation("FavoriteZones")
+  DownloadedBy      User[]              @relation("DownloadedZones")
+  History           History[]
+  agreements        ZoneAgreement[]
+  Location          Location?           @relation(fields: [locationId], references: [id])
+  locationId        String?
+  currentStatus     Status              @default(Unpublished)
+  statusHistory     ZoneStatus[]
+  ZoneAccessRequest ZoneAccessRequest[]
 
   @@index([locationId])
 }
