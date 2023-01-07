@@ -107,15 +107,15 @@ const SelectZoneLocationScreen: FC<Props> = ({
         position="absolute"
         bottom="50%"
         left="50%"
-        height={images.marker.height / 2}
-        width={images.marker.width / 2}
+        height={images.marker.height}
+        width={images.marker.width}
       >
         <Image
           source={images.marker.file}
           style={{
-            height: images.marker.height / 2,
-            width: images.marker.width / 2,
-            marginLeft: -images.marker.width / 4,
+            height: images.marker.height,
+            width: images.marker.width,
+            marginLeft: -images.marker.width / 2,
           }}
         />
       </Box>
