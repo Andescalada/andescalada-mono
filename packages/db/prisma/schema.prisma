@@ -172,19 +172,22 @@ enum PermissionActions {
 }
 
 model ZoneAccessRequest {
-  id           String        @id @default(uuid())
-  createdAt    DateTime      @default(now())
-  zone         Zone          @relation(fields: [zoneId], references: [id])
-  zoneId       String
-  user         User          @relation(fields: [userId], references: [id])
-  userId       String
-  status       RequestStatus
-  modifiedBy   User          @relation("ZoneAccessRequestModifiedBy", fields: [modifiedById], references: [id])
-  modifiedById String
+  id            String        @id @default(uuid())
+  createdAt     DateTime      @default(now())
+  zone          Zone          @relation(fields: [zoneId], references: [id])
+  zoneId        String
+  user          User          @relation(fields: [userId], references: [id])
+  userId        String
+  status        RequestStatus
+  modifiedBy    User          @relation("ZoneAccessRequestModifiedBy", fields: [modifiedById], references: [id])
+  modifiedById  String
+  message       TextContent?  @relation(fields: [textContentId], references: [id])
+  textContentId String?
 
   @@index([zoneId])
   @@index([userId])
   @@index([modifiedById])
+  @@index([textContentId])
 }
 
 enum RequestStatus {
@@ -532,18 +535,19 @@ enum SoftDelete {
 }
 
 model TextContent {
-  id                   String          @id @default(uuid())
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
-  originalText         String          @db.LongText
-  originalLang         Language        @relation(fields: [languageId], references: [languageId])
+  id                   String              @id @default(uuid())
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  originalText         String              @db.LongText
+  originalLang         Language            @relation(fields: [languageId], references: [languageId])
   languageId           String
-  isDeleted            SoftDelete      @default(NotDeleted)
+  isDeleted            SoftDelete          @default(NotDeleted)
   Translation          Translation[]
-  AgreementName        Agreement[]     @relation("AgreementName")
-  AgreementDescription Agreement[]     @relation("AgreementDescription")
+  AgreementName        Agreement[]         @relation("AgreementName")
+  AgreementDescription Agreement[]         @relation("AgreementDescription")
   ZoneAgreementComment ZoneAgreement[]
   ZoneStatus           ZoneStatus[]
+  ZoneAccessRequest    ZoneAccessRequest[]
 
   @@index([languageId])
 }
@@ -625,7 +629,7 @@ model NotificationSender {
 
 enum EntityTypeId {
   RequestZoneReview
-  RequestCommunityAccess
+  RequestZoneAccess
   ZoneReviewAssigned
   ApproveZoneReview
   RejectZoneReview
