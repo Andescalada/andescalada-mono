@@ -65,7 +65,7 @@ const ZoneMapScreen: FC<Props> = ({
             variant="info"
             marginTop="m"
             onPress={() => {
-              rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+              rootNavigation.replace(RootNavigationRoutes.ZoneManager, {
                 screen: ZoneManagerRoutes.SelectZoneLocation,
                 params: { zoneId, zoneName, skipOnboarding: true },
               });

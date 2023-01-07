@@ -45,6 +45,8 @@ const SelectZoneLocationScreen: FC<Props> = ({
 
   const mapTypeProps = useMapType();
 
+  const utils = trpc.useContext();
+
   const editZone = trpc.zones.edit.useMutation({
     onSuccess: () => {
       if (skipOnboarding) {
@@ -52,7 +54,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
           screen: ClimbsNavigationRoutes.Zone,
           params: { zoneId, zoneName },
         });
-
+        utils.zones.location.invalidate({ zoneId });
         return;
       }
       navigation.navigate(ZoneManagerRoutes.ZoneOnboarding, {

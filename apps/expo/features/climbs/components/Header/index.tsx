@@ -11,14 +11,14 @@ interface Props extends ComponentProps<typeof Box> {
   title: string;
   editingTitle: boolean;
   headerOptionsProps: ComponentProps<typeof HeaderOptionsButton>;
-  goBackAlternative?: (...args: unknown[]) => void;
+  onGoBack?: (...args: unknown[]) => void;
 }
 
 const Header: FC<Props> = ({
   title,
   editingTitle,
   headerOptionsProps,
-  goBackAlternative,
+  onGoBack,
   ...props
 }) => {
   const navigation =
@@ -36,13 +36,15 @@ const Header: FC<Props> = ({
     >
       <BackButton
         onPress={() => {
+          if (onGoBack) {
+            onGoBack();
+            return;
+          }
           if (navigation.canGoBack()) {
             navigation.goBack();
+            return;
           }
-          if (goBackAlternative) {
-            goBackAlternative();
-          }
-          navigation.navigate(ClimbsNavigationRoutes.UserZones);
+          navigation.navigate(ClimbsNavigationRoutes.Home);
         }}
       />
       <EditableTitle
