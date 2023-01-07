@@ -6,7 +6,12 @@ export const images = {
   },
   marker: {
     file: require("./custom_marker_purple_orange.png"),
-    height: 121 / 2,
-    width: 61 / 2,
+    height: 60,
+    width: 30,
+  },
+  markerLarge: {
+    file: require("./custom_marker_purple_orange_large.png"),
+    height: 121,
+    width: 61,
   },
 };
