@@ -41,6 +41,10 @@ const roleNames: RoleNames = {
   },
   [RoleNamesSchema.Enum.Reader]: {
     color: "brand.secondaryB",
+    label: "Lector",
+  },
+  [RoleNamesSchema.Enum.Member]: {
+    color: "brand.secondaryB",
     label: "Miembro",
   },
   [RoleNamesSchema.Enum.Editor]: { color: "brand.primaryA", label: "Editor" },

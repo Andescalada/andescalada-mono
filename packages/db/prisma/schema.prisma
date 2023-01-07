@@ -140,6 +140,7 @@ enum RoleNames {
   Editor
   Reader
   Reviewer
+  Member
 }
 
 model Permissions {
