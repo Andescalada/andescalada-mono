@@ -23,6 +23,7 @@ module.exports = function (api) {
             "@utils": "./utils",
             "@store": "./store",
             "@hooks": "./hooks",
+            "@templates": "./templates",
           },
         },
       ],
