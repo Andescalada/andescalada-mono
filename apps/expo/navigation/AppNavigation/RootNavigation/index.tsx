@@ -3,6 +3,7 @@ import ClimbsStackNavigation from "@features/climbs/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
+import InfoAccessManager from "@features/InfoAccessManager/Navigation";
 import useOffline from "@features/offline/useOffline";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
@@ -95,6 +96,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.Error}
             component={ErrorStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.InfoAccessManager}
+            component={InfoAccessManager}
           />
         </Stack.Group>
       )}

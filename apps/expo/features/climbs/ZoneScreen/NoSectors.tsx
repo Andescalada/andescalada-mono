@@ -1,5 +1,13 @@
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Button, Screen, Text } from "@andescalada/ui";
+import {
+  ClimbsNavigationRouteProps,
+  ClimbsNavigationRoutes,
+} from "@features/climbs/Navigation/types";
+import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { useRoute } from "@react-navigation/native";
 import infoAccessAssets from "@utils/infoAccessAssets";
 import { useMemo } from "react";
 
@@ -15,6 +23,12 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
     () => !!infoAccess && infoAccessAssets[infoAccess],
     [infoAccess],
   );
+
+  const {
+    params: { zoneId, zoneName },
+  } = useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Zone>>();
+
+  const rootNavigation = useRootNavigation();
 
   if (isLoading)
     return (
@@ -42,6 +56,12 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
           title="Solicitar acceso"
           alignSelf="center"
           marginTop="l"
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+              screen: InfoAccessManagerRoutes.AcceptAgreements,
+              params: { zoneId, zoneName },
+            })
+          }
         />
       </Box>
     );
