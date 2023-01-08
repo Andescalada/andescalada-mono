@@ -3,11 +3,16 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum InfoAccessManagerRoutes {
-  AcceptAgreements = "AcceptAgreements",
+  AcceptAgreements = "InfoAccessManagerAcceptAgreements",
+  AgreementsIntro = "InfoAccessManagerAgreementsIntro",
 }
 
 export type InfoAccessManagerNavigationParamList = {
   [InfoAccessManagerRoutes.AcceptAgreements]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
+  };
+  [InfoAccessManagerRoutes.AgreementsIntro]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };

@@ -235,11 +235,11 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                         borderRadius={16}
                         padding="s"
                         backgroundColor={
-                          infoAccessAssets(data?.infoAccess).backgroundColor
+                          infoAccessAssets[data?.infoAccess].backgroundColor
                         }
                       >
-                        <Text color={infoAccessAssets(data?.infoAccess)?.color}>
-                          {infoAccessAssets(data?.infoAccess)?.label}
+                        <Text color={infoAccessAssets[data?.infoAccess].color}>
+                          {infoAccessAssets[data?.infoAccess]?.label}
                         </Text>
                       </Box>
                     )}

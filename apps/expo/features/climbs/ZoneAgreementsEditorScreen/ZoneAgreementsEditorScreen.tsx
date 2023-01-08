@@ -71,7 +71,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
             flex={1}
             justifyContent="center"
             alignItems="center"
-            marginBottom="xxxl"
+            marginTop="xxxl"
           >
             {agreements.isLoading ? (
               <ActivityIndicator size="large" />

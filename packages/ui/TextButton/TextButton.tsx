@@ -1,6 +1,7 @@
-import { Pressable, Text } from "@andescalada/ui";
 import { ComponentProps, FC, ReactNode, useMemo } from "react";
 
+import Pressable from "../Pressable/Pressable";
+import Text from "../Text/Text";
 import { Colors } from "../Theme/theme";
 
 interface Props extends ComponentProps<typeof Pressable> {

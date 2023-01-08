@@ -15,15 +15,10 @@ interface Props {
   isLoading: boolean;
   isError: boolean;
   hasAccess: boolean;
-  infoAccess: keyof typeof InfoAccessSchema.Enum;
+  infoAccess: keyof typeof InfoAccessSchema.Enum | undefined;
 }
 
 const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
-  const { requestTitle, requestDescription } = useMemo(
-    () => !!infoAccess && infoAccessAssets[infoAccess],
-    [infoAccess],
-  );
-
   const {
     params: { zoneId, zoneName },
   } = useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Zone>>();
@@ -37,7 +32,9 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
       </Screen>
     );
 
-  if (!hasAccess && !isError)
+  if (!hasAccess && !isError && !!infoAccess) {
+    const { requestTitle, requestDescription } = infoAccessAssets[infoAccess];
+
     return (
       <Box flex={1} justifyContent={"flex-start"} marginTop="m">
         <Box flex={1 / 3} justifyContent="center">
@@ -58,13 +55,14 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
           marginTop="l"
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
-              screen: InfoAccessManagerRoutes.AcceptAgreements,
+              screen: InfoAccessManagerRoutes.AgreementsIntro,
               params: { zoneId, zoneName },
             })
           }
         />
       </Box>
     );
+  }
 
   return (
     <Box flex={1} justifyContent="center" alignItems="center" marginTop="xxxl">

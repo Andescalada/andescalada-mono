@@ -1,4 +1,5 @@
 import AcceptAgreementsScreen from "@features/InfoAccessManager/AcceptAgreementsScreen";
+import AgreementsIntroScreen from "@features/InfoAccessManager/AgreementsIntroScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -14,6 +15,10 @@ const Navigator = () => {
       <Stack.Screen
         component={AcceptAgreementsScreen}
         name={InfoAccessManagerRoutes.AcceptAgreements}
+      />
+      <Stack.Screen
+        component={AgreementsIntroScreen}
+        name={InfoAccessManagerRoutes.AgreementsIntro}
       />
     </Stack.Navigator>
   );
