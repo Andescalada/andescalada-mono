@@ -174,9 +174,9 @@ enum PermissionActions {
 model ZoneAccessRequest {
   id            String        @id @default(uuid())
   createdAt     DateTime      @default(now())
-  zone          Zone          @relation(fields: [zoneId], references: [id])
+  Zone          Zone          @relation(fields: [zoneId], references: [id])
   zoneId        String
-  user          User          @relation(fields: [userId], references: [id])
+  User          User          @relation(fields: [userId], references: [id])
   userId        String
   status        RequestStatus
   modifiedBy    User          @relation("ZoneAccessRequestModifiedBy", fields: [modifiedById], references: [id])

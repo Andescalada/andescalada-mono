@@ -1,7 +1,10 @@
+import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import { RequestStatus } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { t } from "../createRouter";
@@ -13,8 +16,8 @@ export const zoneAccessRouter = t.router({
       const accessRequest = await ctx.prisma.zoneAccessRequest.create({
         data: {
           status: RequestStatus.Pending,
-          user: { connect: { email: ctx.user.email } },
-          zone: { connect: { id: input.zoneId } },
+          User: { connect: { email: ctx.user.email } },
+          Zone: { connect: { id: input.zoneId } },
           modifiedBy: { connect: { email: ctx.user.email } },
           message: input.message
             ? {
@@ -26,8 +29,8 @@ export const zoneAccessRouter = t.router({
             : undefined,
         },
         select: {
-          user: { select: { username: true } },
-          zone: { select: { name: true } },
+          User: { select: { username: true } },
+          Zone: { select: { name: true } },
         },
       });
 
@@ -53,12 +56,26 @@ export const zoneAccessRouter = t.router({
         entityId: input.zoneId,
         entityTypeId: id,
         message: template.es({
-          zoneName: accessRequest.zone.name,
-          user: accessRequest.user.username,
+          zoneName: accessRequest.Zone.name,
+          user: accessRequest.User.username,
         }),
         receivers,
       });
 
       return accessRequest;
     }),
+  usersRequestingAccessToZone: protectedZoneProcedure.mutation(
+    ({ ctx, input }) => {
+      if (!ctx.permissions.has("GrantAccess")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "GrantAccess"),
+        );
+      }
+
+      return ctx.prisma.zoneAccessRequest.findMany({
+        where: { zoneId: input.zoneId, status: RequestStatus.Pending },
+        select: { User: { select: { username: true, email: true, id: true } } },
+      });
+    },
+  ),
 });
