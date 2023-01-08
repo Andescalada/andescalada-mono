@@ -34,7 +34,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { useFocusEffect } from "@react-navigation/native";
 import { GlobalPermissions } from "@utils/auth0/types";
 import featureFlags from "@utils/featureFlags";
-import infoAccess from "@utils/infoAccess";
+import infoAccessAssets from "@utils/infoAccessAssets";
 import zoneStatus from "@utils/zoneStatus";
 import { ComponentProps, FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
@@ -235,11 +235,11 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                         borderRadius={16}
                         padding="s"
                         backgroundColor={
-                          infoAccess(data?.infoAccess).backgroundColor
+                          infoAccessAssets(data?.infoAccess).backgroundColor
                         }
                       >
-                        <Text color={infoAccess(data?.infoAccess)?.color}>
-                          {infoAccess(data?.infoAccess)?.label}
+                        <Text color={infoAccessAssets(data?.infoAccess)?.color}>
+                          {infoAccessAssets(data?.infoAccess)?.label}
                         </Text>
                       </Box>
                     )}

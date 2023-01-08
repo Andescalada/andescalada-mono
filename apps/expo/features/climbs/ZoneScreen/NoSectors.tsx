@@ -1,22 +1,21 @@
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Button, Screen, Text } from "@andescalada/ui";
+import infoAccessAssets from "@utils/infoAccessAssets";
+import { useMemo } from "react";
 
 interface Props {
   isLoading: boolean;
   isError: boolean;
   hasAccess: boolean;
-  infoAccess: keyof typeof InfoAccessSchema.Enum | undefined;
+  infoAccess: keyof typeof InfoAccessSchema.Enum;
 }
 
 const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
-  const title =
-    infoAccess === InfoAccessSchema.Enum.Private
-      ? "Acceso Privado"
-      : "Acceso Comunitario";
-  const description =
-    infoAccess === InfoAccessSchema.Enum.Private
-      ? "Solo los y las administradoras de la zona pueden darte acceso."
-      : "Cualquier persona que ya tenga acceso a estos topos puede entregarte acceso.";
+  const { requestTitle, requestDescription } = useMemo(
+    () => !!infoAccess && infoAccessAssets[infoAccess],
+    [infoAccess],
+  );
+
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
@@ -29,13 +28,13 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
       <Box flex={1} justifyContent={"flex-start"} marginTop="m">
         <Box flex={1 / 3} justifyContent="center">
           <Text variant="h2" marginBottom="l">
-            {title}
+            {requestTitle}
           </Text>
           <Text variant="p1R" marginBottom="m">
             No tienes permiso para ver esta zona
           </Text>
           <Text marginBottom="s" variant="p3R">
-            {description}
+            {requestDescription}
           </Text>
         </Box>
         <Button

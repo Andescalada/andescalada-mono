@@ -15,7 +15,7 @@ import {
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
 import useZodForm from "@hooks/useZodForm";
-import infoAccess from "@utils/infoAccess";
+import infoAccessAssets from "@utils/infoAccessAssets";
 import { FC } from "react";
 import { useController } from "react-hook-form";
 
@@ -70,25 +70,27 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
                 {InfoAccessSchema.options.map((access) => (
                   <ButtonGroup.Item
                     key={access}
-                    label={infoAccess(access).label}
+                    label={infoAccessAssets(access).label}
                     value={access}
                     justifyContent="center"
                     alignItems="center"
                     textColor={({ hasSelection, isSelected }) =>
                       hasSelection && !isSelected
                         ? undefined
-                        : infoAccess(access).color
+                        : infoAccessAssets(access).color
                     }
-                    selectedTextColor={infoAccess(access).color}
+                    selectedTextColor={infoAccessAssets(access).color}
                     textProps={{
                       textAlign: "center",
                     }}
                     backgroundColor={({ hasSelection, isSelected }) =>
                       hasSelection && !isSelected
                         ? "grayscale.600"
-                        : infoAccess(access).backgroundColor
+                        : infoAccessAssets(access).backgroundColor
                     }
-                    selectedBackgroundColor={infoAccess(access).backgroundColor}
+                    selectedBackgroundColor={
+                      infoAccessAssets(access).backgroundColor
+                    }
                   />
                 ))}
               </Box>
@@ -99,15 +101,15 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
             {access.field.value && (
               <>
                 <Text variant="h4">
-                  {infoAccess(access.field.value).descriptionTitle}
+                  {infoAccessAssets(access.field.value).descriptionTitle}
                 </Text>
                 <Text variant="p2R">
                   <Text variant="p2B">- Acceso: </Text>
-                  {infoAccess(access.field.value).accessDescription}
+                  {infoAccessAssets(access.field.value).accessDescription}
                 </Text>
                 <Text variant="p2R">
                   <Text variant="p2B">- Edición: </Text>
-                  {infoAccess(access.field.value).editionDescription}
+                  {infoAccessAssets(access.field.value).editionDescription}
                 </Text>
               </>
             )}
