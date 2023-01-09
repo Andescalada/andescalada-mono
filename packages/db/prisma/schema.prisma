@@ -20,46 +20,47 @@ datasource db {
 }
 
 model User {
-  id                          String                 @id @default(uuid())
-  createdAt                   DateTime               @default(now())
-  updatedAt                   DateTime               @updatedAt
+  id                          String                    @id @default(uuid())
+  createdAt                   DateTime                  @default(now())
+  updatedAt                   DateTime                  @updatedAt
   name                        String
-  username                    String                 @unique
-  email                       String                 @unique
-  profilePhoto                Image?                 @relation(fields: [profilePhotoId], references: [id])
+  username                    String                    @unique
+  email                       String                    @unique
+  profilePhoto                Image?                    @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId              String?
-  firstLogin                  Boolean                @default(true)
+  firstLogin                  Boolean                   @default(true)
   auth0id                     String?
-  authorSector                Sector[]               @relation("AuthorSector")
-  coAuthorSector              Sector[]               @relation("CoAuthorSector")
-  authorWall                  Wall[]                 @relation("AuthorWall")
-  coAuthorWall                Wall[]                 @relation("CoAuthorWall")
-  authorRoute                 Route[]                @relation("AuthorRoute")
-  coAuthorRoute               Route[]                @relation("CoAuthorRoute")
-  authorTopo                  Topo[]                 @relation("AuthorTopo")
-  coAuthorTopo                Topo[]                 @relation("CoAuthorTopo")
-  authorRoutePath             RoutePath[]            @relation("AuthorRoutePath")
-  coAuthorRoutePath           RoutePath[]            @relation("CoAuthorRoutePath")
-  authorMultiPitch            MultiPitch[]           @relation("AuthorMultiPitch")
-  coAuthorMultiPitch          MultiPitch[]           @relation("CoAuthorMultiPitch")
+  authorSector                Sector[]                  @relation("AuthorSector")
+  coAuthorSector              Sector[]                  @relation("CoAuthorSector")
+  authorWall                  Wall[]                    @relation("AuthorWall")
+  coAuthorWall                Wall[]                    @relation("CoAuthorWall")
+  authorRoute                 Route[]                   @relation("AuthorRoute")
+  coAuthorRoute               Route[]                   @relation("CoAuthorRoute")
+  authorTopo                  Topo[]                    @relation("AuthorTopo")
+  coAuthorTopo                Topo[]                    @relation("CoAuthorTopo")
+  authorRoutePath             RoutePath[]               @relation("AuthorRoutePath")
+  coAuthorRoutePath           RoutePath[]               @relation("CoAuthorRoutePath")
+  authorMultiPitch            MultiPitch[]              @relation("AuthorMultiPitch")
+  coAuthorMultiPitch          MultiPitch[]              @relation("CoAuthorMultiPitch")
   RoleByZone                  RoleByZone[]
-  preferredSportGrade         GradeSystems           @default(French)
-  preferredTradGrade          GradeSystems           @default(Yosemite)
-  preferredBoulderGrade       GradeSystems           @default(Hueco)
-  AssignedRoles               RoleByZone[]           @relation("AssignedBy")
-  isDeleted                   SoftDelete             @default(NotDeleted)
-  FavoriteZones               Zone[]                 @relation("FavoriteZones")
-  DownloadedZones             Zone[]                 @relation("DownloadedZones")
+  preferredSportGrade         GradeSystems              @default(French)
+  preferredTradGrade          GradeSystems              @default(Yosemite)
+  preferredBoulderGrade       GradeSystems              @default(Hueco)
+  AssignedRoles               RoleByZone[]              @relation("AssignedBy")
+  isDeleted                   SoftDelete                @default(NotDeleted)
+  FavoriteZones               Zone[]                    @relation("FavoriteZones")
+  DownloadedZones             Zone[]                    @relation("DownloadedZones")
   History                     History[]
-  AuthorAgreements            Agreement[]            @relation("AuthorAgreements")
-  coAuthorAgreements          Agreement[]            @relation("CoAuthorAgreements")
-  AuthorZoneListAgreements    ZoneAgreement[]        @relation("AuthorZoneAgreements")
-  coAuthorZoneListAgreements  ZoneAgreement[]        @relation("CoAuthorZoneAgreements")
+  AuthorAgreements            Agreement[]               @relation("AuthorAgreements")
+  coAuthorAgreements          Agreement[]               @relation("CoAuthorAgreements")
+  AuthorZoneListAgreements    ZoneAgreement[]           @relation("AuthorZoneAgreements")
+  coAuthorZoneListAgreements  ZoneAgreement[]           @relation("CoAuthorZoneAgreements")
   ZoneStatusModifications     ZoneStatus[]
-  NotificationSent            NotificationSender[]   @relation("Sender")
-  NotificationReceived        NotificationReceiver[] @relation("Receiver")
+  NotificationSent            NotificationSender[]      @relation("Sender")
+  NotificationReceived        NotificationReceiver[]    @relation("Receiver")
   ZoneAccessRequestHistory    ZoneAccessRequest[]
-  ZoneAccessRequestRespondend ZoneAccessRequest[]    @relation("ZoneAccessRequestModifiedBy")
+  ZoneAccessRequestRespondend ZoneAccessRequest[]       @relation("ZoneAccessRequestModifiedBy")
+  UserZoneAgreementHistory    UserZoneAgreementRecord[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -119,6 +120,21 @@ model RoleByZone {
   @@index([userId, zoneId, roleId])
   @@index([zoneId])
   @@index([roleId])
+}
+
+model UserZoneAgreementRecord {
+  id               String   @id @default(uuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  Zone             Zone     @relation(fields: [zoneId], references: [id])
+  zoneId           String
+  User             User     @relation(fields: [userId], references: [id])
+  userId           String
+  hasAgreed        Boolean
+  agreementsRecord String
+
+  @@index([zoneId])
+  @@index([userId])
 }
 
 model Role {
@@ -198,26 +214,27 @@ enum RequestStatus {
 }
 
 model Zone {
-  id                String              @id @default(uuid())
-  name              String
-  slug              String
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  infoAccess        InfoAccess          @default(Public)
-  sectors           Sector[]
-  photos            Image[]
-  RoleByZone        RoleByZone[]
-  isDeleted         SoftDelete          @default(NotDeleted)
-  version           Int                 @default(0)
-  FavoritedBy       User[]              @relation("FavoriteZones")
-  DownloadedBy      User[]              @relation("DownloadedZones")
-  History           History[]
-  agreements        ZoneAgreement[]
-  Location          Location?           @relation(fields: [locationId], references: [id])
-  locationId        String?
-  currentStatus     Status              @default(Unpublished)
-  statusHistory     ZoneStatus[]
-  ZoneAccessRequest ZoneAccessRequest[]
+  id                       String                    @id @default(uuid())
+  name                     String
+  slug                     String
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  infoAccess               InfoAccess                @default(Public)
+  sectors                  Sector[]
+  photos                   Image[]
+  RoleByZone               RoleByZone[]
+  isDeleted                SoftDelete                @default(NotDeleted)
+  version                  Int                       @default(0)
+  FavoritedBy              User[]                    @relation("FavoriteZones")
+  DownloadedBy             User[]                    @relation("DownloadedZones")
+  History                  History[]
+  agreements               ZoneAgreement[]
+  Location                 Location?                 @relation(fields: [locationId], references: [id])
+  locationId               String?
+  currentStatus            Status                    @default(Unpublished)
+  statusHistory            ZoneStatus[]
+  ZoneAccessRequest        ZoneAccessRequest[]
+  UserZoneAgreementHistory UserZoneAgreementRecord[]
 
   @@index([locationId])
 }

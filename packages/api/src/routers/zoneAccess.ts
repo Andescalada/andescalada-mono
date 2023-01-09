@@ -11,7 +11,13 @@ import { t } from "../createRouter";
 
 export const zoneAccessRouter = t.router({
   requestZoneAccess: protectedProcedure
-    .input(z.object({ zoneId: z.string(), message: z.string().optional() }))
+    .input(
+      z.object({
+        zoneId: z.string(),
+        message: z.string().optional(),
+        agreementRecord: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const accessRequest = await ctx.prisma.zoneAccessRequest.create({
         data: {
@@ -31,6 +37,15 @@ export const zoneAccessRouter = t.router({
         select: {
           User: { select: { username: true } },
           Zone: { select: { name: true } },
+        },
+      });
+
+      await ctx.prisma.userZoneAgreementRecord.create({
+        data: {
+          agreementsRecord: input.agreementRecord,
+          hasAgreed: true,
+          User: { connect: { email: ctx.user.email } },
+          Zone: { connect: { id: input.zoneId } },
         },
       });
 
@@ -78,4 +93,21 @@ export const zoneAccessRouter = t.router({
       });
     },
   ),
+  rejectAgreements: protectedProcedure
+    .input(
+      z.object({
+        zoneId: z.string(),
+        agreementRecord: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.userZoneAgreementRecord.create({
+        data: {
+          agreementsRecord: input.agreementRecord,
+          hasAgreed: false,
+          User: { connect: { email: ctx.user.email } },
+          Zone: { connect: { id: input.zoneId } },
+        },
+      }),
+    ),
 });
