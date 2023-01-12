@@ -255,7 +255,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             <TextInput
               value={value}
               onChangeText={onChange}
-              editable={!unknownName}
+              editable={!unknownName && !rest.id}
               onPressIn={() => {
                 if (!unknownName) setShowNoName(false);
               }}
