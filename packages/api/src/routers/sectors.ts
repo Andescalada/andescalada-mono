@@ -57,7 +57,11 @@ export const sectorsRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const sector = await ctx.prisma.sector.update({
         where: { id: input.sectorId },
-        data: { name: input.name, version: { increment: 1 } },
+        data: {
+          name: input.name,
+          slug: slug(input.name),
+          version: { increment: 1 },
+        },
       });
       await ctx.prisma.zone.update({
         where: { id: sector.zoneId },

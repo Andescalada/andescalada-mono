@@ -61,7 +61,7 @@ export const zonesRouter = t.router({
       const zone = await ctx.prisma.zone.update({
         where: { id: input.zoneId },
         data: {
-          ...(input.name && { name: input.name }),
+          ...(input.name && { name: input.name, slug: slug(input.name) }),
           ...(input.coordinates && {
             Location: {
               create: input.coordinates,

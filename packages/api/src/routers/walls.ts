@@ -127,7 +127,11 @@ export const wallsRouter = t.router({
 
       const wall = await ctx.prisma.wall.update({
         where: { id: input.wallId },
-        data: { name: input.name, version: { increment: 1 } },
+        data: {
+          name: input.name,
+          slug: slug(input.name),
+          version: { increment: 1 },
+        },
       });
       await ctx.prisma.sector.update({
         where: { id: wall.sectorId },

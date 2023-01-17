@@ -180,6 +180,7 @@ export const routesRouter = t.router({
         data: {
           RouteGrade: { update: { ...grade } },
           name,
+          slug: slug(name),
           kind,
           unknownName,
           version: { increment: 1 },
