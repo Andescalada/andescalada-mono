@@ -10,6 +10,7 @@ import {
   ScrollView,
   SemanticButton,
   Text,
+  TextButton,
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -157,6 +158,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     name: "unknownName",
   });
 
+  const nameRouteHandler = () => {
+    onChange("");
+    unknownNameOnChange(false);
+  };
+
   const kindWatch = useWatch({ control, name: "kind" });
 
   const {
@@ -226,11 +232,6 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const theme = useAppTheme();
 
   const onUnknownNamePress = () => {
-    if (unknownName) {
-      onChange("");
-      unknownNameOnChange(false);
-      return;
-    }
     onChange("Ruta sin nombre");
     unknownNameOnChange(true);
   };
@@ -252,20 +253,33 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             {inputLabel}
           </Text>
           <Box flexDirection="row" flex={1}>
-            <TextInput
-              value={value}
-              onChangeText={onChange}
-              editable={!unknownName && !rest.id}
-              onPressIn={() => {
-                if (!unknownName) setShowNoName(false);
-              }}
-              onBlur={() => {
-                setShowNoName(value === undefined || value === "");
-              }}
-              containerProps={{ height: 50, flex: 1, paddingLeft: "s" }}
-              textAlignVertical="center"
-              color={!unknownName ? "textContrast" : "grayscale.600"}
-            />
+            <Box flex={1}>
+              <TextInput
+                value={value}
+                onChangeText={onChange}
+                editable={!unknownName}
+                onPressIn={() => {
+                  if (!unknownName) setShowNoName(false);
+                }}
+                onBlur={() => {
+                  setShowNoName(value === undefined || value === "");
+                }}
+                containerProps={{ height: 50, flex: 1, paddingLeft: "s" }}
+                textAlignVertical="center"
+                color={!unknownName ? "textContrast" : "grayscale.600"}
+              />
+              {unknownName && value && (
+                <A.Box entering={FadeIn} exiting={FadeOut}>
+                  <TextButton
+                    variant="info"
+                    marginTop="s"
+                    onPress={nameRouteHandler}
+                  >
+                    Nombrar ruta
+                  </TextButton>
+                </A.Box>
+              )}
+            </Box>
             {showNoName && !value && (
               <A.Pressable
                 paddingHorizontal={"s"}
