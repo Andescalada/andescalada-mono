@@ -27,6 +27,7 @@ const parseZonesToRole = (item: Item) => {
     [RoleNames.Editor]: [],
     [RoleNames.Reader]: [],
     [RoleNames.Reviewer]: [],
+    [RoleNames.Member]: [],
   };
 
   if (!item) return undefined;
