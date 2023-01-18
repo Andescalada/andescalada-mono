@@ -13,10 +13,12 @@ import {
   ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
+import { toggleWalls } from "@features/climbs/ZoneScreen/ToolBar";
 import useAnimatedHeight from "@hooks/useAnimatedHeight";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import Conditional from "@utils/conditionalVars";
+import { useAtom } from "jotai";
 import { FC, memo, useMemo } from "react";
 import { StyleSheet } from "react-native";
 
@@ -32,10 +34,10 @@ const SUBITEM_HEIGHT = 50;
 
 interface Props {
   item: Item;
-  defaultOpen?: boolean;
 }
 
-const ZoneItem: FC<Props> = ({ item, defaultOpen = false }) => {
+const ZoneItem: FC<Props> = ({ item }) => {
+  const [defaultOpen] = useAtom(toggleWalls);
   const wallCount = useMemo(() => item.walls.length, [item.walls.length]);
 
   const { onOpen, style } = useAnimatedHeight({

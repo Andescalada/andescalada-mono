@@ -17,7 +17,7 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
 import { useFocusEffect } from "@react-navigation/native";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 
@@ -112,8 +112,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
-  const [openAll, setOpenAll] = useState(false);
-
   if (isPaused && !isOfflineMode)
     return (
       <Screen padding="m" justifyContent="center" alignItems="center">
@@ -135,9 +133,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         <FlatList
           data={data?.sectors}
           refreshControl={refresh}
-          ListHeaderComponent={() => (
-            <ZoneHeader openAll={openAll} setOpenAll={setOpenAll} />
-          )}
+          ListHeaderComponent={ZoneHeader}
           ListEmptyComponent={() => (
             <NoSectors
               isLoading={isLoading}
@@ -146,9 +142,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
               infoAccess={data?.infoAccess}
             />
           )}
-          renderItem={({ item }) => (
-            <ZoneItem item={item} defaultOpen={openAll} />
-          )}
+          renderItem={({ item }) => <ZoneItem item={item} />}
         />
       </Box>
     </Screen>

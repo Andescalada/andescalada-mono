@@ -20,15 +20,9 @@ import { GlobalPermissions } from "@utils/auth0/types";
 import featureFlags from "@utils/featureFlags";
 import infoAccessAssets from "@utils/infoAccessAssets";
 import zoneStatus from "@utils/zoneStatus";
-import { Dispatch, SetStateAction } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
-interface Props {
-  setOpenAll: Dispatch<SetStateAction<boolean>>;
-  openAll: boolean;
-}
-
-const ZoneHeader = ({ openAll, setOpenAll }: Props) => {
+const ZoneHeader = () => {
   const {
     params: { zoneId, zoneName },
   } = useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Zone>>();
@@ -139,8 +133,6 @@ const ZoneHeader = ({ openAll, setOpenAll }: Props) => {
             isFavorite={isFavorite}
             onDownloadPress={onDownloadPress}
             onFavoritePress={onFavoritePress}
-            openAll={openAll}
-            setOpenAll={setOpenAll}
           />
         </>
       )}

@@ -1,18 +1,18 @@
 import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
-import { Dispatch, SetStateAction } from "react";
+import { atom, useAtom } from "jotai";
 import {
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
 
+export const toggleWalls = atom(false);
+
 interface ToolBarProps {
   isDownloaded: boolean;
   isFavorite: boolean;
   onDownloadPress: () => void;
   onFavoritePress: () => void;
-  openAll: boolean;
-  setOpenAll: Dispatch<SetStateAction<boolean>>;
 }
 
 const ToolBar = ({
@@ -20,15 +20,15 @@ const ToolBar = ({
   isFavorite,
   onDownloadPress,
   onFavoritePress,
-  openAll,
-  setOpenAll,
 }: ToolBarProps) => {
+  const [openAll, setOpenAll] = useAtom(toggleWalls);
   const open = useDerivedValue(() => (openAll ? 0 : -180));
   const degrees = useDerivedValue(() => withTiming(open.value));
 
   const toggleButtonStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${degrees.value}deg` }],
   }));
+
   return (
     <Box flexDirection="row" justifyContent="flex-end">
       <Pressable onPress={onDownloadPress}>
