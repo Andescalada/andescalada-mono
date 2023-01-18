@@ -1,0 +1,151 @@
+import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
+import {
+  ClimbsNavigationNavigationProps,
+  ClimbsNavigationRouteProps,
+  ClimbsNavigationRoutes,
+} from "@features/climbs/Navigation/types";
+import StoryButton from "@features/climbs/ZoneScreen/StoryButton";
+import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
+import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
+import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
+import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
+import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useGlobalPermissions from "@hooks/useGlobalPermissions";
+import usePermissions from "@hooks/usePermissions";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { GlobalPermissions } from "@utils/auth0/types";
+import featureFlags from "@utils/featureFlags";
+import infoAccessAssets from "@utils/infoAccessAssets";
+import zoneStatus from "@utils/zoneStatus";
+import { Dispatch, SetStateAction } from "react";
+import { FadeIn, FadeOut } from "react-native-reanimated";
+
+interface Props {
+  setOpenAll: Dispatch<SetStateAction<boolean>>;
+  openAll: boolean;
+}
+
+const ZoneHeader = ({ openAll, setOpenAll }: Props) => {
+  const {
+    params: { zoneId, zoneName },
+  } = useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Zone>>();
+
+  const navigation =
+    useNavigation<
+      ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Zone>
+    >();
+
+  const utils = trpc.useContext();
+
+  const rootNavigation = useRootNavigation();
+
+  const { data } = trpc.zones.allSectors.useQuery(
+    { zoneId },
+    {
+      onSuccess() {
+        utils.user.zoneHistory.invalidate();
+      },
+    },
+  );
+
+  const { permission } = usePermissions({ zoneId });
+  const globalPermissions = useGlobalPermissions();
+
+  const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
+  const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
+
+  if (!data) return <Box />;
+
+  return (
+    <A.Box marginTop="s" entering={FadeIn} exiting={FadeOut}>
+      {(permission?.has("Update") ||
+        globalPermissions.includes(GlobalPermissions.REVIEW_ZONE)) && (
+        <Pressable
+          marginBottom="s"
+          padding="s"
+          backgroundColor={zoneStatus(data.currentStatus).backgroundColor}
+          borderRadius={16}
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+              screen: ZoneManagerRoutes.EditZoneStatus,
+              params: { zoneId, zoneName },
+            })
+          }
+        >
+          <Text color={zoneStatus(data.currentStatus).color}>
+            {zoneStatus(data.currentStatus).label}
+          </Text>
+          <Ionicons
+            name="information"
+            size={20}
+            color={zoneStatus(data.currentStatus).color}
+          />
+        </Pressable>
+      )}
+      {data.hasAccess && (
+        <>
+          <Box flexDirection="row" marginBottom="l">
+            <StoryButton
+              title="Acuerdos"
+              iconName="shake-hands"
+              onPress={() =>
+                navigation.navigate(ClimbsNavigationRoutes.ZoneAgreements, {
+                  zoneId,
+                  zoneName,
+                })
+              }
+            />
+            <StoryButton
+              title="Mapa"
+              iconName="pin"
+              onPress={() =>
+                rootNavigation.navigate(RootNavigationRoutes.ZoneLocation, {
+                  screen: ZoneLocationRoutes.ZoneMap,
+                  params: { zoneId, zoneName },
+                })
+              }
+            />
+            {featureFlags.storyBar && (
+              <>
+                <StoryButton title="Como llegar" />
+                <StoryButton title="Flora y fauna" />
+              </>
+            )}
+          </Box>
+
+          <Box flexDirection="row">
+            {data?.infoAccess && (
+              <Box
+                borderRadius={16}
+                padding="s"
+                backgroundColor={
+                  infoAccessAssets[data?.infoAccess].backgroundColor
+                }
+              >
+                <Text color={infoAccessAssets[data?.infoAccess].color}>
+                  {infoAccessAssets[data?.infoAccess]?.label}
+                </Text>
+              </Box>
+            )}
+          </Box>
+          <ToolBar
+            isDownloaded={isDownloaded}
+            isFavorite={isFavorite}
+            onDownloadPress={onDownloadPress}
+            onFavoritePress={onFavoritePress}
+            openAll={openAll}
+            setOpenAll={setOpenAll}
+          />
+        </>
+      )}
+    </A.Box>
+  );
+};
+
+export default ZoneHeader;

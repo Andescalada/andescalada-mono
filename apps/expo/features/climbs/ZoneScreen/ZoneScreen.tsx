@@ -1,14 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
-import { IconNames } from "@andescalada/icons";
-import {
-  A,
-  Box,
-  Icon,
-  Ionicons,
-  Pressable,
-  Screen,
-  Text,
-} from "@andescalada/ui";
+import { Box, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -17,29 +8,18 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import NoSectors from "@features/climbs/ZoneScreen/NoSectors";
-import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
-import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
-import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
+import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
-import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
-import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
-import useRootNavigation from "@hooks/useRootNavigation";
 import useZodForm from "@hooks/useZodForm";
-import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useFocusEffect } from "@react-navigation/native";
-import { GlobalPermissions } from "@utils/auth0/types";
-import featureFlags from "@utils/featureFlags";
-import infoAccessAssets from "@utils/infoAccessAssets";
-import zoneStatus from "@utils/zoneStatus";
-import { ComponentProps, FC, useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
-import { FadeIn, FadeOut } from "react-native-reanimated";
 
 const { schema } = zone;
 
@@ -49,8 +29,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const { zoneId, zoneName } = route.params;
 
   const utils = trpc.useContext();
-
-  const rootNavigation = useRootNavigation();
 
   const { isOfflineMode } = useOfflineMode();
 
@@ -113,6 +91,8 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   } = usePermissions({ zoneId });
   const globalPermissions = useGlobalPermissions();
 
+  console.log(globalPermissions);
+
   const refresh = useRefresh(() => {
     refetch();
     getPermissions();
@@ -131,9 +111,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
       hide: !permission?.has("Update"),
     },
   });
-
-  const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
-  const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
 
   const [openAll, setOpenAll] = useState(false);
 
@@ -158,104 +135,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         <FlatList
           data={data?.sectors}
           refreshControl={refresh}
-          ListHeaderComponent={() => {
-            if (!!data && data?.hasAccess)
-              return (
-                <A.Box marginTop="s" entering={FadeIn} exiting={FadeOut}>
-                  {data &&
-                    (permission?.has("Update") ||
-                      globalPermissions.includes(
-                        GlobalPermissions.REVIEW_ZONE,
-                      )) && (
-                      <Pressable
-                        marginBottom="s"
-                        padding="s"
-                        backgroundColor={
-                          zoneStatus(data.currentStatus).backgroundColor
-                        }
-                        borderRadius={16}
-                        flexDirection="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        onPress={() =>
-                          rootNavigation.navigate(
-                            RootNavigationRoutes.ZoneManager,
-                            {
-                              screen: ZoneManagerRoutes.EditZoneStatus,
-                              params: { zoneId, zoneName },
-                            },
-                          )
-                        }
-                      >
-                        <Text color={zoneStatus(data.currentStatus).color}>
-                          {zoneStatus(data.currentStatus).label}
-                        </Text>
-                        <Ionicons
-                          name="information"
-                          size={20}
-                          color={zoneStatus(data.currentStatus).color}
-                        />
-                      </Pressable>
-                    )}
-                  <Box flexDirection="row" marginBottom="l">
-                    <StoryButton
-                      title="Acuerdos"
-                      iconName="shake-hands"
-                      onPress={() =>
-                        navigation.navigate(
-                          ClimbsNavigationRoutes.ZoneAgreements,
-                          { zoneId, zoneName },
-                        )
-                      }
-                    />
-                    <StoryButton
-                      title="Mapa"
-                      iconName="pin"
-                      onPress={() =>
-                        rootNavigation.navigate(
-                          RootNavigationRoutes.ZoneLocation,
-                          {
-                            screen: ZoneLocationRoutes.ZoneMap,
-                            params: { zoneId, zoneName },
-                          },
-                        )
-                      }
-                    />
-                    {featureFlags.storyBar && (
-                      <>
-                        <StoryButton title="Como llegar" />
-                        <StoryButton title="Flora y fauna" />
-                      </>
-                    )}
-                  </Box>
-
-                  <Box flexDirection="row">
-                    {data?.infoAccess && (
-                      <Box
-                        borderRadius={16}
-                        padding="s"
-                        backgroundColor={
-                          infoAccessAssets[data?.infoAccess].backgroundColor
-                        }
-                      >
-                        <Text color={infoAccessAssets[data?.infoAccess].color}>
-                          {infoAccessAssets[data?.infoAccess]?.label}
-                        </Text>
-                      </Box>
-                    )}
-                  </Box>
-                  <ToolBar
-                    isDownloaded={isDownloaded}
-                    isFavorite={isFavorite}
-                    onDownloadPress={onDownloadPress}
-                    onFavoritePress={onFavoritePress}
-                    openAll={openAll}
-                    setOpenAll={setOpenAll}
-                  />
-                </A.Box>
-              );
-            return <Box />;
-          }}
+          ListHeaderComponent={() => (
+            <ZoneHeader openAll={openAll} setOpenAll={setOpenAll} />
+          )}
           ListEmptyComponent={() => (
             <NoSectors
               isLoading={isLoading}
@@ -274,40 +156,3 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 };
 
 export default ZoneScreen;
-
-interface StoryButtonProps extends ComponentProps<typeof Pressable> {
-  title: string;
-  iconName?: IconNames;
-  iconSize?: number;
-}
-
-const StoryButton = ({
-  title,
-  iconName,
-  iconSize,
-  ...props
-}: StoryButtonProps) => (
-  <Pressable
-    alignItems="center"
-    marginHorizontal="xs"
-    height={60}
-    width={60}
-    {...props}
-  >
-    <Box
-      height={60}
-      width={60}
-      borderRadius={30}
-      borderWidth={2}
-      borderColor="brand.primaryA"
-      justifyContent="center"
-      alignItems="center"
-      overflow="hidden"
-    >
-      <Icon name={iconName} size={iconSize} />
-    </Box>
-    <Text variant="caption" marginTop="xs" textAlign="center" fontSize={10}>
-      {title}
-    </Text>
-  </Pressable>
-);
