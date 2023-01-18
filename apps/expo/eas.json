@@ -4,7 +4,13 @@
     "requireCommit": false
   },
   "build": {
+    "base": {
+      "ios": {
+        "resourceClass": "m1-medium"
+      }
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
       "env": {
@@ -23,6 +29,7 @@
       "channel": "development-simulator"
     },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
       "channel": "preview",
       "env": {
@@ -31,6 +38,7 @@
       }
     },
     "production": {
+      "extends": "base",
       "autoIncrement": true,
       "channel": "production",
       "env": {
