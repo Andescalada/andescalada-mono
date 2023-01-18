@@ -36,6 +36,8 @@ const SearchItem = ({ item }: { item: Data[0] }) => {
           borderRadius={100}
           backgroundColor={backgroundColor}
           paddingHorizontal="s"
+          justifyContent="center"
+          alignItems="center"
         >
           <Text color={color}>{label}</Text>
         </Box>
