@@ -30,7 +30,7 @@ const ToolBar = ({
   }));
 
   return (
-    <Box flexDirection="row" justifyContent="flex-end">
+    <Box flexDirection="row" justifyContent="flex-end" marginTop="s">
       <Pressable onPress={onDownloadPress}>
         <Ionicons
           name={

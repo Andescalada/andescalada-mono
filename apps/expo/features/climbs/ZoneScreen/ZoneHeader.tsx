@@ -9,6 +9,7 @@ import StoryButton from "@features/climbs/ZoneScreen/StoryButton";
 import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
+import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
@@ -20,6 +21,7 @@ import { GlobalPermissions } from "@utils/auth0/types";
 import featureFlags from "@utils/featureFlags";
 import infoAccessAssets from "@utils/infoAccessAssets";
 import zoneStatus from "@utils/zoneStatus";
+import { useMemo } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 const ZoneHeader = () => {
@@ -32,17 +34,17 @@ const ZoneHeader = () => {
       ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Zone>
     >();
 
-  const utils = trpc.useContext();
-
   const rootNavigation = useRootNavigation();
 
-  const { data } = trpc.zones.allSectors.useQuery(
-    { zoneId },
-    {
-      onSuccess() {
-        utils.user.zoneHistory.invalidate();
-      },
-    },
+  const { data } = trpc.zones.allSectors.useQuery({ zoneId });
+
+  const members = useMemo(
+    () =>
+      data?.RoleByZone.filter((role) => role.Role.name !== "Reviewer").slice(
+        0,
+        2,
+      ) || [],
+    [data?.RoleByZone],
   );
 
   const { permission } = usePermissions({ zoneId });
@@ -113,8 +115,8 @@ const ZoneHeader = () => {
             )}
           </Box>
 
-          <Box flexDirection="row">
-            {data?.infoAccess && (
+          {data?.infoAccess !== "Public" && (
+            <Box flexDirection="row">
               <Box
                 borderRadius={16}
                 padding="s"
@@ -126,8 +128,30 @@ const ZoneHeader = () => {
                   {infoAccessAssets[data?.infoAccess]?.label}
                 </Text>
               </Box>
-            )}
-          </Box>
+
+              <Box flexDirection="row" marginLeft="s">
+                {members.map((role) => (
+                  <UserProfileImage
+                    key={role.User.id}
+                    publicId={role.User.profilePhoto?.publicId || undefined}
+                    style={{ height: 32, width: 32, borderRadius: 16 }}
+                    zIndex={10}
+                  />
+                ))}
+                <Pressable
+                  height={32}
+                  width={32}
+                  style={{ marginLeft: -5 }}
+                  borderRadius={16}
+                  justifyContent="center"
+                  alignItems="center"
+                  backgroundColor="transparentButtonBackground"
+                >
+                  <Ionicons name="ellipsis-horizontal-sharp" size={20} />
+                </Pressable>
+              </Box>
+            </Box>
+          )}
           <ToolBar
             isDownloaded={isDownloaded}
             isFavorite={isFavorite}

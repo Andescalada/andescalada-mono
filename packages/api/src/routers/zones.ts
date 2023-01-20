@@ -112,7 +112,15 @@ export const zonesRouter = t.router({
         DownloadedBy: { where: { email: ctx.user.email } },
         FavoritedBy: { where: { email: ctx.user.email } },
         RoleByZone: {
-          select: { User: true, Role: true },
+          select: {
+            User: {
+              select: {
+                id: true,
+                profilePhoto: { select: { publicId: true } },
+              },
+            },
+            Role: true,
+          },
         },
       },
     });
