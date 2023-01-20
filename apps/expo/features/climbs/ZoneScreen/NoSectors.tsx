@@ -1,5 +1,6 @@
 import { InfoAccessSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Button, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
@@ -22,6 +23,16 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
   const {
     params: { zoneId, zoneName },
   } = useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Zone>>();
+
+  const utils = trpc.useContext();
+
+  const { ZoneAccessRequest } =
+    utils.zones.allSectors.getData({ zoneId }) || {};
+
+  const requestStatus = useMemo(() => {
+    if (ZoneAccessRequest?.length === 0) return "None";
+    return ZoneAccessRequest?.[0].status;
+  }, [ZoneAccessRequest]);
 
   const rootNavigation = useRootNavigation();
 
@@ -49,10 +60,11 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
           </Text>
         </Box>
         <Button
-          variant="info"
-          title="Solicitar acceso"
+          variant={requestStatus === "Pending" ? "transparent" : "info"}
+          title={requestStatus === "Pending" ? "Pendiente" : "Solicitar acceso"}
           alignSelf="center"
           marginTop="l"
+          disabled={requestStatus === "Pending"}
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
               screen: InfoAccessManagerRoutes.AgreementsIntro,

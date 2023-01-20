@@ -88,6 +88,15 @@ export const zonesRouter = t.router({
       select: {
         name: true,
         isDeleted: true,
+        ZoneAccessRequest: {
+          where: {
+            User: { email: ctx.user.email },
+            Zone: { id: input.zoneId },
+          },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { status: true },
+        },
         sectors: {
           where: { isDeleted: SoftDelete.NotDeleted },
           include: {
@@ -102,17 +111,16 @@ export const zonesRouter = t.router({
         currentStatus: true,
         DownloadedBy: { where: { email: ctx.user.email } },
         FavoritedBy: { where: { email: ctx.user.email } },
+        RoleByZone: {
+          select: { User: true, Role: true },
+        },
       },
     });
     if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
       throw new TRPCError(error.sectorNotFound(input.zoneId));
     }
 
-    if (
-      res.infoAccess !== "Public" &&
-      !ctx.permissions.has("Read") &&
-      !ctx.user.permissions.includes("review:zone")
-    ) {
+    if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
       return {
         ...res,
         sectors: undefined,

@@ -70,18 +70,17 @@ const AcceptAgreementsScreen: FC<Props> = ({
             {zoneName}
           </Text>
         </Box>
-        <Box>
-          <Text variant="h2" textAlign="center">
+        <Box marginTop="xxxl">
+          <Text variant="h2" textAlign="center" marginBottom="l">
             No hay acuerdos definidos para esta zona
           </Text>
-          <Text variant="p2R" textAlign="center">
+          <Text variant="p2R" textAlign="center" marginBottom="l">
             De todas formas recuerda ser consiente y amable con la comunidad
             local y la biodiversidad.
           </Text>
           <Button
             variant="success"
             title="Solicitar acceso"
-            flex={1}
             marginLeft="s"
             onPress={handleRequestAccess}
           />

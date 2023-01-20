@@ -10,7 +10,6 @@ import {
 import NoSectors from "@features/climbs/ZoneScreen/NoSectors";
 import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
-import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
@@ -89,9 +88,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     getPermissions,
     isLoading: isLoadingPermissions,
   } = usePermissions({ zoneId });
-  const globalPermissions = useGlobalPermissions();
-
-  console.log(globalPermissions);
 
   const refresh = useRefresh(() => {
     refetch();
