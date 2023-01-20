@@ -1,4 +1,4 @@
-import { Box, Screen, Text } from "@andescalada/ui";
+import { Screen, Text } from "@andescalada/ui";
 import AccessRequestList from "@features/InfoAccessManager/MembersScreen/AccessRequestList";
 import AdminsList from "@features/InfoAccessManager/MembersScreen/AdminsList";
 import MembersList from "@features/InfoAccessManager/MembersScreen/MembersList";
