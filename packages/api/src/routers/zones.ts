@@ -1,11 +1,12 @@
 import global from "@andescalada/api/schemas/global";
 import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
+import parseUsersToRole from "@andescalada/api/src/utils/parseUsersToRole";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { SoftDelete, Status } from "@prisma/client";
+import { RoleNames, SoftDelete, Status } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -235,4 +236,38 @@ export const zonesRouter = t.router({
     }
     return zone;
   }),
+  usersByRole: protectedZoneProcedure
+    .input(z.object({ roles: z.array(z.nativeEnum(RoleNames)) }))
+    .query(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("Read")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Read"),
+        );
+      }
+
+      const zone = await ctx.prisma.zone.findUnique({
+        where: { id: input.zoneId },
+        select: {
+          RoleByZone: {
+            where: { Role: { OR: input.roles.map((r) => ({ name: r })) } },
+            orderBy: { updatedAt: "desc" },
+            include: {
+              Role: true,
+              User: {
+                select: {
+                  name: true,
+                  id: true,
+                  username: true,
+                  profilePhoto: { select: { publicId: true } },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const parsedData = parseUsersToRole(zone?.RoleByZone);
+
+      return parsedData;
+    }),
 });

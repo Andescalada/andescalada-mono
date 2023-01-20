@@ -1,3 +1,4 @@
+import { rolesObject } from "@andescalada/api/src/utils/rolesObject";
 import { InfoAccess, RoleNames } from "@prisma/client";
 
 type Zone = {
@@ -16,19 +17,8 @@ type Item = {
   }[];
 } | null;
 
-type Z = {
-  [key in RoleNames]: Zone[];
-};
-
 const parseZonesToRole = (item: Item) => {
-  const initialZone: Z = {
-    [RoleNames.Admin]: [],
-    [RoleNames.Collaborator]: [],
-    [RoleNames.Editor]: [],
-    [RoleNames.Reader]: [],
-    [RoleNames.Reviewer]: [],
-    [RoleNames.Member]: [],
-  };
+  const initialRolesList = rolesObject<Zone>();
 
   if (!item) return undefined;
 
@@ -39,7 +29,7 @@ const parseZonesToRole = (item: Item) => {
   const roles = sortedRoles.reduce((prev, current) => {
     prev[current.Role.name] = [...prev[current.Role.name], current.Zone];
     return prev;
-  }, initialZone);
+  }, initialRolesList);
 
   const res = Object.entries(roles)
     .filter((r) => r[1].length > 0)

@@ -17,38 +17,11 @@ import {
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import roleNameAssets from "@utils/roleNameAssets";
 import { FC } from "react";
 import { FlatList } from "react-native";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.ZonesByRole>;
-
-type RoleNames = {
-  [key in typeof RoleNamesSchema._type]: { color: Colors; label: string };
-};
-
-const roleNames: RoleNames = {
-  [RoleNamesSchema.Enum.Admin]: {
-    color: "brand.primaryA",
-    label: "Administrador",
-  },
-  [RoleNamesSchema.Enum.Reviewer]: {
-    color: "brand.primaryB",
-    label: "Revisor",
-  },
-  [RoleNamesSchema.Enum.Collaborator]: {
-    color: "brand.secondaryA",
-    label: "Colaborador",
-  },
-  [RoleNamesSchema.Enum.Reader]: {
-    color: "brand.secondaryB",
-    label: "Lector",
-  },
-  [RoleNamesSchema.Enum.Member]: {
-    color: "brand.secondaryB",
-    label: "Miembro",
-  },
-  [RoleNamesSchema.Enum.Editor]: { color: "brand.primaryA", label: "Editor" },
-};
 
 const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
   const { data, isLoading, isFetching, refetch } =
@@ -100,7 +73,7 @@ const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
         renderItem={({ item }) => (
           <Box marginBottom="m">
             <Text variant="h4" marginBottom="s">
-              {roleNames[item.role].label}
+              {roleNameAssets[item.role].label}
             </Text>
             <FlatList
               horizontal
@@ -112,7 +85,7 @@ const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
                   width={100}
                   padding="s"
                   justifyContent="center"
-                  borderColor={roleNames[item.role].color}
+                  borderColor={roleNameAssets[item.role].color}
                   borderWidth={3}
                   borderRadius={16}
                   marginRight="xs"
