@@ -159,7 +159,7 @@ const UserZonesScreen = () => {
           }}
         />
       </Box>
-      <ScrollView refreshControl={refresh}>
+      <ScrollView refreshControl={refresh} showsVerticalScrollIndicator={false}>
         <Box>
           <Box flexDirection="row" alignItems="center">
             <Text variant="h2" marginRight="s">

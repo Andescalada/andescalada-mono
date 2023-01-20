@@ -53,6 +53,7 @@ const ZonesListScreen = ({ navigation }: Props) => {
       </Box>
       <FlatList
         data={data}
+        showsVerticalScrollIndicator={false}
         refreshControl={refresh}
         renderItem={({ item }) => (
           <ListItem

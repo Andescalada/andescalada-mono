@@ -24,6 +24,7 @@ const Results = ({ data, isLoading }: Props) => {
     return (
       <FlatList
         data={data}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <Box
             flex={1}
