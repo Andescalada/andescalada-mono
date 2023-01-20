@@ -78,6 +78,14 @@ const pushNotification = {
         `La publicación de la zona ${zoneName} ha sido pausada por ${user}, revisa las razones y vuelve a publicar la zona`,
     },
   },
+  [EntityTypeId.ApproveZoneAccess]: {
+    id: EntityTypeId.ApproveZoneAccess,
+    entity: Entity.Zone,
+    template: {
+      es: ({ zoneName, user }: { zoneName: string; user: string }) =>
+        `${user} te ha dado acceso a la zona ${zoneName}, ahora puedes ver la guía`,
+    },
+  },
 } satisfies NotificationEntityTypes;
 
 export default pushNotification;

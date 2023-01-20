@@ -653,6 +653,7 @@ enum EntityTypeId {
   PublishZoneByAdmin
   PausePublicationByAdmin
   UnpublishZoneByReviewer
+  ApproveZoneAccess
 }
 
 enum Entity {
