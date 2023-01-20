@@ -1,6 +1,6 @@
 import { User } from "@andescalada/api/src/utils/parseUsersToRole";
 import { Box, Pressable, Text } from "@andescalada/ui";
-import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
+import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 
 interface Props {
   item: User;

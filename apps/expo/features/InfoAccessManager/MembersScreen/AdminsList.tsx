@@ -1,8 +1,6 @@
-import { User } from "@andescalada/api/src/utils/parseUsersToRole";
-import { ActivityIndicator, Box, Pressable, Text } from "@andescalada/ui";
+import { ActivityIndicator, Box, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
-import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
 import roleNameAssets from "@utils/roleNameAssets";

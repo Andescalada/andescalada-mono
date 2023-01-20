@@ -7,7 +7,6 @@ import {
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
@@ -17,6 +16,7 @@ import { useAppDispatch } from "@hooks/redux";
 import useRefresh from "@hooks/useRefresh";
 import { useFocusEffect } from "@react-navigation/native";
 import { setIsNewNotification } from "@store/localConfigs";
+import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { FC, useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 

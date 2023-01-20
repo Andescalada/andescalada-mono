@@ -10,9 +10,9 @@ import {
 } from "@andescalada/ui";
 import { pallete } from "@andescalada/ui/Theme/pallete";
 import { trpc } from "@andescalada/utils/trpc";
-import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import BottomSheet from "@gorhom/bottom-sheet";
 import useDebounce from "@hooks/useDebounce";
+import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
 import {
   forwardRef,
