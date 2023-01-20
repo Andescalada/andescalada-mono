@@ -1,8 +1,6 @@
-import { RoleNamesSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
-  Colors,
   Ionicons,
   Pressable,
   Screen,
