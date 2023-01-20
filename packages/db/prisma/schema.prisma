@@ -188,22 +188,22 @@ enum PermissionActions {
 }
 
 model ZoneAccessRequest {
-  id            String        @id @default(uuid())
-  createdAt     DateTime      @default(now())
-  Zone          Zone          @relation(fields: [zoneId], references: [id])
-  zoneId        String
-  User          User          @relation(fields: [userId], references: [id])
-  userId        String
-  status        RequestStatus
-  modifiedBy    User          @relation("ZoneAccessRequestModifiedBy", fields: [modifiedById], references: [id])
-  modifiedById  String
-  message       TextContent?  @relation(fields: [textContentId], references: [id])
-  textContentId String?
+  id           String        @id @default(uuid())
+  createdAt    DateTime      @default(now())
+  Zone         Zone          @relation(fields: [zoneId], references: [id])
+  zoneId       String
+  User         User          @relation(fields: [userId], references: [id])
+  userId       String
+  status       RequestStatus
+  modifiedBy   User          @relation("ZoneAccessRequestModifiedBy", fields: [modifiedById], references: [id])
+  modifiedById String
+  message      TextContent?  @relation(fields: [messageId], references: [id])
+  messageId    String?
 
   @@index([zoneId])
   @@index([userId])
   @@index([modifiedById])
-  @@index([textContentId])
+  @@index([messageId])
 }
 
 enum RequestStatus {
