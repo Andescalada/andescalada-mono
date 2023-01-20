@@ -5,6 +5,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum InfoAccessManagerRoutes {
   AcceptAgreements = "InfoAccessManagerAcceptAgreements",
   AgreementsIntro = "InfoAccessManagerAgreementsIntro",
+  MembersScreen = "InfoAccessManagerMembersScreen",
 }
 
 export type InfoAccessManagerNavigationParamList = {
@@ -13,6 +14,10 @@ export type InfoAccessManagerNavigationParamList = {
     zoneName: Zone["name"];
   };
   [InfoAccessManagerRoutes.AgreementsIntro]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
+  };
+  [InfoAccessManagerRoutes.MembersScreen]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };

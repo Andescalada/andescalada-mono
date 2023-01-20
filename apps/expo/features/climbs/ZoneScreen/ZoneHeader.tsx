@@ -9,6 +9,7 @@ import StoryButton from "@features/climbs/ZoneScreen/StoryButton";
 import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
+import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
 import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
@@ -116,7 +117,18 @@ const ZoneHeader = () => {
           </Box>
 
           {data?.infoAccess !== "Public" && (
-            <Box flexDirection="row">
+            <Pressable
+              flexDirection="row"
+              onPress={() =>
+                rootNavigation.navigate(
+                  RootNavigationRoutes.InfoAccessManager,
+                  {
+                    screen: InfoAccessManagerRoutes.MembersScreen,
+                    params: { zoneId, zoneName },
+                  },
+                )
+              }
+            >
               <Box
                 borderRadius={16}
                 padding="s"
@@ -150,7 +162,7 @@ const ZoneHeader = () => {
                   <Ionicons name="ellipsis-horizontal-sharp" size={20} />
                 </Pressable>
               </Box>
-            </Box>
+            </Pressable>
           )}
           <ToolBar
             isDownloaded={isDownloaded}
