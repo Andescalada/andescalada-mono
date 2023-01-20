@@ -1,4 +1,5 @@
 import { Box, Screen, Text } from "@andescalada/ui";
+import AccessRequestList from "@features/InfoAccessManager/MembersScreen/AccessRequestList";
 import AdminsList from "@features/InfoAccessManager/MembersScreen/AdminsList";
 import MembersList from "@features/InfoAccessManager/MembersScreen/MembersList";
 import {
@@ -37,12 +38,9 @@ const MembersScreen: FC<Props> = ({
           {() => <AdminsList zoneId={zoneId} />}
         </Tab.Screen>
         {permission?.has("GrantAccess") && (
-          <Tab.Screen
-            name="Solicitudes"
-            component={() => (
-              <Box flex={1} backgroundColor="brand.secondaryB" />
-            )}
-          />
+          <Tab.Screen name="Solicitudes">
+            {() => <AccessRequestList zoneId={zoneId} />}
+          </Tab.Screen>
         )}
       </Tab.Navigator>
     </Screen>

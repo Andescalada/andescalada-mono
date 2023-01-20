@@ -79,7 +79,7 @@ export const zoneAccessRouter = t.router({
 
       return accessRequest;
     }),
-  usersRequestingAccessToZone: protectedZoneProcedure.mutation(
+  usersRequestingAccessToZone: protectedZoneProcedure.query(
     ({ ctx, input }) => {
       if (!ctx.permissions.has("GrantAccess")) {
         throw new TRPCError(
@@ -89,7 +89,17 @@ export const zoneAccessRouter = t.router({
 
       return ctx.prisma.zoneAccessRequest.findMany({
         where: { zoneId: input.zoneId, status: RequestStatus.Pending },
-        select: { User: { select: { username: true, email: true, id: true } } },
+        select: {
+          User: {
+            select: {
+              username: true,
+              email: true,
+              name: true,
+              id: true,
+              profilePhoto: { select: { publicId: true } },
+            },
+          },
+        },
       });
     },
   ),
