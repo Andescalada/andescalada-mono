@@ -70,26 +70,26 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
                 {InfoAccessSchema.options.map((access) => (
                   <ButtonGroup.Item
                     key={access}
-                    label={infoAccessAssets(access).label}
+                    label={infoAccessAssets[access].label}
                     value={access}
                     justifyContent="center"
                     alignItems="center"
                     textColor={({ hasSelection, isSelected }) =>
                       hasSelection && !isSelected
                         ? undefined
-                        : infoAccessAssets(access).color
+                        : infoAccessAssets[access].color
                     }
-                    selectedTextColor={infoAccessAssets(access).color}
+                    selectedTextColor={infoAccessAssets[access].color}
                     textProps={{
                       textAlign: "center",
                     }}
                     backgroundColor={({ hasSelection, isSelected }) =>
                       hasSelection && !isSelected
                         ? "grayscale.600"
-                        : infoAccessAssets(access).backgroundColor
+                        : infoAccessAssets[access].backgroundColor
                     }
                     selectedBackgroundColor={
-                      infoAccessAssets(access).backgroundColor
+                      infoAccessAssets[access].backgroundColor
                     }
                   />
                 ))}
@@ -101,15 +101,15 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
             {access.field.value && (
               <>
                 <Text variant="h4">
-                  {infoAccessAssets(access.field.value).descriptionTitle}
+                  {infoAccessAssets[access.field.value].descriptionTitle}
                 </Text>
                 <Text variant="p2R">
                   <Text variant="p2B">- Acceso: </Text>
-                  {infoAccessAssets(access.field.value).accessDescription}
+                  {infoAccessAssets[access.field.value].accessDescription}
                 </Text>
                 <Text variant="p2R">
                   <Text variant="p2B">- Edición: </Text>
-                  {infoAccessAssets(access.field.value).editionDescription}
+                  {infoAccessAssets[access.field.value].editionDescription}
                 </Text>
               </>
             )}
