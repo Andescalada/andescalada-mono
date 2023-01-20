@@ -1,4 +1,4 @@
-import { ActivityIndicator, Box, Button } from "@andescalada/ui";
+import { ActivityIndicator, Box, Button, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
 import useRefresh from "@hooks/useRefresh";
@@ -11,8 +11,38 @@ interface Props {
 }
 
 const AccessRequestList: FC<Props> = ({ zoneId }) => {
+  const utils = trpc.useContext();
+
   const { data, isLoading, refetch, isFetching } =
     trpc.zoneAccess.usersRequestingAccessToZone.useQuery({ zoneId });
+
+  const acceptAccess = trpc.zoneAccess.approveZoneAccess.useMutation({
+    onMutate: async ({ userId }) => {
+      await utils.zoneAccess.usersRequestingAccessToZone.cancel();
+      const previousData = utils.zoneAccess.usersRequestingAccessToZone.getData(
+        { zoneId },
+      );
+      utils.zoneAccess.usersRequestingAccessToZone.setData(
+        { zoneId },
+        (old) => {
+          if (!old) return old;
+          const newData = old.filter((item) => item.User.id !== userId);
+          return newData;
+        },
+      );
+      return { previousData };
+    },
+    onError: (_, __, context) => {
+      utils.zoneAccess.usersRequestingAccessToZone.setData(
+        { zoneId },
+        context?.previousData,
+      );
+    },
+    onSuccess: () => {
+      utils.zoneAccess.usersRequestingAccessToZone.invalidate({ zoneId });
+      utils.zones.usersByRole.invalidate({ roles: ["Member"], zoneId });
+    },
+  });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
@@ -23,11 +53,17 @@ const AccessRequestList: FC<Props> = ({ zoneId }) => {
       </Box>
     );
   return (
-    <Box>
+    <Box flex={1}>
       <FlatList
         data={data}
         keyExtractor={(item) => item.User.id}
         refreshControl={refresh}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => (
+          <Box justifyContent="center" alignItems="center" marginTop="xxxl">
+            <Text variant="p3R">No hay solicitudes</Text>
+          </Box>
+        )}
         renderItem={({ item }) => (
           <UserItem item={item.User}>
             <Button
@@ -35,6 +71,9 @@ const AccessRequestList: FC<Props> = ({ zoneId }) => {
               variant="primary"
               titleVariant="p3B"
               marginRight="s"
+              onPress={() =>
+                acceptAccess.mutate({ userId: item.User.id, zoneId })
+              }
             />
           </UserItem>
         )}

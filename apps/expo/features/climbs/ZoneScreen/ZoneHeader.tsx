@@ -43,7 +43,7 @@ const ZoneHeader = () => {
     () =>
       data?.RoleByZone.filter((role) => role.Role.name !== "Reviewer").slice(
         0,
-        2,
+        3,
       ) || [],
     [data?.RoleByZone],
   );
@@ -86,7 +86,7 @@ const ZoneHeader = () => {
         </Pressable>
       )}
       {data.hasAccess && (
-        <>
+        <Box>
           <Box flexDirection="row" marginBottom="l">
             <StoryButton
               title="Acuerdos"
@@ -118,6 +118,9 @@ const ZoneHeader = () => {
 
           {data?.infoAccess !== "Public" && (
             <Pressable
+              marginTop="s"
+              alignItems="center"
+              alignSelf="flex-start"
               flexDirection="row"
               onPress={() =>
                 rootNavigation.navigate(
@@ -142,18 +145,23 @@ const ZoneHeader = () => {
               </Box>
 
               <Box flexDirection="row" marginLeft="s">
-                {members.map((role) => (
+                {members.map((role, index) => (
                   <UserProfileImage
                     key={role.User.id}
                     publicId={role.User.profilePhoto?.publicId || undefined}
-                    style={{ height: 32, width: 32, borderRadius: 16 }}
-                    zIndex={10}
+                    style={{
+                      height: 32,
+                      width: 32,
+                      borderRadius: 16,
+                      marginLeft: index > 0 ? -10 : 0,
+                    }}
+                    zIndex={-10 * index + 10}
                   />
                 ))}
                 <Pressable
                   height={32}
                   width={32}
-                  style={{ marginLeft: -5 }}
+                  style={{ marginLeft: -10, zIndex: -100 }}
                   borderRadius={16}
                   justifyContent="center"
                   alignItems="center"
@@ -170,7 +178,7 @@ const ZoneHeader = () => {
             onDownloadPress={onDownloadPress}
             onFavoritePress={onFavoritePress}
           />
-        </>
+        </Box>
       )}
     </A.Box>
   );

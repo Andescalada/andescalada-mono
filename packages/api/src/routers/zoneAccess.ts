@@ -81,16 +81,18 @@ export const zoneAccessRouter = t.router({
       return accessRequest;
     }),
   usersRequestingAccessToZone: protectedZoneProcedure.query(
-    ({ ctx, input }) => {
+    async ({ ctx, input }) => {
       if (!ctx.permissions.has("GrantAccess")) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "GrantAccess"),
         );
       }
 
-      return ctx.prisma.zoneAccessRequest.findMany({
-        where: { zoneId: input.zoneId, status: RequestStatus.Pending },
+      const requests = await ctx.prisma.zoneAccessRequest.findMany({
+        where: { Zone: { id: input.zoneId } },
+        orderBy: { createdAt: "desc" },
         select: {
+          status: true,
           User: {
             select: {
               username: true,
@@ -102,6 +104,16 @@ export const zoneAccessRouter = t.router({
           },
         },
       });
+
+      const latestRequest = requests
+        .reduce((acc, curr) => {
+          const accUser = acc.find((u) => u?.User.id === curr.User.id);
+          if (!accUser) return [...acc, curr];
+          return acc;
+        }, [] as typeof requests)
+        .filter((a) => a.status === RequestStatus.Pending);
+
+      return latestRequest;
     },
   ),
   approveZoneAccess: protectedZoneProcedure
@@ -189,3 +201,16 @@ export const zoneAccessRouter = t.router({
       }),
     ),
 });
+
+type A = {
+  User: {
+    email: string;
+    profilePhoto: {
+      publicId: string | null;
+    } | null;
+    id: string;
+    name: string;
+    username: string;
+  };
+  status: RequestStatus;
+}[];

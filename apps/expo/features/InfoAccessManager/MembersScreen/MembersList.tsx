@@ -27,7 +27,7 @@ const MembersList: FC<Props> = ({ zoneId }) => {
       </Box>
     );
   return (
-    <Box>
+    <Box flex={1}>
       <FlatList
         data={members?.users}
         keyExtractor={(item) => item.id}

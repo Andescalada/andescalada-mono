@@ -27,7 +27,7 @@ const pushNotification = {
     entity: Entity.Zone,
     template: {
       es: ({ user, zoneName }: { user: string; zoneName: string }) =>
-        `${user} ha solicitado la revisión de la zona ${zoneName}`,
+        `${user} ha solicitado acceso a la zona ${zoneName}`,
     },
   },
   [EntityTypeId.ZoneReviewAssigned]: {

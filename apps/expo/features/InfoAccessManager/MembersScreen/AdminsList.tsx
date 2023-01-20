@@ -27,7 +27,7 @@ const AdminsList: FC<Props> = ({ zoneId }) => {
       </Box>
     );
   return (
-    <Box>
+    <Box flex={1}>
       <FlatList
         data={data}
         keyExtractor={(item) => item.role}
