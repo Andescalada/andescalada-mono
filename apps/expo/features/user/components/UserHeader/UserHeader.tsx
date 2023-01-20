@@ -1,6 +1,5 @@
 import { Box, Ionicons, Pressable, Screen } from "@andescalada/ui";
 import pathTitle from "@assets/andescaladaPathTitle";
-import UserProfileImage from "@features/user/components/UserProfileImage/UserProfileImage";
 import { UserNavigationRoutes } from "@features/user/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
@@ -27,6 +26,7 @@ import {
 } from "@shopify/react-native-skia";
 import { useResponsiveProp } from "@shopify/restyle";
 import { logoutAuth0 } from "@store/auth";
+import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import featureFlags from "@utils/featureFlags";
 import { useCallback, useMemo } from "react";
