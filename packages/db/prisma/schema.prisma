@@ -185,6 +185,8 @@ enum PermissionActions {
   ApproveZone
   RejectZone
   RequestZoneReview
+  AssignZoneRole
+  RevokeZoneRole
 }
 
 model ZoneAccessRequest {
