@@ -20,6 +20,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
   },
 }) => {
   const rootNavigation = useRootNavigation();
+  const utils = trpc.useContext();
   const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
 
   const requestAccess = trpc.zoneAccess.requestZoneAccess.useMutation({
@@ -28,6 +29,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
         screen: ClimbsNavigationRoutes.Zone,
         params: { zoneId, zoneName },
       });
+      utils.zones.allSectors.invalidate({ zoneId });
     },
   });
 
@@ -81,6 +83,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
           <Button
             variant="success"
             title="Solicitar acceso"
+            isLoading={requestAccess.isLoading}
             marginLeft="s"
             onPress={handleRequestAccess}
           />
@@ -111,6 +114,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
             title="No gracias"
             flex={1}
             marginRight="s"
+            isLoading={rejectAgreements.isLoading}
             onPress={handleRejection}
           />
           <Button
@@ -118,6 +122,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
             title="Aceptar"
             flex={1}
             marginLeft="s"
+            isLoading={requestAccess.isLoading}
             onPress={handleRequestAccess}
           />
         </Box>
