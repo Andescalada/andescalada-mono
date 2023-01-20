@@ -4,7 +4,7 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { RequestStatus } from "@prisma/client";
+import { InfoAccess, RequestStatus, RoleNames } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -142,7 +142,7 @@ export const zoneAccessRouter = t.router({
         },
         select: {
           User: { select: { username: true, id: true, email: true } },
-          Zone: { select: { name: true } },
+          Zone: { select: { name: true, infoAccess: true } },
           modifiedBy: { select: { username: true } },
         },
       });
@@ -151,7 +151,14 @@ export const zoneAccessRouter = t.router({
         data: {
           User: { connect: { id: input.userId } },
           Zone: { connect: { id: input.zoneId } },
-          Role: { connect: { name: "Member" } },
+          Role: {
+            connect: {
+              name:
+                accessRequest.Zone.infoAccess === InfoAccess.Private
+                  ? RoleNames.Reader
+                  : RoleNames.Member,
+            },
+          },
           AssignedBy: { connect: { email: ctx.user.email } },
         },
         select: {

@@ -1,9 +1,10 @@
+import { RoleNamesSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
 import useRefresh from "@hooks/useRefresh";
-import { Zone } from "@prisma/client";
-import { FC } from "react";
+import type { Zone } from "@prisma/client";
+import { FC, useMemo } from "react";
 import { FlatList } from "react-native";
 
 interface Props {
@@ -13,13 +14,19 @@ interface Props {
 const MembersList: FC<Props> = ({ zoneId }) => {
   const { data, isLoading, refetch, isFetching } =
     trpc.zones.usersByRole.useQuery({
-      roles: ["Member"],
+      roles: ["Member", "Reader"],
       zoneId,
     });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
+  const usersList = useMemo(() => {
+    const members =
+      data?.find((d) => d.role === RoleNamesSchema.Enum.Member)?.users || [];
+    const readers =
+      data?.find((d) => d.role === RoleNamesSchema.Enum.Reader)?.users || [];
+    return [...members, ...readers];
+  }, [data]);
 
-  const members = data?.find((member) => member.role === "Member");
   if (isLoading)
     return (
       <Box flex={1} justifyContent="center" alignItems="center">
@@ -29,7 +36,7 @@ const MembersList: FC<Props> = ({ zoneId }) => {
   return (
     <Box flex={1}>
       <FlatList
-        data={members?.users}
+        data={usersList}
         keyExtractor={(item) => item.id}
         refreshControl={refresh}
         ListEmptyComponent={() => (
