@@ -5,22 +5,30 @@ import {
   ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
+import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import infoAccessAssets from "@utils/infoAccessAssets";
-import { useEffect, useMemo } from "react";
+import { FC, ReactElement, useMemo } from "react";
 
 interface Props {
   isLoading: boolean;
   isError: boolean;
   hasAccess: boolean;
   infoAccess: keyof typeof InfoAccessSchema.Enum | undefined;
+  children: ReactElement;
 }
 
-const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
+const SectorsGateway: FC<Props> = ({
+  isLoading,
+  hasAccess,
+  infoAccess,
+  isError,
+  children,
+}) => {
   const {
     params: { zoneId, zoneName },
   } = useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Zone>>();
@@ -39,31 +47,25 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
 
   const { permission } = usePermissions({ zoneId });
 
-  useEffect(() => {
-    if (
+  const hasNotAcceptedAgreement = useMemo(
+    () =>
       !isLoading &&
       hasAccess &&
       !isError &&
-      requestStatus === RequestStatusSchema.enum.Accepted &&
+      (requestStatus === RequestStatusSchema.enum.Accepted ||
+        infoAccess === InfoAccessSchema.enum.Public) &&
       !permission?.has("EditZoneAgreements") &&
-      !UserZoneAgreementHistory[0]?.hasAgreed
-    ) {
-      rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
-        screen: InfoAccessManagerRoutes.AgreementsIntro,
-        params: { zoneId, zoneName },
-      });
-    }
-  }, [
-    UserZoneAgreementHistory,
-    hasAccess,
-    isError,
-    isLoading,
-    permission,
-    requestStatus,
-    rootNavigation,
-    zoneId,
-    zoneName,
-  ]);
+      !UserZoneAgreementHistory[0]?.hasAgreed,
+    [
+      UserZoneAgreementHistory,
+      hasAccess,
+      infoAccess,
+      isError,
+      isLoading,
+      permission,
+      requestStatus,
+    ],
+  );
 
   if (isLoading)
     return (
@@ -72,44 +74,76 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
       </Screen>
     );
 
+  if (hasNotAcceptedAgreement) {
+    return (
+      <Screen safeAreaDisabled>
+        <ZoneHeader />
+        <Box flex={1} justifyContent={"flex-start"} marginTop="m">
+          <Box flex={1 / 2} justifyContent="center">
+            <Text variant="h2" marginBottom="l">
+              Aceptar acuerdos
+            </Text>
+            <Text variant="p1R" marginBottom="m">
+              Para poder ver los sectores de esta zona, debes revisar y aceptar
+              los acuerdos.
+            </Text>
+          </Box>
+          <Button
+            variant="info"
+            title="Continuar"
+            alignSelf="center"
+            marginTop="l"
+            onPress={() =>
+              rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+                screen: InfoAccessManagerRoutes.AgreementsIntro,
+                params: { zoneId, zoneName },
+              })
+            }
+          />
+        </Box>
+      </Screen>
+    );
+  }
+
   if (!hasAccess && !isError && !!infoAccess) {
     const { requestTitle, requestDescription } = infoAccessAssets[infoAccess];
 
     return (
-      <Box flex={1} justifyContent={"flex-start"} marginTop="m">
-        <Box flex={1 / 3} justifyContent="center">
-          <Text variant="h2" marginBottom="l">
-            {requestTitle}
-          </Text>
-          <Text variant="p1R" marginBottom="m">
-            No tienes permiso para ver esta zona
-          </Text>
-          <Text marginBottom="s" variant="p3R">
-            {requestDescription}
-          </Text>
+      <Screen safeAreaDisabled>
+        <ZoneHeader />
+        <Box flex={1} justifyContent={"flex-start"} marginTop="m">
+          <Box flex={1 / 3} justifyContent="center">
+            <Text variant="h2" marginBottom="l">
+              {requestTitle}
+            </Text>
+            <Text variant="p1R" marginBottom="m">
+              No tienes permiso para ver esta zona
+            </Text>
+            <Text marginBottom="s" variant="p3R">
+              {requestDescription}
+            </Text>
+          </Box>
+          <Button
+            variant={requestStatus === "Pending" ? "transparent" : "info"}
+            title={
+              requestStatus === "Pending" ? "Pendiente" : "Solicitar acceso"
+            }
+            alignSelf="center"
+            marginTop="l"
+            disabled={requestStatus === "Pending"}
+            onPress={() =>
+              rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+                screen: InfoAccessManagerRoutes.AgreementsIntro,
+                params: { zoneId, zoneName },
+              })
+            }
+          />
         </Box>
-        <Button
-          variant={requestStatus === "Pending" ? "transparent" : "info"}
-          title={requestStatus === "Pending" ? "Pendiente" : "Solicitar acceso"}
-          alignSelf="center"
-          marginTop="l"
-          disabled={requestStatus === "Pending"}
-          onPress={() =>
-            rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
-              screen: InfoAccessManagerRoutes.AgreementsIntro,
-              params: { zoneId, zoneName },
-            })
-          }
-        />
-      </Box>
+      </Screen>
     );
   }
 
-  return (
-    <Box flex={1} justifyContent="center" alignItems="center" marginTop="xxxl">
-      <Text variant={"h3"}>Sin sectores</Text>
-    </Box>
-  );
+  return children;
 };
 
-export default NoSectors;
+export default SectorsGateway;

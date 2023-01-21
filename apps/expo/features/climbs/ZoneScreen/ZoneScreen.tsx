@@ -7,7 +7,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import NoSectors from "@features/climbs/ZoneScreen/NoSectors";
+import SectorsGateway from "@features/climbs/ZoneScreen/NoSectors";
 import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import useOfflineMode from "@hooks/useOfflineMode";
@@ -126,20 +126,29 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         />
       </FormProvider>
       <Box flex={1}>
-        <FlatList
-          data={data?.sectors}
-          refreshControl={refresh}
-          ListHeaderComponent={ZoneHeader}
-          ListEmptyComponent={() => (
-            <NoSectors
-              isLoading={isLoading}
-              isError={isError}
-              hasAccess={!!data?.hasAccess}
-              infoAccess={data?.infoAccess}
-            />
-          )}
-          renderItem={({ item }) => <ZoneItem item={item} />}
-        />
+        <SectorsGateway
+          isLoading={isLoading}
+          isError={isError}
+          hasAccess={!!data?.hasAccess}
+          infoAccess={data?.infoAccess}
+        >
+          <FlatList
+            data={[]}
+            refreshControl={refresh}
+            ListHeaderComponent={ZoneHeader}
+            ListEmptyComponent={() => (
+              <Box
+                flex={1}
+                justifyContent="center"
+                alignItems="center"
+                marginTop="xxxl"
+              >
+                <Text variant={"h3"}>Sin sectores</Text>
+              </Box>
+            )}
+            renderItem={({ item }) => <ZoneItem item={item} />}
+          />
+        </SectorsGateway>
       </Box>
     </Screen>
   );
