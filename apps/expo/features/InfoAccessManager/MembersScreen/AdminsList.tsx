@@ -60,7 +60,7 @@ const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
             )
           }
         >
-          <Text variant="h4">Agregar colaborador</Text>
+          <Text variant="h4">Agregar roles</Text>
           <AddButton
             onPress={() =>
               navigation.navigate(

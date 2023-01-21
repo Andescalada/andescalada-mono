@@ -115,63 +115,57 @@ const ZoneHeader = () => {
               </>
             )}
           </Box>
-
-          {data?.infoAccess !== "Public" && (
-            <Pressable
-              marginTop="s"
-              alignItems="center"
-              alignSelf="flex-start"
-              flexDirection="row"
-              onPress={() =>
-                rootNavigation.navigate(
-                  RootNavigationRoutes.InfoAccessManager,
-                  {
-                    screen: InfoAccessManagerRoutes.MembersScreen,
-                    params: { zoneId, zoneName },
-                  },
-                )
+          <Pressable
+            marginTop="s"
+            alignItems="center"
+            alignSelf="flex-start"
+            flexDirection="row"
+            onPress={() =>
+              rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+                screen: InfoAccessManagerRoutes.MembersScreen,
+                params: { zoneId, zoneName },
+              })
+            }
+          >
+            <Box
+              borderRadius={16}
+              padding="s"
+              backgroundColor={
+                infoAccessAssets[data?.infoAccess].backgroundColor
               }
             >
-              <Box
-                borderRadius={16}
-                padding="s"
-                backgroundColor={
-                  infoAccessAssets[data?.infoAccess].backgroundColor
-                }
-              >
-                <Text color={infoAccessAssets[data?.infoAccess].color}>
-                  {infoAccessAssets[data?.infoAccess]?.label}
-                </Text>
-              </Box>
+              <Text color={infoAccessAssets[data?.infoAccess].color}>
+                {infoAccessAssets[data?.infoAccess]?.label}
+              </Text>
+            </Box>
 
-              <Box flexDirection="row" marginLeft="s">
-                {members.map((role, index) => (
-                  <UserProfileImage
-                    key={role.User.id}
-                    publicId={role.User.profilePhoto?.publicId || undefined}
-                    style={{
-                      height: 32,
-                      width: 32,
-                      borderRadius: 16,
-                      marginLeft: index > 0 ? -10 : 0,
-                    }}
-                    zIndex={-10 * index + 10}
-                  />
-                ))}
-                <Pressable
-                  height={32}
-                  width={32}
-                  style={{ marginLeft: -10, zIndex: -100 }}
-                  borderRadius={16}
-                  justifyContent="center"
-                  alignItems="center"
-                  backgroundColor="transparentButtonBackground"
-                >
-                  <Ionicons name="ellipsis-horizontal-sharp" size={20} />
-                </Pressable>
-              </Box>
-            </Pressable>
-          )}
+            <Box flexDirection="row" marginLeft="s">
+              {members.map((role, index) => (
+                <UserProfileImage
+                  key={role.User.id}
+                  publicId={role.User.profilePhoto?.publicId || undefined}
+                  style={{
+                    height: 32,
+                    width: 32,
+                    borderRadius: 16,
+                    marginLeft: index > 0 ? -10 : 0,
+                  }}
+                  zIndex={-10 * index + 10}
+                />
+              ))}
+              <Pressable
+                height={32}
+                width={32}
+                style={{ marginLeft: -10, zIndex: -100 }}
+                borderRadius={16}
+                justifyContent="center"
+                alignItems="center"
+                backgroundColor="transparentButtonBackground"
+              >
+                <Ionicons name="ellipsis-horizontal-sharp" size={20} />
+              </Pressable>
+            </Box>
+          </Pressable>
           <ToolBar
             isDownloaded={isDownloaded}
             isFavorite={isFavorite}

@@ -1,6 +1,14 @@
-import { ActivityIndicator, Box, Button, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  AddButton,
+  Box,
+  Button,
+  Pressable,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
 import { FC } from "react";
@@ -45,6 +53,7 @@ const AccessRequestList: FC<Props> = ({ zoneId }) => {
   });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
+  const { permission } = usePermissions({ zoneId });
 
   if (isLoading)
     return (
@@ -54,6 +63,16 @@ const AccessRequestList: FC<Props> = ({ zoneId }) => {
     );
   return (
     <Box flex={1}>
+      {permission?.has("GrantAccess") && (
+        <Pressable
+          flexDirection="row"
+          justifyContent="space-between"
+          margin="m"
+        >
+          <Text variant="h4">Invitar</Text>
+          <AddButton />
+        </Pressable>
+      )}
       <FlatList
         data={data}
         keyExtractor={(item) => item.User.id}

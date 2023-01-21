@@ -1,4 +1,6 @@
+import { InfoAccessSchema } from "@andescalada/db/zod";
 import { Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import AccessRequestList from "@features/InfoAccessManager/MembersScreen/AccessRequestList";
 import AdminsList from "@features/InfoAccessManager/MembersScreen/AdminsList";
 import MembersList from "@features/InfoAccessManager/MembersScreen/MembersList";
@@ -21,6 +23,7 @@ const MembersScreen: FC<Props> = ({
   },
 }) => {
   const { permission } = usePermissions({ zoneId });
+  const data = trpc.useContext().zones.allSectors.getData({ zoneId });
   return (
     <Screen safeAreaDisabled>
       <Tab.Navigator
@@ -31,17 +34,20 @@ const MembersScreen: FC<Props> = ({
           ),
         }}
       >
-        <Tab.Screen name="Miembros">
-          {() => <MembersList zoneId={zoneId} />}
-        </Tab.Screen>
+        {data?.infoAccess !== InfoAccessSchema.enum.Public && (
+          <Tab.Screen name="Miembros">
+            {() => <MembersList zoneId={zoneId} />}
+          </Tab.Screen>
+        )}
         <Tab.Screen name="Administradores">
           {() => <AdminsList zoneId={zoneId} zoneName={zoneName} />}
         </Tab.Screen>
-        {permission?.has("GrantAccess") && (
-          <Tab.Screen name="Solicitudes">
-            {() => <AccessRequestList zoneId={zoneId} />}
-          </Tab.Screen>
-        )}
+        {permission?.has("GrantAccess") &&
+          data?.infoAccess !== InfoAccessSchema.enum.Public && (
+            <Tab.Screen name="Solicitudes">
+              {() => <AccessRequestList zoneId={zoneId} />}
+            </Tab.Screen>
+          )}
       </Tab.Navigator>
     </Screen>
   );

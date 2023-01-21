@@ -239,15 +239,10 @@ export const zonesRouter = t.router({
   usersByRole: protectedZoneProcedure
     .input(z.object({ roles: z.array(z.nativeEnum(RoleNames)) }))
     .query(async ({ ctx, input }) => {
-      if (!ctx.permissions.has("Read")) {
-        throw new TRPCError(
-          error.unauthorizedActionForZone(input.zoneId, "Read"),
-        );
-      }
-
       const zone = await ctx.prisma.zone.findUnique({
         where: { id: input.zoneId },
         select: {
+          infoAccess: true,
           RoleByZone: {
             where: { Role: { OR: input.roles.map((r) => ({ name: r })) } },
             orderBy: { updatedAt: "desc" },
@@ -265,6 +260,12 @@ export const zonesRouter = t.router({
           },
         },
       });
+
+      if (!ctx.permissions.has("Read") && zone?.infoAccess !== "Public") {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Read"),
+        );
+      }
 
       const parsedData = parseUsersToRole(zone?.RoleByZone);
 
