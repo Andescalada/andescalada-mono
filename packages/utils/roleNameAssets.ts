@@ -51,14 +51,14 @@ const roleNameAssets: RoleNameAssets = {
     plural: "Miembros",
     description:
       "Puede leer el contenido de la guía. Puede agregar usuarios a la guía",
-    availableFor: [Community],
+    availableFor: [],
   },
   [RoleNamesSchema.Enum.Reader]: {
     color: "brand.secondaryB",
     label: "Lector",
     plural: "Lectoras",
     description: "Puede leer el contenido de la guía",
-    availableFor: [Private],
+    availableFor: [],
   },
 };
 
