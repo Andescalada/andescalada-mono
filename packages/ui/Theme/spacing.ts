@@ -10,6 +10,10 @@ const spacing = {
   xll: 52,
   xxl: 80,
   xxxl: 160,
+  minusS: -8,
+  minusM: -16,
+  minusL: -24,
+  minusXl: -40,
 };
 
 export default spacing;

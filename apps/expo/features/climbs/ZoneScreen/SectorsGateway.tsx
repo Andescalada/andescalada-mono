@@ -19,8 +19,10 @@ import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
+import { skipAgreementsIntro } from "@templates/AgreementsIntro/AgreementsIntro";
 import infoAccessAssets from "@utils/infoAccessAssets";
-import { FC, ReactElement, useMemo } from "react";
+import { useAtom } from "jotai";
+import { FC, ReactElement, useCallback, useMemo } from "react";
 
 interface Props {
   children: ReactElement;
@@ -78,6 +80,22 @@ const SectorsGateway: FC<Props> = ({ children }) => {
     ],
   );
 
+  const [skip] = useAtom(skipAgreementsIntro);
+
+  const navigateToAgreements = useCallback(() => {
+    if (skip) {
+      rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+        screen: InfoAccessManagerRoutes.AcceptAgreements,
+        params: { zoneId, zoneName },
+      });
+      return;
+    }
+    rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+      screen: InfoAccessManagerRoutes.AgreementsIntro,
+      params: { zoneId, zoneName },
+    });
+  }, [rootNavigation, skip, zoneId, zoneName]);
+
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
@@ -105,15 +123,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
               title="Continuar"
               alignSelf="center"
               marginTop="l"
-              onPress={() =>
-                rootNavigation.navigate(
-                  RootNavigationRoutes.InfoAccessManager,
-                  {
-                    screen: InfoAccessManagerRoutes.AgreementsIntro,
-                    params: { zoneId, zoneName },
-                  },
-                )
-              }
+              onPress={navigateToAgreements}
             />
           </Box>
         </ScrollView>
@@ -148,15 +158,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
               alignSelf="center"
               marginTop="l"
               disabled={requestStatus === "Pending"}
-              onPress={() =>
-                rootNavigation.navigate(
-                  RootNavigationRoutes.InfoAccessManager,
-                  {
-                    screen: InfoAccessManagerRoutes.AgreementsIntro,
-                    params: { zoneId, zoneName },
-                  },
-                )
-              }
+              onPress={navigateToAgreements}
             />
           </Box>
         </ScrollView>

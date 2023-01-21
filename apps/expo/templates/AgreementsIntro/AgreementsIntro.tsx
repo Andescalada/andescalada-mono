@@ -1,4 +1,6 @@
-import { A, Box, Button, Text } from "@andescalada/ui";
+import { A, Box, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
+import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
+import { useAtom } from "jotai";
 import { ComponentProps, FC } from "react";
 import { SlideInDown } from "react-native-reanimated";
 
@@ -8,7 +10,13 @@ interface Props extends ComponentProps<typeof Box> {
 
 const DELAY = 1800;
 
+export const skipAgreementsIntro = atomWithMMKV(
+  Storage.SKIP_AGREEMENTS_INTRO,
+  false,
+);
+
 const AgreementsIntro: FC<Props> = ({ onContinue, ...props }) => {
+  const [skip, setSkip] = useAtom(skipAgreementsIntro);
   return (
     <Box flex={1} backgroundColor="brand.primaryA" {...props}>
       <Box padding="m">
@@ -61,7 +69,8 @@ const AgreementsIntro: FC<Props> = ({ onContinue, ...props }) => {
               </Box>
             </Box>
             <A.Box
-              marginTop="xs"
+              marginTop="minusL"
+              minHeight={500}
               paddingBottom="s"
               flex={1}
               backgroundColor="brand.secondaryB"
@@ -70,6 +79,21 @@ const AgreementsIntro: FC<Props> = ({ onContinue, ...props }) => {
               entering={SlideInDown.delay(DELAY * 3)}
             >
               <Box padding="m" paddingHorizontal="xxl">
+                <Pressable
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  marginBottom="s"
+                  onPress={() => setSkip((prev) => !prev)}
+                >
+                  <Ionicons
+                    name={skip ? "checkbox" : "stop-outline"}
+                    size={25}
+                  />
+                  <Text variant="p3R" marginLeft="s">
+                    No mostrar más
+                  </Text>
+                </Pressable>
                 <Button
                   variant="transparent"
                   title="Continuar"
