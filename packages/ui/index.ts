@@ -1,4 +1,5 @@
 export { default as ActivityIndicator } from "./ActivityIndicator/ActivityIndicator";
+export { default as AddButton } from "./AddButton/AddButton";
 export { default as A } from "./Animated/Animated";
 export { default as AnimatedBackground } from "./AnimatedBackground/AnimatedBackground";
 export { default as BackButton } from "./BackButton/BackButton";

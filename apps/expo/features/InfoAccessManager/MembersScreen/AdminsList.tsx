@@ -1,6 +1,14 @@
-import { ActivityIndicator, Box, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  AddButton,
+  Box,
+  Ionicons,
+  Pressable,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
 import roleNameAssets from "@utils/roleNameAssets";
@@ -20,6 +28,8 @@ const AdminsList: FC<Props> = ({ zoneId }) => {
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
+  const { permission } = usePermissions({ zoneId });
+
   if (isLoading)
     return (
       <Box flex={1} justifyContent="center" alignItems="center">
@@ -28,6 +38,12 @@ const AdminsList: FC<Props> = ({ zoneId }) => {
     );
   return (
     <Box flex={1}>
+      {permission?.has("AssignZoneRole") && (
+        <Box flexDirection="row" justifyContent="space-between" margin="m">
+          <Text variant="h4">Agregar colaborador</Text>
+          <AddButton />
+        </Box>
+      )}
       <FlatList
         data={data}
         keyExtractor={(item) => item.role}
@@ -39,8 +55,10 @@ const AdminsList: FC<Props> = ({ zoneId }) => {
           </Box>
         )}
         renderItem={({ item: { role, users } }) => (
-          <Box margin="m">
-            <Text variant="h4">{roleNameAssets[role].plural}</Text>
+          <Box>
+            <Text variant="p1R" marginTop="s" marginLeft="m">
+              {roleNameAssets[role].plural}
+            </Text>
             <FlatList
               data={users}
               keyExtractor={(item) => item.id}

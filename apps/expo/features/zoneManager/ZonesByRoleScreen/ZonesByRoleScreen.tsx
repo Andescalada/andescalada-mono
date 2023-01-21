@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  AddButton,
   Box,
   Ionicons,
   Pressable,
@@ -49,16 +50,11 @@ const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
             justifyContent="space-between"
           >
             <Text variant="h3">Crear una zona</Text>
-            <Pressable
-              backgroundColor="semantic.info"
-              borderRadius={30}
-              padding="xs"
+            <AddButton
               onPress={() =>
                 navigation.navigate(ZoneManagerRoutes.AddNewZoneScreen)
               }
-            >
-              <Ionicons name={"add-sharp"} size={30} color="grayscale.white" />
-            </Pressable>
+            />
           </Box>
         )}
         ListEmptyComponent={() => (

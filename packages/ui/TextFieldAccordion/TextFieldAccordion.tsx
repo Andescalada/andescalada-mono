@@ -69,14 +69,14 @@ const TextFieldAccordion: ForwardRefRenderFunction<
           <Text variant="p1B">{label}</Text>
           <Pressable
             backgroundColor="semantic.info"
-            borderRadius={30}
+            borderRadius={10}
             padding="xs"
             onPress={() => setIsAddComment((prev) => !prev)}
           >
             {isAddComment ? (
               <Text padding="s">{cancelButtonLabel}</Text>
             ) : (
-              <Ionicons name={"add-sharp"} size={30} color="grayscale.white" />
+              <Ionicons name={"add-sharp"} size={25} color="grayscale.white" />
             )}
           </Pressable>
         </Box>
