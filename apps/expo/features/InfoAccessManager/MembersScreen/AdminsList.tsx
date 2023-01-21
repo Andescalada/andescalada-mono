@@ -1,18 +1,30 @@
-import { ActivityIndicator, AddButton, Box, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  AddButton,
+  Box,
+  Pressable,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
+import {
+  InfoAccessManagerNavigationProps,
+  InfoAccessManagerRoutes,
+} from "@features/InfoAccessManager/Navigation/types";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
+import { useNavigation } from "@react-navigation/native";
 import roleNameAssets from "@utils/roleNameAssets";
 import { FC } from "react";
 import { FlatList } from "react-native";
 
 interface Props {
   zoneId: Zone["id"];
+  zoneName: Zone["name"];
 }
 
-const AdminsList: FC<Props> = ({ zoneId }) => {
+const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
   const { data, isLoading, refetch, isFetching } =
     trpc.zones.usersByRole.useQuery({
       roles: ["Admin", "Editor", "Collaborator"],
@@ -20,6 +32,11 @@ const AdminsList: FC<Props> = ({ zoneId }) => {
     });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
+
+  const navigation =
+    useNavigation<
+      InfoAccessManagerNavigationProps<InfoAccessManagerRoutes.MembersScreen>
+    >();
 
   const { permission } = usePermissions({ zoneId });
 
@@ -32,10 +49,27 @@ const AdminsList: FC<Props> = ({ zoneId }) => {
   return (
     <Box flex={1}>
       {permission?.has("AssignZoneRole") && (
-        <Box flexDirection="row" justifyContent="space-between" margin="m">
+        <Pressable
+          flexDirection="row"
+          justifyContent="space-between"
+          margin="m"
+          onPress={() =>
+            navigation.navigate(
+              InfoAccessManagerRoutes.AddZoneRoleToUserScreen,
+              { zoneId, zoneName },
+            )
+          }
+        >
           <Text variant="h4">Agregar colaborador</Text>
-          <AddButton />
-        </Box>
+          <AddButton
+            onPress={() =>
+              navigation.navigate(
+                InfoAccessManagerRoutes.AddZoneRoleToUserScreen,
+                { zoneId, zoneName },
+              )
+            }
+          />
+        </Pressable>
       )}
       <FlatList
         data={data}

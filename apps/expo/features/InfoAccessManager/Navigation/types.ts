@@ -6,6 +6,7 @@ export enum InfoAccessManagerRoutes {
   AcceptAgreements = "InfoAccessManagerAcceptAgreements",
   AgreementsIntro = "InfoAccessManagerAgreementsIntro",
   MembersScreen = "InfoAccessManagerMembersScreen",
+  AddZoneRoleToUserScreen = "InfoAccessManagerAddZoneRoleToUserScreen",
 }
 
 export type InfoAccessManagerNavigationParamList = {
@@ -18,6 +19,10 @@ export type InfoAccessManagerNavigationParamList = {
     zoneName: Zone["name"];
   };
   [InfoAccessManagerRoutes.MembersScreen]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
+  };
+  [InfoAccessManagerRoutes.AddZoneRoleToUserScreen]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };

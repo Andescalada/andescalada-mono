@@ -1,4 +1,5 @@
 import AcceptAgreementsScreen from "@features/InfoAccessManager/AcceptAgreementsScreen";
+import AddZoneRoleToUserScreen from "@features/InfoAccessManager/AddZoneRoleToUserScreen";
 import AgreementsIntroScreen from "@features/InfoAccessManager/AgreementsIntroScreen";
 import MembersScreen from "@features/InfoAccessManager/MembersScreen";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -26,6 +27,11 @@ const Navigator = () => {
         component={MembersScreen}
         name={InfoAccessManagerRoutes.MembersScreen}
         options={{ ...backHeader, title: "Miembros" }}
+      />
+      <Stack.Screen
+        component={AddZoneRoleToUserScreen}
+        name={InfoAccessManagerRoutes.AddZoneRoleToUserScreen}
+        options={{ presentation: "modal" }}
       />
     </Stack.Navigator>
   );

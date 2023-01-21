@@ -17,7 +17,7 @@ type Props =
 
 const MembersScreen: FC<Props> = ({
   route: {
-    params: { zoneId },
+    params: { zoneId, zoneName },
   },
 }) => {
   const { permission } = usePermissions({ zoneId });
@@ -35,7 +35,7 @@ const MembersScreen: FC<Props> = ({
           {() => <MembersList zoneId={zoneId} />}
         </Tab.Screen>
         <Tab.Screen name="Administradores">
-          {() => <AdminsList zoneId={zoneId} />}
+          {() => <AdminsList zoneId={zoneId} zoneName={zoneName} />}
         </Tab.Screen>
         {permission?.has("GrantAccess") && (
           <Tab.Screen name="Solicitudes">
