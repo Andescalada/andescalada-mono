@@ -6,6 +6,7 @@ import {
   Screen,
   Text,
 } from "@andescalada/ui";
+import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {
@@ -15,7 +16,6 @@ import {
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import roleNameAssets from "@utils/roleNameAssets";
 import { FC } from "react";
 import { FlatList } from "react-native";
 

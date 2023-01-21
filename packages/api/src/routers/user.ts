@@ -10,6 +10,7 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
+import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
@@ -171,14 +172,43 @@ export const userRouter = t.router({
       })
       .then(parseZonesToRole),
   ),
-  assignRoleToUser: protectedProcedure
-    .input(user.schema.pick({ username: true }).merge(zone.id).merge(user.role))
+  assignRoleToUser: protectedZoneProcedure
+    .input(user.schema.pick({ username: true }).merge(user.role))
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user.permissions.includes("crud:roles")) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (
+        !ctx.user.permissions.includes("crud:roles") ||
+        !ctx.permissions.has("AssignZoneRole")
+      ) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "AssignZoneRole"),
+        );
       }
-      const roles = await assignAndCacheRole(ctx, input);
-      return roles;
+      const { filteredRoles, data } = await assignAndCacheRole(ctx, input);
+
+      const { entity, id, template } = pushNotification.AssignNewZoneRole;
+
+      const receivers = [{ email: data.email, id: data.id }];
+
+      const onwInfo = await ctx.prisma.user.findUnique({
+        where: { email: ctx.user.email },
+        select: { username: true },
+      });
+
+      if (!onwInfo) throw new TRPCError(error.userNotFound(ctx.user.email));
+
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({
+          zoneName: data.RoleByZone[0].Zone.name,
+          sender: onwInfo?.username,
+          role: roleNameAssets[input.role].label,
+        }),
+        receivers,
+      });
+
+      return filteredRoles;
     }),
   deleteRoleByUser: protectedProcedure
     .input(z.object({ roleByZoneId: z.string().uuid() }))

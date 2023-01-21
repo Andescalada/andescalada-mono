@@ -1,9 +1,9 @@
+import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
-import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { InfoAccess, RequestStatus, RoleNames } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -147,31 +147,15 @@ export const zoneAccessRouter = t.router({
         },
       });
 
-      const roleByZone = await ctx.prisma.roleByZone.create({
-        data: {
-          User: { connect: { id: input.userId } },
-          Zone: { connect: { id: input.zoneId } },
-          Role: {
-            connect: {
-              name:
-                accessRequest.Zone.infoAccess === InfoAccess.Private
-                  ? RoleNames.Reader
-                  : RoleNames.Member,
-            },
-          },
-          AssignedBy: { connect: { email: ctx.user.email } },
-        },
-        select: {
-          Role: { select: { permissions: { select: { action: true } } } },
-          User: { select: { email: true } },
-          zoneId: true,
-        },
+      const roleByZone = await assignAndCacheRole(ctx, {
+        zoneId: input.zoneId,
+        role:
+          accessRequest.Zone.infoAccess === InfoAccess.Private
+            ? RoleNames.Reader
+            : RoleNames.Member,
+        userId: input.userId,
       });
 
-      const email = roleByZone.User.email;
-      const zoneId = roleByZone.zoneId;
-      const permissions = roleByZone.Role.permissions.flatMap((p) => p.action);
-      await updateRedisPermissions(ctx.access, email, zoneId, permissions);
       const receivers = [
         { email: accessRequest.User.email, id: accessRequest.User.id },
       ];

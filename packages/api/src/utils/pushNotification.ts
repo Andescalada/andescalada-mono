@@ -86,6 +86,22 @@ const pushNotification = {
         `${user} te ha dado acceso a la zona ${zoneName}, ahora puedes ver la guía`,
     },
   },
+  [EntityTypeId.AssignNewZoneRole]: {
+    id: EntityTypeId.AssignNewZoneRole,
+    entity: Entity.Zone,
+    template: {
+      es: ({
+        zoneName,
+        sender,
+        role,
+      }: {
+        zoneName: string;
+        sender: string;
+        role: string;
+      }) =>
+        `${sender} te ha asignado el rol de ${role}  para la zona ${zoneName}`,
+    },
+  },
 } satisfies NotificationEntityTypes;
 
 export default pushNotification;

@@ -5,6 +5,7 @@ import {
   Pressable,
   Text,
 } from "@andescalada/ui";
+import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
 import {
@@ -15,7 +16,6 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
 import { useNavigation } from "@react-navigation/native";
-import roleNameAssets from "@utils/roleNameAssets";
 import { FC } from "react";
 import { FlatList } from "react-native";
 

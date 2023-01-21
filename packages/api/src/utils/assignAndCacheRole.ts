@@ -5,11 +5,19 @@ import { TRPCError } from "@trpc/server";
 
 const assignAndCacheRole = async (
   ctx: Context,
-  input: { zoneId: string; role: RoleNames; username?: string; email?: string },
+  input: {
+    zoneId: string;
+    role: RoleNames;
+    username?: string;
+    email?: string;
+    userId?: string;
+  },
 ) => {
   const roleExist = await ctx.prisma.roleByZone.findMany({
     where: {
-      User: { OR: { username: input.username, email: input.email } },
+      User: {
+        OR: { username: input.username, email: input.email, id: input.userId },
+      },
       Zone: { id: input.zoneId },
       Role: { name: input.role },
     },
@@ -25,7 +33,11 @@ const assignAndCacheRole = async (
   const createRole = ctx.prisma.roleByZone.create({
     data: {
       User: {
-        connect: { email: input.email, username: input.username },
+        connect: {
+          email: input.email,
+          username: input.username,
+          id: input.userId,
+        },
       },
       Role: { connect: { name: input.role } },
       Zone: { connect: { id: input.zoneId } },
@@ -34,6 +46,7 @@ const assignAndCacheRole = async (
     select: {
       User: {
         select: {
+          id: true,
           email: true,
           RoleByZone: {
             select: {
@@ -69,7 +82,7 @@ const assignAndCacheRole = async (
     newPermissions,
   );
 
-  return filteredRoles;
+  return { filteredRoles, data: roles.User };
 };
 
 export default assignAndCacheRole;
