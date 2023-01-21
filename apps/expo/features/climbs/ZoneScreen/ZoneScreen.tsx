@@ -44,7 +44,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     }, [zoneId, isOfflineMode]),
   );
 
-  const { data, refetch, isFetching, isLoading, isError, isPaused } =
+  const { data, refetch, isFetching, isLoading, isPaused } =
     trpc.zones.allSectors.useQuery(
       { zoneId },
       {
@@ -126,14 +126,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
         />
       </FormProvider>
       <Box flex={1}>
-        <SectorsGateway
-          isLoading={isLoading}
-          isError={isError}
-          hasAccess={!!data?.hasAccess}
-          infoAccess={data?.infoAccess}
-        >
+        <SectorsGateway>
           <FlatList
-            data={[]}
+            data={data?.sectors}
             refreshControl={refresh}
             ListHeaderComponent={ZoneHeader}
             ListEmptyComponent={() => (

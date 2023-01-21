@@ -1,3 +1,4 @@
+import zone from "@andescalada/api/schemas/zone";
 import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
@@ -174,21 +175,31 @@ export const zoneAccessRouter = t.router({
 
       return { accessRequest, roleByZone };
     }),
-  rejectAgreements: protectedProcedure
+  respondAgreement: protectedProcedure
     .input(
       z.object({
         zoneId: z.string(),
         agreementRecord: z.string(),
+        hasAgreed: z.boolean(),
       }),
     )
     .mutation(({ ctx, input }) =>
       ctx.prisma.userZoneAgreementRecord.create({
         data: {
           agreementsRecord: input.agreementRecord,
-          hasAgreed: false,
+          hasAgreed: input.hasAgreed,
           User: { connect: { email: ctx.user.email } },
           Zone: { connect: { id: input.zoneId } },
         },
+      }),
+    ),
+  userLatestAccessStatus: protectedProcedure
+    .input(zone.id)
+    .query(({ ctx, input }) =>
+      ctx.prisma.zoneAccessRequest.findFirst({
+        where: { Zone: { id: input.zoneId }, User: { email: ctx.user.email } },
+        orderBy: { createdAt: "desc" },
+        select: { status: true },
       }),
     ),
 });

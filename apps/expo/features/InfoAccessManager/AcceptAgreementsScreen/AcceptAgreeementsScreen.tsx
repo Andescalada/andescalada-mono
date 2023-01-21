@@ -1,4 +1,12 @@
-import { BackButton, Box, Button, Screen, Text } from "@andescalada/ui";
+import { RequestStatusSchema } from "@andescalada/db/zod";
+import {
+  ActivityIndicator,
+  BackButton,
+  Box,
+  Button,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {
@@ -22,6 +30,9 @@ const AcceptAgreementsScreen: FC<Props> = ({
   const rootNavigation = useRootNavigation();
   const utils = trpc.useContext();
   const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
+  const accessStatus = trpc.zoneAccess.userLatestAccessStatus.useQuery({
+    zoneId,
+  });
 
   const requestAccess = trpc.zoneAccess.requestZoneAccess.useMutation({
     onSuccess: () => {
@@ -33,28 +44,52 @@ const AcceptAgreementsScreen: FC<Props> = ({
     },
   });
 
-  const rejectAgreements = trpc.zoneAccess.rejectAgreements.useMutation({
-    onMutate: () => {
+  const respondAgreements = trpc.zoneAccess.respondAgreement.useMutation({
+    onMutate: ({ hasAgreed }) => {
+      if (!hasAgreed)
+        rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+          screen: ClimbsNavigationRoutes.Zone,
+          params: { zoneId, zoneName },
+        });
+    },
+    onSuccess: () => {
       rootNavigation.navigate(RootNavigationRoutes.Climbs, {
         screen: ClimbsNavigationRoutes.Zone,
         params: { zoneId, zoneName },
       });
+      utils.zones.allSectors.invalidate({ zoneId });
     },
   });
 
   const handleRequestAccess = () => {
-    requestAccess.mutate({
+    if (accessStatus.data?.status === RequestStatusSchema.enum.Pending) {
+      requestAccess.mutate({
+        zoneId,
+        agreementRecord: stringify(agreements.data || "No agreements"),
+      });
+      return;
+    }
+    respondAgreements.mutate({
       zoneId,
       agreementRecord: stringify(agreements.data || "No agreements"),
+      hasAgreed: true,
     });
   };
 
   const handleRejection = () => {
-    rejectAgreements.mutate({
+    respondAgreements.mutate({
       zoneId,
       agreementRecord: stringify(agreements.data || "No agreements"),
+      hasAgreed: false,
     });
   };
+
+  if (agreements.isLoading || accessStatus.isLoading)
+    return (
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" />
+      </Box>
+    );
 
   if (!agreements.data || agreements.data.length === 0)
     return (
@@ -82,7 +117,11 @@ const AcceptAgreementsScreen: FC<Props> = ({
           </Text>
           <Button
             variant="success"
-            title="Solicitar acceso"
+            title={
+              accessStatus.data?.status === RequestStatusSchema.enum.Pending
+                ? "Solicitar acceso"
+                : "Aceptar"
+            }
             isLoading={requestAccess.isLoading}
             marginLeft="s"
             onPress={handleRequestAccess}
@@ -114,7 +153,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
             title="No gracias"
             flex={1}
             marginRight="s"
-            isLoading={rejectAgreements.isLoading}
+            isLoading={respondAgreements.isLoading}
             onPress={handleRejection}
           />
           <Button
@@ -122,7 +161,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
             title="Aceptar"
             flex={1}
             marginLeft="s"
-            isLoading={requestAccess.isLoading}
+            isLoading={requestAccess.isLoading || respondAgreements.isLoading}
             onPress={handleRequestAccess}
           />
         </Box>
