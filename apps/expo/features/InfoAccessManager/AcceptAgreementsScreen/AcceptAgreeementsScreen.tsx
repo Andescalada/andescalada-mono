@@ -122,7 +122,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
                 ? "Solicitar acceso"
                 : "Aceptar"
             }
-            isLoading={requestAccess.isLoading}
+            isLoading={requestAccess.isLoading || respondAgreements.isLoading}
             marginLeft="s"
             onPress={handleRequestAccess}
           />
