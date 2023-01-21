@@ -98,6 +98,15 @@ export const zonesRouter = t.router({
           take: 1,
           select: { status: true },
         },
+        UserZoneAgreementHistory: {
+          where: {
+            User: { email: ctx.user.email },
+            Zone: { id: input.zoneId },
+          },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { hasAgreed: true },
+        },
         sectors: {
           where: { isDeleted: SoftDelete.NotDeleted },
           include: {

@@ -1,4 +1,4 @@
-import { InfoAccessSchema } from "@andescalada/db/zod";
+import { InfoAccessSchema, RequestStatusSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Button, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -6,11 +6,12 @@ import {
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
+import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import infoAccessAssets from "@utils/infoAccessAssets";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 interface Props {
   isLoading: boolean;
@@ -26,15 +27,43 @@ const NoSectors = ({ isLoading, hasAccess, infoAccess, isError }: Props) => {
 
   const utils = trpc.useContext();
 
-  const { ZoneAccessRequest } =
+  const { ZoneAccessRequest, UserZoneAgreementHistory = [] } =
     utils.zones.allSectors.getData({ zoneId }) || {};
 
   const requestStatus = useMemo(() => {
-    if (ZoneAccessRequest?.length === 0) return "None";
+    if (ZoneAccessRequest?.length === 0) return undefined;
     return ZoneAccessRequest?.[0].status;
   }, [ZoneAccessRequest]);
 
   const rootNavigation = useRootNavigation();
+
+  const { permission } = usePermissions({ zoneId });
+
+  useEffect(() => {
+    if (
+      !isLoading &&
+      hasAccess &&
+      !isError &&
+      requestStatus === RequestStatusSchema.enum.Accepted &&
+      !permission?.has("EditZoneAgreements") &&
+      !UserZoneAgreementHistory[0]?.hasAgreed
+    ) {
+      rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+        screen: InfoAccessManagerRoutes.AgreementsIntro,
+        params: { zoneId, zoneName },
+      });
+    }
+  }, [
+    UserZoneAgreementHistory,
+    hasAccess,
+    isError,
+    isLoading,
+    permission,
+    requestStatus,
+    rootNavigation,
+    zoneId,
+    zoneName,
+  ]);
 
   if (isLoading)
     return (
