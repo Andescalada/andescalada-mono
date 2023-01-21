@@ -7,7 +7,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import SectorsGateway from "@features/climbs/ZoneScreen/NoSectors";
+import SectorsGateway from "@features/climbs/ZoneScreen/SectosGateway";
 import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import useOfflineMode from "@hooks/useOfflineMode";
