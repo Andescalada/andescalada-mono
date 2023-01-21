@@ -192,16 +192,3 @@ export const zoneAccessRouter = t.router({
       }),
     ),
 });
-
-type A = {
-  User: {
-    email: string;
-    profilePhoto: {
-      publicId: string | null;
-    } | null;
-    id: string;
-    name: string;
-    username: string;
-  };
-  status: RequestStatus;
-}[];
