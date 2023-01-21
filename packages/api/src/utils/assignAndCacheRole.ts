@@ -44,6 +44,7 @@ const assignAndCacheRole = async (
       AssignedBy: { connect: { email: ctx.user!.email } },
     },
     select: {
+      Zone: { select: { name: true } },
       User: {
         select: {
           id: true,
@@ -82,7 +83,7 @@ const assignAndCacheRole = async (
     newPermissions,
   );
 
-  return { filteredRoles, data: roles.User };
+  return { filteredRoles, data: roles };
 };
 
 export default assignAndCacheRole;

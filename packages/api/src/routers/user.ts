@@ -176,18 +176,21 @@ export const userRouter = t.router({
     .input(user.schema.pick({ username: true }).merge(user.role))
     .mutation(async ({ ctx, input }) => {
       if (
-        !ctx.user.permissions.includes("crud:roles") ||
+        !ctx.user.permissions.includes("crud:roles") &&
         !ctx.permissions.has("AssignZoneRole")
       ) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "AssignZoneRole"),
         );
       }
-      const { filteredRoles, data } = await assignAndCacheRole(ctx, input);
+      const {
+        filteredRoles,
+        data: { User, Zone },
+      } = await assignAndCacheRole(ctx, input);
 
       const { entity, id, template } = pushNotification.AssignNewZoneRole;
 
-      const receivers = [{ email: data.email, id: data.id }];
+      const receivers = [{ email: User.email, id: User.id }];
 
       const onwInfo = await ctx.prisma.user.findUnique({
         where: { email: ctx.user.email },
@@ -201,7 +204,7 @@ export const userRouter = t.router({
         entityId: input.zoneId,
         entityTypeId: id,
         message: template.es({
-          zoneName: data.RoleByZone[0].Zone.name,
+          zoneName: Zone.name,
           sender: onwInfo?.username,
           role: roleNameAssets[input.role].label,
         }),

@@ -6,6 +6,7 @@ import {
   Pressable,
   Screen,
   ScrollView,
+  SemanticButton,
   Text,
 } from "@andescalada/ui";
 import roleNameAssets from "@andescalada/utils/roleNameAssets";
@@ -154,6 +155,11 @@ const AddZoneRoleToUserScreen: FC<Props> = ({
         isLoading={isLoading}
         disabled={isLoading || !user || !role || isSuccess}
         marginVertical="m"
+      />
+      <SemanticButton
+        variant="error"
+        title="Cancelar"
+        onPress={navigation.goBack}
       />
       <FindUser ref={findUserRef} onSetUser={setUser} />
     </Screen>
