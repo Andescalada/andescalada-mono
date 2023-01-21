@@ -2,7 +2,6 @@ import {
   ActivityIndicator,
   AddButton,
   Box,
-  Ionicons,
   Pressable,
   Screen,
   Text,

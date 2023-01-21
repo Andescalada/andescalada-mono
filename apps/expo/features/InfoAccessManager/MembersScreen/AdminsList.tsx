@@ -1,11 +1,4 @@
-import {
-  ActivityIndicator,
-  AddButton,
-  Box,
-  Ionicons,
-  Pressable,
-  Text,
-} from "@andescalada/ui";
+import { ActivityIndicator, AddButton, Box, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
 import usePermissions from "@hooks/usePermissions";
