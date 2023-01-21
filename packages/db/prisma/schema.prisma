@@ -131,7 +131,7 @@ model UserZoneAgreementRecord {
   User             User     @relation(fields: [userId], references: [id])
   userId           String
   hasAgreed        Boolean
-  agreementsRecord String
+  agreementsRecord String   @db.LongText
 
   @@index([zoneId])
   @@index([userId])
