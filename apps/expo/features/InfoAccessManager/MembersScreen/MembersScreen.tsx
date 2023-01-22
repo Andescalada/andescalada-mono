@@ -45,7 +45,7 @@ const MembersScreen: FC<Props> = ({
         {permission?.has("GrantAccess") &&
           data?.infoAccess !== InfoAccessSchema.enum.Public && (
             <Tab.Screen name="Solicitudes">
-              {() => <AccessRequestList zoneId={zoneId} />}
+              {() => <AccessRequestList zoneId={zoneId} zoneName={zoneName} />}
             </Tab.Screen>
           )}
       </Tab.Navigator>

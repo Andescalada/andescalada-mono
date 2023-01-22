@@ -8,17 +8,28 @@ import {
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
+import {
+  InfoAccessManagerNavigationProps,
+  InfoAccessManagerRoutes,
+} from "@features/InfoAccessManager/Navigation/types";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
+import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import { FlatList } from "react-native";
 
 interface Props {
   zoneId: Zone["id"];
+  zoneName: Zone["name"];
 }
 
-const AccessRequestList: FC<Props> = ({ zoneId }) => {
+const AccessRequestList: FC<Props> = ({ zoneId, zoneName }) => {
+  const navigation =
+    useNavigation<
+      InfoAccessManagerNavigationProps<InfoAccessManagerRoutes.MembersScreen>
+    >();
+
   const utils = trpc.useContext();
 
   const { data, isLoading, refetch, isFetching } =
@@ -68,6 +79,12 @@ const AccessRequestList: FC<Props> = ({ zoneId }) => {
           flexDirection="row"
           justifyContent="space-between"
           margin="m"
+          onPress={() =>
+            navigation.navigate(
+              InfoAccessManagerRoutes.InviteUserToZoneScreen,
+              { zoneId, zoneName },
+            )
+          }
         >
           <Text variant="h4">Invitar</Text>
           <AddButton />
