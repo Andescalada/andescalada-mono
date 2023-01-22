@@ -109,8 +109,7 @@ model RoleByZone {
   Zone         Zone       @relation(fields: [zoneId], references: [id])
   zoneId       String
   Role         Role       @relation(fields: [roleName], references: [name])
-  roleName     RoleNames  @default(Reader)
-  roleId       String?
+  roleName     RoleNames
   AssignedBy   User       @relation("AssignedBy", fields: [assignedById], references: [id])
   assignedById String
   isDeleted    SoftDelete @default(NotDeleted)
