@@ -1,7 +1,8 @@
 import { RoleNamesSchema } from "@andescalada/db/zod";
-import { ActivityIndicator, Box, Text } from "@andescalada/ui";
+import { ActivityIndicator, Box, Button, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import type { Zone } from "@prisma/client";
 import { FC, useMemo } from "react";
@@ -27,6 +28,18 @@ const MembersList: FC<Props> = ({ zoneId }) => {
     return [...members, ...readers];
   }, [data]);
 
+  const utils = trpc.useContext();
+  const pauseAccess = trpc.zoneAccess.pauseUserAccess.useMutation({
+    onSuccess: () => {
+      utils.zones.usersByRole.invalidate({
+        roles: ["Member", "Reader"],
+        zoneId,
+      });
+    },
+  });
+
+  const { permission } = usePermissions({ zoneId });
+
   if (isLoading)
     return (
       <Box flex={1} justifyContent="center" alignItems="center">
@@ -44,7 +57,21 @@ const MembersList: FC<Props> = ({ zoneId }) => {
             <Text variant="p3R">No se encontraron miembros</Text>
           </Box>
         )}
-        renderItem={({ item }) => <UserItem item={item} />}
+        renderItem={({ item }) => (
+          <UserItem item={item}>
+            {permission?.has("PauseZoneAccess") && (
+              <Button
+                title="Pausar acceso"
+                variant="transparentSimplified"
+                titleVariant="p3B"
+                marginRight="s"
+                isLoading={pauseAccess.isLoading}
+                onPress={() => pauseAccess.mutate({ userId: item.id, zoneId })}
+                paddingHorizontal="xs"
+              />
+            )}
+          </UserItem>
+        )}
       />
     </Box>
   );
