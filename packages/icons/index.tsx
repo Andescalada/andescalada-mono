@@ -2,8 +2,6 @@ import { FC, useMemo } from "react";
 
 import { Icons } from "./map";
 
-const IconName =Object.keys(Icons).filter(k => k.search("color")=== -1) as (keyof typeof Icons)[];
-
 export type IconNames = keyof typeof Icons;
 
 interface Props {
