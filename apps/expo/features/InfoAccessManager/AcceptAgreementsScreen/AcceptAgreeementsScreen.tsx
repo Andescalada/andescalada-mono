@@ -62,17 +62,17 @@ const AcceptAgreementsScreen: FC<Props> = ({
   });
 
   const handleRequestAccess = () => {
-    if (accessStatus.data?.status === RequestStatusSchema.enum.Pending) {
-      requestAccess.mutate({
+    if (accessStatus.data?.status === RequestStatusSchema.enum.Accepted) {
+      respondAgreements.mutate({
         zoneId,
         agreementRecord: stringify(agreements.data || "No agreements"),
+        hasAgreed: true,
       });
       return;
     }
-    respondAgreements.mutate({
+    requestAccess.mutate({
       zoneId,
       agreementRecord: stringify(agreements.data || "No agreements"),
-      hasAgreed: true,
     });
   };
 
