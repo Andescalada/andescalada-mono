@@ -14,15 +14,9 @@ interface Props {
 export const Icon: FC<Props> = ({ name, size = 28, color, style }) => {
   const fill = useMemo(() => (style ? style[0].color : color), [color, style]);
 
-  return Icons[name] === undefined
-    ? Icons["help"]({
-        height: size,
-        width: size,
-        fill,
-      })
-    : Icons[name]({
-        height: size,
-        width: size,
-        fill,
-      });
+  return Icons[name]({
+    height: size,
+    width: size,
+    fill,
+  });
 };
