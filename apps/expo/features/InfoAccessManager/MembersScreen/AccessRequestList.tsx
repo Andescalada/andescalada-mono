@@ -1,3 +1,4 @@
+import { RequestStatusSchema, StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   AddButton,
@@ -45,8 +46,11 @@ const AccessRequestList: FC<Props> = ({ zoneId, zoneName }) => {
         { zoneId },
         (old) => {
           if (!old) return old;
+          const updateUser = old.find((item) => item.User.id === userId);
+          if (!updateUser) return old;
+          updateUser.status = RequestStatusSchema.enum.Accepted;
           const newData = old.filter((item) => item.User.id !== userId);
-          return newData;
+          return [...newData, updateUser];
         },
       );
       return { previousData };
@@ -106,9 +110,18 @@ const AccessRequestList: FC<Props> = ({ zoneId, zoneName }) => {
         renderItem={({ item }) => (
           <UserItem item={item.User}>
             <Button
-              title="Agregar"
-              variant="primary"
+              title={
+                item.status === RequestStatusSchema.enum.Accepted
+                  ? "Agregado"
+                  : "Agregar"
+              }
+              variant={
+                item.status === RequestStatusSchema.enum.Accepted
+                  ? "transparentSimplified"
+                  : "primary"
+              }
               titleVariant="p3B"
+              padding="xs"
               marginRight="s"
               onPress={() =>
                 acceptAccess.mutate({ userId: item.User.id, zoneId })
