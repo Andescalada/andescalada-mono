@@ -108,18 +108,20 @@ model RoleByZone {
   userId       String
   Zone         Zone       @relation(fields: [zoneId], references: [id])
   zoneId       String
-  Role         Role       @relation(fields: [roleId], references: [id])
-  roleId       String
+  Role         Role       @relation(fields: [roleName], references: [name])
+  roleName     RoleNames  @default(Reader)
+  roleId       String?
   AssignedBy   User       @relation("AssignedBy", fields: [assignedById], references: [id])
   assignedById String
   isDeleted    SoftDelete @default(NotDeleted)
   version      Int        @default(0)
 
+  @@unique([roleName, zoneId, userId], name: "rolebyzone_unique")
   @@index([id])
   @@index([assignedById])
-  @@index([userId, zoneId, roleId])
+  @@index([userId, zoneId, roleName])
   @@index([zoneId])
-  @@index([roleId])
+  @@index([roleName])
 }
 
 model UserZoneAgreementRecord {
@@ -187,6 +189,7 @@ enum PermissionActions {
   RequestZoneReview
   AssignZoneRole
   RevokeZoneRole
+  PauseZoneAccess
   EditZoneAgreements
 }
 

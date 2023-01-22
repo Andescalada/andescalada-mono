@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const access = Redis.fromEnv();
 
 const permissionsData: Prisma.PermissionsCreateInput[] = [
-  { action: "EditZoneAgreements" },
+  { action: "PauseZoneAccess" },
 ];
 
 async function main() {
@@ -26,7 +26,10 @@ async function main() {
     where: { name: RoleNames.Admin },
     data: {
       permissions: {
-        connect: [{ action: "EditZoneAgreements" }],
+        connect: [
+          { action: "PauseZoneAccess" },
+          { action: "EditZoneAgreements" },
+        ],
       },
     },
   });
