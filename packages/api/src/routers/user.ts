@@ -8,8 +8,8 @@ import parseZonesToRole from "@andescalada/api/src/utils/parseZonesToRole";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
+import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
-import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -213,55 +213,13 @@ export const userRouter = t.router({
 
       return filteredRoles;
     }),
-  deleteRoleByUser: protectedProcedure
+  adminDeleteRoleByUser: protectedProcedure
     .input(z.object({ roleByZoneId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       if (!ctx.user.permissions.includes("crud:roles")) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-      const deletedRole = ctx.prisma.roleByZone.delete({
-        where: { id: input.roleByZoneId },
-        select: {
-          zoneId: true,
-          userId: true,
-        },
-      });
-
-      const transaction = await ctx.prisma.$transaction([deletedRole]);
-
-      const userId = transaction[0].userId;
-      const zoneId = transaction[0].zoneId;
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: userId },
-        select: {
-          email: true,
-          RoleByZone: {
-            where: { zoneId },
-            select: {
-              id: true,
-              Role: {
-                select: { permissions: { select: { action: true } } },
-              },
-            },
-          },
-        },
-      });
-
-      if (user) {
-        const newPermissions = user.RoleByZone.flatMap((r) => r.Role)
-          .flatMap((r) => r.permissions)
-          .flatMap((p) => p.action);
-
-        await updateRedisPermissions(
-          ctx.access,
-          user.email,
-          zoneId,
-          newPermissions,
-        );
-      }
-
-      return transaction;
+      return removeRole(ctx, { roleByZoneId: input.roleByZoneId });
     }),
   uniqueUsername: protectedProcedure
     .input(user.schema.pick({ username: true }))

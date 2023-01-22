@@ -70,7 +70,7 @@ const ManageUserRolesScreen: FC<Props> = ({ navigation }) => {
     [user?.roles, zone?.id],
   );
 
-  const deleteRoleByZone = trpc.user.deleteRoleByUser.useMutation();
+  const deleteRoleByZone = trpc.user.adminDeleteRoleByUser.useMutation();
 
   const onDeleteRole = (id: RoleByZone["id"]) => {
     deleteRoleByZone.mutate({ roleByZoneId: id });
