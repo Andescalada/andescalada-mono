@@ -4,6 +4,7 @@ import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
+import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import { InfoAccess, RequestStatus, RoleNames } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -202,4 +203,61 @@ export const zoneAccessRouter = t.router({
         select: { status: true },
       }),
     ),
+  pauseUserAccess: protectedZoneProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        message: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("PauseZoneAccess")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "PauseZoneAccess"),
+        );
+      }
+
+      const infoAccess = await ctx.prisma.zone.findUnique({
+        where: { id: input.zoneId },
+        select: { infoAccess: true },
+      });
+
+      if (!infoAccess) throw new TRPCError(error.zoneNotFound(input.zoneId));
+
+      const roleToPause =
+        infoAccess.infoAccess === InfoAccess.Private
+          ? RoleNames.Reader
+          : RoleNames.Member;
+
+      const deletedRole = await removeRole(ctx, {
+        relation: {
+          zoneId: input.zoneId,
+          userId: input.userId,
+          roleName: roleToPause,
+        },
+      });
+
+      const accessRequest = await ctx.prisma.zoneAccessRequest.create({
+        data: {
+          status: RequestStatus.Paused,
+          User: { connect: { id: deletedRole.userId } },
+          Zone: { connect: { id: input.zoneId } },
+          modifiedBy: { connect: { email: ctx.user.email } },
+          message: input.message
+            ? {
+                create: {
+                  originalText: input.message,
+                  originalLang: { connect: { languageId: "es" } },
+                },
+              }
+            : undefined,
+        },
+        select: {
+          User: { select: { username: true, id: true, email: true } },
+          Zone: { select: { name: true, infoAccess: true } },
+          modifiedBy: { select: { username: true } },
+        },
+      });
+      return accessRequest;
+    }),
 });

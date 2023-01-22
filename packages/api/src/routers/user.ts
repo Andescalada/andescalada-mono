@@ -219,7 +219,7 @@ export const userRouter = t.router({
       if (!ctx.user.permissions.includes("crud:roles")) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-      return removeRole(ctx, { roleByZoneId: input.roleByZoneId });
+      return removeRole(ctx, { id: input.roleByZoneId });
     }),
   uniqueUsername: protectedProcedure
     .input(user.schema.pick({ username: true }))

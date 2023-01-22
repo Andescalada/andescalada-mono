@@ -1,14 +1,19 @@
 import { Context } from "@andescalada/api/src/createContext";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
+import { RoleNames, User, Zone } from "@prisma/client";
 
 const removeRole = async (
   ctx: Context,
   input: {
-    roleByZoneId: string;
+    id?: string;
+    relation?: { roleName: RoleNames; zoneId: Zone["id"]; userId: User["id"] };
   },
 ) => {
   const deletedRole = ctx.prisma.roleByZone.delete({
-    where: { id: input.roleByZoneId },
+    where: {
+      id: input.id,
+      rolebyzone_unique: input.relation,
+    },
     select: {
       zoneId: true,
       userId: true,
