@@ -26,6 +26,7 @@ import { FlatList, StyleSheet } from "react-native";
 type FindOutput = inferProcedureOutput<AppRouter["user"]["find"]>[0];
 
 export interface UserOutput {
+  id: FindOutput["id"];
   username: FindOutput["username"];
   email: FindOutput["email"];
   roles: FindOutput["RoleByZone"];
@@ -120,7 +121,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                 ) : null
               }
               renderItem={({
-                item: { username, RoleByZone, email, name, profilePhoto },
+                item: { username, RoleByZone, email, name, profilePhoto, id },
               }) => {
                 return (
                   <Pressable
@@ -131,7 +132,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                     justifyContent={"space-between"}
                     alignItems="center"
                     onPress={() => {
-                      onSetUser({ username, email, roles: RoleByZone });
+                      onSetUser({ username, email, roles: RoleByZone, id });
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore
                       ref?.current?.close();

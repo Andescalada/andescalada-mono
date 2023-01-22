@@ -59,7 +59,10 @@ const AccessRequestList: FC<Props> = ({ zoneId, zoneName }) => {
     },
     onSuccess: () => {
       utils.zoneAccess.usersRequestingAccessToZone.invalidate({ zoneId });
-      utils.zones.usersByRole.invalidate({ roles: ["Member"], zoneId });
+      utils.zones.usersByRole.invalidate({
+        roles: ["Member", "Reader"],
+        zoneId,
+      });
     },
   });
 
