@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
@@ -38,7 +38,7 @@
         "NSLocationAlwaysUsageDescription": "Necesitamos tu ubicación para mostrar las zonas de escalada más cercanas a ti.",
         "NSUserTrackingUsageDescription": "Mantenemos registro tu actividad dentro de la app para mejorarla y corregir problemas"
       },
-      "buildNumber": "19"
+      "buildNumber": "21"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -47,7 +47,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 19
+      "versionCode": 21
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
