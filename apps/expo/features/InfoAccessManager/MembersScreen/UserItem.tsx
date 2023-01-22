@@ -1,7 +1,15 @@
-import { User } from "@andescalada/api/src/utils/parseUsersToRole";
 import { Box, Pressable, Text } from "@andescalada/ui";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { ReactNode } from "react";
+
+export type User = {
+  profilePhoto: {
+    publicId: string | null;
+  } | null;
+  id: string;
+  name: string;
+  username: string;
+};
 
 interface Props {
   item: User;
