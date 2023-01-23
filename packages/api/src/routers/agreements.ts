@@ -4,6 +4,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { t } from "../createRouter";
 
@@ -111,7 +112,11 @@ export const agreementsRouter = t.router({
       }),
     ),
   delete: protectedZoneProcedure
-    .input(agreements.zoneAgreementId)
+    .input(
+      agreements.zoneAgreementId.merge(
+        z.object({ privateDelete: z.boolean().optional() }),
+      ),
+    )
     .mutation(({ ctx, input }) => {
       if (!ctx.permissions.has("EditZoneAgreements")) {
         throw new TRPCError(
@@ -120,7 +125,11 @@ export const agreementsRouter = t.router({
       }
       return ctx.prisma.zoneAgreement.update({
         where: { id: input.zoneAgreementId },
-        data: { isDeleted: SoftDelete.DeletedPublic },
+        data: {
+          isDeleted: input.privateDelete
+            ? SoftDelete.DeletedPrivate
+            : SoftDelete.DeletedPublic,
+        },
       });
     }),
   edit: protectedZoneProcedure

@@ -7,6 +7,7 @@ import {
   ListItem,
   Screen,
   Text,
+  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -52,6 +53,13 @@ const AddAgreementsScreen: FC<Props> = ({
   );
 
   const restoreAgreement = trpc.agreements.restoreAgreement.useMutation({
+    onSuccess: () => {
+      utils.agreements.adminListByZone.invalidate({ zoneId });
+      utils.agreements.listByZone.invalidate({ zoneId });
+    },
+  });
+
+  const privateDelete = trpc.agreements.delete.useMutation({
     onSuccess: () => {
       utils.agreements.adminListByZone.invalidate({ zoneId });
       utils.agreements.listByZone.invalidate({ zoneId });
@@ -122,19 +130,35 @@ const AddAgreementsScreen: FC<Props> = ({
                   <Text variant="p2R">
                     {classicAgreementAssets[item.Agreement.classic].title}
                   </Text>
-                  <Button
-                    variant="transparentSimplified"
-                    paddingHorizontal="xs"
-                    title="Restablecer"
-                    isLoading={restoreAgreement.isLoading}
-                    onPress={() =>
-                      restoreAgreement.mutate({
-                        zoneAgreementId: item.id,
-                        zoneId,
-                      })
-                    }
-                    titleVariant="p3R"
-                  />
+                  <Box flexDirection="row">
+                    <Button
+                      variant="transparentSimplified"
+                      paddingHorizontal="xs"
+                      title="Restablecer"
+                      isLoading={restoreAgreement.isLoading}
+                      onPress={() =>
+                        restoreAgreement.mutate({
+                          zoneAgreementId: item.id,
+                          zoneId,
+                        })
+                      }
+                      titleVariant="p3R"
+                      marginRight="s"
+                    />
+                    <TextButton
+                      variant="error"
+                      isLoading={privateDelete.isLoading}
+                      onPress={() => {
+                        privateDelete.mutate({
+                          zoneAgreementId: item.id,
+                          zoneId,
+                          privateDelete: true,
+                        });
+                      }}
+                    >
+                      Borrar
+                    </TextButton>
+                  </Box>
                 </ListItem>
               ) : null
             }

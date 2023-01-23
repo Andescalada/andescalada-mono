@@ -1,5 +1,6 @@
 import { ComponentProps, FC, ReactNode, useMemo } from "react";
 
+import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
 import { Colors } from "../Theme/theme";
@@ -9,6 +10,7 @@ interface Props extends ComponentProps<typeof Pressable> {
   textProps?: Omit<ComponentProps<typeof Text>, "variant">;
   children?: ReactNode;
   textVariant?: ComponentProps<typeof Text>["variant"];
+  isLoading?: boolean;
 }
 
 const TextButton: FC<Props> = ({
@@ -16,6 +18,7 @@ const TextButton: FC<Props> = ({
   textVariant = "p2R",
   textProps,
   variant,
+  isLoading,
   ...props
 }) => {
   const color = useMemo(
@@ -27,14 +30,18 @@ const TextButton: FC<Props> = ({
   );
   return (
     <Pressable {...props}>
-      <Text
-        variant={textVariant}
-        color={color}
-        textDecorationLine="underline"
-        {...textProps}
-      >
-        {children}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator size="small" color={color} />
+      ) : (
+        <Text
+          variant={textVariant}
+          color={color}
+          textDecorationLine="underline"
+          {...textProps}
+        >
+          {children}
+        </Text>
+      )}
     </Pressable>
   );
 };
