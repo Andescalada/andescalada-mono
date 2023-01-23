@@ -11,7 +11,7 @@ import { FC, useState } from "react";
 
 type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.FireAgreement>;
 
-const PetsAgreementScreen: FC<Props> = ({
+const FireAgreementScreen: FC<Props> = ({
   navigation,
   route: {
     params: { zoneId },
@@ -40,4 +40,4 @@ const PetsAgreementScreen: FC<Props> = ({
   );
 };
 
-export default PetsAgreementScreen;
+export default FireAgreementScreen;
