@@ -24,6 +24,8 @@ interface TextFieldAccordionProps
   value: string;
   onChangeText: (comment: string) => void;
   show?: boolean;
+  defaultOpen?: boolean;
+  hideToggle?: boolean;
 }
 
 export interface TextFieldAccordionRef {
@@ -42,11 +44,13 @@ const TextFieldAccordion: ForwardRefRenderFunction<
     value: comment,
     onChangeText: setComment,
     show = true,
+    defaultOpen = false,
+    hideToggle = false,
     ...props
   },
   ref,
 ) => {
-  const [isAddComment, setIsAddComment] = useState(false);
+  const [isAddComment, setIsAddComment] = useState(defaultOpen);
 
   const textRef = useRef<TextInputRef>() as RefObject<TextInputRef>;
 
@@ -68,10 +72,14 @@ const TextFieldAccordion: ForwardRefRenderFunction<
         >
           <Text variant="p1B">{label}</Text>
           <Pressable
+            visible={!hideToggle}
             backgroundColor="semantic.info"
             borderRadius={10}
             padding="xs"
-            onPress={() => setIsAddComment((prev) => !prev)}
+            onPress={() => {
+              setComment("");
+              setIsAddComment((prev) => !prev);
+            }}
           >
             {isAddComment ? (
               <Text padding="s">{cancelButtonLabel}</Text>

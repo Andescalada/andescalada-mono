@@ -22,7 +22,7 @@ import AgreementLevelBadge from "@features/climbs/ZoneAgreementsEditorScreen/Agr
 import { ZoneAgreementsRoutes } from "@features/zoneAgreementManager/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { Alert, FlatList } from "react-native";
 import { FadeInUp, FadeOut, Layout } from "react-native-reanimated";
 
@@ -61,6 +61,24 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
       params: { zoneId },
     });
   };
+
+  const onDelete = useCallback(
+    (id: string) =>
+      Alert.alert("Eliminar", "¿Estás seguro de eliminar este acuerdo?", [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: () => {
+            deleteAgreement.mutate({
+              zoneAgreementId: id,
+              zoneId,
+            });
+          },
+        },
+      ]),
+    [],
+  );
 
   return (
     <Screen safeAreaDisabled>
@@ -145,25 +163,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
                   borderRadius={25}
                   backgroundColor="semantic.error"
                   padding="xs"
-                  onPress={() =>
-                    Alert.alert(
-                      "Eliminar",
-                      "¿Estás seguro de eliminar este acuerdo?",
-                      [
-                        { text: "Cancelar", style: "cancel" },
-                        {
-                          text: "Eliminar",
-                          style: "destructive",
-                          onPress: () => {
-                            deleteAgreement.mutate({
-                              zoneAgreementId: item.id,
-                              zoneId,
-                            });
-                          },
-                        },
-                      ],
-                    )
-                  }
+                  onPress={() => onDelete(item.id)}
                 >
                   <Ionicons name="close" color="background" size={15} />
                 </Pressable>
@@ -195,7 +195,12 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
               )}
             </ListItem>
             {item.Agreement?.ZoneAgreement[0]?.comment?.originalText && (
-              <SubItem justifyContent="center" height={undefined} padding="s">
+              <SubItem
+                justifyContent="center"
+                height={undefined}
+                padding="s"
+                marginHorizontal="l"
+              >
                 <Text variant="p3R">
                   {item.Agreement?.ZoneAgreement[0]?.comment?.originalText.trim()}
                 </Text>
