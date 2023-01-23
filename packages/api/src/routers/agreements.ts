@@ -14,7 +14,9 @@ export const agreementsRouter = t.router({
     }),
   ),
   addToZoneList: protectedZoneProcedure
-    .input(agreements.schema.merge(agreements.classic))
+    .input(
+      agreements.data.merge(agreements.classic).merge(agreements.agreementId),
+    )
     .mutation(({ ctx, input }) =>
       ctx.prisma.zoneAgreement.create({
         data: {

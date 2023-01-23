@@ -4,12 +4,15 @@ import {
 } from "@andescalada/db/zod";
 import { z } from "zod";
 
-const schema = z.object({
-  agreementId: z.string(),
-  level: AgreementLevelSchema,
-  comment: z.string().max(280).optional(),
+const agreementId = z.object({ agreementId: z.string() });
+const data = z.object({
+  level: z.nativeEnum(AgreementLevelSchema.enum, {
+    invalid_type_error: "Requerido",
+    description: "Requerido",
+  }),
+  comment: z.string().max(280, { message: "Máximo 280 caracteres" }).optional(),
 });
 
 const classic = z.object({ classic: ClassicAgreementSchema });
 
-export default { schema, classic };
+export default { data, classic, agreementId };
