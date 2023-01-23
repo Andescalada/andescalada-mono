@@ -17,8 +17,6 @@ const PetsAgreementScreen: FC<Props> = ({
     params: { zoneId },
   },
 }) => {
-  const [selected, setSelected] = useState<string>();
-
   trpc.agreements.classic.useQuery({
     classic: ClassicAgreementSchema.enum.Fire,
   });
@@ -28,8 +26,6 @@ const PetsAgreementScreen: FC<Props> = ({
       <ClassicAgreementContainer
         zoneId={zoneId}
         title="Sobre acampar:"
-        value={selected}
-        onChange={(v) => setSelected(v as string)}
         onSubmit={() =>
           navigation.navigate(ZoneAgreementsRoutes.FireAgreement, { zoneId })
         }

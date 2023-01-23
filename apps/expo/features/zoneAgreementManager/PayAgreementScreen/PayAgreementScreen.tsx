@@ -7,7 +7,7 @@ import {
   ZoneAgreementsRoutes,
   ZoneAgreementsScreenProps,
 } from "@features/zoneAgreementManager/Navigation/types";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.PayAgreement>;
 
@@ -17,7 +17,6 @@ const PetsAgreementScreen: FC<Props> = ({
     params: { zoneId },
   },
 }) => {
-  const [selected, setSelected] = useState<string>();
   trpc.agreements.classic.useQuery({
     classic: ClassicAgreementSchema.enum.Toilet,
   });
@@ -26,8 +25,6 @@ const PetsAgreementScreen: FC<Props> = ({
       <ClassicAgreementContainer
         zoneId={zoneId}
         title="Sobre el acceso:"
-        value={selected}
-        onChange={(v) => setSelected(v as string)}
         onSubmit={() =>
           navigation.navigate(ZoneAgreementsRoutes.ToiletAgreement, { zoneId })
         }

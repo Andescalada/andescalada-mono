@@ -10,7 +10,7 @@ import {
 } from "@features/zoneAgreementManager/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.ToiletAgreement>;
 
@@ -19,8 +19,6 @@ const PetsAgreementScreen: FC<Props> = ({
     params: { zoneId },
   },
 }) => {
-  const [selected, setSelected] = useState<string>();
-
   const rootNavigation = useRootNavigation();
 
   const zone = trpc.useContext().zones.allSectors.getData({ zoneId });
@@ -30,8 +28,6 @@ const PetsAgreementScreen: FC<Props> = ({
       <ClassicAgreementContainer
         zoneId={zoneId}
         title="Sobre donde ir al baño:"
-        value={selected}
-        onChange={(v) => setSelected(v as string)}
         onSubmit={() => {
           if (zone)
             rootNavigation.navigate(RootNavigationRoutes.Climbs, {

@@ -37,9 +37,7 @@ interface SubmitArgs {
   comment?: string;
 }
 
-interface Props
-  extends ComponentProps<typeof ButtonGroup>,
-    ComponentProps<typeof Box> {
+interface Props extends ComponentProps<typeof Box> {
   children: ReactNode;
   onSubmit: (args: SubmitArgs) => void;
   submitLabel?: string;
@@ -52,16 +50,14 @@ const UNDEFINED_AGREEMENT = "UNDEFINED_AGREEMENT";
 
 const ClassicAgreementContainer: FC<Props> = ({
   children,
-  value,
-  onChange,
   onSubmit,
   submitLabel,
-  allowUndefined,
   title,
   classic,
   zoneId,
   ...props
 }) => {
+  const [selected, setSelected] = useState<string>();
   const { isLoading } = trpc.agreements.classic.useQuery({
     classic,
   });
@@ -115,9 +111,9 @@ const ClassicAgreementContainer: FC<Props> = ({
             {title}
           </Text>
           <ButtonGroup
-            value={value}
-            allowUndefined={allowUndefined}
-            onChange={onChange}
+            value={selected}
+            allowUndefined={false}
+            onChange={(v) => setSelected(v as string | undefined)}
           >
             {children}
             <UndefinedAgreementButton />
@@ -135,8 +131,8 @@ const ClassicAgreementContainer: FC<Props> = ({
               level={level}
               comment={comment}
               show={
-                value !== undefined &&
-                (level !== undefined || value === UNDEFINED_AGREEMENT) &&
+                selected !== undefined &&
+                (level !== undefined || selected === UNDEFINED_AGREEMENT) &&
                 comment.length <= 280
               }
             />

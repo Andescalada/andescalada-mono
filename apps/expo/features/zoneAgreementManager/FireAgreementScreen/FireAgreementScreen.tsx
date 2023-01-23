@@ -7,7 +7,7 @@ import {
   ZoneAgreementsRoutes,
   ZoneAgreementsScreenProps,
 } from "@features/zoneAgreementManager/Navigation/types";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.FireAgreement>;
 
@@ -17,7 +17,6 @@ const FireAgreementScreen: FC<Props> = ({
     params: { zoneId },
   },
 }) => {
-  const [selected, setSelected] = useState<string>();
   trpc.agreements.classic.useQuery({
     classic: ClassicAgreementSchema.enum.Payment,
   });
@@ -27,8 +26,6 @@ const FireAgreementScreen: FC<Props> = ({
       <ClassicAgreementContainer
         zoneId={zoneId}
         title="Sobre hacer fuego:"
-        value={selected}
-        onChange={(v) => setSelected(v as string)}
         onSubmit={() =>
           navigation.navigate(ZoneAgreementsRoutes.PayAgreement, { zoneId })
         }

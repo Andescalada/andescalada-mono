@@ -7,7 +7,7 @@ import {
   ZoneAgreementsRoutes,
   ZoneAgreementsScreenProps,
 } from "@features/zoneAgreementManager/Navigation/types";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.PetsAgreement>;
 
@@ -17,8 +17,6 @@ const PetsAgreementScreen: FC<Props> = ({
     params: { zoneId },
   },
 }) => {
-  const [selected, setSelected] = useState<string>();
-
   trpc.agreements.classic.useQuery({
     classic: ClassicAgreementSchema.enum.Camping,
   });
@@ -27,9 +25,7 @@ const PetsAgreementScreen: FC<Props> = ({
     <Screen safeAreaDisabled>
       <ClassicAgreementContainer
         title="Sobre mascotas:"
-        value={selected}
         zoneId={zoneId}
-        onChange={(v) => setSelected(v as string)}
         onSubmit={() => {
           navigation.navigate(ZoneAgreementsRoutes.CampingAgreement, {
             zoneId,
