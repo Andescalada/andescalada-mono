@@ -1,4 +1,5 @@
 import { Box, Pressable, Text } from "@andescalada/ui";
+import useOwnInfo from "@hooks/useOwnInfo";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { ReactNode } from "react";
 
@@ -17,9 +18,11 @@ interface Props {
 }
 
 const UserItem = ({
-  item: { username, name, profilePhoto },
+  item: { username, name, profilePhoto, id },
   children,
 }: Props) => {
+  const user = useOwnInfo();
+
   return (
     <Pressable
       padding="s"
@@ -40,6 +43,17 @@ const UserItem = ({
             {username}
           </Text>
         </Box>
+        {user.data?.id === id && (
+          <Box
+            backgroundColor="semantic.info"
+            paddingVertical="xs"
+            paddingHorizontal="s"
+            borderRadius={16}
+            marginLeft="m"
+          >
+            <Text>Yo</Text>
+          </Box>
+        )}
       </Box>
       <Box>{children}</Box>
     </Pressable>
