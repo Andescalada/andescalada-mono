@@ -11,6 +11,7 @@ import {
   Screen,
   SubItem,
   Text,
+  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -78,11 +79,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
             ) : (
               <>
                 <Text variant="h2">Sin acuerdos</Text>
-                <Pressable onPress={onAddAgreement}>
-                  <Text variant="p2R" marginTop="l" color="semantic.info">
-                    Agregar
-                  </Text>
-                </Pressable>
+                <TextButton variant="info">Agregar</TextButton>
               </>
             )}
           </Box>

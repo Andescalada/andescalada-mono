@@ -36,7 +36,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
           })
         }
       >
-        Acuerdos
+        Editar acuerdos
       </ListItemOption>
     </Screen>
   );

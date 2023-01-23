@@ -8,9 +8,14 @@ import {
   ListItem,
   SubItem,
   Text,
+  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import AgreementLevelBadge from "@features/climbs/ZoneAgreementsEditorScreen/AgreementLevelBadge";
+import { ZoneAgreementsRoutes } from "@features/zoneAgreementManager/Navigation/types";
+import usePermissions from "@hooks/usePermissions";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { ComponentProps, FC, useState } from "react";
 import { FlatList } from "react-native";
 import { FadeInUp, FadeOut, Layout } from "react-native-reanimated";
@@ -31,7 +36,9 @@ const ZoneAgreementsScreen: FC<Props> = ({
   ...props
 }) => {
   const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
+  const { permission } = usePermissions({ zoneId });
   const [openDescription, setOpenDescription] = useState(!toggleDescriptions);
+  const rootNavigation = useRootNavigation();
   return (
     <FlatList
       data={agreements.data}
@@ -47,7 +54,25 @@ const ZoneAgreementsScreen: FC<Props> = ({
           {agreements.isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
-            <Text variant="p1R">Sin acuerdos</Text>
+            <Box alignItems="center">
+              <Text variant="p1R">Sin acuerdos</Text>
+              {permission?.has("EditZoneAgreements") && (
+                <TextButton
+                  variant="info"
+                  onPress={() =>
+                    rootNavigation.navigate(
+                      RootNavigationRoutes.ZoneAgreementsManager,
+                      {
+                        screen: ZoneAgreementsRoutes.AgreementsIntro,
+                        params: { zoneId },
+                      },
+                    )
+                  }
+                >
+                  Agregar
+                </TextButton>
+              )}
+            </Box>
           )}
         </Box>
       )}
