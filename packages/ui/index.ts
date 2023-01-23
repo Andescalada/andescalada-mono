@@ -23,6 +23,7 @@ export {
   default as MapTypeToolbar,
   useMapType,
 } from "./MapTypeToolbar/MapTypeToolbar";
+export { default as Modal } from "./Modal/Modal";
 export { default as Pressable } from "./Pressable/Pressable";
 export { default as SafeAreaView } from "./SafeAreaView/SafeAreaView";
 export { default as Screen } from "./Screen/Screen";
