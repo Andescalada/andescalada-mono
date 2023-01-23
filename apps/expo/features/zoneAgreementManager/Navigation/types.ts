@@ -1,3 +1,4 @@
+import { ClassicAgreementSchema } from "@andescalada/db/zod";
 import type { Zone, ZoneAgreement } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -11,6 +12,7 @@ export enum ZoneAgreementsRoutes {
   ToiletAgreement = "ToiletAgreement",
   EditAgreement = "EditAgreement",
   AddAgreements = "AddAgreements",
+  SelectClassicAgreement = "SelectClassicAgreement",
 }
 
 export type ZoneAgreementsNavigationParamList = {
@@ -27,6 +29,10 @@ export type ZoneAgreementsNavigationParamList = {
   [ZoneAgreementsRoutes.AddAgreements]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
+  };
+  [ZoneAgreementsRoutes.SelectClassicAgreement]: {
+    zoneId: Zone["id"];
+    classicAgreement: typeof ClassicAgreementSchema._type;
   };
 };
 

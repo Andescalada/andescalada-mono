@@ -5,6 +5,7 @@ import EditAgreementScreen from "@features/zoneAgreementManager/EditAgreementScr
 import FireAgreementScreen from "@features/zoneAgreementManager/FireAgreementScreen";
 import PayAgreementScreen from "@features/zoneAgreementManager/PayAgreementScreen";
 import PetsAgreement from "@features/zoneAgreementManager/PetsAgreementScreen";
+import SelectClassicAgreementScreen from "@features/zoneAgreementManager/SelectClassicAgreementScreen";
 import ToiletAgreementScreen from "@features/zoneAgreementManager/ToiletAgreementScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
@@ -58,6 +59,14 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneAgreementsRoutes.ToiletAgreement}
         component={ToiletAgreementScreen}
+        options={{
+          title: "Acuerdos clásicos",
+          ...backHeader,
+        }}
+      />
+      <Stack.Screen
+        name={ZoneAgreementsRoutes.SelectClassicAgreement}
+        component={SelectClassicAgreementScreen}
         options={{
           title: "Acuerdos clásicos",
           ...backHeader,
