@@ -71,7 +71,11 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
         padding="m"
       >
         <Text variant="h1">{zoneName}</Text>
-        {!!agreements.data && <TextButton variant="info">Editar</TextButton>}
+        {!!agreements.data && (
+          <TextButton variant="info" onPress={onAddAgreement}>
+            Editar
+          </TextButton>
+        )}
       </Box>
       <FlatList
         data={agreements.data}
@@ -112,20 +116,29 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
                 top={-15}
                 flexDirection="row"
               >
-                <Box
+                <Pressable
                   borderWidth={3}
                   borderColor="background"
                   borderRadius={25}
                   backgroundColor="semantic.info"
                   padding="xs"
                   marginRight="s"
+                  onPress={() =>
+                    rootNavigation.navigate(
+                      RootNavigationRoutes.ZoneAgreementsManager,
+                      {
+                        screen: ZoneAgreementsRoutes.EditAgreement,
+                        params: { zoneId, zoneAgreementId: item.id },
+                      },
+                    )
+                  }
                 >
                   <Ionicons
                     name="settings-sharp"
                     color="background"
                     size={15}
                   />
-                </Box>
+                </Pressable>
                 <Pressable
                   borderWidth={3}
                   borderColor="background"

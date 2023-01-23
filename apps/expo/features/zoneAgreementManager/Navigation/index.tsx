@@ -1,5 +1,6 @@
 import AgreementsIntroScreen from "@features/zoneAgreementManager/AgreementsIntroScreen";
 import CampingAgreementScreen from "@features/zoneAgreementManager/CampingAgreementScreen";
+import EditAgreementScreen from "@features/zoneAgreementManager/EditAgreementScreen";
 import FireAgreementScreen from "@features/zoneAgreementManager/FireAgreementScreen";
 import PayAgreementScreen from "@features/zoneAgreementManager/PayAgreementScreen";
 import PetsAgreement from "@features/zoneAgreementManager/PetsAgreementScreen";
@@ -58,6 +59,14 @@ const Navigator = () => {
         component={ToiletAgreementScreen}
         options={{
           title: "Acuerdos clásicos",
+          ...backHeader,
+        }}
+      />
+      <Stack.Screen
+        name={ZoneAgreementsRoutes.EditAgreement}
+        component={EditAgreementScreen}
+        options={{
+          title: "Editar acuerdo",
           ...backHeader,
         }}
       />
