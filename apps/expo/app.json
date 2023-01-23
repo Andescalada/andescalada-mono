@@ -23,6 +23,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.andescalada.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
           "uber",
