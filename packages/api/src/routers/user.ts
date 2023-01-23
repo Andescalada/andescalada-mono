@@ -10,6 +10,7 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
+import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -146,9 +147,32 @@ export const userRouter = t.router({
       let permissions: Permissions = new Set();
       if (res) {
         permissions = deserialize<Permissions>(res);
+        return permissions;
       }
 
-      return permissions;
+      const roles = await ctx.prisma.roleByZone.findMany({
+        where: { User: { email: ctx.user.email }, Zone: { id: input.zoneId } },
+        select: {
+          Role: {
+            select: { permissions: { select: { action: true } } },
+          },
+        },
+      });
+
+      if (!roles) return permissions;
+
+      const newPermissions = roles
+        .flatMap((r) => r.Role.permissions)
+        .flatMap((p) => p.action);
+
+      const updatedPermissions = await updateRedisPermissions(
+        ctx.access,
+        ctx.user.email,
+        input.zoneId,
+        newPermissions,
+      );
+
+      return updatedPermissions;
     }),
   zonesByRole: protectedProcedure.query(({ ctx }) =>
     ctx.prisma.user
