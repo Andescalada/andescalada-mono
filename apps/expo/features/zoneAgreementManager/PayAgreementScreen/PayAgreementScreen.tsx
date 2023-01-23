@@ -24,7 +24,7 @@ const PetsAgreementScreen: FC<Props> = ({
     <Screen safeAreaDisabled>
       <ClassicAgreementContainer
         zoneId={zoneId}
-        title="Sobre el acceso:"
+        title="Sobre cobros:"
         onSubmit={() =>
           navigation.navigate(ZoneAgreementsRoutes.ToiletAgreement, { zoneId })
         }

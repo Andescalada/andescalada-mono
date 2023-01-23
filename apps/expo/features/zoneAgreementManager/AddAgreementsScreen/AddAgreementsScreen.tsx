@@ -1,12 +1,21 @@
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import { ClassicAgreementSchema } from "@andescalada/db/zod";
-import { Screen, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  Box,
+  ListItem,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneAgreementsRoutes,
   ZoneAgreementsScreenProps,
 } from "@features/zoneAgreementManager/Navigation/types";
+import useRefresh from "@hooks/useRefresh";
+import classicAgreementAssets from "@utils/classicAgreementAssets";
 import { FC, useMemo } from "react";
+import { FlatList } from "react-native";
 
 type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.AddAgreements>;
 
@@ -14,6 +23,7 @@ const AddAgreementsScreen: FC<Props> = ({
   route: {
     params: { zoneId },
   },
+  navigation,
 }) => {
   const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
 
@@ -31,11 +41,48 @@ const AddAgreementsScreen: FC<Props> = ({
     [existingClassicAgreements],
   );
 
-  console.log({ existingClassicAgreements, missingClassicAgreements });
+  const refresh = useRefresh(
+    agreements.refetch,
+    agreements.isFetching && !agreements.isLoading,
+  );
+
+  if (agreements.isLoading)
+    return (
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" />
+      </Box>
+    );
 
   return (
-    <Screen>
-      <Text></Text>
+    <Screen safeAreaDisabled padding="m">
+      <FlatList
+        data={missingClassicAgreements}
+        refreshControl={refresh}
+        keyExtractor={(item) => item}
+        ListEmptyComponent={() => (
+          <Box
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
+            marginTop="xxxl"
+          >
+            <Text variant="p3R">No hay acuerdos disponibles para agregar</Text>
+          </Box>
+        )}
+        renderItem={({ item }) => (
+          <ListItem
+            marginBottom="m"
+            onPress={() =>
+              navigation.navigate(ZoneAgreementsRoutes.SelectClassicAgreement, {
+                classicAgreement: item,
+                zoneId,
+              })
+            }
+          >
+            <Text>{classicAgreementAssets[item].title}</Text>
+          </ListItem>
+        )}
+      />
     </Screen>
   );
 };
