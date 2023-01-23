@@ -6,6 +6,7 @@ import { SlideInDown } from "react-native-reanimated";
 
 interface Props extends ComponentProps<typeof Box> {
   onContinue: () => void;
+  showSkip?: boolean;
 }
 
 const DELAY = 1800;
@@ -15,7 +16,11 @@ export const skipAgreementsIntro = atomWithMMKV(
   false,
 );
 
-const AgreementsIntro: FC<Props> = ({ onContinue, ...props }) => {
+const AgreementsIntro: FC<Props> = ({
+  onContinue,
+  showSkip = false,
+  ...props
+}) => {
   const [skip, setSkip] = useAtom(skipAgreementsIntro);
   return (
     <Box flex={1} backgroundColor="brand.primaryA" {...props}>
@@ -79,21 +84,23 @@ const AgreementsIntro: FC<Props> = ({ onContinue, ...props }) => {
               entering={SlideInDown.delay(DELAY * 3)}
             >
               <Box padding="m" paddingHorizontal="xxl">
-                <Pressable
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  marginBottom="s"
-                  onPress={() => setSkip((prev) => !prev)}
-                >
-                  <Ionicons
-                    name={skip ? "checkbox" : "stop-outline"}
-                    size={25}
-                  />
-                  <Text variant="p3R" marginLeft="s">
-                    No mostrar más
-                  </Text>
-                </Pressable>
+                {showSkip && (
+                  <Pressable
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="center"
+                    marginBottom="s"
+                    onPress={() => setSkip((prev) => !prev)}
+                  >
+                    <Ionicons
+                      name={skip ? "checkbox" : "stop-outline"}
+                      size={25}
+                    />
+                    <Text variant="p3R" marginLeft="s">
+                      No mostrar más
+                    </Text>
+                  </Pressable>
+                )}
                 <Button
                   variant="transparent"
                   title="Continuar"

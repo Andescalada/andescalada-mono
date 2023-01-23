@@ -19,6 +19,7 @@ export enum ClimbsNavigationRoutes {
   AdminZoneOptions = "AdminZoneOptions",
   ZoneAgreementsEditor = "ZoneAgreementsEditor",
   ZoneAgreements = "ZoneAgreements",
+  AgreementsIntro = "ClimbsAgreementsIntro",
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -71,6 +72,7 @@ export type ClimbsNavigationNavigationParamList = {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };
+  [ClimbsNavigationRoutes.AgreementsIntro]: undefined;
 };
 
 export type ClimbsNavigationRouteProps<T extends ClimbsNavigationRoutes> =

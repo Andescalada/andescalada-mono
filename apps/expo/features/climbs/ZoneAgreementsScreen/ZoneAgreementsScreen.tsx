@@ -1,4 +1,4 @@
-import { Box, Screen, Text } from "@andescalada/ui";
+import { Box, Ionicons, Screen, Text } from "@andescalada/ui";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -12,6 +12,7 @@ const ZoneAgreementsScreen: FC<Props> = ({
   route: {
     params: { zoneName, zoneId },
   },
+  navigation,
 }) => {
   return (
     <Screen safeAreaDisabled padding="m">
@@ -21,6 +22,15 @@ const ZoneAgreementsScreen: FC<Props> = ({
         alignItems="center"
       >
         <Text variant="h1">{zoneName}</Text>
+        <Box>
+          <Ionicons
+            name="information-circle"
+            size={24}
+            onPress={() =>
+              navigation.navigate(ClimbsNavigationRoutes.AgreementsIntro)
+            }
+          />
+        </Box>
       </Box>
       <AgreementsList zoneId={zoneId} toggleDescriptions />
     </Screen>

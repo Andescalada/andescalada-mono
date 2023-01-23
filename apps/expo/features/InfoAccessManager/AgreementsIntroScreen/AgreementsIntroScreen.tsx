@@ -16,6 +16,7 @@ const AgreementsIntroScreen: FC<Props> = ({
   return (
     <Screen backgroundColor="brand.primaryA">
       <AgreementsIntro
+        showSkip
         onContinue={() =>
           navigation.navigate(InfoAccessManagerRoutes.AcceptAgreements, params)
         }

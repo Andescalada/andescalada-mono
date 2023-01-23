@@ -3,6 +3,7 @@ import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
 import AdminZoneOptionsScreen from "@features/climbs/AdminZoneOptionsScreen";
+import AgreementsIntroScreen from "@features/climbs/AgreementsIntroScreen";
 import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
 import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
@@ -72,6 +73,10 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.Wall}
           component={WallScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.AgreementsIntro}
+          component={AgreementsIntroScreen}
         />
 
         <Stack.Screen
