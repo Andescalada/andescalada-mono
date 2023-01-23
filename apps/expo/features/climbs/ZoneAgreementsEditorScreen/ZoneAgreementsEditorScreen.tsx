@@ -35,19 +35,19 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
   },
 }) => {
   const utils = trpc.useContext();
-  const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
+  const agreements = trpc.agreements.listByZone.useQuery({ zoneId });
 
   const deleteAgreement = trpc.agreements.delete.useMutation({
     onMutate: async ({ zoneAgreementId }) => {
-      await utils.zones.agreementsList.cancel();
-      const previousData = utils.zones.agreementsList.getData();
-      utils.zones.agreementsList.setData({ zoneId }, (old) =>
+      await utils.agreements.listByZone.cancel();
+      const previousData = utils.agreements.listByZone.getData();
+      utils.agreements.listByZone.setData({ zoneId }, (old) =>
         old ? old.filter((a) => a.id !== zoneAgreementId) : undefined,
       );
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.zones.agreementsList.setData({ zoneId }, context?.previousData);
+      utils.agreements.listByZone.setData({ zoneId }, context?.previousData);
     },
   });
 

@@ -27,7 +27,7 @@ const AddAgreementsScreen: FC<Props> = ({
   navigation,
 }) => {
   const utils = trpc.useContext();
-  const agreements = trpc.agreements.adminAgreementsList.useQuery({ zoneId });
+  const agreements = trpc.agreements.adminListByZone.useQuery({ zoneId });
 
   const existingClassicAgreements = useMemo(
     () =>
@@ -53,8 +53,8 @@ const AddAgreementsScreen: FC<Props> = ({
 
   const restoreAgreement = trpc.agreements.restoreAgreement.useMutation({
     onSuccess: () => {
-      utils.agreements.adminAgreementsList.invalidate({ zoneId });
-      utils.zones.agreementsList.invalidate({ zoneId });
+      utils.agreements.adminListByZone.invalidate({ zoneId });
+      utils.agreements.listByZone.invalidate({ zoneId });
     },
   });
 

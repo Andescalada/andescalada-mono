@@ -206,23 +206,6 @@ export const zonesRouter = t.router({
       select: { name: true, id: true },
     }),
   ),
-  agreementsList: protectedZoneProcedure.query(async ({ ctx, input }) =>
-    ctx.prisma.zoneAgreement.findMany({
-      where: { zoneId: input.zoneId, isDeleted: SoftDelete.NotDeleted },
-      include: {
-        Agreement: {
-          include: {
-            title: { select: { originalText: true } },
-            description: { select: { originalText: true } },
-            ZoneAgreement: {
-              where: { zoneId: input.zoneId },
-              select: { comment: { select: { originalText: true } } },
-            },
-          },
-        },
-      },
-    }),
-  ),
   statusById: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },

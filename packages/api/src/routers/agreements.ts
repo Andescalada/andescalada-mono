@@ -41,7 +41,24 @@ export const agreementsRouter = t.router({
         },
       }),
     ),
-  adminAgreementsList: protectedZoneProcedure.query(async ({ ctx, input }) => {
+  listByZone: protectedZoneProcedure.query(async ({ ctx, input }) =>
+    ctx.prisma.zoneAgreement.findMany({
+      where: { zoneId: input.zoneId, isDeleted: SoftDelete.NotDeleted },
+      include: {
+        Agreement: {
+          include: {
+            title: { select: { originalText: true } },
+            description: { select: { originalText: true } },
+            ZoneAgreement: {
+              where: { zoneId: input.zoneId },
+              select: { comment: { select: { originalText: true } } },
+            },
+          },
+        },
+      },
+    }),
+  ),
+  adminListByZone: protectedZoneProcedure.query(async ({ ctx, input }) => {
     if (!ctx.permissions.has("EditZoneAgreements")) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "EditZoneAgreements"),

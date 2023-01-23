@@ -29,7 +29,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
 }) => {
   const rootNavigation = useRootNavigation();
   const utils = trpc.useContext();
-  const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
+  const agreements = trpc.agreements.listByZone.useQuery({ zoneId });
   const accessStatus = trpc.zoneAccess.userLatestAccessStatus.useQuery({
     zoneId,
   });

@@ -35,7 +35,7 @@ const ZoneAgreementsScreen: FC<Props> = ({
   toggleDescriptions = false,
   ...props
 }) => {
-  const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
+  const agreements = trpc.agreements.listByZone.useQuery({ zoneId });
   const { permission } = usePermissions({ zoneId });
   const [openDescription, setOpenDescription] = useState(!toggleDescriptions);
   const rootNavigation = useRootNavigation();
