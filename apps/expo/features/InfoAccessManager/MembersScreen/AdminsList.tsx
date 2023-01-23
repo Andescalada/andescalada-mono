@@ -1,7 +1,10 @@
+import { RoleNamesSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   AddButton,
   Box,
+  Ionicons,
+  Modal,
   Pressable,
   Text,
 } from "@andescalada/ui";
@@ -16,7 +19,7 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
 import { useNavigation } from "@react-navigation/native";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FlatList } from "react-native";
 
 interface Props {
@@ -39,6 +42,9 @@ const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
     >();
 
   const { permission } = usePermissions({ zoneId });
+
+  const [selectedRole, setSelectedRole] =
+    useState<typeof RoleNamesSchema._type>();
 
   if (isLoading)
     return (
@@ -83,9 +89,14 @@ const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
         )}
         renderItem={({ item: { role, users } }) => (
           <Box>
-            <Text variant="p1R" marginTop="s" marginLeft="m">
-              {roleNameAssets[role].plural}
-            </Text>
+            <Box flexDirection={"row"} alignItems="flex-end">
+              <Text variant="p1R" marginTop="s" marginLeft="m" lineHeight={0}>
+                {roleNameAssets[role].plural}
+              </Text>
+              <Pressable marginLeft="xs" onPress={() => setSelectedRole(role)}>
+                <Ionicons name="information-circle" size={20} />
+              </Pressable>
+            </Box>
             <FlatList
               data={users}
               keyExtractor={(item) => item.id}
@@ -94,6 +105,26 @@ const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
           </Box>
         )}
       />
+      <Modal
+        visible={!!selectedRole}
+        onDismiss={() => setSelectedRole(undefined)}
+        padding="m"
+        margin="m"
+      >
+        <Modal.Close />
+        {selectedRole && (
+          <>
+            <Box marginRight="xxl">
+              <Text variant="h4">{`Sobre ${roleNameAssets[selectedRole].plural}`}</Text>
+            </Box>
+            <Box>
+              <Text variant="p2R" lineHeight={32}>
+                {roleNameAssets[selectedRole].description}
+              </Text>
+            </Box>
+          </>
+        )}
+      </Modal>
     </Box>
   );
 };
