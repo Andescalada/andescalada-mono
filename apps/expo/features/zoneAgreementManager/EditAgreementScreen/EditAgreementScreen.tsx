@@ -38,13 +38,13 @@ const EditAgreementScreen: FC<Props> = ({
     mode: "onSubmit",
     reValidateMode: "onChange",
   });
-  const { data, isLoading } = trpc.zoneAgreements.byId.useQuery({
+  const { data, isLoading } = trpc.agreements.byId.useQuery({
     zoneAgreementId,
   });
 
   const utils = trpc.useContext();
 
-  const edit = trpc.zoneAgreements.edit.useMutation({
+  const edit = trpc.agreements.edit.useMutation({
     onSuccess: () => {
       utils.zones.agreementsList.invalidate({ zoneId });
       navigation.goBack();

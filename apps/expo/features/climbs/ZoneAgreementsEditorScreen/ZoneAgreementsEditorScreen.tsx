@@ -37,7 +37,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
   const utils = trpc.useContext();
   const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
 
-  const deleteAgreement = trpc.zoneAgreements.delete.useMutation({
+  const deleteAgreement = trpc.agreements.delete.useMutation({
     onMutate: async ({ zoneAgreementId }) => {
       await utils.zones.agreementsList.cancel();
       const previousData = utils.zones.agreementsList.getData();
@@ -84,7 +84,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
           },
         },
       ]),
-    [],
+    [deleteAgreement, zoneId],
   );
 
   return (
