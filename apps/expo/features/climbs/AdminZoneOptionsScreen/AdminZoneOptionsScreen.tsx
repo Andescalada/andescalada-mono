@@ -3,6 +3,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import usePermissions from "@hooks/usePermissions";
 import { FC } from "react";
 
 type Props =
@@ -14,30 +15,35 @@ const AdminZoneOptionsScreen: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
+  const { permission } = usePermissions({ zoneId });
   return (
     <Screen padding="m" safeAreaDisabled>
       <Text variant="h1" marginBottom="m">
         {zoneName}
       </Text>
-      <ListItemOption
-        onPress={() =>
-          navigation.replace(ClimbsNavigationRoutes.AddSector, {
-            zoneId,
-          })
-        }
-      >
-        Agregar sector
-      </ListItemOption>
-      <ListItemOption
-        onPress={() =>
-          navigation.navigate(ClimbsNavigationRoutes.ZoneAgreementsEditor, {
-            zoneId,
-            zoneName,
-          })
-        }
-      >
-        Editar acuerdos
-      </ListItemOption>
+      {permission?.has("Create") && (
+        <ListItemOption
+          onPress={() =>
+            navigation.replace(ClimbsNavigationRoutes.AddSector, {
+              zoneId,
+            })
+          }
+        >
+          Agregar sector
+        </ListItemOption>
+      )}
+      {permission?.has("EditZoneAgreements") && (
+        <ListItemOption
+          onPress={() =>
+            navigation.navigate(ClimbsNavigationRoutes.ZoneAgreementsEditor, {
+              zoneId,
+              zoneName,
+            })
+          }
+        >
+          Editar acuerdos
+        </ListItemOption>
+      )}
     </Screen>
   );
 };
