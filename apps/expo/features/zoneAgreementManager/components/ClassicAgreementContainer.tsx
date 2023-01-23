@@ -17,6 +17,7 @@ import {
   useButtonGroup,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import AgreementLevelButtonGroup from "@features/zoneAgreementManager/components/AgreementLevelButtonGroup";
 import { Zone } from "@prisma/client";
 import {
   ComponentProps,
@@ -120,7 +121,7 @@ const ClassicAgreementContainer: FC<Props> = ({
           >
             {children}
             <UndefinedAgreementButton />
-            <AgreementGrade level={level} setLevel={setLevel} />
+            <AgreementGradeContainer level={level} setLevel={setLevel} />
             <TextFieldAccordion
               label="Agregar comentario"
               value={comment}
@@ -199,65 +200,24 @@ const SubmitButton = ({
   return <Box />;
 };
 
-interface AgreementGradeProps {
+interface AgreementGradeContainerProps {
   level: AgreementLevel | undefined;
   setLevel: (level: AgreementLevel | undefined) => void;
 }
 
-const AgreementGrade = ({ level, setLevel }: AgreementGradeProps) => {
+const AgreementGradeContainer = ({
+  level,
+  setLevel,
+}: AgreementGradeContainerProps) => {
   const { value } = useButtonGroup();
 
   if (value && value !== UNDEFINED_AGREEMENT)
     return (
-      <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="m">
-        <Text variant="p1B" marginBottom="xs">
-          Grado de relevancia:
-        </Text>
-        <ButtonGroup
-          value={level}
-          onChange={(v) => setLevel(v as AgreementLevel)}
-          allowUndefined
-        >
-          <Box flexWrap="wrap" flexDirection="row">
-            <ButtonGroup.Item
-              value={AgreementLevelSchema.enum.Critical}
-              label="Crítico"
-              selectedBackgroundColor={"semantic.error"}
-              backgroundColor={
-                level === undefined ? "semantic.error" : "grayscale.500"
-              }
-            />
-            <ButtonGroup.Item
-              value={AgreementLevelSchema.enum.Important}
-              label="Importante"
-              selectedBackgroundColor={"semantic.warning"}
-              backgroundColor={
-                level === undefined ? "semantic.warning" : "grayscale.500"
-              }
-              textColor={
-                level === undefined ? "grayscale.black" : "grayscale.white"
-              }
-              selectedTextColor="grayscale.black"
-            />
-            <ButtonGroup.Item
-              value={AgreementLevelSchema.enum.Recommended}
-              label="Recomendado"
-              selectedBackgroundColor={"semantic.info"}
-              backgroundColor={
-                level === undefined ? "semantic.info" : "grayscale.500"
-              }
-            />
-            <ButtonGroup.Item
-              value={AgreementLevelSchema.enum.NotAplicable}
-              label="No aplica"
-              selectedBackgroundColor={"grayscale.800"}
-              backgroundColor={
-                level === undefined ? "grayscale.800" : "grayscale.500"
-              }
-            />
-          </Box>
-        </ButtonGroup>
-      </A.Box>
+      <AgreementLevelButtonGroup
+        level={level}
+        setLevel={setLevel}
+        marginBottom="m"
+      />
     );
 
   return <Box />;
