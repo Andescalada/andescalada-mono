@@ -1,4 +1,4 @@
-import { RequestStatusSchema } from "@andescalada/db/zod";
+import { InfoAccessSchema, RequestStatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   BackButton,
@@ -34,6 +34,8 @@ const AcceptAgreementsScreen: FC<Props> = ({
     zoneId,
   });
 
+  const zone = trpc.zones.allSectors.useQuery({ zoneId });
+
   const requestAccess = trpc.zoneAccess.requestZoneAccess.useMutation({
     onSuccess: () => {
       rootNavigation.navigate(RootNavigationRoutes.Climbs, {
@@ -62,7 +64,10 @@ const AcceptAgreementsScreen: FC<Props> = ({
   });
 
   const handleRequestAccess = () => {
-    if (accessStatus.data?.status === RequestStatusSchema.enum.Accepted) {
+    if (
+      accessStatus.data?.status === RequestStatusSchema.enum.Accepted ||
+      zone.data?.infoAccess === InfoAccessSchema.enum.Public
+    ) {
       respondAgreements.mutate({
         zoneId,
         agreementRecord: stringify(agreements.data || "No agreements"),
