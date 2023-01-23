@@ -1,8 +1,9 @@
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
-import { ClassicAgreementSchema } from "@andescalada/db/zod";
+import { ClassicAgreementSchema, SoftDeleteSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
+  Button,
   ListItem,
   Screen,
   Text,
@@ -25,11 +26,20 @@ const AddAgreementsScreen: FC<Props> = ({
   },
   navigation,
 }) => {
-  const agreements = trpc.zones.agreementsList.useQuery({ zoneId });
+  const utils = trpc.useContext();
+  const agreements = trpc.agreements.adminAgreementsList.useQuery({ zoneId });
 
   const existingClassicAgreements = useMemo(
     () =>
       agreements.data?.map((a) => a.Agreement.classic).filter(notNull) ?? [],
+    [agreements.data],
+  );
+
+  const deletedClassicAgreements = useMemo(
+    () =>
+      agreements.data?.filter(
+        (a) => a.isDeleted === SoftDeleteSchema.enum.DeletedPublic,
+      ) ?? [],
     [agreements.data],
   );
 
@@ -40,6 +50,13 @@ const AddAgreementsScreen: FC<Props> = ({
       ),
     [existingClassicAgreements],
   );
+
+  const restoreAgreement = trpc.agreements.restoreAgreement.useMutation({
+    onSuccess: () => {
+      utils.agreements.adminAgreementsList.invalidate({ zoneId });
+      utils.zones.agreementsList.invalidate({ zoneId });
+    },
+  });
 
   const refresh = useRefresh(
     agreements.refetch,
@@ -64,7 +81,7 @@ const AddAgreementsScreen: FC<Props> = ({
             flex={1}
             justifyContent="center"
             alignItems="center"
-            marginTop="xxxl"
+            marginVertical="xxxl"
           >
             <Text variant="p3R">No hay acuerdos disponibles para agregar</Text>
           </Box>
@@ -79,8 +96,49 @@ const AddAgreementsScreen: FC<Props> = ({
               })
             }
           >
-            <Text>{classicAgreementAssets[item].title}</Text>
+            <Text variant="p2R">{classicAgreementAssets[item].title}</Text>
           </ListItem>
+        )}
+        ListFooterComponent={() => (
+          <FlatList
+            data={deletedClassicAgreements}
+            refreshControl={refresh}
+            keyExtractor={(item) => item.id}
+            ListHeaderComponent={() =>
+              deletedClassicAgreements.length > 0 ? (
+                <Box marginTop="l" marginBottom="m">
+                  <Text variant="h4">Acuerdos eliminados</Text>
+                </Box>
+              ) : null
+            }
+            renderItem={({ item }) =>
+              item.Agreement.classic ? (
+                <ListItem
+                  marginBottom="m"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Text variant="p2R">
+                    {classicAgreementAssets[item.Agreement.classic].title}
+                  </Text>
+                  <Button
+                    variant="transparentSimplified"
+                    paddingHorizontal="xs"
+                    title="Restablecer"
+                    isLoading={restoreAgreement.isLoading}
+                    onPress={() =>
+                      restoreAgreement.mutate({
+                        zoneAgreementId: item.id,
+                        zoneId,
+                      })
+                    }
+                    titleVariant="p3R"
+                  />
+                </ListItem>
+              ) : null
+            }
+          />
         )}
       />
     </Screen>

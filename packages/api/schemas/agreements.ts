@@ -5,6 +5,7 @@ import {
 import { z } from "zod";
 
 const agreementId = z.object({ agreementId: z.string() });
+const zoneAgreementId = z.object({ zoneAgreementId: z.string() });
 const data = z.object({
   level: z.nativeEnum(AgreementLevelSchema.enum, {
     invalid_type_error: "Requerido",
@@ -15,4 +16,4 @@ const data = z.object({
 
 const classic = z.object({ classic: ClassicAgreementSchema });
 
-export default { data, classic, agreementId };
+export default { data, classic, agreementId, zoneAgreementId };
