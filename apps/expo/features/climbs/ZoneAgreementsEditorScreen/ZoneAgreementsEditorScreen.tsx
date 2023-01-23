@@ -55,10 +55,17 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
 
   const rootNavigation = useRootNavigation();
 
-  const onAddAgreement = () => {
+  const onAddFirstTimeAgreements = () => {
     rootNavigation.navigate(RootNavigationRoutes.ZoneAgreementsManager, {
       screen: ZoneAgreementsRoutes.AgreementsIntro,
       params: { zoneId },
+    });
+  };
+
+  const onAddAgreements = () => {
+    rootNavigation.navigate(RootNavigationRoutes.ZoneAgreementsManager, {
+      screen: ZoneAgreementsRoutes.AddAgreements,
+      params: { zoneId, zoneName },
     });
   };
 
@@ -90,8 +97,8 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
       >
         <Text variant="h1">{zoneName}</Text>
         {!!agreements.data && (
-          <TextButton variant="info" onPress={onAddAgreement}>
-            Editar
+          <TextButton variant="info" onPress={onAddAgreements}>
+            Agregar
           </TextButton>
         )}
       </Box>
@@ -110,7 +117,7 @@ const ZoneAgreementsEditorScreen: FC<Props> = ({
             ) : (
               <>
                 <Text variant="h2">Sin acuerdos</Text>
-                <TextButton variant="info" onPress={onAddAgreement}>
+                <TextButton variant="info" onPress={onAddFirstTimeAgreements}>
                   Agregar
                 </TextButton>
               </>

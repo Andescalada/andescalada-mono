@@ -1,3 +1,4 @@
+import AddAgreementsScreen from "@features/zoneAgreementManager/AddAgreementsScreen";
 import AgreementsIntroScreen from "@features/zoneAgreementManager/AgreementsIntroScreen";
 import CampingAgreementScreen from "@features/zoneAgreementManager/CampingAgreementScreen";
 import EditAgreementScreen from "@features/zoneAgreementManager/EditAgreementScreen";
@@ -67,6 +68,14 @@ const Navigator = () => {
         component={EditAgreementScreen}
         options={{
           title: "Editar acuerdo",
+          ...backHeader,
+        }}
+      />
+      <Stack.Screen
+        name={ZoneAgreementsRoutes.AddAgreements}
+        component={AddAgreementsScreen}
+        options={{
+          title: "Agregar acuerdos",
           ...backHeader,
         }}
       />

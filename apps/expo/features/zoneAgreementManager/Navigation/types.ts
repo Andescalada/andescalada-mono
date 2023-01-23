@@ -10,6 +10,7 @@ export enum ZoneAgreementsRoutes {
   PayAgreement = "PayAgreement",
   ToiletAgreement = "ToiletAgreement",
   EditAgreement = "EditAgreement",
+  AddAgreements = "AddAgreements",
 }
 
 export type ZoneAgreementsNavigationParamList = {
@@ -22,6 +23,10 @@ export type ZoneAgreementsNavigationParamList = {
   [ZoneAgreementsRoutes.EditAgreement]: {
     zoneId: Zone["id"];
     zoneAgreementId: ZoneAgreement["id"];
+  };
+  [ZoneAgreementsRoutes.AddAgreements]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
   };
 };
 
