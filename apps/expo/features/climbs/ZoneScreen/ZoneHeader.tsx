@@ -127,6 +127,9 @@ const ZoneHeader = () => {
               })
             }
           >
+            {/* <Box paddingRight="xs">
+              <Text>Guía</Text>
+            </Box> */}
             <Box
               borderRadius={16}
               padding="s"
@@ -135,7 +138,7 @@ const ZoneHeader = () => {
               }
             >
               <Text color={infoAccessAssets[data?.infoAccess].color}>
-                {infoAccessAssets[data?.infoAccess]?.label}
+                {`Guía ${infoAccessAssets[data?.infoAccess]?.label}`}
               </Text>
             </Box>
 
