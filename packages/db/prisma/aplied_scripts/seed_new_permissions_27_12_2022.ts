@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 const access = Redis.fromEnv();
 
 const permissionsData: Prisma.PermissionsCreateInput[] = [
-  { action: "ApproveZone" },
-  { action: "RejectZone" },
+  // { action: "ApproveZone" },
+  // { action: "RejectZone" },
   { action: "PauseZonePublication" },
   { action: "PublishZone" },
   { action: "RequestZoneReview" },
-  { action: "UnpublishZone" },
+  // { action: "UnpublishZone" },
 ];
 
 async function main() {
