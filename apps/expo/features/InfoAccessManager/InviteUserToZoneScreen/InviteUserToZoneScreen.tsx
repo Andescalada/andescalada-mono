@@ -13,6 +13,7 @@ import {
 } from "@features/InfoAccessManager/Navigation/types";
 import FindUser, { UserOutput } from "@features/user/FindUser";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { isAndroid } from "@utils/platform";
 import { FC, useRef, useState } from "react";
 import { Keyboard } from "react-native";
 
@@ -44,7 +45,11 @@ const InviteUserToZoneScreen: FC<Props> = ({
   };
 
   return (
-    <Screen safeAreaDisabled padding="m" justifyContent="space-between">
+    <Screen
+      safeAreaDisabled={!isAndroid}
+      padding="m"
+      justifyContent="space-between"
+    >
       <Box>
         <Text variant="p2R">Busca al usuario que quieres invitar:</Text>
 
