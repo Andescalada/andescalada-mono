@@ -1,4 +1,5 @@
 import global from "@andescalada/api/schemas/global";
+import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
 import parseUsersToRole from "@andescalada/api/src/utils/parseUsersToRole";
@@ -229,7 +230,7 @@ export const zonesRouter = t.router({
     return zone;
   }),
   usersByRole: protectedZoneProcedure
-    .input(z.object({ roles: z.array(z.nativeEnum(RoleNames)) }))
+    .input(z.object({ roles: user.rolesArray }))
     .query(async ({ ctx, input }) => {
       const zone = await ctx.prisma.zone.findUnique({
         where: { id: input.zoneId },
