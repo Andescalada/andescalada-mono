@@ -211,7 +211,7 @@ export const zoneReviewRouter = t.router({
           zoneId: input.zoneId,
           message: input.message || "",
         },
-        { allowedPreviousSteps: [Status.Approved] },
+        { allowedPreviousSteps: [Status.Approved, Status.Paused] },
       );
 
       const admins = await ctx.prisma.roleByZone
