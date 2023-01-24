@@ -2,6 +2,7 @@ import { RoleNamesSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Button, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
+import usePauseAccess from "@hooks/usePauseAccess";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import type { Zone } from "@prisma/client";
@@ -28,48 +29,10 @@ const MembersList: FC<Props> = ({ zoneId }) => {
     return [...members, ...readers];
   }, [data]);
 
-  const utils = trpc.useContext();
-  const pauseAccess = trpc.zoneAccess.pauseUserAccess.useMutation({
-    onMutate: async ({ userId }) => {
-      await utils.zones.usersByRole.cancel({
-        roles: ["Member", "Reader"],
-        zoneId,
-      });
-      const previousData = utils.zones.usersByRole.getData({
-        roles: ["Member", "Reader"],
-        zoneId,
-      });
-      utils.zones.usersByRole.setData(
-        {
-          roles: ["Member", "Reader"],
-          zoneId,
-        },
-        (old) =>
-          old
-            ? old.map((list) => ({
-                role: list.role,
-                users: list.users.filter((u) => u.id !== userId),
-              }))
-            : old,
-      );
-      return { previousData };
-    },
-    onError: (_, __, context) => {
-      if (context?.previousData) {
-        utils.zones.usersByRole.setData(
-          {
-            roles: ["Member", "Reader"],
-            zoneId,
-          },
-          context.previousData,
-        );
-      }
-    },
-    onSuccess: () => {
-      utils.zones.usersByRole.invalidate({
-        roles: ["Member", "Reader"],
-        zoneId,
-      });
+  const pauseAccess = usePauseAccess({
+    invalidation: {
+      roles: ["Member", "Reader"],
+      zoneId,
     },
   });
 
