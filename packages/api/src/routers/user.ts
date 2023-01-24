@@ -11,6 +11,7 @@ import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
+import { RoleNamesSchema } from "@andescalada/db/zod";
 import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -534,6 +535,29 @@ export const userRouter = t.router({
       });
 
       return roles;
+    }),
+  removeZoneRole: protectedZoneProcedure
+    .input(z.object({ role: RoleNamesSchema }).merge(user.id))
+    .mutation(({ ctx, input }) => {
+      if (!ctx.permissions.has("RevokeZoneRole")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "RevokeZoneRole"),
+        );
+      }
+      if (input.role === RoleNames.Member || input.role === RoleNames.Reader) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Action not allowed for this procedure",
+        });
+      }
+
+      return removeRole(ctx, {
+        relation: {
+          zoneId: input.zoneId,
+          userId: input.userId,
+          roleName: input.role,
+        },
+      });
     }),
 });
 

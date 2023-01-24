@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   AddButton,
   Box,
+  Button,
   Ionicons,
   Modal,
   Pressable,
@@ -15,12 +16,14 @@ import {
   InfoAccessManagerNavigationProps,
   InfoAccessManagerRoutes,
 } from "@features/InfoAccessManager/Navigation/types";
+import useOwnInfo from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
+import useRemoveZoneRole from "@hooks/useRemoveZoneRole";
 import { Zone } from "@prisma/client";
 import { useNavigation } from "@react-navigation/native";
 import { FC, useState } from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList } from "react-native";
 
 interface Props {
   zoneId: Zone["id"];
@@ -36,12 +39,21 @@ const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
+  const removeRole = useRemoveZoneRole({
+    invalidation: {
+      roles: ["Admin", "Editor", "Collaborator"],
+      zoneId,
+    },
+  });
+
   const navigation =
     useNavigation<
       InfoAccessManagerNavigationProps<InfoAccessManagerRoutes.MembersScreen>
     >();
 
   const { permission } = usePermissions({ zoneId });
+
+  const { data: ownInfoData } = useOwnInfo();
 
   const [selectedRole, setSelectedRole] =
     useState<typeof RoleNamesSchema._type>();
@@ -100,7 +112,39 @@ const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
             <FlatList
               data={users}
               keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <UserItem item={item} />}
+              renderItem={({ item }) => (
+                <UserItem item={item}>
+                  {permission?.has("RevokeZoneRole") &&
+                    ownInfoData?.id !== item.id && (
+                      <Button
+                        title="Eliminar"
+                        variant="transparentSimplified"
+                        titleVariant="p3B"
+                        marginRight="s"
+                        onPress={() =>
+                          Alert.alert(
+                            `Eliminar usuario de ${roleNameAssets[role].plural}`,
+                            "¿Estás seguro?",
+                            [
+                              { text: "Cancelar", style: "cancel" },
+                              {
+                                text: "Eliminar",
+                                style: "destructive",
+                                onPress: () =>
+                                  removeRole.mutate({
+                                    userId: item.id,
+                                    zoneId,
+                                    role,
+                                  }),
+                              },
+                            ],
+                          )
+                        }
+                        paddingHorizontal="xs"
+                      />
+                    )}
+                </UserItem>
+              )}
             />
           </Box>
         )}
