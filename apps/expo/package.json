@@ -38,7 +38,6 @@
     "@gorhom/bottom-sheet": "^4",
     "@hookform/resolvers": "^2.9.8",
     "@openspacelabs/react-native-zoomable-view": "^2.0.4",
-    "@prisma/client": "^4.7.0",
     "@react-native-community/hooks": "^2.8.1",
     "@react-native-community/netinfo": "9.3.5",
     "@react-native-picker/picker": "2.4.8",
@@ -125,12 +124,14 @@
     "react-native-flipper-performance-plugin": "^0.3.1",
     "react-native-mmkv-flipper-plugin": "^1.0.0",
     "react-query-native-devtools": "^4.0.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "@prisma/client": "*"
   },
   "peerDependencies": {
     "react": "*",
     "react-dom": "*",
-    "zod": "*"
+    "zod": "*",
+    "@prisma/client": "*"
   },
   "resolutions": {
     "@types/react": "17.0.43"
