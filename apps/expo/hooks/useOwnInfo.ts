@@ -10,7 +10,11 @@ import { parse, stringify } from "superjson";
 
 type OwnInfoOutput = inferProcedureOutput<AppRouter["user"]["ownInfo"]>;
 
-const useOwnInfo = () => {
+interface Args {
+  withInitialData?: boolean;
+}
+
+const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
   const dispatch = useAppDispatch();
 
   const ownInfoOutput = storage.getString("ownInfo");
@@ -24,17 +28,18 @@ const useOwnInfo = () => {
 
   const ownInfo = trpc.user.ownInfo.useQuery(undefined, {
     staleTime: 1000 * 60,
-    initialData: parsedStoredOwnInfo,
+    initialData: withInitialData ? parsedStoredOwnInfo : undefined,
     onSuccess: (data) => {
       storage.set("ownInfo", stringify(data));
     },
     onError(err) {
+      if (noNetwork(err)) {
+        utils.user.ownInfo.setData(undefined, parsedStoredOwnInfo);
+        return;
+      }
       if (err.data?.code === "UNAUTHORIZED") {
         dispatch(logoutAuth0());
         return;
-      }
-      if (noNetwork(err)) {
-        utils.user.ownInfo.setData(undefined, parsedStoredOwnInfo);
       }
     },
   });
