@@ -256,11 +256,17 @@ export const userRouter = t.router({
       return false;
     }),
   find: protectedProcedure
-    .input(user.usernameSearch)
+    .input(
+      z.object({
+        search: user.usernameSearch,
+        filterMe: z.boolean().optional(),
+      }),
+    )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.user.findMany({
         where: {
-          username: { contains: input },
+          username: { contains: input.search },
+          ...(input.filterMe && { NOT: { email: ctx.user.email } }),
           isDeleted: SoftDelete.NotDeleted,
         },
         select: {
