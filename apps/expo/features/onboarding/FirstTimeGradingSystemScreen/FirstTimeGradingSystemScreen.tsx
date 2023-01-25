@@ -32,7 +32,7 @@ const GradingSystemConfigScreen: FC<Props> = () => {
   const utils = trpc.useContext();
 
   const {
-    mutate,
+    mutateAsync,
     isSuccess,
     isLoading,
     reset: resetMutation,
@@ -57,6 +57,8 @@ const GradingSystemConfigScreen: FC<Props> = () => {
     },
   });
 
+  const firstTimeLogin = trpc.user.firstTimeLogin.useMutation();
+
   const { data } = useOwnInfo();
 
   const sport = useController({
@@ -75,74 +77,82 @@ const GradingSystemConfigScreen: FC<Props> = () => {
     defaultValue: data ? data.preferredBoulderGrade : undefined,
   });
 
-  const onSave = handleSubmit((data) => {
-    mutate(data);
+  const onSave = handleSubmit(async (data) => {
+    await mutateAsync(data);
+    await firstTimeLogin.mutateAsync(false);
+    utils.user.ownInfo.invalidate();
   });
 
   const saveButton = useMemo(() => {
     if (!formState.isDirty) {
-      return { variant: "transparent" as const, title: "Guardar" };
+      return { variant: "transparent" as const, title: "Continuar" };
     }
     if (isSuccess) {
-      return { variant: "success" as const, title: "Guardado" };
+      return { variant: "success" as const, title: "Éxito" };
     }
-    return { variant: "info" as const, title: "Guardar" };
+    return { variant: "info" as const, title: "Continuar" };
   }, [formState.isDirty, isSuccess]);
 
   return (
-    <Screen safeAreaDisabled alignItems="center" justifyContent="space-evenly">
-      <Text variant="h2">Grado Deportiva</Text>
-      <GradingBox>
-        <ButtonGroup
-          value={sport.field.value}
-          onChange={sport.field.onChange}
-          allowUndefined={false}
-        >
-          <ButtonGroup.Item
-            value={GradeSystemsSchema.Enum.French}
-            label="Francesa"
-          />
-          <ButtonGroup.Item
-            value={GradeSystemsSchema.Enum.Yosemite}
-            label="Yosemite"
-          />
-        </ButtonGroup>
-      </GradingBox>
-      <Text variant="h2">Grado Boulder</Text>
-      <GradingBox>
-        <ButtonGroup
-          value={boulder.field.value}
-          onChange={boulder.field.onChange}
-          allowUndefined={false}
-        >
-          <ButtonGroup.Item
-            value={GradeSystemsSchema.Enum.French}
-            label="Francesa"
-          />
-          <ButtonGroup.Item
-            value={GradeSystemsSchema.Enum.Hueco}
-            label="Hueco"
-          />
-        </ButtonGroup>
-      </GradingBox>
-      <Text variant="h2">Grado Tradicional</Text>
-      <GradingBox>
-        <ButtonGroup
-          value={trad.field.value}
-          onChange={trad.field.onChange}
-          allowUndefined={false}
-        >
-          <ButtonGroup.Item
-            value={GradeSystemsSchema.Enum.French}
-            label="Francesa"
-          />
-          <ButtonGroup.Item
-            value={GradeSystemsSchema.Enum.Yosemite}
-            label="Yosemite"
-          />
-        </ButtonGroup>
-      </GradingBox>
+    <Screen alignItems="center" padding="s">
+      <Text variant="h1" marginHorizontal="none">
+        Elige tus escalas de graduación favoritas
+      </Text>
+      <Box flex={1} justifyContent="space-evenly">
+        <Text variant="h2">Grado Deportiva</Text>
+        <GradingBox>
+          <ButtonGroup
+            value={sport.field.value}
+            onChange={sport.field.onChange}
+            allowUndefined={false}
+          >
+            <ButtonGroup.Item
+              value={GradeSystemsSchema.Enum.French}
+              label="Francesa"
+            />
+            <ButtonGroup.Item
+              value={GradeSystemsSchema.Enum.Yosemite}
+              label="Yosemite"
+            />
+          </ButtonGroup>
+        </GradingBox>
+        <Text variant="h2">Grado Boulder</Text>
+        <GradingBox>
+          <ButtonGroup
+            value={boulder.field.value}
+            onChange={boulder.field.onChange}
+            allowUndefined={false}
+          >
+            <ButtonGroup.Item
+              value={GradeSystemsSchema.Enum.French}
+              label="Francesa"
+            />
+            <ButtonGroup.Item
+              value={GradeSystemsSchema.Enum.Hueco}
+              label="Hueco"
+            />
+          </ButtonGroup>
+        </GradingBox>
+        <Text variant="h2">Grado Tradicional</Text>
+        <GradingBox>
+          <ButtonGroup
+            value={trad.field.value}
+            onChange={trad.field.onChange}
+            allowUndefined={false}
+          >
+            <ButtonGroup.Item
+              value={GradeSystemsSchema.Enum.French}
+              label="Francesa"
+            />
+            <ButtonGroup.Item
+              value={GradeSystemsSchema.Enum.Yosemite}
+              label="Yosemite"
+            />
+          </ButtonGroup>
+        </GradingBox>
+      </Box>
       <Button
+        marginBottom="m"
         title={saveButton.title}
         variant={saveButton.variant}
         onPress={onSave}
