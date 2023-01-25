@@ -13,6 +13,8 @@ const updateRedisPermissions = async (
   await access.hset(userEmail, {
     [zoneId]: serialize(updatedPermissions),
   });
+
+  return updatedPermissions;
 };
 
 export default updateRedisPermissions;

@@ -344,9 +344,16 @@ model Sector {
   coAuthors  User[]     @relation("CoAuthorSector")
   isDeleted  SoftDelete @default(NotDeleted)
   version    Int        @default(0)
+  sectorKind SectorKind @default(Wall)
 
   @@index([zoneId])
   @@index([authorId])
+}
+
+enum SectorKind {
+  Wall
+  Boulder
+  Waterfall
 }
 
 model Wall {
@@ -372,24 +379,25 @@ model Wall {
 }
 
 model Topo {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  slug      String
-  Wall      Wall        @relation(fields: [wallId], references: [id])
-  wallId    String
-  position  Int         @default(0)
-  main      Boolean     @default(false)
-  name      String?
-  RoutePath RoutePath[]
-  canvas    String?     @db.LongText
-  image     Image       @relation(fields: [imageId], references: [id])
-  imageId   String
-  Author    User        @relation("AuthorTopo", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]      @relation("CoAuthorTopo")
-  isDeleted SoftDelete  @default(NotDeleted)
-  version   Int         @default(0)
+  id               String      @id @default(uuid())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  slug             String
+  Wall             Wall        @relation(fields: [wallId], references: [id])
+  wallId           String
+  position         Int         @default(0)
+  main             Boolean     @default(false)
+  name             String?
+  RoutePath        RoutePath[]
+  canvas           String?     @db.LongText
+  image            Image       @relation(fields: [imageId], references: [id])
+  imageId          String
+  Author           User        @relation("AuthorTopo", fields: [authorId], references: [id])
+  authorId         String
+  coAuthors        User[]      @relation("CoAuthorTopo")
+  isDeleted        SoftDelete  @default(NotDeleted)
+  version          Int         @default(0)
+  routeStrokeWidth Decimal     @default(1) @db.Decimal(4, 2)
 
   @@index([wallId])
   @@index([imageId])
@@ -474,16 +482,17 @@ model Pitch {
 }
 
 model RouteGrade {
-  id         String     @id @default(uuid())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  grade      Int?
-  project    Boolean    @default(false)
-  slashGrade Boolean    @default(false)
-  route      Route      @relation(fields: [routeId], references: [id])
-  routeId    String     @unique
-  isDeleted  SoftDelete @default(NotDeleted)
-  version    Int        @default(0)
+  id                  String       @id @default(uuid())
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  grade               Int?
+  project             Boolean      @default(false)
+  slashGrade          Boolean      @default(false)
+  route               Route        @relation(fields: [routeId], references: [id])
+  routeId             String       @unique
+  isDeleted           SoftDelete   @default(NotDeleted)
+  version             Int          @default(0)
+  originalGradeSystem GradeSystems @default(French)
 
   @@index([routeId])
 }
@@ -516,9 +525,9 @@ model Image {
   width          Int
   url            String         @db.LongText
   storageService StorageService
-  bytes          BigInt?
+  bytes          Int?
   publicId       String?        @db.MediumText
-  version        BigInt?
+  version        Int?
   assetId        String?        @db.MediumText
   format         String?
   Topo           Topo[]

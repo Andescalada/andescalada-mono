@@ -1,9 +1,11 @@
 import topo from "@andescalada/api/schemas/topo";
+import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { t } from "../createRouter";
 
@@ -55,4 +57,17 @@ export const toposRouter = t.router({
       },
     }),
   ),
+  modifyStrokeWidth: protectedZoneProcedure
+    .input(topo.id.merge(z.object({ routeStrokeWidth: z.number() })))
+    .mutation(({ ctx, input }) => {
+      if (!ctx.permissions.has("Update")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Update"),
+        );
+      }
+      return ctx.prisma.topo.update({
+        where: { id: input.topoId },
+        data: { routeStrokeWidth: input.routeStrokeWidth },
+      });
+    }),
 });

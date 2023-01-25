@@ -7,7 +7,7 @@ import {
   ZoneAgreementsRoutes,
   ZoneAgreementsScreenProps,
 } from "@features/zoneAgreementManager/Navigation/types";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 type Props = ZoneAgreementsScreenProps<ZoneAgreementsRoutes.CampingAgreement>;
 

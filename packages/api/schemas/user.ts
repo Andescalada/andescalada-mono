@@ -33,10 +33,12 @@ const usernameSearch = z
     "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",
   );
 
+const rolesArray = z.array(z.nativeEnum(RoleNamesSchema.enum));
+
 const gradeSystem = z.object({
   preferredSportGrade: GradeSystemsSchema,
   preferredTradGrade: GradeSystemsSchema,
   preferredBoulderGrade: GradeSystemsSchema,
 });
 
-export default { schema, gradeSystem, usernameSearch, role, id };
+export default { schema, gradeSystem, usernameSearch, role, id, rolesArray };

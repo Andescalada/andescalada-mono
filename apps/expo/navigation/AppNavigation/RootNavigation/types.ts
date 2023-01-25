@@ -2,6 +2,7 @@ import { ClimbsNavigationNavigationParamList } from "@features/climbs/Navigation
 import { ErrorNavigationParamList } from "@features/error/Navigation/types";
 import { ImageManagerNavigationParamList } from "@features/imageManager/Navigation/types";
 import { InfoAccessManagerNavigationParamList } from "@features/InfoAccessManager/Navigation/types";
+import { OnboardingNavigationParamList } from "@features/onboarding/Navigation/types";
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
 import { ZoneAgreementsNavigationParamList } from "@features/zoneAgreementManager/Navigation/types";
@@ -14,7 +15,7 @@ export enum RootNavigationRoutes {
   Climbs = "ClimbsStack",
   RouteManager = "RouteManagerStack",
   User = "UserStack",
-  FirstTimeLogin = "FirstTimeLogin",
+  Onboarding = "Onboarding",
   Loading = "RootLoading",
   ZoneAgreementsManager = "ZoneAgreementsManager",
   ImageManager = "ImageManager",
@@ -27,7 +28,7 @@ export enum RootNavigationRoutes {
 export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.Climbs]: NavigatorScreenParams<ClimbsNavigationNavigationParamList>;
   [RootNavigationRoutes.RouteManager]: NavigatorScreenParams<RoutesManagerNavigationParamList>;
-  [RootNavigationRoutes.FirstTimeLogin]: undefined;
+  [RootNavigationRoutes.Onboarding]: NavigatorScreenParams<OnboardingNavigationParamList>;
   [RootNavigationRoutes.User]: NavigatorScreenParams<UserNavigationParamList>;
   [RootNavigationRoutes.Loading]: undefined;
   [RootNavigationRoutes.ZoneAgreementsManager]: NavigatorScreenParams<ZoneAgreementsNavigationParamList>;

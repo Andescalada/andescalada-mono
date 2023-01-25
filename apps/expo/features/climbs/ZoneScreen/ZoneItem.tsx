@@ -18,6 +18,7 @@ import useAnimatedHeight from "@hooks/useAnimatedHeight";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import Conditional from "@utils/conditionalVars";
+import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { useAtom } from "jotai";
 import { FC, memo, useMemo } from "react";
 import { StyleSheet } from "react-native";
@@ -105,6 +106,7 @@ const ZoneItem: FC<Props> = ({ item }) => {
                     wallName: wall.name,
                     sectorId: item.id,
                     zoneId: item.zoneId,
+                    sectorKind: item.sectorKind,
                   })
                 }
               >
@@ -113,7 +115,9 @@ const ZoneItem: FC<Props> = ({ item }) => {
             ))
           ) : (
             <SubItem height={SUBITEM_HEIGHT}>
-              <Text variant="p3R">Sin paredes 😢</Text>
+              <Text variant="p3R">{`${
+                sectorKindAssets[item.sectorKind].noneMessage
+              } 😢`}</Text>
             </SubItem>
           )}
         </Box>

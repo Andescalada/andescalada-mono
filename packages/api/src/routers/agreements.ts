@@ -45,6 +45,7 @@ export const agreementsRouter = t.router({
   listByZone: protectedZoneProcedure.query(async ({ ctx, input }) =>
     ctx.prisma.zoneAgreement.findMany({
       where: { zoneId: input.zoneId, isDeleted: SoftDelete.NotDeleted },
+      orderBy: { level: "asc" },
       include: {
         Agreement: {
           include: {

@@ -49,21 +49,29 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const result = await ctx.prisma.route.aggregate({
-        where: { wallId: input.wallId },
+        where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
         _max: { position: true },
       });
       const biggestPosition = result._max.position || 0;
 
+      const { grade, kind, name, originalGradeSystem, unknownName } = input;
+
       const newRoute = await ctx.prisma.route.create({
         data: {
-          name: input.name,
-          slug: slug(input.name),
+          name,
+          slug: slug(name),
           Wall: { connect: { id: input.wallId } },
-          kind: input.kind,
-          unknownName: input.unknownName,
+          kind,
+          unknownName,
           position: biggestPosition + 1,
           RouteGrade: {
-            create: { grade: input.grade.grade, project: input.grade.project },
+            create: {
+              grade: grade.grade,
+              project: grade.project,
+              ...(originalGradeSystem && {
+                originalGradeSystem,
+              }),
+            },
           },
           Author: { connect: { email: ctx.user.email } },
         },
@@ -126,15 +134,10 @@ export const routesRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const updateOrCreate = async () => {
         if (input.routePathId) {
-          const path = await ctx.prisma.routePath.findUnique({
+          return ctx.prisma.routePath.update({
             where: { id: input.routePathId },
+            data: { path: input.path },
           });
-          if (path) {
-            return ctx.prisma.routePath.update({
-              where: { id: input.routePathId },
-              data: { path: input.path },
-            });
-          }
         } else {
           return ctx.prisma.routePath.create({
             data: {
@@ -168,7 +171,7 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const { grade, kind, name, unknownName } = input;
+      const { grade, kind, name, unknownName, originalGradeSystem } = input;
 
       await ctx.prisma.wall.update({
         where: { id: route?.wallId },
@@ -178,12 +181,24 @@ export const routesRouter = t.router({
       return ctx.prisma.route.update({
         where: { id: input.routeId },
         data: {
-          RouteGrade: { update: { ...grade } },
+          RouteGrade: {
+            update: {
+              ...grade,
+              ...(originalGradeSystem && { originalGradeSystem }),
+            },
+          },
           name,
           slug: slug(name),
           kind,
           unknownName,
+
           version: { increment: 1 },
+          coAuthors:
+            route?.Author.email === ctx.user.email
+              ? undefined
+              : {
+                  connect: { email: ctx.user.email },
+                },
         },
       });
     }),

@@ -5,8 +5,8 @@ import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
 import InfoAccessManager from "@features/InfoAccessManager/Navigation";
 import useOffline from "@features/offline/useOffline";
+import OnboardingStackNavigation from "@features/onboarding/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
-import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import UserStackNavigation from "@features/user/Navigation";
 import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation";
 import ZoneLocationStackNavigation from "@features/zoneLocation/Navigation";
@@ -26,7 +26,7 @@ export interface AccessToken {
 const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 
 const Navigator = () => {
-  const { data, isLoading, isError } = useOwnInfo();
+  const { data, isLoading, isError } = useOwnInfo({ withInitialData: false });
 
   useOffline({ fetchAssets: true });
   usePushNotification();
@@ -59,9 +59,8 @@ const Navigator = () => {
         />
       ) : data?.firstLogin ? (
         <Stack.Screen
-          name={RootNavigationRoutes.FirstTimeLogin}
-          component={FirstTimeLoginScreen}
-          options={{ presentation: "modal" }}
+          name={RootNavigationRoutes.Onboarding}
+          component={OnboardingStackNavigation}
         />
       ) : (
         <Stack.Group>

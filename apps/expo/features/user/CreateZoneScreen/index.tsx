@@ -150,7 +150,7 @@ const CreateZoneScreen: FC<Props> = () => {
           marginVertical="m"
         />
       </KeyboardDismiss>
-      <FindUser ref={bottomSheetRef} onSetUser={setUser} />
+      <FindUser ref={bottomSheetRef} onSetUser={setUser} filterMe={false} />
     </Screen>
   );
 };

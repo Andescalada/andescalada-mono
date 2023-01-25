@@ -42,7 +42,8 @@ const schema = routeSchema
   );
 
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId, extendedRouteId, ...rest } = route.params;
+  const { wallId, extendedRouteId, zoneId, id, ...rest } = route.params;
+
   const utils = trpc.useContext();
 
   const rootNavigation = useRootNavigation();
@@ -58,14 +59,14 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     if (isExtension) {
       return "Añadir extensión";
     }
-    if (rest.id) {
+    if (id) {
       return "Editar ruta";
     }
     return "Añadir ruta";
-  }, [isExtension, rest.id]);
+  }, [isExtension, id]);
 
   const mainTopo = trpc.walls.mainTopo.useQuery({
-    zoneId: rest.zoneId,
+    zoneId,
     wallId,
   });
 
@@ -79,7 +80,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               route: { id, position, extendedRouteId },
               wallId,
               topoId: mainTopo.data,
-              zoneId: rest.zoneId,
+              zoneId,
             },
           });
         } else {
@@ -89,7 +90,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               route: { id, position },
               wallId,
               topoId: mainTopo.data,
-              zoneId: rest.zoneId,
+              zoneId,
             },
           });
         }
@@ -110,7 +111,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               route: { id, position, extendedRouteId },
               wallId,
               topoId: mainTopo.data,
-              zoneId: rest.zoneId,
+              zoneId,
             },
           });
         } else {
@@ -178,35 +179,32 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       project: input.grade === "project",
     };
 
-    if (rest.id) {
+    const data = {
+      name: input.name,
+      kind: input.kind,
+      grade,
+      unknownName: input.unknownName,
+      zoneId,
+      originalGradeSystem: getSystem(input.kind),
+    };
+
+    if (id) {
       mutateEdit({
-        grade,
-        kind: input.kind,
-        name: input.name,
-        routeId: rest.id,
-        zoneId: rest.zoneId,
-        unknownName: input.unknownName,
+        routeId: id,
+        ...data,
       });
       return;
     }
     if (!!extendedRouteId) {
       mutateExtension({
-        name: input.name,
-        kind: input.kind,
-        grade,
-        unknownName: input.unknownName,
-        zoneId: rest.zoneId,
         extendedRouteId,
+        ...data,
       });
       return;
     }
     mutate({
       wallId,
-      name: input.name,
-      kind: input.kind,
-      grade,
-      unknownName: input.unknownName,
-      zoneId: rest.zoneId,
+      ...data,
     });
   });
 
@@ -227,7 +225,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
-  const { allGrades, gradeSystem } = useGradeSystem(kindValue);
+  const { allGrades, gradeSystem, getSystem } = useGradeSystem(kindValue);
 
   const theme = useAppTheme();
 

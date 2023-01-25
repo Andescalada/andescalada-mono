@@ -3,7 +3,7 @@ import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import type { Route, RoutePath, Topo, Wall } from "@prisma/client";
+import type { Route, RoutePath, Topo, Wall, Zone } from "@prisma/client";
 import { useValue } from "@shopify/react-native-skia";
 import { useRef, useState } from "react";
 
@@ -18,7 +18,9 @@ interface Args {
   routeId: Route["id"];
   topoId: Topo["id"];
   wallId: Wall["id"];
+  zoneId: Zone["id"];
   position: number;
+  routeStrokeWidth: number;
   routePathId?: RoutePath["id"];
 }
 
@@ -27,22 +29,27 @@ const useRouteDrawer = ({
   position,
   topoId,
   wallId,
+  zoneId,
   routePathId,
+  routeStrokeWidth,
 }: Args) => {
   const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation({
     onSuccess: () => {
-      utils.topos.byId.invalidate({ topoId });
+      utils.topos.byId.invalidate({ topoId, zoneId });
       setTimeout(
         () =>
-          rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-            screen: ClimbsNavigationRoutes.Wall,
-            params: {
-              wallId,
-              wallName: data?.name || "",
-              sectorId: data?.sectorId || "",
-              zoneId: data?.Sector.zoneId || "",
-            },
-          }),
+          data
+            ? rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+                screen: ClimbsNavigationRoutes.Wall,
+                params: {
+                  wallId,
+                  wallName: data.name,
+                  sectorId: data.sectorId,
+                  zoneId: data.Sector.zoneId,
+                  sectorKind: data.Sector.sectorKind,
+                },
+              })
+            : undefined,
         500,
       );
     },
@@ -53,6 +60,8 @@ const useRouteDrawer = ({
   const [showConfig, setShowConfig] = useState(false);
 
   const { data } = trpc.walls.byId.useQuery({ wallId });
+
+  const modifyStrokeWidth = trpc.topos.modifyStrokeWidth.useMutation();
 
   const [route, setRoute] = useState<SelectedRoute>({
     id: routeId,
@@ -86,6 +95,7 @@ const useRouteDrawer = ({
             sectorId: data.sectorId,
             wallName: data.name,
             zoneId: data.Sector.zoneId,
+            sectorKind: data.Sector.sectorKind,
           },
         });
         return;
@@ -95,6 +105,11 @@ const useRouteDrawer = ({
         routeId: route.id,
         topoId,
         routePathId,
+      });
+      modifyStrokeWidth.mutate({
+        zoneId,
+        topoId,
+        routeStrokeWidth,
       });
     }
   };

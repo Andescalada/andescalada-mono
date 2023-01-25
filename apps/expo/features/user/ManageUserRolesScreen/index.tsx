@@ -202,7 +202,7 @@ const ManageUserRolesScreen: FC<Props> = ({ navigation }) => {
         disabled={isLoading || !user || !role || isSuccess || !zone}
         marginVertical="m"
       />
-      <FindUser ref={findUserRef} onSetUser={setUser} />
+      <FindUser ref={findUserRef} onSetUser={setUser} filterMe={false} />
       <FindZone ref={findZoneRef} onSetZone={setZone} />
     </Screen>
   );

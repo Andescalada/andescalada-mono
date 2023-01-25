@@ -17,7 +17,7 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
 import { useNavigation } from "@react-navigation/native";
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { Alert, FlatList } from "react-native";
 
 interface Props {
@@ -75,6 +75,17 @@ const AccessRequestList: FC<Props> = ({ zoneId, zoneName }) => {
   const refresh = useRefresh(refetch, isFetching && !isLoading);
   const { permission } = usePermissions({ zoneId });
 
+  const onInvite = useCallback(() => {
+    if (zone.data?.currentStatus !== StatusSchema.enum.Published) {
+      Alert.alert("Solo puedes invitar usuarios cuando la zona esté publicada");
+      return;
+    }
+    navigation.navigate(InfoAccessManagerRoutes.InviteUserToZoneScreen, {
+      zoneId,
+      zoneName,
+    });
+  }, [navigation, zone.data?.currentStatus, zoneId, zoneName]);
+
   if (isLoading || zone.isLoading)
     return (
       <Box flex={1} justifyContent="center" alignItems="center">
@@ -88,21 +99,10 @@ const AccessRequestList: FC<Props> = ({ zoneId, zoneName }) => {
           flexDirection="row"
           justifyContent="space-between"
           margin="m"
-          onPress={() => {
-            if (zone.data?.currentStatus !== StatusSchema.enum.Published) {
-              Alert.alert(
-                "Solo puedes invitar usuarios cuando la zona esté publicada",
-              );
-              return;
-            }
-            navigation.navigate(
-              InfoAccessManagerRoutes.InviteUserToZoneScreen,
-              { zoneId, zoneName },
-            );
-          }}
+          onPress={onInvite}
         >
           <Text variant="h4">Invitar</Text>
-          <AddButton />
+          <AddButton onPress={onInvite} />
         </Pressable>
       )}
       <FlatList

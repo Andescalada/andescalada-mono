@@ -11,7 +11,9 @@ import {
 import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
 import useOptionsSheet from "@hooks/useOptionsSheet";
+import usePermissions from "@hooks/usePermissions";
 import useZodForm from "@hooks/useZodForm";
+import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert } from "react-native";
@@ -21,10 +23,13 @@ const { schema } = wall;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId, zoneId, sectorId, wallName } = route.params;
+  const { wallId, zoneId, sectorId, wallName, sectorKind } = route.params;
 
   const editWall = trpc.walls.edit.useMutation();
   const methods = useZodForm({ schema });
+
+  const { permission } = usePermissions({ zoneId });
+
   const onSubmit = methods.handleSubmit(
     (input) => {
       if (input.name !== wallName)
@@ -58,43 +63,52 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
       navigation.goBack();
     },
     onSuccess: () => {
-      Alert.alert(`Pared "${route.params.wallName}" eliminada`);
+      Alert.alert(sectorKindAssets[sectorKind].deletedMessage(wallName));
       utils.sectors.allWalls.invalidate({ sectorId });
     },
     onError: () => {
-      Alert.alert("No pudimos eliminar la pared, intenta más tarde");
+      Alert.alert(sectorKindAssets[sectorKind].onDeleteError);
     },
   });
 
   const onOptions = useOptionsSheet(
     {
-      "Agregar Ruta": () =>
-        navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
-          wallId,
-          zoneId,
-        }),
-      "Cambiar Nombre": () => {
-        headerMethods.setEditing(true);
+      ["Agregar ruta"]: {
+        hide: !permission?.has("Create"),
+        action: () =>
+          navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+            wallId,
+            zoneId,
+          }),
       },
-      "Eliminar Pared": () => {
-        Alert.alert(
-          "Eliminar pared",
-          "¿Seguro que quieres eliminar esta pared?",
-          [
-            {
-              text: "Eliminar",
-              onPress: () => {
-                deleteWall.mutate({
-                  isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
-                  wallId,
-                  zoneId,
-                });
+      "Cambiar nombre": {
+        hide: !permission?.has("Update"),
+        action: () => {
+          headerMethods.setEditing(true);
+        },
+      },
+      [sectorKindAssets[sectorKind].delete]: {
+        hide: !permission?.has("Delete"),
+        action: () => {
+          Alert.alert(
+            sectorKindAssets[sectorKind].delete,
+            sectorKindAssets[sectorKind].confirmDelete,
+            [
+              {
+                text: "Eliminar",
+                onPress: () => {
+                  deleteWall.mutate({
+                    isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
+                    wallId,
+                    zoneId,
+                  });
+                },
+                style: "destructive",
               },
-              style: "destructive",
-            },
-            { text: "Cancelar", style: "cancel" },
-          ],
-        );
+              { text: "Cancelar", style: "cancel" },
+            ],
+          );
+        },
       },
     },
     { destructiveButtonIndex: 2 },

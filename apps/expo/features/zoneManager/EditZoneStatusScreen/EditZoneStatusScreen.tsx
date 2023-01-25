@@ -37,7 +37,7 @@ const EditZoneStatus: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
-  const { data, isLoading, isFetching, refetch } =
+  const { data, refetch, isRefetching, isInitialLoading } =
     trpc.zones.statusById.useQuery(
       {
         zoneId,
@@ -90,9 +90,9 @@ const EditZoneStatus: FC<Props> = ({
 
   const [message, setMessage] = useState("");
 
-  const refresh = useRefresh(refetch, isFetching && !isLoading);
+  const refresh = useRefresh(refetch, isRefetching);
 
-  if (isLoading)
+  if (isInitialLoading)
     return (
       <Screen safeAreaDisabled padding="m">
         <Text variant="h1" marginBottom="m">

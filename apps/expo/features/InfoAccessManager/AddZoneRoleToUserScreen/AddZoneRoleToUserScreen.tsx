@@ -19,6 +19,7 @@ import FindUser, { UserOutput } from "@features/user/FindUser";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useAppTheme } from "@hooks/useAppTheme";
 import { Picker } from "@react-native-picker/picker";
+import { isAndroid } from "@utils/platform";
 import { FC, useMemo, useRef, useState } from "react";
 import { Keyboard, Platform } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
@@ -83,7 +84,11 @@ const AddZoneRoleToUserScreen: FC<Props> = ({
   };
 
   return (
-    <Screen safeAreaDisabled padding="m" justifyContent="space-between">
+    <Screen
+      safeAreaDisabled={!isAndroid}
+      padding="m"
+      justifyContent="space-between"
+    >
       <ScrollView flex={1}>
         <Box>
           <Text variant="p2R">

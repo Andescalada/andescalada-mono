@@ -17,6 +17,7 @@ import {
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useRefresh from "@hooks/useRefresh";
 import useZodForm from "@hooks/useZodForm";
+import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -65,6 +66,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
           {
             name: input.name,
             sectorId,
+            zoneId,
           },
           {
             onSuccess: () => {
@@ -86,17 +88,20 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const onOptions = useOptionsSheet(
     {
-      "Agregar Pared": () =>
-        navigation.navigate(ClimbsNavigationRoutes.AddWall, {
-          sectorId,
-          zoneId,
-        }),
-      "Cambiar Nombre": () => {
+      [data ? sectorKindAssets[data.sectorKind].add : "Agregar"]: () =>
+        data
+          ? navigation.navigate(ClimbsNavigationRoutes.AddWall, {
+              sectorId,
+              zoneId,
+              sectorKind: data?.sectorKind,
+            })
+          : null,
+      "Cambiar nombre del sector": () => {
         headerMethods.setEditing(true);
       },
-      "Eliminar Sector": () => {
+      "Eliminar sector": () => {
         Alert.alert(
-          "Eliminar sector",
+          data ? sectorKindAssets[data.sectorKind].delete : "Eliminar",
           "¿Seguro que quieres eliminar este sector?",
           [
             {
@@ -124,6 +129,9 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         <ActivityIndicator size="large" />
       </Screen>
     );
+
+  if (!data) return null;
+
   return (
     <Screen padding="m">
       <FormProvider {...methods}>
@@ -135,7 +143,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
       </FormProvider>
       <Box flex={1}>
         <FlatList
-          data={data}
+          data={data.walls}
           refreshControl={refresh}
           ListEmptyComponent={() => (
             <Box
@@ -144,7 +152,9 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               alignItems="center"
               marginTop="xxxl"
             >
-              <Text variant="h3">Sin paredes</Text>
+              <Text variant="h3">
+                {sectorKindAssets[data.sectorKind].noneMessage}
+              </Text>
             </Box>
           )}
           renderItem={({ item }) => (
@@ -156,6 +166,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
                   wallName: item.name,
                   sectorId,
                   zoneId,
+                  sectorKind: data?.sectorKind,
                 })
               }
             >

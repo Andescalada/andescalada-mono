@@ -1,5 +1,6 @@
 import global from "@andescalada/api/schemas/global";
 import wall from "@andescalada/api/schemas/wall";
+import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
@@ -31,7 +32,7 @@ export const wallsRouter = t.router({
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input.wallId },
       include: {
-        Sector: { select: { zoneId: true } },
+        Sector: { select: { zoneId: true, sectorKind: true } },
         routes: {
           orderBy: { position: "asc" },
 
@@ -178,7 +179,12 @@ export const wallsRouter = t.router({
   mainTopo: protectedZoneProcedure
     .input(wall.id)
     .query(async ({ ctx, input }) => {
-      const mainTopo = await ctx.prisma.wall.findUnique({
+      if (!ctx.permissions.has("Read")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Read"),
+        );
+      }
+      const mainTopo = await ctx.prisma.wall.findUniqueOrThrow({
         where: { id: input.wallId },
         select: {
           topos: {
@@ -187,8 +193,9 @@ export const wallsRouter = t.router({
           },
         },
       });
-      if (!mainTopo) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (!mainTopo || !mainTopo.topos.length || !mainTopo.topos[0].id) {
+        return null;
       }
       return mainTopo.topos[0].id;
     }),

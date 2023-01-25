@@ -2,24 +2,25 @@ import { RoleNamesSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Button, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
+import usePauseAccess from "@hooks/usePauseAccess";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import type { Zone } from "@prisma/client";
 import { FC, useMemo } from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList } from "react-native";
 
 interface Props {
   zoneId: Zone["id"];
 }
 
 const MembersList: FC<Props> = ({ zoneId }) => {
-  const { data, isLoading, refetch, isFetching } =
+  const { data, isLoading, refetch, isRefetching } =
     trpc.zones.usersByRole.useQuery({
       roles: ["Member", "Reader"],
       zoneId,
     });
 
-  const refresh = useRefresh(refetch, isFetching && !isLoading);
+  const refresh = useRefresh(refetch, isRefetching);
   const usersList = useMemo(() => {
     const members =
       data?.find((d) => d.role === RoleNamesSchema.Enum.Member)?.users || [];
@@ -28,13 +29,10 @@ const MembersList: FC<Props> = ({ zoneId }) => {
     return [...members, ...readers];
   }, [data]);
 
-  const utils = trpc.useContext();
-  const pauseAccess = trpc.zoneAccess.pauseUserAccess.useMutation({
-    onSuccess: () => {
-      utils.zones.usersByRole.invalidate({
-        roles: ["Member", "Reader"],
-        zoneId,
-      });
+  const pauseAccess = usePauseAccess({
+    invalidation: {
+      roles: ["Member", "Reader"],
+      zoneId,
     },
   });
 
@@ -61,12 +59,21 @@ const MembersList: FC<Props> = ({ zoneId }) => {
           <UserItem item={item}>
             {permission?.has("PauseZoneAccess") && (
               <Button
-                title="Pausar acceso"
+                title="Eliminar"
                 variant="transparentSimplified"
                 titleVariant="p3B"
                 marginRight="s"
-                isLoading={pauseAccess.isLoading}
-                onPress={() => pauseAccess.mutate({ userId: item.id, zoneId })}
+                onPress={() =>
+                  Alert.alert("Eliminar miembro", "¿Estás seguro?", [
+                    { text: "Cancelar", style: "cancel" },
+                    {
+                      text: "Eliminar",
+                      style: "destructive",
+                      onPress: () =>
+                        pauseAccess.mutate({ userId: item.id, zoneId }),
+                    },
+                  ])
+                }
                 paddingHorizontal="xs"
               />
             )}

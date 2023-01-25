@@ -10,6 +10,8 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
+import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
+import { RoleNamesSchema } from "@andescalada/db/zod";
 import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -105,10 +107,17 @@ export const userRouter = t.router({
         name: input.name,
         username: input.username,
         profilePhoto: input.image ? { create: input.image } : undefined,
-        firstLogin: false,
       },
     }),
   ),
+  firstTimeLogin: protectedProcedure
+    .input(z.boolean())
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.user.update({
+        where: { email: ctx.user.email },
+        data: { firstLogin: input },
+      }),
+    ),
   editGradingSystem: protectedProcedure
     .input(user.gradeSystem)
     .mutation(({ ctx, input }) => {
@@ -146,9 +155,32 @@ export const userRouter = t.router({
       let permissions: Permissions = new Set();
       if (res) {
         permissions = deserialize<Permissions>(res);
+        return permissions;
       }
 
-      return permissions;
+      const roles = await ctx.prisma.roleByZone.findMany({
+        where: { User: { email: ctx.user.email }, Zone: { id: input.zoneId } },
+        select: {
+          Role: {
+            select: { permissions: { select: { action: true } } },
+          },
+        },
+      });
+
+      if (!roles) return permissions;
+
+      const newPermissions = roles
+        .flatMap((r) => r.Role.permissions)
+        .flatMap((p) => p.action);
+
+      const updatedPermissions = await updateRedisPermissions(
+        ctx.access,
+        ctx.user.email,
+        input.zoneId,
+        newPermissions,
+      );
+
+      return updatedPermissions;
     }),
   zonesByRole: protectedProcedure.query(({ ctx }) =>
     ctx.prisma.user
@@ -231,11 +263,17 @@ export const userRouter = t.router({
       return false;
     }),
   find: protectedProcedure
-    .input(user.usernameSearch)
+    .input(
+      z.object({
+        search: user.usernameSearch,
+        filterMe: z.boolean().optional(),
+      }),
+    )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.user.findMany({
         where: {
-          username: { contains: input },
+          username: { contains: input.search },
+          ...(input.filterMe && { NOT: { email: ctx.user.email } }),
           isDeleted: SoftDelete.NotDeleted,
         },
         select: {
@@ -510,6 +548,29 @@ export const userRouter = t.router({
       });
 
       return roles;
+    }),
+  removeZoneRole: protectedZoneProcedure
+    .input(z.object({ role: RoleNamesSchema }).merge(user.id))
+    .mutation(({ ctx, input }) => {
+      if (!ctx.permissions.has("RevokeZoneRole")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "RevokeZoneRole"),
+        );
+      }
+      if (input.role === RoleNames.Member || input.role === RoleNames.Reader) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Action not allowed for this procedure",
+        });
+      }
+
+      return removeRole(ctx, {
+        relation: {
+          zoneId: input.zoneId,
+          userId: input.userId,
+          roleName: input.role,
+        },
+      });
     }),
 });
 

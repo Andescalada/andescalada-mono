@@ -12,6 +12,7 @@ import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
+import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC } from "react";
@@ -20,14 +21,18 @@ import { FlatList } from "react-native";
 type Props = UserNavigationScreenProps<UserNavigationRoutes.ZoneReviewManager>;
 
 const ZoneReviewManagerScreen: FC<Props> = () => {
-  const zonesToReview = trpc.zoneReview.currentStatus.useQuery({
-    status: StatusSchema.Enum.InReview,
-  });
+  const { data, isLoading, refetch, isRefetching } =
+    trpc.zoneReview.currentStatus.useQuery({
+      status: StatusSchema.Enum.InReview,
+    });
+
+  const refresh = useRefresh(refetch, isRefetching);
   const rootNavigation = useRootNavigation();
   return (
     <Screen padding="m" safeAreaDisabled>
       <FlatList
-        data={zonesToReview.data}
+        data={data}
+        refreshControl={refresh}
         ListEmptyComponent={() => (
           <Box
             flex={1}
@@ -35,7 +40,7 @@ const ZoneReviewManagerScreen: FC<Props> = () => {
             alignItems="center"
             marginTop="xxxl"
           >
-            {zonesToReview.isLoading ? (
+            {isLoading ? (
               <ActivityIndicator size="large" />
             ) : (
               <Text>Sin zonas que revisar</Text>

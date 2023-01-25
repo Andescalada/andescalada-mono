@@ -34,10 +34,11 @@ export interface UserOutput {
 
 interface Props {
   onSetUser: (args: UserOutput) => void;
+  filterMe?: boolean;
 }
 
 const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
-  { onSetUser },
+  { onSetUser, filterMe = true },
   ref,
 ) => {
   const snapPoints = useMemo(() => ["1%", "100%"], []);
@@ -58,7 +59,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
       return;
     }
 
-    mutate(value);
+    mutate({ search: value, filterMe });
   };
 
   const onDebounceChange = useDebounce(searchUsername);
