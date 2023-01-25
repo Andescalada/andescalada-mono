@@ -200,6 +200,14 @@ export const routesRouter = t.router({
                   connect: { email: ctx.user.email },
                 },
         },
+        include: {
+          Wall: {
+            select: {
+              name: true,
+              Sector: { select: { id: true, sectorKind: true } },
+            },
+          },
+        },
       });
     }),
   delete: protectedZoneProcedure

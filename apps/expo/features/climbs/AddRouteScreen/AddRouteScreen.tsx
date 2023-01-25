@@ -94,6 +94,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             },
           });
         }
+        utils.topos.byId.invalidate({ topoId: mainTopo.data, zoneId });
       } else {
         navigation.goBack();
       }
@@ -114,6 +115,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               zoneId,
             },
           });
+          utils.topos.byId.invalidate({ topoId: mainTopo.data, zoneId });
         } else {
           navigation.goBack();
         }
@@ -123,8 +125,17 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const { mutate: mutateEdit, isLoading: isLoadingEdit } =
     trpc.routes.edit.useMutation({
-      onSuccess: () => {
-        navigation.goBack();
+      onSuccess: ({ Wall }) => {
+        if (mainTopo.data) {
+          utils.topos.byId.invalidate({ topoId: mainTopo.data, zoneId });
+        }
+        navigation.navigate(ClimbsNavigationRoutes.Wall, {
+          zoneId,
+          wallId,
+          sectorId: Wall.Sector.id,
+          sectorKind: Wall.Sector.sectorKind,
+          wallName: Wall.name,
+        });
         utils.walls.byId.invalidate({ wallId });
       },
     });
