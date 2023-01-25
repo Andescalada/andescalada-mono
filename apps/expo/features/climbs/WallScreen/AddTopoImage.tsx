@@ -94,7 +94,7 @@ const AddTopoImage: FC = () => {
         marginVertical="s"
         onPress={() => pickImage()}
       >
-        <Text variant={"p1R"}>Agregar topo</Text>
+        <Text variant={"p1R"}>Agregar imagen</Text>
       </Pressable>
     );
   }
