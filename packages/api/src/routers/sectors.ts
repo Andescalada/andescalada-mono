@@ -1,5 +1,6 @@
 import global from "@andescalada/api/schemas/global";
 import sector from "@andescalada/api/schemas/sector";
+import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -27,12 +28,19 @@ export const sectorsRouter = t.router({
     }
     return sector;
   }),
-  add: protectedProcedure
-    .input(z.object({ zoneId: z.string(), name: z.string() }))
+  add: protectedZoneProcedure
+    .input(sector.schema)
     .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("Create")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Create"),
+        );
+      }
       const result = await ctx.prisma.sector.aggregate({
+        where: { zoneId: input.zoneId, isDeleted: SoftDelete.NotDeleted },
         _max: { position: true },
       });
+
       const biggestPosition = result._max.position || 0;
 
       const newSector = await ctx.prisma.sector.create({
@@ -41,6 +49,7 @@ export const sectorsRouter = t.router({
           slug: slug(input.name),
           Zone: { connect: { id: input.zoneId } },
           position: biggestPosition + 1,
+          sectorKind: input.sectorKind,
           Author: { connect: { email: ctx.user.email } },
         },
       });
