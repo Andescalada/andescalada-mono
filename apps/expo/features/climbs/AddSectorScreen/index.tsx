@@ -1,7 +1,9 @@
 import sector from "@andescalada/api/schemas/sector";
+import { SectorKindSchema } from "@andescalada/db/zod";
 import {
   Box,
   Button,
+  ButtonGroup,
   Screen,
   SemanticButton,
   Text,
@@ -13,6 +15,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useZodForm from "@hooks/useZodForm";
+import { sectorKindAssets } from "@utils/sectorKindAssets";
 import type { FC } from "react";
 import { useController } from "react-hook-form";
 import { Alert } from "react-native";
@@ -47,8 +50,13 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     name: "name",
   });
 
+  const sectorKind = useController({
+    control,
+    name: "sectorKind",
+  });
+
   const onSubmit = handleSubmit((input) => {
-    mutate({ zoneId, name: input.name });
+    mutate({ zoneId, name: input.name, sectorKind: input.sectorKind });
   });
 
   const onCancel = () => {
@@ -80,6 +88,23 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
           {error?.message}
         </Text>
       </Box>
+      <ButtonGroup
+        value={sectorKind.field.value}
+        onChange={sectorKind.field.onChange}
+      >
+        <Box flexDirection="row">
+          {SectorKindSchema.options.map((kind) => (
+            <ButtonGroup.Item
+              key={kind}
+              value={kind}
+              label={sectorKindAssets[kind].label}
+            />
+          ))}
+        </Box>
+        <Text marginTop={"xs"} color="semantic.error">
+          {sectorKind.fieldState?.error?.message}
+        </Text>
+      </ButtonGroup>
       <Button
         variant="primary"
         title="Agregar"
