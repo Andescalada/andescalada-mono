@@ -2,7 +2,7 @@ import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import useOwnInfo from "@hooks/useOwnInfo";
 import { RouteGrade } from "@prisma/client";
 import { gradeUnits } from "@utils/climbingGrades";
-import { use, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
   const { data } = useOwnInfo();
