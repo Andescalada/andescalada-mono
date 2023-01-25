@@ -5,8 +5,8 @@ import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
 import InfoAccessManager from "@features/InfoAccessManager/Navigation";
 import useOffline from "@features/offline/useOffline";
+import OnboardingStackNavigation from "@features/onboarding/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
-import FirstTimeLoginScreen from "@features/user/FirstTimeLoginScreen";
 import UserStackNavigation from "@features/user/Navigation";
 import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation";
 import ZoneLocationStackNavigation from "@features/zoneLocation/Navigation";
@@ -59,9 +59,8 @@ const Navigator = () => {
         />
       ) : data?.firstLogin ? (
         <Stack.Screen
-          name={RootNavigationRoutes.FirstTimeLogin}
-          component={FirstTimeLoginScreen}
-          options={{ presentation: "modal" }}
+          name={RootNavigationRoutes.Onboarding}
+          component={OnboardingStackNavigation}
         />
       ) : (
         <Stack.Group>

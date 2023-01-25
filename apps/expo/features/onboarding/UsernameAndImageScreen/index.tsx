@@ -10,22 +10,22 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import {
+  OnboardingRoutes,
+  OnboardingScreenProps,
+} from "@features/onboarding/Navigation/types";
 import ProfileImagePicker from "@features/user/components/ProfileImagePicker/ProfileImagePicker";
 import UsernameInput from "@features/user/components/UsernameInput/UsernameInput";
 import usePickImage from "@hooks/usePickImage";
 import useUploadImage from "@hooks/useUploadImage";
 import useZodForm from "@hooks/useZodForm";
-import {
-  RootNavigationRoutes,
-  RootNavigationScreenProps,
-} from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
 import { z } from "zod";
 
-type Props = RootNavigationScreenProps<RootNavigationRoutes.FirstTimeLogin>;
+type Props = OnboardingScreenProps<OnboardingRoutes.UsernameAndImage>;
 
-const FirstTimeLoginScreen: FC<Props> = () => {
+const UsernameAndImageScreen: FC<Props> = () => {
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: true,
     quality: 0.5,
@@ -113,4 +113,4 @@ const FirstTimeLoginScreen: FC<Props> = () => {
   );
 };
 
-export default FirstTimeLoginScreen;
+export default UsernameAndImageScreen;
