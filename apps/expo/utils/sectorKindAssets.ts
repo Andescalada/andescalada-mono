@@ -11,6 +11,7 @@ export const sectorKindAssets = {
     add: "Agregar bloque",
     deletedMessage: (name: string) => `Bloque "${name}" eliminado`,
     delete: "Eliminar bloque",
+    onDeleteError: "No se pudo eliminar el bloque, inténtalo de nuevo",
     confirmDelete: "¿Estás seguro de que quieres eliminar este bloque?",
   },
   [SectorKindSchema.Enum.Wall]: {
@@ -20,6 +21,7 @@ export const sectorKindAssets = {
     noneMessage: "No hay paredes",
     add: "Agregar pared",
     deletedMessage: (name: string) => `Pared "${name}" eliminada`,
+    onDeleteError: "No se pudo eliminar la pared, inténtalo de nuevo",
     delete: "Eliminar pared",
     confirmDelete: "¿Estás seguro de que quieres eliminar esta pared?",
   },
@@ -31,6 +33,7 @@ export const sectorKindAssets = {
     add: "Agregar cascada",
     deletedMessage: (name: string) => `Cascada "${name}" eliminada`,
     delete: "Eliminar cascada",
+    onDeleteError: "No se pudo eliminar la cascada, inténtalo de nuevo",
     confirmDelete: "¿Estás seguro de que quieres eliminar esta cascada?",
   },
 } satisfies SectorKindObject;
