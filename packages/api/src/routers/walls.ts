@@ -32,7 +32,7 @@ export const wallsRouter = t.router({
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input.wallId },
       include: {
-        Sector: { select: { zoneId: true } },
+        Sector: { select: { zoneId: true, sectorKind: true } },
         routes: {
           orderBy: { position: "asc" },
 

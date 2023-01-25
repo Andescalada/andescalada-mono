@@ -129,15 +129,10 @@ export const routesRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const updateOrCreate = async () => {
         if (input.routePathId) {
-          const path = await ctx.prisma.routePath.findUnique({
+          return ctx.prisma.routePath.update({
             where: { id: input.routePathId },
+            data: { path: input.path },
           });
-          if (path) {
-            return ctx.prisma.routePath.update({
-              where: { id: input.routePathId },
-              data: { path: input.path },
-            });
-          }
         } else {
           return ctx.prisma.routePath.create({
             data: {
