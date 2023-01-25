@@ -266,7 +266,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               <TextInput
                 value={value}
                 onChangeText={onChange}
-                editable={!unknownName}
+                editable={unknownName !== false}
                 onPressIn={() => {
                   if (!unknownName) setShowNoName(false);
                 }}
@@ -277,7 +277,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
                 textAlignVertical="center"
                 color={!unknownName ? "textContrast" : "grayscale.600"}
               />
-              {unknownName && value && (
+              {!!unknownName && value && (
                 <A.Box entering={FadeIn} exiting={FadeOut}>
                   <TextButton
                     variant="info"
