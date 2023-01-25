@@ -344,9 +344,16 @@ model Sector {
   coAuthors  User[]     @relation("CoAuthorSector")
   isDeleted  SoftDelete @default(NotDeleted)
   version    Int        @default(0)
+  sectorKind SectorKind @default(Wall)
 
   @@index([zoneId])
   @@index([authorId])
+}
+
+enum SectorKind {
+  Wall
+  Boulder
+  Waterfall
 }
 
 model Wall {
