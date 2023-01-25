@@ -25,7 +25,7 @@ import { z } from "zod";
 
 type Props = OnboardingScreenProps<OnboardingRoutes.UsernameAndImage>;
 
-const UsernameAndImageScreen: FC<Props> = () => {
+const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: true,
     quality: 0.5,
@@ -53,7 +53,8 @@ const UsernameAndImageScreen: FC<Props> = () => {
         image = await uploadImage(selectedImage.base64Img);
       }
       await mutateAsync({ name, image, username });
-      await utils.user.ownInfo.invalidate();
+      utils.user.ownInfo.invalidate();
+      navigation.navigate(OnboardingRoutes.FirstTimeGradingSystem);
     } catch (err) {}
     setLoading(false);
   });

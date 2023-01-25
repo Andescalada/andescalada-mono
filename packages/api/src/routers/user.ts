@@ -107,10 +107,17 @@ export const userRouter = t.router({
         name: input.name,
         username: input.username,
         profilePhoto: input.image ? { create: input.image } : undefined,
-        firstLogin: false,
       },
     }),
   ),
+  firstTimeLogin: protectedProcedure
+    .input(z.boolean())
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.user.update({
+        where: { email: ctx.user.email },
+        data: { firstLogin: input },
+      }),
+    ),
   editGradingSystem: protectedProcedure
     .input(user.gradeSystem)
     .mutation(({ ctx, input }) => {
