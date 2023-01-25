@@ -524,9 +524,9 @@ model Image {
   width          Int
   url            String         @db.LongText
   storageService StorageService
-  bytes          BigInt?
+  bytes          Int?
   publicId       String?        @db.MediumText
-  version        BigInt?
+  version        Int?
   assetId        String?        @db.MediumText
   format         String?
   Topo           Topo[]
