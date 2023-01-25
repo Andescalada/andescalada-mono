@@ -93,6 +93,7 @@ const CloseButton: FC<CloseButtonProps> = ({ iconProps, ...props }) => {
       position="absolute"
       right={0}
       top={0}
+      zIndex={300}
       padding="m"
       {...props}
       onPress={onDismiss}

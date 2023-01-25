@@ -105,6 +105,7 @@ export const sectorsRouter = t.router({
         where: { id: input.sectorId },
         select: {
           isDeleted: true,
+          sectorKind: true,
           walls: {
             where: { isDeleted: SoftDelete.NotDeleted },
             select: { id: true, name: true },
@@ -116,7 +117,7 @@ export const sectorsRouter = t.router({
           code: "NOT_FOUND",
           message: `No walls found for sector  with id '${input.sectorId}'`,
         });
-      return res.walls;
+      return res;
     }),
   delete: protectedZoneProcedure
     .input(sector.id.merge(global.isDeleted))

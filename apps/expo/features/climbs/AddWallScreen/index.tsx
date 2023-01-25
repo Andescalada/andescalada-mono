@@ -1,6 +1,9 @@
+import { SectorKindSchema } from "@andescalada/db/zod";
 import {
   Box,
   Button,
+  Ionicons,
+  Modal,
   Screen,
   SemanticButton,
   Text,
@@ -12,7 +15,8 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useZodForm from "@hooks/useZodForm";
-import { FC } from "react";
+import { sectorKindAssets } from "@utils/sectorKindAssets";
+import { FC, useState } from "react";
 import { useController } from "react-hook-form";
 import { Alert } from "react-native";
 import { z } from "zod";
@@ -26,8 +30,8 @@ const schema = z.object({
     .max(50, "Nombre muy largo"),
 });
 
-const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
-  const { sectorId, zoneId } = route.params;
+const AddWallScreen: FC<Props> = ({ route, navigation }) => {
+  const { sectorId, zoneId, sectorKind } = route.params;
   const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.walls.add.useMutation({
     onSuccess: (data, params) => {
@@ -74,13 +78,27 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
+  const [openModal, setOpenModal] = useState(false);
+
   return (
     <Screen padding="m">
-      <Text variant="h1">Agregar pared</Text>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Text variant="h1">{`Agregar ${sectorKindAssets[sectorKind].label}`}</Text>
+        <Ionicons
+          name="information-circle"
+          size={25}
+          onPress={() => setOpenModal(true)}
+        />
+      </Box>
       <Box marginTop={"m"}>
         <Text variant={"p1R"} marginBottom={"s"}>
-          Nombre de la pared
+          {sectorKindAssets[sectorKind].nameOf}
         </Text>
+
         <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
         <Text marginTop={"xs"} color="semantic.error">
           {error?.message}
@@ -94,8 +112,66 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
         marginVertical="s"
       />
       <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
+      <Modal
+        visible={openModal}
+        onDismiss={() => setOpenModal(false)}
+        margin="s"
+        padding="m"
+      >
+        <Modal.Close />
+        <ModalDescription sectorKind={sectorKind} />
+      </Modal>
     </Screen>
   );
 };
 
-export default AddSectorScreen;
+export default AddWallScreen;
+
+const ModalDescription = ({
+  sectorKind,
+}: {
+  sectorKind: typeof SectorKindSchema._type;
+}) => {
+  if (sectorKind === SectorKindSchema.enum.Boulder) {
+    return <BoulderDescription />;
+  }
+  return <WallDescription />;
+};
+
+const WallDescription = () => (
+  <Box>
+    <Text variant="h4" marginBottom="m">
+      Sobre las paredes
+    </Text>
+    <Text variant="p2R" marginBottom="s">
+      Un sector puede estar conformado de muchas paredes o una pared es tan
+      grade que conviene dividirla en secciones.
+    </Text>
+    <Text variant="p2R" marginBottom="s">
+      Agrega cuantas paredes quieras y luego podrás agregar las vías.
+    </Text>
+    <Text variant="p2R" marginBottom="s">
+      Considera que una pared quepa en una sola foto, si no es así, considera
+      dividirla en secciones.
+    </Text>
+  </Box>
+);
+
+const BoulderDescription = () => (
+  <Box>
+    <Text variant="h4" marginBottom="m">
+      Sobre los boulder
+    </Text>
+    <Text variant="p2R" marginBottom="s">
+      Un sector de boulder puede estar conformado de muchos rocones o un único
+      rocón es tan grade que conviene dividirlo en caras.
+    </Text>
+    <Text variant="p2R" marginBottom="s">
+      Agrega cuantos boulder quieras y luego podrás agregar los problema.
+    </Text>
+    <Text variant="p2R" marginBottom="s">
+      Considera que un boulder quepa en una sola foto, si no es así, considera
+      dividirlo en caras.
+    </Text>
+  </Box>
+);

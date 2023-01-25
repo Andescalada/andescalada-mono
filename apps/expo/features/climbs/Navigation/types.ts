@@ -33,6 +33,7 @@ export type ClimbsNavigationNavigationParamList = {
   [ClimbsNavigationRoutes.AddWall]: {
     sectorId: Sector["id"];
     zoneId: Zone["id"];
+    sectorKind: Sector["sectorKind"];
   };
   [ClimbsNavigationRoutes.Sector]: {
     sectorId: Sector["id"];

@@ -88,10 +88,13 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const onOptions = useOptionsSheet(
     {
       "Agregar Pared": () =>
-        navigation.navigate(ClimbsNavigationRoutes.AddWall, {
-          sectorId,
-          zoneId,
-        }),
+        data
+          ? navigation.navigate(ClimbsNavigationRoutes.AddWall, {
+              sectorId,
+              zoneId,
+              sectorKind: data?.sectorKind,
+            })
+          : null,
       "Cambiar Nombre": () => {
         headerMethods.setEditing(true);
       },
@@ -136,7 +139,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
       </FormProvider>
       <Box flex={1}>
         <FlatList
-          data={data}
+          data={data?.walls}
           refreshControl={refresh}
           ListEmptyComponent={() => (
             <Box
