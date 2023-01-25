@@ -397,7 +397,7 @@ model Topo {
   coAuthors        User[]      @relation("CoAuthorTopo")
   isDeleted        SoftDelete  @default(NotDeleted)
   version          Int         @default(0)
-  routeStrokeWidth Int         @default(1)
+  routeStrokeWidth Decimal     @default(1) @db.Decimal(4, 2)
 
   @@index([wallId])
   @@index([imageId])
