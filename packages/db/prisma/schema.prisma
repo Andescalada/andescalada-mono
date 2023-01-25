@@ -474,16 +474,17 @@ model Pitch {
 }
 
 model RouteGrade {
-  id         String     @id @default(uuid())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  grade      Int?
-  project    Boolean    @default(false)
-  slashGrade Boolean    @default(false)
-  route      Route      @relation(fields: [routeId], references: [id])
-  routeId    String     @unique
-  isDeleted  SoftDelete @default(NotDeleted)
-  version    Int        @default(0)
+  id                  String       @id @default(uuid())
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  grade               Int?
+  project             Boolean      @default(false)
+  slashGrade          Boolean      @default(false)
+  route               Route        @relation(fields: [routeId], references: [id])
+  routeId             String       @unique
+  isDeleted           SoftDelete   @default(NotDeleted)
+  version             Int          @default(0)
+  originalGradeSystem GradeSystems @default(French)
 
   @@index([routeId])
 }
