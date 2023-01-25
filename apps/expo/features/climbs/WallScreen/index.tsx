@@ -12,6 +12,7 @@ import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import useZodForm from "@hooks/useZodForm";
+import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert } from "react-native";
@@ -21,7 +22,7 @@ const { schema } = wall;
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId, zoneId, sectorId, wallName } = route.params;
+  const { wallId, zoneId, sectorId, wallName, sectorKind } = route.params;
 
   const editWall = trpc.walls.edit.useMutation();
   const methods = useZodForm({ schema });
@@ -58,7 +59,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
       navigation.goBack();
     },
     onSuccess: () => {
-      Alert.alert(`Pared "${route.params.wallName}" eliminada`);
+      Alert.alert(sectorKindAssets[sectorKind].deletedMessage(wallName));
       utils.sectors.allWalls.invalidate({ sectorId });
     },
     onError: () => {
@@ -68,7 +69,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
 
   const onOptions = useOptionsSheet(
     {
-      "Agregar Ruta": () =>
+      ["Agregar Ruta"]: () =>
         navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
           wallId,
           zoneId,

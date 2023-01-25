@@ -40,6 +40,7 @@ const AddWallScreen: FC<Props> = ({ route, navigation }) => {
         wallId: data.id,
         wallName: data.name,
         zoneId: params.zoneId,
+        sectorKind,
       });
       utils.sectors.allWalls.invalidate();
     },
@@ -160,17 +161,17 @@ const WallDescription = () => (
 const BoulderDescription = () => (
   <Box>
     <Text variant="h4" marginBottom="m">
-      Sobre los boulder
+      Sobre los bloques (boulders)
     </Text>
     <Text variant="p2R" marginBottom="s">
-      Un sector de boulder puede estar conformado de muchos rocones o un único
+      Un sector de bloques puede estar conformado de muchos rocones o un único
       rocón es tan grade que conviene dividirlo en caras.
     </Text>
     <Text variant="p2R" marginBottom="s">
-      Agrega cuantos boulder quieras y luego podrás agregar los problema.
+      Agrega cuantos bloques quieras y luego podrás agregar las rutas.
     </Text>
     <Text variant="p2R" marginBottom="s">
-      Considera que un boulder quepa en una sola foto, si no es así, considera
+      Considera que un bloque quepa en una sola foto, si no es así, considera
       dividirlo en caras.
     </Text>
   </Box>
