@@ -1,4 +1,4 @@
-import { Screen, Text } from "@andescalada/ui";
+import { Screen } from "@andescalada/ui";
 import ClassicAgreementCardList from "@features/zoneAgreementManager/components/ClassicAgreementCardList";
 import ClassicAgreementContainer from "@features/zoneAgreementManager/components/ClassicAgreementContainer";
 import {
