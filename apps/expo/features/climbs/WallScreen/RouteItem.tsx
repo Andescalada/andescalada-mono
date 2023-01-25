@@ -6,6 +6,7 @@ import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -53,6 +54,7 @@ const RouteItem = ({
 
   const { permission } = usePermissions({ zoneId });
   const { data: user } = useOwnInfo();
+  const { isOfflineMode } = useOfflineMode();
 
   const wallId = useMemo(() => item.wallId, [item.wallId]);
 
@@ -158,7 +160,10 @@ const RouteItem = ({
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
-      allowEdit={permission?.has("Update") || item.Author.email === user?.email}
+      allowEdit={
+        (permission?.has("Update") || item.Author.email === user?.email) &&
+        !isOfflineMode
+      }
       onTouch={() => {
         setTouchRouteId((prev) => {
           if (prev !== item.id) {
