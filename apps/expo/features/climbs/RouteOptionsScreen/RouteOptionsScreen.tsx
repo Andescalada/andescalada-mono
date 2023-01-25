@@ -23,7 +23,10 @@ const EditOptions: FC<Props> = ({
   },
   navigation,
 }) => {
-  const route = trpc.routes.byId.useQuery(routeId);
+  const route = trpc.routes.byId.useQuery(routeId, {
+    staleTime: 0,
+    cacheTime: 0,
+  });
 
   const rootNavigation = useRootNavigation();
 
