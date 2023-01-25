@@ -65,6 +65,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
           {
             name: input.name,
             sectorId,
+            zoneId,
           },
           {
             onSuccess: () => {
