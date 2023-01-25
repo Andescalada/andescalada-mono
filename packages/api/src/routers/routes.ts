@@ -64,9 +64,14 @@ export const routesRouter = t.router({
           kind,
           unknownName,
           position: biggestPosition + 1,
-          ...(originalGradeSystem && { originalGradeSystem }),
           RouteGrade: {
-            create: { grade: grade.grade, project: grade.project },
+            create: {
+              grade: grade.grade,
+              project: grade.project,
+              ...(originalGradeSystem && {
+                originalGradeSystem,
+              }),
+            },
           },
           Author: { connect: { email: ctx.user.email } },
         },
@@ -176,12 +181,17 @@ export const routesRouter = t.router({
       return ctx.prisma.route.update({
         where: { id: input.routeId },
         data: {
-          RouteGrade: { update: { ...grade } },
+          RouteGrade: {
+            update: {
+              ...grade,
+              ...(originalGradeSystem && { originalGradeSystem }),
+            },
+          },
           name,
           slug: slug(name),
           kind,
           unknownName,
-          ...(originalGradeSystem && { originalGradeSystem }),
+
           version: { increment: 1 },
           coAuthors:
             route?.Author.email === ctx.user.email
