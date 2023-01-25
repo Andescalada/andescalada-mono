@@ -379,24 +379,25 @@ model Wall {
 }
 
 model Topo {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  slug      String
-  Wall      Wall        @relation(fields: [wallId], references: [id])
-  wallId    String
-  position  Int         @default(0)
-  main      Boolean     @default(false)
-  name      String?
-  RoutePath RoutePath[]
-  canvas    String?     @db.LongText
-  image     Image       @relation(fields: [imageId], references: [id])
-  imageId   String
-  Author    User        @relation("AuthorTopo", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]      @relation("CoAuthorTopo")
-  isDeleted SoftDelete  @default(NotDeleted)
-  version   Int         @default(0)
+  id               String      @id @default(uuid())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  slug             String
+  Wall             Wall        @relation(fields: [wallId], references: [id])
+  wallId           String
+  position         Int         @default(0)
+  main             Boolean     @default(false)
+  name             String?
+  RoutePath        RoutePath[]
+  canvas           String?     @db.LongText
+  image            Image       @relation(fields: [imageId], references: [id])
+  imageId          String
+  Author           User        @relation("AuthorTopo", fields: [authorId], references: [id])
+  authorId         String
+  coAuthors        User[]      @relation("CoAuthorTopo")
+  isDeleted        SoftDelete  @default(NotDeleted)
+  version          Int         @default(0)
+  routeStrokeWidth Int         @default(1)
 
   @@index([wallId])
   @@index([imageId])
