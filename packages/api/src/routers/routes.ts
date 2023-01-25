@@ -49,21 +49,24 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const result = await ctx.prisma.route.aggregate({
-        where: { wallId: input.wallId },
+        where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
         _max: { position: true },
       });
       const biggestPosition = result._max.position || 0;
 
+      const { grade, kind, name, originalGradeSystem, unknownName } = input;
+
       const newRoute = await ctx.prisma.route.create({
         data: {
-          name: input.name,
-          slug: slug(input.name),
+          name,
+          slug: slug(name),
           Wall: { connect: { id: input.wallId } },
-          kind: input.kind,
-          unknownName: input.unknownName,
+          kind,
+          unknownName,
           position: biggestPosition + 1,
+          ...(originalGradeSystem && { originalGradeSystem }),
           RouteGrade: {
-            create: { grade: input.grade.grade, project: input.grade.project },
+            create: { grade: grade.grade, project: grade.project },
           },
           Author: { connect: { email: ctx.user.email } },
         },
@@ -168,7 +171,7 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const { grade, kind, name, unknownName } = input;
+      const { grade, kind, name, unknownName, originalGradeSystem } = input;
 
       await ctx.prisma.wall.update({
         where: { id: route?.wallId },
@@ -183,7 +186,14 @@ export const routesRouter = t.router({
           slug: slug(name),
           kind,
           unknownName,
+          ...(originalGradeSystem && { originalGradeSystem }),
           version: { increment: 1 },
+          coAuthors:
+            route?.Author.email === ctx.user.email
+              ? undefined
+              : {
+                  connect: { email: ctx.user.email },
+                },
         },
       });
     }),

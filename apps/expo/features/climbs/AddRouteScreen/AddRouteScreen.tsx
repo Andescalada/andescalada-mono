@@ -178,35 +178,32 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       project: input.grade === "project",
     };
 
-    if (rest.id) {
-      mutateEdit({
-        grade,
-        kind: input.kind,
-        name: input.name,
-        routeId: rest.id,
-        zoneId: rest.zoneId,
-        unknownName: input.unknownName,
-      });
-      return;
-    }
-    if (!!extendedRouteId) {
-      mutateExtension({
-        name: input.name,
-        kind: input.kind,
-        grade,
-        unknownName: input.unknownName,
-        zoneId: rest.zoneId,
-        extendedRouteId,
-      });
-      return;
-    }
-    mutate({
-      wallId,
+    const data = {
       name: input.name,
       kind: input.kind,
       grade,
       unknownName: input.unknownName,
       zoneId: rest.zoneId,
+      originalGradeSystem: getSystem(input.kind),
+    };
+
+    if (rest.id) {
+      mutateEdit({
+        routeId: rest.id,
+        ...data,
+      });
+      return;
+    }
+    if (!!extendedRouteId) {
+      mutateExtension({
+        extendedRouteId,
+        ...data,
+      });
+      return;
+    }
+    mutate({
+      wallId,
+      ...data,
     });
   });
 
@@ -227,7 +224,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
-  const { allGrades, gradeSystem } = useGradeSystem(kindValue);
+  const { allGrades, gradeSystem, getSystem } = useGradeSystem(kindValue);
 
   const theme = useAppTheme();
 

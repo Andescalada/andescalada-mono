@@ -1,5 +1,5 @@
 import { r } from "@andescalada/api/src/utils/regex";
-import { RouteKindSchema } from "@andescalada/db/zod";
+import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 
 const schema = z.object({
@@ -16,6 +16,7 @@ const schema = z.object({
     project: z.boolean(),
   }),
   unknownName: z.boolean().optional(),
+  originalGradeSystem: z.nativeEnum(GradeSystemsSchema.Enum).optional(),
 });
 
 const routeId = z.object({ routeId: z.string() });
