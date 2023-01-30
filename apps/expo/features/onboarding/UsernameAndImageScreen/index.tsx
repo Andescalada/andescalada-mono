@@ -34,7 +34,7 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
     allowsEditing: true,
     quality: 0.5,
   });
-  const { uploadImage } = useCloudinaryImage();
+  const { uploadImage, destroyImage } = useCloudinaryImage();
   const form = useZodForm({
     schema: user.schema,
     mode: "onChange",
@@ -52,16 +52,23 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
 
   const [loading, setLoading] = useState(false);
   const onSubmit = form.handleSubmit(async ({ name, username }) => {
+    setLoading(true);
+
+    let image: z.infer<typeof imageSchema.schema> | undefined;
+
+    if (selectedImage) {
+      image = await uploadImage(selectedImage.base64Img);
+    }
+
     try {
-      setLoading(true);
-      let image: z.infer<typeof imageSchema.schema> | undefined;
-      if (selectedImage) {
-        image = await uploadImage(selectedImage.base64Img);
-      }
       await mutateAsync({ name, image, username });
       utils.user.ownInfo.invalidate();
       navigation.navigate(OnboardingRoutes.FirstTimeGradingSystem);
-    } catch (err) {}
+    } catch (err) {
+      if (image) {
+        destroyImage(image.publicId);
+      }
+    }
     setLoading(false);
   });
 

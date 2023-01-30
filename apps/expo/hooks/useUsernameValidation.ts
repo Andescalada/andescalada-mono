@@ -1,13 +1,17 @@
 import user from "@andescalada/api/schemas/user";
 import { trpc } from "@andescalada/utils/trpc";
+import { atom, useAtom } from "jotai";
 import { useCallback, useState } from "react";
 
 export const SCHEMA_ERROR = "schemaError";
+
+export const validUsername = atom(false);
 
 const useUsernameValidation = () => {
   const utils = trpc.useContext();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [_, setIsValidUsername] = useAtom(validUsername);
   const [isValid, setIsValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
@@ -27,6 +31,7 @@ const useUsernameValidation = () => {
           username: u,
         });
         setIsValid(isUsernameUnique);
+        setIsValidUsername(isUsernameUnique);
         setIsLoading(false);
 
         if (!isUsernameUnique) {
