@@ -1,6 +1,8 @@
 import { ActivityIndicator, Box, Text, TextInput } from "@andescalada/ui";
 import useDebounce from "@hooks/useDebounce";
-import useUsernameValidation from "@hooks/useUsernameValidation";
+import useUsernameValidation, {
+  SCHEMA_ERROR,
+} from "@hooks/useUsernameValidation";
 import { ComponentProps, FC, useEffect, useMemo } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
@@ -29,12 +31,9 @@ const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
 
   const userNameCheck = async (text: string) => {
     const res = await validateUsername(text);
-    if (!res?.isValid) {
-      form.setError("username", {
-        type: "validate",
-        message: res?.errorMessage,
-      });
-    } else {
+    if (!res?.isValid && res?.errorMessage !== SCHEMA_ERROR) {
+      form.setError("username", { type: "value", message: res?.errorMessage });
+    } else if (res?.errorMessage !== SCHEMA_ERROR) {
       form.clearErrors("username");
     }
   };

@@ -2,6 +2,8 @@ import user from "@andescalada/api/schemas/user";
 import { trpc } from "@andescalada/utils/trpc";
 import { useCallback, useState } from "react";
 
+export const SCHEMA_ERROR = "schemaError";
+
 const useUsernameValidation = () => {
   const utils = trpc.useContext();
 
@@ -18,7 +20,7 @@ const useUsernameValidation = () => {
         if (!validUsername.success)
           return {
             isValid: false,
-            errorMessage: validUsername.error.message,
+            errorMessage: SCHEMA_ERROR,
           };
         setIsLoading(true);
         const isUsernameUnique = await utils.user.uniqueUsername.fetch({
