@@ -14,7 +14,7 @@ import {
 import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import usePickImage from "@hooks/usePickImage";
-import useUploadImage from "@hooks/useUploadImage";
+import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useViewImage from "@hooks/useViewImage";
 import { useRoute } from "@react-navigation/native";
 import { FC, useState } from "react";
@@ -39,7 +39,7 @@ const AddTopoImage: FC = () => {
 
   const viewImage = useViewImage();
 
-  const { uploadImage } = useUploadImage();
+  const { uploadImage } = useCloudinaryImage();
 
   const { mutate, isSuccess } = trpc.topos.add.useMutation();
 

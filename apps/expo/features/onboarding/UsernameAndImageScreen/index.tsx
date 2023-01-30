@@ -16,11 +16,13 @@ import {
 } from "@features/onboarding/Navigation/types";
 import ProfileImagePicker from "@features/user/components/ProfileImagePicker/ProfileImagePicker";
 import UsernameInput from "@features/user/components/UsernameInput/UsernameInput";
+import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useOwnInfo from "@hooks/useOwnInfo";
 import usePickImage from "@hooks/usePickImage";
 import useRefresh from "@hooks/useRefresh";
-import useUploadImage from "@hooks/useUploadImage";
+import { validUsername } from "@hooks/useUsernameValidation";
 import useZodForm from "@hooks/useZodForm";
+import { useAtom } from "jotai";
 import { FC, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
 import { z } from "zod";
@@ -32,7 +34,7 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
     allowsEditing: true,
     quality: 0.5,
   });
-  const { uploadImage } = useUploadImage();
+  const { uploadImage } = useCloudinaryImage();
   const form = useZodForm({
     schema: user.schema,
     mode: "onChange",
@@ -42,6 +44,8 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
     field: { onChange, onBlur, value },
     fieldState: { error },
   } = useController({ control: form.control, name: "name" });
+
+  const [isValidUsername] = useAtom(validUsername);
 
   const utils = trpc.useContext();
   const { mutateAsync } = trpc.user.edit.useMutation();
@@ -64,6 +68,9 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
   const { refetch, isRefetching } = useOwnInfo();
 
   const refresh = useRefresh(refetch, isRefetching);
+
+  const submitButtonVariant =
+    !form.formState.isValid || !isValidUsername ? "transparent" : "info";
 
   return (
     <KeyboardAvoidingBox>
@@ -107,14 +114,17 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
             </FormProvider>
           </Box>
           <Button
-            variant={"info"}
+            variant={submitButtonVariant}
             title="Continuar"
             alignSelf={"center"}
             marginTop="xxl"
             onPress={onSubmit}
             isLoading={loading}
             disabled={
-              loading || !form.formState.isDirty || !form.formState.isValid
+              loading ||
+              !form.formState.isDirty ||
+              !form.formState.isValid ||
+              !isValidUsername
             }
           />
         </KeyboardDismiss>

@@ -41,7 +41,7 @@ const productionConfig = (config: ConfigContext["config"]): ExpoConfig => ({
     AUTH0_AUDIENCE: "https://api.andescalada.org/",
     CLOUDINARY_UPLOAD_PRESET: "andescalada-app",
     CLOUDINARY_URL:
-      "https://api.cloudinary.com/v1_1/fundacion-andescalada/image/upload",
+      "https://api.cloudinary.com/v1_1/fundacion-andescalada/image",
   },
 });
 
