@@ -26,7 +26,7 @@ export interface AccessToken {
 const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 
 const Navigator = () => {
-  const { data, isLoading, isError } = useOwnInfo({ withInitialData: false });
+  const { data, isLoading, isError } = useOwnInfo();
 
   useOffline({ fetchAssets: true });
   usePushNotification();

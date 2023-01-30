@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingBox,
   KeyboardDismiss,
   Screen,
+  ScrollView,
   Text,
   TextInput,
 } from "@andescalada/ui";
@@ -16,7 +17,9 @@ import {
 } from "@features/onboarding/Navigation/types";
 import ProfileImagePicker from "@features/user/components/ProfileImagePicker/ProfileImagePicker";
 import UsernameInput from "@features/user/components/UsernameInput/UsernameInput";
+import useOwnInfo from "@hooks/useOwnInfo";
 import usePickImage from "@hooks/usePickImage";
+import useRefresh from "@hooks/useRefresh";
 import useUploadImage from "@hooks/useUploadImage";
 import useZodForm from "@hooks/useZodForm";
 import { FC, useState } from "react";
@@ -59,9 +62,16 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
     setLoading(false);
   });
 
+  const { refetch, isRefetching } = useOwnInfo();
+
+  const refresh = useRefresh(refetch, isRefetching);
+
   return (
     <KeyboardAvoidingBox>
-      <Screen margin={{ mobile: "m", tablet: "xxl" }}>
+      <ScrollView
+        margin={{ mobile: "m", tablet: "xxl" }}
+        refreshControl={refresh}
+      >
         <KeyboardDismiss>
           <Box marginVertical={"ll"}>
             <Text variant={"h1"}>Comencemos</Text>
@@ -109,7 +119,7 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
             }
           />
         </KeyboardDismiss>
-      </Screen>
+      </ScrollView>
     </KeyboardAvoidingBox>
   );
 };
