@@ -18,6 +18,7 @@ const useUsernameValidation = () => {
   const validateUsername = useCallback(
     async (u: string) => {
       try {
+        setIsValid(false);
         const validUsername = await user.schema
           .pick({ username: true })
           .safeParseAsync({ username: u });
