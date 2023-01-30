@@ -56,7 +56,10 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         hide={!showRoutes}
         onSelectedRoute={setSelectedRoute}
       />
-      <BackButton.Transparent onPress={navigation.goBack} />
+      <BackButton.Transparent
+        onPress={navigation.goBack}
+        iconProps={{ color: "grayscale.black" }}
+      />
       {!showConfig && (
         <A.Box
           position="absolute"

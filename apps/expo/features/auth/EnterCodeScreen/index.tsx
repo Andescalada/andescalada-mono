@@ -81,7 +81,7 @@ const EnterCodeScreen: FC<Props> = ({
       <AnimatedBackground />
       <BackButton.Transparent
         onPress={navigation.goBack}
-        iconProps={{ color: "white" }}
+        iconProps={{ color: "grayscale.white" }}
       />
       <Box flex={0.2} justifyContent="space-evenly" alignItems="center">
         <Text variant="h1" marginBottom="m">
