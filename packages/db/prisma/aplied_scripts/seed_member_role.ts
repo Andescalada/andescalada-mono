@@ -2,7 +2,8 @@ import { PrismaClient, RoleNames } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main() {
+export default async function main() {
+  console.log("Start seeding seed_member_role ...");
   const memberRole = await prisma.role.create({
     data: {
       name: RoleNames.Member,
@@ -12,13 +13,3 @@ async function main() {
 
   console.log(`Member role created with id ${memberRole.id}`);
 }
-
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });

@@ -9,8 +9,8 @@ const permissionsData: Prisma.PermissionsCreateInput[] = [
   { action: "PauseZoneAccess" },
 ];
 
-async function main() {
-  console.log(`Start seeding ...`);
+export default async function main() {
+  console.log(`Start seeding seed_new_permissions_22-01-2023 ...`);
 
   console.log(`Creating permissions`);
   for (const p of permissionsData) {
@@ -61,13 +61,3 @@ async function main() {
 
   console.log(`Update finished.`);
 }
-
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });

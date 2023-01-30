@@ -1,5 +1,3 @@
-module.exports = {};
-
 import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -187,7 +185,8 @@ const agreements: Prisma.AgreementCreateInput[] = [
   },
 ];
 
-async function main() {
+export default async function main() {
+  console.log("Start seeding seed_agreements ...");
   console.log("Creating agreements...");
 
   for (const agreement of agreements) {
@@ -198,13 +197,3 @@ async function main() {
 
   console.log("Agreements created!");
 }
-
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
