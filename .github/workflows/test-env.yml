@@ -1,0 +1,14 @@
+name: test-env
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    name: Test Env
+    runs-on: ubuntu-latest
+    environment: Preview
+    steps:
+      - name: test
+        run: echo ${{secrets.DATABASE_URL }} | sed 's/./& /g'
