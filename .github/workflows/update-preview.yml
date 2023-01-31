@@ -4,6 +4,11 @@ on:
     branches:
       - main
 
+env: 
+  DATABASE_URL: ${{ env.DATABASE_URL }}
+  SENTRY_AUTH_TOKEN: ${{env.SENTRY_AUTH_TOKEN}}
+  GOOGLE_MAPS_API_KEY_ANDROID: ${{env.GOOGLE_MAPS_API_KEY_ANDROID}}
+  GOOGLE_MAPS_API_KEY_IOS: ${{env.GOOGLE_MAPS_API_KEY_IOS}}
 
 jobs:
   update:
