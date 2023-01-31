@@ -7,7 +7,9 @@
     },
     "update:preview": {},
     "update:production": {},
-    "dev": {},
+    "dev": {
+      "cache": false
+    },
     "lint": {
       "outputs": []
     }
