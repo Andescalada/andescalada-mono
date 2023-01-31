@@ -9,7 +9,7 @@ jobs:
   update:
     name: EAS Update Preview
     runs-on: ubuntu-latest
-    environment: preview
+    environment: Preview
     steps:
       - name: Check for EXPO_TOKEN
         run: |
