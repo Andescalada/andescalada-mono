@@ -52,4 +52,8 @@ jobs:
         run: yarn install --immutable
 
       - name: Publish update
+        env: 
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+          GOOGLE_MAPS_API_KEY_ANDROID: ${{secrets.GOOGLE_MAPS_API_KEY_ANDROID}}
+          GOOGLE_MAPS_API_KEY_IOS: ${{secrets.GOOGLE_MAPS_API_KEY_IOS}}
         run: npx turbo update:production
