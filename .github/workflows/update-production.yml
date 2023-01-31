@@ -2,12 +2,12 @@ name: update
 on: 
   push:
     branches:
-      - main
+      - production
 
 
 jobs:
   update:
-    name: EAS Update Preview
+    name: EAS Update Production
     runs-on: ubuntu-latest
     steps:
       - name: Check for EXPO_TOKEN
@@ -48,4 +48,4 @@ jobs:
         run: yarn install --immutable
 
       - name: Publish update
-        run: turbo update:preview
+        run: turbo update:production
