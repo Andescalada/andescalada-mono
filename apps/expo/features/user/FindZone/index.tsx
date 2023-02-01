@@ -115,8 +115,7 @@ const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
                       alignItems="center"
                       onPress={() => {
                         onSetZone({ name: item.name, id: item.id });
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
+                        // @ts-expect-error ref is correctly
                         ref?.current?.close();
                       }}
                     >

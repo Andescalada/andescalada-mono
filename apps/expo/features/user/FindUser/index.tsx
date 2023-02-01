@@ -134,8 +134,8 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                     alignItems="center"
                     onPress={() => {
                       onSetUser({ username, email, roles: RoleByZone, id });
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
+
+                      // @ts-expect-error ref is correctly typed
                       ref?.current?.close();
                     }}
                   >
