@@ -11,7 +11,7 @@ const useUsernameValidation = () => {
   const utils = trpc.useContext();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [_, setIsValidUsername] = useAtom(validUsername);
+  const setIsValidUsername = useAtom(validUsername)[1];
   const [isValid, setIsValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
@@ -53,7 +53,7 @@ const useUsernameValidation = () => {
         console.warn(err);
       }
     },
-    [utils.user.uniqueUsername],
+    [setIsValidUsername, utils.user.uniqueUsername],
   );
 
   return { isLoading, isValid, error: errorMessage, validateUsername };
