@@ -7,7 +7,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { RoleNames, SoftDelete, Status } from "@prisma/client";
+import { SoftDelete, Status } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
