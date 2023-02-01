@@ -7,7 +7,9 @@
   "files": [
     "src"
   ],
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint . --ext .ts,.js,.json"
+  },
   "dependencies": {
     "@andescalada/utils": "*",
     "@auth0/nextjs-auth0": "^1.9.1",
