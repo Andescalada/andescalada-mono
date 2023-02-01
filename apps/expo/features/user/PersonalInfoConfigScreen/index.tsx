@@ -16,9 +16,9 @@ import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
+import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useOwnInfo from "@hooks/useOwnInfo";
 import usePickImage from "@hooks/usePickImage";
-import useUploadImage from "@hooks/useUploadImage";
 import useZodForm from "@hooks/useZodForm";
 import { FC, useMemo, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
@@ -33,7 +33,7 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
     allowsEditing: true,
     quality: 0.5,
   });
-  const { uploadImage } = useUploadImage();
+  const { uploadImage } = useCloudinaryImage();
   const form = useZodForm({
     schema: user.schema,
     mode: "onBlur",

@@ -1,0 +1,58 @@
+name: update
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    name: EAS Update Preview
+    runs-on: ubuntu-latest
+    environment: Preview
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Find yarn cache
+        id: yarn-cache-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules/.cache/turbo
+          key: turbo-${{ runner.os }}-${{ github.job }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ github.job }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Publish update
+        env: 
+          DISABLE_ERD: true
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+          GOOGLE_MAPS_API_KEY_ANDROID: ${{secrets.GOOGLE_MAPS_API_KEY_ANDROID}}
+          GOOGLE_MAPS_API_KEY_IOS: ${{secrets.GOOGLE_MAPS_API_KEY_IOS}}
+        run: npx turbo update:preview

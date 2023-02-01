@@ -17,7 +17,7 @@ export const parseImageResponse = (img: CloudinaryResponse) => ({
   bytes: img.bytes,
 });
 
-const useUploadImage = () => {
+const useCloudinaryImage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [uri, setUri] = useState<string>();
@@ -29,7 +29,7 @@ const useUploadImage = () => {
       setUri(undefined);
 
       const res = await axios.post<CloudinaryResponse>(
-        Env.CLOUDINARY_URL,
+        Env.CLOUDINARY_URL + "/upload",
 
         { file: data, upload_preset: Env.CLOUDINARY_UPLOAD_PRESET },
         {
@@ -48,10 +48,32 @@ const useUploadImage = () => {
       throw new Error(err as string);
     }
   }, []);
-  return { isLoading, uri, uploadImage, isSuccess };
+
+  const destroyImage = useCallback(async (publicId: string) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post<DestroyResponse>(
+        Env.CLOUDINARY_URL + "/destroy",
+        { publicId },
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      );
+      setIsLoading(false);
+      return res;
+    } catch (err) {
+      Alert.alert("Hubo un error al borrar la imagen");
+      setIsLoading(false);
+      throw new Error(err as string);
+    }
+  }, []);
+
+  return { isLoading, uri, uploadImage, isSuccess, destroyImage };
 };
 
-export default useUploadImage;
+export default useCloudinaryImage;
 
 export interface CloudinaryResponse {
   access_mode: string;
@@ -84,4 +106,8 @@ export interface CloudinaryResponse {
   version: number;
   version_id: string;
   width: number;
+}
+
+export interface DestroyResponse {
+  result: "ok";
 }

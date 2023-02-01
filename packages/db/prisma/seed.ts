@@ -1,80 +1,37 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+
+import agreementsScript from "./aplied_scripts/seed_agreements";
+import memberRole from "./aplied_scripts/seed_member_role";
+import permissions1 from "./aplied_scripts/seed_new_permissions_20-01-2023";
+import permissions2 from "./aplied_scripts/seed_new_permissions_21-01-2023";
+import permissions3 from "./aplied_scripts/seed_new_permissions_22-01-2023";
+import permissions0 from "./aplied_scripts/seed_new_permissions_27_12_2022";
+import seedRoles from "./aplied_scripts/seed_roles";
+import grantPermission from "./grant_permissions";
 
 const prisma = new PrismaClient();
 
-const permissionsData: Prisma.PermissionsCreateInput[] = [
-  { action: "Create" },
-  { action: "Read" },
-  { action: "Update" },
-  { action: "Delete" },
-  { action: "DenyAccess" },
-  { action: "GrantAccess" },
-  { action: "RevokeAccess" },
-];
-
-const rolesData: Prisma.RoleCreateInput[] = [
-  { name: "Reader", permissions: { connect: { action: "Read" } } },
-  {
-    name: "Collaborator",
-    permissions: { connect: [{ action: "Read" }, { action: "Create" }] },
-  },
-  {
-    name: "Editor",
-    permissions: {
-      connect: [
-        { action: "Read" },
-        { action: "Create" },
-        { action: "Update" },
-        { action: "Delete" },
-      ],
-    },
-  },
-  {
-    name: "Admin",
-    permissions: {
-      connect: [
-        { action: "Read" },
-        { action: "Create" },
-        { action: "Update" },
-        { action: "Delete" },
-        { action: "GrantAccess" },
-        { action: "RevokeAccess" },
-        { action: "DenyAccess" },
-      ],
-    },
-  },
-];
-
-const LanguagesData: Prisma.LanguageCreateInput[] = [
-  { languageId: "es", languageName: "Español" },
-  { languageId: "en", languageName: "English" },
-];
-
 async function main() {
-  console.log(`Creating permissions`);
-  for (const p of permissionsData) {
-    await prisma.permissions.create({
-      data: p,
+  try {
+    await prisma.user.create({
+      data: {
+        email: "elevy@andescalada.org",
+        name: "Eyal",
+        username: "eyal_admin",
+      },
     });
-  }
-  console.log(`All permissions created successfully`);
-
-  console.log(`Creating roles`);
-  for (const r of rolesData) {
-    await prisma.role.create({
-      data: r,
-    });
+  } catch (e) {
+    console.error(e);
   }
 
-  console.log(`Creating languages`);
-  for (const l of LanguagesData) {
-    await prisma.language.create({
-      data: l,
-    });
-  }
-  console.log(`All languages created successfully`);
-
-  console.log(`Seeding finished.`);
+  await seedRoles();
+  await agreementsScript();
+  await memberRole();
+  await permissions0();
+  await permissions1();
+  await permissions2();
+  await permissions3();
+  await grantPermission();
 }
 
 main()

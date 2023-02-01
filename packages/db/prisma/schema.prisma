@@ -23,8 +23,8 @@ model User {
   id                         String                    @id @default(uuid())
   createdAt                  DateTime                  @default(now())
   updatedAt                  DateTime                  @updatedAt
-  name                       String
-  username                   String                    @unique
+  name                       String                    @default("")
+  username                   String                    @unique @default(cuid())
   email                      String                    @unique
   profilePhoto               Image?                    @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId             String?
@@ -71,7 +71,7 @@ model History {
   id        String     @id @default(uuid())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  user      User       @relation(fields: [email], references: [email])
+  user      User       @relation(fields: [email], references: [email], onDelete: Cascade, onUpdate: Cascade)
   email     String
   zone      Zone?      @relation(fields: [zoneId], references: [id])
   zoneId    String?

@@ -6,16 +6,16 @@ const prisma = new PrismaClient();
 const access = Redis.fromEnv();
 
 const permissionsData: Prisma.PermissionsCreateInput[] = [
-  // { action: "ApproveZone" },
-  // { action: "RejectZone" },
+  { action: "ApproveZone" },
+  { action: "RejectZone" },
   { action: "PauseZonePublication" },
   { action: "PublishZone" },
   { action: "RequestZoneReview" },
-  // { action: "UnpublishZone" },
+  { action: "UnpublishZone" },
 ];
 
-async function main() {
-  console.log(`Start seeding ...`);
+export default async function main() {
+  console.log(`Start seeding seed_new_permissions_27_12_2022 ...`);
 
   console.log(`Creating permissions`);
   for (const p of permissionsData) {
@@ -80,13 +80,3 @@ async function main() {
 
   console.log(`Update finished.`);
 }
-
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });

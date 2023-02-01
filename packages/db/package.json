@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": " pscale connect andescalada develop --port 3309",
-    "build": "pscale connect andescalada develop --port 3309 && npx prisma db push && pscale deploy-request create andescalada develop"
+    "build": "pscale connect andescalada develop --port 3309 && npx prisma db push && pscale deploy-request create andescalada develop",
+    "update:preview": "npx prisma db push"
   }
 }

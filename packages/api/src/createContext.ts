@@ -46,9 +46,7 @@ export const createContext = async ({
       await prisma.user.create({
         data: {
           email: user.email,
-          name: "",
           auth0id: user.auth0Id,
-          username: `andescalada${Math.random().toString().substring(2, 9)}`,
         },
       });
     } else {
