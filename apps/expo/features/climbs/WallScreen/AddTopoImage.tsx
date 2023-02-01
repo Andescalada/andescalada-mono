@@ -11,10 +11,10 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import usePickImage from "@hooks/usePickImage";
-import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useViewImage from "@hooks/useViewImage";
 import { useRoute } from "@react-navigation/native";
 import { FC, useState } from "react";
