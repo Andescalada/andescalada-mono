@@ -47,7 +47,7 @@ const AddZoneRoleToUserScreen: FC<Props> = ({
   const roleList = useMemo(() => {
     if (!zone) return [];
     return Object.entries(roleNameAssets)
-      .filter(([_, r]) => r.availableFor?.includes(zone?.infoAccess))
+      .filter((r) => r[1].availableFor?.includes(zone?.infoAccess))
       .map(([r]) => r as typeof RoleNamesSchema._type);
   }, [zone]);
 
