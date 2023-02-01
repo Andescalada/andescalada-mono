@@ -234,15 +234,16 @@ export const zoneReviewRouter = t.router({
         select: { username: true },
       });
 
-      const { entity, id, template } = pushNotification.PublishZoneByAdmin;
-
-      await sendAndRecordPushNotification(ctx, {
-        Entity: entity,
-        entityId: input.zoneId,
-        entityTypeId: id,
-        message: template.es({ zoneName: zone.name, user: user!.username! }),
-        receivers: admins,
-      });
+      if (user) {
+        const { entity, id, template } = pushNotification.PublishZoneByAdmin;
+        await sendAndRecordPushNotification(ctx, {
+          Entity: entity,
+          entityId: input.zoneId,
+          entityTypeId: id,
+          message: template.es({ zoneName: zone.name, user: user.username }),
+          receivers: admins,
+        });
+      }
 
       return zone;
     }),
@@ -283,16 +284,17 @@ export const zoneReviewRouter = t.router({
         where: { email: ctx.user.email },
         select: { username: true },
       });
-
-      const { entity, id, template } = pushNotification.PausePublicationByAdmin;
-
-      await sendAndRecordPushNotification(ctx, {
-        Entity: entity,
-        entityId: input.zoneId,
-        entityTypeId: id,
-        message: template.es({ zoneName: zone.name, user: user!.username! }),
-        receivers: admins,
-      });
+      if (user) {
+        const { entity, id, template } =
+          pushNotification.PausePublicationByAdmin;
+        await sendAndRecordPushNotification(ctx, {
+          Entity: entity,
+          entityId: input.zoneId,
+          entityTypeId: id,
+          message: template.es({ zoneName: zone.name, user: user.username }),
+          receivers: admins,
+        });
+      }
 
       return zone;
     }),
@@ -334,15 +336,17 @@ export const zoneReviewRouter = t.router({
         select: { username: true },
       });
 
-      const { entity, id, template } = pushNotification.UnpublishZoneByReviewer;
-
-      await sendAndRecordPushNotification(ctx, {
-        Entity: entity,
-        entityId: input.zoneId,
-        entityTypeId: id,
-        message: template.es({ zoneName: zone.name, user: user!.username! }),
-        receivers: admins,
-      });
+      if (user) {
+        const { entity, id, template } =
+          pushNotification.UnpublishZoneByReviewer;
+        await sendAndRecordPushNotification(ctx, {
+          Entity: entity,
+          entityId: input.zoneId,
+          entityTypeId: id,
+          message: template.es({ zoneName: zone.name, user: user.username }),
+          receivers: admins,
+        });
+      }
 
       return zone;
     }),
