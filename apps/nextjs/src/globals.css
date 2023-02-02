@@ -2,17 +2,15 @@
 
 @layer base {
   h1 {
-    @apply text-6xl font-thin;
+    @apply text-6xl font-thin font-display;
   }
   h2 {
-    @apply text-xl;
+    @apply text-xl font-display;
   }
   h3 {
     @apply text-lg;
   }
-  a {
-    @apply text-blue-600 underline;
-  }
+ 
   input {
     @apply font-display
   }

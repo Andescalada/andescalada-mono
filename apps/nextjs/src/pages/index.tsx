@@ -1,5 +1,6 @@
 import useZodForm from "@andescalada/hooks/useZodForm";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Link from "next/link";
 import { trpc } from "utils/trpc";
 import { z } from "zod";
 
@@ -25,6 +26,20 @@ export default function IndexPage() {
             {...register("search")}
           />
         </form>
+        <div>
+          {data?.map((item) => (
+            <div
+              key={item.id}
+              className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
+            >
+              <h2 className="text-white">
+                <Link href={`/zone/${item.id}`} target="_blank">
+                  {item.name}
+                </Link>
+              </h2>
+            </div>
+          ))}
+        </div>
       </div>
       <ReactQueryDevtools />
     </div>
