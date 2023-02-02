@@ -1,5 +1,4 @@
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Link from "next/link";
 import { trpc } from "utils/trpc";
 import { z } from "zod";
@@ -41,7 +40,6 @@ export default function IndexPage() {
           ))}
         </div>
       </div>
-      <ReactQueryDevtools />
     </div>
   );
 }
