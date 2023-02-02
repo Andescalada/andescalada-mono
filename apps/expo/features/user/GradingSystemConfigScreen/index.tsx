@@ -7,7 +7,7 @@ import {
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
 import useOwnInfo from "@hooks/useOwnInfo";
-import useZodForm from "@hooks/useZodForm";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import { ComponentProps, FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 

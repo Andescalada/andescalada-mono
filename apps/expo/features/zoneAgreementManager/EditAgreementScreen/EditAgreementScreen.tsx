@@ -1,4 +1,5 @@
 import schema from "@andescalada/api/schemas/agreements";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import { IconNames } from "@andescalada/icons";
 import {
   ActivityIndicator,
@@ -17,7 +18,6 @@ import {
   ZoneAgreementsRoutes,
   ZoneAgreementsScreenProps,
 } from "@features/zoneAgreementManager/Navigation/types";
-import useZodForm from "@hooks/useZodForm";
 import { FC, useEffect } from "react";
 import { useController } from "react-hook-form";
 

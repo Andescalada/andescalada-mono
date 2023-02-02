@@ -1,5 +1,6 @@
 import route from "@andescalada/api/schemas/route";
 import { RouteKindSchema } from "@andescalada/db/zod";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   A,
   Box,
@@ -22,7 +23,6 @@ import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigatio
 import { useAppTheme } from "@hooks/useAppTheme";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useRootNavigation from "@hooks/useRootNavigation";
-import useZodForm from "@hooks/useZodForm";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
 import { routeKindLabel } from "@utils/routeKind";

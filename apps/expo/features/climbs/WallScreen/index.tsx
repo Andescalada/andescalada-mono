@@ -1,5 +1,6 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import { Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
@@ -12,7 +13,6 @@ import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
-import useZodForm from "@hooks/useZodForm";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";

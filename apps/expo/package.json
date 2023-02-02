@@ -33,6 +33,7 @@
     "@andescalada/maps": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
+    "@andescalada/hooks": "*",
     "@cloudinary/url-gen": "^1.8.6",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@gorhom/bottom-sheet": "^4",

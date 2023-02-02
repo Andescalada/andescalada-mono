@@ -1,5 +1,6 @@
 import zone from "@andescalada/api/schemas/zone";
 import { InfoAccessSchema } from "@andescalada/db/zod";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   Box,
   Button,
@@ -14,7 +15,6 @@ import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
-import useZodForm from "@hooks/useZodForm";
 import infoAccessAssets from "@utils/infoAccessAssets";
 import { FC } from "react";
 import { useController } from "react-hook-form";

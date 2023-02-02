@@ -1,5 +1,6 @@
 import sector from "@andescalada/api/schemas/sector";
 import { SectorKindSchema } from "@andescalada/db/zod";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   Box,
   Button,
@@ -14,7 +15,6 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import useZodForm from "@hooks/useZodForm";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
 import type { FC } from "react";
 import { useController } from "react-hook-form";

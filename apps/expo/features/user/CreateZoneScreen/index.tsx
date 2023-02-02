@@ -16,7 +16,7 @@ import {
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
 import BottomSheet from "@gorhom/bottom-sheet";
-import useZodForm from "@hooks/useZodForm";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import { FC, useMemo, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 import { Keyboard } from "react-native";

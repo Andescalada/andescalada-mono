@@ -21,7 +21,7 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import usePickImage from "@hooks/usePickImage";
 import useRefresh from "@hooks/useRefresh";
 import { validUsername } from "@hooks/useUsernameValidation";
-import useZodForm from "@hooks/useZodForm";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import { useAtom } from "jotai";
 import { FC, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
