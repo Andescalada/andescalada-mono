@@ -1,4 +1,5 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
+import type { AppRouter } from "@andescalada/api/src/routers/_app";
+import { transformer } from "@andescalada/api/src/transformer";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 
@@ -16,6 +17,7 @@ function getBaseUrl() {
 export const trpc = createTRPCNext<AppRouter>({
   config() {
     return {
+      transformer,
       links: [
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
