@@ -14,12 +14,13 @@ export const searchRouter = t.router({
           isDeleted: SoftDelete.NotDeleted,
           currentStatus: Status.Published,
         },
-        select: { id: true, name: true },
+        select: { id: true, name: true, slug: true },
       })
       .then((results) =>
-        results.map(({ id, name }) => ({
+        results.map(({ id, name, slug }) => ({
           id,
           name,
+          slug,
           detail: "Chile",
           navigationParams: { zoneId: id, zoneName: name }, // TODO: Placeholder, add region to zones
           type: SearchType.Zone,
@@ -36,13 +37,15 @@ export const searchRouter = t.router({
         select: {
           id: true,
           name: true,
+          slug: true,
           Zone: { select: { name: true, id: true } },
         },
       })
       .then((results) =>
-        results.map(({ id, name, ...result }) => ({
+        results.map(({ id, name, slug, ...result }) => ({
           id,
           name,
+          slug,
           detail: result.Zone.name,
           navigationParams: {
             zoneId: result.Zone.id,
@@ -63,6 +66,7 @@ export const searchRouter = t.router({
         select: {
           id: true,
           name: true,
+          slug: true,
           Sector: {
             select: {
               id: true,
@@ -73,9 +77,10 @@ export const searchRouter = t.router({
         },
       })
       .then((results) =>
-        results.map(({ id, name, ...result }) => ({
+        results.map(({ id, name, slug, ...result }) => ({
           id,
           name,
+          slug,
           detail: `${result.Sector.name}, ${result.Sector.Zone.name}`,
           navigationParams: {
             wallId: id,
@@ -97,6 +102,7 @@ export const searchRouter = t.router({
         select: {
           id: true,
           name: true,
+          slug: true,
           Wall: {
             select: {
               name: true,
@@ -105,7 +111,7 @@ export const searchRouter = t.router({
                 select: {
                   id: true,
                   name: true,
-                  Zone: { select: { name: true, id: true } },
+                  Zone: { select: { name: true, id: true, slug: true } },
                 },
               },
             },
@@ -113,9 +119,10 @@ export const searchRouter = t.router({
         },
       })
       .then((results) =>
-        results.map(({ id, name, ...result }) => ({
+        results.map(({ id, name, slug, ...result }) => ({
           id,
           name,
+          slug,
           detail: `${result.Wall.name}, ${result.Wall.Sector.name}, ${result.Wall.Sector.Zone.name}`,
           navigationParams: {
             wallId: result.Wall.id,

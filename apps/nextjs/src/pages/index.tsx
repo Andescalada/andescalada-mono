@@ -33,7 +33,7 @@ export default function IndexPage() {
               className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
             >
               <h2 className="text-white">
-                <Link href={`/zone/${item.id}`} target="_blank">
+                <Link href={`/zona/${item.id}/${item.slug}`} target="_blank">
                   {item.name}
                 </Link>
               </h2>
