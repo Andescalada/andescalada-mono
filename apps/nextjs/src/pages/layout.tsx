@@ -7,9 +7,9 @@ const rubik = Rubik({
 });
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => (
-  <html className={`${rubik.variable}`}>
-    <body>{children}</body>
-  </html>
+  <>
+    <main className={`${rubik.variable}`}>{children}</main>
+  </>
 );
 
 export default RootLayout;
