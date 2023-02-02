@@ -14,7 +14,7 @@ export default function IndexPage() {
   const onSubmit = handleSubmit(async (data) => {
     mutate(data.search);
   });
-  console.log({ data, isLoading });
+
   return (
     <div className="bg-gradient-to-r from-primaryA to-primaryB flex flex-1 min-w-full min-h-screen justify-center items-center">
       <div>
