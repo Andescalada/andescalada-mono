@@ -13,6 +13,9 @@
   a {
     @apply text-blue-600 underline;
   }
+  input {
+    @apply font-display
+  }
 }
 
 @tailwind components;

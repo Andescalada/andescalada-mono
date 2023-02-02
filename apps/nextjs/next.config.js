@@ -8,6 +8,7 @@ const config = {
     "@andescalada/api",
     "@andescalada/utils",
     "@andescalada/db",
+    "@andescalada/hooks",
   ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
