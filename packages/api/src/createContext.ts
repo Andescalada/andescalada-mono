@@ -28,7 +28,15 @@ acceptLanguage.languages(["es-Cl", "es-EN"]);
 export const createContext = async ({
   req,
   res,
-}: trpcNext.CreateNextContextOptions) => {
+}: Partial<trpcNext.CreateNextContextOptions> = {}) => {
+  if (!req || !res) {
+    return {
+      req,
+      res,
+      prisma,
+      access,
+    };
+  }
   const { user, verified } = await verifyAndDecodeToken(req);
 
   const language = {

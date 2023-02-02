@@ -23,7 +23,14 @@ export const zonesRouter = t.router({
     }),
   ),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
-    const zone = await ctx.prisma.zone.findUnique({ where: { id: input } });
+    const zone = await ctx.prisma.zone.findUnique({
+      where: { id: input },
+      include: {
+        sectors: {
+          include: { walls: { include: { routes: true, topos: true } } },
+        },
+      },
+    });
     if (!zone) {
       throw new TRPCError({
         code: "NOT_FOUND",
