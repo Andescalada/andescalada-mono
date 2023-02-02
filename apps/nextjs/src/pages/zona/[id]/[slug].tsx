@@ -12,14 +12,20 @@ import { trpc } from "utils/trpc";
 export async function getStaticProps(
   context: GetStaticPropsContext<{ id: string; slug: string }>,
 ) {
-  const ssg = await createProxySSGHelpers({
+  const ssg = createProxySSGHelpers({
     router: appRouter,
     ctx: await createContext(),
     transformer,
   });
   const id = context.params?.id as string;
 
-  await ssg.zones.byId.prefetch(id);
+  const zone = await ssg.zones.byId.fetch(id);
+
+  if (!zone) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       trpcState: ssg.dehydrate(),
@@ -48,11 +54,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { data, status } = trpc.zones.byId.useQuery(id);
-  if (status !== "success") {
-    // won't happen since we're using `fallback: "blocking"`
-    return <>Loading...</>;
-  }
+  const { data } = trpc.zones.byId.useQuery(id);
+
   return (
     <div>
       <h1>{data?.name}</h1>

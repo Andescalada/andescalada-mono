@@ -31,12 +31,6 @@ export const zonesRouter = t.router({
         },
       },
     });
-    if (!zone) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `No zone with id '${input}'`,
-      });
-    }
 
     return zone;
   }),
