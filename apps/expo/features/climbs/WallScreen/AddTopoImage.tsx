@@ -35,7 +35,7 @@ const AddTopoImage: FC = () => {
 
   const mainTopo = data?.topos[0];
 
-  const { pickImage, selectedImage } = usePickImage({ allowsEditing: true });
+  const { pickImage, selectedImage } = usePickImage({ allowsEditing: false });
 
   const viewImage = useViewImage();
 
