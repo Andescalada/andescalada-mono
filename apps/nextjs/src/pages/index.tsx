@@ -1,10 +1,10 @@
-import Box from "@andescalada/ui/Box/Box";
-import Text from "@andescalada/ui/Text/Text";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function IndexPage() {
   return (
-    <Box flex={1} backgroundColor="primary">
-      <Text variant="h1">Hola mundo</Text>
-    </Box>
+    <div>
+      <h1>Api Andescalada v0.0.5-a</h1>
+      <ReactQueryDevtools />
+    </div>
   );
 }

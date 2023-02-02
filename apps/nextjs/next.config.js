@@ -1,24 +1,17 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { withExpo } = require("@expo/next-adapter");
+// @ts-check
 
-/** @type {import('next').NextConfig} */
-const nextConfig = withExpo({
+/** @type {import("next").NextConfig} */
+const config = {
   reactStrictMode: true,
-  swcMinify: true,
+  /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
-    "react-native",
-    "expo",
-    "@shopify/restyle",
-    "@expo/vector-icons",
     "@andescalada/api",
     "@andescalada/utils",
     "@andescalada/db",
-    "@andescalada/ui",
-    // Add more React Native / Expo packages here...
   ],
-  experimental: {
-    forceSwcTransforms: true,
-  },
-});
+  /** We already do linting and typechecking as separate tasks in CI */
+  eslint: { ignoreDuringBuilds: !!process.env.CI },
+  typescript: { ignoreBuildErrors: !!process.env.CI },
+};
 
-module.exports = nextConfig;
+module.exports = config;
