@@ -7,7 +7,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { SoftDelete, Status } from "@prisma/client";
+import { InfoAccess, SoftDelete, Status } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -22,11 +22,17 @@ export const zonesRouter = t.router({
       },
     }),
   ),
-  byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
+  publicById: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
+    const { infoAccess } =
+      (await ctx.prisma.zone.findUnique({
+        where: { id: input },
+        select: { infoAccess: true },
+      })) || {};
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input },
       include: {
         sectors: {
+          take: infoAccess !== InfoAccess.Public ? 0 : undefined,
           include: {
             walls: {
               include: {
@@ -37,7 +43,11 @@ export const zonesRouter = t.router({
                     RoutePath: {
                       include: {
                         Route: {
-                          select: { name: true, id: true, position: true },
+                          select: {
+                            name: true,
+                            id: true,
+                            position: true,
+                          },
                         },
                       },
                     },
@@ -51,6 +61,11 @@ export const zonesRouter = t.router({
     });
 
     return zone;
+
+    // return {
+    //   ...zone,
+    //   sectors: zone?.infoAccess === InfoAccess.Public ? zone.sectors : [],
+    // };
   }),
   location: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({

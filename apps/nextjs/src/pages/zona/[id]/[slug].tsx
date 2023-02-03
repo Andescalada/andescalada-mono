@@ -24,7 +24,7 @@ export async function getStaticProps(
   try {
     const id = context.params?.id as string;
 
-    const zone = await ssg.zones.byId.fetch(id);
+    const zone = await ssg.zones.publicById.fetch(id);
 
     if (!zone) {
       return {
@@ -64,13 +64,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { data } = trpc.zones.byId.useQuery(id);
+  const { data } = trpc.zones.publicById.useQuery(id);
 
   return (
     <div className="bg-black min-h-screen min-w-full p-5">
       <h1>{data?.name}</h1>
+      <h2>{data?.infoAccess}</h2>
       <div>
-        {data?.sectors.map((sector) => (
+        {data?.sectors?.map((sector) => (
           <>
             <h2 key={sector.id}>{sector.name}</h2>
             <div>
