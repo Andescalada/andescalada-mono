@@ -1,5 +1,10 @@
-import { Group, Points } from "@shopify/react-native-skia";
-import { FC, memo, useCallback, useMemo } from "react";
+import {
+  Group,
+  Points,
+  SkiaMutableValue,
+  SkPoint,
+} from "@shopify/react-native-skia";
+import { FC, memo, useMemo } from "react";
 
 import usePathToPoints from "../usePathToPoints/usePathToPoints";
 import EndPointer from "./EndPointer";
@@ -29,21 +34,6 @@ const SkiaRoutePath: FC<Props> = ({
     [scale, strokeWidthProp],
   );
 
-  const StartComponent = useCallback(
-    () =>
-      routeFromTheGround ? (
-        <StartPointer
-          c={start}
-          label={label}
-          scale={scale * strokeWidthProp}
-          color={color}
-        />
-      ) : (
-        <EndPointer c={start} color={color} scale={scale * strokeWidthProp} />
-      ),
-    [color, label, routeFromTheGround, scale, start, strokeWidthProp],
-  );
-
   return (
     <Group>
       <Points
@@ -57,9 +47,46 @@ const SkiaRoutePath: FC<Props> = ({
         strokeWidth={strokeWidth}
       />
       <EndPointer c={end} color={color} scale={scale * strokeWidthProp} />
-      {StartComponent()}
+      {
+        <StartComponent
+          color={color}
+          label={label}
+          routeFromTheGround={routeFromTheGround}
+          scale={scale}
+          start={start}
+          strokeWidthProp={strokeWidthProp}
+        />
+      }
     </Group>
   );
 };
 
 export default memo(SkiaRoutePath);
+
+interface StartComponentProps {
+  color: string;
+  label: string;
+  routeFromTheGround: boolean;
+  scale: number;
+  start: SkiaMutableValue<SkPoint>;
+  strokeWidthProp: number;
+}
+
+const StartComponent = ({
+  color,
+  label,
+  routeFromTheGround,
+  scale,
+  start,
+  strokeWidthProp,
+}: StartComponentProps) =>
+  routeFromTheGround ? (
+    <StartPointer
+      c={start}
+      label={label}
+      scale={scale * strokeWidthProp}
+      color={color}
+    />
+  ) : (
+    <EndPointer c={start} color={color} scale={scale * strokeWidthProp} />
+  );
