@@ -9,6 +9,9 @@ const updateZoneStatus = async (
   input: typeof zone.status._type,
   { allowedPreviousSteps }: { allowedPreviousSteps: Status[] },
 ) => {
+  if (!ctx.user) {
+    throw new TRPCError(error.userNotFound());
+  }
   const currentStatus = await ctx.prisma.zone
     .findUnique({
       where: { id: input.zoneId },
@@ -33,7 +36,7 @@ const updateZoneStatus = async (
       statusHistory: {
         create: {
           status: input.status,
-          modifiedBy: { connect: { email: ctx.user!.email } },
+          modifiedBy: { connect: { email: ctx.user.email } },
           message: {
             create: {
               originalText: input.message,

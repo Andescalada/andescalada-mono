@@ -11,10 +11,10 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import usePickImage from "@hooks/usePickImage";
-import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useViewImage from "@hooks/useViewImage";
 import { useRoute } from "@react-navigation/native";
 import { FC, useState } from "react";
@@ -35,7 +35,7 @@ const AddTopoImage: FC = () => {
 
   const mainTopo = data?.topos[0];
 
-  const { pickImage, selectedImage } = usePickImage({ allowsEditing: true });
+  const { pickImage, selectedImage } = usePickImage({ allowsEditing: false });
 
   const viewImage = useViewImage();
 

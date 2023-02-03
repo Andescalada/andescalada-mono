@@ -50,7 +50,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     downloadedList.forEach((asset) => {
       const { params, router, procedure, zoneId } = asset;
 
-      // @ts-ignore
+      // @ts-expect-error Unable to type procedure
       const selectedUtil = utils[router][procedure];
 
       const db = offlineDb.open();

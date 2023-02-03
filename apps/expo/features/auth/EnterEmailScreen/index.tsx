@@ -1,3 +1,4 @@
+import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   AnimatedBackground,
   Box,
@@ -9,7 +10,6 @@ import {
   AuthNavigationRoutes,
   AuthNavigationScreenProps,
 } from "@features/auth/Navigation/types";
-import useZodForm from "@hooks/useZodForm";
 import passwordless from "@utils/auth0/passwordless";
 import { FC } from "react";
 import { useController } from "react-hook-form";

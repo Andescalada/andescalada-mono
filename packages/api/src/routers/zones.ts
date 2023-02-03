@@ -7,7 +7,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { RoleNames, SoftDelete, Status } from "@prisma/client";
+import { SoftDelete, Status } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -23,13 +23,32 @@ export const zonesRouter = t.router({
     }),
   ),
   byId: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
-    const zone = await ctx.prisma.zone.findUnique({ where: { id: input } });
-    if (!zone) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `No zone with id '${input}'`,
-      });
-    }
+    const zone = await ctx.prisma.zone.findUnique({
+      where: { id: input },
+      include: {
+        sectors: {
+          include: {
+            walls: {
+              include: {
+                routes: true,
+                topos: {
+                  include: {
+                    image: true,
+                    RoutePath: {
+                      include: {
+                        Route: {
+                          select: { name: true, id: true, position: true },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
 
     return zone;
   }),

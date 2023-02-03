@@ -1,5 +1,6 @@
 import user from "@andescalada/api/schemas/user";
 import { GradeSystemsSchema } from "@andescalada/db/zod";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import { Box, Button, ButtonGroup, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -7,7 +8,6 @@ import {
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
 import useOwnInfo from "@hooks/useOwnInfo";
-import useZodForm from "@hooks/useZodForm";
 import { ComponentProps, FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 

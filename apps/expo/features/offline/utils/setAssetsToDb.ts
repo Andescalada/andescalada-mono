@@ -59,10 +59,9 @@ const setAssetsToDb = async (
     const queryKey = stringify({ router, procedure, params });
 
     try {
-      //@ts-ignore
+      // @ts-expect-error Unable to type procedure
       const selectedClient = client[router][procedure];
 
-      //@ts-ignore
       const data = await selectedClient.query(params);
 
       await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
