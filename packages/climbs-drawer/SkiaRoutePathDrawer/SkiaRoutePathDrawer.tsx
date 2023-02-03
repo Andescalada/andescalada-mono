@@ -15,8 +15,9 @@ import {
   useState,
 } from "react";
 
-import usePathToPoints from "../usePathToPoints/usePathToPoints";
-import { pathToVector } from "../utils";
+import usePathToPoints, {
+  pathToVector,
+} from "../usePathToPoints/usePathToPoints";
 import EndPointer from "./EndPointer";
 import StartPointer from "./StartPointer";
 

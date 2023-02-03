@@ -1,5 +1,3 @@
-import { vec } from "@shopify/react-native-skia";
-
 export const pathToArray = (path: string | undefined | null) => {
   if (!path) return [];
   return path
@@ -13,7 +11,7 @@ export const scalePathArray = (path: string | undefined, scale = 1) => {
   return points.map((p) => [p[0] * scale, p[1] * scale]);
 };
 
-export const pathToVector = (path: string | undefined, scale = 1) => {
+export const scalePath = (path: string | undefined, scale = 1) => {
   const points = scalePathArray(path, scale);
-  return points.map((p) => vec(p[0], p[1]));
+  return points.map((p) => p.join(",")).join(" ");
 };

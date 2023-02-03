@@ -5,7 +5,12 @@ import {
   vec,
 } from "@shopify/react-native-skia";
 
-import { pathToVector } from "../utils";
+import { scalePathArray } from "../utils";
+
+export const pathToVector = (path: string | undefined, scale = 1) => {
+  const points = scalePathArray(path, scale);
+  return points.map((p) => vec(p[0], p[1]));
+};
 
 const usePathToPoints = (path: string | undefined, scale = 1) => {
   const points = useValue<SkPoint[]>([]);
