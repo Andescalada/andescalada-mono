@@ -9661,6 +9661,13 @@ new-github-issue-url@0.2.1:
   resolved "https://registry.npmjs.org/new-github-issue-url/-/new-github-issue-url-0.2.1.tgz"
   integrity sha512-md4cGoxuT4T4d/HDOXbrUHkTKrp/vp+m3aOA7XXVYwNsUNMK49g3SQicTSeV5GIz/5QVGAeYRAOlyp9OvlgsYA==
 
+next-cloudinary@^1.12.2:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/next-cloudinary/-/next-cloudinary-1.12.2.tgz#935f8911df401736e7e30fec2b871f182add779f"
+  integrity sha512-peu0ZLqUrx3kkcRTNgBBFNF3QexmZnhQx6FpbOEGjtbjF7RlUpIpA0RhYMMWsRAwH7wllxvVi8keTXZtLbpnrA==
+  dependencies:
+    "@cloudinary/url-gen" "^1.8.6"
+
 next-superjson-plugin@^0.5.4:
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/next-superjson-plugin/-/next-superjson-plugin-0.5.4.tgz#ec6ff50a9c4d09695f2a58fad0cce3fea07a4e13"

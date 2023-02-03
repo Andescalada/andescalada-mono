@@ -27,7 +27,11 @@ export const zonesRouter = t.router({
       where: { id: input },
       include: {
         sectors: {
-          include: { walls: { include: { routes: true, topos: true } } },
+          include: {
+            walls: {
+              include: { routes: true, topos: { include: { image: true } } },
+            },
+          },
         },
       },
     });

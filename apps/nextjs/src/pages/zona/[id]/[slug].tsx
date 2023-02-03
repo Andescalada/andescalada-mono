@@ -7,7 +7,12 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
+// import { CldImage as Image } from "next-cloudinary";
+import Image from "next/image";
 import { trpc } from "utils/trpc";
+
+const cloudinaryUrl =
+  "https://res.cloudinary.com/fundacion-andescalada/image/upload";
 
 export async function getStaticProps(
   context: GetStaticPropsContext<{ id: string; slug: string }>,
@@ -17,22 +22,28 @@ export async function getStaticProps(
     ctx: await createContext(),
     transformer,
   });
-  const id = context.params?.id as string;
+  try {
+    const id = context.params?.id as string;
 
-  const zone = await ssg.zones.byId.fetch(id);
+    const zone = await ssg.zones.byId.fetch(id);
 
-  if (!zone) {
+    if (!zone) {
+      return {
+        notFound: true,
+      };
+    }
+    return {
+      props: {
+        trpcState: ssg.dehydrate(),
+        id,
+      },
+      revalidate: 1,
+    };
+  } catch (e) {
     return {
       notFound: true,
     };
   }
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      id,
-    },
-    revalidate: 1,
-  };
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -59,27 +70,42 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
       <h1>{data?.name}</h1>
-      <ul>
+      <div>
         {data?.sectors.map((sector) => (
           <>
-            <li key={sector.id}>{sector.name}</li>
-            <ul>
+            <h2 key={sector.id}>{sector.name}</h2>
+            <div>
               {sector.walls.map((wall) => (
                 <>
-                  <li key={wall.id}>{wall.name}</li>
-                  <ul>
+                  <h3 key={wall.id}>{wall.name}</h3>
+                  <div>
                     {wall.routes.map((route) => (
                       <>
-                        <li key={route.id}>{route.name}</li>
+                        <h4 key={route.id}>{route.name}</h4>
                       </>
                     ))}
-                  </ul>
+                  </div>
                 </>
               ))}
-            </ul>
+            </div>
           </>
         ))}
-      </ul>
+      </div>
+      {data?.sectors.map((sector) =>
+        sector.walls.map((wall) =>
+          wall.topos.map((topo) => (
+            <div key={topo.id}>
+              <a href={topo.image.url}>{topo.image.url}</a>
+              <Image
+                src={topo.image.url}
+                alt="Topo"
+                width={topo.image.width * 0.1}
+                height={topo.image.height * 0.1}
+              />
+            </div>
+          )),
+        ),
+      )}
     </div>
   );
 };
