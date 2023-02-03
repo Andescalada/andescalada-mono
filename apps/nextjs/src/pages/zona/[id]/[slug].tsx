@@ -11,9 +11,6 @@ import {
 import Image from "next/image";
 import { trpc } from "utils/trpc";
 
-const cloudinaryUrl =
-  "https://res.cloudinary.com/fundacion-andescalada/image/upload";
-
 export async function getStaticProps(
   context: GetStaticPropsContext<{ id: string; slug: string }>,
 ) {
@@ -94,14 +91,31 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
       {data?.sectors.map((sector) =>
         sector.walls.map((wall) =>
           wall.topos.map((topo) => (
-            <div key={topo.id}>
+            <div key={topo.id} className="relative">
               <a href={topo.image.url}>{topo.image.url}</a>
+              {/* <p>{topo}</p> */}
               <Image
                 src={topo.image.url}
                 alt="Topo"
-                width={topo.image.width * 0.1}
-                height={topo.image.height * 0.1}
+                width={topo.image.width}
+                height={topo.image.height}
+                className="absolute"
               />
+              <svg
+                viewBox={`0 0 ${topo.image.width} ${topo.image.height}`}
+                className="absolute"
+              >
+                {topo.RoutePath.map((routePath) => (
+                  <polyline
+                    points={routePath.path}
+                    key={routePath.id}
+                    className="stroke-red-600 fill-none stroke-[10] hover:stroke-green-600"
+                    onClick={() => {
+                      window.alert(routePath.Route.name);
+                    }}
+                  />
+                ))}
+              </svg>
             </div>
           )),
         ),
