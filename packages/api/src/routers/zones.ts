@@ -22,6 +22,16 @@ export const zonesRouter = t.router({
       },
     }),
   ),
+  recentlyAdded: t.procedure.query(({ ctx }) =>
+    ctx.prisma.zone.findMany({
+      where: {
+        isDeleted: SoftDelete.NotDeleted,
+        currentStatus: Status.Published,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    }),
+  ),
   publicById: t.procedure.input(z.string()).query(async ({ ctx, input }) => {
     const { infoAccess } =
       (await ctx.prisma.zone.findUnique({
