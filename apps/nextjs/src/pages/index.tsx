@@ -8,7 +8,7 @@ export default function IndexPage() {
     schema: z.object({ search: z.string().min(2) }),
   });
 
-  const { mutate, data, isLoading } = trpc.search.all.useMutation();
+  const { mutate, data } = trpc.search.all.useMutation();
 
   const onSubmit = handleSubmit(async (data) => {
     mutate(data.search);
