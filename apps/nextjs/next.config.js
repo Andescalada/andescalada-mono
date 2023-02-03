@@ -9,6 +9,7 @@ const config = {
     "@andescalada/utils",
     "@andescalada/db",
     "@andescalada/hooks",
+    "@andescalada/climbs-drawer",
   ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },

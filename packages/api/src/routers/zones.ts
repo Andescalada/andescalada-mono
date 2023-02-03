@@ -35,7 +35,11 @@ export const zonesRouter = t.router({
                   include: {
                     image: true,
                     RoutePath: {
-                      include: { Route: { select: { name: true, id: true } } },
+                      include: {
+                        Route: {
+                          select: { name: true, id: true, position: true },
+                        },
+                      },
                     },
                   },
                 },

@@ -2,13 +2,19 @@
 
 @layer base {
   h1 {
-    @apply text-6xl font-thin font-display;
+    @apply text-6xl font-thin font-display text-white;
   }
   h2 {
-    @apply text-xl font-display;
+    @apply text-2xl font-display text-white;
   }
   h3 {
-    @apply text-lg;
+    @apply text-lg font-display text-white;
+  }
+  h4 {
+    @apply text-base font-display text-white;
+  }
+  p {
+    @apply text-white font-display;
   }
  
   input {

@@ -1,15 +1,17 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
+import { scalePath, scalePathArray } from "@andescalada/climbs-drawer/utils";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import {
   GetStaticPaths,
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
-// import { CldImage as Image } from "next-cloudinary";
 import Image from "next/image";
 import { trpc } from "utils/trpc";
+
+const SCALE = 1;
 
 export async function getStaticProps(
   context: GetStaticPropsContext<{ id: string; slug: string }>,
@@ -65,7 +67,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = trpc.zones.byId.useQuery(id);
 
   return (
-    <div>
+    <div className="bg-black min-h-screen min-w-full p-5">
       <h1>{data?.name}</h1>
       <div>
         {data?.sectors.map((sector) => (
@@ -88,38 +90,86 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
           </>
         ))}
       </div>
-      {data?.sectors.map((sector) =>
-        sector.walls.map((wall) =>
-          wall.topos.map((topo) => (
-            <div key={topo.id} className="relative">
-              <a href={topo.image.url}>{topo.image.url}</a>
-              {/* <p>{topo}</p> */}
-              <Image
-                src={topo.image.url}
-                alt="Topo"
-                width={topo.image.width}
-                height={topo.image.height}
-                className="absolute"
-              />
-              <svg
-                viewBox={`0 0 ${topo.image.width} ${topo.image.height}`}
-                className="absolute"
-              >
-                {topo.RoutePath.map((routePath) => (
-                  <polyline
-                    points={routePath.path}
-                    key={routePath.id}
-                    className="stroke-red-600 fill-none stroke-[10] hover:stroke-green-600"
-                    onClick={() => {
-                      window.alert(routePath.Route.name);
-                    }}
-                  />
-                ))}
-              </svg>
-            </div>
-          )),
-        ),
-      )}
+      <div className="">
+        {data?.sectors.map((sector) =>
+          sector.walls.map((wall) =>
+            wall.topos.map((topo) => (
+              <div key={topo.id} className="scale-50 relative">
+                <Image
+                  src={topo.image.url}
+                  alt="Topo"
+                  width={topo.image.width * SCALE}
+                  height={topo.image.height * SCALE}
+                  className="absolute top-0 left-0 right-0 bottom-0"
+                />
+                <svg
+                  viewBox={`0 0 ${topo.image.width * SCALE} ${
+                    topo.image.height * SCALE
+                  }`}
+                  className="absolute top-0 left-0 right-0 bottom-0"
+                >
+                  {topo.RoutePath.map((routePath) => (
+                    <>
+                      <polyline
+                        points={scalePath(routePath.path, SCALE)}
+                        key={routePath.id}
+                        strokeLinejoin="miter"
+                        className="stroke-contrast-bright-red fill-none stroke-[10] hover:stroke-contrast-bright-green"
+                        onClick={() => {
+                          window.alert(routePath.Route.name);
+                        }}
+                      />
+                      <g
+                        transform={`translate(${
+                          scalePathArray(routePath.path, SCALE)[0][0]
+                        } ${scalePathArray(routePath.path, SCALE)[0][1]})`}
+                      >
+                        <circle r={50} cx={0} cy={0} className="fill-white" />
+                        <text
+                          x={0}
+                          y={0}
+                          dy=".3em"
+                          textAnchor="middle"
+                          className="font-display font-bold text-6xl fill-current text-black"
+                        >
+                          {routePath.Route.position}
+                        </text>
+                        <circle
+                          r={50}
+                          className="stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]"
+                          cx={0}
+                          cy={0}
+                        />
+                      </g>
+                      <g
+                        transform={`translate(${
+                          scalePathArray(routePath.path, SCALE).slice(-1)[0][0]
+                        } ${
+                          scalePathArray(routePath.path, SCALE).slice(-1)[0][1]
+                        })`}
+                      >
+                        <circle r={50} cx={0} cy={0} className="fill-white" />
+                        <path
+                          d="M -144 0 L 0 144 L 144 0 m -144 144 v -312"
+                          className="stroke-contrast-bright-red stroke-[50] fill-none max-h-sm max-w-sm scale-[0.15]"
+                          strokeLinejoin="miter"
+                          strokeLinecap="round"
+                        />
+                        <circle
+                          r={50}
+                          className="stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]"
+                          cx={0}
+                          cy={0}
+                        />
+                      </g>
+                    </>
+                  ))}
+                </svg>
+              </div>
+            )),
+          ),
+        )}
+      </div>
     </div>
   );
 };

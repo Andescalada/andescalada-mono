@@ -27,6 +27,16 @@ module.exports = {
         "1grayscale-000": "#13191c",
         black: "#121212",
         "true-black": "#000000",
+        contrast: {
+          bright: {
+            purple: "#8931EF",
+            yellow: "#F2CA19",
+            pink: "#FF00BD",
+            blue: "#0057E9",
+            green: "#87E911",
+            red: "#E11845",
+          },
+        },
       },
     },
   },
