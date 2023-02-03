@@ -1,6 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
-import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
+import { pathToVector } from "@andescalada/climbs-drawer/utils";
 import { ThemeProvider } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
