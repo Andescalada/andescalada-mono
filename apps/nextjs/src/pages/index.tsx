@@ -26,24 +26,49 @@ export default function IndexPage() {
     <div>
       <div className="bg-gradient-to-r from-primaryA to-primaryB flex flex-1 flex-col min-w-screen min-h-screen">
         <div className=" flex flex-1 flex-col justify-center items-center">
-          <div className="w-5/6 md:w-1/2 flex flex-col items-center">
+          <div className=" w-full  flex flex-col items-center">
             <Image
               src="https://andescalada.org/img/logo_blanco.svg"
               width={350}
               height={350}
               alt="andescalada logo"
-              className="mb-20"
+              className="mb-20 mt-20"
             />
-            <form onSubmit={onSubmit} className="relative w-full">
-              <input
-                placeholder="Buscar zona, sector, ruta o pared..."
-                className="w-full p-2 rounded-xl"
-                {...register("search")}
-              />
-              <button type="submit" className="absolute right-0 ">
-                <IoSearchCircleSharp size={40} className="fill-grayscale-600" />
-              </button>
-            </form>
+            <div className="flex flex-2 flex-col w-full px-10 md:px-20 items-center">
+              <h2 className="text-white">Zonas recientemente añadidas</h2>
+              <div className="mt-10 flex w-full flex-wrap items-stretch justify-around">
+                {recentlyAdded.data?.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-4 rounded-lg my-4 border-2 border-grayscale-500 mx-2"
+                  >
+                    <h2 className="text-white">
+                      <Link
+                        href={`/zona/${item.id}/${item.slug}`}
+                        target="_blank"
+                      >
+                        {item.name}
+                      </Link>
+                    </h2>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {false && (
+              <form onSubmit={onSubmit} className="relative w-full">
+                <input
+                  placeholder="Buscar zona, sector, ruta o pared..."
+                  className="w-full p-2 rounded-xl"
+                  {...register("search")}
+                />
+                <button type="submit" className="absolute right-0 ">
+                  <IoSearchCircleSharp
+                    size={40}
+                    className="fill-grayscale-600"
+                  />
+                </button>
+              </form>
+            )}
           </div>
           <div className="flex flex-3 items-center justify-center">
             {isLoading && (
@@ -97,23 +122,25 @@ export default function IndexPage() {
           </a>
         </div>
       </div>
-      <div className="bg-black flex flex-1 flex-col min-w-screen  items-center p-20">
-        <h2 className="text-white">Zonas recientemente añadidas</h2>
-        <div className="mt-10">
-          {recentlyAdded.data?.map((item) => (
-            <div
-              key={item.id}
-              className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
-            >
-              <h2 className="text-white">
-                <Link href={`/zona/${item.id}/${item.slug}`} target="_blank">
-                  {item.name}
-                </Link>
-              </h2>
-            </div>
-          ))}
+      {false && (
+        <div className="bg-black flex flex-1 flex-col min-w-screen  items-center p-20">
+          <h2 className="text-white">Zonas recientemente añadidas</h2>
+          <div className="mt-10">
+            {recentlyAdded.data?.map((item) => (
+              <div
+                key={item.id}
+                className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
+              >
+                <h2 className="text-white">
+                  <Link href={`/zona/${item.id}/${item.slug}`} target="_blank">
+                    {item.name}
+                  </Link>
+                </h2>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
