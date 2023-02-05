@@ -14,7 +14,6 @@ echo "Done transforming icons for web"
 rm map-web.ts
 
 printf "\e[1m\e[92mCreating the map...\e[0m\n"
-echo "const base = \"./components-web/\";" > map-web.ts
 echo >> map-web.ts
 echo "export const Icons = {" >> map-web.ts
 for file in components-web/*.js
@@ -23,7 +22,7 @@ do
   then
       base_name=$(basename ${file%.js})
       echo $base_name
-      echo "  \"$base_name\": require(base + \"$base_name\").default," >> map-web.ts
+      echo "  \"$base_name\": require( \"./components-web/$base_name\").default," >> map-web.ts
   else 
     echo "Skipping index.js"
   fi
