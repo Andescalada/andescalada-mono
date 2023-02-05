@@ -74,20 +74,6 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         {data?.sectors?.map((sector) => (
           <>
             <h2 key={sector.id}>{sector.name}</h2>
-            <div>
-              {sector.walls.map((wall) => (
-                <>
-                  <h3 key={wall.id}>{wall.name}</h3>
-                  <div>
-                    {wall.routes.map((route) => (
-                      <>
-                        <h4 key={route.id}>{route.name}</h4>
-                      </>
-                    ))}
-                  </div>
-                </>
-              ))}
-            </div>
           </>
         ))}
       </div>
