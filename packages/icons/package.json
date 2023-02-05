@@ -2,7 +2,6 @@
   "name": "@andescalada/icons",
   "version": "1.0.0",
   "description": "Svg Icons for Andescalada ",
-  "main": "index.tsx",
   "private": true,
   "license": "MIT",
   "scripts": {
