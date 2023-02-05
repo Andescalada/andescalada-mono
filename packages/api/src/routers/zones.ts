@@ -41,6 +41,20 @@ export const zonesRouter = t.router({
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input },
       include: {
+        agreements: {
+          include: {
+            Agreement: {
+              include: {
+                title: { select: { originalText: true } },
+                description: { select: { originalText: true } },
+                ZoneAgreement: {
+                  where: { zoneId: input },
+                  select: { comment: { select: { originalText: true } } },
+                },
+              },
+            },
+          },
+        },
         sectors: {
           take: infoAccess !== InfoAccess.Public ? 0 : undefined,
           include: {
