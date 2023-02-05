@@ -1,6 +1,6 @@
 import schema from "@andescalada/api/schemas/agreements";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { IconNames } from "@andescalada/icons";
+import { IconNames } from "@andescalada/icons/NativeIcons";
 import {
   ActivityIndicator,
   Box,

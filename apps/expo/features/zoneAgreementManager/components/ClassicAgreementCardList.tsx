@@ -1,5 +1,5 @@
 import { ClassicAgreementSchema } from "@andescalada/db/zod";
-import { IconNames } from "@andescalada/icons";
+import { IconNames } from "@andescalada/icons/NativeIcons";
 import { trpc } from "@andescalada/utils/trpc";
 import ClassicAgreementCard from "@features/zoneAgreementManager/components/ClassicAgreementCard";
 import { FC } from "react";

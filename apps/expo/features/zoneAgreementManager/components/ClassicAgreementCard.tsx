@@ -1,4 +1,4 @@
-import type { IconNames } from "@andescalada/icons";
+import type { IconNames } from "@andescalada/icons/NativeIcons";
 import {
   Box,
   Icon,
