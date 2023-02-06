@@ -11,8 +11,6 @@ import {
 import Image from "next/image";
 import { trpc } from "utils/trpc";
 
-const SCALE = 1;
-
 export async function getStaticProps(
   context: GetStaticPropsContext<{ id: string; slug: string }>,
 ) {
@@ -81,24 +79,26 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         {data?.sectors.map((sector) =>
           sector.walls.map((wall) =>
             wall.topos.map((topo) => (
-              <div key={topo.id} className="scale-50 relative">
+              <div
+                key={topo.id}
+                className="transform-gpu max-w-2xl  relative translate-x-0 translate-y-0"
+              >
                 <Image
                   src={topo.image.url}
                   alt="Topo"
-                  width={topo.image.width * SCALE}
-                  height={topo.image.height * SCALE}
+                  width={topo.image.width}
+                  height={topo.image.height}
+                  quality={2000000 / (topo.image.bytes || 20000)}
                   className="absolute top-0 left-0 right-0 bottom-0"
                 />
                 <svg
-                  viewBox={`0 0 ${topo.image.width * SCALE} ${
-                    topo.image.height * SCALE
-                  }`}
+                  viewBox={`0 0 ${topo.image.width} ${topo.image.height}`}
                   className="absolute top-0 left-0 right-0 bottom-0"
                 >
                   {topo.RoutePath.map((routePath) => (
                     <>
                       <polyline
-                        points={scalePath(routePath.path, SCALE)}
+                        points={scalePath(routePath.path)}
                         key={routePath.id}
                         strokeLinejoin="miter"
                         className="stroke-contrast-bright-red fill-none stroke-[10] hover:stroke-contrast-bright-green"
@@ -108,8 +108,8 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                       />
                       <g
                         transform={`translate(${
-                          scalePathArray(routePath.path, SCALE)[0][0]
-                        } ${scalePathArray(routePath.path, SCALE)[0][1]})`}
+                          scalePathArray(routePath.path)[0][0]
+                        } ${scalePathArray(routePath.path)[0][1]})`}
                       >
                         <circle r={50} cx={0} cy={0} className="fill-white" />
                         <text
@@ -130,10 +130,8 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                       </g>
                       <g
                         transform={`translate(${
-                          scalePathArray(routePath.path, SCALE).slice(-1)[0][0]
-                        } ${
-                          scalePathArray(routePath.path, SCALE).slice(-1)[0][1]
-                        })`}
+                          scalePathArray(routePath.path).slice(-1)[0][0]
+                        } ${scalePathArray(routePath.path).slice(-1)[0][1]})`}
                       >
                         <circle r={50} cx={0} cy={0} className="fill-white" />
                         <path
