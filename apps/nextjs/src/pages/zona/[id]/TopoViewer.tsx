@@ -29,11 +29,11 @@ export const TopoViewer = ({ topo }: Props) => {
         quality={2000000 / (topo.image.bytes || 20000)}
         placeholder="blur"
         blurDataURL={lowQuality(topo.image.publicId)?.url}
-        className="absolute top-0 left-0 right-0 bottom-0"
+        className="absolute top-0 left-0 right-0"
       />
       <svg
         viewBox={`0 0 ${topo.image.width} ${topo.image.height}`}
-        className="absolute top-0 left-0 right-0 bottom-0"
+        className="absolute top-0 left-0 right-0"
       >
         {topo.RoutePath.map((routePath) => (
           <>

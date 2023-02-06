@@ -77,20 +77,37 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <h1>{data?.name}</h1>
         <div className="flex ml-5">
           <div
-            className={`flex justify-center items-center px-4 ${iA.backgroundColorWeb} self-stretch rounded-full`}
+            className={`flex justify-center items-center px-4 bg-[theme(colors.${iA.backgroundColor})] self-stretch rounded-full`}
           >
-            <h4>{`Guía ${iA.label}`}</h4>
+            <h4 className="text-center">{`Guía ${iA.label}`}</h4>
           </div>
         </div>
       </div>
       <div>
-        {data?.sectors?.map((sector) => (
-          <>
-            <h2 key={sector.id}>{sector.name}</h2>
-          </>
-        ))}
+        <h2 className="my-4">Sectores</h2>
+        <div className="md:max-w-xl">
+          {data?.sectors?.map((sector) => (
+            <div key={sector.id} className="my-4">
+              <div className="border-2 p-4 rounded-md border-brand-primaryA">
+                <p>{sector.name}</p>
+              </div>
+              <div>
+                {sector.walls.map((wall) => (
+                  <>
+                    <div
+                      key={wall.id}
+                      className="border first:border-t-0 last:rounded-b-md mx-2 p-2 text-sm font-light"
+                    >
+                      <p>{wall.name}</p>
+                    </div>
+                  </>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="">
+      <div className="hidden">
         {data?.sectors.map((sector) =>
           sector.walls.map((wall) =>
             wall.topos.map((topo) => <TopoViewer key={topo.id} topo={topo} />),

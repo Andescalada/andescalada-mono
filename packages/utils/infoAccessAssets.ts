@@ -9,7 +9,6 @@ interface InfoAccessAssetsItem {
   requestTitle: string;
   requestDescription: string;
   backgroundColor: Colors;
-  backgroundColorWeb: string;
   color: Colors;
 }
 
@@ -25,7 +24,6 @@ const infoAccessAssets = {
     editionDescription:
       "La información de la guía solo puede ser modificada por personas que tú u otros administradores definan como administradores, editores o colaboradores.",
     backgroundColor: "brand.primaryB",
-    backgroundColorWeb: "bg-brand-primaryB",
     color: "grayscale.white",
     requestTitle: "Acceso Público",
     requestDescription:
@@ -39,7 +37,6 @@ const infoAccessAssets = {
     editionDescription:
       "La información de la guía solo puede ser modificada por personas que tú u otros administradores definan como administradores, editores o colaboradores.",
     backgroundColor: "brand.secondaryA",
-    backgroundColorWeb: "bg-brand-secondaryA",
     color: "grayscale.black",
     requestTitle: "Acceso Comunitario",
     requestDescription:
@@ -53,7 +50,6 @@ const infoAccessAssets = {
     editionDescription:
       "La información de la guía solo puede ser modificada por personas que tú definas como administradores, editores o colaboradores.",
     backgroundColor: "brand.primaryA",
-    backgroundColorWeb: "bg-brand-primaryA",
     color: "grayscale.white",
     requestTitle: "Acceso Privado",
     requestDescription:
