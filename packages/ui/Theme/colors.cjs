@@ -1,4 +1,4 @@
-export const pallete = {
+const pallete = {
   brand: {
     primaryA: "#413d76",
     primaryB: "#c75f3d",
@@ -95,3 +95,5 @@ export const pallete = {
     },
   },
 };
+
+module.exports = pallete;

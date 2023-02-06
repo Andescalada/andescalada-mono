@@ -24,7 +24,7 @@ export default function IndexPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-primaryA to-primaryB flex flex-1 flex-col min-w-screen min-h-screen">
+      <div className="bg-gradient-to-r from-brand-primaryA to-brand-primaryB flex flex-1 flex-col min-w-screen min-h-screen">
         <div className=" flex flex-1 flex-col justify-center items-center">
           <div className=" w-full  flex flex-col items-center">
             <Image
@@ -137,7 +137,7 @@ export default function IndexPage() {
                 className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
               >
                 <h2 className="text-white">
-                  <Link href={`/zona/${item.id}/${item.slug}`} target="_blank">
+                  <Link href={`/zona/${item.id}/${item.slug}`}>
                     {item.name}
                   </Link>
                 </h2>

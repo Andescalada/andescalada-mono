@@ -66,7 +66,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = trpc.zones.publicById.useQuery(id);
 
   return (
-    <div className="bg-black min-h-screen min-w-full p-5">
+    <div className="bg-grayscale-black min-h-screen min-w-full p-5">
       <h1>{data?.name}</h1>
       <h2>{data?.infoAccess}</h2>
       <div>
