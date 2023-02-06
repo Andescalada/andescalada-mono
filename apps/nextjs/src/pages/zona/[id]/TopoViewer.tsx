@@ -18,7 +18,7 @@ interface Props {
   topo: Item;
 }
 
-export const TopoViewer = ({ topo }: Props) => {
+const TopoViewer = ({ topo }: Props) => {
   return (
     <div className="transform-gpu max-w-2xl  relative translate-x-0 translate-y-0">
       <Image
@@ -93,3 +93,5 @@ export const TopoViewer = ({ topo }: Props) => {
     </div>
   );
 };
+
+export default TopoViewer;

@@ -9,7 +9,7 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
-import { TopoViewer } from "pages/zona/[id]/TopoViewer";
+import TopoViewer from "pages/zona/[id]/TopoViewer";
 import { useMemo } from "react";
 import { trpc } from "utils/trpc";
 
