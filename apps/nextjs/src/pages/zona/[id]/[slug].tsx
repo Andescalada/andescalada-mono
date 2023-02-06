@@ -96,7 +96,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <>
                     <div
                       key={wall.id}
-                      className="border first:border-t-0 last:rounded-b-md mx-2 p-2 text-sm font-light"
+                      className="border-l border-r border-b last:border-b last:rounded-b-md mx-2 p-2 text-sm font-light"
                     >
                       <p>{wall.name}</p>
                     </div>
