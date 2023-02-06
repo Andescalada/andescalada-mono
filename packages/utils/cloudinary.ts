@@ -29,6 +29,15 @@ export const optimizedImage = (publicId?: string | null, quality = 100) =>
     publicId,
   );
 
+export const lowQuality = (publicId?: string | null) =>
+  imageObject(
+    cld
+      .image(publicId || undefined)
+      .format("auto")
+      .quality("low"),
+    publicId,
+  );
+
 export const getThumbnail = ({
   width,
   publicId,

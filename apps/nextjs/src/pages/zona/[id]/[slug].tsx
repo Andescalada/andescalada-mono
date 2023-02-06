@@ -2,6 +2,7 @@ import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
 import { scalePath, scalePathArray } from "@andescalada/climbs-drawer/utils";
+import { lowQuality } from "@andescalada/utils/cloudinary";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import {
   GetStaticPaths,
@@ -89,6 +90,8 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                   width={topo.image.width}
                   height={topo.image.height}
                   quality={2000000 / (topo.image.bytes || 20000)}
+                  placeholder="blur"
+                  blurDataURL={lowQuality(topo.image.publicId)?.url}
                   className="absolute top-0 left-0 right-0 bottom-0"
                 />
                 <svg
