@@ -35,21 +35,18 @@ export default function IndexPage() {
               className="mb-20 mt-20"
             />
             <div className="flex flex-2 flex-col w-full px-10 md:px-20 items-center">
-              <h2 className="text-white">Zonas recientemente añadidas</h2>
-              <div className="mt-10 flex w-full flex-wrap items-stretch justify-around">
+              <h3 className="text-white">Zonas recientemente añadidas</h3>
+              <div className="mt-10 flex w-full flex-wrap items-stretch justify-center">
                 {recentlyAdded.data?.map((item) => (
                   <div
                     key={item.id}
                     className="p-4 rounded-lg my-4 border-2 border-grayscale-500 mx-2"
                   >
-                    <h2 className="text-white">
-                      <Link
-                        href={`/zona/${item.id}/${item.slug}`}
-                        target="_blank"
-                      >
+                    <h4 className="text-white">
+                      <Link href={`/zona/${item.id}/${item.slug}`}>
                         {item.name}
                       </Link>
-                    </h2>
+                    </h4>
                   </div>
                 ))}
               </div>
@@ -87,7 +84,7 @@ export default function IndexPage() {
                 className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
               >
                 <h2 className="text-white">
-                  <Link href={`/zona/${item.id}/${item.slug}`} target="_blank">
+                  <Link href={`/zona/${item.id}/${item.slug}`}>
                     {item.name}
                   </Link>
                 </h2>
