@@ -10,12 +10,12 @@ import {
   Text,
   TextInput,
 } from "@andescalada/ui";
+import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
-import infoAccessAssets from "@utils/infoAccessAssets";
 import { FC } from "react";
 import { useController } from "react-hook-form";
 

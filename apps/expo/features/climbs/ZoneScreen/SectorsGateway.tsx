@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
+import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRouteProps,
@@ -20,7 +21,6 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import { skipAgreementsIntro } from "@templates/AgreementsIntro/AgreementsIntro";
-import infoAccessAssets from "@utils/infoAccessAssets";
 import { useAtom } from "jotai";
 import { FC, ReactElement, useCallback, useMemo } from "react";
 

@@ -1,4 +1,5 @@
 import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
+import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,
@@ -20,7 +21,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { GlobalPermissions } from "@utils/auth0/types";
 import featureFlags from "@utils/featureFlags";
-import infoAccessAssets from "@utils/infoAccessAssets";
 import zoneStatus from "@utils/zoneStatus";
 import { useMemo } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
