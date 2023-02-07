@@ -20,7 +20,7 @@ interface Props {
 
 const TopoViewer = ({ topo }: Props) => {
   return (
-    <div className="transform-gpu max-w-2xl  relative translate-x-0 translate-y-0">
+    <div className="relative max-w-2xl flex">
       <Image
         src={topo.image.url}
         alt="Topo"
@@ -29,11 +29,11 @@ const TopoViewer = ({ topo }: Props) => {
         quality={2000000 / (topo.image.bytes || 20000)}
         placeholder="blur"
         blurDataURL={lowQuality(topo.image.publicId)?.url}
-        className="absolute top-0 left-0 right-0"
+        className="flex-1"
       />
       <svg
         viewBox={`0 0 ${topo.image.width} ${topo.image.height}`}
-        className="absolute top-0 left-0 right-0"
+        className="absolute top-0 left-0 right-0 bottom-0 flex-1"
       >
         {topo.RoutePath.map((routePath) => (
           <>

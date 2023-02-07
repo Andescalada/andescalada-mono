@@ -65,12 +65,25 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const topo = data?.topos.find((t) => t.main);
 
   return (
-    <div className="bg-black flex flex-col flex-1 min-h-screen">
+    <div className="bg-black flex flex-col justify-start items-stretch flex-1 min-h-screen">
       <div className="p-5">
         <h1>{data?.name}</h1>
       </div>
-      <div className="relative flex-1">
-        {topo && <TopoViewer topo={topo} />}
+      <div className="flex-1">{topo && <TopoViewer topo={topo} />}</div>
+      <div className="flex-1 p-5">
+        <h2>Rutas</h2>
+        {data?.routes.map((route) => (
+          <div
+            key={route.id}
+            className="p-5 flex justify-between max-w-2xl border-4 rounded-lg border-gray-800"
+          >
+            <div>
+              <p>{route.position}</p>
+            </div>
+            <p>{route.name}</p>
+            <p>{route.RouteGrade?.grade}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

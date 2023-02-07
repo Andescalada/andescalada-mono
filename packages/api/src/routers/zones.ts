@@ -97,7 +97,7 @@ export const zonesRouter = t.router({
               Zone: { select: { infoAccess: true, currentStatus: true } },
             },
           },
-          routes: true,
+          routes: { include: { RouteGrade: true } },
           topos: {
             include: {
               image: true,
