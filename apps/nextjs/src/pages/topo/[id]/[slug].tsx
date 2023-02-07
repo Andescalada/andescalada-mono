@@ -1,8 +1,10 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
+import { SoftDeleteSchema } from "@andescalada/db/zod";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import StoreBadges from "components/StoreBadges";
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -46,6 +48,7 @@ export async function getStaticProps(
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const walls = await prisma.wall.findMany({
+    where: { isDeleted: SoftDeleteSchema.enum.NotDeleted },
     select: {
       id: true,
       slug: true,
@@ -95,6 +98,10 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
           ))}
         </div>
+      </div>
+      <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md m-5">
+        <p className="text-sm">Descarga la nuestra App Movil</p>
+        <StoreBadges />
       </div>
     </div>
   );
