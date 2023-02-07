@@ -42,6 +42,7 @@ export const zonesRouter = t.router({
       where: { id: input },
       include: {
         agreements: {
+          orderBy: { level: "asc" },
           include: {
             Agreement: {
               include: {
@@ -91,6 +92,7 @@ export const zonesRouter = t.router({
           },
           routes: {
             where: { isDeleted: SoftDelete.NotDeleted },
+            orderBy: { position: "asc" },
             include: { RouteGrade: true },
           },
           topos: {
