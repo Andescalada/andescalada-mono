@@ -106,7 +106,10 @@ export const zonesRouter = t.router({
             include: {
               image: true,
               RoutePath: {
-                where: { isDeleted: SoftDelete.NotDeleted },
+                where: {
+                  isDeleted: SoftDelete.NotDeleted,
+                  Route: { isDeleted: SoftDelete.NotDeleted },
+                },
                 include: {
                   Route: {
                     select: {
