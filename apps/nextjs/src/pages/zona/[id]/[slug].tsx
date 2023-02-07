@@ -1,7 +1,11 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
-import { AgreementLevelSchema, InfoAccessSchema } from "@andescalada/db/zod";
+import {
+  AgreementLevelSchema,
+  InfoAccessSchema,
+  SoftDeleteSchema,
+} from "@andescalada/db/zod";
 import { Icon, IconNames } from "@andescalada/icons/WebIcons";
 import agreementLevelAssets from "@andescalada/utils/agreementLevel";
 import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
@@ -50,6 +54,7 @@ export async function getStaticProps(
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const zones = await prisma.zone.findMany({
+    where: { isDeleted: SoftDeleteSchema.enum.NotDeleted },
     select: {
       id: true,
       slug: true,
@@ -128,9 +133,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
             <h3 className="my-4">{iA.requestTitle}</h3>
             <p className="mb-6">{iA.requestDescription}</p>
             <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
-              <p className="text-sm font-extrabold">
-                Descarga la app para solicitar acceso.
-              </p>
+              <p className="text-sm">Descarga la app para solicitar acceso.</p>
               <StoreBadges />
             </div>
           </div>
@@ -165,6 +168,10 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
           </div>
         )}
+      </div>
+      <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
+        <p className="text-sm">Descarga la nuestra App Movil</p>
+        <StoreBadges />
       </div>
     </div>
   );

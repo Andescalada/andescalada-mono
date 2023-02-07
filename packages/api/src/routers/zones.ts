@@ -97,11 +97,16 @@ export const zonesRouter = t.router({
               Zone: { select: { infoAccess: true, currentStatus: true } },
             },
           },
-          routes: { include: { RouteGrade: true } },
+          routes: {
+            where: { isDeleted: SoftDelete.NotDeleted },
+            include: { RouteGrade: true },
+          },
           topos: {
+            where: { isDeleted: SoftDelete.NotDeleted },
             include: {
               image: true,
               RoutePath: {
+                where: { isDeleted: SoftDelete.NotDeleted },
                 include: {
                   Route: {
                     select: {
