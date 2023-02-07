@@ -26,10 +26,13 @@ const TopoViewer = ({ topo }: Props) => {
         alt="Topo"
         width={topo.image.width}
         height={topo.image.height}
-        quality={2000000 / (topo.image.bytes || 20000)}
         placeholder="blur"
         blurDataURL={lowQuality(topo.image.publicId)?.url}
         className="flex-1"
+        priority
+        sizes="(min-width: 60em) 24vw,
+        (min-width: 28em) 45vw,
+        100vw"
       />
       <svg
         viewBox={`0 0 ${topo.image.width} ${topo.image.height}`}
