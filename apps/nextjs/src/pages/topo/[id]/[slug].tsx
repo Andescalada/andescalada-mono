@@ -64,8 +64,6 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = trpc.zones.publicWallById.useQuery(id);
   const topo = data?.topos.find((t) => t.main);
 
-  console.log(data?.topos);
-  console.log(topo);
   return (
     <div className="bg-black flex flex-col flex-1 min-h-screen">
       <div className="p-5">
