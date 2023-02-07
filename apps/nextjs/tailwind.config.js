@@ -9,6 +9,10 @@ module.exports = {
     "bg-[theme(colors.brand.primaryB)]",
     "bg-[theme(colors.brand.secondaryA)]",
     "bg-[theme(colors.brand.secondaryB)]",
+    "bg-[theme(colors.semantic.error)]",
+    "bg-[theme(colors.semantic.info)]",
+    "bg-[theme(colors.semantic.warning)]",
+    "bg-[theme(colors.grayscale.800)]",
   ],
   theme: {
     fontFamily: {

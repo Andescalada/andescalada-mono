@@ -2,6 +2,8 @@ import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
 import { InfoAccessSchema } from "@andescalada/db/zod";
+import { Icon, IconNames } from "@andescalada/icons/WebIcons";
+import agreementLevelAssets from "@andescalada/utils/agreementLevel";
 import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import {
@@ -83,29 +85,69 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
         </div>
       </div>
-      <div>
-        <h2 className="my-4">Sectores</h2>
-        <div className="md:max-w-xl">
-          {data?.sectors?.map((sector) => (
-            <div key={sector.id} className="my-4">
-              <div className="border-2 p-4 rounded-md border-brand-primaryA">
-                <p>{sector.name}</p>
-              </div>
-              <div>
-                {sector.walls.map((wall) => (
-                  <>
-                    <div
-                      key={wall.id}
-                      className="border-l border-r border-b last:border-b last:rounded-b-md mx-2 p-2 text-sm font-light"
-                    >
-                      <p>{wall.name}</p>
-                    </div>
-                  </>
-                ))}
-              </div>
+      <div className="flex flex-col md:flex-row flex-1 items-stretch">
+        {data?.agreements && data?.agreements?.length > 0 && (
+          <div className="flex-1 md:flex-2 md:px-8">
+            <h2 className="my-4">Acuerdos</h2>
+            <div>
+              {data?.agreements?.map((agreement) => (
+                <div
+                  key={agreement.id}
+                  className="bg-white p-2 my-4 rounded-md flex relative"
+                >
+                  <Icon
+                    name={`${agreement.Agreement.icon}-color` as IconNames}
+                  />
+                  <p className="text-black ml-4">
+                    {agreement.Agreement.title.originalText}
+                  </p>
+                  <div
+                    className={`px-2 h-6 rounded-full absolute -bottom-2 right-2 flex justify-center items-center bg-[theme(colors.${
+                      agreementLevelAssets(agreement.level).backgroundColor
+                    })]`}
+                  >
+                    <p className="text-sm">
+                      {agreementLevelAssets(agreement.level).label}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+        {data?.sectors?.length === 0 && (
+          <div className="flex-1 md:flex-2 md:px-8">
+            <h3 className="my-4">{iA.requestTitle}</h3>
+            <p className="mb-6">{iA.requestDescription}</p>
+            <p>Descarga la app para solicitar acceso.</p>
+          </div>
+        )}
+        {data?.sectors && data?.sectors?.length && (
+          <div className="flex-1 md:flex-2 md:px-8">
+            <h2 className="my-4">Sectores</h2>
+            <div>
+              {data?.sectors?.map((sector) => (
+                <div key={sector.id} className="my-4">
+                  <div className="border-2 p-4 rounded-md border-brand-primaryA">
+                    <p>{sector.name}</p>
+                  </div>
+                  <div>
+                    {sector.walls.map((wall) => (
+                      <>
+                        <div
+                          key={wall.id}
+                          className="border-l border-r border-b last:border-b last:rounded-b-md mx-2 p-2 text-sm font-light"
+                        >
+                          <p>{wall.name}</p>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className="hidden">
         {data?.sectors.map((sector) =>
