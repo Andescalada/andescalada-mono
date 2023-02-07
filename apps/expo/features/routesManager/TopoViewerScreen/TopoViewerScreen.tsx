@@ -7,6 +7,7 @@ import {
   Screen,
   Text,
 } from "@andescalada/ui";
+import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
@@ -16,7 +17,6 @@ import {
 } from "@features/routesManager/Navigation/types";
 import { useAppSelector } from "@hooks/redux";
 import useGradeSystem from "@hooks/useGradeSystem";
-import { routeKindLabel } from "@utils/routeKind";
 import { FC, useEffect, useMemo, useState } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 

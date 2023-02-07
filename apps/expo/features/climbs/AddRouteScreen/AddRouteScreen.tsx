@@ -14,6 +14,7 @@ import {
   TextButton,
   TextInput,
 } from "@andescalada/ui";
+import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
@@ -25,7 +26,6 @@ import useGradeSystem from "@hooks/useGradeSystem";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
-import { routeKindLabel } from "@utils/routeKind";
 import { FC, useMemo, useState } from "react";
 import { useController, useWatch } from "react-hook-form";
 import { Alert, Keyboard, Platform } from "react-native";

@@ -1,6 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import { Box, Text } from "@andescalada/ui";
+import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
@@ -13,7 +14,6 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import type { Topo, Zone } from "@prisma/client";
 import { inferProcedureOutput } from "@trpc/server";
-import { routeKindLabel } from "@utils/routeKind";
 import { ComponentProps, useCallback, useMemo, useState } from "react";
 import { Alert } from "react-native";
 

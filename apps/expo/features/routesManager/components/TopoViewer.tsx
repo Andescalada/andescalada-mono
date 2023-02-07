@@ -2,6 +2,7 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
 import { ThemeProvider } from "@andescalada/ui";
+import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
@@ -15,7 +16,6 @@ import {
 import { inferProcedureOutput } from "@trpc/server";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
-import { routeKindLabel } from "@utils/routeKind";
 import { FC, memo, useMemo, useState } from "react";
 
 type PathItem = inferProcedureOutput<
