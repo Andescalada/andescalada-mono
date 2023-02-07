@@ -1,6 +1,7 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
+import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import {
   GetStaticPaths,
@@ -83,7 +84,12 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                 <div className="border-4 rounded-full px-4 py-2 flex justify-center items-center mr-5">
                   <p>{route.position}</p>
                 </div>
-                <p>{route.name}</p>
+                <div>
+                  <p>{route.name}</p>
+                  <p className="font-thin text-xs text-grayscale-400">
+                    {routeKindLabel(route.kind).long}
+                  </p>
+                </div>
               </div>
               <p>{gradeLabel(route.RouteGrade, route.kind)}</p>
             </div>
