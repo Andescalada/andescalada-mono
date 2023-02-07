@@ -85,12 +85,48 @@ export const zonesRouter = t.router({
     });
 
     return zone;
-
-    // return {
-    //   ...zone,
-    //   sectors: zone?.infoAccess === InfoAccess.Public ? zone.sectors : [],
-    // };
   }),
+  publicWallById: t.procedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const wall = await ctx.prisma.wall.findUnique({
+        where: { id: input },
+        include: {
+          Sector: { select: { Zone: { select: { infoAccess: true } } } },
+          routes: true,
+          topos: {
+            include: {
+              image: true,
+              RoutePath: {
+                include: {
+                  Route: {
+                    select: {
+                      name: true,
+                      id: true,
+                      position: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!wall) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `No wall with id '${input}'`,
+        });
+      }
+      const { infoAccess } = wall.Sector.Zone;
+      if (infoAccess !== InfoAccess.Public) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: `Wall with id '${input}' has infoAccess '${infoAccess}'`,
+        });
+      }
+      return wall;
+    }),
   location: protectedZoneProcedure.query(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
