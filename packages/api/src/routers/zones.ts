@@ -92,7 +92,11 @@ export const zonesRouter = t.router({
       const wall = await ctx.prisma.wall.findUnique({
         where: { id: input },
         include: {
-          Sector: { select: { Zone: { select: { infoAccess: true } } } },
+          Sector: {
+            select: {
+              Zone: { select: { infoAccess: true, currentStatus: true } },
+            },
+          },
           routes: true,
           topos: {
             include: {
@@ -112,7 +116,11 @@ export const zonesRouter = t.router({
           },
         },
       });
-      if (!wall) {
+      if (
+        !wall ||
+        wall.isDeleted !== SoftDelete.NotDeleted ||
+        wall.Sector.Zone.currentStatus !== Status.Published
+      ) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: `No wall with id '${input}'`,
