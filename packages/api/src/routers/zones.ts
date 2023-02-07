@@ -77,7 +77,16 @@ export const zonesRouter = t.router({
         include: {
           Sector: {
             select: {
-              Zone: { select: { infoAccess: true, currentStatus: true } },
+              name: true,
+              Zone: {
+                select: {
+                  infoAccess: true,
+                  currentStatus: true,
+                  name: true,
+                  slug: true,
+                  id: true,
+                },
+              },
             },
           },
           routes: {
