@@ -8,6 +8,7 @@ import {
   InferGetStaticPropsType,
 } from "next";
 import TopoViewer from "pages/zona/[id]/TopoViewer";
+import gradeLabel from "utils/gradeLabel";
 import { trpc } from "utils/trpc";
 
 export async function getStaticProps(
@@ -69,21 +70,25 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
       <div className="p-5">
         <h1>{data?.name}</h1>
       </div>
-      <div className="flex-1">{topo && <TopoViewer topo={topo} />}</div>
-      <div className="flex-1 p-5">
-        <h2>Rutas</h2>
-        {data?.routes.map((route) => (
-          <div
-            key={route.id}
-            className="p-5 flex justify-between max-w-2xl border-4 rounded-lg border-gray-800"
-          >
-            <div>
-              <p>{route.position}</p>
+      <div className="flex flex-col md:flex-row">
+        <div className="md:flex-1">{topo && <TopoViewer topo={topo} />}</div>
+        <div className="p-5 md:flex-1">
+          <h2 className="mb-5">Rutas</h2>
+          {data?.routes.map((route) => (
+            <div
+              key={route.id}
+              className="py-2 px-5 flex justify-between items-center max-w-2xl border-4 rounded-lg border-grayscale-800"
+            >
+              <div className="flex items-center">
+                <div className="border-4 rounded-full px-4 py-2 flex justify-center items-center mr-5">
+                  <p>{route.position}</p>
+                </div>
+                <p>{route.name}</p>
+              </div>
+              <p>{gradeLabel(route.RouteGrade, route.kind)}</p>
             </div>
-            <p>{route.name}</p>
-            <p>{route.RouteGrade?.grade}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

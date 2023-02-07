@@ -20,7 +20,7 @@ interface Props {
 
 const TopoViewer = ({ topo }: Props) => {
   return (
-    <div className="relative max-w-2xl flex">
+    <div className="relative flex">
       <Image
         src={topo.image.url}
         alt="Topo"
