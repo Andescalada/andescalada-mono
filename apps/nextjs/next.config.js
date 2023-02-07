@@ -10,12 +10,19 @@ const config = {
     "@andescalada/db",
     "@andescalada/hooks",
     "@andescalada/climbs-drawer",
+    "@andescalada/icons",
   ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   typescript: { ignoreBuildErrors: !!process.env.CI },
   images: {
-    domains: ["res.cloudinary.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+    ],
   },
   experimental: {
     swcPlugins: [

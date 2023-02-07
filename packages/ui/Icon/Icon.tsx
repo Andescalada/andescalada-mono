@@ -1,4 +1,7 @@
-import { Icon as AndescaladaIcon, IconNames } from "@andescalada/icons";
+import {
+  Icon as AndescaladaIcon,
+  IconNames,
+} from "@andescalada/icons/NativeIcons";
 import { useTheme } from "@shopify/restyle";
 import { ComponentProps, FC, useMemo } from "react";
 

@@ -1,5 +1,5 @@
 import { AgreementLevelSchema } from "@andescalada/db/zod";
-import { IconNames } from "@andescalada/icons";
+import { IconNames } from "@andescalada/icons/NativeIcons";
 import {
   A,
   ActivityIndicator,

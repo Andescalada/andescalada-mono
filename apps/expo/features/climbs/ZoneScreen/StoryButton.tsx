@@ -1,4 +1,4 @@
-import { IconNames } from "@andescalada/icons";
+import { IconNames } from "@andescalada/icons/NativeIcons";
 import { Box, Icon, Pressable, Text } from "@andescalada/ui";
 import { ComponentProps } from "react";
 

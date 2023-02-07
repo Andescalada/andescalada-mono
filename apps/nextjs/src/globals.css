@@ -2,10 +2,10 @@
 
 @layer base {
   h1 {
-    @apply text-6xl font-thin font-display text-white;
+    @apply text-3xl md:text-6xl font-thin font-display text-white;
   }
   h2 {
-    @apply text-2xl font-display text-white;
+    @apply text-xl md:text-3xl font-display text-white;
   }
   h3 {
     @apply text-lg font-display text-white;

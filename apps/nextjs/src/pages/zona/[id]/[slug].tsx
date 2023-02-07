@@ -1,17 +1,20 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
-import { scalePath, scalePathArray } from "@andescalada/climbs-drawer/utils";
+import { AgreementLevelSchema, InfoAccessSchema } from "@andescalada/db/zod";
+import { Icon, IconNames } from "@andescalada/icons/WebIcons";
+import agreementLevelAssets from "@andescalada/utils/agreementLevel";
+import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import StoreBadges from "components/StoreBadges";
 import {
   GetStaticPaths,
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
-import Image from "next/image";
+import Link from "next/link";
+import { useMemo } from "react";
 import { trpc } from "utils/trpc";
-
-const SCALE = 1;
 
 export async function getStaticProps(
   context: GetStaticPropsContext<{ id: string; slug: string }>,
@@ -24,7 +27,7 @@ export async function getStaticProps(
   try {
     const id = context.params?.id as string;
 
-    const zone = await ssg.zones.byId.fetch(id);
+    const zone = await ssg.zones.publicById.fetch(id);
 
     if (!zone) {
       return {
@@ -64,110 +67,103 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { data } = trpc.zones.byId.useQuery(id);
+  const { data } = trpc.zones.publicById.useQuery(id);
+
+  const iA = useMemo(
+    () => infoAccessAssets[data?.infoAccess || InfoAccessSchema.enum.Public],
+    [data?.infoAccess],
+  );
 
   return (
-    <div className="bg-black min-h-screen min-w-full p-5">
-      <h1>{data?.name}</h1>
-      <div>
-        {data?.sectors.map((sector) => (
-          <>
-            <h2 key={sector.id}>{sector.name}</h2>
+    <div className="bg-grayscale-black min-h-screen min-w-full p-5">
+      <div className="flex">
+        <h1>{data?.name}</h1>
+        <div className="flex ml-5">
+          <div
+            className={`flex justify-center items-center px-4 bg-[theme(colors.${iA.backgroundColor})] self-stretch rounded-full`}
+          >
+            <h4 className="text-center">{`Guía ${iA.label}`}</h4>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col md:flex-row flex-1 items-stretch">
+        {data?.agreements && data?.agreements?.length > 0 && (
+          <div className="flex-1 md:flex-2 md:px-8">
+            <h2 className="my-4">Acuerdos</h2>
             <div>
-              {sector.walls.map((wall) => (
-                <>
-                  <h3 key={wall.id}>{wall.name}</h3>
+              {data?.agreements?.map((agreement) => (
+                <div
+                  key={agreement.id}
+                  className="bg-white p-2 my-4 rounded-md flex relative"
+                >
+                  <Icon
+                    name={`${agreement.Agreement.icon}-color` as IconNames}
+                  />
+                  <p className="text-black ml-4">
+                    {agreement.Agreement.title.originalText}
+                  </p>
+                  {agreement.level !==
+                    AgreementLevelSchema.enum.NotAplicable && (
+                    <div
+                      className={`px-2 h-6 rounded-full absolute -bottom-2 right-2 flex justify-center items-center bg-[theme(colors.${
+                        agreementLevelAssets(agreement.level).backgroundColor
+                      })]`}
+                    >
+                      <p
+                        className={`text-sm text-[theme(colors.${
+                          agreementLevelAssets(agreement.level).color
+                        })]`}
+                      >
+                        {agreementLevelAssets(agreement.level).label}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {data?.sectors?.length === 0 && (
+          <div className="flex-1 md:flex-2 md:px-8">
+            <h3 className="my-4">{iA.requestTitle}</h3>
+            <p className="mb-6">{iA.requestDescription}</p>
+            <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
+              <p className="text-sm font-extrabold">
+                Descarga la app para solicitar acceso.
+              </p>
+              <StoreBadges />
+            </div>
+          </div>
+        )}
+        {data?.sectors && data?.sectors?.length && (
+          <div className="flex-1 md:flex-2 md:px-8">
+            <h2 className="my-4">Sectores</h2>
+            <div>
+              {data?.sectors?.map((sector) => (
+                <div key={sector.id} className="my-4">
+                  <div className="border-2 p-4 rounded-md border-brand-primaryA">
+                    <p>{sector.name}</p>
+                  </div>
                   <div>
-                    {wall.routes.map((route) => (
+                    {sector.walls.map((wall) => (
                       <>
-                        <h4 key={route.id}>{route.name}</h4>
+                        <div
+                          key={wall.id}
+                          className="border-l border-r border-b last:border-b last:rounded-b-md mx-2 p-2 text-sm font-light"
+                        >
+                          <p>
+                            <Link href={`/topo/${wall.id}/${wall.slug}`}>
+                              {wall.name}
+                            </Link>
+                          </p>
+                        </div>
                       </>
                     ))}
                   </div>
-                </>
+                </div>
               ))}
             </div>
-          </>
-        ))}
-      </div>
-      <div className="">
-        {data?.sectors.map((sector) =>
-          sector.walls.map((wall) =>
-            wall.topos.map((topo) => (
-              <div key={topo.id} className="scale-50 relative">
-                <Image
-                  src={topo.image.url}
-                  alt="Topo"
-                  width={topo.image.width * SCALE}
-                  height={topo.image.height * SCALE}
-                  className="absolute top-0 left-0 right-0 bottom-0"
-                />
-                <svg
-                  viewBox={`0 0 ${topo.image.width * SCALE} ${
-                    topo.image.height * SCALE
-                  }`}
-                  className="absolute top-0 left-0 right-0 bottom-0"
-                >
-                  {topo.RoutePath.map((routePath) => (
-                    <>
-                      <polyline
-                        points={scalePath(routePath.path, SCALE)}
-                        key={routePath.id}
-                        strokeLinejoin="miter"
-                        className="stroke-contrast-bright-red fill-none stroke-[10] hover:stroke-contrast-bright-green"
-                        onClick={() => {
-                          window.alert(routePath.Route.name);
-                        }}
-                      />
-                      <g
-                        transform={`translate(${
-                          scalePathArray(routePath.path, SCALE)[0][0]
-                        } ${scalePathArray(routePath.path, SCALE)[0][1]})`}
-                      >
-                        <circle r={50} cx={0} cy={0} className="fill-white" />
-                        <text
-                          x={0}
-                          y={0}
-                          dy=".3em"
-                          textAnchor="middle"
-                          className="font-display font-bold text-6xl fill-current text-black"
-                        >
-                          {routePath.Route.position}
-                        </text>
-                        <circle
-                          r={50}
-                          className="stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]"
-                          cx={0}
-                          cy={0}
-                        />
-                      </g>
-                      <g
-                        transform={`translate(${
-                          scalePathArray(routePath.path, SCALE).slice(-1)[0][0]
-                        } ${
-                          scalePathArray(routePath.path, SCALE).slice(-1)[0][1]
-                        })`}
-                      >
-                        <circle r={50} cx={0} cy={0} className="fill-white" />
-                        <path
-                          d="M -144 0 L 0 144 L 144 0 m -144 144 v -312"
-                          className="stroke-contrast-bright-red stroke-[50] fill-none max-h-sm max-w-sm scale-[0.15]"
-                          strokeLinejoin="miter"
-                          strokeLinecap="round"
-                        />
-                        <circle
-                          r={50}
-                          className="stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]"
-                          cx={0}
-                          cy={0}
-                        />
-                      </g>
-                    </>
-                  ))}
-                </svg>
-              </div>
-            )),
-          ),
+          </div>
         )}
       </div>
     </div>

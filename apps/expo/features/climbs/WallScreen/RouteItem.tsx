@@ -1,6 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import { Box, Text } from "@andescalada/ui";
+import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
@@ -13,7 +14,6 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import type { Topo, Zone } from "@prisma/client";
 import { inferProcedureOutput } from "@trpc/server";
-import { routeKindLabel } from "@utils/routeKind";
 import { ComponentProps, useCallback, useMemo, useState } from "react";
 import { Alert } from "react-native";
 
@@ -46,7 +46,7 @@ const RouteItem = ({
   isExtension,
   ...props
 }: Props) => {
-  const { gradeSystem } = useGradeSystem();
+  const { gradeLabel } = useGradeSystem();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setTouchRouteId] = useState<string | null>(null);
@@ -139,17 +139,10 @@ const RouteItem = ({
     });
   }, [item.id, item.routeRef, rootNavigation, wallId, zoneId]);
 
-  const grade = useMemo(() => {
-    const n = item.RouteGrade?.grade;
-    const project = item.RouteGrade?.project;
-    if (project) return "Proyecto";
-    return typeof n === "number" ? gradeSystem(n, item.kind) : "?";
-  }, [
-    gradeSystem,
-    item.RouteGrade?.grade,
-    item.RouteGrade?.project,
-    item.kind,
-  ]);
+  const grade = useMemo(
+    () => gradeLabel(item.RouteGrade, item.kind),
+    [gradeLabel, item.kind, item.RouteGrade],
+  );
 
   return (
     <ListItem

@@ -49,7 +49,7 @@ const infoAccessAssets = {
       "Solo tú y personas que definas como administradores pueden entregar acceso a la guía.",
     editionDescription:
       "La información de la guía solo puede ser modificada por personas que tú definas como administradores, editores o colaboradores.",
-    backgroundColor: "private",
+    backgroundColor: "brand.primaryA",
     color: "grayscale.white",
     requestTitle: "Acceso Privado",
     requestDescription:
