@@ -67,7 +67,7 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const topo = data?.topos.find((t) => t.main);
 
   return (
-    <div className="bg-black flex flex-col justify-start items-stretch flex-1 min-h-screen">
+    <div className="bg-black flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">
       <div className="p-5">
         <h1>{data?.name}</h1>
       </div>
@@ -78,7 +78,7 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
           {data?.routes.map((route) => (
             <div
               key={route.id}
-              className="py-2 px-5 flex justify-between items-center max-w-2xl border-4 rounded-lg border-grayscale-800"
+              className="py-2 px-5 flex justify-between items-center max-w-2xl border-4 rounded-lg border-grayscale-800 my-2"
             >
               <div className="flex items-center">
                 <div className="border-4 rounded-full px-4 py-2 flex justify-center items-center mr-5">
