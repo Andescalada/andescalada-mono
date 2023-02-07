@@ -13,7 +13,6 @@ import {
   InferGetStaticPropsType,
 } from "next";
 import Link from "next/link";
-import TopoViewer from "pages/zona/[id]/TopoViewer";
 import { useMemo } from "react";
 import { trpc } from "utils/trpc";
 
