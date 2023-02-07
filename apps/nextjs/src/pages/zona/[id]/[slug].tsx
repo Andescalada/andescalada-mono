@@ -1,11 +1,12 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
-import { InfoAccessSchema } from "@andescalada/db/zod";
+import { AgreementLevelSchema, InfoAccessSchema } from "@andescalada/db/zod";
 import { Icon, IconNames } from "@andescalada/icons/WebIcons";
 import agreementLevelAssets from "@andescalada/utils/agreementLevel";
 import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import StoreBadges from "components/StoreBadges";
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -101,15 +102,22 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <p className="text-black ml-4">
                     {agreement.Agreement.title.originalText}
                   </p>
-                  <div
-                    className={`px-2 h-6 rounded-full absolute -bottom-2 right-2 flex justify-center items-center bg-[theme(colors.${
-                      agreementLevelAssets(agreement.level).backgroundColor
-                    })]`}
-                  >
-                    <p className="text-sm">
-                      {agreementLevelAssets(agreement.level).label}
-                    </p>
-                  </div>
+                  {agreement.level !==
+                    AgreementLevelSchema.enum.NotAplicable && (
+                    <div
+                      className={`px-2 h-6 rounded-full absolute -bottom-2 right-2 flex justify-center items-center bg-[theme(colors.${
+                        agreementLevelAssets(agreement.level).backgroundColor
+                      })]`}
+                    >
+                      <p
+                        className={`text-sm text-[theme(colors.${
+                          agreementLevelAssets(agreement.level).color
+                        })]`}
+                      >
+                        {agreementLevelAssets(agreement.level).label}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -119,7 +127,12 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
           <div className="flex-1 md:flex-2 md:px-8">
             <h3 className="my-4">{iA.requestTitle}</h3>
             <p className="mb-6">{iA.requestDescription}</p>
-            <p>Descarga la app para solicitar acceso.</p>
+            <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
+              <p className="text-sm font-extrabold">
+                Descarga la app para solicitar acceso.
+              </p>
+              <StoreBadges />
+            </div>
           </div>
         )}
         {data?.sectors && data?.sectors?.length && (

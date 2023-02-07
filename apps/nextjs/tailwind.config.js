@@ -13,6 +13,8 @@ module.exports = {
     "bg-[theme(colors.semantic.info)]",
     "bg-[theme(colors.semantic.warning)]",
     "bg-[theme(colors.grayscale.800)]",
+    "text-[theme(colors.grayscale.black)]",
+    "text-[theme(colors.grayscale.white)]",
   ],
   theme: {
     fontFamily: {
