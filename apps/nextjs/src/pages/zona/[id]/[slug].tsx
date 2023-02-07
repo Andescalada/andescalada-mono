@@ -12,6 +12,7 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
+import Link from "next/link";
 import TopoViewer from "pages/zona/[id]/TopoViewer";
 import { useMemo } from "react";
 import { trpc } from "utils/trpc";
@@ -151,7 +152,11 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                           key={wall.id}
                           className="border-l border-r border-b last:border-b last:rounded-b-md mx-2 p-2 text-sm font-light"
                         >
-                          <p>{wall.name}</p>
+                          <p>
+                            <Link href={`/topo/${wall.id}/${wall.slug}`}>
+                              {wall.name}
+                            </Link>
+                          </p>
                         </div>
                       </>
                     ))}
@@ -160,13 +165,6 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
               ))}
             </div>
           </div>
-        )}
-      </div>
-      <div className="hidden">
-        {data?.sectors.map((sector) =>
-          sector.walls.map((wall) =>
-            wall.topos.map((topo) => <TopoViewer key={topo.id} topo={topo} />),
-          ),
         )}
       </div>
     </div>
