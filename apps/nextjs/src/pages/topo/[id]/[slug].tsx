@@ -10,6 +10,7 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
+import Link from "next/link";
 import TopoViewer from "pages/zona/[id]/TopoViewer";
 import gradeLabel from "utils/gradeLabel";
 import { trpc } from "utils/trpc";
@@ -70,9 +71,19 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const topo = data?.topos.find((t) => t.main);
 
   return (
-    <div className="bg-black flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">
+    <div className="bg-grayscale-black text-white flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">
       <div className="p-5">
-        <h1>{data?.name}</h1>
+        <h1>
+          <span className="text-brand-primaryA underline">
+            <Link
+              href={`/zona/${data?.Sector.Zone.id}/${data?.Sector.Zone.slug}`}
+            >
+              {data?.Sector.Zone.name}
+            </Link>
+          </span>
+          <span className="text-grayscale-600"> / {data?.Sector.name} / </span>
+          {data?.name}
+        </h1>
       </div>
       <div className="flex flex-col md:flex-row">
         <div className="md:flex-1">{topo && <TopoViewer topo={topo} />}</div>

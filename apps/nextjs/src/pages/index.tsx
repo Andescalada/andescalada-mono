@@ -4,8 +4,9 @@ import { transformer } from "@andescalada/api/src/transformer";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
-import Image from "next/image";
 import Link from "next/link";
+import Challenges from "pages/challenges";
+import Why from "pages/why";
 import { IoSearchCircleSharp } from "react-icons/io5";
 import { trpc } from "utils/trpc";
 import { z } from "zod";
@@ -25,25 +26,24 @@ export default function IndexPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-brand-primaryA to-brand-primaryB flex flex-1 flex-col min-w-screen min-h-screen">
+      <div className="text-white bg-gradient-to-r from-brand-primaryA to-brand-primaryB flex flex-1 flex-col min-w-screen">
         <div className=" flex flex-1 flex-col justify-center items-center">
           <div className=" w-full  flex flex-col items-center">
-            <Image
-              src="https://andescalada.org/img/logo_blanco.svg"
-              width={350}
-              height={350}
-              alt="andescalada logo"
-              className="mb-20 mt-20"
-            />
+            <div className=" my-32 text-center px-10">
+              <h1 className="font-bold">Documenta con nosotr🪨s</h1>
+              <h2 className="font-extralight mt-5 text-md md:text-lg">
+                Crea y comparte topos de escalada de manera fácil y responsable.
+              </h2>
+            </div>
             <div className="flex flex-2 flex-col w-full px-10 md:px-20 items-center">
-              <h3 className="text-white">Zonas recientemente añadidas</h3>
-              <div className="mt-10 flex w-full flex-wrap items-stretch justify-center">
+              <h3>⌛️ Topos publicados recientemente</h3>
+              <div className=" flex w-full flex-wrap items-stretch justify-center">
                 {recentlyAdded.data?.map((item) => (
                   <div
                     key={item.id}
                     className="p-4 rounded-lg my-4 border-2 border-grayscale-500 mx-2"
                   >
-                    <h4 className="text-white">
+                    <h4>
                       <Link href={`/zona/${item.id}/${item.slug}`}>
                         {item.name}
                       </Link>
@@ -84,7 +84,7 @@ export default function IndexPage() {
                 key={item.id}
                 className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
               >
-                <h2 className="text-white">
+                <h2>
                   <Link href={`/zona/${item.id}/${item.slug}`}>
                     {item.name}
                   </Link>
@@ -93,21 +93,23 @@ export default function IndexPage() {
             ))}
           </div>
         </div>
-        <div className=" flex flex-col justify-center items-center transition-opacity delay-200">
+        <div className="mt-10  flex flex-col justify-center items-center transition-opacity delay-200">
           <p className="font-extralight">Descarga nuestra App Movil</p>
           <StoreBadges />
         </div>
       </div>
+      <Why />
+      <Challenges />
       {false && (
-        <div className="bg-black flex flex-1 flex-col min-w-screen  items-center p-20">
-          <h2 className="text-white">Zonas recientemente añadidas</h2>
+        <div className="bg-grayscale-black flex flex-1 flex-col min-w-screen  items-center p-20">
+          <h2>Zonas recientemente añadidas</h2>
           <div className="mt-10">
             {recentlyAdded.data?.map((item) => (
               <div
                 key={item.id}
                 className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
               >
-                <h2 className="text-white">
+                <h2>
                   <Link href={`/zona/${item.id}/${item.slug}`}>
                     {item.name}
                   </Link>

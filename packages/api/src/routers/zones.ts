@@ -42,6 +42,7 @@ export const zonesRouter = t.router({
       where: { id: input },
       include: {
         agreements: {
+          orderBy: { level: "asc" },
           include: {
             Agreement: {
               include: {
@@ -56,28 +57,11 @@ export const zonesRouter = t.router({
           },
         },
         sectors: {
+          where: { isDeleted: SoftDelete.NotDeleted },
           take: infoAccess !== InfoAccess.Public ? 0 : undefined,
           include: {
             walls: {
-              include: {
-                routes: true,
-                topos: {
-                  include: {
-                    image: true,
-                    RoutePath: {
-                      include: {
-                        Route: {
-                          select: {
-                            name: true,
-                            id: true,
-                            position: true,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+              where: { isDeleted: SoftDelete.NotDeleted },
             },
           },
         },
@@ -94,11 +78,21 @@ export const zonesRouter = t.router({
         include: {
           Sector: {
             select: {
-              Zone: { select: { infoAccess: true, currentStatus: true } },
+              name: true,
+              Zone: {
+                select: {
+                  infoAccess: true,
+                  currentStatus: true,
+                  name: true,
+                  slug: true,
+                  id: true,
+                },
+              },
             },
           },
           routes: {
             where: { isDeleted: SoftDelete.NotDeleted },
+            orderBy: { position: "asc" },
             include: { RouteGrade: true },
           },
           topos: {
@@ -107,8 +101,10 @@ export const zonesRouter = t.router({
               image: true,
               RoutePath: {
                 where: {
-                  isDeleted: SoftDelete.NotDeleted,
-                  Route: { isDeleted: SoftDelete.NotDeleted },
+                  OR: {
+                    isDeleted: SoftDelete.NotDeleted,
+                    Route: { isDeleted: SoftDelete.NotDeleted },
+                  },
                 },
                 include: {
                   Route: {
