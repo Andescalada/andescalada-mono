@@ -1,7 +1,7 @@
-import Bosque from "assets/flaticon/bosque.svg";
-import Ecologia from "assets/flaticon/ecologia.svg";
-import Pensando from "assets/flaticon/pensando.svg";
-import Planta from "assets/flaticon/planta.svg";
+import Bosque from "assets/svg/bosque.svg";
+import Ecologia from "assets/svg/ecologia.svg";
+import Pensando from "assets/svg/pensando.svg";
+import Planta from "assets/svg/planta.svg";
 
 const Why = () => {
   return (
