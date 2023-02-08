@@ -3,12 +3,22 @@ import Link from "next/link";
 import { useState } from "react";
 import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io5";
 
+const linkItemList = [
+  { title: "Inicio", href: "/" },
+  { title: "Conoce más", href: "/conoce-mas" },
+  // { title: "Equipo", href: "/nosotros" },
+  { title: "Blog", href: "https://medium.com/andescalada" },
+];
+
 const Navbar = () => {
   const [menuIsOpen, setOpenMenu] = useState(false);
   return (
     <nav className="text-white bg-transparent px-2 sm:px-4 py-2.5 dark:bg-transparent  w-full z-20 top-0 left-0 bg-gradient-to-r from-brand-primaryA  to-brand-primaryB">
-      <div className="container flex flex-wrap items-center justify-between mx-auto">
-        <Link href="/" className="flex items-center">
+      <div className="container flex flex-wrap items-center justify-between mx-auto ">
+        <Link
+          href="/"
+          className="flex items-center hover:bg-brand-transparent-secondaryB p-2 rounded-lg"
+        >
           <img
             src={whiteLogo}
             className="h-10 mr-3 sm:h-10 m-3 md:m-0"
@@ -42,15 +52,11 @@ const Navbar = () => {
         </div>
         {menuIsOpen && (
           <div className="flex md:hidden absolute right-10 top-16 z-50">
-            <ul className="flex flex-col bg-white text-black p-4 mt-4 border rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
-              {[
-                { title: "Inicio", href: "/" },
-                { title: "Conoce más", href: "/nosotros" },
-                { title: "Equipo", href: "/nosotros" },
-                { title: "Blog", href: "$" },
-              ].map((item) => (
+            <ul className="flex flex-col bg-white text-brand-primaryA p-4 mt-4 border rounded-lg">
+              {linkItemList.map((item) => (
                 <NavbarItem key={item.title} {...item} />
               ))}
+              <SocialLinks />
             </ul>
           </div>
         )}
@@ -58,35 +64,12 @@ const Navbar = () => {
           className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
           id="navbar-sticky"
         >
-          <ul className="flex flex-col p-4 mt-4 rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
-            {[
-              { title: "Inicio", href: "/" },
-              { title: "Conoce más", href: "/nosotros" },
-              { title: "Equipo", href: "/nosotros" },
-              { title: "Blog", href: "$" },
-            ].map((item) => (
+          <ul className="flex flex-col items-stretch  mt-4 rounded-tl-lg rounded-bl-lg overflow-hidden  md:flex-row  md:mt-0 md:text-sm md:font-medium">
+            {linkItemList.map((item) => (
               <NavbarItem key={item.title} {...item} />
             ))}
           </ul>
-          <div className="flex">
-            <a
-              title="facebook"
-              href="https://facebook.com/andescalada"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <IoLogoFacebook size={30} fill="white" />
-            </a>
-            <a
-              title="instagram"
-              href="https://instagram.com/andescalada"
-              target="_blank"
-              rel="noreferrer"
-              className="ml-2"
-            >
-              <IoLogoInstagram size={30} fill="white" />
-            </a>
-          </div>
+          <SocialLinks />
         </div>
       </div>
     </nav>
@@ -96,13 +79,38 @@ const Navbar = () => {
 export default Navbar;
 
 const NavbarItem = ({ title, href = "#" }: { title: string; href: string }) => (
-  <li>
+  <li className="hover:bg-brand-transparent-secondaryB h-auto p-2 md:p-4 hover:underline hover:underline-offset-2">
     <a
       href={href}
-      className="block py-2 pl-3 pr-4 md:text-lg md:font-light rounded md:bg-transparent md:p-0 "
-      aria-current="page"
+      className="md:text-lg md:font-light rounded md:bg-transparent  "
     >
-      <p>{title}</p>
+      <p className="">{title}</p>
     </a>
   </li>
+);
+
+const SocialLinks = () => (
+  <div className="flex h-full ">
+    <a
+      title="facebook"
+      href="https://facebook.com/andescalada"
+      target="_blank"
+      rel="noreferrer"
+      className="p-4 hover:bg-brand-transparent-secondaryB md:rounded-none rounded-tl-lg rounded-bl-lg"
+    >
+      <IoLogoFacebook size={30} className="fill-brand-primaryA md:fill-white" />
+    </a>
+    <a
+      title="instagram"
+      href="https://instagram.com/andescalada"
+      target="_blank"
+      rel="noreferrer"
+      className="p-4 rounded-tr-lg rounded-br-lg hover:bg-brand-transparent-secondaryB"
+    >
+      <IoLogoInstagram
+        size={30}
+        className="fill-brand-primaryA md:fill-white"
+      />
+    </a>
+  </div>
 );
