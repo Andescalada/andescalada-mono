@@ -80,7 +80,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 
   return (
-    <div className="bg-grayscale-black min-h-screen min-w-full p-5 flex justify-between flex-col flex-1">
+    <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex justify-between flex-col flex-1">
       <div className="flex">
         <h1>{data?.name}</h1>
         <div className="flex ml-5">

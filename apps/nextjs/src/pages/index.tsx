@@ -27,7 +27,7 @@ export default function IndexPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-brand-primaryA to-brand-primaryB flex flex-1 flex-col min-w-screen min-h-screen">
+      <div className="text-white bg-gradient-to-r from-brand-primaryA to-brand-primaryB flex flex-1 flex-col min-w-screen min-h-screen">
         <div className=" flex flex-1 flex-col justify-center items-center">
           <div className=" w-full  flex flex-col items-center">
             <Image
@@ -38,14 +38,14 @@ export default function IndexPage() {
               className="mb-20 mt-20"
             />
             <div className="flex flex-2 flex-col w-full px-10 md:px-20 items-center">
-              <h3 className="text-white">Zonas recientemente añadidas</h3>
+              <h3>Zonas recientemente añadidas</h3>
               <div className="mt-10 flex w-full flex-wrap items-stretch justify-center">
                 {recentlyAdded.data?.map((item) => (
                   <div
                     key={item.id}
                     className="p-4 rounded-lg my-4 border-2 border-grayscale-500 mx-2"
                   >
-                    <h4 className="text-white">
+                    <h4>
                       <Link href={`/zona/${item.id}/${item.slug}`}>
                         {item.name}
                       </Link>
@@ -86,7 +86,7 @@ export default function IndexPage() {
                 key={item.id}
                 className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
               >
-                <h2 className="text-white">
+                <h2>
                   <Link href={`/zona/${item.id}/${item.slug}`}>
                     {item.name}
                   </Link>
@@ -103,15 +103,15 @@ export default function IndexPage() {
       <Why />
       <Challenges />
       {false && (
-        <div className="bg-black flex flex-1 flex-col min-w-screen  items-center p-20">
-          <h2 className="text-white">Zonas recientemente añadidas</h2>
+        <div className="bg-grayscale-black flex flex-1 flex-col min-w-screen  items-center p-20">
+          <h2>Zonas recientemente añadidas</h2>
           <div className="mt-10">
             {recentlyAdded.data?.map((item) => (
               <div
                 key={item.id}
                 className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
               >
-                <h2 className="text-white">
+                <h2>
                   <Link href={`/zona/${item.id}/${item.slug}`}>
                     {item.name}
                   </Link>

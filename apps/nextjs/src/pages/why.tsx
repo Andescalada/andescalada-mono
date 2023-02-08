@@ -5,7 +5,7 @@ import Planta from "assets/svg/planta.svg";
 
 const Why = () => {
   return (
-    <section className="bg-black p-4 py-16">
+    <section className="bg-grayscale-black text-white p-4 py-16">
       <div className="flex justify-center items-center">
         <div className="flex-1">
           <h1 className="font-semibold text-transparent text-center bg-clip-text bg-gradient-to-r from-brand-primaryA to-brand-primaryB">

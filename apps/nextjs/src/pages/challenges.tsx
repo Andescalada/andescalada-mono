@@ -87,7 +87,7 @@ interface ChallengeProps {
 
 const Challenge = ({ title }: ChallengeProps) => {
   return (
-    <div className="mx-5 rounded-md overflow-hidden flex-1 h-full my-4 lg:my-0">
+    <div className="mx-5 rounded-md overflow-hidden flex-1 h-full my-4 lg:my-0 text-white">
       <div
         className={`flex flex-1 p-5 ${challengeData[title].backgroundImage} bg-cover bg-no-repeat bg-center`}
       >

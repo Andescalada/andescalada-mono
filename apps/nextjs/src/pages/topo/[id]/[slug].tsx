@@ -71,7 +71,7 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const topo = data?.topos.find((t) => t.main);
 
   return (
-    <div className="bg-black flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">
+    <div className="bg-grayscale-black text-white flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">
       <div className="p-5">
         <h1>
           <span className="text-brand-primaryA underline">
