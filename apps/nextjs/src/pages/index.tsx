@@ -4,7 +4,6 @@ import { transformer } from "@andescalada/api/src/transformer";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
-import Image from "next/image";
 import Link from "next/link";
 import Challenges from "pages/challenges";
 import Why from "pages/why";
