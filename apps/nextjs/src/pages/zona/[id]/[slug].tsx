@@ -170,7 +170,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         )}
       </div>
       <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
-        <p className="text-sm">Descarga la nuestra App Movil</p>
+        <p className="text-sm">Descarga nuestra App Movil</p>
         <StoreBadges />
       </div>
     </div>

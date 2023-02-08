@@ -111,7 +111,7 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </div>
       <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md m-5">
-        <p className="text-sm">Descarga la nuestra App Movil</p>
+        <p className="text-sm">Descarga nuestra App Movil</p>
         <StoreBadges />
       </div>
     </div>
