@@ -6,6 +6,7 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
 import Image from "next/image";
 import Link from "next/link";
+import Why from "pages/why";
 import { IoSearchCircleSharp } from "react-icons/io5";
 import { trpc } from "utils/trpc";
 import { z } from "zod";
@@ -98,6 +99,7 @@ export default function IndexPage() {
           <StoreBadges />
         </div>
       </div>
+      <Why />
       {false && (
         <div className="bg-black flex flex-1 flex-col min-w-screen  items-center p-20">
           <h2 className="text-white">Zonas recientemente añadidas</h2>

@@ -12,7 +12,13 @@ const config = {
     "@andescalada/climbs-drawer",
     "@andescalada/icons",
   ],
-  /** We already do linting and typechecking as separate tasks in CI */
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"],
+    });
+    return config;
+  },
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   typescript: { ignoreBuildErrors: !!process.env.CI },
   images: {
