@@ -3,9 +3,7 @@
     "details": [
       {
         "appIDs": [
-          "W7ZDU4P3XP.com.andescalada.app",
-          "W7ZDU4P3XP.com.andescalada-preview.app",
-          "W7ZDU4P3XP.com.andescalada-dev.app"
+          "W7ZDU4P3XP.com.andescalada.app"
         ],
         "components": [
           {

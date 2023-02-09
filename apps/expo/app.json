@@ -46,6 +46,35 @@
     },
     "android": {
       "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.andescalada.org",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "*.andescalada.org",
+              "pathPrefix": "/zona/"
+            },
+            {
+              "scheme": "https",
+              "host": "*.andescalada.org",
+              "pathPrefix": "/topo/*"
+            },
+            {
+              "scheme": "https",
+              "host": "*.andescalada.org",
+              "pathPrefix": "/download"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/expoConfig/android-foregroundImage-adaptiveIcon.png",
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"

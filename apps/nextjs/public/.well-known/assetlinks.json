@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.andescalada.app",
+      "sha256_cert_fingerprints": [
+        "6B:D2:A0:3F:97:31:98:4D:12:3E:E5:AA:A7:04:13:2A:7E:3D:B6:8F:13:67:21:6D:41:3E:A3:C3:20:44:55:AB"
+      ]
+    }
+  }
+]
