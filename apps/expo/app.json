@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
