@@ -1,14 +1,13 @@
-name: Update Preview
-on: 
-  push:
-    branches:
-      - main
-
+name: Build on Release
+on:
+  release:
+    types: [published]
+  
 jobs:
-  update:
-    name: EAS Update Preview
+  if_merged:
+    name: EAS Build and Submit Production
     runs-on: ubuntu-latest
-    environment: Preview
+    environment: Production
     steps:
       - name: Check for EXPO_TOKEN
         run: |
@@ -48,11 +47,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Publish update
+      - name: Build production
         env: 
           DISABLE_ERD: true
-          DATABASE_URL: ${{secrets.DATABASE_URL}}
-          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
-          GOOGLE_MAPS_API_KEY_ANDROID: ${{secrets.GOOGLE_MAPS_API_KEY_ANDROID}}
-          GOOGLE_MAPS_API_KEY_IOS: ${{secrets.GOOGLE_MAPS_API_KEY_IOS}}
-        run: npx turbo update:preview
+        run: npx turbo build:production
