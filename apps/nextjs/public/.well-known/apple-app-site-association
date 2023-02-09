@@ -7,20 +7,11 @@
         ],
         "components": [
           {
-            "#": "no_universal_links",
-            "exclude": true,
-            "comment": "Matches any URL whose fragment equals no_universal_links and instructs the system not to open it as a universal link"
-          },
-          {
             "/": "/zona/*",
             "comment": "Matches any URL whose path starts with /zona/"
           },
           {
-            "/": "/topo/*",
-            "comment": "Matches any URL whose path starts with /topo/"
-          },
-          {
-            "/": "/download",
+            "/": "/open-app",
             "comment": "Matches url to download the app"
           }
         ]

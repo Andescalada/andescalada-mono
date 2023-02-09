@@ -54,22 +54,22 @@
             {
               "scheme": "https",
               "host": "*.andescalada.org",
-              "pathPrefix": "/"
-            },
-            {
-              "scheme": "https",
-              "host": "*.andescalada.org",
               "pathPrefix": "/zona/"
             },
             {
               "scheme": "https",
               "host": "*.andescalada.org",
-              "pathPrefix": "/topo/*"
+              "pathPrefix": "/open-app"
             },
             {
               "scheme": "https",
-              "host": "*.andescalada.org",
-              "pathPrefix": "/download"
+              "host": "andescalada.org",
+              "pathPrefix": "/zona/"
+            },
+            {
+              "scheme": "https",
+              "host": "andescalada.org",
+              "pathPrefix": "/open-app"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
