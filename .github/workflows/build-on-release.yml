@@ -1,4 +1,4 @@
-name: update
+name: Build on Release
 on:
   release:
     types: [published]
