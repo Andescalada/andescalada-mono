@@ -1,13 +1,32 @@
 {
   "applinks": {
-    "apps": [],
     "details": [
       {
-        "appID": ["W7ZDU4P3XP.com.andescalada.app","W7ZDU4P3XP.com.andescalada-preview.app","W7ZDU4P3XP.com.andescalada-dev.app"],
-        "paths": ["/zona/*/*", "/zona/*", "/topo/*", "/topo/*/*","/"]
+        "appIDs": [
+          "W7ZDU4P3XP.com.andescalada.app",
+          "W7ZDU4P3XP.com.andescalada-preview.app",
+          "W7ZDU4P3XP.com.andescalada-dev.app"
+        ],
+        "components": [
+          {
+            "#": "no_universal_links",
+            "exclude": true,
+            "comment": "Matches any URL whose fragment equals no_universal_links and instructs the system not to open it as a universal link"
+          },
+          {
+            "/": "/zona/*",
+            "comment": "Matches any URL whose path starts with /zona/"
+          },
+          {
+            "/": "/topo/*",
+            "comment": "Matches any URL whose path starts with /topo/"
+          },
+          {
+            "/": "/download",
+            "comment": "Matches url to download the app"
+          }
+        ]
       }
     ]
   }
 }
-
-
