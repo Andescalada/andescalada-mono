@@ -35,8 +35,10 @@ export default function IndexPage() {
                 Crea y comparte topos de escalada de manera fácil y responsable.
               </h2>
             </div>
-            <div className="flex flex-2 flex-col w-full px-10 md:px-20 items-center">
-              <h3>⌛️ Topos publicados recientemente</h3>
+            <div className="flex flex-2 flex-col w-full px-5 md:px-20 items-center">
+              <h3 className="text-center">
+                ⌛️ Topos publicados recientemente
+              </h3>
               <div className=" flex w-full flex-wrap items-stretch justify-center">
                 {recentlyAdded.data?.map((item) => (
                   <div
@@ -93,32 +95,13 @@ export default function IndexPage() {
             ))}
           </div>
         </div>
-        <div className="mt-10  flex flex-col justify-center items-center transition-opacity delay-200">
+        <div className="mt-10  flex flex-col justify-center items-center transition-opacity delay-200 mb-20">
           <p className="font-extralight">Descarga nuestra App Movil</p>
           <StoreBadges />
         </div>
       </div>
       <Why />
       <Challenges />
-      {false && (
-        <div className="bg-grayscale-black flex flex-1 flex-col min-w-screen  items-center p-20">
-          <h2>Zonas recientemente añadidas</h2>
-          <div className="mt-10">
-            {recentlyAdded.data?.map((item) => (
-              <div
-                key={item.id}
-                className="p-4 rounded-lg my-4 border-2 border-grayscale-500"
-              >
-                <h2>
-                  <Link href={`/zona/${item.id}/${item.slug}`}>
-                    {item.name}
-                  </Link>
-                </h2>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

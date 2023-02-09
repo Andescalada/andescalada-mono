@@ -37,6 +37,19 @@ const config = {
       },
     ],
   },
+  // Mobile app deep link config
+  headers: async () => {
+    return [
+      {
+        source: "/.well-known/apple-app-site-association",
+        headers: [{ key: "content-type", value: "application/json" }],
+      },
+      {
+        source: "/.well-known/assetlinks.json",
+        headers: [{ key: "content-type", value: "application/json" }],
+      },
+    ];
+  },
   experimental: {
     swcPlugins: [
       [

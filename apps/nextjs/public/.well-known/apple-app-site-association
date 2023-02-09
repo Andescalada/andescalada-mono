@@ -1,0 +1,21 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "W7ZDU4P3XP.com.andescalada.app"
+        ],
+        "components": [
+          {
+            "/": "/zona/*",
+            "comment": "Matches any URL whose path starts with /zona/"
+          },
+          {
+            "/": "/open-app",
+            "comment": "Matches url to download the app"
+          }
+        ]
+      }
+    ]
+  }
+}

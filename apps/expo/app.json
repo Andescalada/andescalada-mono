@@ -22,6 +22,7 @@
     ],
     "ios": {
       "supportsTablet": true,
+      "associatedDomains": ["applinks:andescalada.org"],
       "bundleIdentifier": "com.andescalada.app",
       "config": {
         "usesNonExemptEncryption": false
@@ -45,6 +46,35 @@
     },
     "android": {
       "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.andescalada.org",
+              "pathPrefix": "/zona/"
+            },
+            {
+              "scheme": "https",
+              "host": "*.andescalada.org",
+              "pathPrefix": "/open-app"
+            },
+            {
+              "scheme": "https",
+              "host": "andescalada.org",
+              "pathPrefix": "/zona/"
+            },
+            {
+              "scheme": "https",
+              "host": "andescalada.org",
+              "pathPrefix": "/open-app"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/expoConfig/android-foregroundImage-adaptiveIcon.png",
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"

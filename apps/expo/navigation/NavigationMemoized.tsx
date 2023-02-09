@@ -1,9 +1,18 @@
+import { slug, unSlug } from "@andescalada/api/src/utils/slug";
+import { Text } from "@andescalada/ui";
+import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { InitialState, NavigationContainer } from "@react-navigation/native";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import {
+  InitialState,
+  LinkingOptions,
+  NavigationContainer,
+} from "@react-navigation/native";
 import { setIsNavigationReady } from "@store/localConfigs";
 import storage from "@utils/mmkv/storage";
 import Constants from "expo-constants";
-import React, {
+import * as Linking from "expo-linking";
+import {
   ComponentProps,
   FC,
   useCallback,
@@ -18,6 +27,40 @@ const NAVIGATION_STATE_KEY = `NAVIGATION_STATE_KEY-${
 interface Props extends ComponentProps<typeof NavigationContainer> {
   children: React.ReactNode;
 }
+
+const config: LinkingOptions<ReactNavigation.RootParamList>["config"] = {
+  screens: {
+    [RootNavigationRoutes.Climbs]: {
+      screens: {
+        [ClimbsNavigationRoutes.Zone]: {
+          path: "zona/:zoneId/:slug",
+          parse: {
+            zoneName: (slug: string) => unSlug(slug),
+          },
+          stringify: {
+            slug: (zoneName: string) => slug(zoneName),
+          },
+        },
+      },
+    },
+    [RootNavigationRoutes.Climbs]: {
+      screens: {
+        [ClimbsNavigationRoutes.Home]: {
+          path: "open-app",
+        },
+      },
+    },
+  },
+};
+
+const linking: LinkingOptions<ReactNavigation.RootParamList> = {
+  config,
+  prefixes: [
+    Linking.createURL("/"),
+    "https://andescalada.org",
+    "https://*.andescalada.org",
+  ],
+};
 
 const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   const dispatch = useAppDispatch();
@@ -57,6 +100,8 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   }
   return (
     <NavigationContainer
+      linking={linking}
+      fallback={<Text>Loading...</Text>}
       {...{ onStateChange, initialState, ...props }}
       ref={navigationRef}
     >
