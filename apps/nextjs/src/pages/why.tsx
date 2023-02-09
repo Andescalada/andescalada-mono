@@ -5,11 +5,11 @@ import Planta from "assets/svg/planta.svg";
 
 const Why = () => {
   return (
-    <section className="bg-grayscale-black text-white px-10 py-20 md:mpy-40 flex justify-center items-center flex-col">
+    <section className="bg-grayscale-black text-white px-10 py-20 md:py-40 flex justify-center items-center flex-col">
       <h1 className="font-semibold text-transparent text-center bg-clip-text bg-gradient-to-r from-brand-primaryA to-brand-primaryB ">
         ¿Por qué Andescalada?
       </h1>
-      <p className="leading-10 text-2xl text-center mt-10 md:mb-10">
+      <p className="leading-10 text-2xl text-center mt-10 md:mb-20">
         Apostamos por comunidades que velen por el <br />
         cuidado, acceso, desarrollo y documentación <br />
         de los sectores de escalada

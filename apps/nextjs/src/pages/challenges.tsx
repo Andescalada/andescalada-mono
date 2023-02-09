@@ -6,12 +6,12 @@ import hikingIcon from "assets/svg/icono_trekking.svg?url";
 
 const Challenges = () => {
   return (
-    <section className="flex items-center flex-col px-10 my-20 md:py-40">
+    <section className="flex items-center flex-col px-10 my-20 md:my-40">
       <div>
         <h1 className="font-semibold text-transparent text-center bg-clip-text bg-gradient-to-r from-brand-primaryA to-brand-primaryB">
           Líneas de acción
         </h1>
-        <p className="text-black text-2xl text-center my-10">
+        <p className="text-black text-2xl text-center my-10 md:mb-20">
           Nuestro trabajo se divide en tres áreas que, en conjunto, buscan
           proporcionar un espacio de comunicación y entregar herramientas de
           gestión a la comunidad escaladora
