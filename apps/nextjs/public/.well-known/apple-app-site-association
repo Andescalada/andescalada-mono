@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "W7ZDU4P3XP.com.andescalada.app",
+        "appID": ["W7ZDU4P3XP.com.andescalada.app","W7ZDU4P3XP.com.andescalada-preview.app","W7ZDU4P3XP.com.andescalada-dev.app"],
         "paths": ["/zona/*/*", "/zona/*", "/topo/*", "/topo/*/*","/"]
       }
     ]

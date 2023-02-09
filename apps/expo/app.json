@@ -22,6 +22,7 @@
     ],
     "ios": {
       "supportsTablet": true,
+      "associatedDomains": ["applinks:andescalada.org"],
       "bundleIdentifier": "com.andescalada.app",
       "config": {
         "usesNonExemptEncryption": false
