@@ -19,6 +19,7 @@
     "prod": "npx expo start --dev-client --no-dev",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json",
     "build:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1  eas build --profile production --non-interactive --platform all --auto-submit --no-wait",
+    "build-local:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1  eas build --profile production --non-interactive",
     "build:preview": "APP_VARIANT=preview CI=1 eas build --profile preview",
     "build:dev": "APP_VARIANT=development eas build --profile development --platform all",
     "build:dev-simulator": "APP_VARIANT=development eas build --profile development-simulator",
