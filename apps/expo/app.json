@@ -22,7 +22,6 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "associatedDomains": ["applinks:andescalada.org"],
       "bundleIdentifier": "com.andescalada.app",
       "config": {
         "usesNonExemptEncryption": false
@@ -72,7 +71,10 @@
               "pathPrefix": "/open-app"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "adaptiveIcon": {
@@ -80,7 +82,7 @@
         "backgroundImage": "./assets/expoConfig/android-backgroundImage-adaptiveIcon.png"
       },
       "package": "com.andescalada.app",
-      "versionCode": 21
+      "versionCode": 22
     },
     "web": {
       "favicon": "./assets/expoConfig/favicon.png"
