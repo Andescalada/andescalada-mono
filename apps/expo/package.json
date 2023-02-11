@@ -62,7 +62,7 @@
     "buffer": "^6.0.3",
     "dotenv": "^16.0.2",
     "eslint-plugin-react": "^7.24.0",
-    "expo": "~47.0.8",
+    "expo": "~47.0.12",
     "expo-application": "~5.0.1",
     "expo-auth-session": "~3.7.1",
     "expo-community-flipper": "^47.0.0",
