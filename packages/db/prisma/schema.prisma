@@ -448,7 +448,6 @@ model MultiPitch {
   name        String
   slug        String
   Pitches     Pitch[]
-  kind        RouteKind
   Wall        Wall       @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId      String
   description String?    @db.LongText
@@ -476,9 +475,15 @@ model Pitch {
   variantPitchId String?
   VariantPitch   Pitch?      @relation("VariantPitchOf", fields: [variantPitchId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Variant        Pitch[]     @relation("VariantPitchOf")
+  pitchType      PitchType   @default(Normal)
 
   @@index([muliPitchId])
   @@index([variantPitchId])
+}
+
+enum PitchType {
+  Normal
+  Transition
 }
 
 model RouteGrade {
