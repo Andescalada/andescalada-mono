@@ -1,6 +1,5 @@
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { v2 as cloudinary } from "cloudinary";
-import { z } from "zod";
 
 import { t } from "../createRouter";
 
