@@ -1,4 +1,5 @@
 import { StorageService } from "@andescalada/api/schemas/image";
+import { trpc } from "@andescalada/utils/trpc";
 import type { SelectedImage } from "@hooks/usePickImage";
 import Env from "@utils/env";
 import axios from "axios";
@@ -22,16 +23,26 @@ const useCloudinaryImage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [uri, setUri] = useState<string>();
 
+  const { data: signatureData } = trpc.images.sign.useQuery(undefined, {
+    staleTime: 1000 * 60 * 59, // 59 minutes
+  });
+
   const uploadImage = useCallback(async (data: SelectedImage["base64Img"]) => {
     try {
       setIsLoading(true);
       setIsSuccess(false);
       setUri(undefined);
+      if (!signatureData) throw new Error("No signature data");
 
       const res = await axios.post<CloudinaryResponse>(
-        Env.CLOUDINARY_URL + "/upload",
+        Env.CLOUDINARY_URL + "/image/upload",
 
-        { file: data, upload_preset: Env.CLOUDINARY_UPLOAD_PRESET },
+        {
+          file: data,
+          uploadPreset: Env.CLOUDINARY_UPLOAD_PRESET,
+          api_key: Env.CLOUDINARY_API_KEY,
+          ...signatureData,
+        },
         {
           headers: {
             "content-type": "application/json",
@@ -53,8 +64,8 @@ const useCloudinaryImage = () => {
     try {
       setIsLoading(true);
       const res = await axios.post<DestroyResponse>(
-        Env.CLOUDINARY_URL + "/destroy",
-        { publicId },
+        Env.CLOUDINARY_URL + "/image/destroy",
+        { publicId, ...signatureData },
         {
           headers: {
             "content-type": "application/json",

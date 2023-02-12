@@ -11,6 +11,9 @@ const Env = {
   AUTH0_CLIENT_ID: Constants?.expoConfig?.extra?.AUTH0_CLIENT_ID as string,
   AUTH0_DOMAIN: Constants?.expoConfig?.extra?.AUTH0_DOMAIN as string,
   AUTH0_AUDIENCE: Constants?.expoConfig?.extra?.AUTH0_AUDIENCE as string,
+  CLOUDINARY_NAME: Constants?.expoConfig?.extra?.CLOUDINARY_NAME as string,
+  CLOUDINARY_API_KEY: Constants?.expoConfig?.extra
+    ?.CLOUDINARY_API_KEY as string,
 };
 
 export default Env;
