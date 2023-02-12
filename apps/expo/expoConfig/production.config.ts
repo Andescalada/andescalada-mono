@@ -26,10 +26,6 @@ const productionConfig = (config: ConfigContext["config"]): ExpoConfig => ({
   },
   ios: {
     ...config.ios,
-    // associatedDomains: [
-    //   "applinks:www.andescalada.org",
-    //   "applinks:andescalada.org",
-    // ],
     config: {
       ...config.ios?.config,
       googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
