@@ -43,7 +43,7 @@ const previewConfig = (config: ConfigContext["config"]): ExpoConfig => ({
   extra: {
     ...config.extra,
     featureFlags: featureFlags.preview,
-    API_URL: "https://preview-andescalada-mono.vercel.app",
+    API_URL: "https://preview.andescalada.org",
     SENTRY_DEPLOY_ENV: "preview",
     AUTH0_DOMAIN: "andescalada-dev.us.auth0.com",
     AUTH0_CLIENT_ID: "8rRn5mILmCShT1wjCZ38wLR4Plopabk4",
