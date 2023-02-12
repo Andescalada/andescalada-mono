@@ -40,7 +40,7 @@ const FallbackErrorScreen = ({ error }: Props) => {
         {moreInfo && (
           <Box>
             <Text variant="p2R" color="grayscale.white">
-              {error.message}
+              {JSON.stringify(error)}
             </Text>
           </Box>
         )}
