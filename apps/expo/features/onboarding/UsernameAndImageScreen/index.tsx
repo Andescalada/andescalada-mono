@@ -22,6 +22,7 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import usePickImage from "@hooks/usePickImage";
 import useRefresh from "@hooks/useRefresh";
 import { validUsername } from "@hooks/useUsernameValidation";
+import { useNotifications } from "@utils/notificated";
 import { useAtom } from "jotai";
 import { FC, useState } from "react";
 import { FormProvider, useController } from "react-hook-form";
@@ -48,23 +49,43 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
   const [isValidUsername] = useAtom(validUsername);
 
   const utils = trpc.useContext();
+
   const { mutateAsync } = trpc.user.edit.useMutation();
 
+  const { notify } = useNotifications();
+
   const [loading, setLoading] = useState(false);
+
   const onSubmit = form.handleSubmit(async ({ name, username }) => {
     setLoading(true);
-
     let image: z.infer<typeof imageSchema.schema> | undefined;
-
-    if (selectedImage) {
-      image = await uploadImage(selectedImage.base64Img);
+    try {
+      if (selectedImage) {
+        image = await uploadImage(selectedImage.base64Img);
+      }
+    } catch (err) {
+      notify("error", {
+        params: {
+          hideCloseButton: true,
+          title: "Error",
+          description: "No se pudo subir la imagen",
+        },
+      });
     }
 
     try {
       await mutateAsync({ name, image, username });
-      utils.user.ownInfo.invalidate();
+      await utils.user.ownInfo.invalidate();
       navigation.navigate(OnboardingRoutes.FirstTimeGradingSystem);
     } catch (err) {
+      notify("error", {
+        params: {
+          hideCloseButton: true,
+          title: "Error",
+          description:
+            "No se pudo guardar la información, cierra la app y vuelve a intentarlo",
+        },
+      });
       if (image) {
         destroyImage(image.publicId);
       }
