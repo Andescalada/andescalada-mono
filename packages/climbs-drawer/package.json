@@ -5,7 +5,6 @@
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json"
   },
-  "license": "MIT",
   "dependencies": {
     "@andescalada/ui": "*",
     "react-native": "0.69.5"

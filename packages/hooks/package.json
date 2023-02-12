@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "description": "Reusable React hooks",
   "author": "elevyg",
-  "license": "MIT",
   "private": true,
   "peerDependencies": {
     "react": "*",
     "react-router-dom": "*",
     "react-hook-form": "*",
     "@hookform/resolvers/zod": "*"
-
   }
 }

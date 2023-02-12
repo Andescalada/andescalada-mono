@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {},
-  "license": "MIT",
   "dependencies": {
     "@andescalada/ui": "*",
     "@cloudinary/url-gen": "^1.9.0",
