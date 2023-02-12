@@ -1,6 +1,6 @@
 import "expo-dev-client";
 
-import { Box, Icon, Screen, Text } from "@andescalada/ui";
+import { Box, Button, Icon, Screen, Text } from "@andescalada/ui";
 import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
 import ThemeProvider from "@andescalada/ui/Theme/ThemeProvider";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
@@ -68,7 +68,13 @@ export default function App() {
   );
 }
 
-const FallbackErrorScreen = () => {
+const FallbackErrorScreen = ({
+  error,
+  resetError,
+}: {
+  error: Error;
+  resetError: () => void;
+}) => {
   return (
     <Screen padding="m" backgroundColor="brand.primaryA">
       <Text variant="h1" color="brand.secondaryA">
@@ -85,6 +91,16 @@ const FallbackErrorScreen = () => {
           Reinicia la app, si el error persiste bórrala y vuelve a descargarla.
         </Text>
       </Box>
+      <Box>
+        <Text variant="p1R" color="grayscale.white">
+          {error.message}
+        </Text>
+      </Box>
+      <Button
+        title="Volver a intentar"
+        variant="transparent"
+        onPress={resetError}
+      />
     </Screen>
   );
 };
