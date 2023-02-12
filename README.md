@@ -81,13 +81,24 @@ prisma studio
 - Yarn Workspaces for monorepo management
 - Turborepo for monorepo cache management
 - Prisma for database schema management
-- NextJS for web app (Coming soon...)
+- NextJS for web app
 
 ## Main Services 
 - Expo Application Services (EAS) for app builds and updates
 - Expo Notification Server for push notifications
+- Github actions for CI/CD
 - Vercel for web and api hosting
 - PlanetScale for main MySql database
 - Upstash for Back End cache Redis DB
 - Cloudinary for Image management and DB
 - Auth0 with Passwordless for Login 
+- Mailgun as mailing server
+- Sentry for error logging
+
+## Licencia 
+
+Software: andescalada-mono
+
+License: GNU AGPLv3 with Commons Clause
+
+Licensor: Fundación Andescalada
