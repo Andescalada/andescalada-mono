@@ -28,23 +28,19 @@ interface Props extends ComponentProps<typeof NavigationContainer> {
   children: React.ReactNode;
 }
 
-const config: LinkingOptions<ReactNavigation.RootParamList>["config"] = {
+const config = {
   screens: {
     [RootNavigationRoutes.Climbs]: {
       screens: {
         [ClimbsNavigationRoutes.Zone]: {
-          path: "zona/:zoneId/:slug",
+          path: "zona/:zoneId/:zoneName",
           parse: {
             zoneName: (slug: string) => unSlug(slug),
           },
           stringify: {
-            slug: (zoneName: string) => slug(zoneName),
+            zoneName: (zoneName: string) => slug(zoneName),
           },
         },
-      },
-    },
-    [RootNavigationRoutes.Climbs]: {
-      screens: {
         [ClimbsNavigationRoutes.Home]: {
           path: "open-app",
         },
