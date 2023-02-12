@@ -7,7 +7,6 @@ import {
   OnboardingRoutes,
   OnboardingScreenProps,
 } from "@features/onboarding/Navigation/types";
-import useOwnInfo from "@hooks/useOwnInfo";
 import { ComponentProps, FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 
@@ -59,22 +58,17 @@ const GradingSystemConfigScreen: FC<Props> = () => {
 
   const firstTimeLogin = trpc.user.firstTimeLogin.useMutation();
 
-  const { data } = useOwnInfo();
-
   const sport = useController({
     control,
     name: "preferredSportGrade",
-    defaultValue: data ? data.preferredSportGrade : undefined,
   });
   const trad = useController({
     control,
     name: "preferredTradGrade",
-    defaultValue: data ? data.preferredTradGrade : undefined,
   });
   const boulder = useController({
     control,
     name: "preferredBoulderGrade",
-    defaultValue: data ? data.preferredBoulderGrade : undefined,
   });
 
   const onSave = handleSubmit(async (data) => {
