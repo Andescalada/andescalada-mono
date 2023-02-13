@@ -2,7 +2,6 @@
   "name": "@andescalada/db",
   "version": "1.0.0",
   "author": "elevyg",
-  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": " pscale connect andescalada develop --port 3309",

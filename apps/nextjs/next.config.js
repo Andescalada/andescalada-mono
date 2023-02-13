@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // @ts-check
+
+const { withSentryConfig } = require("@sentry/nextjs");
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -25,6 +28,9 @@ const config = {
       use: ["@svgr/webpack"],
     });
     return config;
+  },
+  sentry: {
+    hideSourceMaps: true,
   },
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   typescript: { ignoreBuildErrors: !!process.env.CI },
@@ -62,4 +68,8 @@ const config = {
   },
 };
 
-module.exports = config;
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
+module.exports = withSentryConfig(config, sentryWebpackPluginOptions);

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "author": "elevyg",
-  "license": "MIT",
+  "license": "GNU AGPLv3 with Commons Clause",
   "scripts": {
     "db-up": "pscale connect andescalada develop --port 3309",
     "dev:nextjs": "turbo run dev --filter=@andescalada/nextjs",

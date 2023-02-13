@@ -1,9 +1,9 @@
 import "expo-dev-client";
 
-import { Box, Icon, Screen, Text } from "@andescalada/ui";
 import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
 import ThemeProvider from "@andescalada/ui/Theme/ThemeProvider";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import AppNavigation from "@navigation/AppNavigation";
 import NavigationMemoized from "@navigation/NavigationMemoized";
 import { Store } from "@store/index";
@@ -35,11 +35,12 @@ Sentry.init({
   environment: Env.SENTRY_DEPLOY_ENV,
 });
 
+const captureException = (error: Error) =>
+  Sentry.Native.captureException(error);
+
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
   "The native module for Flipper seems unavailable. Please verify that `react-native-flipper` is installed as yarn dependency to your project and, for iOS, that `pod install` is run in the `ios` directory.",
-  // Coming from React Query Devtools
-  "JSON.stringify cannot serialize BigInt",
 ]);
 
 export default function App() {
@@ -47,7 +48,7 @@ export default function App() {
     <ThemeProvider>
       <SafeAreaProvider>
         <ErrorBoundary
-          onError={(error) => Sentry.Native.captureException(error)}
+          onError={captureException}
           FallbackComponent={FallbackErrorScreen}
         >
           <NotificationsProvider>
@@ -67,24 +68,3 @@ export default function App() {
     </ThemeProvider>
   );
 }
-
-const FallbackErrorScreen = () => {
-  return (
-    <Screen padding="m" backgroundColor="brand.primaryA">
-      <Text variant="h1" color="brand.secondaryA">
-        ¡Tuvimos un error!
-      </Text>
-      <Box flex={1} marginTop="xl">
-        <Text variant="h4" marginTop="m" color="grayscale.white">
-          Se nos cayó el ATC en la mitad de un multi-largo.
-        </Text>
-        <Box marginVertical="m" alignSelf="center">
-          <Icon name="climber-rappeling" size={100} />
-        </Box>
-        <Text variant="p1R" marginTop="m" color="grayscale.white">
-          Reinicia la app, si el error persiste bórrala y vuelve a descargarla.
-        </Text>
-      </Box>
-    </Screen>
-  );
-};

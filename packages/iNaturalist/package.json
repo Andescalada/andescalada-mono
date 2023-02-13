@@ -4,7 +4,6 @@
   "description": "Package to manage and show information from iNaturalist",
   "main": "index.ts",
   "author": "bemarchant",
-  "license": "MIT",
   "private": true,
   "dependencies": {
     "@tanstack/react-query": "^4.19.1"

@@ -26,13 +26,18 @@ export interface AccessToken {
 const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 
 const Navigator = () => {
-  const { data, isLoading, isError } = useOwnInfo();
+  const { data, isLoading, isError, error, refetch } = useOwnInfo();
 
   useOffline({ fetchAssets: true });
   usePushNotification();
 
   if (isError) {
-    return <FallbackErrorScreen />;
+    return (
+      <FallbackErrorScreen
+        error={new Error(error.message)}
+        resetError={refetch}
+      />
+    );
   }
 
   if (isLoading)

@@ -43,14 +43,15 @@ const previewConfig = (config: ConfigContext["config"]): ExpoConfig => ({
   extra: {
     ...config.extra,
     featureFlags: featureFlags.preview,
-    API_URL: "https://preview-andescalada-mono.vercel.app",
+    API_URL: "https://preview.andescalada.org",
     SENTRY_DEPLOY_ENV: "preview",
     AUTH0_DOMAIN: "andescalada-dev.us.auth0.com",
     AUTH0_CLIENT_ID: "8rRn5mILmCShT1wjCZ38wLR4Plopabk4",
     AUTH0_AUDIENCE: "https://api-dev.andescalada.org/",
     CLOUDINARY_UPLOAD_PRESET: "andescalada-app-dev",
-    CLOUDINARY_URL:
-      "https://api.cloudinary.com/v1_1/fundacion-andescalada/image",
+    CLOUDINARY_URL: "https://api.cloudinary.com/v1_1/fundacion-andescalada",
+    CLOUDINARY_NAME: "fundacion-andescalada",
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   },
 });
 
