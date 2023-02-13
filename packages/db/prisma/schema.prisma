@@ -61,6 +61,8 @@ model User {
   ZoneAccessRequestHistory   ZoneAccessRequest[]
   ZoneAccessRequestReviewed  ZoneAccessRequest[]       @relation("ZoneAccessRequestModifiedBy")
   UserZoneAgreementHistory   UserZoneAgreementRecord[]
+  authorZoneDirections       ZoneDirections[]          @relation("AuthorZoneDirections")
+  coAuthorZoneDirections     ZoneDirections[]          @relation("CoAuthorZoneDirections")
 
   @@index([email])
   @@index([profilePhotoId])
@@ -240,6 +242,7 @@ model Zone {
   statusHistory            ZoneStatus[]
   ZoneAccessRequest        ZoneAccessRequest[]
   UserZoneAgreementHistory UserZoneAgreementRecord[]
+  ZoneDirections           ZoneDirections[]
 
   @@index([locationId])
 }
@@ -326,6 +329,34 @@ enum AgreementLevel {
   Important
   Recommended
   NotAplicable
+}
+
+model ZoneDirections {
+  id                 String             @id @default(uuid())
+  name               String
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  Zone               Zone               @relation(fields: [zoneId], references: [id])
+  zoneId             String
+  transportationMode TransportationMode
+  description        TextContent?       @relation(fields: [descriptionId], references: [id])
+  descriptionId      String?
+  Author             User               @relation("AuthorZoneDirections", fields: [authorId], references: [id])
+  authorId           String
+  coAuthors          User[]             @relation("CoAuthorZoneDirections")
+
+  @@index([authorId])
+  @@index([descriptionId])
+  @@index([zoneId])
+}
+
+enum TransportationMode {
+  Car
+  PublicTransport
+  Train
+  Bike
+  Walk
+  Other
 }
 
 model Sector {
@@ -584,6 +615,7 @@ model TextContent {
   ZoneAgreementComment ZoneAgreement[]
   ZoneStatus           ZoneStatus[]
   ZoneAccessRequest    ZoneAccessRequest[]
+  ZoneDirections       ZoneDirections[]
 
   @@index([languageId])
 }
