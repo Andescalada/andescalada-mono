@@ -9,6 +9,7 @@ import OnboardingStackNavigation from "@features/onboarding/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import UserStackNavigation from "@features/user/Navigation";
 import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation";
+import ZoneDirectionsStackNavigation from "@features/zoneDirections/Navigation";
 import ZoneLocationStackNavigation from "@features/zoneLocation/Navigation";
 import ZoneManagerStackNavigation from "@features/zoneManager/Navigation";
 import useOwnInfo from "@hooks/useOwnInfo";
@@ -92,6 +93,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.ZoneLocation}
             component={ZoneLocationStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.ZoneDirections}
+            component={ZoneDirectionsStackNavigation}
           />
           <Stack.Screen
             name={RootNavigationRoutes.ZoneManager}

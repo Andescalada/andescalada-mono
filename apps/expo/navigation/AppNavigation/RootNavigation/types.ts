@@ -6,23 +6,25 @@ import { OnboardingNavigationParamList } from "@features/onboarding/Navigation/t
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
 import { ZoneAgreementsNavigationParamList } from "@features/zoneAgreementManager/Navigation/types";
+import { ZoneDirectionsNavigationParamList } from "@features/zoneDirections/Navigation/types";
 import { ZoneLocationNavigationParamList } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerNavigationParamList } from "@features/zoneManager/Navigation/types";
 import { NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum RootNavigationRoutes {
-  Climbs = "ClimbsStack",
-  RouteManager = "RouteManagerStack",
-  User = "UserStack",
-  Onboarding = "Onboarding",
+  Climbs = "RootClimbsStack",
+  RouteManager = "RootRouteManagerStack",
+  User = "RootUserStack",
+  Onboarding = "RootOnboarding",
   Loading = "RootLoading",
-  ZoneAgreementsManager = "ZoneAgreementsManager",
-  ImageManager = "ImageManager",
-  ZoneLocation = "ZoneLocation",
-  ZoneManager = "ZoneManager",
-  Error = "Error",
-  InfoAccessManager = "InfoAccessManager",
+  ZoneAgreementsManager = "RootZoneAgreementsManager",
+  ImageManager = "RootImageManager",
+  ZoneLocation = "RootZoneLocation",
+  ZoneDirections = "RootZoneDirections",
+  ZoneManager = "RootZoneManager",
+  Error = "RootError",
+  InfoAccessManager = "RootInfoAccessManager",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -34,6 +36,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.ZoneAgreementsManager]: NavigatorScreenParams<ZoneAgreementsNavigationParamList>;
   [RootNavigationRoutes.ImageManager]: NavigatorScreenParams<ImageManagerNavigationParamList>;
   [RootNavigationRoutes.ZoneLocation]: NavigatorScreenParams<ZoneLocationNavigationParamList>;
+  [RootNavigationRoutes.ZoneDirections]: NavigatorScreenParams<ZoneDirectionsNavigationParamList>;
   [RootNavigationRoutes.ZoneManager]: NavigatorScreenParams<ZoneManagerNavigationParamList>;
   [RootNavigationRoutes.Error]: NavigatorScreenParams<ErrorNavigationParamList>;
   [RootNavigationRoutes.InfoAccessManager]: NavigatorScreenParams<InfoAccessManagerNavigationParamList>;

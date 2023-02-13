@@ -11,6 +11,7 @@ import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
+import { ZoneDirectionsRoutes } from "@features/zoneDirections/Navigation/types";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
@@ -110,7 +111,18 @@ const ZoneHeader = () => {
             />
             {featureFlags.storyBar && (
               <>
-                <StoryButton title="Como llegar" />
+                <StoryButton
+                  title="Como llegar"
+                  iconName="destination"
+                  onPress={() =>
+                    rootNavigation.navigate(
+                      RootNavigationRoutes.ZoneDirections,
+                      {
+                        screen: ZoneDirectionsRoutes.ZoneDirections,
+                      },
+                    )
+                  }
+                />
                 <StoryButton title="Flora y fauna" />
               </>
             )}
