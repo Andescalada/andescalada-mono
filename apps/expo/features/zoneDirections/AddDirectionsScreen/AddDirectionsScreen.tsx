@@ -9,7 +9,6 @@ import {
   KeyboardDismiss,
   Screen,
   Text,
-  TextFieldAccordion,
   TextInput,
 } from "@andescalada/ui";
 import transportationModeAssets from "@andescalada/utils/transportationModesAssets";
@@ -21,7 +20,6 @@ import {
 import { FC } from "react";
 import { useController } from "react-hook-form";
 import { useNotifications } from "react-native-notificated";
-import { add } from "react-native-reanimated";
 
 type Props = ZoneDirectionsScreenProps<ZoneDirectionsRoutes.AddDirections>;
 
