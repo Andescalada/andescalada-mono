@@ -41,7 +41,9 @@ const addDirections = z.object({
   transportationMode: z.nativeEnum(TransportationModeSchema.Enum, {
     required_error: "Requerido",
   }),
-  description: z.string({ required_error: "Requerido" }),
+  description: z
+    .string({ required_error: "Requerido" })
+    .min(1, { message: "Requerido" }),
 });
 
 const nameSearch = z

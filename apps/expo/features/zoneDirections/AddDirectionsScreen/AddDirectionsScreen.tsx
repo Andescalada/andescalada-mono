@@ -1,4 +1,6 @@
+import zone from "@andescalada/api/schemas/zone";
 import { TransportationModeSchema } from "@andescalada/db/zod";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   Box,
   Button,
@@ -11,21 +13,64 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import transportationModeAssets from "@andescalada/utils/transportationModesAssets";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneDirectionsRoutes,
   ZoneDirectionsScreenProps,
 } from "@features/zoneDirections/Navigation/types";
 import { FC } from "react";
+import { useController } from "react-hook-form";
+import { useNotifications } from "react-native-notificated";
+import { add } from "react-native-reanimated";
 
 type Props = ZoneDirectionsScreenProps<ZoneDirectionsRoutes.AddDirections>;
 
-const AddDirectionsScreen: FC<Props> = (props) => {
+const AddDirectionsScreen: FC<Props> = ({
+  route: {
+    params: { zoneId },
+  },
+}) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useZodForm({
+    schema: zone.addDirections,
+    mode: "onChange",
+    reValidateMode: "onChange",
+  });
+  const transportationMode = useController({
+    control,
+    name: "transportationMode",
+  });
+  const description = useController({ control, name: "description" });
+  const { notify } = useNotifications();
+  const addDirection = trpc.zones.addDirection.useMutation({
+    onError: (error) => {
+      let description = "No pudimos guardar los datos que agregaste 😢";
+      if (
+        error instanceof Error &&
+        error.message.includes("Unique constraint failed")
+      ) {
+        description = "Ya existe una descripción para ese modo de transporte";
+      }
+      notify("error", { params: { title: "Error", description } });
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    addDirection.mutate({ ...data, zoneId });
+  });
+
   return (
     <Screen safeAreaDisabled padding="m">
       <KeyboardAvoidingBox>
         <KeyboardDismiss>
           <Text variant="h4">Modo de transporte</Text>
-          <ButtonGroup value="" onChange={(value) => console.log(value)}>
+          <ButtonGroup
+            value={transportationMode.field.value}
+            onChange={transportationMode.field.onChange}
+          >
             <Box flexDirection="row" alignItems="stretch" flexWrap="wrap">
               {TransportationModeSchema.options.map((mode) => (
                 <ButtonGroup.Item
@@ -35,6 +80,9 @@ const AddDirectionsScreen: FC<Props> = (props) => {
                 />
               ))}
             </Box>
+            <Text variant="error" color="semantic.error">
+              {transportationMode.fieldState.error?.message}
+            </Text>
           </ButtonGroup>
           <Text variant="h4" marginTop="m">
             Descripción
@@ -43,12 +91,23 @@ const AddDirectionsScreen: FC<Props> = (props) => {
             containerProps={{ flex: 1, padding: "s" }}
             multiline
             textAlignVertical="top"
-            value={""}
-            onChangeText={() => console.log()}
+            value={description.field.value}
+            onChangeText={description.field.onChange}
+            onBlur={description.field.onBlur}
           />
+          <Text variant="error" color="semantic.error">
+            {description.fieldState.error?.message}
+          </Text>
         </KeyboardDismiss>
       </KeyboardAvoidingBox>
-      <Button variant="info" title="Continuar" marginVertical="l" />
+      <Button
+        variant={isValid ? "info" : "transparent"}
+        title="Continuar"
+        marginVertical="l"
+        isLoading={addDirection.isLoading}
+        disabled={addDirection.isLoading || !isValid}
+        onPress={onSubmit}
+      />
     </Screen>
   );
 };

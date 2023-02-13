@@ -1,4 +1,4 @@
-import { Box, Screen, SemanticButton, Text, TextButton } from "@andescalada/ui";
+import { Box, Screen, Text, TextButton } from "@andescalada/ui";
 import {
   ZoneDirectionsRoutes,
   ZoneDirectionsScreenProps,
