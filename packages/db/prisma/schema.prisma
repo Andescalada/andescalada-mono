@@ -333,7 +333,8 @@ enum AgreementLevel {
 
 model ZoneDirections {
   id                 String             @id @default(uuid())
-  name               String?
+  name               TextContent?       @relation("ZoneDirectionsName", fields: [nameId], references: [id])
+  nameId             String?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   Zone               Zone               @relation(fields: [zoneId], references: [id])
@@ -349,6 +350,7 @@ model ZoneDirections {
   @@index([authorId])
   @@index([descriptionId])
   @@index([zoneId])
+  @@index([nameId])
 }
 
 enum TransportationMode {
@@ -617,6 +619,7 @@ model TextContent {
   ZoneStatus           ZoneStatus[]
   ZoneAccessRequest    ZoneAccessRequest[]
   ZoneDirections       ZoneDirections[]
+  ZoneDirectionsName   ZoneDirections[]    @relation("ZoneDirectionsName")
 
   @@index([languageId])
 }

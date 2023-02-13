@@ -37,6 +37,7 @@ const rejectStatus = z.object({
 });
 
 const addDirections = z.object({
+  name: z.string().optional(),
   transportationMode: z.nativeEnum(TransportationModeSchema.Enum, {
     required_error: "Requerido",
   }),

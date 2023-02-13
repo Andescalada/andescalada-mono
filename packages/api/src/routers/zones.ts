@@ -385,7 +385,14 @@ export const zonesRouter = t.router({
           Author: {
             connect: { email: ctx.user.email },
           },
-          name: input.transportationMode,
+          name: input.name
+            ? {
+                create: {
+                  originalText: input.name,
+                  originalLang: { connect: { languageId: "es" } },
+                },
+              }
+            : undefined,
           transportationMode: input.transportationMode,
           description: {
             create: {
