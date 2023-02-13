@@ -333,7 +333,7 @@ enum AgreementLevel {
 
 model ZoneDirections {
   id                 String             @id @default(uuid())
-  name               String
+  name               String?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   Zone               Zone               @relation(fields: [zoneId], references: [id])
@@ -345,6 +345,7 @@ model ZoneDirections {
   authorId           String
   coAuthors          User[]             @relation("CoAuthorZoneDirections")
 
+  @@unique([transportationMode, zoneId], name: "ZoneTransportationModeUnique")
   @@index([authorId])
   @@index([descriptionId])
   @@index([zoneId])
