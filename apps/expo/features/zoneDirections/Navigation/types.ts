@@ -1,12 +1,21 @@
+import { Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum ZoneDirectionsRoutes {
   ZoneDirections = "ZoneDirections",
+  AddDirections = "AddDirections",
 }
 
 export type ZoneDirectionsNavigationParamList = {
-  [ZoneDirectionsRoutes.ZoneDirections]: undefined;
+  [ZoneDirectionsRoutes.ZoneDirections]: {
+    zoneName: Zone["name"];
+    zoneId: Zone["id"];
+  };
+  [ZoneDirectionsRoutes.AddDirections]: {
+    zoneName: Zone["name"];
+    zoneId: Zone["id"];
+  };
 };
 
 export type ZoneDirectionsRouteProps<T extends ZoneDirectionsRoutes> =

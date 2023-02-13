@@ -119,6 +119,7 @@ const ZoneHeader = () => {
                       RootNavigationRoutes.ZoneDirections,
                       {
                         screen: ZoneDirectionsRoutes.ZoneDirections,
+                        params: { zoneId, zoneName },
                       },
                     )
                   }
