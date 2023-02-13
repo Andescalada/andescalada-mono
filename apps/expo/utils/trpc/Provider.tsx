@@ -43,6 +43,17 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [queryClient] = useState(() => {
     const client = new QueryClient({
       defaultOptions: {
+        mutations: {
+          onError(err) {
+            const description =
+              err instanceof Error && process.env.APP_VARIANT !== "production"
+                ? err.message
+                : "No pudimos procesar tu solicitud";
+            notify("error", {
+              params: { title: "Hubo un error", description },
+            });
+          },
+        },
         queries: {
           retry: false,
           cacheTime: Infinity,
