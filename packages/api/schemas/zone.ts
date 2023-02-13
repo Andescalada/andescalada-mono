@@ -1,6 +1,10 @@
 import global from "@andescalada/api/schemas/global";
 import { r } from "@andescalada/api/src/utils/regex";
-import { InfoAccessSchema, StatusSchema } from "@andescalada/db/zod";
+import {
+  InfoAccessSchema,
+  StatusSchema,
+  TransportationModeSchema,
+} from "@andescalada/db/zod";
 import { z } from "zod";
 
 const id = z.object({ zoneId: z.string() });
@@ -32,6 +36,13 @@ const rejectStatus = z.object({
   message: z.string(),
 });
 
+const addDirections = z.object({
+  transportationMode: z.nativeEnum(TransportationModeSchema.Enum, {
+    required_error: "Requerido",
+  }),
+  description: z.string({ required_error: "Requerido" }),
+});
+
 const nameSearch = z
   .string()
   .trim()
@@ -40,4 +51,12 @@ const nameSearch = z
     "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",
   );
 
-export default { schema, id, nameSearch, status, approveStatus, rejectStatus };
+export default {
+  schema,
+  id,
+  nameSearch,
+  status,
+  approveStatus,
+  rejectStatus,
+  addDirections,
+};

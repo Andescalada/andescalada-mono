@@ -370,4 +370,29 @@ export const zonesRouter = t.router({
 
       return parsedData;
     }),
+  addDirection: protectedZoneProcedure
+    .input(zone.addDirections)
+    .mutation(({ ctx, input }) => {
+      if (!ctx.permissions.has("Create")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Create"),
+        );
+      }
+
+      return ctx.prisma.zoneDirections.create({
+        data: {
+          Zone: { connect: { id: input.zoneId } },
+          Author: {
+            connect: { email: ctx.user.email },
+          },
+          transportationMode: input.transportationMode,
+          description: {
+            create: {
+              originalText: input.description,
+              originalLang: { connect: { languageId: "es" } },
+            },
+          },
+        },
+      });
+    }),
 });
