@@ -385,6 +385,7 @@ export const zonesRouter = t.router({
           Author: {
             connect: { email: ctx.user.email },
           },
+          name: input.transportationMode,
           transportationMode: input.transportationMode,
           description: {
             create: {
