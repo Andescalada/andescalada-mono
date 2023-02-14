@@ -345,6 +345,7 @@ model ZoneDirections {
   Author             User               @relation("AuthorZoneDirections", fields: [authorId], references: [id])
   authorId           String
   coAuthors          User[]             @relation("CoAuthorZoneDirections")
+  isDeleted          SoftDelete         @default(NotDeleted)
 
   @@unique([transportationMode, zoneId], name: "ZoneTransportationModeUnique")
   @@index([authorId])
