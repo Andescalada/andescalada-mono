@@ -43,7 +43,6 @@ const addDirection = protectedZoneProcedure
 
     return ctx.prisma.zoneDirections.upsert({
       where: {
-        id: existingDirections?.id,
         ZoneTransportationModeUnique: {
           transportationMode: input.transportationMode,
           zoneId: input.zoneId,
