@@ -109,24 +109,18 @@ const ZoneHeader = () => {
                 })
               }
             />
-            {featureFlags.storyBar && (
-              <>
-                <StoryButton
-                  title="Como llegar"
-                  iconName="destination"
-                  onPress={() =>
-                    rootNavigation.navigate(
-                      RootNavigationRoutes.ZoneDirections,
-                      {
-                        screen: ZoneDirectionsRoutes.ZoneDirections,
-                        params: { zoneId, zoneName },
-                      },
-                    )
-                  }
-                />
-                <StoryButton title="Flora y fauna" />
-              </>
-            )}
+
+            <StoryButton
+              title="Como llegar"
+              iconName="destination"
+              onPress={() =>
+                rootNavigation.navigate(RootNavigationRoutes.ZoneDirections, {
+                  screen: ZoneDirectionsRoutes.ZoneDirections,
+                  params: { zoneId, zoneName },
+                })
+              }
+            />
+            {featureFlags.storyBar && <StoryButton title="Flora y fauna" />}
           </Box>
           <Pressable
             marginTop="s"
