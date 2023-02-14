@@ -1,4 +1,4 @@
-import { Zone } from "@prisma/client";
+import { Zone, ZoneDirections } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -15,6 +15,8 @@ export type ZoneDirectionsNavigationParamList = {
   [ZoneDirectionsRoutes.AddDirections]: {
     zoneName: Zone["name"];
     zoneId: Zone["id"];
+    transportationMode?: ZoneDirections["transportationMode"];
+    description?: string;
   };
 };
 

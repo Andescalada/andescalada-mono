@@ -75,7 +75,18 @@ const ZoneDirectionsScreen: FC<Props> = ({
                 </Text>
               </Box>
               {permission.has("Update") && (
-                <TextButton variant="info" marginHorizontal="m">
+                <TextButton
+                  variant="info"
+                  marginHorizontal="m"
+                  onPress={() =>
+                    navigation.navigate(ZoneDirectionsRoutes.AddDirections, {
+                      zoneId,
+                      zoneName,
+                      description: item.description?.originalText,
+                      transportationMode: item.transportationMode,
+                    })
+                  }
+                >
                   Editar
                 </TextButton>
               )}

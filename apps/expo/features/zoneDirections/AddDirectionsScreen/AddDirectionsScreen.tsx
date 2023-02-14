@@ -24,8 +24,13 @@ import { useNotifications } from "react-native-notificated";
 type Props = ZoneDirectionsScreenProps<ZoneDirectionsRoutes.AddDirections>;
 
 const AddDirectionsScreen: FC<Props> = ({
+  navigation,
   route: {
-    params: { zoneId },
+    params: {
+      zoneId,
+      description: defaultDescription,
+      transportationMode: defaultTransportationMode,
+    },
   },
 }) => {
   const {
@@ -40,10 +45,20 @@ const AddDirectionsScreen: FC<Props> = ({
   const transportationMode = useController({
     control,
     name: "transportationMode",
+    defaultValue: defaultTransportationMode,
   });
-  const description = useController({ control, name: "description" });
+  const description = useController({
+    control,
+    name: "description",
+    defaultValue: defaultDescription,
+  });
   const { notify } = useNotifications();
+  const utils = trpc.useContext();
   const addDirection = trpc.zones.addDirection.useMutation({
+    onSuccess: () => {
+      utils.zones.directionsById.invalidate({ zoneId });
+      navigation.goBack();
+    },
     onError: (error) => {
       let description = "No pudimos guardar los datos que agregaste 😢";
       if (

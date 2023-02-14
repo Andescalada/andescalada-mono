@@ -398,15 +398,69 @@ export const zonesRouter = t.router({
   }),
   addDirection: protectedZoneProcedure
     .input(zone.addDirections)
-    .mutation(({ ctx, input }) => {
-      if (!ctx.permissions.has("Create")) {
+    .mutation(async ({ ctx, input }) => {
+      const existingDirections = await ctx.prisma.zoneDirections.findUnique({
+        where: {
+          ZoneTransportationModeUnique: {
+            transportationMode: input.transportationMode,
+            zoneId: input.zoneId,
+          },
+        },
+        select: {
+          id: true,
+          Author: { select: { email: true } },
+          coAuthors: { select: { email: true } },
+          descriptionId: true,
+          nameId: true,
+        },
+      });
+
+      if (!existingDirections && !ctx.permissions.has("Create")) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "Create"),
         );
       }
 
-      return ctx.prisma.zoneDirections.create({
-        data: {
+      if (
+        existingDirections &&
+        !ctx.permissions.has("Update") &&
+        existingDirections.Author.email !== ctx.user.email &&
+        !existingDirections.coAuthors.some((c) => c.email === ctx.user.email)
+      ) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Update"),
+        );
+      }
+
+      return ctx.prisma.zoneDirections.upsert({
+        where: { id: existingDirections?.id },
+        update: {
+          name: {
+            ...(input.name && {
+              upsert: {
+                create: {
+                  originalText: input.name,
+                  originalLang: { connect: { languageId: "es" } },
+                },
+                update: {
+                  originalText: input.name,
+                  originalLang: { connect: { languageId: "es" } },
+                },
+              },
+            }),
+          },
+          description: {
+            update: { originalText: input.description },
+          },
+          transportationMode: input.transportationMode,
+          coAuthors:
+            existingDirections?.Author.email === ctx.user.email
+              ? undefined
+              : {
+                  connect: { email: ctx.user.email },
+                },
+        },
+        create: {
           Zone: { connect: { id: input.zoneId } },
           Author: {
             connect: { email: ctx.user.email },
