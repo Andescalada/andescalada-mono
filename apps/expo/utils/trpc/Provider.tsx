@@ -58,15 +58,6 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
           retry: false,
           cacheTime: Infinity,
           staleTime: Infinity,
-          onError(err) {
-            const description =
-              err instanceof Error && process.env.APP_VARIANT !== "production"
-                ? err.message
-                : "No pudimos procesar tu solicitud";
-            notify("error", {
-              params: { title: "Error", description },
-            });
-          },
         },
       },
     });
