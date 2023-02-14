@@ -1,4 +1,4 @@
-import { A, Box, Ionicons, Pressable, Text, TextButton } from "@andescalada/ui";
+import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
 import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -10,6 +10,7 @@ import StoryButton from "@features/climbs/ZoneScreen/StoryButton";
 import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
+import ZoneDescription from "@features/climbs/ZoneScreen/ZoneDescription";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
 import { ZoneDirectionsRoutes } from "@features/zoneDirections/Navigation/types";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
@@ -59,19 +60,6 @@ const ZoneHeader = () => {
 
   return (
     <A.Box entering={FadeIn} exiting={FadeOut}>
-      <Box paddingVertical="m">
-        <TextButton
-          variant="info"
-          onPress={() =>
-            navigation.navigate(ClimbsNavigationRoutes.AddAndEditDescription, {
-              zoneId,
-              zoneName,
-            })
-          }
-        >
-          Agrega una descripción
-        </TextButton>
-      </Box>
       {(permission?.has("Update") ||
         globalPermissions.includes(GlobalPermissions.REVIEW_ZONE)) && (
         <Pressable
@@ -99,6 +87,7 @@ const ZoneHeader = () => {
           />
         </Pressable>
       )}
+      <ZoneDescription description={data.description?.originalText} />
       {data.hasAccess && (
         <Box>
           <Box flexDirection="row" marginBottom="l">
@@ -135,6 +124,7 @@ const ZoneHeader = () => {
             />
             {featureFlags.storyBar && <StoryButton title="Flora y fauna" />}
           </Box>
+
           <Pressable
             marginTop="s"
             alignItems="center"

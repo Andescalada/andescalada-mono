@@ -38,6 +38,7 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
           },
         },
       },
+      description: { select: { originalText: true } },
       infoAccess: true,
       currentStatus: true,
       DownloadedBy: { where: { email: ctx.user.email } },
