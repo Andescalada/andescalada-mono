@@ -1,6 +1,7 @@
 import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 const addDirection = protectedZoneProcedure
@@ -14,6 +15,7 @@ const addDirection = protectedZoneProcedure
         },
       },
       select: {
+        isDeleted: true,
         id: true,
         Author: { select: { email: true } },
         coAuthors: { select: { email: true } },
@@ -48,6 +50,7 @@ const addDirection = protectedZoneProcedure
         },
       },
       update: {
+        isDeleted: SoftDelete.NotDeleted,
         name: {
           ...(input.name && {
             upsert: {
