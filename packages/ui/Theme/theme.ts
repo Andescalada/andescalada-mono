@@ -1,6 +1,5 @@
 import { flattenObject } from "@andescalada/utils/flattenObject";
 import { createTheme } from "@shopify/restyle";
-import { clearConfigCache } from "prettier";
 
 import breakpoints from "./breakpoints";
 import buttonVariants, { buttonVariantsColors } from "./buttonVariants";
