@@ -13,7 +13,7 @@ import {
   ZoneDirectionsScreenProps,
 } from "@features/zoneDirections/Navigation/types";
 import usePermissions from "@hooks/usePermissions";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Alert, FlatList } from "react-native";
 
 type Props = ZoneDirectionsScreenProps<ZoneDirectionsRoutes.ZoneDirections>;
@@ -27,6 +27,8 @@ const ZoneDirectionsScreen: FC<Props> = ({
   const { permission } = usePermissions({ zoneId });
   const utils = trpc.useContext();
   const { data, isLoading } = trpc.zones.directionsById.useQuery({ zoneId });
+
+  const [deletedDirectionId, setDeletedDirectionId] = useState("");
 
   const deleteDirection = trpc.zones.deleteDirection.useMutation({
     onSuccess: () => {
@@ -107,7 +109,9 @@ const ZoneDirectionsScreen: FC<Props> = ({
               {permission.has("Delete") && (
                 <TextButton
                   variant="error"
-                  isLoading={deleteDirection.isLoading}
+                  isLoading={
+                    deleteDirection.isLoading && item.id === deletedDirectionId
+                  }
                   onPress={() =>
                     Alert.alert("Eliminar dirección", "¿Estás seguro?", [
                       {
@@ -117,11 +121,13 @@ const ZoneDirectionsScreen: FC<Props> = ({
                       {
                         text: "Eliminar",
                         style: "destructive",
-                        onPress: () =>
+                        onPress: () => {
+                          setDeletedDirectionId(item.id);
                           deleteDirection.mutate({
                             zoneDirectionId: item.id,
                             zoneId,
-                          }),
+                          });
+                        },
                       },
                     ])
                   }
