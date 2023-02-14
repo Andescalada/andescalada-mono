@@ -224,6 +224,8 @@ model Zone {
   id                       String                    @id @default(uuid())
   name                     String
   slug                     String
+  description              TextContent?              @relation(fields: [descriptionId], references: [id])
+  descriptionId            String?
   createdAt                DateTime                  @default(now())
   updatedAt                DateTime                  @updatedAt
   infoAccess               InfoAccess                @default(Public)
@@ -245,6 +247,7 @@ model Zone {
   ZoneDirections           ZoneDirections[]
 
   @@index([locationId])
+  @@index([descriptionId])
 }
 
 model ZoneStatus {
@@ -621,6 +624,7 @@ model TextContent {
   ZoneAccessRequest    ZoneAccessRequest[]
   ZoneDirections       ZoneDirections[]
   ZoneDirectionsName   ZoneDirections[]    @relation("ZoneDirectionsName")
+  Zone                 Zone[]
 
   @@index([languageId])
 }

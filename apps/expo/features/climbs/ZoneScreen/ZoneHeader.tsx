@@ -1,4 +1,4 @@
-import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
+import { A, Box, Ionicons, Pressable, Text, TextButton } from "@andescalada/ui";
 import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -58,7 +58,20 @@ const ZoneHeader = () => {
   if (!data) return <Box />;
 
   return (
-    <A.Box marginTop="s" entering={FadeIn} exiting={FadeOut}>
+    <A.Box entering={FadeIn} exiting={FadeOut}>
+      <Box paddingVertical="m">
+        <TextButton
+          variant="info"
+          onPress={() =>
+            navigation.navigate(ClimbsNavigationRoutes.AddAndEditDescription, {
+              zoneId,
+              zoneName,
+            })
+          }
+        >
+          Agrega una descripción
+        </TextButton>
+      </Box>
       {(permission?.has("Update") ||
         globalPermissions.includes(GlobalPermissions.REVIEW_ZONE)) && (
         <Pressable

@@ -54,6 +54,17 @@ const nameSearch = z
     "Solo se permiten números y letra minúsculas, caracteres especiales permitidos: . _ &",
   );
 
+export const descriptionLength = { max: 280, min: 100 };
+
+const description = z.object({
+  description: z
+    .string({ required_error: "Requerido" })
+    .min(descriptionLength.min, { message: "Muy corto, mínimo 50 caracteres" })
+    .max(descriptionLength.max, {
+      message: "Muy largo, máximo 280 caracteres",
+    }),
+});
+
 export default {
   schema,
   id,
@@ -62,4 +73,5 @@ export default {
   approveStatus,
   rejectStatus,
   addDirections,
+  description,
 };

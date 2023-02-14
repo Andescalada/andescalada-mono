@@ -1,3 +1,4 @@
+import upsertDescription from "@andescalada/api/src/routers/zones/addDescription";
 import addDirection from "@andescalada/api/src/routers/zones/addDirection";
 import all from "@andescalada/api/src/routers/zones/all";
 import allSectors from "@andescalada/api/src/routers/zones/allSectors";
@@ -32,4 +33,5 @@ export const zonesRouter = t.router({
   directionsById,
   addDirection,
   deleteDirection,
+  upsertDescription,
 });
