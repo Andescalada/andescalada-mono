@@ -79,6 +79,7 @@ export type ClimbsNavigationNavigationParamList = {
   [ClimbsNavigationRoutes.AddAndEditDescription]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
+    description?: string;
   };
 };
 

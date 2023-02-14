@@ -24,7 +24,7 @@ type Props =
 const AddAndEditDescription: FC<Props> = ({
   navigation,
   route: {
-    params: { zoneId },
+    params: { zoneId, description: defaultDescription },
   },
 }) => {
   const textRef = useRef<TextInputRef>() as RefObject<TextInputRef>;
@@ -32,6 +32,7 @@ const AddAndEditDescription: FC<Props> = ({
   const description = useController({
     name: "description",
     control: form.control,
+    defaultValue: defaultDescription || "",
   });
   const utils = trpc.useContext();
   const upsertDescription = trpc.zones.upsertDescription.useMutation({
