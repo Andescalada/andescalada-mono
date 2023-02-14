@@ -2,6 +2,7 @@ import { A, Box, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
 import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
 import { useAtom } from "jotai";
 import { ComponentProps, FC } from "react";
+import { Platform } from "react-native";
 import { SlideInDown } from "react-native-reanimated";
 
 interface Props extends ComponentProps<typeof Box> {
@@ -9,7 +10,7 @@ interface Props extends ComponentProps<typeof Box> {
   showSkip?: boolean;
 }
 
-const DELAY = 1800;
+const DELAY = Platform.OS === "android" ? 0 : 1800;
 
 export const skipAgreementsIntro = atomWithMMKV(
   Storage.SKIP_AGREEMENTS_INTRO,
