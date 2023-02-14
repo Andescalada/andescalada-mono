@@ -53,6 +53,7 @@ const darkBaseTheme = {
     boulderRoutes: pallete.contrast.opaque.red,
     textButtonInfo: pallete.semantic.info,
     textButtonError: pallete.semantic.error,
+    textButtonTransparent: pallete.grayscale[600],
     ...lisItemVariantsColors,
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,

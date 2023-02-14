@@ -137,9 +137,6 @@ const ZoneHeader = () => {
               })
             }
           >
-            {/* <Box paddingRight="xs">
-              <Text>Guía</Text>
-            </Box> */}
             <Box
               borderRadius={16}
               padding="s"

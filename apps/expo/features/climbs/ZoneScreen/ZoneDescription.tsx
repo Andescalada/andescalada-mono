@@ -52,7 +52,7 @@ const ZoneDescription = ({ description }: Props) => {
       <TextButton
         alignSelf="flex-end"
         onPress={() => setShowMore((prev) => !prev)}
-        variant="info"
+        variant="transparent"
       >
         {showMore ? "menos" : "más"}
       </TextButton>
