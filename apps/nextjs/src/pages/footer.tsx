@@ -1,4 +1,5 @@
 import WhiteLogo from "assets/svg/logo_blanco.svg";
+import Link from "next/link";
 import {
   IoLogoFacebook,
   IoLogoInstagram,
@@ -11,6 +12,14 @@ const Footer = () => {
     <footer className="bg-brand-primaryA flex p-4 md:p-10 flex-col text-white">
       <div className="flex items-center justify-between">
         <WhiteLogo className="h-20 md:h-32 flex-3 mr-5" />
+        <div className="flex  justify-end flex-col items-center self-end">
+          <Link
+            className="text-brand-secondaryA"
+            href="./politica-de-privacidad"
+          >
+            Política de privacidad
+          </Link>
+        </div>
         <div className="">
           <div className="flex flex-col w-full">
             <p className="mb-2">Siguenos en nuestras redes sociales</p>
@@ -63,6 +72,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="bg-white h-[2px] w-full rounded-sm mt-10" />
+      <p className="text-xs">v1.1</p>
     </footer>
   );
 };
