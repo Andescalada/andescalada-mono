@@ -433,7 +433,13 @@ export const zonesRouter = t.router({
       }
 
       return ctx.prisma.zoneDirections.upsert({
-        where: { id: existingDirections?.id },
+        where: {
+          id: existingDirections?.id,
+          ZoneTransportationModeUnique: {
+            transportationMode: input.transportationMode,
+            zoneId: input.zoneId,
+          },
+        },
         update: {
           name: {
             ...(input.name && {

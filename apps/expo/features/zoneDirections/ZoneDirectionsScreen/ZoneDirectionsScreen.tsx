@@ -51,7 +51,14 @@ const ZoneDirectionsScreen: FC<Props> = ({
                 flexDirection="row"
               >
                 <Text variant="p1B">Agregar direcciones</Text>
-                <AddButton />
+                <AddButton
+                  onPress={() =>
+                    navigation.navigate(ZoneDirectionsRoutes.AddDirections, {
+                      zoneId,
+                      zoneName,
+                    })
+                  }
+                />
               </Box>
             )}
           </Box>
