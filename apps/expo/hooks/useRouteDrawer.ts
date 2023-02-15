@@ -36,6 +36,7 @@ const useRouteDrawer = ({
   const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation({
     onSuccess: () => {
       utils.topos.byId.invalidate({ topoId, zoneId });
+      utils.walls.byId.invalidate({ wallId, zoneId });
       setTimeout(
         () =>
           data
@@ -61,7 +62,12 @@ const useRouteDrawer = ({
 
   const { data } = trpc.walls.byId.useQuery({ wallId, zoneId });
 
-  const modifyStrokeWidth = trpc.topos.modifyStrokeWidth.useMutation();
+  const modifyStrokeWidth = trpc.topos.modifyStrokeWidth.useMutation({
+    onSuccess: () => {
+      utils.topos.byId.invalidate({ topoId, zoneId });
+      utils.walls.byId.invalidate({ wallId, zoneId });
+    },
+  });
 
   const [route, setRoute] = useState<SelectedRoute>({
     id: routeId,
