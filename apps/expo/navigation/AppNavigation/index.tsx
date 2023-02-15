@@ -1,3 +1,4 @@
+import { Screen } from "@andescalada/ui";
 import AuthNavigation from "@features/auth/Navigation";
 import RootNavigation from "@navigation/AppNavigation/RootNavigation";
 import useAutoLogin from "@navigation/AppNavigation/useAutoLogin";
@@ -8,8 +9,12 @@ import * as SplashScreen from "expo-splash-screen";
 SplashScreen.preventAutoHideAsync();
 
 const Navigator = () => {
-  const { accessToken, isAuth } = useHideSplashScreen();
+  const { accessToken, isAuth, fontsLoaded } = useHideSplashScreen();
   useAutoLogin();
+
+  if (!fontsLoaded) {
+    return <Screen backgroundColor="transitionScreen" />;
+  }
 
   return (
     <>
