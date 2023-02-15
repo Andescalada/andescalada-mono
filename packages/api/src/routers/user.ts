@@ -335,13 +335,6 @@ export const userRouter = t.router({
     if (!zoneToAdd || zoneToAdd.isDeleted === SoftDelete.DeletedPublic) {
       throw new TRPCError({ code: "NOT_FOUND" });
     }
-    if (
-      zoneToAdd.infoAccess !== "Public" &&
-      !ctx.permissions.has("Read") &&
-      !ctx.user.permissions.includes("review:zone")
-    ) {
-      throw new TRPCError(error.noAccessToZone(input.zoneId));
-    }
 
     return ctx.prisma.history.upsert({
       where: {
