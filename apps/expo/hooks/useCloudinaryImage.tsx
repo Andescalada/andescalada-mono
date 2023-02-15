@@ -66,26 +66,29 @@ const useCloudinaryImage = () => {
     [signatureData],
   );
 
-  const destroyImage = useCallback(async (publicId: string) => {
-    try {
-      setIsLoading(true);
-      const res = await axios.post<DestroyResponse>(
-        Env.CLOUDINARY_URL + "/image/destroy",
-        { publicId, ...signatureData },
-        {
-          headers: {
-            "content-type": "application/json",
+  const destroyImage = useCallback(
+    async (publicId: string) => {
+      try {
+        setIsLoading(true);
+        const res = await axios.post<DestroyResponse>(
+          Env.CLOUDINARY_URL + "/image/destroy",
+          { publicId, ...signatureData },
+          {
+            headers: {
+              "content-type": "application/json",
+            },
           },
-        },
-      );
-      setIsLoading(false);
-      return res;
-    } catch (err) {
-      Alert.alert("Hubo un error al borrar la imagen");
-      setIsLoading(false);
-      throw new Error(err as string);
-    }
-  }, []);
+        );
+        setIsLoading(false);
+        return res;
+      } catch (err) {
+        Alert.alert("Hubo un error al borrar la imagen");
+        setIsLoading(false);
+        throw new Error(err as string);
+      }
+    },
+    [signatureData],
+  );
 
   return { isLoading, uri, uploadImage, isSuccess, destroyImage };
 };
