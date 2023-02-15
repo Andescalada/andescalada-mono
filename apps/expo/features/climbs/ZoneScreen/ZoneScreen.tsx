@@ -16,6 +16,7 @@ import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { useFocusEffect } from "@react-navigation/native";
+import constants from "@utils/constants";
 import { FC, useCallback } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -34,6 +35,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const recentZones = trpc.user.addToRecentZones.useMutation({
     onSuccess: () => {
       utils.user.zoneHistory.invalidate();
+    },
+    onError() {
+      return constants.silentError;
     },
   });
 
