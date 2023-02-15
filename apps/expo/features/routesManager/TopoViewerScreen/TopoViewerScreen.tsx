@@ -39,6 +39,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
     () => data?.RoutePath.find((r) => r.Route.id === selectedRoute)?.Route,
     [data, selectedRoute],
   );
+  console.log(data?.routeStrokeWidth);
 
   useEffect(() => () => setSelectedRoute(undefined), []);
 
@@ -72,15 +73,12 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         >
           <Pressable
             backgroundColor={"transparentButtonBackground"}
-            borderRadius={100}
+            borderTopLeftRadius={100}
+            borderBottomLeftRadius={100}
             padding="s"
             onPress={() => setShowConfig(true)}
           >
-            <Ionicons
-              name="options-outline"
-              size={30}
-              color="grayscale.black"
-            />
+            <Ionicons name="chevron-back" size={30} color="grayscale.black" />
           </Pressable>
         </A.Box>
       )}

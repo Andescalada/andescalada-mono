@@ -9,6 +9,7 @@ import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
+import RoutePathDrawConfig from "@features/routesManager/components/RoutePathDrawConfig";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -133,7 +134,7 @@ const DrawRoute: FC<Props> = ({
             ? 'Pulsa "deshacer" para borrar el último punto o "borrar" para borrar todo'
             : "Pulsa sobre la imagen para dibujar la ruta"}
         </Instructions>
-        <RoutePathConfig show={showConfig} setShow={setShowConfig} />
+        <RoutePathDrawConfig show={showConfig} setShow={setShowConfig} />
         <DrawingTools
           canSave={canSave}
           onFinishOrSave={onFinishOrSave}

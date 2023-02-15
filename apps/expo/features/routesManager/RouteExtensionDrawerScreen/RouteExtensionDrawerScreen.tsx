@@ -10,6 +10,7 @@ import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
+import RoutePathDrawConfig from "@features/routesManager/components/RoutePathDrawConfig";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -162,7 +163,7 @@ const DrawRoute: FC<Props> = ({
           Comienza a dibujar la extensión de la ruta, comenzará desde el punto
           donde termina la ruta anterior.
         </Instructions>
-        <RoutePathConfig show={showConfig} setShow={setShowConfig} />
+        <RoutePathDrawConfig show={showConfig} setShow={setShowConfig} />
         <DrawingTools
           canSave={canSave}
           onFinishOrSave={onFinishOrSave}
