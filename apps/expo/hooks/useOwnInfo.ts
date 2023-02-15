@@ -1,7 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppDispatch } from "@hooks/redux";
-import { logoutAuth0 } from "@store/auth";
+import { autoLoginAuth0 } from "@store/auth";
 import { inferProcedureOutput } from "@trpc/server";
 import storage from "@utils/mmkv/storage";
 import { noNetwork } from "@utils/noNetworkCondition";
@@ -38,7 +38,7 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
         return;
       }
       if (err.data?.code === "UNAUTHORIZED") {
-        dispatch(logoutAuth0());
+        dispatch(autoLoginAuth0());
         return;
       }
     },

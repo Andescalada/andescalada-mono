@@ -9,9 +9,8 @@ import * as SplashScreen from "expo-splash-screen";
 SplashScreen.preventAutoHideAsync();
 
 const Navigator = () => {
-  useAutoLogin();
-
   const { accessToken, fontsLoaded, isAuth } = useHideSplashScreen();
+  useAutoLogin();
 
   if (!fontsLoaded) {
     return <Screen backgroundColor="transitionScreen" />;
