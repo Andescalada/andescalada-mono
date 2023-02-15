@@ -55,7 +55,7 @@ const AddAndEditDescription: FC<Props> = ({
 
   return (
     <Screen safeAreaDisabled padding="m">
-      <KeyboardAvoidingBox>
+      <KeyboardAvoidingBox behavior="height">
         <KeyboardDismiss>
           <Text variant="h4" marginBottom="s">
             Agrega una descripción
