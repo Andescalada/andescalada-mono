@@ -77,7 +77,11 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
             padding="s"
             onPress={() => setShowConfig(true)}
           >
-            <Ionicons name="chevron-back" size={30} color="grayscale.black" />
+            <Ionicons
+              name="options-outline"
+              size={30}
+              color="grayscale.black"
+            />
           </Pressable>
         </A.Box>
       )}
