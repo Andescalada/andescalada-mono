@@ -10,8 +10,10 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import featureFlags from "@utils/featureFlags";
 import parseGrade from "@utils/parseGrade";
 import { FC } from "react";
 
@@ -27,6 +29,8 @@ const EditOptions: FC<Props> = ({
     staleTime: 0,
     cacheTime: 0,
   });
+
+  const { permission } = usePermissions({ zoneId });
 
   const rootNavigation = useRootNavigation();
 
@@ -79,6 +83,7 @@ const EditOptions: FC<Props> = ({
         {name}
       </Text>
       <ListItemOption
+        visible={permission.has("Create")}
         onPress={() =>
           navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
             wallId,
@@ -94,11 +99,15 @@ const EditOptions: FC<Props> = ({
         Editar ruta
       </ListItemOption>
       {Wall.topos.length > 0 && (
-        <ListItemOption onPress={navigateToDrawRoute}>
+        <ListItemOption
+          onPress={navigateToDrawRoute}
+          visible={permission.has("Update")}
+        >
           Editar topo
         </ListItemOption>
       )}
       <ListItemOption
+        visible={permission.has("Create")}
         onPress={() =>
           navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
             wallId,
@@ -108,6 +117,11 @@ const EditOptions: FC<Props> = ({
         }
       >
         Agregar extensión
+      </ListItemOption>
+      <ListItemOption
+        visible={permission.has("Create") && featureFlags.multiPitch}
+      >
+        Convertir en multilargo
       </ListItemOption>
     </Screen>
   );

@@ -1,3 +1,4 @@
+import MultiPitchDrawerScreen from "@features/routesManager/MultiPitchDrawerScreen";
 import RouteDrawerScreen from "@features/routesManager/RouteDrawerScreen";
 import RouteExtensionDrawerScreen from "@features/routesManager/RouteExtensionDrawerScreen";
 import TopoViewerScreen from "@features/routesManager/TopoViewerScreen";
@@ -24,6 +25,10 @@ const Navigator = () => {
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.RouteExtensionDrawer}
         component={RouteExtensionDrawerScreen}
+      />
+      <Stack.Screen
+        name={RoutesManagerNavigationRoutes.MultiPitchDrawer}
+        component={MultiPitchDrawerScreen}
       />
     </Stack.Navigator>
   );
