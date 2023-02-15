@@ -42,7 +42,7 @@ const AddTopoImage: FC = () => {
 
   const { uploadImage } = useCloudinaryImage();
 
-  const { mutate, isSuccess } = trpc.topos.add.useMutation();
+  const { mutateAsync, isSuccess } = trpc.topos.add.useMutation();
 
   const { permission } = usePermissions({ zoneId });
 
@@ -50,21 +50,23 @@ const AddTopoImage: FC = () => {
   const onUpload = async () => {
     if (!selectedImage) return;
     setIsLoadingUpload(true);
-    const image = await uploadImage(selectedImage?.base64Img);
-    mutate(
-      {
-        main: true,
-        wallId,
-        image,
-        name: `${data?.name} topo`,
-      },
-      {
-        onSuccess: () => {
-          utils.walls.byId.invalidate({ wallId, zoneId });
-          setIsLoadingUpload(false);
+    try {
+      const image = await uploadImage(selectedImage?.base64Img);
+      await mutateAsync(
+        {
+          main: true,
+          wallId,
+          image,
+          name: `${data?.name} topo`,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            utils.walls.byId.invalidate({ wallId, zoneId });
+          },
+        },
+      );
+    } catch (err) {}
+    setIsLoadingUpload(false);
   };
 
   const noTopoAndPermission =
