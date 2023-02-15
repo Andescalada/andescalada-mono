@@ -1,14 +1,16 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { A, ScrollView, Text } from "@andescalada/ui";
+import { A, ScrollView, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
+  ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { ListItemRef } from "@features/climbs/WallScreen/ListItem";
 import RouteItem from "@features/climbs/WallScreen/RouteItem";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import type { inferProcedureOutput } from "@trpc/server";
 import { createRef, FC, useCallback, useMemo } from "react";
 
@@ -20,6 +22,13 @@ type NavigationRoute =
 const RoutesList: FC = () => {
   const route = useRoute<NavigationRoute>();
   const { zoneId, wallId } = route.params;
+
+  const navigation =
+    useNavigation<
+      ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Wall>
+    >();
+
+  const { permission } = usePermissions({ zoneId });
 
   const {
     data,
@@ -79,6 +88,19 @@ const RoutesList: FC = () => {
         }}
       >
         <Text variant="h3">Sin rutas</Text>
+        {permission.has("Create") && (
+          <TextButton
+            variant="info"
+            onPress={() => {
+              navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+                zoneId,
+                wallId,
+              });
+            }}
+          >
+            Agregar ruta
+          </TextButton>
+        )}
       </ScrollView>
     );
 

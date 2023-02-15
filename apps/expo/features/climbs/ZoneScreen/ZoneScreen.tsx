@@ -1,6 +1,6 @@
 import zone from "@andescalada/api/schemas/zone";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { Box, Screen, Text } from "@andescalada/ui";
+import { Box, Screen, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -143,6 +143,18 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                 marginTop="xxxl"
               >
                 <Text variant={"h3"}>Sin sectores</Text>
+                {permission.has("Create") && (
+                  <TextButton
+                    variant="info"
+                    onPress={() =>
+                      navigation.replace(ClimbsNavigationRoutes.AddSector, {
+                        zoneId,
+                      })
+                    }
+                  >
+                    Agregar sector
+                  </TextButton>
+                )}
               </Box>
             )}
             renderItem={({ item }) => <ZoneItem item={item} />}

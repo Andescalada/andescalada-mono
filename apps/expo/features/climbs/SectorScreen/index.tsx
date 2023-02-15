@@ -7,6 +7,7 @@ import {
   ListItem,
   Screen,
   Text,
+  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
@@ -16,6 +17,7 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import useOptionsSheet from "@hooks/useOptionsSheet";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC } from "react";
@@ -85,17 +87,21 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   );
 
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
+  const { permission } = usePermissions({ zoneId });
 
   const onOptions = useOptionsSheet(
     {
-      [data ? sectorKindAssets[data.sectorKind].add : "Agregar"]: () =>
-        data
-          ? navigation.navigate(ClimbsNavigationRoutes.AddWall, {
-              sectorId,
-              zoneId,
-              sectorKind: data?.sectorKind,
-            })
-          : null,
+      [data ? sectorKindAssets[data.sectorKind].add : "Agregar"]: {
+        hide: !permission.has("Create"),
+        action: () =>
+          data
+            ? navigation.navigate(ClimbsNavigationRoutes.AddWall, {
+                sectorId,
+                zoneId,
+                sectorKind: data?.sectorKind,
+              })
+            : null,
+      },
       "Cambiar nombre del sector": () => {
         headerMethods.setEditing(true);
       },
@@ -155,6 +161,20 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               <Text variant="h3">
                 {sectorKindAssets[data.sectorKind].noneMessage}
               </Text>
+              {permission.has("Create") && (
+                <TextButton
+                  variant="info"
+                  onPress={() =>
+                    navigation.navigate(ClimbsNavigationRoutes.AddWall, {
+                      sectorId,
+                      zoneId,
+                      sectorKind: data?.sectorKind,
+                    })
+                  }
+                >{`Agregar ${
+                  sectorKindAssets[data.sectorKind].labelLowerCase
+                }`}</TextButton>
+              )}
             </Box>
           )}
           renderItem={({ item }) => (
