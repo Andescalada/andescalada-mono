@@ -39,7 +39,6 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
     () => data?.RoutePath.find((r) => r.Route.id === selectedRoute)?.Route,
     [data, selectedRoute],
   );
-  console.log(data?.routeStrokeWidth);
 
   useEffect(() => () => setSelectedRoute(undefined), []);
 

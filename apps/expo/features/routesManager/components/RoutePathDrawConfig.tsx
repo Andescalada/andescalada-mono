@@ -2,21 +2,30 @@ import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import { setRouteStrokeWidth, setShowRoutes } from "@store/localConfigs";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import Slider from "rn-vertical-slider";
 
 interface Props {
   show: boolean;
   setShow: (show: boolean) => void;
+  defaultRouteStrokeWidth?: number;
 }
 
-const RoutePathDrawConfig: FC<Props> = ({ show, setShow }) => {
+const RoutePathDrawConfig: FC<Props> = ({
+  show,
+  setShow,
+  defaultRouteStrokeWidth = 1,
+}) => {
   const theme = useAppTheme();
   const dispatch = useAppDispatch();
   const { routeStrokeWidth, showRoutes } = useAppSelector(
     (state) => state.localConfig,
   );
+
+  useEffect(() => {
+    dispatch(setRouteStrokeWidth(defaultRouteStrokeWidth));
+  }, [defaultRouteStrokeWidth, dispatch]);
 
   if (show) {
     return (
