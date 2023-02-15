@@ -59,7 +59,7 @@ const useRouteDrawer = ({
 
   const [showConfig, setShowConfig] = useState(false);
 
-  const { data } = trpc.walls.byId.useQuery({ wallId });
+  const { data } = trpc.walls.byId.useQuery({ wallId, zoneId });
 
   const modifyStrokeWidth = trpc.topos.modifyStrokeWidth.useMutation();
 

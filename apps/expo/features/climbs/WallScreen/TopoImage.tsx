@@ -23,6 +23,7 @@ const TopoImage: FC = () => {
   const { wallId, zoneId } = route.params;
   const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
     wallId,
+    zoneId,
   });
 
   const mainTopo = data?.topos[0];
@@ -62,7 +63,7 @@ const TopoImage: FC = () => {
             zoneId={zoneId}
             center={false}
             disableGesture
-            strokeWidth={routeStrokeWidth}
+            strokeWidth={Number(mainTopo.routeStrokeWidth) || routeStrokeWidth}
           />
         </A.Pressable>
       )}

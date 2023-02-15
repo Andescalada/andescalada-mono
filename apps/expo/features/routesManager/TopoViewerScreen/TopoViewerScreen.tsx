@@ -52,7 +52,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         routeId={routeId}
         topoId={topoId}
         zoneId={zoneId}
-        strokeWidth={routeStrokeWidth}
+        strokeWidth={Number(data?.routeStrokeWidth) || routeStrokeWidth}
         hide={!showRoutes}
         onSelectedRoute={setSelectedRoute}
       />

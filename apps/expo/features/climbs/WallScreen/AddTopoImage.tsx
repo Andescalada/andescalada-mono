@@ -31,6 +31,7 @@ const AddTopoImage: FC = () => {
   const utils = trpc.useContext();
   const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
     wallId,
+    zoneId,
   });
 
   const mainTopo = data?.topos[0];
@@ -59,7 +60,7 @@ const AddTopoImage: FC = () => {
       },
       {
         onSuccess: () => {
-          utils.walls.byId.invalidate({ wallId });
+          utils.walls.byId.invalidate({ wallId, zoneId });
           setIsLoadingUpload(false);
         },
       },

@@ -60,10 +60,10 @@ const RouteItem = ({
 
   const { mutate } = trpc.routes.delete.useMutation({
     onMutate: async ({ routeId }) => {
-      await utils.walls.byId.cancel({ wallId });
-      const previousData = utils.walls.byId.getData({ wallId });
+      await utils.walls.byId.cancel({ wallId, zoneId });
+      const previousData = utils.walls.byId.getData({ wallId, zoneId });
 
-      utils.walls.byId.setData({ wallId }, (old) => {
+      utils.walls.byId.setData({ wallId, zoneId }, (old) => {
         if (!old) return undefined;
 
         let routes;
@@ -81,10 +81,10 @@ const RouteItem = ({
       return { previousData };
     },
     onError: (_, __, context) => {
-      utils.walls.byId.setData({ wallId }, context?.previousData);
+      utils.walls.byId.setData({ wallId, zoneId }, context?.previousData);
     },
     onSettled: () => {
-      utils.walls.byId.invalidate({ wallId });
+      utils.walls.byId.invalidate({ wallId, zoneId });
       if (topoId) utils.topos.byId.invalidate({ topoId, zoneId });
     },
   });

@@ -27,7 +27,7 @@ const RoutesList: FC = () => {
     isFetching,
     isLoading: isLoadingWall,
   } = trpc.walls.byId.useQuery(
-    { wallId },
+    { wallId, zoneId },
     {
       select: useCallback((wall: Wall) => {
         const routesWithRef = wall.routes.map((route) => ({

@@ -98,7 +98,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       } else {
         navigation.goBack();
       }
-      utils.walls.byId.invalidate({ wallId });
+      utils.walls.byId.invalidate({ wallId, zoneId });
     },
   });
 
@@ -119,7 +119,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
         } else {
           navigation.goBack();
         }
-        utils.walls.byId.invalidate({ wallId });
+        utils.walls.byId.invalidate({ wallId, zoneId });
       },
     });
 
@@ -136,7 +136,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           sectorKind: Wall.Sector.sectorKind,
           wallName: Wall.name,
         });
-        utils.walls.byId.invalidate({ wallId });
+        utils.walls.byId.invalidate({ wallId, zoneId });
       },
     });
 

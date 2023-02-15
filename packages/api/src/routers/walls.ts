@@ -3,7 +3,7 @@ import wall from "@andescalada/api/schemas/wall";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete } from "@prisma/client";
+import { InfoAccess, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -28,11 +28,17 @@ export const wallsRouter = t.router({
     }),
   ),
   // Asset being downloaded
-  byId: t.procedure.input(wall.id).query(async ({ ctx, input }) => {
+  byId: protectedZoneProcedure.input(wall.id).query(async ({ ctx, input }) => {
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input.wallId },
       include: {
-        Sector: { select: { zoneId: true, sectorKind: true } },
+        Sector: {
+          select: {
+            zoneId: true,
+            sectorKind: true,
+            Zone: { select: { infoAccess: true } },
+          },
+        },
         routes: {
           orderBy: { position: "asc" },
 
@@ -50,15 +56,21 @@ export const wallsRouter = t.router({
         },
         topos: {
           where: { main: true },
-          select: { id: true, image: true, name: true },
+          take: 1,
+          select: { id: true, image: true, name: true, routeStrokeWidth: true },
         },
       },
     });
     if (!wall) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `No wall with id '${input}'`,
-      });
+      throw new TRPCError(error.wallNotFound(input.wallId));
+    }
+    if (
+      !ctx.permissions.has("Read") &&
+      wall.Sector.Zone.infoAccess !== InfoAccess.Public
+    ) {
+      throw new TRPCError(
+        error.unauthorizedActionForZone(input.zoneId, "Read"),
+      );
     }
     return wall;
   }),

@@ -82,6 +82,7 @@ const DrawRoute: FC<Props> = ({
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
     wallId,
+    zoneId,
   });
 
   const onUndo = () => {

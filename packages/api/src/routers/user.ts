@@ -458,7 +458,7 @@ export const userRouter = t.router({
             {
               router: "walls" as const,
               procedure: "byId" as const,
-              params: { wallId: w.id },
+              params: { wallId: w.id, zoneId },
               version: w.version,
               zoneId,
             },
