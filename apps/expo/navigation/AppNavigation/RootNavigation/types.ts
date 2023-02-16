@@ -2,6 +2,7 @@ import { ClimbsNavigationNavigationParamList } from "@features/climbs/Navigation
 import { ErrorNavigationParamList } from "@features/error/Navigation/types";
 import { ImageManagerNavigationParamList } from "@features/imageManager/Navigation/types";
 import { InfoAccessManagerNavigationParamList } from "@features/InfoAccessManager/Navigation/types";
+import { MultiPitchManagerNavigationParamList } from "@features/multiPitchManager/Navigation/types";
 import { OnboardingNavigationParamList } from "@features/onboarding/Navigation/types";
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
@@ -25,6 +26,7 @@ export enum RootNavigationRoutes {
   ZoneManager = "RootZoneManager",
   Error = "RootError",
   InfoAccessManager = "RootInfoAccessManager",
+  MultiPitchManager = "RootMultiPitchManager",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -40,6 +42,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.ZoneManager]: NavigatorScreenParams<ZoneManagerNavigationParamList>;
   [RootNavigationRoutes.Error]: NavigatorScreenParams<ErrorNavigationParamList>;
   [RootNavigationRoutes.InfoAccessManager]: NavigatorScreenParams<InfoAccessManagerNavigationParamList>;
+  [RootNavigationRoutes.MultiPitchManager]: NavigatorScreenParams<MultiPitchManagerNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =

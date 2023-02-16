@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Box,
   ListItemOption,
   Screen,
   Text,
@@ -9,6 +10,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -16,6 +18,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import featureFlags from "@utils/featureFlags";
 import parseGrade from "@utils/parseGrade";
 import { FC } from "react";
+import { Alert } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.RouteOptions>;
 
@@ -33,25 +36,6 @@ const EditOptions: FC<Props> = ({
   const { permission } = usePermissions({ zoneId });
 
   const rootNavigation = useRootNavigation();
-
-  if (!route.data) {
-    return (
-      <Screen>
-        <ActivityIndicator />
-      </Screen>
-    );
-  }
-
-  const {
-    name,
-    id,
-    kind,
-    RouteGrade,
-    unknownName,
-    position,
-    Wall,
-    extendedRouteId,
-  } = route.data;
 
   const navigateToDrawRoute = () => {
     if (!!extendedRouteId) {
@@ -77,6 +61,41 @@ const EditOptions: FC<Props> = ({
     }
   };
 
+  const utils = trpc.useContext();
+  const convertToMultiPitch = trpc.multiPitch.convertRoute.useMutation({
+    onSuccess: ({ name, id }) => {
+      utils.routes.byId.invalidate(routeId);
+      rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
+        screen: MultiPitchManagerRoutes.MultiPitchManager,
+        params: { multiPitchId: id, multiPitchName: name },
+      });
+    },
+  });
+
+  if (convertToMultiPitch.isLoading || !route.data) {
+    return (
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" />
+      </Box>
+    );
+  }
+  const {
+    name,
+    id,
+    kind,
+    RouteGrade,
+    unknownName,
+    position,
+    Wall,
+    extendedRouteId,
+  } = route.data;
+
+  console.log(featureFlags);
+  console.log({
+    permission: permission.has("Create"),
+    ff: featureFlags.multiPitch,
+    hasPitch: !route.data.Pitch,
+  });
   return (
     <Screen safeAreaDisabled padding="m">
       <Text variant="h1" marginBottom="m">
@@ -119,9 +138,43 @@ const EditOptions: FC<Props> = ({
         Agregar extensión
       </ListItemOption>
       <ListItemOption
-        visible={permission.has("Create") && featureFlags.multiPitch}
+        visible={
+          permission.has("Create") &&
+          featureFlags.multiPitch &&
+          !route.data.Pitch
+        }
+        onPress={() =>
+          Alert.alert(
+            "Convertir a multi largo",
+            "¿Seguro que quieres convertir esta ruta en multilargo?, el cambio es irreversible",
+            [
+              { text: "Cancelar", style: "cancel" },
+              {
+                text: "Convertir",
+                style: "default",
+                onPress: () => {
+                  if (route.data?.id)
+                    convertToMultiPitch.mutate({
+                      routeId: route.data.id,
+                      zoneId,
+                    });
+                },
+              },
+              {
+                text: "Más información",
+                onPress: () => {
+                  Alert.alert(
+                    "Sobre multi largos",
+                    "Convertir una ruta en multi largos te permitirá agregar más rutas sobre la actual y desbloquear nuevas funcionalidades.",
+                    [{ text: "Entendido" }],
+                  );
+                },
+              },
+            ],
+          )
+        }
       >
-        Convertir en multilargo
+        Convertir en multi largo
       </ListItemOption>
     </Screen>
   );

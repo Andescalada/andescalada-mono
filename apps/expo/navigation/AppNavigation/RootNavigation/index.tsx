@@ -3,7 +3,8 @@ import ClimbsStackNavigation from "@features/climbs/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
-import InfoAccessManager from "@features/InfoAccessManager/Navigation";
+import InfoAccessManagerStackNavigation from "@features/InfoAccessManager/Navigation";
+import MultiPitchManagerStackNavigation from "@features/multiPitchManager/Navigation";
 import useOffline from "@features/offline/useOffline";
 import OnboardingStackNavigation from "@features/onboarding/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
@@ -108,7 +109,11 @@ const Navigator = () => {
           />
           <Stack.Screen
             name={RootNavigationRoutes.InfoAccessManager}
-            component={InfoAccessManager}
+            component={InfoAccessManagerStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.MultiPitchManager}
+            component={MultiPitchManagerStackNavigation}
           />
         </Stack.Group>
       )}
