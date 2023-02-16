@@ -14,13 +14,17 @@ const error = satisfies<Record<string, Value>>()({
     code: "UNAUTHORIZED",
     message: "You don't have access to zone with ID " + zoneId,
   }),
+  routeNotFound: (routeId: string) => ({
+    code: "NOT_FOUND",
+    message: `No route found with id '${routeId}'`,
+  }),
   sectorNotFound: (sectorId: string) => ({
     code: "NOT_FOUND",
-    message: `No sectors found for the zone with id '${sectorId}'`,
+    message: `No sectors  with id '${sectorId}'`,
   }),
   wallNotFound: (wallId: string) => ({
     code: "NOT_FOUND",
-    message: `No wall found for the zone with id '${wallId}'`,
+    message: `No wall found with id '${wallId}'`,
   }),
   zoneNotFound: (zoneId: string) => ({
     code: "NOT_FOUND",
