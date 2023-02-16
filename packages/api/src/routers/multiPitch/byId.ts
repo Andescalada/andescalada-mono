@@ -25,7 +25,7 @@ const byId = protectedZoneProcedure
       include: {
         Pitches: {
           include: {
-            Route: { select: { name: true, id: true, RouteGrade: true } },
+            Route: { include: { RouteGrade: true } },
           },
         },
       },
