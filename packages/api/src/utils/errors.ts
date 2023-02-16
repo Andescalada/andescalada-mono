@@ -14,6 +14,10 @@ const error = satisfies<Record<string, Value>>()({
     code: "UNAUTHORIZED",
     message: "You don't have access to zone with ID " + zoneId,
   }),
+  multiPitchNotFound: (multiPitchId: string) => ({
+    code: "NOT_FOUND",
+    message: `No multi pitch found with id '${multiPitchId}'`,
+  }),
   routeNotFound: (routeId: string) => ({
     code: "NOT_FOUND",
     message: `No route found with id '${routeId}'`,

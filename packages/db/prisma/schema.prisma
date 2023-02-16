@@ -483,6 +483,7 @@ model MultiPitch {
   id          String     @id @default(uuid())
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  position    Int        @default(0)
   name        String
   slug        String
   Pitches     Pitch[]

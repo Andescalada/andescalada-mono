@@ -163,6 +163,7 @@ const RouteItem = ({
         params: {
           multiPitchId: item.Pitch.MultiPitch.id,
           multiPitchName: item.Pitch?.MultiPitch?.name,
+          zoneId,
         },
       });
       return;

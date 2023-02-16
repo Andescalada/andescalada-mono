@@ -1,4 +1,5 @@
 import { Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   MultiPitchManagerRoutes,
   MultiPitchManagerScreenProps,
@@ -10,12 +11,14 @@ type Props =
 
 const MultiPitchManagerScreen: FC<Props> = ({
   route: {
-    params: { multiPitchName },
+    params: { multiPitchName, multiPitchId, zoneId },
   },
 }) => {
+  const { data } = trpc.multiPitch.byId.useQuery({ multiPitchId, zoneId });
+  console.log(data);
   return (
-    <Screen safeAreaDisabled>
-      <Text>{multiPitchName}</Text>
+    <Screen safeAreaDisabled padding="m">
+      <Text variant="h1">{multiPitchName}</Text>
     </Screen>
   );
 };

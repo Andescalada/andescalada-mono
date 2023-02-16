@@ -19,6 +19,7 @@ const convertRoute = protectedZoneProcedure
         name: true,
         Author: { select: { email: true } },
         wallId: true,
+        position: true,
       },
     });
 
@@ -41,6 +42,7 @@ const convertRoute = protectedZoneProcedure
       data: {
         name: firstPitch.name,
         slug: slug(firstPitch.name),
+        position: firstPitch.position,
         Author: { connect: { email: firstPitch.Author.email } },
         coAuthors:
           firstPitch.Author.email !== ctx.user.email
