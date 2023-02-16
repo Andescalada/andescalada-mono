@@ -1,7 +1,9 @@
 import {
   ActivityIndicator,
+  AddButton,
   Box,
   ListItem,
+  Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
@@ -19,6 +21,7 @@ type Props =
   MultiPitchManagerScreenProps<MultiPitchManagerRoutes.MultiPitchManager>;
 
 const MultiPitchManagerScreen: FC<Props> = ({
+  navigation,
   route: {
     params: { multiPitchName, multiPitchId, zoneId },
   },
@@ -40,10 +43,38 @@ const MultiPitchManagerScreen: FC<Props> = ({
     );
   return (
     <Screen safeAreaDisabled padding="m">
-      <Text variant="h1">{multiPitchName}</Text>
       <FlatList
         data={data?.Pitches}
         keyExtractor={(item) => item.id}
+        ListHeaderComponent={() => (
+          <Box>
+            <Text variant="h1">{multiPitchName}</Text>
+            <Pressable
+              flexDirection="row"
+              paddingBottom="m"
+              justifyContent="space-between"
+              alignItems="center"
+              onPress={() =>
+                navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
+                  multiPitchId,
+                  zoneId,
+                  lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                })
+              }
+            >
+              <Text variant="h4">Agregar largo</Text>
+              <AddButton
+                onPress={() =>
+                  navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
+                    multiPitchId,
+                    zoneId,
+                    lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                  })
+                }
+              />
+            </Pressable>
+          </Box>
+        )}
         renderItem={({ item }) => {
           return (
             <ListItem

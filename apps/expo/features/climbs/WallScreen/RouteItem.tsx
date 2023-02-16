@@ -157,7 +157,6 @@ const RouteItem = ({
   const onOptions = () => {
     item.routeRef?.current?.reset();
     if (!isExtension && item.Pitch?.MultiPitch) {
-      console.log("here!");
       rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
         screen: MultiPitchManagerRoutes.MultiPitchManager,
         params: {

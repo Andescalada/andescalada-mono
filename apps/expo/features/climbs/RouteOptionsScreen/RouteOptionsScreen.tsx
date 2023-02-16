@@ -67,7 +67,7 @@ const EditOptions: FC<Props> = ({
       utils.routes.byId.invalidate(routeId);
       rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
         screen: MultiPitchManagerRoutes.MultiPitchManager,
-        params: { multiPitchId: id, multiPitchName: name },
+        params: { multiPitchId: id, multiPitchName: name, zoneId },
       });
     },
   });
@@ -90,12 +90,6 @@ const EditOptions: FC<Props> = ({
     extendedRouteId,
   } = route.data;
 
-  console.log(featureFlags);
-  console.log({
-    permission: permission.has("Create"),
-    ff: featureFlags.multiPitch,
-    hasPitch: !route.data.Pitch,
-  });
   return (
     <Screen safeAreaDisabled padding="m">
       <Text variant="h1" marginBottom="m">
