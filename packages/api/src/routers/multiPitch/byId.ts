@@ -24,6 +24,7 @@ const byId = protectedZoneProcedure
       where: { id: input.multiPitchId },
       include: {
         Pitches: {
+          orderBy: { number: "asc" },
           include: {
             Route: { include: { RouteGrade: true } },
           },

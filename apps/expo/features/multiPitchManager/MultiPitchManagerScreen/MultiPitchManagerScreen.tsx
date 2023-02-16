@@ -14,6 +14,7 @@ import {
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useRefresh from "@hooks/useRefresh";
 import { FC } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -27,10 +28,13 @@ const MultiPitchManagerScreen: FC<Props> = ({
   },
 }) => {
   const { gradeLabel } = useGradeSystem();
-  const { data, isLoading } = trpc.multiPitch.byId.useQuery({
-    multiPitchId,
-    zoneId,
-  });
+  const { data, isLoading, refetch, isRefetching } =
+    trpc.multiPitch.byId.useQuery({
+      multiPitchId,
+      zoneId,
+    });
+
+  const refresh = useRefresh(refetch, isRefetching);
 
   if (isLoading)
     return (
@@ -46,6 +50,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
       <FlatList
         data={data?.Pitches}
         keyExtractor={(item) => item.id}
+        refreshControl={refresh}
         ListHeaderComponent={() => (
           <Box>
             <Text variant="h1">{multiPitchName}</Text>
@@ -81,6 +86,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
               flexDirection="row"
               alignItems="center"
               justifyContent="space-between"
+              marginBottom="m"
             >
               <Box>
                 <Text
