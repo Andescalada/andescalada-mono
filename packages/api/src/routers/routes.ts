@@ -18,6 +18,7 @@ export const routesRouter = t.router({
         where: { id: input },
         include: {
           RouteGrade: true,
+          Pitch: { include: { MultiPitch: { select: { name: true } } } },
           Wall: {
             select: {
               topos: {
