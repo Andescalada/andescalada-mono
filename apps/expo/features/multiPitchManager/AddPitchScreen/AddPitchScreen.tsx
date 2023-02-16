@@ -11,6 +11,7 @@ import {
   Text,
 } from "@andescalada/ui";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   MultiPitchManagerRoutes,
   MultiPitchManagerScreenProps,
@@ -34,14 +35,24 @@ const schema = route.schema
 const AddPitchScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { lastPitchKind },
+    params: { lastPitchKind, zoneId, multiPitchId },
   },
 }) => {
   const theme = useAppTheme();
 
+  const utils = trpc.useContext();
+
+  const addPitch = trpc.multiPitch.addPitch.useMutation({
+    onSuccess: () => {
+      utils.invalidate();
+      navigation.goBack();
+    },
+  });
+
   const {
     control,
     formState: { isDirty },
+    handleSubmit,
   } = useZodForm({ schema });
   const kind = useController({
     control,
@@ -50,12 +61,31 @@ const AddPitchScreen: FC<Props> = ({
   });
   const grade = useController({ control, name: "grade", defaultValue: null });
 
-  const { allGrades, gradeSystem } = useGradeSystem(kind.field.value);
+  const { allGrades, gradeSystem, getSystem } = useGradeSystem(
+    kind.field.value,
+  );
 
   const kindWatch = useWatch({
     control,
     name: "kind",
     defaultValue: lastPitchKind,
+  });
+
+  const onSubmit = handleSubmit((input) => {
+    const grade = {
+      grade: input.grade !== "project" ? input.grade : null,
+      project: input.grade === "project",
+    };
+
+    const data = {
+      kind: input.kind,
+      grade,
+      zoneId,
+      multiPitchId,
+      originalGradeSystem: getSystem(input.kind),
+    };
+
+    addPitch.mutate(data);
   });
 
   const onCancel = () => {
@@ -150,8 +180,8 @@ const AddPitchScreen: FC<Props> = ({
         <Button
           variant="primary"
           title={"Agregar"}
-          // onPress={onSubmit}
-          // isLoading={isLoading || isLoadingEdit || isExtensionLoading}
+          onPress={onSubmit}
+          isLoading={addPitch.isLoading}
           marginVertical="s"
         />
         <SemanticButton

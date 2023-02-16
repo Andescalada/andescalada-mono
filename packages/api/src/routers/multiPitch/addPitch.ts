@@ -42,6 +42,20 @@ const addPitch = protectedZoneProcedure
     if (!multiPitch)
       throw new TRPCError(error.multiPitchNotFound(input.multiPitchId));
 
+    await ctx.prisma.wall.update({
+      where: { id: multiPitch.wallId },
+      data: {
+        version: { increment: 1 },
+      },
+    });
+
+    await ctx.prisma.multiPitch.update({
+      where: { id: input.multiPitchId },
+      data: {
+        version: { increment: 1 },
+      },
+    });
+
     return ctx.prisma.pitch.create({
       data: {
         number: Number(multiPitch.Pitches[0]?.number) + 1,

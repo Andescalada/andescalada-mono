@@ -13,6 +13,4 @@ const addPitch = route.schema.pick({
   originalGradeSystem: true,
 });
 
-type AddPitch = z.infer<typeof addPitch>;
-
 export default { addPitchFrontEnd, addPitch };
