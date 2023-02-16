@@ -3,7 +3,12 @@ import wall from "@andescalada/api/schemas/wall";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { InfoAccess, SoftDelete } from "@prisma/client";
+import {
+  GradeSystems,
+  InfoAccess,
+  RouteKind,
+  SoftDelete,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -45,6 +50,7 @@ export const wallsRouter = t.router({
           where: {
             isDeleted: { equals: SoftDelete.NotDeleted },
             extendedRouteId: { equals: null },
+            Pitch: { is: null },
           },
           select: {
             ...Route,
@@ -57,16 +63,35 @@ export const wallsRouter = t.router({
             },
           },
         },
+        MultiPitch: {
+          where: { isDeleted: SoftDelete.NotDeleted },
+          select: {
+            id: true,
+            name: true,
+            position: true,
+            wallId: true,
+            Pitches: {
+              select: { Route: { select: { RouteGrade: true, kind: true } } },
+            },
+          },
+        },
         topos: {
           where: { main: true },
           take: 1,
-          select: { id: true, image: true, name: true, routeStrokeWidth: true },
+          select: {
+            id: true,
+            image: true,
+            name: true,
+            routeStrokeWidth: true,
+          },
         },
       },
     });
+
     if (!wall) {
       throw new TRPCError(error.wallNotFound(input.wallId));
     }
+
     if (
       !ctx.permissions.has("Read") &&
       wall.Sector.Zone.infoAccess !== InfoAccess.Public
@@ -75,7 +100,58 @@ export const wallsRouter = t.router({
         error.unauthorizedActionForZone(input.zoneId, "Read"),
       );
     }
-    return wall;
+
+    const parsedMultiPitch = wall.MultiPitch.map((mp) => {
+      const reduce = mp.Pitches.reduce<{
+        maxGrade: number;
+        kinds: RouteKind[];
+        project: boolean;
+        maxAid?: number;
+        originalGradeSystem: GradeSystems;
+      }>(
+        (prev, current) => {
+          const currentGrade = Number(current.Route.RouteGrade?.grade ?? 0);
+          const currentKind = current.Route.kind;
+          const aidValue =
+            current.Route.RouteGrade?.originalGradeSystem === GradeSystems.Aid
+              ? Number(current.Route.RouteGrade?.grade ?? 0)
+              : undefined;
+          return {
+            maxGrade: Math.max(prev.maxGrade, currentGrade),
+            originalGradeSystem:
+              currentGrade > prev.maxGrade &&
+              current.Route.RouteGrade?.originalGradeSystem !== undefined
+                ? current.Route.RouteGrade?.originalGradeSystem
+                : prev.originalGradeSystem,
+            kinds: Array.from(new Set([...prev.kinds, currentKind])),
+            project: prev.project || !!current.Route.RouteGrade?.project,
+            maxAid: [prev.maxAid, aidValue].every((v) => v === undefined)
+              ? undefined
+              : Math.max(Number(prev.maxAid ?? 0), Number(aidValue ?? 0)),
+          };
+        },
+        {
+          maxGrade: 0,
+          kinds: [],
+          project: false,
+          originalGradeSystem: GradeSystems.Yosemite,
+          maxAid: undefined,
+        },
+      );
+      return {
+        id: true,
+        name: mp.name,
+        position: mp.position,
+        wallId: mp.wallId,
+        grade: reduce.maxGrade,
+        project: false,
+        originalGradeSystem: reduce.originalGradeSystem,
+        maxAid: reduce.maxAid,
+        kinds: reduce.kinds,
+      };
+    });
+    const parsedWall = { ...wall, MultiPitch: parsedMultiPitch };
+    return parsedWall;
   }),
   add: protectedZoneProcedure
     .input(z.object({ sectorId: z.string(), name: z.string() }))

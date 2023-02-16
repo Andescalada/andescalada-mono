@@ -395,22 +395,22 @@ enum SectorKind {
 }
 
 model Wall {
-  id        String       @id @default(uuid())
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  name      String
-  slug      String
-  position  Int          @default(0)
-  Sector    Sector       @relation(fields: [sectorId], references: [id], onDelete: Cascade)
-  sectorId  String
-  topos     Topo[]
-  routes    Route[]
-  Author    User         @relation("AuthorWall", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]       @relation("CoAuthorWall")
-  isDeleted SoftDelete   @default(NotDeleted)
-  version   Int          @default(0)
-  MuliPitch MultiPitch[]
+  id         String       @id @default(uuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  name       String
+  slug       String
+  position   Int          @default(0)
+  Sector     Sector       @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  sectorId   String
+  topos      Topo[]
+  routes     Route[]
+  Author     User         @relation("AuthorWall", fields: [authorId], references: [id])
+  authorId   String
+  coAuthors  User[]       @relation("CoAuthorWall")
+  isDeleted  SoftDelete   @default(NotDeleted)
+  version    Int          @default(0)
+  MultiPitch MultiPitch[]
 
   @@index([sectorId])
   @@index([authorId])
