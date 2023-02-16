@@ -125,6 +125,7 @@ const RoutesList: FC = () => {
             marginVertical="s"
           >
             <RouteItem
+              isExtension={false}
               item={item}
               zoneId={zoneId}
               topoId={mainTopo?.id}

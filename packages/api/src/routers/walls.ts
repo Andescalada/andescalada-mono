@@ -48,6 +48,9 @@ export const wallsRouter = t.router({
           },
           select: {
             ...Route,
+            Pitch: {
+              include: { MultiPitch: { select: { name: true, id: true } } },
+            },
             Extension: {
               where: { isDeleted: SoftDelete.NotDeleted },
               select: Route,

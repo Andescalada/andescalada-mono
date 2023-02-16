@@ -5,6 +5,7 @@ import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
+import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useOfflineMode from "@hooks/useOfflineMode";
@@ -19,22 +20,39 @@ import { Alert } from "react-native";
 
 type Wall = inferProcedureOutput<AppRouter["walls"]["byId"]>;
 
-type RouteItem = Wall["routes"][0] | Wall["routes"][0]["Extension"][0];
+type RouteItem<E extends boolean> = E extends true
+  ? Wall["routes"][0]["Extension"][0]
+  : Wall["routes"][0];
 
 type CustomListItemProps = Omit<
   ComponentProps<typeof ListItem>,
   "children" | "routeName"
 >;
 
-interface Props extends CustomListItemProps {
-  item: RouteItem & { routeRef: React.RefObject<ListItemRef> };
+interface BaseProps extends CustomListItemProps {
   index: number;
   resetOthers: () => void;
   zoneId: Zone["id"];
   topoId: Topo["id"] | undefined;
   hidePosition?: boolean;
-  isExtension?: boolean;
 }
+
+interface ExtensionProps extends BaseProps {
+  item: Wall["routes"][0]["Extension"][0] & {
+    routeRef: React.RefObject<ListItemRef>;
+  };
+  isExtension: true;
+}
+
+interface RouteProps extends BaseProps {
+  item: Wall["routes"][0] & {
+    routeRef: React.RefObject<ListItemRef>;
+  };
+
+  isExtension: false;
+}
+
+type Props = ExtensionProps | RouteProps;
 
 const RouteItem = ({
   item,
@@ -131,13 +149,29 @@ const RouteItem = ({
     });
   }, [item.id, rootNavigation, topoId, zoneId]);
 
-  const onOptions = useCallback(() => {
+  const multiPitchData = useMemo(() => {
+    if (!isExtension && item.Pitch?.MultiPitch) return item.Pitch?.MultiPitch;
+    return undefined;
+  }, [isExtension]);
+
+  const onOptions = () => {
     item.routeRef?.current?.reset();
+    if (!isExtension && item.Pitch?.MultiPitch) {
+      console.log("here!");
+      rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
+        screen: MultiPitchManagerRoutes.MultiPitchManager,
+        params: {
+          multiPitchId: item.Pitch.MultiPitch.id,
+          multiPitchName: item.Pitch?.MultiPitch?.name,
+        },
+      });
+      return;
+    }
     rootNavigation.navigate(RootNavigationRoutes.Climbs, {
       screen: ClimbsNavigationRoutes.RouteOptions,
       params: { routeId: item.id, zoneId, wallId },
     });
-  }, [item.id, item.routeRef, rootNavigation, wallId, zoneId]);
+  };
 
   const grade = useMemo(
     () => gradeLabel(item.RouteGrade, item.kind),
@@ -195,10 +229,10 @@ const RouteItem = ({
         )}
         <Box>
           <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
-            {item.name}
+            {multiPitchData ? multiPitchData.name : item.name}
           </Text>
           <Text variant="caption" color="grayscale.400">
-            {routeKindLabel(item.kind).long}
+            {multiPitchData ? "Multi largo" : routeKindLabel(item.kind).long}
           </Text>
         </Box>
       </Box>
