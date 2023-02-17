@@ -542,19 +542,21 @@ model RouteGrade {
 }
 
 model RoutePath {
-  id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  path      String     @db.LongText
-  Topo      Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
-  topoId    String
-  Route     Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
-  routeId   String
-  Author    User       @relation("AuthorRoutePath", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]     @relation("CoAuthorRoutePath")
-  isDeleted SoftDelete @default(NotDeleted)
-  version   Int        @default(0)
+  id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  path            String     @db.LongText
+  labelPoint      String?
+  pitchlabelPoint String?
+  Topo            Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
+  topoId          String
+  Route           Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  routeId         String
+  Author          User       @relation("AuthorRoutePath", fields: [authorId], references: [id])
+  authorId        String
+  coAuthors       User[]     @relation("CoAuthorRoutePath")
+  isDeleted       SoftDelete @default(NotDeleted)
+  version         Int        @default(0)
 
   @@index([topoId])
   @@index([routeId])
