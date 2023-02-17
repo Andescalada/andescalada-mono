@@ -149,6 +149,7 @@ export const wallsRouter = t.router({
         position: mp.position,
         wallId: mp.wallId,
         Author: mp.Author,
+        numberOfPitches: mp.Pitches.length,
         gradeRouteKind: reduce.gradeRouteKind,
         grade: reduce.maxGrade,
         project: false,
