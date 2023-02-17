@@ -59,7 +59,6 @@ const useCloudinaryImage = () => {
       } catch (err) {
         Alert.alert("Hubo un error al subir la imagen");
         setIsLoading(false);
-        console.log(err);
         throw new Error(err as string);
       }
     },

@@ -64,8 +64,6 @@ export const routesRouter = t.router({
           Number(maxMultiPitchPosition._max.position),
         ) ?? 0;
 
-      console.log({ maxMultiPitchPosition, maxRoutePosition, biggestPosition });
-
       const { grade, kind, name, originalGradeSystem, unknownName } = input;
 
       const newRoute = await ctx.prisma.route.create({
