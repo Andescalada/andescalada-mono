@@ -69,6 +69,7 @@ export const wallsRouter = t.router({
             id: true,
             name: true,
             position: true,
+            Author: { select: { email: true } },
             wallId: true,
             Pitches: {
               select: { Route: { select: { RouteGrade: true, kind: true } } },
@@ -104,26 +105,29 @@ export const wallsRouter = t.router({
     const parsedMultiPitch = wall.MultiPitch.map((mp) => {
       const reduce = mp.Pitches.reduce<{
         maxGrade: number;
-        kinds: RouteKind[];
         project: boolean;
         maxAid?: number;
+        gradeRouteKind: RouteKind;
         originalGradeSystem: GradeSystems;
       }>(
         (prev, current) => {
           const currentGrade = Number(current.Route.RouteGrade?.grade ?? 0);
-          const currentKind = current.Route.kind;
           const aidValue =
             current.Route.RouteGrade?.originalGradeSystem === GradeSystems.Aid
               ? Number(current.Route.RouteGrade?.grade ?? 0)
               : undefined;
           return {
             maxGrade: Math.max(prev.maxGrade, currentGrade),
+            gradeRouteKind:
+              prev.maxGrade > currentGrade
+                ? prev.gradeRouteKind
+                : current.Route.kind,
             originalGradeSystem:
               currentGrade > prev.maxGrade &&
               current.Route.RouteGrade?.originalGradeSystem !== undefined
                 ? current.Route.RouteGrade?.originalGradeSystem
                 : prev.originalGradeSystem,
-            kinds: Array.from(new Set([...prev.kinds, currentKind])),
+
             project: prev.project || !!current.Route.RouteGrade?.project,
             maxAid: [prev.maxAid, aidValue].every((v) => v === undefined)
               ? undefined
@@ -132,22 +136,24 @@ export const wallsRouter = t.router({
         },
         {
           maxGrade: 0,
-          kinds: [],
+          gradeRouteKind: "Sport",
           project: false,
           originalGradeSystem: GradeSystems.Yosemite,
           maxAid: undefined,
         },
       );
+
       return {
-        id: true,
+        id: mp.id,
         name: mp.name,
         position: mp.position,
         wallId: mp.wallId,
+        Author: mp.Author,
+        gradeRouteKind: reduce.gradeRouteKind,
         grade: reduce.maxGrade,
         project: false,
         originalGradeSystem: reduce.originalGradeSystem,
         maxAid: reduce.maxAid,
-        kinds: reduce.kinds,
       };
     });
     const parsedWall = { ...wall, MultiPitch: parsedMultiPitch };

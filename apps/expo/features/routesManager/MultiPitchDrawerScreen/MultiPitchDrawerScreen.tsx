@@ -1,10 +1,10 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
-  pathToArray,
   SkiaRouteCanvas,
   SkiaRoutePath,
   SkiaRoutePathDrawer,
 } from "@andescalada/climbs-drawer";
+import { pathToArray } from "@andescalada/climbs-drawer/utils";
 import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";

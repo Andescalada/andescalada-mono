@@ -13,4 +13,6 @@ const addPitch = route.schema.pick({
   originalGradeSystem: true,
 });
 
-export default { addPitchFrontEnd, addPitch };
+const id = z.object({ multiPitchId: z.string() });
+
+export default { addPitchFrontEnd, addPitch, id };

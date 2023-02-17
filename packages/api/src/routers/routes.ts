@@ -49,11 +49,22 @@ export const routesRouter = t.router({
       if (!ctx.permissions.has("Create")) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-      const result = await ctx.prisma.route.aggregate({
+      const maxRoutePosition = await ctx.prisma.route.aggregate({
         where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
         _max: { position: true },
       });
-      const biggestPosition = result._max.position || 0;
+      const maxMultiPitchPosition = await ctx.prisma.multiPitch.aggregate({
+        where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
+        _max: { position: true },
+      });
+
+      const biggestPosition =
+        Math.max(
+          Number(maxRoutePosition._max.position),
+          Number(maxMultiPitchPosition._max.position),
+        ) ?? 0;
+
+      console.log({ maxMultiPitchPosition, maxRoutePosition, biggestPosition });
 
       const { grade, kind, name, originalGradeSystem, unknownName } = input;
 
@@ -212,7 +223,11 @@ export const routesRouter = t.router({
       });
     }),
   delete: protectedZoneProcedure
-    .input(routeSchema.routeId.merge(global.isDeleted))
+    .input(
+      routeSchema.routeId
+        .merge(global.isDeleted)
+        .merge(z.object({ isExtension: z.boolean().optional() })),
+    )
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.route.findUnique({
         where: { id: input.routeId },

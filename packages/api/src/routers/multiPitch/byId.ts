@@ -1,11 +1,11 @@
+import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { InfoAccess } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 const byId = protectedZoneProcedure
-  .input(z.object({ multiPitchId: z.string() }))
+  .input(multiPitch.id)
   .query(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
