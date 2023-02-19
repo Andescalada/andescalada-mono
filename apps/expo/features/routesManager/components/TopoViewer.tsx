@@ -1,7 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
-import { ThemeProvider } from "@andescalada/ui";
+import { ActivityIndicator, Box, ThemeProvider } from "@andescalada/ui";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
@@ -80,6 +80,13 @@ const TopoViewer: FC<Props> = ({
     setSelectedRoute(selectedRoute);
     onSelectedRoute?.(selectedRoute);
   });
+
+  if (!data || !fileUrl)
+    return (
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator />
+      </Box>
+    );
 
   if (data) {
     const { height, width } = data?.image;
