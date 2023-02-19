@@ -65,6 +65,7 @@ const TopoViewer: FC<Props> = ({
   const routeStarts = useComputedValue(() => {
     return paths.map((path) => ({
       ...path,
+      pitchlabelPoint: path.pitchlabelPoint,
       routeId: path.routeId,
       pathToVector: pathToVector(path.path, fitted.scale),
       start: pathToVector(path.path, fitted.scale)[0],
@@ -128,6 +129,8 @@ const TopoViewer: FC<Props> = ({
               <ColoredRoute
                 key={path.id}
                 path={path}
+                pitchLabelPoint={path.pitchlabelPoint || undefined}
+                pitchLabelTitle="1"
                 scale={fitted.scale}
                 selectedRoute={selectedRoute}
                 strokeWidth={strokeWidth}
@@ -147,6 +150,8 @@ interface ColoredRouteProps {
   selectedRoute: string | undefined;
   scale: number;
   strokeWidth: number;
+  pitchLabelPoint?: string;
+  pitchLabelTitle?: string;
 }
 
 const ColoredRoute = ({
@@ -154,6 +159,8 @@ const ColoredRoute = ({
   selectedRoute,
   scale,
   strokeWidth,
+  pitchLabelPoint,
+  pitchLabelTitle,
 }: ColoredRouteProps) => {
   const theme = useAppTheme();
 
@@ -172,6 +179,8 @@ const ColoredRoute = ({
       key={path.id}
       color={color}
       scale={scale}
+      pitchLabelPoint={pitchLabelPoint}
+      pitchLabelTitle={pitchLabelTitle}
       routeFromTheGround={!path.Route.extendedRouteId}
       strokeWidth={strokeWidth}
     />

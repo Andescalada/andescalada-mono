@@ -15,3 +15,12 @@ export const scalePath = (path: string | undefined, scale = 1) => {
   const points = scalePathArray(path, scale);
   return points.map((p) => p.join(",")).join(" ");
 };
+
+export const pointToVector = (
+  point: string | undefined = undefined,
+  scale: number,
+) => {
+  if (!point) return { x: 0, y: 0 };
+  const [x, y] = point.split(",").map((n) => parseFloat(n));
+  return { x: x * scale, y: y * scale };
+};

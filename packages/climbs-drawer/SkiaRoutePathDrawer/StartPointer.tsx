@@ -15,9 +15,16 @@ interface Props {
   c: SkiaValue<SkPoint>;
   color?: string;
   scale?: number;
+  backgroundColor?: string;
 }
 
-const StartPointer: FC<Props> = ({ label, c, color = "red", scale = 1 }) => {
+const StartPointer: FC<Props> = ({
+  label,
+  c,
+  color = "red",
+  scale = 1,
+  backgroundColor = "white",
+}) => {
   const fontSize = 120 * scale;
   const r = 100 * scale;
   const strokeWidth = r / 5;
@@ -33,7 +40,7 @@ const StartPointer: FC<Props> = ({ label, c, color = "red", scale = 1 }) => {
   const textWidth = font.getTextWidth(label);
   return (
     <Group transform={transform}>
-      <Circle cx={0} cy={0} r={r} color="white" />
+      <Circle cx={0} cy={0} r={r} color={backgroundColor} />
       <Text y={r / 2} x={-textWidth / 2} text={label} font={font} />
       <Circle
         cx={0}

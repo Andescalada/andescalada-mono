@@ -3,15 +3,19 @@ import {
   Points,
   SkiaMutableValue,
   SkPoint,
+  useValue,
 } from "@shopify/react-native-skia";
 import { FC, memo, useMemo } from "react";
 
 import usePathToPoints from "../usePathToPoints/usePathToPoints";
+import { pointToVector } from "../utils";
 import EndPointer from "./EndPointer";
 import StartPointer from "./StartPointer";
 
 interface Props {
   path: string;
+  pitchLabelPoint?: string;
+  pitchLabelTitle?: string;
   label: string;
   color?: string;
   scale?: number;
@@ -22,12 +26,17 @@ interface Props {
 const SkiaRoutePath: FC<Props> = ({
   label = "?",
   path,
+  pitchLabelPoint: pitchLabelPointProp,
+  pitchLabelTitle,
   color = "red",
   scale = 1,
   strokeWidth: strokeWidthProp = 1,
   routeFromTheGround = true,
 }) => {
   const { points, start, end } = usePathToPoints(path, scale);
+  const pitchLabelPoint = useValue<SkPoint>(
+    pointToVector(pitchLabelPointProp, scale),
+  );
 
   const strokeWidth = useMemo(
     () => 21.5 * scale * strokeWidthProp,
@@ -46,6 +55,15 @@ const SkiaRoutePath: FC<Props> = ({
         strokeMiter={1}
         strokeWidth={strokeWidth}
       />
+      {pitchLabelPointProp && pitchLabelTitle && (
+        <StartPointer
+          color="transparent"
+          backgroundColor={color}
+          label={pitchLabelTitle}
+          scale={scale * strokeWidthProp}
+          c={pitchLabelPoint}
+        />
+      )}
       <EndPointer c={end} color={color} scale={scale * strokeWidthProp} />
       {
         <StartComponent
