@@ -2,18 +2,16 @@ import {
   ActivityIndicator,
   AddButton,
   Box,
-  ListItem,
   Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
-import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
+import MultiPitchRouteItem from "@features/multiPitchManager/MultiPitchManagerScreen/MultiPitchItem";
 import {
   MultiPitchManagerRoutes,
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
-import useGradeSystem from "@hooks/useGradeSystem";
 import useRefresh from "@hooks/useRefresh";
 import { FC } from "react";
 import { FlatList } from "react-native-gesture-handler";
@@ -27,7 +25,6 @@ const MultiPitchManagerScreen: FC<Props> = ({
     params: { multiPitchName, multiPitchId, zoneId },
   },
 }) => {
-  const { gradeLabel } = useGradeSystem();
   const { data, isLoading, refetch, isRefetching } =
     trpc.multiPitch.byId.useQuery({
       multiPitchId,
@@ -82,28 +79,11 @@ const MultiPitchManagerScreen: FC<Props> = ({
         )}
         renderItem={({ item }) => {
           return (
-            <ListItem
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-              marginBottom="m"
-            >
-              <Box>
-                <Text
-                  variant="p2R"
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                >{`Largo ${item.number}`}</Text>
-                <Text variant="caption" color="grayscale.400">
-                  {routeKindLabel(item.Route.kind).long}
-                </Text>
-              </Box>
-              <Box alignItems="center" justifyContent="center">
-                <Text variant="p2R">
-                  {gradeLabel(item.Route.RouteGrade, item.Route.kind)}
-                </Text>
-              </Box>
-            </ListItem>
+            <MultiPitchRouteItem
+              routeGrade={item.Route.RouteGrade}
+              routeKind={item.Route.kind}
+              pitchNumber={Number(item.number)}
+            />
           );
         }}
       />

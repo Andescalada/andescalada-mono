@@ -26,7 +26,7 @@ type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 type Props =
   RoutesManagerScreenProps<RoutesManagerNavigationRoutes.MultiPitchDrawer>;
 
-const DrawRoute: FC<Props> = ({
+const MultiPitchDrawerScreen: FC<Props> = ({
   route: {
     params: { wallId, route: routeParams, topoId, zoneId },
   },
@@ -38,7 +38,7 @@ const DrawRoute: FC<Props> = ({
     !!routeParams.firstPitchRouteId &&
     trpc.routes.byId.useQuery(routeParams.firstPitchRouteId);
 
-  const extendedRouteStart = useMemo(() => {
+  const priorPitchStart = useMemo(() => {
     if (!extendedRoute) return undefined;
 
     const prevPath = extendedRoute?.data?.Wall.topos.find(
@@ -112,15 +112,15 @@ const DrawRoute: FC<Props> = ({
   };
 
   const onReset = () => {
-    if (!extendedRouteStart) return;
-    routeRef?.current?.softReset(extendedRouteStart);
+    if (!priorPitchStart) return;
+    routeRef?.current?.softReset(priorPitchStart);
     setCanSave(false);
   };
 
   if (
     route &&
     isImageLoaded &&
-    (!routeParams.firstPitchRouteId || !!extendedRouteStart)
+    (!routeParams.firstPitchRouteId || !!priorPitchStart)
   )
     return (
       <Screen safeAreaDisabled justifyContent="center">
@@ -133,7 +133,7 @@ const DrawRoute: FC<Props> = ({
           <SkiaRoutePathDrawer
             coords={coords}
             ref={routeRef}
-            path={topos?.selectedRoute?.path || extendedRouteStart}
+            path={topos?.selectedRoute?.path || priorPitchStart}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
             withStart={false}
@@ -187,4 +187,4 @@ const DrawRoute: FC<Props> = ({
   );
 };
 
-export default DrawRoute;
+export default MultiPitchDrawerScreen;

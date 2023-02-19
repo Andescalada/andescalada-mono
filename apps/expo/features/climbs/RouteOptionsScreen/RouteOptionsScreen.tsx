@@ -109,14 +109,14 @@ const EditOptions: FC<Props> = ({
           })
         }
       >
-        Editar ruta
+        Editar información
       </ListItemOption>
       {Wall.topos.length > 0 && (
         <ListItemOption
           onPress={navigateToDrawRoute}
           visible={permission.has("Update")}
         >
-          Editar topo
+          Editar ruta
         </ListItemOption>
       )}
       <ListItemOption
