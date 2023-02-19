@@ -2,7 +2,6 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
 import { ThemeProvider } from "@andescalada/ui";
-import theme from "@andescalada/ui/Theme/theme";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
@@ -16,7 +15,7 @@ import {
 import { inferProcedureOutput } from "@trpc/server";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
-import roundPoint from "@utils/roundPoint";
+import selectRouteByPoint from "@utils/selectRouteByPoint";
 import { FC, memo, useMemo, useState } from "react";
 
 type PathItem = inferProcedureOutput<
@@ -34,7 +33,6 @@ interface Props {
   onSelectedRoute?: (id: string | undefined) => void;
   zoneId: Zone["id"];
 }
-const THRESHOLD = 1;
 
 const TopoViewer: FC<Props> = ({
   routeId,
@@ -77,37 +75,10 @@ const TopoViewer: FC<Props> = ({
     routeId || "",
   );
 
-  const color = useValue(theme.colors["contrast.bright.red"]);
-
-  useValueEffect(coords, (pto3) => {
-    const touchingPath = routeStarts.current.map((route) => {
-      const length = route.pathToVector.length;
-      const inInSection = route.pathToVector.map((pto1, index, arr) => {
-        if (index === length - 1) return false;
-
-        const pt1 = roundPoint(pto1);
-        const pt2 = roundPoint(arr[index + 1]);
-        const pt3 = roundPoint(pto3);
-
-        const dx = (pt3.x - pt1.x) / (pt2.x - pt1.x);
-        const dy = (pt3.y - pt1.y) / (pt2.y - pt1.y);
-
-        const betweenX = -THRESHOLD <= dx && dx <= THRESHOLD;
-        const betweenY = -THRESHOLD <= dy && dy <= THRESHOLD;
-
-        return betweenX && betweenY;
-      });
-      return { isIn: inInSection, routeId: route.routeId };
-    });
-
-    const d = touchingPath.find((t) => t.isIn.some((tt) => tt));
-    setSelectedRoute(d?.routeId);
-    onSelectedRoute?.(d?.routeId);
-    if (!!d?.routeId) {
-      color.current = theme.colors["contrast.bright.green"];
-    } else {
-      color.current = theme.colors["contrast.bright.red"];
-    }
+  useValueEffect(coords, (point) => {
+    const selectedRoute = selectRouteByPoint(routeStarts, point);
+    setSelectedRoute(selectedRoute);
+    onSelectedRoute?.(selectedRoute);
   });
 
   if (data) {
