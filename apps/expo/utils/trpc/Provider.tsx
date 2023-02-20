@@ -56,8 +56,8 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
         },
         queries: {
           retry: false,
-          cacheTime: Infinity,
-          staleTime: Infinity,
+          staleTime: 1 * (60 * 1000), // 5 mins
+          cacheTime: 5 * (60 * 1000), // 10 mins
         },
       },
     });
