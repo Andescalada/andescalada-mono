@@ -12,6 +12,10 @@ interface Props {
   isLoading: boolean;
   onUndo: () => void;
   onReset: () => void;
+  isMultiPitch?: boolean;
+  onDisconnect?: () => void;
+  isDisconnected?: boolean;
+  canDisconnect?: boolean;
 }
 
 const DrawingTools = ({
@@ -19,9 +23,13 @@ const DrawingTools = ({
   canSave,
   isLoading,
   onFinishOrSave,
+  onDisconnect,
   onReset,
   setShowConfig,
   onUndo,
+  isDisconnected = false,
+  isMultiPitch = false,
+  canDisconnect = false,
 }: Props) => {
   const dispatch = useAppDispatch();
   const { showRoutes } = useAppSelector((state) => state.localConfig);
@@ -55,9 +63,9 @@ const DrawingTools = ({
         bottom={0}
         right={0}
         left={0}
-        padding="s"
+        paddingTop="m"
         paddingBottom="xl"
-        paddingLeft="m"
+        paddingHorizontal="m"
         entering={FadeIn}
         exiting={FadeOut}
         horizontal
@@ -80,11 +88,33 @@ const DrawingTools = ({
         />
         <ToolItem
           title={showRoutes ? "Ocultar" : "Mostrar"}
+          secondLine="otras"
           iconName={showRoutes ? "eye-off" : "eye"}
           onPress={() => {
             dispatch(setShowRoutes());
           }}
         />
+        {isMultiPitch && (
+          <>
+            {canDisconnect && (
+              <ToolItem
+                title={isDisconnected ? "Conectar" : "Desconectar"}
+                secondLine="inicio"
+                iconName={"flag-sharp"}
+                onPress={onDisconnect}
+              />
+            )}
+            <ToolItem
+              title="Mover"
+              secondLine="etiqueta"
+              iconName={"ellipse-sharp"}
+              marginRight="l"
+              onPress={() => {
+                dispatch(setShowRoutes());
+              }}
+            />
+          </>
+        )}
       </A.ScrollView>
     </>
   );
@@ -92,24 +122,15 @@ const DrawingTools = ({
 
 export default DrawingTools;
 
-const ToolItem = ({
-  iconName,
-  onPress,
-  title,
-}: {
-  onPress: () => void;
+interface ToolItemProps extends ComponentProps<typeof Pressable> {
   iconName: ComponentProps<typeof Ionicons>["name"];
   title: string;
-}) => {
+  secondLine?: string;
+}
+
+const ToolItem = ({ iconName, secondLine, title, ...props }: ToolItemProps) => {
   return (
-    <Pressable
-      alignItems="center"
-      justifyContent="space-between"
-      // padding="xs"
-      marginRight="s"
-      onPress={onPress}
-      minWidth={50}
-    >
+    <Pressable alignItems="center" marginRight="m" minWidth={50} {...props}>
       <Ionicons name={iconName} size={30} color="transparentButtonText" />
       <Text
         marginTop="s"
@@ -119,6 +140,16 @@ const ToolItem = ({
       >
         {title}
       </Text>
+      {secondLine && (
+        <Text
+          color="transparentButtonText"
+          numberOfLines={1}
+          textAlign="center"
+          lineHeight={undefined}
+        >
+          {secondLine}
+        </Text>
+      )}
     </Pressable>
   );
 };

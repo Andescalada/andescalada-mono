@@ -1,7 +1,7 @@
 import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
-import { setRouteStrokeWidth, setShowRoutes } from "@store/localConfigs";
+import { setRouteStrokeWidth } from "@store/localConfigs";
 import { FC, useEffect } from "react";
 import { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import Slider from "rn-vertical-slider";

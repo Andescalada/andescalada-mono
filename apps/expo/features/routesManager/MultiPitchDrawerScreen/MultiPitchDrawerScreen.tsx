@@ -5,12 +5,10 @@ import {
   SkiaRoutePathDrawer,
 } from "@andescalada/climbs-drawer";
 import { pathToArray } from "@andescalada/climbs-drawer/utils";
-import { ActivityIndicator, BackButton, Screen, Text } from "@andescalada/ui";
+import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
-import Instructions, {
-  SHOWING_TIME,
-} from "@features/routesManager/components/Instructions";
+import Instructions from "@features/routesManager/components/Instructions";
 import RoutePathDrawConfig from "@features/routesManager/components/RoutePathDrawConfig";
 import {
   RoutesManagerNavigationRoutes,
@@ -21,7 +19,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import useTopoImage from "@hooks/useTopoImage";
 import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
@@ -115,9 +113,30 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     setCanSave(false);
   };
 
+  const [startDisconnected, setDisconnectedStart] = useState(
+    !!topos?.selectedRoute?.path && !previousPitchStart,
+  );
+
   const onReset = () => {
+    if (startDisconnected || !previousPitchStart) {
+      routeRef?.current?.reset();
+    } else {
+      routeRef?.current?.softReset(previousPitchStart);
+    }
+    setCanSave(false);
+  };
+
+  const disconnectStart = () => {
     routeRef?.current?.reset();
     setCanSave(false);
+    setDisconnectedStart(true);
+  };
+
+  const connectStart = () => {
+    if (!previousPitchStart) return;
+    routeRef?.current?.softReset(previousPitchStart);
+    setCanSave(false);
+    setDisconnectedStart(false);
   };
 
   if (route && isImageLoaded && (!previousPitchId || !!previousPitchStart))
@@ -150,7 +169,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             path={topos?.selectedRoute?.path || previousPitchStart}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
-            withStart={!!topos?.selectedRoute?.path && !previousPitchStart}
+            withStart={!startDisconnected}
             withEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
@@ -164,19 +183,13 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           Comienza a dibujar el siguiente largo, empezará desde el punto donde
           termina el largo anterior.
         </Instructions>
-        <Instructions delay={SHOWING_TIME + 1000}>
-          Para desconectar el comienzo de la ruta anterior, presiona el botón{" "}
-          <Text variant="p2B" color="semantic.error">
-            Borrar
-          </Text>{" "}
-          y sigue dibujando
-        </Instructions>
         <RoutePathDrawConfig
           show={showConfig}
           setShow={setShowConfig}
           defaultRouteStrokeWidth={topos?.routeStrokeWidth}
         />
         <DrawingTools
+          isMultiPitch
           canSave={canSave}
           onFinishOrSave={onFinishOrSave}
           isLoading={isLoading}
@@ -184,6 +197,11 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           showConfig={showConfig}
           onUndo={onUndo}
           onReset={onReset}
+          canDisconnect={!!previousPitchStart}
+          isDisconnected={startDisconnected}
+          onDisconnect={() => {
+            startDisconnected ? connectStart() : disconnectStart();
+          }}
         />
       </Screen>
     );
