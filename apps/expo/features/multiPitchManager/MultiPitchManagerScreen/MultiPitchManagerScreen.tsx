@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  AddButton,
   Box,
   Pressable,
   Screen,
@@ -13,7 +12,7 @@ import {
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
 import useRefresh from "@hooks/useRefresh";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 type Props =
@@ -33,6 +32,8 @@ const MultiPitchManagerScreen: FC<Props> = ({
 
   const refresh = useRefresh(refetch, isRefetching);
 
+  const [keepOpen, setKeepOpen] = useState<string | undefined>();
+
   if (isLoading)
     return (
       <Screen safeAreaDisabled padding="m">
@@ -51,38 +52,56 @@ const MultiPitchManagerScreen: FC<Props> = ({
         ListHeaderComponent={() => (
           <Box>
             <Text variant="h1">{multiPitchName}</Text>
-            <Pressable
+            <Box
               flexDirection="row"
               paddingBottom="m"
               justifyContent="space-between"
               alignItems="center"
-              onPress={() =>
-                navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
-                  multiPitchId,
-                  zoneId,
-                  lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
-                })
-              }
             >
-              <Text variant="h4">Agregar largo</Text>
-              <AddButton
-                onPress={() =>
-                  navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
-                    multiPitchId,
-                    zoneId,
-                    lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
-                  })
-                }
-              />
-            </Pressable>
+              <Text variant="h4">Agregar:</Text>
+              <Box flexDirection="row">
+                <Pressable
+                  backgroundColor="semantic.info"
+                  borderRadius={20}
+                  padding="s"
+                  onPress={() =>
+                    navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
+                      multiPitchId,
+                      zoneId,
+                      lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                    })
+                  }
+                >
+                  <Text>Largo</Text>
+                </Pressable>
+                <Pressable
+                  backgroundColor="semantic.warning"
+                  borderRadius={25}
+                  padding="s"
+                  marginLeft="s"
+                  onPress={() =>
+                    navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
+                      multiPitchId,
+                      zoneId,
+                      lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                    })
+                  }
+                >
+                  <Text color="textContrast">Transición</Text>
+                </Pressable>
+              </Box>
+            </Box>
           </Box>
         )}
         renderItem={({ item }) => {
           return (
             <MultiPitchRouteItem
+              keepOpen={keepOpen}
+              setKeepOpen={setKeepOpen}
               routeGrade={item.Route.RouteGrade}
               routeKind={item.Route.kind}
               pitchNumber={Number(item.number)}
+              routeId={item.Route.id}
             />
           );
         }}

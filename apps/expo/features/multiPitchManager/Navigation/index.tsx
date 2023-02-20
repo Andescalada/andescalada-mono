@@ -1,4 +1,5 @@
 import AddPitchScreen from "@features/multiPitchManager/AddPitchScreen";
+import EditPitchScreen from "@features/multiPitchManager/EditPitchScreen";
 import MultiPitchManagerScreen from "@features/multiPitchManager/MultiPitchManagerScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
@@ -24,6 +25,13 @@ const Navigator = () => {
       <Stack.Screen
         name={MultiPitchManagerRoutes.AddPitch}
         component={AddPitchScreen}
+        options={{
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name={MultiPitchManagerRoutes.EditPitch}
+        component={EditPitchScreen}
         options={{
           presentation: "modal",
         }}
