@@ -2,7 +2,6 @@ import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { InfoAccess } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -10,17 +9,8 @@ const addPitch = protectedZoneProcedure
   .input(z.object({ multiPitchId: z.string() }).merge(multiPitch.addPitch))
   .mutation(async ({ input, ctx }) => {
     const { originalGradeSystem, grade, kind } = input;
-    const zone = await ctx.prisma.zone.findUnique({
-      where: { id: input.zoneId },
-      select: { infoAccess: true },
-    });
 
-    if (!zone) throw new TRPCError(error.zoneNotFound(input.zoneId));
-
-    if (
-      !ctx.permissions.has("Create") &&
-      zone.infoAccess !== InfoAccess.Public
-    ) {
+    if (!ctx.permissions.has("Create")) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Create"),
       );

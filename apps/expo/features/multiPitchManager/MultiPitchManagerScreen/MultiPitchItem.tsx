@@ -8,7 +8,7 @@ import {
 } from "@features/multiPitchManager/Navigation/types";
 import useAnimatedHeight from "@hooks/useAnimatedHeight";
 import useGradeSystem from "@hooks/useGradeSystem";
-import { Route, RouteGrade } from "@prisma/client";
+import { Pitch, Route, RouteGrade } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Conditional from "@utils/conditionalVars";
 import parseGrade from "@utils/parseGrade";
@@ -18,6 +18,7 @@ interface Props {
   pitchNumber: number;
   routeGrade: RouteGrade | null;
   routeId: Route["id"];
+  pitchId: Pitch["id"];
   keepOpen: string | undefined;
   setKeepOpen: (keepOpen: string) => void;
 }
@@ -28,6 +29,7 @@ const MultiPitchRouteItem = ({
   routeGrade,
   routeId,
   keepOpen,
+  pitchId,
   setKeepOpen,
 }: Props) => {
   const { onOpen, style } = useAnimatedHeight({
@@ -42,7 +44,7 @@ const MultiPitchRouteItem = ({
     >();
 
   const {
-    params: { multiPitchId, zoneId },
+    params: { zoneId },
   } =
     useRoute<
       MultiPitchManagerRouteProps<MultiPitchManagerRoutes.MultiPitchManager>
@@ -81,7 +83,7 @@ const MultiPitchRouteItem = ({
             maxIndex={2}
             onPress={() =>
               navigation.navigate(MultiPitchManagerRoutes.EditPitch, {
-                multiPitchId,
+                pitchId,
                 zoneId,
                 routeId: routeId,
                 grade: parseGrade(routeGrade),

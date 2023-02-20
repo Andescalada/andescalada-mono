@@ -1,4 +1,4 @@
-import { MultiPitch, Route, Zone } from "@prisma/client";
+import { MultiPitch, Pitch, Route, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParseGrade } from "@utils/parseGrade";
@@ -21,11 +21,11 @@ export type MultiPitchManagerNavigationParamList = {
     lastPitchKind: Route["kind"] | undefined;
   };
   [MultiPitchManagerRoutes.EditPitch]: {
-    multiPitchId: MultiPitch["id"];
     zoneId: Zone["id"];
     kind: Route["kind"];
     grade: ParseGrade;
     routeId: Route["id"];
+    pitchId: Pitch["id"];
   };
 };
 

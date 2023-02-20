@@ -35,14 +35,14 @@ const schema = route.schema
 const EditPitchScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { zoneId, multiPitchId, ...defaultValues },
+    params: { pitchId, zoneId, ...defaultValues },
   },
 }) => {
   const theme = useAppTheme();
 
   const utils = trpc.useContext();
 
-  const addPitch = trpc.multiPitch.addPitch.useMutation({
+  const editPitch = trpc.multiPitch.editPitch.useMutation({
     onSuccess: () => {
       utils.invalidate();
       navigation.goBack();
@@ -79,11 +79,11 @@ const EditPitchScreen: FC<Props> = ({
       kind: input.kind,
       grade,
       zoneId,
-      multiPitchId,
+      pitchId,
       originalGradeSystem: getSystem(input.kind),
     };
 
-    addPitch.mutate(data);
+    editPitch.mutate(data);
   });
 
   const onCancel = () => {
@@ -112,7 +112,7 @@ const EditPitchScreen: FC<Props> = ({
         marginBottom={"l"}
         onResponderGrant={Keyboard.dismiss}
       >
-        <Text variant="h1">Agregar largo</Text>
+        <Text variant="h1">Editar largo</Text>
 
         <Text variant={"p1R"} marginBottom={"s"}>
           Tipo de ruta
@@ -177,9 +177,9 @@ const EditPitchScreen: FC<Props> = ({
         )}
         <Button
           variant="primary"
-          title={"Agregar"}
+          title={"Editar"}
           onPress={onSubmit}
-          isLoading={addPitch.isLoading}
+          isLoading={editPitch.isLoading}
           marginVertical="s"
         />
         <SemanticButton

@@ -102,6 +102,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
               routeKind={item.Route.kind}
               pitchNumber={Number(item.number)}
               routeId={item.Route.id}
+              pitchId={item.id}
             />
           );
         }}
