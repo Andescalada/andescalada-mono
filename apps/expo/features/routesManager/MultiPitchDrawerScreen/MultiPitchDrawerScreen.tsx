@@ -154,6 +154,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
                 key={route.id}
                 label={route.Route.position.toString()}
                 path={route.path}
+                pitchLabelPoint={route.pitchLabelPoint || undefined}
                 scale={fitted.scale}
                 color={
                   route.routeId === previousPitchId

@@ -547,7 +547,7 @@ model RoutePath {
   updatedAt       DateTime   @updatedAt
   path            String     @db.LongText
   labelPoint      String?
-  pitchlabelPoint String?
+  pitchLabelPoint String?
   Topo            Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
   topoId          String
   Route           Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
