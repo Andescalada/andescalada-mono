@@ -2,6 +2,7 @@ import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -22,6 +23,7 @@ const addPitch = protectedZoneProcedure
         name: true,
         wallId: true,
         Pitches: {
+          where: { isDeleted: SoftDelete.NotDeleted },
           orderBy: { number: "desc" },
           take: 1,
           select: { number: true },

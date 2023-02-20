@@ -44,7 +44,8 @@ const AddPitchScreen: FC<Props> = ({
 
   const addPitch = trpc.multiPitch.addPitch.useMutation({
     onSuccess: () => {
-      utils.invalidate();
+      utils.zones.invalidate();
+      utils.multiPitch.invalidate();
       navigation.goBack();
     },
   });

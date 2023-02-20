@@ -44,7 +44,8 @@ const EditPitchScreen: FC<Props> = ({
 
   const editPitch = trpc.multiPitch.editPitch.useMutation({
     onSuccess: () => {
-      utils.invalidate();
+      utils.zones.invalidate();
+      utils.multiPitch.invalidate();
       navigation.goBack();
     },
   });

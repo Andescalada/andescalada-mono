@@ -1,6 +1,7 @@
 import { RouteKindSchema } from "@andescalada/db/zod";
 import { A, Box, ListItem, SubItem, Text } from "@andescalada/ui";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   MultiPitchManagerNavigationProps,
   MultiPitchManagerRouteProps,
@@ -12,6 +13,7 @@ import { Pitch, Route, RouteGrade } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Conditional from "@utils/conditionalVars";
 import parseGrade from "@utils/parseGrade";
+import { Alert } from "react-native";
 
 interface Props {
   routeKind: typeof RouteKindSchema._type;
@@ -44,11 +46,38 @@ const MultiPitchRouteItem = ({
     >();
 
   const {
-    params: { zoneId },
+    params: { zoneId, multiPitchId },
   } =
     useRoute<
       MultiPitchManagerRouteProps<MultiPitchManagerRoutes.MultiPitchManager>
     >();
+
+  const utils = trpc.useContext();
+  const deletePitch = trpc.multiPitch.deletePitch.useMutation({
+    onMutate: async ({ pitchId }) => {
+      await utils.multiPitch.byId.cancel({ zoneId, multiPitchId });
+      const previousData = utils.multiPitch.byId.getData({
+        zoneId,
+        multiPitchId,
+      });
+      utils.multiPitch.byId.setData({ multiPitchId, zoneId }, (old) =>
+        old
+          ? { ...old, Pitches: old.Pitches.filter((p) => p.id !== pitchId) }
+          : old,
+      );
+      return { previousData };
+    },
+    onError: (_, { zoneId }, context) => {
+      utils.multiPitch.byId.setData(
+        { multiPitchId, zoneId },
+        context?.previousData,
+      );
+    },
+    onSettled: () => {
+      utils.zones.invalidate();
+      utils.multiPitch.invalidate();
+    },
+  });
 
   return (
     <A.Box marginBottom="m">
@@ -105,7 +134,19 @@ const MultiPitchRouteItem = ({
             index={2}
             height={50}
             maxIndex={2}
-            onPress={() => console.log("hre")}
+            onPress={() =>
+              Alert.alert("Eliminar largo", "¿Estás seguro?", [
+                {
+                  text: "Cancelar",
+                  style: "cancel",
+                },
+                {
+                  text: "Eliminar",
+                  style: "destructive",
+                  onPress: () => deletePitch.mutate({ pitchId, zoneId }),
+                },
+              ])
+            }
           >
             <Text variant="p2R" color="semantic.error">
               Eliminar largo

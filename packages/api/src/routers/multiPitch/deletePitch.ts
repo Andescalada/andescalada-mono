@@ -1,14 +1,12 @@
-import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-const editPitch = protectedZoneProcedure
-  .input(z.object({ pitchId: z.string() }).merge(multiPitch.addPitch))
+const deletePitch = protectedZoneProcedure
+  .input(z.object({ pitchId: z.string() }))
   .mutation(async ({ input, ctx }) => {
-    const { originalGradeSystem, grade, kind } = input;
-
     const pitch = await ctx.prisma.pitch.findUnique({
       where: { id: input.pitchId },
       select: {
@@ -23,30 +21,22 @@ const editPitch = protectedZoneProcedure
       throw new TRPCError(error.notFound("pitch", input.pitchId));
 
     if (
-      !ctx.permissions.has("Update") &&
+      !ctx.permissions.has("Delete") &&
       ctx.user.email !== pitch?.MultiPitch?.Author?.email
     ) {
       throw new TRPCError(
-        error.unauthorizedActionForZone(input.zoneId, "Update"),
+        error.unauthorizedActionForZone(input.zoneId, "Delete"),
       );
     }
 
-    const updatedPitch = ctx.prisma.pitch.update({
+    const deletedPitch = ctx.prisma.pitch.update({
       where: { id: input.pitchId },
       data: {
+        isDeleted: SoftDelete.DeletedPublic,
         version: { increment: 1 },
         Route: {
           update: {
-            kind,
-            RouteGrade: {
-              update: {
-                grade: grade.grade,
-                project: grade.project,
-                ...(originalGradeSystem && {
-                  originalGradeSystem,
-                }),
-              },
-            },
+            isDeleted: SoftDelete.DeletedPublic,
           },
         },
       },
@@ -72,7 +62,7 @@ const editPitch = protectedZoneProcedure
       },
     });
 
-    return updatedPitch;
+    return deletedPitch;
   });
 
-export default editPitch;
+export default deletePitch;

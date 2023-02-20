@@ -72,6 +72,7 @@ export const wallsRouter = t.router({
             Author: { select: { email: true } },
             wallId: true,
             Pitches: {
+              where: { isDeleted: SoftDelete.NotDeleted },
               select: { Route: { select: { RouteGrade: true, kind: true } } },
             },
           },
