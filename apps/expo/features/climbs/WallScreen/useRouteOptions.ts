@@ -178,6 +178,7 @@ const useRouteOptions = ({
         multiPitchId: id,
         multiPitchName: name,
         zoneId,
+        topoId,
       },
     });
   };

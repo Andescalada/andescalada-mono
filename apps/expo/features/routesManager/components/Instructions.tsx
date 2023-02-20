@@ -5,16 +5,22 @@ import { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface InstructionProps {
   children: ReactNode;
+  delay?: number;
 }
 
-const Instructions = ({ children }: InstructionProps) => {
+export const SHOWING_TIME = 3000;
+
+const Instructions = ({ children, delay = 0 }: InstructionProps) => {
   const [showInstruction, setShowInstructions] = useState(true);
 
   const timeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (showInstruction) {
-      timeRef.current = setTimeout(() => setShowInstructions(false), 3000);
+      timeRef.current = setTimeout(
+        () => setShowInstructions(false),
+        SHOWING_TIME,
+      );
     }
   }, [showInstruction]);
 
@@ -30,7 +36,7 @@ const Instructions = ({ children }: InstructionProps) => {
         alignItems="center"
         padding="s"
         borderRadius={10}
-        entering={FadeIn}
+        entering={FadeIn.delay(delay)}
         exiting={FadeOut}
         onPressIn={() => {
           if (timeRef.current) clearTimeout(timeRef.current);

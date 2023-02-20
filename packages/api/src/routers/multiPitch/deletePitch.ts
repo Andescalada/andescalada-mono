@@ -1,11 +1,11 @@
+import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 const deletePitch = protectedZoneProcedure
-  .input(z.object({ pitchId: z.string() }))
+  .input(multiPitch.pitchId)
   .mutation(async ({ input, ctx }) => {
     const pitch = await ctx.prisma.pitch.findUnique({
       where: { id: input.pitchId },

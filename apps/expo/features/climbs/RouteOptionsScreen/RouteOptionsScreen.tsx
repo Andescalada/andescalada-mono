@@ -67,7 +67,12 @@ const EditOptions: FC<Props> = ({
       utils.routes.byId.invalidate(routeId);
       rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
         screen: MultiPitchManagerRoutes.MultiPitchManager,
-        params: { multiPitchId: id, multiPitchName: name, zoneId },
+        params: {
+          multiPitchId: id,
+          multiPitchName: name,
+          zoneId,
+          topoId: Wall.topos[0].id,
+        },
       });
     },
   });

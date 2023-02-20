@@ -33,8 +33,8 @@ export type RoutesManagerNavigationParamList = {
     route: {
       id: Route["id"];
       position: Route["position"];
-      firstPitchRouteId?: Route["id"];
     };
+    previousPitchId?: Route["id"];
     zoneId: Zone["id"];
     wallId: Wall["id"];
     topoId: Topo["id"];

@@ -16,8 +16,11 @@ import {
   MultiPitchManagerRoutes,
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { Picker } from "@react-native-picker/picker";
 import { FC } from "react";
 import { useController, useWatch } from "react-hook-form";
@@ -35,18 +38,43 @@ const schema = route.schema
 const AddPitchScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { lastPitchKind, zoneId, multiPitchId },
+    params: {
+      previousPitchKind: lastPitchKind,
+      zoneId,
+      multiPitchId,
+      previousPitchId,
+      topoId,
+    },
   },
 }) => {
   const theme = useAppTheme();
 
   const utils = trpc.useContext();
 
+  const rootNavigation = useRootNavigation();
+
   const addPitch = trpc.multiPitch.addPitch.useMutation({
-    onSuccess: () => {
+    onSuccess: ({ routeId, MultiPitch }) => {
       utils.zones.invalidate();
       utils.multiPitch.invalidate();
-      navigation.goBack();
+      if (!topoId || !MultiPitch?.wallId) {
+        navigation.goBack();
+        return;
+      }
+
+      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+        screen: RoutesManagerNavigationRoutes.MultiPitchDrawer,
+        params: {
+          route: {
+            id: routeId,
+            position: MultiPitch?.position || 1,
+          },
+          previousPitchId,
+          wallId: MultiPitch?.wallId,
+          topoId,
+          zoneId,
+        },
+      });
     },
   });
 

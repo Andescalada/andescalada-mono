@@ -22,6 +22,7 @@ const addPitch = protectedZoneProcedure
       select: {
         name: true,
         wallId: true,
+        position: true,
         Pitches: {
           where: { isDeleted: SoftDelete.NotDeleted },
           orderBy: { number: "desc" },
@@ -49,14 +50,26 @@ const addPitch = protectedZoneProcedure
     });
 
     return ctx.prisma.pitch.create({
+      include: {
+        MultiPitch: {
+          select: {
+            position: true,
+            wallId: true,
+            Wall: { select: { topos: { where: { main: true }, take: 1 } } },
+          },
+        },
+      },
       data: {
         number: Number(multiPitch.Pitches[0]?.number) + 1,
         MultiPitch: { connect: { id: input.multiPitchId } },
         Route: {
           create: {
-            name: multiPitch?.name,
-            slug: slug(multiPitch?.name),
-            Wall: { connect: { id: multiPitch?.wallId } },
+            name: `${multiPitch.name}-${
+              Number(multiPitch.Pitches[0]?.number) + 1
+            }`,
+            slug: slug(multiPitch.name),
+            position: multiPitch.position,
+            Wall: { connect: { id: multiPitch.wallId } },
             Author: { connect: { email: ctx.user.email } },
             kind,
             RouteGrade: {

@@ -8,7 +8,9 @@ import { pathToArray } from "@andescalada/climbs-drawer/utils";
 import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
-import Instructions from "@features/routesManager/components/Instructions";
+import Instructions, {
+  SHOWING_TIME,
+} from "@features/routesManager/components/Instructions";
 import RoutePathDrawConfig from "@features/routesManager/components/RoutePathDrawConfig";
 import {
   RoutesManagerNavigationRoutes,
@@ -28,22 +30,24 @@ type Props =
 
 const MultiPitchDrawerScreen: FC<Props> = ({
   route: {
-    params: { wallId, route: routeParams, topoId, zoneId },
+    params: { wallId, route: routeParams, topoId, zoneId, previousPitchId },
   },
   navigation,
 }) => {
   const theme = useAppTheme();
 
-  const extendedRoute =
-    !!routeParams.firstPitchRouteId &&
-    trpc.routes.byId.useQuery(routeParams.firstPitchRouteId);
+  const previousPitch =
+    !!previousPitchId &&
+    trpc.multiPitch.pitchById.useQuery({
+      pitchId: previousPitchId,
+      zoneId,
+      topoId,
+    });
 
-  const priorPitchStart = useMemo(() => {
-    if (!extendedRoute) return undefined;
+  const previousPitchStart = useMemo(() => {
+    if (!previousPitch) return undefined;
 
-    const prevPath = extendedRoute?.data?.Wall.topos.find(
-      (t) => t.id === topoId,
-    )?.RoutePath[0].path;
+    const prevPath = previousPitch?.data?.Route.RoutePath[0]?.path;
 
     if (prevPath) {
       const arrayPath = pathToArray(prevPath).pop();
@@ -51,7 +55,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
       return `${arrayPath[0]},${arrayPath[1]}`;
     }
     return undefined;
-  }, [extendedRoute, topoId]);
+  }, [previousPitch]);
 
   const { routeStrokeWidth, showRoutes } = useAppSelector(
     (state) => state.localConfig,
@@ -112,16 +116,12 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   };
 
   const onReset = () => {
-    if (!priorPitchStart) return;
-    routeRef?.current?.softReset(priorPitchStart);
+    if (!previousPitchStart) return;
+    routeRef?.current?.softReset(previousPitchStart);
     setCanSave(false);
   };
 
-  if (
-    route &&
-    isImageLoaded &&
-    (!routeParams.firstPitchRouteId || !!priorPitchStart)
-  )
+  if (route && isImageLoaded && (!previousPitchId || !!previousPitchStart))
     return (
       <Screen safeAreaDisabled justifyContent="center">
         <SkiaRouteCanvas
@@ -133,7 +133,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           <SkiaRoutePathDrawer
             coords={coords}
             ref={routeRef}
-            path={topos?.selectedRoute?.path || priorPitchStart}
+            path={topos?.selectedRoute?.path || previousPitchStart}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
             withStart={false}
@@ -150,7 +150,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
                 path={route.path}
                 scale={fitted.scale}
                 color={
-                  route.routeId === routeParams.firstPitchRouteId
+                  route.routeId === previousPitchId
                     ? theme.colors.drawingRoutePath
                     : theme.colors.routePath
                 }
@@ -160,8 +160,12 @@ const MultiPitchDrawerScreen: FC<Props> = ({
         </SkiaRouteCanvas>
         <BackButton.Transparent onPress={navigation.goBack} />
         <Instructions>
-          Comienza a dibujar la extensión de la ruta, comenzará desde el punto
-          donde termina la ruta anterior.
+          Comienza a dibujar el siguiente, comenzará desde el punto donde
+          termina la ruta anterior.
+        </Instructions>
+        <Instructions delay={SHOWING_TIME + 500}>
+          Para desconectar el comienzo de la ruta anterior, presiona el botón
+          con el símbolo de la flecha hacia arriba.
         </Instructions>
         <RoutePathDrawConfig
           show={showConfig}

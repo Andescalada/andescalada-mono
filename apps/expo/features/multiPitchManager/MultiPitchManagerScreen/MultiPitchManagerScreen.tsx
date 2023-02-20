@@ -21,7 +21,7 @@ type Props =
 const MultiPitchManagerScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { multiPitchName, multiPitchId, zoneId },
+    params: { multiPitchName, multiPitchId, zoneId, topoId },
   },
 }) => {
   const { data, isLoading, refetch, isRefetching } =
@@ -53,6 +53,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
           <Box>
             <Text variant="h1">{multiPitchName}</Text>
             <Box
+              visible={!!topoId}
               flexDirection="row"
               paddingBottom="m"
               justifyContent="space-between"
@@ -68,7 +69,9 @@ const MultiPitchManagerScreen: FC<Props> = ({
                     navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
                       multiPitchId,
                       zoneId,
-                      lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                      previousPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                      previousPitchId: data?.Pitches.slice(-1)[0].id,
+                      topoId,
                     })
                   }
                 >
@@ -83,7 +86,8 @@ const MultiPitchManagerScreen: FC<Props> = ({
                     navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
                       multiPitchId,
                       zoneId,
-                      lastPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                      previousPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
+                      previousPitchId: data?.Pitches.slice(-1)[0].id,
                     })
                   }
                 >
@@ -93,7 +97,9 @@ const MultiPitchManagerScreen: FC<Props> = ({
             </Box>
           </Box>
         )}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
+          const previousPitchId =
+            index > 0 ? data?.Pitches[index - 1].id : undefined;
           return (
             <MultiPitchRouteItem
               keepOpen={keepOpen}
@@ -103,6 +109,10 @@ const MultiPitchManagerScreen: FC<Props> = ({
               pitchNumber={Number(item.number)}
               routeId={item.Route.id}
               pitchId={item.id}
+              previousPitchId={previousPitchId}
+              wallId={data?.wallId || ""}
+              topoId={topoId}
+              position={data?.position || 0}
             />
           );
         }}

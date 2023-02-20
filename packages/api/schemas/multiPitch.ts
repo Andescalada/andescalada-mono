@@ -15,4 +15,6 @@ const addPitch = route.schema.pick({
 
 const id = z.object({ multiPitchId: z.string() });
 
-export default { addPitchFrontEnd, addPitch, id };
+const pitchId = z.object({ pitchId: z.string() });
+
+export default { addPitchFrontEnd, addPitch, id, pitchId };

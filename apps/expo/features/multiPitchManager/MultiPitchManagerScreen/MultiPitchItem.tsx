@@ -7,9 +7,12 @@ import {
   MultiPitchManagerRouteProps,
   MultiPitchManagerRoutes,
 } from "@features/multiPitchManager/Navigation/types";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useAnimatedHeight from "@hooks/useAnimatedHeight";
 import useGradeSystem from "@hooks/useGradeSystem";
-import { Pitch, Route, RouteGrade } from "@prisma/client";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { Pitch, Route, RouteGrade, Topo, Wall } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Conditional from "@utils/conditionalVars";
 import parseGrade from "@utils/parseGrade";
@@ -23,6 +26,10 @@ interface Props {
   pitchId: Pitch["id"];
   keepOpen: string | undefined;
   setKeepOpen: (keepOpen: string) => void;
+  previousPitchId?: Pitch["id"];
+  wallId: Wall["id"];
+  topoId?: Topo["id"];
+  position: number;
 }
 
 const MultiPitchRouteItem = ({
@@ -32,6 +39,10 @@ const MultiPitchRouteItem = ({
   routeId,
   keepOpen,
   pitchId,
+  previousPitchId,
+  position,
+  topoId,
+  wallId,
   setKeepOpen,
 }: Props) => {
   const { onOpen, style } = useAnimatedHeight({
@@ -51,6 +62,8 @@ const MultiPitchRouteItem = ({
     useRoute<
       MultiPitchManagerRouteProps<MultiPitchManagerRoutes.MultiPitchManager>
     >();
+
+  const rootNavigation = useRootNavigation();
 
   const utils = trpc.useContext();
   const deletePitch = trpc.multiPitch.deletePitch.useMutation({
@@ -122,14 +135,30 @@ const MultiPitchRouteItem = ({
           >
             <Text variant="p2R">Editar información</Text>
           </SubItem>
-          <SubItem
-            index={1}
-            height={50}
-            maxIndex={2}
-            onPress={() => console.log("hre")}
-          >
-            <Text variant="p2R">Editar ruta</Text>
-          </SubItem>
+          {topoId && (
+            <SubItem
+              index={1}
+              height={50}
+              maxIndex={2}
+              onPress={() => {
+                rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+                  screen: RoutesManagerNavigationRoutes.MultiPitchDrawer,
+                  params: {
+                    route: {
+                      id: routeId,
+                      position,
+                    },
+                    previousPitchId,
+                    wallId,
+                    topoId,
+                    zoneId,
+                  },
+                });
+              }}
+            >
+              <Text variant="p2R">Editar ruta</Text>
+            </SubItem>
+          )}
           <SubItem
             index={2}
             height={50}
