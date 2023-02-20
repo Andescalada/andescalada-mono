@@ -44,7 +44,7 @@ const DrawingTools = ({
             title={canSave ? "Guardar" : "Finalizar"}
             variant={canSave ? "success" : "error"}
             titleVariant="p2R"
-            titleProps={{ lineHeight: 0 }}
+            titleProps={{ lineHeight: 20, textAlign: "center" }}
             isLoading={isLoading}
             onPress={onFinishOrSave}
           />
@@ -57,6 +57,7 @@ const DrawingTools = ({
         left={0}
         padding="s"
         paddingBottom="xl"
+        paddingLeft="m"
         entering={FadeIn}
         exiting={FadeOut}
         horizontal
@@ -104,16 +105,16 @@ const ToolItem = ({
     <Pressable
       alignItems="center"
       justifyContent="space-between"
-      padding="xs"
+      // padding="xs"
       marginRight="s"
       onPress={onPress}
-      maxWidth={70}
+      minWidth={50}
     >
       <Ionicons name={iconName} size={30} color="transparentButtonText" />
       <Text
         marginTop="s"
         color="transparentButtonText"
-        numberOfLines={2}
+        numberOfLines={1}
         textAlign="center"
       >
         {title}
