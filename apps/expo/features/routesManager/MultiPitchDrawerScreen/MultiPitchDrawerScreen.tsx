@@ -5,7 +5,7 @@ import {
   SkiaRoutePathDrawer,
 } from "@andescalada/climbs-drawer";
 import { pathToArray } from "@andescalada/climbs-drawer/utils";
-import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
+import { ActivityIndicator, BackButton, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions, {
@@ -116,8 +116,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   };
 
   const onReset = () => {
-    if (!previousPitchStart) return;
-    routeRef?.current?.softReset(previousPitchStart);
+    routeRef?.current?.reset();
     setCanSave(false);
   };
 
@@ -130,18 +129,6 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           height={fitted.height}
           width={fitted.width}
         >
-          <SkiaRoutePathDrawer
-            coords={coords}
-            ref={routeRef}
-            path={topos?.selectedRoute?.path || previousPitchStart}
-            label={routeParams?.position.toString()}
-            color={theme.colors.drawingRoutePath}
-            withStart={false}
-            withoutStart={true}
-            withEnd={!!topos?.selectedRoute?.path}
-            scale={fitted.scale}
-            strokeWidth={routeStrokeWidth}
-          />
           {showRoutes &&
             topos?.otherRoutes?.map((route) => (
               <SkiaRoutePath
@@ -157,15 +144,29 @@ const MultiPitchDrawerScreen: FC<Props> = ({
                 strokeWidth={routeStrokeWidth}
               />
             ))}
+          <SkiaRoutePathDrawer
+            coords={coords}
+            ref={routeRef}
+            path={topos?.selectedRoute?.path || previousPitchStart}
+            label={routeParams?.position.toString()}
+            color={theme.colors.drawingRoutePath}
+            withStart={!!topos?.selectedRoute?.path && !previousPitchStart}
+            withEnd={!!topos?.selectedRoute?.path}
+            scale={fitted.scale}
+            strokeWidth={routeStrokeWidth}
+          />
         </SkiaRouteCanvas>
         <BackButton.Transparent onPress={navigation.goBack} />
         <Instructions>
           Comienza a dibujar el siguiente, comenzará desde el punto donde
           termina la ruta anterior.
         </Instructions>
-        <Instructions delay={SHOWING_TIME + 500}>
-          Para desconectar el comienzo de la ruta anterior, presiona el botón
-          con el símbolo de la flecha hacia arriba.
+        <Instructions delay={SHOWING_TIME + 1000}>
+          Para desconectar el comienzo de la ruta anterior, presiona el botón{" "}
+          <Text variant="p2B" color="semantic.error">
+            Borrar
+          </Text>{" "}
+          y sigue dibujando
         </Instructions>
         <RoutePathDrawConfig
           show={showConfig}

@@ -53,7 +53,6 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     label = "?",
     color,
     scale = 1,
-    withoutStart = false,
     strokeWidth: strokeWidthProp = 1,
   },
   ref,
@@ -71,7 +70,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
       ...points.current,
       vec(coords.current.x, coords.current.y),
     ];
-    if (points.current.length > 0 && !drawStart.current && !withoutStart) {
+    if (points.current.length > 0 && !drawStart.current && withStart) {
       setHasStart(true);
       drawStart.current = true;
       start.current = points.current[0];

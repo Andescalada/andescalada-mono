@@ -137,7 +137,6 @@ const DrawRoute: FC<Props> = ({
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
             withStart={false}
-            withoutStart={true}
             withEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
