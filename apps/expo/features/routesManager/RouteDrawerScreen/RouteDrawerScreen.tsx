@@ -128,7 +128,10 @@ const DrawRoute: FC<Props> = ({
               />
             ))}
         </SkiaRouteCanvas>
-        <BackButton.Transparent onPress={navigation.goBack} />
+        <BackButton.Transparent
+          iconProps={{ color: "grayscale.black" }}
+          onPress={navigation.goBack}
+        />
         <Instructions>
           {!!topos?.selectedRoute?.path
             ? 'Pulsa "deshacer" para borrar el último punto o "borrar" para borrar todo'

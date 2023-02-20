@@ -4,7 +4,7 @@ import { ScrollView as RNGHScrollView } from "react-native-gesture-handler";
 
 import { Theme } from "../Theme/theme";
 
-const SV = createBox<Theme, ScrollViewProps>(RNScrollView);
+export const SV = createBox<Theme, ScrollViewProps>(RNScrollView);
 
 type RNGHScrollViewProps = React.ComponentProps<typeof RNGHScrollView>;
 

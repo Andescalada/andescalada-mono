@@ -156,10 +156,13 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             strokeWidth={routeStrokeWidth}
           />
         </SkiaRouteCanvas>
-        <BackButton.Transparent onPress={navigation.goBack} />
+        <BackButton.Transparent
+          iconProps={{ color: "grayscale.black" }}
+          onPress={navigation.goBack}
+        />
         <Instructions>
-          Comienza a dibujar el siguiente, comenzará desde el punto donde
-          termina la ruta anterior.
+          Comienza a dibujar el siguiente largo, empezará desde el punto donde
+          termina el largo anterior.
         </Instructions>
         <Instructions delay={SHOWING_TIME + 1000}>
           Para desconectar el comienzo de la ruta anterior, presiona el botón{" "}

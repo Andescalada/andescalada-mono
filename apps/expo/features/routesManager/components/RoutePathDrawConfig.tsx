@@ -19,9 +19,7 @@ const RoutePathDrawConfig: FC<Props> = ({
 }) => {
   const theme = useAppTheme();
   const dispatch = useAppDispatch();
-  const { routeStrokeWidth, showRoutes } = useAppSelector(
-    (state) => state.localConfig,
-  );
+  const { routeStrokeWidth } = useAppSelector((state) => state.localConfig);
 
   useEffect(() => {
     dispatch(setRouteStrokeWidth(defaultRouteStrokeWidth));
@@ -59,13 +57,6 @@ const RoutePathDrawConfig: FC<Props> = ({
             maximumTrackTintColor={theme.colors["grayscale.transparent.80.600"]}
             onChange={(v) => dispatch(setRouteStrokeWidth(v))}
           />
-          <Pressable onPress={() => dispatch(setShowRoutes())}>
-            <Ionicons
-              name={showRoutes ? "eye-off" : "eye"}
-              size={30}
-              color="grayscale.transparent.80.200"
-            />
-          </Pressable>
         </Box>
       </A.Box>
     );
