@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  AddButton,
   Box,
   Pressable,
   Screen,
@@ -13,7 +14,7 @@ import {
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
 import useRefresh from "@hooks/useRefresh";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 type Props =
@@ -34,6 +35,18 @@ const MultiPitchManagerScreen: FC<Props> = ({
   const refresh = useRefresh(refetch, isRefetching);
 
   const [keepOpen, setKeepOpen] = useState<string | undefined>();
+
+  const addPitch = useCallback(
+    () =>
+      navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
+        multiPitchId,
+        zoneId,
+        previousPitchKind: data?.Pitches.slice(-1)[0]?.Route.kind,
+        previousPitchId: data?.Pitches.slice(-1)[0]?.id,
+        topoId,
+      }),
+    [],
+  );
 
   if (isLoading)
     return (
@@ -58,18 +71,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
             paddingTop="xxl"
           >
             <Text variant="p2R">No hay largos</Text>
-            <TextButton
-              variant="info"
-              onPress={() =>
-                navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
-                  multiPitchId,
-                  zoneId,
-                  previousPitchKind: data?.Pitches.slice(-1)[0]?.Route.kind,
-                  previousPitchId: data?.Pitches.slice(-1)[0]?.id,
-                  topoId,
-                })
-              }
-            >
+            <TextButton variant="info" onPress={addPitch}>
               Agregar largo
             </TextButton>
           </Box>
@@ -77,49 +79,16 @@ const MultiPitchManagerScreen: FC<Props> = ({
         ListHeaderComponent={() => (
           <Box>
             <Text variant="h1">{multiPitchName}</Text>
-            <Box
-              visible={!!topoId}
+            <Pressable
               flexDirection="row"
               paddingBottom="m"
               justifyContent="space-between"
               alignItems="center"
+              onPress={addPitch}
             >
-              <Text variant="h4">Agregar:</Text>
-              <Box flexDirection="row">
-                <Pressable
-                  backgroundColor="semantic.info"
-                  borderRadius={20}
-                  padding="s"
-                  onPress={() =>
-                    navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
-                      multiPitchId,
-                      zoneId,
-                      previousPitchKind: data?.Pitches.slice(-1)[0]?.Route.kind,
-                      previousPitchId: data?.Pitches.slice(-1)[0]?.id,
-                      topoId,
-                    })
-                  }
-                >
-                  <Text>Largo</Text>
-                </Pressable>
-                <Pressable
-                  backgroundColor="semantic.warning"
-                  borderRadius={25}
-                  padding="s"
-                  marginLeft="s"
-                  onPress={() =>
-                    navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
-                      multiPitchId,
-                      zoneId,
-                      previousPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
-                      previousPitchId: data?.Pitches.slice(-1)[0].id,
-                    })
-                  }
-                >
-                  <Text color="textContrast">Transición</Text>
-                </Pressable>
-              </Box>
-            </Box>
+              <Text variant="h4">Agregar largo</Text>
+              <AddButton onPress={addPitch} />
+            </Pressable>
           </Box>
         )}
         renderItem={({ item, index }) => {
