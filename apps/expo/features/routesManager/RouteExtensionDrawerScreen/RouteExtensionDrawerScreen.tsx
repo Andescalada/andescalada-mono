@@ -99,6 +99,7 @@ const DrawRoute: FC<Props> = ({
     routePathId: topos?.selectedRoute?.id,
     routeStrokeWidth,
     zoneId,
+    hideStart: true,
   });
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
@@ -140,6 +141,7 @@ const DrawRoute: FC<Props> = ({
             defaultEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
+            hideStart
           />
           {showRoutes &&
             topos?.otherRoutes?.map((route) => (

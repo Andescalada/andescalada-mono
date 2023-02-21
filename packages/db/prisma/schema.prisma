@@ -549,6 +549,7 @@ model RoutePath {
   path            String     @db.LongText
   labelPoint      String?
   pitchLabelPoint String?
+  hideStart       Boolean    @default(false)
   Topo            Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
   topoId          String
   Route           Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)

@@ -69,7 +69,7 @@ const AddPitchScreen: FC<Props> = ({
             id: routeId,
             position: MultiPitch.position,
           },
-          newPitch: true,
+          newPitch: Number(number) === 1,
           pitchNumber: Number(number),
           previousPitchId,
           wallId: MultiPitch.wallId,

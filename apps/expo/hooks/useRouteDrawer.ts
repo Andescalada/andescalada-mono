@@ -29,6 +29,7 @@ interface Args {
   pitchLabelPoint?: string;
   scale?: number;
   withLabel?: boolean;
+  hideStart?: boolean;
 }
 
 const useRouteDrawer = ({
@@ -42,6 +43,7 @@ const useRouteDrawer = ({
   pitchLabelPoint,
   scale = 1,
   withLabel = false,
+  hideStart = false,
 }: Args) => {
   const movement = useValue<SkPoint>(pointToVector(pitchLabelPoint, scale));
 
@@ -138,6 +140,7 @@ const useRouteDrawer = ({
         topoId,
         routePathId,
         pitchLabelPoint,
+        hideStart,
       });
       modifyStrokeWidth.mutate({
         zoneId,

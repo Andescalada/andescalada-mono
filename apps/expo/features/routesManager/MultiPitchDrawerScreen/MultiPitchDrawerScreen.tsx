@@ -101,6 +101,10 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     zoneId,
   });
 
+  const [hideStart, setHideStart] = useState(
+    !!topos?.selectedRoute?.hideStart && !newPitch,
+  );
+
   const {
     canSave,
     coords,
@@ -125,6 +129,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     pitchLabelPoint: topos?.selectedRoute?.pitchLabelPoint || undefined,
     scale: fitted.scale,
     withLabel: true,
+    hideStart,
   });
 
   const onUndo = () => {
@@ -132,13 +137,9 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     setCanSave(false);
   };
 
-  const [showStartBadge, setShowStartBadge] = useState(
-    (!!topos?.selectedRoute?.path && !previousPitchStart) || newPitch,
-  );
-
   const onReset = () => {
     movement.current = DEFAULT_POSITION;
-    if (showStartBadge || !previousPitchStart) {
+    if (!hideStart || !previousPitchStart) {
       routeRef?.current?.reset();
     } else {
       routeRef?.current?.softReset(previousPitchStart);
@@ -147,7 +148,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   };
 
   const handleConnection = () => {
-    setShowStartBadge((prev) => {
+    setHideStart((prev) => {
       if (prev) {
         connectStart();
       } else {
@@ -220,7 +221,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             defaultEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
-            hideStart={showStartBadge}
+            hideStart={hideStart}
           />
         </SkiaRouteCanvas>
         <BackButton.Transparent
@@ -246,7 +247,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           onUndo={onUndo}
           onReset={onReset}
           canDisconnect={!!previousPitchStart && !newPitch}
-          isDisconnected={showStartBadge}
+          isDisconnected={hideStart}
           onDisconnect={handleConnection}
           onLabelMovement={handleLabelMovement}
           labelCanMove={!disableMovement}

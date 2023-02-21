@@ -140,6 +140,7 @@ export const routesRouter = t.router({
         topoId: z.string(),
         routePathId: z.string().optional(),
         pitchLabelPoint: z.string().optional(),
+        hideStart: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
