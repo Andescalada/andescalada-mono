@@ -149,6 +149,7 @@ const MultiPitchRouteItem = ({
                       position,
                     },
                     previousPitchId,
+                    pitchNumber,
                     wallId,
                     topoId,
                     zoneId,

@@ -144,7 +144,7 @@ export const routesRouter = t.router({
     )
     .mutation(async ({ ctx, input }) => {
       const routePath = await ctx.prisma.routePath.upsert({
-        where: { id: input.routePathId },
+        where: { id: input.routePathId || "" },
         include: { Author: { select: { email: true } } },
         create: {
           Topo: { connect: { id: input.topoId } },

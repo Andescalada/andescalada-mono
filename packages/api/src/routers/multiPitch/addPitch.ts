@@ -49,6 +49,10 @@ const addPitch = protectedZoneProcedure
       },
     });
 
+    const number = multiPitch.Pitches[0]?.number
+      ? Number(multiPitch.Pitches[0]?.number) + 1
+      : 1;
+
     return ctx.prisma.pitch.create({
       include: {
         MultiPitch: {
@@ -60,7 +64,7 @@ const addPitch = protectedZoneProcedure
         },
       },
       data: {
-        number: Number(multiPitch.Pitches[0]?.number) + 1,
+        number: number,
         MultiPitch: { connect: { id: input.multiPitchId } },
         Route: {
           create: {

@@ -35,6 +35,8 @@ export type RoutesManagerNavigationParamList = {
       position: Route["position"];
     };
     previousPitchId?: Route["id"];
+    pitchNumber?: number;
+    newPitch?: boolean;
     zoneId: Zone["id"];
     wallId: Wall["id"];
     topoId: Topo["id"];

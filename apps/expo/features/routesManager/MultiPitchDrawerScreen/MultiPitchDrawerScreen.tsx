@@ -32,7 +32,15 @@ type Props =
 
 const MultiPitchDrawerScreen: FC<Props> = ({
   route: {
-    params: { wallId, route: routeParams, topoId, zoneId, previousPitchId },
+    params: {
+      wallId,
+      route: routeParams,
+      topoId,
+      zoneId,
+      previousPitchId,
+      newPitch,
+      pitchNumber,
+    },
   },
   navigation,
 }) => {
@@ -66,6 +74,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   const { data: topos } = trpc.topos.byId.useQuery(
     { topoId, zoneId },
     {
+      staleTime: 0,
       select: useCallback(
         (topo: Topo) => {
           const otherRoutes = topo?.RoutePath.filter(
@@ -124,7 +133,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   };
 
   const [showStartBadge, setShowStartBadge] = useState(
-    !!topos?.selectedRoute?.path && !previousPitchStart,
+    (!!topos?.selectedRoute?.path && !previousPitchStart) || newPitch,
   );
 
   const onReset = () => {
@@ -194,7 +203,9 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             <StartPointer
               color="transparent"
               backgroundColor={theme.colors["contrast.bright.green"]}
-              label={String(topos?.selectedRoute?.Route.Pitch?.number)}
+              label={String(
+                pitchNumber ?? topos?.selectedRoute?.Route.Pitch?.number,
+              )}
               scale={fitted.scale}
               c={movement}
             />
@@ -209,7 +220,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             defaultEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
-            hideStart={!showStartBadge}
+            hideStart={showStartBadge}
           />
         </SkiaRouteCanvas>
         <BackButton.Transparent
@@ -234,7 +245,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           showConfig={showConfig}
           onUndo={onUndo}
           onReset={onReset}
-          canDisconnect={!!previousPitchStart}
+          canDisconnect={!!previousPitchStart && !newPitch}
           isDisconnected={showStartBadge}
           onDisconnect={handleConnection}
           onLabelMovement={handleLabelMovement}

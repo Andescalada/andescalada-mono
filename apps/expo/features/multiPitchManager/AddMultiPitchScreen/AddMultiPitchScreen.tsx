@@ -21,7 +21,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useState } from "react";
 import { useController } from "react-hook-form";
-import { Alert, Keyboard, Platform } from "react-native";
+import { Alert, Keyboard } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 type Props =

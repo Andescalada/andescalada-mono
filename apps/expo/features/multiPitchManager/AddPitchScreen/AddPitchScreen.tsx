@@ -54,10 +54,10 @@ const AddPitchScreen: FC<Props> = ({
   const rootNavigation = useRootNavigation();
 
   const addPitch = trpc.multiPitch.addPitch.useMutation({
-    onSuccess: ({ routeId, MultiPitch }) => {
+    onSuccess: ({ routeId, MultiPitch, number }) => {
       utils.zones.invalidate();
       utils.multiPitch.invalidate();
-      if (!topoId || !MultiPitch?.wallId) {
+      if (!topoId || !MultiPitch) {
         navigation.goBack();
         return;
       }
@@ -67,10 +67,12 @@ const AddPitchScreen: FC<Props> = ({
         params: {
           route: {
             id: routeId,
-            position: MultiPitch?.position || 1,
+            position: MultiPitch.position,
           },
+          newPitch: true,
+          pitchNumber: Number(number),
           previousPitchId,
-          wallId: MultiPitch?.wallId,
+          wallId: MultiPitch.wallId,
           topoId,
           zoneId,
         },
