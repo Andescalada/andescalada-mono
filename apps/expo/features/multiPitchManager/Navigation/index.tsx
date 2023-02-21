@@ -18,10 +18,6 @@ const Navigator = () => {
       <Stack.Screen
         name={MultiPitchManagerRoutes.MultiPitchManager}
         component={MultiPitchManagerScreen}
-        options={{
-          title: "Multi Largo",
-          ...backHeader,
-        }}
       />
       <Stack.Screen
         name={MultiPitchManagerRoutes.AddPitch}

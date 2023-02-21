@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   AddButton,
   Box,
+  Header,
   Pressable,
   Screen,
   Text,
@@ -45,20 +46,21 @@ const MultiPitchManagerScreen: FC<Props> = ({
         previousPitchId: data?.Pitches.slice(-1)[0]?.id,
         topoId,
       }),
-    [],
+    [data?.Pitches, multiPitchId, navigation, topoId, zoneId],
   );
 
   if (isLoading)
     return (
-      <Screen safeAreaDisabled padding="m">
-        <Text variant="h1">{multiPitchName}</Text>
+      <Screen padding="m">
+        <Header title={multiPitchName} onGoBack={navigation.goBack} />
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" />
         </Box>
       </Screen>
     );
   return (
-    <Screen safeAreaDisabled padding="m">
+    <Screen padding="m">
+      <Header title={multiPitchName} onGoBack={navigation.goBack} />
       <FlatList
         data={data?.Pitches}
         keyExtractor={(item) => item.id}
@@ -78,7 +80,6 @@ const MultiPitchManagerScreen: FC<Props> = ({
         }
         ListHeaderComponent={() => (
           <Box>
-            <Text variant="h1">{multiPitchName}</Text>
             <Pressable
               flexDirection="row"
               paddingBottom="m"
