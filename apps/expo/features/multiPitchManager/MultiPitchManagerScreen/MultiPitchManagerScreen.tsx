@@ -4,6 +4,7 @@ import {
   Pressable,
   Screen,
   Text,
+  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import MultiPitchRouteItem from "@features/multiPitchManager/MultiPitchManagerScreen/MultiPitchItem";
@@ -49,6 +50,30 @@ const MultiPitchManagerScreen: FC<Props> = ({
         data={data?.Pitches}
         keyExtractor={(item) => item.id}
         refreshControl={refresh}
+        ListEmptyComponent={
+          <Box
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
+            paddingTop="xxl"
+          >
+            <Text variant="p2R">No hay largos</Text>
+            <TextButton
+              variant="info"
+              onPress={() =>
+                navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
+                  multiPitchId,
+                  zoneId,
+                  previousPitchKind: data?.Pitches.slice(-1)[0]?.Route.kind,
+                  previousPitchId: data?.Pitches.slice(-1)[0]?.id,
+                  topoId,
+                })
+              }
+            >
+              Agregar largo
+            </TextButton>
+          </Box>
+        }
         ListHeaderComponent={() => (
           <Box>
             <Text variant="h1">{multiPitchName}</Text>
@@ -69,8 +94,8 @@ const MultiPitchManagerScreen: FC<Props> = ({
                     navigation.navigate(MultiPitchManagerRoutes.AddPitch, {
                       multiPitchId,
                       zoneId,
-                      previousPitchKind: data?.Pitches.slice(-1)[0].Route.kind,
-                      previousPitchId: data?.Pitches.slice(-1)[0].id,
+                      previousPitchKind: data?.Pitches.slice(-1)[0]?.Route.kind,
+                      previousPitchId: data?.Pitches.slice(-1)[0]?.id,
                       topoId,
                     })
                   }

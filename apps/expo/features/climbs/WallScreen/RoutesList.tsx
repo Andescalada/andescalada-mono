@@ -66,7 +66,9 @@ const RoutesList: FC = () => {
             position: multiPitch.position,
             routeRef: createRef<ListItemRef>(),
             kindStringify: `Multi largo, ${multiPitch.numberOfPitches} ${
-              multiPitch.numberOfPitches > 1 ? "largos" : "largo"
+              multiPitch.numberOfPitches > 1 || multiPitch.numberOfPitches === 0
+                ? "largos"
+                : "largo"
             } `,
             gradeStringify: gradeLabel(
               {

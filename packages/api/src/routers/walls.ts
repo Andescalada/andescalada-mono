@@ -152,7 +152,7 @@ export const wallsRouter = t.router({
         Author: mp.Author,
         numberOfPitches: mp.Pitches.length,
         gradeRouteKind: reduce.gradeRouteKind,
-        grade: reduce.maxGrade,
+        grade: reduce.maxGrade === 0 ? undefined : reduce.maxGrade,
         project: false,
         originalGradeSystem: reduce.originalGradeSystem,
         maxAid: reduce.maxAid,
