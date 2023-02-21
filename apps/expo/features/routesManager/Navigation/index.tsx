@@ -29,6 +29,7 @@ const Navigator = () => {
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.MultiPitchDrawer}
         component={MultiPitchDrawerScreen}
+        options={{ gestureEnabled: false, gestureResponseDistance: 0 }}
       />
     </Stack.Navigator>
   );

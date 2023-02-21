@@ -14,8 +14,8 @@ import StartPointer from "./StartPointer";
 
 interface Props {
   path: string;
-  pitchLabelPoint?: string;
-  pitchLabelTitle?: string;
+  pitchLabelPoint?: string | undefined;
+  pitchLabelTitle?: string | undefined;
   label: string;
   color?: string;
   scale?: number;

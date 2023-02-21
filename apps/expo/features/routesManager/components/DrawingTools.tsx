@@ -1,7 +1,13 @@
 import { A, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { setShowRoutes } from "@store/localConfigs";
-import { ComponentProps, Dispatch, SetStateAction } from "react";
+import {
+  ComponentProps,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface Props {
@@ -109,6 +115,7 @@ const DrawingTools = ({
         <ToolItem
           title="Trazo"
           iconName="pencil-sharp"
+          active={showConfig}
           onPress={() => {
             setShowConfig((prev) => !prev);
           }}
@@ -116,6 +123,7 @@ const DrawingTools = ({
         <ToolItem
           title={showRoutes ? "Ocultar" : "Mostrar"}
           secondLine="otras"
+          active={!showRoutes}
           iconName={showRoutes ? "eye-off" : "eye"}
           onPress={() => {
             dispatch(setShowRoutes());
@@ -134,6 +142,7 @@ const DrawingTools = ({
             {labelOnScreen && (
               <ToolItem
                 title={labelCanMove ? "Fijar" : "Mover"}
+                active={labelCanMove}
                 secondLine="etiqueta"
                 iconName={"ellipse-sharp"}
                 marginRight="l"
@@ -153,15 +162,41 @@ interface ToolItemProps extends ComponentProps<typeof Pressable> {
   iconName: ComponentProps<typeof Ionicons>["name"];
   title: string;
   secondLine?: string;
+  active?: boolean;
 }
 
-const ToolItem = ({ iconName, secondLine, title, ...props }: ToolItemProps) => {
+const ToolItem = ({
+  iconName,
+  secondLine,
+  title,
+  active: activeProp,
+  ...props
+}: ToolItemProps) => {
+  const [localActive, setLocalActive] = useState(activeProp);
+  useEffect(() => {
+    if (activeProp !== undefined) setLocalActive(activeProp);
+  }, [activeProp]);
   return (
-    <Pressable alignItems="center" marginRight="m" minWidth={50} {...props}>
-      <Ionicons name={iconName} size={30} color="transparentButtonText" />
+    <Pressable
+      alignItems="center"
+      marginRight="m"
+      minWidth={50}
+      onPressIn={() => {
+        if (activeProp === undefined) setLocalActive(true);
+      }}
+      onPressOut={() => {
+        if (activeProp === undefined) setLocalActive(false);
+      }}
+      {...props}
+    >
+      <Ionicons
+        name={iconName}
+        size={30}
+        color={localActive ? "brand.primaryA" : "transparentButtonText"}
+      />
       <Text
         marginTop="s"
-        color="transparentButtonText"
+        color={localActive ? "brand.primaryA" : "transparentButtonText"}
         numberOfLines={1}
         textAlign="center"
       >
@@ -169,7 +204,7 @@ const ToolItem = ({ iconName, secondLine, title, ...props }: ToolItemProps) => {
       </Text>
       {secondLine && (
         <Text
-          color="transparentButtonText"
+          color={localActive ? "brand.primaryA" : "transparentButtonText"}
           numberOfLines={1}
           textAlign="center"
           lineHeight={undefined}

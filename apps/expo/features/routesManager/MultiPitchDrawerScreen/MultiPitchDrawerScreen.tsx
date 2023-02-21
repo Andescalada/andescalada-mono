@@ -128,6 +128,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   );
 
   const onReset = () => {
+    movement.current = DEFAULT_POSITION;
     if (showStartBadge || !previousPitchStart) {
       routeRef?.current?.reset();
     } else {
@@ -178,6 +179,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
                   label={route.Route.position.toString()}
                   path={route.path}
                   pitchLabelPoint={route.pitchLabelPoint || undefined}
+                  pitchLabelTitle={String(route.Route.Pitch?.number)}
                   scale={fitted.scale}
                   color={
                     route.routeId === previousPitchId
@@ -192,7 +194,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             <StartPointer
               color="transparent"
               backgroundColor={theme.colors["contrast.bright.green"]}
-              label={"1"}
+              label={String(topos?.selectedRoute?.Route.Pitch?.number)}
               scale={fitted.scale}
               c={movement}
             />

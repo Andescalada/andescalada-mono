@@ -40,12 +40,10 @@ const useRouteDrawer = ({
   routePathId,
   routeStrokeWidth,
   pitchLabelPoint,
-  scale,
+  scale = 1,
   withLabel = false,
 }: Args) => {
-  const movement = useValue<SkPoint>(
-    pointToVector(pitchLabelPoint, scale || 1),
-  );
+  const movement = useValue<SkPoint>(pointToVector(pitchLabelPoint, scale));
 
   const [disableMovement, setDisableMovement] = useState(true);
   const handleLabelMovement = () => {
@@ -102,7 +100,7 @@ const useRouteDrawer = ({
   const onFinishOrSave = () => {
     if (!canSave) {
       routeRef?.current?.finishRoute();
-      if (withLabel) {
+      if (withLabel && movement.current === DEFAULT_POSITION) {
         movement.current = routeRef?.current?.getLabelPosition({
           toString: false,
         }) as SkPoint;
@@ -131,7 +129,7 @@ const useRouteDrawer = ({
       }
       const pitchLabelPoint =
         movement.current !== DEFAULT_POSITION
-          ? `${movement.current.x},${movement.current.y}`
+          ? `${movement.current.x / scale},${movement.current.y / scale}`
           : undefined;
 
       mutate({
