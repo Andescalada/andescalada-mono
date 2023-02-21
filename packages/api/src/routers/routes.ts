@@ -139,28 +139,33 @@ export const routesRouter = t.router({
         path: z.string(),
         topoId: z.string(),
         routePathId: z.string().optional(),
+        pitchLabelPoint: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const updateOrCreate = async () => {
-        if (input.routePathId) {
-          return ctx.prisma.routePath.update({
-            where: { id: input.routePathId },
-            data: { path: input.path },
-          });
-        } else {
-          return ctx.prisma.routePath.create({
-            data: {
-              Topo: { connect: { id: input.topoId } },
-              Route: { connect: { id: input.routeId } },
-              Author: { connect: { email: ctx.user.email } },
-              path: input.path,
-            },
-          });
-        }
-      };
+      const routePath = await ctx.prisma.routePath.upsert({
+        where: { id: input.routePathId },
+        include: { Author: { select: { email: true } } },
+        create: {
+          Topo: { connect: { id: input.topoId } },
+          Route: { connect: { id: input.routeId } },
+          Author: { connect: { email: ctx.user.email } },
+          path: input.path,
+          pitchLabelPoint: input.pitchLabelPoint,
+        },
+        update: {
+          path: input.path,
+          pitchLabelPoint: input.pitchLabelPoint,
+        },
+      });
 
-      const routePath = await updateOrCreate();
+      if (routePath.Author.email !== ctx.user.email) {
+        await ctx.prisma.routePath.update({
+          where: { id: routePath.id },
+          data: { coAuthors: { connect: { email: ctx.user.email } } },
+        });
+      }
+
       await ctx.prisma.topo.update({
         where: { id: input.topoId },
         data: { version: { increment: 1 } },

@@ -1,10 +1,14 @@
 import { SkiaRouteRef } from "@andescalada/climbs-drawer/SkiaRoutePathDrawer/SkiaRoutePathDrawer";
+import {
+  DEFAULT_POSITION,
+  pointToVector,
+} from "@andescalada/climbs-drawer/utils";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import type { Route, RoutePath, Topo, Wall, Zone } from "@prisma/client";
-import { useValue } from "@shopify/react-native-skia";
+import { SkPoint, useValue } from "@shopify/react-native-skia";
 import { useRef, useState } from "react";
 
 interface SelectedRoute {
@@ -22,6 +26,9 @@ interface Args {
   position: number;
   routeStrokeWidth: number;
   routePathId?: RoutePath["id"];
+  pitchLabelPoint?: string;
+  scale?: number;
+  withLabel?: boolean;
 }
 
 const useRouteDrawer = ({
@@ -32,7 +39,19 @@ const useRouteDrawer = ({
   zoneId,
   routePathId,
   routeStrokeWidth,
+  pitchLabelPoint,
+  scale,
+  withLabel = false,
 }: Args) => {
+  const movement = useValue<SkPoint>(
+    pointToVector(pitchLabelPoint, scale || 1),
+  );
+
+  const [disableMovement, setDisableMovement] = useState(true);
+  const handleLabelMovement = () => {
+    setDisableMovement((prev) => !prev);
+  };
+
   const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation({
     onSuccess: () => {
       utils.topos.byId.invalidate({ topoId, zoneId });
@@ -83,7 +102,11 @@ const useRouteDrawer = ({
   const onFinishOrSave = () => {
     if (!canSave) {
       routeRef?.current?.finishRoute();
-
+      if (withLabel) {
+        movement.current = routeRef?.current?.getLabelPosition({
+          toString: false,
+        }) as SkPoint;
+      }
       setRoute((prev) => ({
         ...prev,
         id: routeId,
@@ -106,11 +129,17 @@ const useRouteDrawer = ({
         });
         return;
       }
+      const pitchLabelPoint =
+        movement.current !== DEFAULT_POSITION
+          ? `${movement.current.x},${movement.current.y}`
+          : undefined;
+
       mutate({
         path: route.path,
         routeId: route.id,
         topoId,
         routePathId,
+        pitchLabelPoint,
       });
       modifyStrokeWidth.mutate({
         zoneId,
@@ -132,6 +161,9 @@ const useRouteDrawer = ({
     routeRef,
     showConfig,
     setShowConfig,
+    movement,
+    handleLabelMovement,
+    disableMovement,
   };
 };
 

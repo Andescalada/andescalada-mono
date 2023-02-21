@@ -4,7 +4,11 @@ import {
   SkiaRoutePath,
   SkiaRoutePathDrawer,
 } from "@andescalada/climbs-drawer";
-import { pathToArray } from "@andescalada/climbs-drawer/utils";
+import StartPointer from "@andescalada/climbs-drawer/SkiaRoutePathDrawer/StartPointer";
+import {
+  DEFAULT_POSITION,
+  pathToArray,
+} from "@andescalada/climbs-drawer/utils";
 import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
@@ -83,6 +87,11 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     },
   );
 
+  const { fileUrl, isImageLoaded, fitted } = useTopoImage({
+    wallId,
+    zoneId,
+  });
+
   const {
     canSave,
     coords,
@@ -93,6 +102,9 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     setCanSave,
     setShowConfig,
     showConfig,
+    movement,
+    handleLabelMovement,
+    disableMovement,
   } = useRouteDrawer({
     position: routeParams.position,
     routeId: routeParams.id,
@@ -101,11 +113,9 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     routePathId: topos?.selectedRoute?.id,
     routeStrokeWidth,
     zoneId,
-  });
-
-  const { fileUrl, isImageLoaded, fitted } = useTopoImage({
-    wallId,
-    zoneId,
+    pitchLabelPoint: topos?.selectedRoute?.pitchLabelPoint || undefined,
+    scale: fitted.scale,
+    withLabel: true,
   });
 
   const onUndo = () => {
@@ -113,12 +123,12 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     setCanSave(false);
   };
 
-  const [startDisconnected, setDisconnectedStart] = useState(
+  const [showStartBadge, setShowStartBadge] = useState(
     !!topos?.selectedRoute?.path && !previousPitchStart,
   );
 
   const onReset = () => {
-    if (startDisconnected || !previousPitchStart) {
+    if (showStartBadge || !previousPitchStart) {
       routeRef?.current?.reset();
     } else {
       routeRef?.current?.softReset(previousPitchStart);
@@ -126,17 +136,26 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     setCanSave(false);
   };
 
+  const handleConnection = () => {
+    setShowStartBadge((prev) => {
+      if (prev) {
+        connectStart();
+      } else {
+        disconnectStart();
+      }
+      return !prev;
+    });
+  };
+
   const disconnectStart = () => {
     routeRef?.current?.reset();
     setCanSave(false);
-    setDisconnectedStart(true);
   };
 
   const connectStart = () => {
     if (!previousPitchStart) return;
     routeRef?.current?.softReset(previousPitchStart);
     setCanSave(false);
-    setDisconnectedStart(false);
   };
 
   if (route && isImageLoaded && (!previousPitchId || !!previousPitchStart))
@@ -144,36 +163,51 @@ const MultiPitchDrawerScreen: FC<Props> = ({
       <Screen safeAreaDisabled justifyContent="center">
         <SkiaRouteCanvas
           coords={coords}
+          movement={movement}
           imageUrl={fileUrl}
           height={fitted.height}
           width={fitted.width}
+          disableGesture={!disableMovement}
+          disableMovement={disableMovement}
         >
           {showRoutes &&
             topos?.otherRoutes?.map((route) => (
-              <SkiaRoutePath
-                key={route.id}
-                label={route.Route.position.toString()}
-                path={route.path}
-                pitchLabelPoint={route.pitchLabelPoint || undefined}
-                scale={fitted.scale}
-                color={
-                  route.routeId === previousPitchId
-                    ? theme.colors.drawingRoutePath
-                    : theme.colors.routePath
-                }
-                strokeWidth={routeStrokeWidth}
-              />
+              <>
+                <SkiaRoutePath
+                  key={route.id}
+                  label={route.Route.position.toString()}
+                  path={route.path}
+                  pitchLabelPoint={route.pitchLabelPoint || undefined}
+                  scale={fitted.scale}
+                  color={
+                    route.routeId === previousPitchId
+                      ? theme.colors.drawingRoutePath
+                      : theme.colors.routePath
+                  }
+                  strokeWidth={routeStrokeWidth}
+                />
+              </>
             ))}
+          {movement.current !== DEFAULT_POSITION && (
+            <StartPointer
+              color="transparent"
+              backgroundColor={theme.colors["contrast.bright.green"]}
+              label={"1"}
+              scale={fitted.scale}
+              c={movement}
+            />
+          )}
           <SkiaRoutePathDrawer
             coords={coords}
             ref={routeRef}
             path={topos?.selectedRoute?.path || previousPitchStart}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
-            withStart={!startDisconnected}
-            withEnd={!!topos?.selectedRoute?.path}
+            defaultStart={!!topos?.selectedRoute?.path || !!previousPitchStart}
+            defaultEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
+            hideStart={!showStartBadge}
           />
         </SkiaRouteCanvas>
         <BackButton.Transparent
@@ -199,10 +233,11 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           onUndo={onUndo}
           onReset={onReset}
           canDisconnect={!!previousPitchStart}
-          isDisconnected={startDisconnected}
-          onDisconnect={() => {
-            startDisconnected ? connectStart() : disconnectStart();
-          }}
+          isDisconnected={showStartBadge}
+          onDisconnect={handleConnection}
+          onLabelMovement={handleLabelMovement}
+          labelCanMove={!disableMovement}
+          labelOnScreen={movement.current !== DEFAULT_POSITION}
         />
       </Screen>
     );

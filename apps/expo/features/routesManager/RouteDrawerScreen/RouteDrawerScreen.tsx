@@ -105,17 +105,6 @@ const DrawRoute: FC<Props> = ({
           height={fitted.height}
           width={fitted.width}
         >
-          <SkiaRoutePathDrawer
-            coords={coords}
-            ref={routeRef}
-            path={topos?.selectedRoute?.path}
-            label={routeParams?.position.toString()}
-            color={theme.colors.drawingRoutePath}
-            withStart={!!topos?.selectedRoute?.path}
-            withEnd={!!topos?.selectedRoute?.path}
-            scale={fitted.scale}
-            strokeWidth={routeStrokeWidth}
-          />
           {showRoutes &&
             topos?.otherRoutes?.map((route) => (
               <SkiaRoutePath
@@ -127,6 +116,17 @@ const DrawRoute: FC<Props> = ({
                 strokeWidth={routeStrokeWidth}
               />
             ))}
+          <SkiaRoutePathDrawer
+            coords={coords}
+            ref={routeRef}
+            path={topos?.selectedRoute?.path}
+            label={routeParams?.position.toString()}
+            color={theme.colors.drawingRoutePath}
+            defaultStart={!!topos?.selectedRoute?.path}
+            defaultEnd={!!topos?.selectedRoute?.path}
+            scale={fitted.scale}
+            strokeWidth={routeStrokeWidth}
+          />
         </SkiaRouteCanvas>
         <BackButton.Transparent
           iconProps={{ color: "grayscale.black" }}

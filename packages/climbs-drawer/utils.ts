@@ -16,11 +16,13 @@ export const scalePath = (path: string | undefined, scale = 1) => {
   return points.map((p) => p.join(",")).join(" ");
 };
 
+export const DEFAULT_POSITION = { x: 0, y: 0 };
+
 export const pointToVector = (
   point: string | undefined = undefined,
   scale: number,
 ) => {
-  if (!point) return { x: 0, y: 0 };
+  if (!point) return DEFAULT_POSITION;
   const [x, y] = point.split(",").map((n) => parseFloat(n));
   return { x: x * scale, y: y * scale };
 };

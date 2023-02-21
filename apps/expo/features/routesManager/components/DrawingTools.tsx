@@ -16,6 +16,9 @@ interface Props {
   onDisconnect?: () => void;
   isDisconnected?: boolean;
   canDisconnect?: boolean;
+  onLabelMovement?: () => void;
+  labelCanMove?: boolean;
+  labelOnScreen?: boolean;
 }
 
 const DrawingTools = ({
@@ -27,9 +30,12 @@ const DrawingTools = ({
   onReset,
   setShowConfig,
   onUndo,
+  onLabelMovement,
   isDisconnected = false,
   isMultiPitch = false,
   canDisconnect = false,
+  labelCanMove = false,
+  labelOnScreen = false,
 }: Props) => {
   const dispatch = useAppDispatch();
   const { showRoutes } = useAppSelector((state) => state.localConfig);
@@ -56,6 +62,27 @@ const DrawingTools = ({
             isLoading={isLoading}
             onPress={onFinishOrSave}
           />
+        </A.Box>
+      )}
+      {labelCanMove && (
+        <A.Box
+          position="absolute"
+          bottom={150}
+          right={0}
+          left={0}
+          flex={1}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <A.Box
+            bg="semantic.warning"
+            padding="s"
+            borderRadius={20}
+            entering={FadeIn}
+            exiting={FadeOut}
+          >
+            <Text color="grayscale.black"> Zoom fijo</Text>
+          </A.Box>
         </A.Box>
       )}
       <A.ScrollView
@@ -104,15 +131,15 @@ const DrawingTools = ({
                 onPress={onDisconnect}
               />
             )}
-            <ToolItem
-              title="Mover"
-              secondLine="etiqueta"
-              iconName={"ellipse-sharp"}
-              marginRight="l"
-              onPress={() => {
-                dispatch(setShowRoutes());
-              }}
-            />
+            {labelOnScreen && (
+              <ToolItem
+                title={labelCanMove ? "Fijar" : "Mover"}
+                secondLine="etiqueta"
+                iconName={"ellipse-sharp"}
+                marginRight="l"
+                onPress={onLabelMovement}
+              />
+            )}
           </>
         )}
       </A.ScrollView>
