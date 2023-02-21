@@ -200,17 +200,6 @@ const MultiPitchDrawerScreen: FC<Props> = ({
                 />
               </>
             ))}
-          {movement.current !== DEFAULT_POSITION && (
-            <StartPointer
-              color="transparent"
-              backgroundColor={theme.colors["contrast.bright.green"]}
-              label={String(
-                pitchNumber ?? topos?.selectedRoute?.Route.Pitch?.number,
-              )}
-              scale={fitted.scale}
-              c={movement}
-            />
-          )}
           <SkiaRoutePathDrawer
             coords={coords}
             ref={routeRef}
@@ -223,6 +212,17 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             strokeWidth={routeStrokeWidth}
             hideStart={hideStart}
           />
+          {movement.current !== DEFAULT_POSITION && (
+            <StartPointer
+              color="transparent"
+              backgroundColor={theme.colors["contrast.bright.green"]}
+              label={String(
+                pitchNumber ?? topos?.selectedRoute?.Route.Pitch?.number,
+              )}
+              scale={fitted.scale}
+              c={movement}
+            />
+          )}
         </SkiaRouteCanvas>
         <BackButton.Transparent
           iconProps={{ color: "grayscale.black" }}

@@ -68,9 +68,7 @@ const addPitch = protectedZoneProcedure
         MultiPitch: { connect: { id: input.multiPitchId } },
         Route: {
           create: {
-            name: `${multiPitch.name}-${
-              Number(multiPitch.Pitches[0]?.number) + 1
-            }`,
+            name: `${multiPitch.name}-${number}`,
             slug: slug(multiPitch.name),
             position: multiPitch.position,
             Wall: { connect: { id: multiPitch.wallId } },
