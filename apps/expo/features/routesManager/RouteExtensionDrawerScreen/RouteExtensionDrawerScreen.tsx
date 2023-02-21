@@ -9,7 +9,7 @@ import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
-import RoutePathDrawConfig from "@features/routesManager/components/RoutePathDrawConfig";
+import RouteStrokeWidth from "@features/routesManager/components/RouteStrokeWidth";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -162,7 +162,7 @@ const DrawRoute: FC<Props> = ({
           Comienza a dibujar la extensión de la ruta, comenzará desde el punto
           donde termina la ruta anterior.
         </Instructions>
-        <RoutePathDrawConfig
+        <RouteStrokeWidth
           show={showConfig}
           setShow={setShowConfig}
           defaultRouteStrokeWidth={topos?.routeStrokeWidth}

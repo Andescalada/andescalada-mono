@@ -12,7 +12,7 @@ interface Props {
   defaultRouteStrokeWidth?: number;
 }
 
-const RoutePathDrawConfig: FC<Props> = ({
+const RouteStrokeWidth: FC<Props> = ({
   show,
   setShow,
   defaultRouteStrokeWidth = 1,
@@ -39,14 +39,14 @@ const RoutePathDrawConfig: FC<Props> = ({
         entering={SlideInRight}
         exiting={SlideOutRight}
       >
-        <Pressable marginTop="s" onPress={() => setShow(false)}>
+        <Pressable marginRight="s" onPress={() => setShow(false)}>
           <Ionicons
-            name="close-sharp"
+            name="close-circle-sharp"
             size={30}
             color="grayscale.transparent.80.200"
           />
         </Pressable>
-        <Box alignItems="center" justifyContent="center">
+        <Box>
           <Slider
             value={routeStrokeWidth}
             min={0.5}
@@ -64,4 +64,4 @@ const RoutePathDrawConfig: FC<Props> = ({
   return <Box />;
 };
 
-export default RoutePathDrawConfig;
+export default RouteStrokeWidth;

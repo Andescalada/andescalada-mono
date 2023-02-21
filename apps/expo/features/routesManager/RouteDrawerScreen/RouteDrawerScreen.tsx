@@ -8,7 +8,7 @@ import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
-import RoutePathDrawConfig from "@features/routesManager/components/RoutePathDrawConfig";
+import RouteStrokeWidth from "@features/routesManager/components/RouteStrokeWidth";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -137,7 +137,7 @@ const DrawRoute: FC<Props> = ({
             ? 'Pulsa "deshacer" para borrar el último punto o "borrar" para borrar todo'
             : "Pulsa sobre la imagen para dibujar la ruta"}
         </Instructions>
-        <RoutePathDrawConfig
+        <RouteStrokeWidth
           show={showConfig}
           setShow={setShowConfig}
           defaultRouteStrokeWidth={topos?.routeStrokeWidth}

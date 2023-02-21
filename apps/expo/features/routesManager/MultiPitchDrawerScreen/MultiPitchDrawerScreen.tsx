@@ -13,7 +13,7 @@ import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
-import RoutePathDrawConfig from "@features/routesManager/components/RoutePathDrawConfig";
+import RouteStrokeWidth from "@features/routesManager/components/RouteStrokeWidth";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -220,7 +220,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
           Comienza a dibujar el siguiente largo, empezará desde el punto donde
           termina el largo anterior.
         </Instructions>
-        <RoutePathDrawConfig
+        <RouteStrokeWidth
           show={showConfig}
           setShow={setShowConfig}
           defaultRouteStrokeWidth={topos?.routeStrokeWidth}
