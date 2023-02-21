@@ -15,6 +15,7 @@ interface Props extends ComponentProps<typeof Box> {
   titleProps?: ComponentProps<typeof Text>;
   backButtonProps?: ComponentProps<typeof BackButton>;
   iconProps?: ComponentProps<typeof Entypo>;
+  showOptions?: boolean;
 }
 
 const Header = ({
@@ -25,6 +26,7 @@ const Header = ({
   titleProps,
   backButtonProps,
   iconProps,
+  showOptions = true,
   ...props
 }: Props) => {
   const theme = useTheme<Theme>();
@@ -41,13 +43,15 @@ const Header = ({
           {title}
         </Text>
       </Box>
-      <Entypo
-        onPress={onOptions}
-        name="dots-three-horizontal"
-        size={24}
-        color={theme.colors["grayscale.100"]}
-        {...iconProps}
-      />
+      {showOptions && (
+        <Entypo
+          onPress={onOptions}
+          name="dots-three-horizontal"
+          size={24}
+          color={theme.colors["grayscale.100"]}
+          {...iconProps}
+        />
+      )}
     </Box>
   );
 };

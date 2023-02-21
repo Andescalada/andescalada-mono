@@ -72,6 +72,7 @@ const EditOptions: FC<Props> = ({
           multiPitchName: name,
           zoneId,
           topoId: Wall.topos[0].id,
+          wallId,
         },
       });
     },

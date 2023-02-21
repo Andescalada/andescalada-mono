@@ -179,6 +179,7 @@ const useRouteOptions = ({
         multiPitchName: name,
         zoneId,
         topoId,
+        wallId,
       },
     });
   };

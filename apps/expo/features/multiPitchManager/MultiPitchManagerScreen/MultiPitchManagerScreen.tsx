@@ -14,6 +14,8 @@ import {
   MultiPitchManagerRoutes,
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
+import useOptionsSheet from "@hooks/useOptionsSheet";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { FC, useCallback, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
@@ -24,7 +26,7 @@ type Props =
 const MultiPitchManagerScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { multiPitchName, multiPitchId, zoneId, topoId },
+    params: { multiPitchName, multiPitchId, zoneId, topoId, wallId },
   },
 }) => {
   const { data, isLoading, refetch, isRefetching } =
@@ -49,10 +51,30 @@ const MultiPitchManagerScreen: FC<Props> = ({
     [data?.Pitches, multiPitchId, navigation, topoId, zoneId],
   );
 
+  const { permission } = usePermissions({ zoneId });
+
+  const onOptions = useOptionsSheet({
+    "Cambiar Nombre": {
+      action: () =>
+        navigation.navigate(MultiPitchManagerRoutes.AddMultiPitch, {
+          wallId,
+          zoneId,
+          multiPitchId,
+          multiPitchName: data?.name,
+          unknownName: data?.unknownName,
+        }),
+      hide: !permission?.has("Update"),
+    },
+  });
+
   if (isLoading)
     return (
       <Screen padding="m">
-        <Header title={multiPitchName} onGoBack={navigation.goBack} />
+        <Header
+          title={multiPitchName}
+          onGoBack={navigation.goBack}
+          showOptions={false}
+        />
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" />
         </Box>
@@ -60,7 +82,13 @@ const MultiPitchManagerScreen: FC<Props> = ({
     );
   return (
     <Screen padding="m">
-      <Header title={multiPitchName} onGoBack={navigation.goBack} />
+      <Header
+        title={multiPitchName}
+        onGoBack={navigation.goBack}
+        showOptions={permission.has("Update")}
+        onOptions={onOptions}
+        marginBottom="m"
+      />
       <FlatList
         data={data?.Pitches}
         keyExtractor={(item) => item.id}

@@ -5,14 +5,32 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 const add = protectedZoneProcedure
-  .input(wall.id.merge(route.schema.pick({ name: true, unknownName: true })))
+  .input(
+    wall.id
+      .merge(route.schema.pick({ name: true, unknownName: true }))
+      .merge(z.object({ multiPitchId: z.string().optional() })),
+  )
   .mutation(async ({ ctx, input }) => {
     if (!ctx.permissions.has("Create")) {
       throw new TRPCError(
         error.unauthorizedActionForZone("Create", input.zoneId),
       );
+    }
+
+    if (!!input.multiPitchId) {
+      if (!ctx.permissions.has("Update")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone("Update", input.zoneId),
+        );
+      }
+
+      return ctx.prisma.multiPitch.update({
+        where: { id: input.multiPitchId },
+        data: { name: input.name, unknownName: input.unknownName },
+      });
     }
 
     const routesPosition = await ctx.prisma.route.aggregate({

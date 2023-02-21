@@ -19,7 +19,7 @@ import {
 } from "@features/multiPitchManager/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useController } from "react-hook-form";
 import { Alert, Keyboard } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
@@ -32,16 +32,36 @@ const schema = route.schema.pick({ name: true, unknownName: true });
 const AddMultiPitchScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { zoneId, wallId },
+    params: {
+      zoneId,
+      wallId,
+      multiPitchName,
+      unknownName: defaultUnknownName,
+      multiPitchId,
+    },
   },
 }) => {
+  const text = useMemo(() => {
+    if (!!multiPitchName || !!defaultUnknownName) {
+      return {
+        isEditing: true,
+        title: "Editar multi largo",
+        buttonTitle: "Editar",
+      };
+    }
+    return {
+      isEditing: false,
+      title: "Agregar multi largo",
+      buttonTitle: "Editar",
+    };
+  }, [multiPitchName, defaultUnknownName]);
   const {
     handleSubmit,
     control,
     formState: { isDirty },
   } = useZodForm({
     schema,
-    // defaultValues: rest,
+    defaultValues: { name: multiPitchName, unknownName: defaultUnknownName },
   });
   const {
     field: { onChange, value },
@@ -104,13 +124,14 @@ const AddMultiPitchScreen: FC<Props> = ({
           multiPitchName: name,
           zoneId,
           topoId: mainTopo.data,
+          wallId,
         },
       });
     },
   });
 
   const onSubmit = handleSubmit(({ name, unknownName }) => {
-    mutate({ name, unknownName, wallId, zoneId });
+    mutate({ name, unknownName, wallId, zoneId, multiPitchId });
   });
 
   return (
@@ -123,7 +144,7 @@ const AddMultiPitchScreen: FC<Props> = ({
         onResponderGrant={Keyboard.dismiss}
       >
         <Box>
-          <Text variant="h1">Agregar multi largo</Text>
+          <Text variant="h1">{text.title}</Text>
           <Text variant={"p1R"} marginBottom={"s"} marginTop="m">
             Nombre multi largo
           </Text>
@@ -193,7 +214,7 @@ const AddMultiPitchScreen: FC<Props> = ({
         <Box>
           <Button
             variant="primary"
-            title={"Agregar"}
+            title={text.buttonTitle}
             onPress={onSubmit}
             isLoading={isLoading}
             marginVertical="s"
