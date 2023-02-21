@@ -294,7 +294,7 @@ export const wallsRouter = t.router({
       });
 
       if (!mainTopo || !mainTopo.topos.length || !mainTopo.topos[0].id) {
-        return null;
+        return undefined;
       }
       return mainTopo.topos[0].id;
     }),

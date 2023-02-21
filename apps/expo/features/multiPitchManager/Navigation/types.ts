@@ -1,4 +1,4 @@
-import { MultiPitch, Pitch, Route, Topo, Zone } from "@prisma/client";
+import { MultiPitch, Pitch, Route, Topo, Wall, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParseGrade } from "@utils/parseGrade";
@@ -7,6 +7,7 @@ export enum MultiPitchManagerRoutes {
   MultiPitchManager = "MultiPitchManager",
   AddPitch = "AddPitch",
   EditPitch = "EditPitch",
+  AddMultiPitch = "AddMultiPitch",
 }
 
 export type MultiPitchManagerNavigationParamList = {
@@ -29,6 +30,10 @@ export type MultiPitchManagerNavigationParamList = {
     grade: ParseGrade;
     routeId: Route["id"];
     pitchId: Pitch["id"];
+  };
+  [MultiPitchManagerRoutes.AddMultiPitch]: {
+    wallId: Wall["id"];
+    zoneId: Zone["id"];
   };
 };
 

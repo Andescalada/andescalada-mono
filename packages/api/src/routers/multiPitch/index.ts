@@ -1,4 +1,5 @@
 import { t } from "@andescalada/api/src/createRouter";
+import add from "@andescalada/api/src/routers/multiPitch/add";
 import addPitch from "@andescalada/api/src/routers/multiPitch/addPitch";
 import byId from "@andescalada/api/src/routers/multiPitch/byId";
 import convertRoute from "@andescalada/api/src/routers/multiPitch/convertRoute";
@@ -15,4 +16,5 @@ export const multiPitchRouter = t.router({
   editPitch,
   deletePitch,
   pitchById,
+  add,
 });

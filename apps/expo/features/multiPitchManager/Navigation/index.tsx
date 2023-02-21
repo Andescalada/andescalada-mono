@@ -1,3 +1,4 @@
+import AddMultiPitchScreen from "@features/multiPitchManager/AddMultiPitchScreen";
 import AddPitchScreen from "@features/multiPitchManager/AddPitchScreen";
 import EditPitchScreen from "@features/multiPitchManager/EditPitchScreen";
 import MultiPitchManagerScreen from "@features/multiPitchManager/MultiPitchManagerScreen";
@@ -35,6 +36,10 @@ const Navigator = () => {
         options={{
           presentation: "modal",
         }}
+      />
+      <Stack.Screen
+        name={MultiPitchManagerRoutes.AddMultiPitch}
+        component={AddMultiPitchScreen}
       />
     </Stack.Navigator>
   );
