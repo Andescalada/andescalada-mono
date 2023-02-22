@@ -26,6 +26,7 @@ export const toposRouter = t.router({
                 kind: true,
                 name: true,
                 RouteGrade: true,
+                Pitch: { select: { number: true } },
               },
             },
           },

@@ -1,6 +1,5 @@
 import { flattenObject } from "@andescalada/utils/flattenObject";
 import { createTheme } from "@shopify/restyle";
-import { clearConfigCache } from "prettier";
 
 import breakpoints from "./breakpoints";
 import buttonVariants, { buttonVariantsColors } from "./buttonVariants";
@@ -53,6 +52,7 @@ const darkBaseTheme = {
     boulderRoutes: pallete.contrast.opaque.red,
     textButtonInfo: pallete.semantic.info,
     textButtonError: pallete.semantic.error,
+    textButtonTransparent: pallete.grayscale[600],
     ...lisItemVariantsColors,
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,

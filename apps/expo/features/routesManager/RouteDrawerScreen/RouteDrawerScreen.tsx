@@ -8,7 +8,7 @@ import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
-import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
+import RouteStrokeWidth from "@features/routesManager/components/RouteStrokeWidth";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -53,6 +53,7 @@ const DrawRoute: FC<Props> = ({
           return {
             otherRoutes,
             selectedRoute,
+            routeStrokeWidth: Number(topo.routeStrokeWidth),
           };
         },
         [routeParams.id],
@@ -82,6 +83,7 @@ const DrawRoute: FC<Props> = ({
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
     wallId,
+    zoneId,
   });
 
   const onUndo = () => {
@@ -103,17 +105,6 @@ const DrawRoute: FC<Props> = ({
           height={fitted.height}
           width={fitted.width}
         >
-          <SkiaRoutePathDrawer
-            coords={coords}
-            ref={routeRef}
-            path={topos?.selectedRoute?.path}
-            label={routeParams?.position.toString()}
-            color={theme.colors.drawingRoutePath}
-            withStart={!!topos?.selectedRoute?.path}
-            withEnd={!!topos?.selectedRoute?.path}
-            scale={fitted.scale}
-            strokeWidth={routeStrokeWidth}
-          />
           {showRoutes &&
             topos?.otherRoutes?.map((route) => (
               <SkiaRoutePath
@@ -125,14 +116,32 @@ const DrawRoute: FC<Props> = ({
                 strokeWidth={routeStrokeWidth}
               />
             ))}
+          <SkiaRoutePathDrawer
+            coords={coords}
+            ref={routeRef}
+            path={topos?.selectedRoute?.path}
+            label={routeParams?.position.toString()}
+            color={theme.colors.drawingRoutePath}
+            defaultStart={!!topos?.selectedRoute?.path}
+            defaultEnd={!!topos?.selectedRoute?.path}
+            scale={fitted.scale}
+            strokeWidth={routeStrokeWidth}
+          />
         </SkiaRouteCanvas>
-        <BackButton.Transparent onPress={navigation.goBack} />
+        <BackButton.Transparent
+          iconProps={{ color: "grayscale.black" }}
+          onPress={navigation.goBack}
+        />
         <Instructions>
           {!!topos?.selectedRoute?.path
             ? 'Pulsa "deshacer" para borrar el último punto o "borrar" para borrar todo'
             : "Pulsa sobre la imagen para dibujar la ruta"}
         </Instructions>
-        <RoutePathConfig show={showConfig} setShow={setShowConfig} />
+        <RouteStrokeWidth
+          show={showConfig}
+          setShow={setShowConfig}
+          defaultRouteStrokeWidth={topos?.routeStrokeWidth}
+        />
         <DrawingTools
           canSave={canSave}
           onFinishOrSave={onFinishOrSave}

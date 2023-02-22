@@ -1,22 +1,32 @@
 import { SCREEN_HEIGHT } from "@andescalada/climbs-drawer/SkiaRouteCanvas/SkiaRouteCanvas";
 import { A, Box, Text } from "@andescalada/ui";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface InstructionProps {
   children: ReactNode;
+  delay?: number;
 }
 
-const Instructions = ({ children }: InstructionProps) => {
+export const SHOWING_TIME = 3000;
+
+const Instructions = ({ children, delay = 0 }: InstructionProps) => {
   const [showInstruction, setShowInstructions] = useState(true);
 
   const timeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const timeOut = useCallback((delay: number) => {
+    timeRef.current = setTimeout(
+      () => setShowInstructions(false),
+      SHOWING_TIME + delay,
+    );
+  }, []);
+
   useEffect(() => {
     if (showInstruction) {
-      timeRef.current = setTimeout(() => setShowInstructions(false), 3000);
+      timeOut(delay);
     }
-  }, [showInstruction]);
+  }, [showInstruction, timeOut, delay]);
 
   if (showInstruction)
     return (
@@ -30,11 +40,14 @@ const Instructions = ({ children }: InstructionProps) => {
         alignItems="center"
         padding="s"
         borderRadius={10}
-        entering={FadeIn}
+        entering={FadeIn.delay(delay)}
         exiting={FadeOut}
         onPressIn={() => {
           if (timeRef.current) clearTimeout(timeRef.current);
-          setShowInstructions(false);
+          // setShowInstructions(false);
+        }}
+        onPressOut={() => {
+          timeOut(2000);
         }}
       >
         <Text variant="p2R">{children}</Text>

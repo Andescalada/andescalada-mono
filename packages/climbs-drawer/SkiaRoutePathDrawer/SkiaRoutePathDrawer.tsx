@@ -2,6 +2,7 @@ import {
   Group,
   Points,
   SkiaValue,
+  SkPoint,
   useValue,
   useValueEffect,
   vec,
@@ -27,20 +28,25 @@ interface Props {
     y: number;
   }>;
   path?: string;
-  withEnd?: boolean;
-  withStart?: boolean;
+  defaultEnd?: boolean;
+  defaultStart?: boolean;
   label?: string;
   color?: string;
   scale?: number;
   strokeWidth?: number;
-  withoutStart?: boolean;
+  hideStart?: boolean;
 }
-
+type GetLabelPosition = ({
+  toString,
+}: {
+  toString: boolean;
+}) => string | SkPoint;
 interface Ref {
   undo: (softReset?: boolean) => void;
   finishRoute: (onFinish?: () => void) => void;
   reset: () => void;
   pointsToString: () => string;
+  getLabelPosition: GetLabelPosition;
   softReset: (path: string) => void;
 }
 
@@ -48,13 +54,13 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
   {
     coords,
     path,
-    withEnd,
-    withStart,
+    defaultEnd: withEnd,
+    defaultStart: withStart,
     label = "?",
     color,
     scale = 1,
-    withoutStart = false,
     strokeWidth: strokeWidthProp = 1,
+    hideStart = false,
   },
   ref,
 ) => {
@@ -71,7 +77,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
       ...points.current,
       vec(coords.current.x, coords.current.y),
     ];
-    if (points.current.length > 0 && !drawStart.current && !withoutStart) {
+    if (points.current.length > 0 && !drawStart.current && !hideStart) {
       setHasStart(true);
       drawStart.current = true;
       start.current = points.current[0];
@@ -126,6 +132,18 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     [drawEnd, drawStart, points, scale, start],
   );
 
+  const getLabelPosition = useCallback(
+    ({ toString }: { toString: boolean }) => {
+      if (points.current.length < 1 && toString) return "0,0";
+      if (points.current.length < 1) return vec(0, 0);
+      const middle = Math.floor(points.current.length / 2);
+      const middlePoint = points.current[middle];
+      if (!toString) return middlePoint;
+      return `${middlePoint.x / scale},${middlePoint.y / scale}`;
+    },
+    [points, scale],
+  );
+
   const pointsToString = useCallback(() => {
     if (points.current.length < 1) return "0,0";
     const stringifyPoints = points.current
@@ -145,6 +163,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     reset,
     pointsToString,
     softReset,
+    getLabelPosition,
   }));
 
   return (

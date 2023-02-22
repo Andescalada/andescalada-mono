@@ -1,14 +1,13 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
-import { ThemeProvider } from "@andescalada/ui";
+import { ActivityIndicator, Box, ThemeProvider } from "@andescalada/ui";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import { Zone } from "@prisma/client";
 import {
-  dist,
   useComputedValue,
   useValue,
   useValueEffect,
@@ -16,6 +15,7 @@ import {
 import { inferProcedureOutput } from "@trpc/server";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
+import selectRouteByPoint from "@utils/selectRouteByPoint";
 import { FC, memo, useMemo, useState } from "react";
 
 type PathItem = inferProcedureOutput<
@@ -33,8 +33,6 @@ interface Props {
   onSelectedRoute?: (id: string | undefined) => void;
   zoneId: Zone["id"];
 }
-
-const MIN_TOUCH_DISTANCE = 10;
 
 const TopoViewer: FC<Props> = ({
   routeId,
@@ -60,30 +58,35 @@ const TopoViewer: FC<Props> = ({
     "width",
   );
 
+  const paths = data?.RoutePath || [];
+
   const routeStarts = useComputedValue(() => {
-    if (data?.RoutePath) {
-      return data.RoutePath.map((path) => ({
-        ...path,
-        start: pathToVector(path.path, fitted.scale)[0],
-        end: pathToVector(path.path, fitted.scale).pop(),
-      }));
-    }
-    return [];
-  }, [data?.RoutePath]);
+    return paths.map((path) => ({
+      ...path,
+      pitchLabelPoint: path.pitchLabelPoint,
+      routeId: path.routeId,
+      pathToVector: pathToVector(path.path, fitted.scale),
+      start: pathToVector(path.path, fitted.scale)[0],
+      end: pathToVector(path.path, fitted.scale).pop(),
+    }));
+  }, [paths]);
 
   const [selectedRoute, setSelectedRoute] = useState<string | undefined>(
     routeId || "",
   );
 
-  useValueEffect(coords, (coords) => {
-    const d = routeStarts.current.find(
-      (route) =>
-        dist(route.start, coords) < MIN_TOUCH_DISTANCE ||
-        (route.end && dist(route.end, coords) < MIN_TOUCH_DISTANCE),
-    );
-    setSelectedRoute(d?.routeId);
-    onSelectedRoute?.(d?.routeId);
+  useValueEffect(coords, (point) => {
+    const selectedRoute = selectRouteByPoint(routeStarts, point);
+    setSelectedRoute(selectedRoute);
+    onSelectedRoute?.(selectedRoute);
   });
+
+  if (!data || !fileUrl)
+    return (
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator />
+      </Box>
+    );
 
   if (data) {
     const { height, width } = data?.image;
@@ -100,10 +103,12 @@ const TopoViewer: FC<Props> = ({
       >
         <ThemeProvider>
           {!hide &&
-            data.RoutePath.map((path) => (
+            paths.map((path) => (
               <ColoredRoute
                 key={path.id}
                 path={path}
+                pitchLabelPoint={path.pitchLabelPoint || undefined}
+                pitchLabelTitle={String(path.Route.Pitch?.number)}
                 scale={fitted.scale}
                 selectedRoute={selectedRoute}
                 strokeWidth={strokeWidth}
@@ -123,6 +128,8 @@ interface ColoredRouteProps {
   selectedRoute: string | undefined;
   scale: number;
   strokeWidth: number;
+  pitchLabelPoint?: string;
+  pitchLabelTitle?: string;
 }
 
 const ColoredRoute = ({
@@ -130,6 +137,8 @@ const ColoredRoute = ({
   selectedRoute,
   scale,
   strokeWidth,
+  pitchLabelPoint,
+  pitchLabelTitle,
 }: ColoredRouteProps) => {
   const theme = useAppTheme();
 
@@ -148,6 +157,8 @@ const ColoredRoute = ({
       key={path.id}
       color={color}
       scale={scale}
+      pitchLabelPoint={pitchLabelPoint}
+      pitchLabelTitle={pitchLabelTitle}
       routeFromTheGround={!path.Route.extendedRouteId}
       strokeWidth={strokeWidth}
     />

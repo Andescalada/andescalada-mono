@@ -97,7 +97,6 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   return (
     <NavigationContainer
       linking={linking}
-      fallback={<Text>Loading...</Text>}
       {...{ onStateChange, initialState, ...props }}
       ref={navigationRef}
     >

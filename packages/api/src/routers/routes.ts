@@ -18,6 +18,7 @@ export const routesRouter = t.router({
         where: { id: input },
         include: {
           RouteGrade: true,
+          Pitch: { include: { MultiPitch: { select: { name: true } } } },
           Wall: {
             select: {
               topos: {
@@ -48,11 +49,20 @@ export const routesRouter = t.router({
       if (!ctx.permissions.has("Create")) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
-      const result = await ctx.prisma.route.aggregate({
+      const maxRoutePosition = await ctx.prisma.route.aggregate({
         where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
         _max: { position: true },
       });
-      const biggestPosition = result._max.position || 0;
+      const maxMultiPitchPosition = await ctx.prisma.multiPitch.aggregate({
+        where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
+        _max: { position: true },
+      });
+
+      const biggestPosition =
+        Math.max(
+          Number(maxRoutePosition._max.position),
+          Number(maxMultiPitchPosition._max.position),
+        ) ?? 0;
 
       const { grade, kind, name, originalGradeSystem, unknownName } = input;
 
@@ -129,28 +139,34 @@ export const routesRouter = t.router({
         path: z.string(),
         topoId: z.string(),
         routePathId: z.string().optional(),
+        pitchLabelPoint: z.string().optional(),
+        hideStart: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const updateOrCreate = async () => {
-        if (input.routePathId) {
-          return ctx.prisma.routePath.update({
-            where: { id: input.routePathId },
-            data: { path: input.path },
-          });
-        } else {
-          return ctx.prisma.routePath.create({
-            data: {
-              Topo: { connect: { id: input.topoId } },
-              Route: { connect: { id: input.routeId } },
-              Author: { connect: { email: ctx.user.email } },
-              path: input.path,
-            },
-          });
-        }
-      };
+      const routePath = await ctx.prisma.routePath.upsert({
+        where: { id: input.routePathId || "" },
+        include: { Author: { select: { email: true } } },
+        create: {
+          Topo: { connect: { id: input.topoId } },
+          Route: { connect: { id: input.routeId } },
+          Author: { connect: { email: ctx.user.email } },
+          path: input.path,
+          pitchLabelPoint: input.pitchLabelPoint,
+        },
+        update: {
+          path: input.path,
+          pitchLabelPoint: input.pitchLabelPoint,
+        },
+      });
 
-      const routePath = await updateOrCreate();
+      if (routePath.Author.email !== ctx.user.email) {
+        await ctx.prisma.routePath.update({
+          where: { id: routePath.id },
+          data: { coAuthors: { connect: { email: ctx.user.email } } },
+        });
+      }
+
       await ctx.prisma.topo.update({
         where: { id: input.topoId },
         data: { version: { increment: 1 } },
@@ -211,7 +227,11 @@ export const routesRouter = t.router({
       });
     }),
   delete: protectedZoneProcedure
-    .input(routeSchema.routeId.merge(global.isDeleted))
+    .input(
+      routeSchema.routeId
+        .merge(global.isDeleted)
+        .merge(z.object({ isExtension: z.boolean().optional() })),
+    )
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.route.findUnique({
         where: { id: input.routeId },

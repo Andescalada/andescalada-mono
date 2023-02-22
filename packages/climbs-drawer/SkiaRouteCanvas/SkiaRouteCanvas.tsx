@@ -25,6 +25,11 @@ interface Props {
     x: number;
     y: number;
   }>;
+  movement?: SkiaMutableValue<{
+    x: number;
+    y: number;
+  }>;
+  disableMovement?: boolean;
 }
 
 const SkiaRouteCanvas: FC<Props> = ({
@@ -35,9 +40,19 @@ const SkiaRouteCanvas: FC<Props> = ({
   coords,
   disableGesture,
   center,
+  movement,
+  disableMovement,
 }) => {
   const touchHandler = useMultiTouchHandler(
     {
+      onStart: ({ x, y }) => {
+        if (disableMovement) return;
+        if (movement) movement.current = { x, y };
+      },
+      onActive: ({ x, y }) => {
+        if (disableMovement) return;
+        if (movement) movement.current = { x, y };
+      },
       onEnd: ({ x, y, id }) => {
         if (disableGesture) return;
         if (coords) {

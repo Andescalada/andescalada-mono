@@ -3,12 +3,14 @@ import ClimbsStackNavigation from "@features/climbs/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
-import InfoAccessManager from "@features/InfoAccessManager/Navigation";
+import InfoAccessManagerStackNavigation from "@features/InfoAccessManager/Navigation";
+import MultiPitchManagerStackNavigation from "@features/multiPitchManager/Navigation";
 import useOffline from "@features/offline/useOffline";
 import OnboardingStackNavigation from "@features/onboarding/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import UserStackNavigation from "@features/user/Navigation";
 import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation";
+import ZoneDirectionsStackNavigation from "@features/zoneDirections/Navigation";
 import ZoneLocationStackNavigation from "@features/zoneLocation/Navigation";
 import ZoneManagerStackNavigation from "@features/zoneManager/Navigation";
 import useOwnInfo from "@hooks/useOwnInfo";
@@ -94,6 +96,10 @@ const Navigator = () => {
             component={ZoneLocationStackNavigation}
           />
           <Stack.Screen
+            name={RootNavigationRoutes.ZoneDirections}
+            component={ZoneDirectionsStackNavigation}
+          />
+          <Stack.Screen
             name={RootNavigationRoutes.ZoneManager}
             component={ZoneManagerStackNavigation}
           />
@@ -103,7 +109,11 @@ const Navigator = () => {
           />
           <Stack.Screen
             name={RootNavigationRoutes.InfoAccessManager}
-            component={InfoAccessManager}
+            component={InfoAccessManagerStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.MultiPitchManager}
+            component={MultiPitchManagerStackNavigation}
           />
         </Stack.Group>
       )}

@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "transform": "sh transform.sh"
+    "transform": "sh transform.sh && sh transform-web.sh"
   },
   "devDependencies": {
     "@svgr/cli": "^6.2.1",

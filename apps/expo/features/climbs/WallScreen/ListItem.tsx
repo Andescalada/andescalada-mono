@@ -38,7 +38,6 @@ interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
   index: number;
   allowEdit?: boolean;
   containerProps?: Omit<ComponentProps<typeof A.Box>, "key">;
-  routeName: string;
   hasFailed?: SharedValue<boolean>;
   onTouch?: () => void;
 }

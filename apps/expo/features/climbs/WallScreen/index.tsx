@@ -11,8 +11,11 @@ import {
 } from "@features/climbs/Navigation/types";
 import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
+import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC } from "react";
 import { FormProvider } from "react-hook-form";
@@ -71,6 +74,8 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
+  const rootNavigation = useRootNavigation();
+
   const onOptions = useOptionsSheet(
     {
       ["Agregar ruta"]: {
@@ -79,6 +84,18 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
             wallId,
             zoneId,
+          }),
+      },
+      ["Agregar multi largo"]: {
+        hide: !permission?.has("Create"),
+        action: () =>
+          rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
+            screen: MultiPitchManagerRoutes.AddMultiPitch,
+            initial: true,
+            params: {
+              wallId,
+              zoneId,
+            },
           }),
       },
       "Cambiar nombre": {
@@ -111,7 +128,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         },
       },
     },
-    { destructiveButtonIndex: 2 },
+    { destructiveButtonIndex: 3 },
   );
 
   return (

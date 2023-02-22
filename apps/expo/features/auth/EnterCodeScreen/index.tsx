@@ -2,6 +2,7 @@ import {
   AnimatedBackground,
   BackButton,
   Box,
+  KeyboardAvoidingBox,
   Pressable,
   Screen,
   Text,
@@ -72,63 +73,67 @@ const EnterCodeScreen: FC<Props> = ({
   }, [seconds]);
 
   return (
-    <Screen
-      justifyContent="flex-start"
-      alignItems="center"
-      padding="m"
-      paddingTop="xxxl"
-    >
-      <AnimatedBackground />
-      <BackButton.Transparent
-        onPress={navigation.goBack}
-        iconProps={{ color: "grayscale.white" }}
-      />
-      <Box flex={0.2} justifyContent="space-evenly" alignItems="center">
-        <Text variant="h1" marginBottom="m">
-          Ingresa el código
-        </Text>
-        <CodeField
-          ref={ref}
-          {...props}
-          value={value}
-          onChangeText={(t) => {
-            setValue(t);
-            if (t.length === 4) onSubmit(t);
-          }}
-          cellCount={4}
-          keyboardType="number-pad"
-          textContentType="oneTimeCode"
-          textAlignVertical="center"
-          renderCell={({ index, symbol, isFocused }) => (
-            <Box
-              key={index}
-              onLayout={getCellOnLayoutHandler(index)}
-              justifyContent="center"
-              alignItems="center"
-              borderRadius={10}
-              borderColor={isFocused ? "semantic.info" : "grayscale.100"}
-              borderWidth={2}
-              width={50}
-              height={50}
-              marginHorizontal="s"
-            >
-              <Text variant="p1R">
-                {symbol || (isFocused ? <Cursor /> : null)}
-              </Text>
-            </Box>
-          )}
+    <KeyboardAvoidingBox keyboardVerticalOffset={0} behavior={"height"}>
+      <Screen
+        justifyContent="flex-start"
+        alignItems="center"
+        padding="m"
+        paddingTop="xxxl"
+      >
+        <AnimatedBackground />
+        <BackButton.Transparent
+          onPress={navigation.goBack}
+          iconProps={{ color: "grayscale.white" }}
         />
-        <Box marginTop="s">
-          {seconds <= TIMEOUT ? (
-            <Text>{timer}</Text>
-          ) : (
-            <Pressable onPress={() => passwordless.login(email)}>
-              <Text textDecorationLine={"underline"}>Reenviar código</Text>
-            </Pressable>
-          )}
+        <Box>
+          <Box justifyContent="space-evenly" alignItems="center">
+            <Text variant="h1" marginBottom="m">
+              Ingresa el código
+            </Text>
+            <CodeField
+              ref={ref}
+              {...props}
+              value={value}
+              onChangeText={(t) => {
+                setValue(t);
+                if (t.length === 4) onSubmit(t);
+              }}
+              cellCount={4}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              textAlignVertical="center"
+              renderCell={({ index, symbol, isFocused }) => (
+                <Box
+                  key={index}
+                  onLayout={getCellOnLayoutHandler(index)}
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRadius={10}
+                  borderColor={isFocused ? "semantic.info" : "grayscale.100"}
+                  borderWidth={2}
+                  width={50}
+                  height={50}
+                  marginHorizontal="s"
+                >
+                  <Text variant="p1R">
+                    {symbol || (isFocused ? <Cursor /> : null)}
+                  </Text>
+                </Box>
+              )}
+            />
+            <Box marginTop="s">
+              {seconds <= TIMEOUT ? (
+                <Text>{timer}</Text>
+              ) : (
+                <Pressable onPress={() => passwordless.login(email)}>
+                  <Text textDecorationLine={"underline"}>Reenviar código</Text>
+                </Pressable>
+              )}
+            </Box>
+          </Box>
         </Box>
-      </Box>
-    </Screen>
+      </Screen>
+    </KeyboardAvoidingBox>
   );
 };
 

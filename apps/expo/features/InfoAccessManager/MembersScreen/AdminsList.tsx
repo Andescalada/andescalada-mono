@@ -101,8 +101,8 @@ const AdminsList: FC<Props> = ({ zoneId, zoneName }) => {
         )}
         renderItem={({ item: { role, users } }) => (
           <Box>
-            <Box flexDirection={"row"} alignItems="flex-end">
-              <Text variant="p1R" marginTop="s" marginLeft="m" lineHeight={0}>
+            <Box flexDirection={"row"} alignItems="center">
+              <Text variant="p1R" marginLeft="m" lineHeight={undefined}>
                 {roleNameAssets[role].plural}
               </Text>
               <Pressable marginLeft="xs" onPress={() => setSelectedRole(role)}>

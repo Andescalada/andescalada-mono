@@ -1,6 +1,6 @@
 import zone from "@andescalada/api/schemas/zone";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { Box, Screen, Text } from "@andescalada/ui";
+import { Box, Screen, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -16,6 +16,7 @@ import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { useFocusEffect } from "@react-navigation/native";
+import constants from "@utils/constants";
 import { FC, useCallback } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
@@ -34,6 +35,9 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const recentZones = trpc.user.addToRecentZones.useMutation({
     onSuccess: () => {
       utils.user.zoneHistory.invalidate();
+    },
+    onError() {
+      return constants.silentError;
     },
   });
 
@@ -139,6 +143,18 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                 marginTop="xxxl"
               >
                 <Text variant={"h3"}>Sin sectores</Text>
+                {permission.has("Create") && (
+                  <TextButton
+                    variant="info"
+                    onPress={() =>
+                      navigation.replace(ClimbsNavigationRoutes.AddSector, {
+                        zoneId,
+                      })
+                    }
+                  >
+                    Agregar sector
+                  </TextButton>
+                )}
               </Box>
             )}
             renderItem={({ item }) => <ZoneItem item={item} />}

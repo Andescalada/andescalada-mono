@@ -23,63 +23,71 @@ const useCloudinaryImage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [uri, setUri] = useState<string>();
 
-  const { data: signatureData } = trpc.images.sign.useQuery(undefined, {
-    staleTime: 1000 * 60 * 59, // 59 minutes
-  });
+  const { data: signatureData } = trpc.images.sign.useQuery(
+    { uploadPreset: Env.CLOUDINARY_UPLOAD_PRESET },
+    {
+      staleTime: 1000 * 60 * 59, // 59 minutes
+    },
+  );
 
-  const uploadImage = useCallback(async (data: SelectedImage["base64Img"]) => {
-    try {
-      setIsLoading(true);
-      setIsSuccess(false);
-      setUri(undefined);
-      if (!signatureData) throw new Error("No signature data");
+  const uploadImage = useCallback(
+    async (data: SelectedImage["base64Img"]) => {
+      try {
+        setIsLoading(true);
+        setIsSuccess(false);
+        setUri(undefined);
+        if (!signatureData) throw new Error("No signature data");
 
-      const res = await axios.post<CloudinaryResponse>(
-        Env.CLOUDINARY_URL + "/image/upload",
-
-        {
-          file: data,
-          uploadPreset: Env.CLOUDINARY_UPLOAD_PRESET,
-          api_key: Env.CLOUDINARY_API_KEY,
-          ...signatureData,
-        },
-        {
-          headers: {
-            "content-type": "application/json",
+        const res = await axios.post<CloudinaryResponse>(
+          Env.CLOUDINARY_URL + "/image/upload",
+          {
+            file: data,
+            upload_preset: Env.CLOUDINARY_UPLOAD_PRESET,
+            api_key: Env.CLOUDINARY_API_KEY,
+            ...signatureData,
           },
-        },
-      );
-      setUri(res.data.url);
-      setIsSuccess(true);
-      setIsLoading(false);
-      return parseImageResponse(res.data);
-    } catch (err) {
-      Alert.alert("Hubo un error al subir la imagen");
-      setIsLoading(false);
-      throw new Error(err as string);
-    }
-  }, []);
-
-  const destroyImage = useCallback(async (publicId: string) => {
-    try {
-      setIsLoading(true);
-      const res = await axios.post<DestroyResponse>(
-        Env.CLOUDINARY_URL + "/image/destroy",
-        { publicId, ...signatureData },
-        {
-          headers: {
-            "content-type": "application/json",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
           },
-        },
-      );
-      setIsLoading(false);
-      return res;
-    } catch (err) {
-      Alert.alert("Hubo un error al borrar la imagen");
-      setIsLoading(false);
-      throw new Error(err as string);
-    }
-  }, []);
+        );
+        setUri(res.data.url);
+        setIsSuccess(true);
+        setIsLoading(false);
+        return parseImageResponse(res.data);
+      } catch (err) {
+        Alert.alert("Hubo un error al subir la imagen");
+        setIsLoading(false);
+        throw new Error(err as string);
+      }
+    },
+    [signatureData],
+  );
+
+  const destroyImage = useCallback(
+    async (publicId: string) => {
+      try {
+        setIsLoading(true);
+        const res = await axios.post<DestroyResponse>(
+          Env.CLOUDINARY_URL + "/image/destroy",
+          { publicId, ...signatureData },
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+          },
+        );
+        setIsLoading(false);
+        return res;
+      } catch (err) {
+        Alert.alert("Hubo un error al borrar la imagen");
+        setIsLoading(false);
+        throw new Error(err as string);
+      }
+    },
+    [signatureData],
+  );
 
   return { isLoading, uri, uploadImage, isSuccess, destroyImage };
 };
@@ -90,7 +98,7 @@ export interface CloudinaryResponse {
   access_mode: string;
   asset_id: string;
   bytes: number;
-  created_at: "2022-09-15T17:46:30Z";
+  created_at: Date;
   eager: [
     {
       bytes: number;
@@ -103,7 +111,7 @@ export interface CloudinaryResponse {
     },
   ];
   etag: string;
-  folder: "andescalada-app-dev";
+  folder: string;
   format: string;
   height: number;
   placeholder: false;

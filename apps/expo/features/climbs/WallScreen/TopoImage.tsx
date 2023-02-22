@@ -7,7 +7,6 @@ import {
 import AddTopoImage from "@features/climbs/WallScreen/AddTopoImage";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
-import { useAppSelector } from "@hooks/redux";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
@@ -23,10 +22,10 @@ const TopoImage: FC = () => {
   const { wallId, zoneId } = route.params;
   const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
     wallId,
+    zoneId,
   });
 
   const mainTopo = data?.topos[0];
-  const { routeStrokeWidth } = useAppSelector((state) => state.localConfig);
 
   const rootNavigation = useRootNavigation();
 
@@ -62,7 +61,7 @@ const TopoImage: FC = () => {
             zoneId={zoneId}
             center={false}
             disableGesture
-            strokeWidth={routeStrokeWidth}
+            strokeWidth={Number(mainTopo.routeStrokeWidth)}
           />
         </A.Pressable>
       )}

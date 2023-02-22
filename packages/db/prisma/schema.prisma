@@ -61,6 +61,8 @@ model User {
   ZoneAccessRequestHistory   ZoneAccessRequest[]
   ZoneAccessRequestReviewed  ZoneAccessRequest[]       @relation("ZoneAccessRequestModifiedBy")
   UserZoneAgreementHistory   UserZoneAgreementRecord[]
+  authorZoneDirections       ZoneDirections[]          @relation("AuthorZoneDirections")
+  coAuthorZoneDirections     ZoneDirections[]          @relation("CoAuthorZoneDirections")
 
   @@index([email])
   @@index([profilePhotoId])
@@ -222,6 +224,8 @@ model Zone {
   id                       String                    @id @default(uuid())
   name                     String
   slug                     String
+  description              TextContent?              @relation(fields: [descriptionId], references: [id])
+  descriptionId            String?
   createdAt                DateTime                  @default(now())
   updatedAt                DateTime                  @updatedAt
   infoAccess               InfoAccess                @default(Public)
@@ -240,8 +244,10 @@ model Zone {
   statusHistory            ZoneStatus[]
   ZoneAccessRequest        ZoneAccessRequest[]
   UserZoneAgreementHistory UserZoneAgreementRecord[]
+  ZoneDirections           ZoneDirections[]
 
   @@index([locationId])
+  @@index([descriptionId])
 }
 
 model ZoneStatus {
@@ -328,6 +334,38 @@ enum AgreementLevel {
   NotAplicable
 }
 
+model ZoneDirections {
+  id                 String             @id @default(uuid())
+  name               TextContent?       @relation("ZoneDirectionsName", fields: [nameId], references: [id])
+  nameId             String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  Zone               Zone               @relation(fields: [zoneId], references: [id])
+  zoneId             String
+  transportationMode TransportationMode
+  description        TextContent?       @relation(fields: [descriptionId], references: [id])
+  descriptionId      String?
+  Author             User               @relation("AuthorZoneDirections", fields: [authorId], references: [id])
+  authorId           String
+  coAuthors          User[]             @relation("CoAuthorZoneDirections")
+  isDeleted          SoftDelete         @default(NotDeleted)
+
+  @@unique([transportationMode, zoneId], name: "ZoneTransportationModeUnique")
+  @@index([authorId])
+  @@index([descriptionId])
+  @@index([zoneId])
+  @@index([nameId])
+}
+
+enum TransportationMode {
+  Car
+  PublicTransport
+  Train
+  Bike
+  Walk
+  Other
+}
+
 model Sector {
   id         String     @id @default(uuid())
   name       String
@@ -357,22 +395,22 @@ enum SectorKind {
 }
 
 model Wall {
-  id        String       @id @default(uuid())
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  name      String
-  slug      String
-  position  Int          @default(0)
-  Sector    Sector       @relation(fields: [sectorId], references: [id], onDelete: Cascade)
-  sectorId  String
-  topos     Topo[]
-  routes    Route[]
-  Author    User         @relation("AuthorWall", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]       @relation("CoAuthorWall")
-  isDeleted SoftDelete   @default(NotDeleted)
-  version   Int          @default(0)
-  MuliPitch MultiPitch[]
+  id         String       @id @default(uuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  name       String
+  slug       String
+  position   Int          @default(0)
+  Sector     Sector       @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  sectorId   String
+  topos      Topo[]
+  routes     Route[]
+  Author     User         @relation("AuthorWall", fields: [authorId], references: [id])
+  authorId   String
+  coAuthors  User[]       @relation("CoAuthorWall")
+  isDeleted  SoftDelete   @default(NotDeleted)
+  version    Int          @default(0)
+  MultiPitch MultiPitch[]
 
   @@index([sectorId])
   @@index([authorId])
@@ -445,8 +483,10 @@ model MultiPitch {
   id          String     @id @default(uuid())
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  position    Int        @default(0)
   name        String
   slug        String
+  unknownName Boolean    @default(false)
   Pitches     Pitch[]
   Wall        Wall       @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId      String
@@ -468,8 +508,8 @@ model Pitch {
   number         Decimal     @db.Decimal(5, 2)
   Route          Route       @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   routeId        String      @unique
-  MuliPitch      MultiPitch? @relation(fields: [muliPitchId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  muliPitchId    String?
+  MultiPitch     MultiPitch? @relation(fields: [multiPitchId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  multiPitchId   String?
   isDeleted      SoftDelete  @default(NotDeleted)
   version        Int         @default(0)
   variantPitchId String?
@@ -477,7 +517,7 @@ model Pitch {
   Variant        Pitch[]     @relation("VariantPitchOf")
   pitchType      PitchType   @default(Normal)
 
-  @@index([muliPitchId])
+  @@index([multiPitchId])
   @@index([variantPitchId])
 }
 
@@ -503,19 +543,22 @@ model RouteGrade {
 }
 
 model RoutePath {
-  id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  path      String     @db.LongText
-  Topo      Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
-  topoId    String
-  Route     Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
-  routeId   String
-  Author    User       @relation("AuthorRoutePath", fields: [authorId], references: [id])
-  authorId  String
-  coAuthors User[]     @relation("CoAuthorRoutePath")
-  isDeleted SoftDelete @default(NotDeleted)
-  version   Int        @default(0)
+  id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  path            String     @db.LongText
+  labelPoint      String?
+  pitchLabelPoint String?
+  hideStart       Boolean    @default(false)
+  Topo            Topo       @relation(fields: [topoId], references: [id], onDelete: Cascade)
+  topoId          String
+  Route           Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  routeId         String
+  Author          User       @relation("AuthorRoutePath", fields: [authorId], references: [id])
+  authorId        String
+  coAuthors       User[]     @relation("CoAuthorRoutePath")
+  isDeleted       SoftDelete @default(NotDeleted)
+  version         Int        @default(0)
 
   @@index([topoId])
   @@index([routeId])
@@ -584,6 +627,9 @@ model TextContent {
   ZoneAgreementComment ZoneAgreement[]
   ZoneStatus           ZoneStatus[]
   ZoneAccessRequest    ZoneAccessRequest[]
+  ZoneDirections       ZoneDirections[]
+  ZoneDirectionsName   ZoneDirections[]    @relation("ZoneDirectionsName")
+  Zone                 Zone[]
 
   @@index([languageId])
 }

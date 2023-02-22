@@ -10,7 +10,9 @@ import StoryButton from "@features/climbs/ZoneScreen/StoryButton";
 import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
+import ZoneDescription from "@features/climbs/ZoneScreen/ZoneDescription";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
+import { ZoneDirectionsRoutes } from "@features/zoneDirections/Navigation/types";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
@@ -57,7 +59,7 @@ const ZoneHeader = () => {
   if (!data) return <Box />;
 
   return (
-    <A.Box marginTop="s" entering={FadeIn} exiting={FadeOut}>
+    <A.Box entering={FadeIn} exiting={FadeOut}>
       {(permission?.has("Update") ||
         globalPermissions.includes(GlobalPermissions.REVIEW_ZONE)) && (
         <Pressable
@@ -85,6 +87,7 @@ const ZoneHeader = () => {
           />
         </Pressable>
       )}
+      <ZoneDescription description={data.description?.originalText} />
       {data.hasAccess && (
         <Box>
           <Box flexDirection="row" marginBottom="l">
@@ -108,13 +111,20 @@ const ZoneHeader = () => {
                 })
               }
             />
-            {featureFlags.storyBar && (
-              <>
-                <StoryButton title="Como llegar" />
-                <StoryButton title="Flora y fauna" />
-              </>
-            )}
+
+            <StoryButton
+              title="Como llegar"
+              iconName="destination"
+              onPress={() =>
+                rootNavigation.navigate(RootNavigationRoutes.ZoneDirections, {
+                  screen: ZoneDirectionsRoutes.ZoneDirections,
+                  params: { zoneId, zoneName },
+                })
+              }
+            />
+            {featureFlags.storyBar && <StoryButton title="Flora y fauna" />}
           </Box>
+
           <Pressable
             marginTop="s"
             alignItems="center"
@@ -127,9 +137,6 @@ const ZoneHeader = () => {
               })
             }
           >
-            {/* <Box paddingRight="xs">
-              <Text>Guía</Text>
-            </Box> */}
             <Box
               borderRadius={16}
               padding="s"

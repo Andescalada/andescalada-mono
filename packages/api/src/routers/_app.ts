@@ -3,6 +3,7 @@
  */
 import { agreementsRouter } from "@andescalada/api/src/routers/agreements";
 import { imagesRouter } from "@andescalada/api/src/routers/images";
+import { multiPitchRouter } from "@andescalada/api/src/routers/multiPitch";
 import { notificationsRouter } from "@andescalada/api/src/routers/notifications";
 import { routesRouter } from "@andescalada/api/src/routers/routes";
 import { searchRouter } from "@andescalada/api/src/routers/search";
@@ -35,6 +36,7 @@ export const appRouter = t.router({
   zoneReview: zoneReviewRouter,
   zoneAccess: zoneAccessRouter,
   images: imagesRouter,
+  multiPitch: multiPitchRouter,
 });
 
 export type AppRouter = typeof appRouter;

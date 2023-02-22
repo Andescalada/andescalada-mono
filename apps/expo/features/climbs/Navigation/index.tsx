@@ -1,4 +1,5 @@
 import { Box } from "@andescalada/ui";
+import AddAndEditDescription from "@features/climbs/AddAndEditDescription";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
@@ -108,6 +109,14 @@ const Navigator = () => {
           component={ZoneAgreementsScreen}
           options={{
             title: `Acuerdos`,
+            ...backHeader,
+          }}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.AddAndEditDescription}
+          component={AddAndEditDescription}
+          options={{
+            title: `Descripción`,
             ...backHeader,
           }}
         />

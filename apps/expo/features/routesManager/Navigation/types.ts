@@ -6,6 +6,7 @@ export enum RoutesManagerNavigationRoutes {
   RouteDrawer = "RouteDrawer",
   TopoViewer = "TopoViewer",
   RouteExtensionDrawer = "RouteExtension",
+  MultiPitchDrawer = "MultiPitchDrawer",
 }
 
 export type RoutesManagerNavigationParamList = {
@@ -24,6 +25,18 @@ export type RoutesManagerNavigationParamList = {
       position: Route["position"];
       extendedRouteId?: Route["extendedRouteId"];
     };
+    zoneId: Zone["id"];
+    wallId: Wall["id"];
+    topoId: Topo["id"];
+  };
+  [RoutesManagerNavigationRoutes.MultiPitchDrawer]: {
+    route: {
+      id: Route["id"];
+      position: Route["position"];
+    };
+    previousPitchId?: Route["id"];
+    pitchNumber?: number;
+    newPitch?: boolean;
     zoneId: Zone["id"];
     wallId: Wall["id"];
     topoId: Topo["id"];

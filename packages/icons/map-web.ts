@@ -13,6 +13,8 @@ export const Icons = {
   "checklist": require( "./components-web/checklist").default,
   "climber-rappeling-color": require( "./components-web/climber-rappeling-color").default,
   "climber-rappeling": require( "./components-web/climber-rappeling").default,
+  "destination-color": require( "./components-web/destination-color").default,
+  "destination": require( "./components-web/destination").default,
   "dog-color": require( "./components-web/dog-color").default,
   "dog": require( "./components-web/dog").default,
   "eyes-color": require( "./components-web/eyes-color").default,

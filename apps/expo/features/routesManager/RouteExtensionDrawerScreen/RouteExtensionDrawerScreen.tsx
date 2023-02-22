@@ -1,15 +1,15 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
-  pathToArray,
   SkiaRouteCanvas,
   SkiaRoutePath,
   SkiaRoutePathDrawer,
 } from "@andescalada/climbs-drawer";
+import { pathToArray } from "@andescalada/climbs-drawer/utils";
 import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
-import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
+import RouteStrokeWidth from "@features/routesManager/components/RouteStrokeWidth";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -73,6 +73,7 @@ const DrawRoute: FC<Props> = ({
           return {
             otherRoutes,
             selectedRoute,
+            routeStrokeWidth: Number(topo.routeStrokeWidth),
           };
         },
         [routeParams.id],
@@ -96,10 +97,14 @@ const DrawRoute: FC<Props> = ({
     topoId,
     wallId,
     routePathId: topos?.selectedRoute?.id,
+    routeStrokeWidth,
+    zoneId,
+    hideStart: true,
   });
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
     wallId,
+    zoneId,
   });
 
   const onUndo = () => {
@@ -132,11 +137,11 @@ const DrawRoute: FC<Props> = ({
             path={topos?.selectedRoute?.path || extendedRouteStart}
             label={routeParams?.position.toString()}
             color={theme.colors.drawingRoutePath}
-            withStart={false}
-            withoutStart={true}
-            withEnd={!!topos?.selectedRoute?.path}
+            defaultStart={false}
+            defaultEnd={!!topos?.selectedRoute?.path}
             scale={fitted.scale}
             strokeWidth={routeStrokeWidth}
+            hideStart
           />
           {showRoutes &&
             topos?.otherRoutes?.map((route) => (
@@ -159,7 +164,11 @@ const DrawRoute: FC<Props> = ({
           Comienza a dibujar la extensión de la ruta, comenzará desde el punto
           donde termina la ruta anterior.
         </Instructions>
-        <RoutePathConfig show={showConfig} setShow={setShowConfig} />
+        <RouteStrokeWidth
+          show={showConfig}
+          setShow={setShowConfig}
+          defaultRouteStrokeWidth={topos?.routeStrokeWidth}
+        />
         <DrawingTools
           canSave={canSave}
           onFinishOrSave={onFinishOrSave}

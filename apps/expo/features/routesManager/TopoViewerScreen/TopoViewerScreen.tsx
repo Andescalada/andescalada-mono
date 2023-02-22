@@ -52,7 +52,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         routeId={routeId}
         topoId={topoId}
         zoneId={zoneId}
-        strokeWidth={routeStrokeWidth}
+        strokeWidth={Number(data?.routeStrokeWidth) || routeStrokeWidth}
         hide={!showRoutes}
         onSelectedRoute={setSelectedRoute}
       />
@@ -72,7 +72,8 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         >
           <Pressable
             backgroundColor={"transparentButtonBackground"}
-            borderRadius={100}
+            borderTopLeftRadius={100}
+            borderBottomLeftRadius={100}
             padding="s"
             onPress={() => setShowConfig(true)}
           >

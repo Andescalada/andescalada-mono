@@ -1,4 +1,5 @@
 import { ListItemOption, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -16,6 +17,8 @@ const AdminZoneOptionsScreen: FC<Props> = ({
   },
 }) => {
   const { permission } = usePermissions({ zoneId });
+  const utils = trpc.useContext();
+  const data = utils.zones.allSectors.getData({ zoneId });
   return (
     <Screen padding="m" safeAreaDisabled>
       <Text variant="h1" marginBottom="m">
@@ -42,6 +45,19 @@ const AdminZoneOptionsScreen: FC<Props> = ({
           }
         >
           Editar acuerdos
+        </ListItemOption>
+      )}
+      {permission?.has("Update") && data?.description?.originalText && (
+        <ListItemOption
+          onPress={() =>
+            navigation.navigate(ClimbsNavigationRoutes.AddAndEditDescription, {
+              zoneId,
+              zoneName,
+              description: data.description?.originalText,
+            })
+          }
+        >
+          Editar descripción
         </ListItemOption>
       )}
     </Screen>

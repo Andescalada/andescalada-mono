@@ -3,7 +3,12 @@ import wall from "@andescalada/api/schemas/wall";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete } from "@prisma/client";
+import {
+  GradeSystems,
+  InfoAccess,
+  RouteKind,
+  SoftDelete,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -28,39 +33,133 @@ export const wallsRouter = t.router({
     }),
   ),
   // Asset being downloaded
-  byId: t.procedure.input(wall.id).query(async ({ ctx, input }) => {
+  byId: protectedZoneProcedure.input(wall.id).query(async ({ ctx, input }) => {
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input.wallId },
       include: {
-        Sector: { select: { zoneId: true, sectorKind: true } },
+        Sector: {
+          select: {
+            zoneId: true,
+            sectorKind: true,
+            Zone: { select: { infoAccess: true } },
+          },
+        },
         routes: {
           orderBy: { position: "asc" },
 
           where: {
             isDeleted: { equals: SoftDelete.NotDeleted },
             extendedRouteId: { equals: null },
+            Pitch: { is: null },
           },
           select: {
             ...Route,
+            Pitch: {
+              include: { MultiPitch: { select: { name: true, id: true } } },
+            },
             Extension: {
               where: { isDeleted: SoftDelete.NotDeleted },
               select: Route,
             },
           },
         },
+        MultiPitch: {
+          where: { isDeleted: SoftDelete.NotDeleted },
+          select: {
+            id: true,
+            name: true,
+            position: true,
+            Author: { select: { email: true } },
+            wallId: true,
+            Pitches: {
+              where: { isDeleted: SoftDelete.NotDeleted },
+              select: { Route: { select: { RouteGrade: true, kind: true } } },
+            },
+          },
+        },
         topos: {
           where: { main: true },
-          select: { id: true, image: true, name: true },
+          take: 1,
+          select: {
+            id: true,
+            image: true,
+            name: true,
+            routeStrokeWidth: true,
+          },
         },
       },
     });
+
     if (!wall) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `No wall with id '${input}'`,
-      });
+      throw new TRPCError(error.wallNotFound(input.wallId));
     }
-    return wall;
+
+    if (
+      !ctx.permissions.has("Read") &&
+      wall.Sector.Zone.infoAccess !== InfoAccess.Public
+    ) {
+      throw new TRPCError(
+        error.unauthorizedActionForZone(input.zoneId, "Read"),
+      );
+    }
+
+    const parsedMultiPitch = wall.MultiPitch.map((mp) => {
+      const reduce = mp.Pitches.reduce<{
+        maxGrade: number;
+        project: boolean;
+        maxAid?: number;
+        gradeRouteKind: RouteKind;
+        originalGradeSystem: GradeSystems;
+      }>(
+        (prev, current) => {
+          const currentGrade = Number(current.Route.RouteGrade?.grade ?? 0);
+          const aidValue =
+            current.Route.RouteGrade?.originalGradeSystem === GradeSystems.Aid
+              ? Number(current.Route.RouteGrade?.grade ?? 0)
+              : undefined;
+          return {
+            maxGrade: Math.max(prev.maxGrade, currentGrade),
+            gradeRouteKind:
+              prev.maxGrade > currentGrade
+                ? prev.gradeRouteKind
+                : current.Route.kind,
+            originalGradeSystem:
+              currentGrade > prev.maxGrade &&
+              current.Route.RouteGrade?.originalGradeSystem !== undefined
+                ? current.Route.RouteGrade?.originalGradeSystem
+                : prev.originalGradeSystem,
+
+            project: prev.project || !!current.Route.RouteGrade?.project,
+            maxAid: [prev.maxAid, aidValue].every((v) => v === undefined)
+              ? undefined
+              : Math.max(Number(prev.maxAid ?? 0), Number(aidValue ?? 0)),
+          };
+        },
+        {
+          maxGrade: 0,
+          gradeRouteKind: "Sport",
+          project: false,
+          originalGradeSystem: GradeSystems.Yosemite,
+          maxAid: undefined,
+        },
+      );
+
+      return {
+        id: mp.id,
+        name: mp.name,
+        position: mp.position,
+        wallId: mp.wallId,
+        Author: mp.Author,
+        numberOfPitches: mp.Pitches.length,
+        gradeRouteKind: reduce.gradeRouteKind,
+        grade: reduce.maxGrade === 0 ? null : reduce.maxGrade,
+        project: false,
+        originalGradeSystem: reduce.originalGradeSystem,
+        maxAid: reduce.maxAid,
+      };
+    });
+    const parsedWall = { ...wall, MultiPitch: parsedMultiPitch };
+    return parsedWall;
   }),
   add: protectedZoneProcedure
     .input(z.object({ sectorId: z.string(), name: z.string() }))
@@ -195,7 +294,7 @@ export const wallsRouter = t.router({
       });
 
       if (!mainTopo || !mainTopo.topos.length || !mainTopo.topos[0].id) {
-        return null;
+        return undefined;
       }
       return mainTopo.topos[0].id;
     }),

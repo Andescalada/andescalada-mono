@@ -41,7 +41,10 @@ const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
   );
 
   const gradeLabel = useCallback(
-    (grade: RouteGrade | null, kind: typeof RouteKindSchema._type) => {
+    (
+      grade: Pick<RouteGrade, "project" | "grade"> | null,
+      kind: typeof RouteKindSchema._type,
+    ) => {
       if (!grade) return "?";
       const n = grade.grade;
       const project = grade.project;

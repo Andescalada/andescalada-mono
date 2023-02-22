@@ -1,6 +1,7 @@
 export interface FeatureFlag {
   storyBar: boolean;
   addZoneFlow: boolean;
+  multiPitch: boolean;
 }
 
 const featureFlags: Record<
@@ -10,14 +11,17 @@ const featureFlags: Record<
   preview: {
     storyBar: true,
     addZoneFlow: true,
+    multiPitch: true,
   },
   development: {
     storyBar: true,
     addZoneFlow: true,
+    multiPitch: true,
   },
   production: {
     storyBar: false,
     addZoneFlow: true,
+    multiPitch: false,
   },
 };
 

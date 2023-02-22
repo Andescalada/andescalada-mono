@@ -11,6 +11,7 @@ export {
   useButtonGroup,
 } from "./ButtonGroup/ButtonGroup";
 export { default as EditableTitle } from "./EditableTitle/EditableTitle";
+export { default as Header } from "./Header/Header";
 export { default as Icon } from "./Icon/Icon";
 export { default as Image } from "./Image/Image";
 export { default as Ionicons } from "./Ionicons/Ionicons";

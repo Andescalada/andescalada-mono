@@ -6,7 +6,7 @@ import Text from "../Text/Text";
 import { Colors } from "../Theme/theme";
 
 interface Props extends ComponentProps<typeof Pressable> {
-  variant: "info" | "error";
+  variant: "info" | "error" | "transparent";
   textProps?: Omit<ComponentProps<typeof Text>, "variant">;
   children?: ReactNode;
   textVariant?: ComponentProps<typeof Text>["variant"];
