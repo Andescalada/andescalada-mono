@@ -130,7 +130,7 @@ const UserHeader = () => {
       width={SCREEN_WIDTH}
       borderBottomColor="grayscale.400"
     >
-      <Canvas style={styles.canvas}>
+      <Canvas style={styles.canvas} mode="continuous">
         <FitBox
           src={rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)}
           dst={rect(
