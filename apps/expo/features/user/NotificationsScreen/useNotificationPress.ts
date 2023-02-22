@@ -2,6 +2,7 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { EntityTypeIdSchema } from "@andescalada/db/zod";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
+import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -68,8 +69,29 @@ const useNotificationPress = () => {
             });
           }
         },
-        RequestCommunityAccess() {
-          undefined;
+        RequestZoneAccess() {
+          if ("zone" in item && item.zone?.id && item.zone?.name) {
+            rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
+              screen: InfoAccessManagerRoutes.MembersScreen,
+              params: { zoneId: item.zone?.id, zoneName: item.zone?.name },
+            });
+          }
+        },
+        ApproveZoneAccess() {
+          if ("zone" in item && item.zone?.id && item.zone?.name) {
+            rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+              screen: ClimbsNavigationRoutes.Zone,
+              params: { zoneId: item.zone?.id, zoneName: item.zone?.name },
+            });
+          }
+        },
+        AssignNewZoneRole() {
+          if ("zone" in item && item.zone?.id && item.zone?.name) {
+            rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+              screen: ClimbsNavigationRoutes.Zone,
+              params: { zoneId: item.zone?.id, zoneName: item.zone?.name },
+            });
+          }
         },
         RequestZoneReview() {
           if ("zone" in item && item.zone?.id && item.zone?.name) {

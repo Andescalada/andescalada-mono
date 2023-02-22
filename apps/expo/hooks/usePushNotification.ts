@@ -49,8 +49,11 @@ const usePushNotification = () => {
         lastNotificationResponse.notification.request.content.title,
         "lastNotification",
       );
+      rootNavigation.navigate(RootNavigationRoutes.User, {
+        screen: UserNavigationRoutes.Notifications,
+      });
     }
-  }, [lastNotificationResponse]);
+  }, [lastNotificationResponse, rootNavigation]);
 
   useEffect(() => {
     notificationListener.current = addNotificationReceivedListener(
