@@ -24,8 +24,6 @@ import { FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
 
-const { schema } = sector;
-
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
@@ -56,7 +54,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
   });
 
   const methods = useZodForm({
-    schema,
+    schema: sector.edit.pick({ name: true }),
   });
 
   const refresh = useRefresh(refetch, isFetching);
@@ -83,6 +81,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
       Alert.alert(errorMessage);
       methods.setValue("name", route.params.sectorName);
       headerMethods.setEditing(false);
+      throw error;
     },
   );
 

@@ -61,11 +61,7 @@ export const sectorsRouter = t.router({
       return newSector;
     }),
   edit: protectedZoneProcedure
-    .input(
-      sector.schema
-        .pick({ name: true })
-        .merge(z.object({ sectorId: z.string() })),
-    )
+    .input(sector.edit)
     .mutation(async ({ ctx, input }) => {
       const author = await ctx.prisma.sector.findUnique({
         where: { id: input.sectorId },

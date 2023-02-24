@@ -16,4 +16,6 @@ const schema = z.object({
 
 const id = z.object({ sectorId: z.string() });
 
-export default { schema, id };
+const edit = schema.pick({ name: true }).merge(id);
+
+export default { schema, id, edit };

@@ -58,6 +58,7 @@ const Header: FC<Props> = ({
           paddingHorizontal: "s",
           paddingLeft: "m",
           flex: 1,
+          marginHorizontal: "s",
         }}
         textAlignVertical="center"
         numberOfLines={1}
