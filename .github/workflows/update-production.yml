@@ -1,8 +1,9 @@
 name: Update Production
-on:
+on: 
   push:
     branches:
       - production
+
 jobs:
   if_merged:
     if:  github.event.pull_request.merged == true
