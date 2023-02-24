@@ -80,8 +80,6 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
     [data?.infoAccess],
   );
 
-  console.log(data?.currentStatus);
-
   if (data?.currentStatus !== StatusSchema.enum.Published) {
     return (
       <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex flex-col flex-1">
