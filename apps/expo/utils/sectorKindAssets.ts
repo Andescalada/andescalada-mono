@@ -13,6 +13,7 @@ export const sectorKindAssets = {
     delete: "Eliminar bloque",
     onDeleteError: "No se pudo eliminar el bloque, inténtalo de nuevo",
     confirmDelete: "¿Estás seguro de que quieres eliminar este bloque?",
+    info: "Optimiza la experiencia para un sector de boulder.",
   },
   [SectorKindSchema.Enum.Wall]: {
     label: "Pared",
@@ -24,6 +25,19 @@ export const sectorKindAssets = {
     onDeleteError: "No se pudo eliminar la pared, inténtalo de nuevo",
     delete: "Eliminar pared",
     confirmDelete: "¿Estás seguro de que quieres eliminar esta pared?",
+    info: "Optimiza la experiencia para un sector de mono largos.",
+  },
+  [SectorKindSchema.Enum.BigWall]: {
+    label: "Gran Pared",
+    labelLowerCase: "gran pared",
+    nameOf: "Nombre de la pared",
+    noneMessage: "No hay paredes",
+    add: "Agregar pared",
+    deletedMessage: (name: string) => `Pared "${name}" eliminada`,
+    onDeleteError: "No se pudo eliminar la pared, inténtalo de nuevo",
+    delete: "Eliminar pared",
+    confirmDelete: "¿Estás seguro de que quieres eliminar esta pared?",
+    info: "Optimiza la experiencia para un sector de multi largos, las imágenes se mostrarán en mayor resolución.",
   },
   [SectorKindSchema.Enum.Waterfall]: {
     label: "Cascada",
@@ -35,5 +49,6 @@ export const sectorKindAssets = {
     delete: "Eliminar cascada",
     onDeleteError: "No se pudo eliminar la cascada, inténtalo de nuevo",
     confirmDelete: "¿Estás seguro de que quieres eliminar esta cascada?",
+    info: "Optimiza la experiencia para un sector de escalada en hielo.",
   },
 } satisfies SectorKindObject;

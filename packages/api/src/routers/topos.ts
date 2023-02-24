@@ -15,6 +15,7 @@ export const toposRouter = t.router({
     const topo = await ctx.prisma.topo.findUnique({
       where: { id: input.topoId },
       include: {
+        Wall: { select: { Sector: { select: { sectorKind: true } } } },
         RoutePath: {
           where: { Route: { isDeleted: SoftDelete.NotDeleted } },
           include: {

@@ -30,6 +30,37 @@ export const sectorsRouter = t.router({
   add: protectedZoneProcedure
     .input(sector.schema)
     .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
+      });
+
+      if (input.sectorId) {
+        if (!ctx.permissions.has("Update")) {
+          throw new TRPCError(
+            error.unauthorizedActionForZone(input.zoneId, "Update"),
+          );
+        }
+
+        const currentSectorAuthor = await ctx.prisma.sector.findUniqueOrThrow({
+          where: { id: input.sectorId },
+          select: { Author: { select: { email: true } } },
+        });
+
+        return ctx.prisma.sector.update({
+          where: { id: input.sectorId },
+          data: {
+            name: input.name,
+            sectorKind: input.sectorKind,
+            version: { increment: 1 },
+            coAuthors:
+              currentSectorAuthor.Author.email !== ctx.user.email
+                ? { connect: { email: ctx.user.email } }
+                : undefined,
+          },
+        });
+      }
+
       if (!ctx.permissions.has("Create")) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "Create"),
@@ -53,19 +84,10 @@ export const sectorsRouter = t.router({
         },
       });
 
-      await ctx.prisma.zone.update({
-        where: { id: input.zoneId },
-        data: { version: { increment: 1 } },
-      });
-
       return newSector;
     }),
   edit: protectedZoneProcedure
-    .input(
-      sector.schema
-        .pick({ name: true })
-        .merge(z.object({ sectorId: z.string() })),
-    )
+    .input(sector.edit)
     .mutation(async ({ ctx, input }) => {
       const author = await ctx.prisma.sector.findUnique({
         where: { id: input.sectorId },
@@ -106,6 +128,8 @@ export const sectorsRouter = t.router({
         select: {
           isDeleted: true,
           sectorKind: true,
+          name: true,
+          Zone: { select: { name: true } },
           walls: {
             where: { isDeleted: SoftDelete.NotDeleted },
             select: { id: true, name: true },

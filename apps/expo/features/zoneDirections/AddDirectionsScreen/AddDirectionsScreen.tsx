@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingBox,
   KeyboardDismiss,
   Screen,
+  ScrollView,
   Text,
   TextInput,
 } from "@andescalada/ui";
@@ -19,6 +20,7 @@ import {
 } from "@features/zoneDirections/Navigation/types";
 import { FC } from "react";
 import { useController } from "react-hook-form";
+import { Keyboard } from "react-native";
 import { useNotifications } from "react-native-notificated";
 
 type Props = ZoneDirectionsScreenProps<ZoneDirectionsRoutes.AddDirections>;
@@ -77,50 +79,55 @@ const AddDirectionsScreen: FC<Props> = ({
 
   return (
     <Screen safeAreaDisabled padding="m">
-      <KeyboardAvoidingBox>
+      <KeyboardAvoidingBox behavior="height">
         <KeyboardDismiss>
-          <Text variant="h4">Modo de transporte</Text>
-          <ButtonGroup
-            value={transportationMode.field.value}
-            onChange={transportationMode.field.onChange}
+          <ScrollView
+            onResponderGrant={Keyboard.dismiss}
+            contentContainerStyle={{ flex: 1 }}
           >
-            <Box flexDirection="row" alignItems="stretch" flexWrap="wrap">
-              {TransportationModeSchema.options.map((mode) => (
-                <ButtonGroup.Item
-                  key={mode}
-                  label={transportationModeAssets[mode].label}
-                  value={mode}
-                />
-              ))}
-            </Box>
-            <Text variant="error" color="semantic.error">
-              {transportationMode.fieldState.error?.message}
+            <Text variant="h4">Modo de transporte</Text>
+            <ButtonGroup
+              value={transportationMode.field.value}
+              onChange={transportationMode.field.onChange}
+            >
+              <Box flexDirection="row" alignItems="stretch" flexWrap="wrap">
+                {TransportationModeSchema.options.map((mode) => (
+                  <ButtonGroup.Item
+                    key={mode}
+                    label={transportationModeAssets[mode].label}
+                    value={mode}
+                  />
+                ))}
+              </Box>
+              <Text variant="error" color="semantic.error">
+                {transportationMode.fieldState.error?.message}
+              </Text>
+            </ButtonGroup>
+            <Text variant="h4" marginTop="m">
+              Descripción
             </Text>
-          </ButtonGroup>
-          <Text variant="h4" marginTop="m">
-            Descripción
-          </Text>
-          <TextInput
-            containerProps={{ flex: 1, padding: "s" }}
-            multiline
-            textAlignVertical="top"
-            value={description.field.value}
-            onChangeText={description.field.onChange}
-            onBlur={description.field.onBlur}
-          />
-          <Text variant="error" color="semantic.error">
-            {description.fieldState.error?.message}
-          </Text>
+            <TextInput
+              containerProps={{ flex: 1, padding: "s" }}
+              multiline
+              textAlignVertical="top"
+              value={description.field.value}
+              onChangeText={description.field.onChange}
+              onBlur={description.field.onBlur}
+            />
+            <Text variant="error" color="semantic.error">
+              {description.fieldState.error?.message}
+            </Text>
+            <Button
+              variant={isValid ? "info" : "transparent"}
+              title="Continuar"
+              marginVertical="l"
+              isLoading={addDirection.isLoading}
+              disabled={addDirection.isLoading || !isValid}
+              onPress={onSubmit}
+            />
+          </ScrollView>
         </KeyboardDismiss>
       </KeyboardAvoidingBox>
-      <Button
-        variant={isValid ? "info" : "transparent"}
-        title="Continuar"
-        marginVertical="l"
-        isLoading={addDirection.isLoading}
-        disabled={addDirection.isLoading || !isValid}
-        onPress={onSubmit}
-      />
     </Screen>
   );
 };

@@ -30,7 +30,12 @@ export type ClimbsNavigationNavigationParamList = {
   [ClimbsNavigationRoutes.Home]: undefined;
   [ClimbsNavigationRoutes.SearchClimbs]: undefined;
   [ClimbsNavigationRoutes.Zone]: { zoneId: Zone["id"]; zoneName: Zone["name"] };
-  [ClimbsNavigationRoutes.AddSector]: { zoneId: Zone["id"] };
+  [ClimbsNavigationRoutes.AddSector]: {
+    zoneId: Zone["id"];
+    name?: Sector["name"];
+    sectorKind?: Sector["sectorKind"];
+    sectorId?: Sector["id"];
+  };
   [ClimbsNavigationRoutes.AddWall]: {
     sectorId: Sector["id"];
     zoneId: Zone["id"];

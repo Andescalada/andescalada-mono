@@ -8,9 +8,10 @@ import { useMemo } from "react";
 interface Args {
   wallId: Wall["id"];
   zoneId: Zone["id"];
+  imageQuality?: number;
 }
 
-const useTopoImage = ({ wallId, zoneId }: Args) => {
+const useTopoImage = ({ wallId, zoneId, imageQuality = 100 }: Args) => {
   const { data } = trpc.walls.byId.useQuery({ wallId, zoneId });
   const { height, width, publicId } = data?.topos[0].image || {
     height: 0,
@@ -19,10 +20,14 @@ const useTopoImage = ({ wallId, zoneId }: Args) => {
     publicId: undefined,
   };
 
-  const image = optimizedImage(publicId || undefined);
+  const image = optimizedImage(publicId || undefined, imageQuality);
 
   const isImageLoaded = useMemo(() => !!image, [image]);
-  const fitted = fitContent({ height, width });
+  const fitted = fitContent(
+    { height, width },
+    "width",
+    Math.min(1024 * 2, width),
+  );
 
   const { fileUrl } = useCachedImage(image);
   return { fileUrl, height, width, isImageLoaded, fitted };

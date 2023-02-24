@@ -389,6 +389,7 @@ model Sector {
 }
 
 enum SectorKind {
+  BigWall
   Wall
   Boulder
   Waterfall

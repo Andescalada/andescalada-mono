@@ -1,3 +1,4 @@
+import { SectorKindSchema } from "@andescalada/db/zod";
 import {
   A,
   BackButton,
@@ -55,6 +56,11 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         strokeWidth={Number(data?.routeStrokeWidth) || routeStrokeWidth}
         hide={!showRoutes}
         onSelectedRoute={setSelectedRoute}
+        imageQuality={
+          data?.Wall.Sector.sectorKind === SectorKindSchema.enum.BigWall
+            ? 100
+            : 60
+        }
       />
       <BackButton.Transparent
         onPress={navigation.goBack}

@@ -183,22 +183,20 @@ const MultiPitchDrawerScreen: FC<Props> = ({
         >
           {showRoutes &&
             topos?.otherRoutes?.map((route) => (
-              <>
-                <SkiaRoutePath
-                  key={route.id}
-                  label={route.Route.position.toString()}
-                  path={route.path}
-                  pitchLabelPoint={route.pitchLabelPoint || undefined}
-                  pitchLabelTitle={String(route.Route.Pitch?.number)}
-                  scale={fitted.scale}
-                  color={
-                    route.routeId === previousPitchId
-                      ? theme.colors.drawingRoutePath
-                      : theme.colors.routePath
-                  }
-                  strokeWidth={routeStrokeWidth}
-                />
-              </>
+              <SkiaRoutePath
+                key={route.id}
+                label={route.Route.position.toString()}
+                path={route.path}
+                pitchLabelPoint={route.pitchLabelPoint || undefined}
+                pitchLabelTitle={String(route.Route.Pitch?.number)}
+                scale={fitted.scale}
+                color={
+                  route.routeId === previousPitchId
+                    ? theme.colors.drawingRoutePath
+                    : theme.colors.routePath
+                }
+                strokeWidth={routeStrokeWidth}
+              />
             ))}
           <SkiaRoutePathDrawer
             coords={coords}

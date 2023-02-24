@@ -1,17 +1,14 @@
-import sector from "@andescalada/api/schemas/sector";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
-import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   ActivityIndicator,
   Box,
+  Header,
   ListItem,
   Screen,
   Text,
   TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import Header from "@features/climbs/components/Header";
-import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -21,10 +18,7 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC } from "react";
-import { FormProvider } from "react-hook-form";
 import { Alert, FlatList } from "react-native";
-
-const { schema } = sector;
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 
@@ -35,12 +29,6 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const { data, refetch, isFetching, isLoading } =
     trpc.sectors.allWalls.useQuery({ sectorId });
-
-  const editSector = trpc.sectors.edit.useMutation({
-    onSuccess: () => {
-      utils.zones.allSectors.invalidate({ zoneId });
-    },
-  });
 
   const deleteSector = trpc.sectors.delete.useMutation({
     onMutate: () => {
@@ -55,38 +43,8 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     },
   });
 
-  const methods = useZodForm({
-    schema,
-  });
-
   const refresh = useRefresh(refetch, isFetching);
 
-  const onSubmit = methods.handleSubmit(
-    (input) => {
-      if (input.name !== route.params.sectorName)
-        editSector.mutate(
-          {
-            name: input.name,
-            sectorId,
-            zoneId,
-          },
-          {
-            onSuccess: () => {
-              utils.zones.allSectors.invalidate({ zoneId });
-            },
-          },
-        );
-      headerMethods.setEditing(false);
-    },
-    (error) => {
-      const errorMessage = error.name?.message || "Hubo un error";
-      Alert.alert(errorMessage);
-      methods.setValue("name", route.params.sectorName);
-      headerMethods.setEditing(false);
-    },
-  );
-
-  const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
   const { permission } = usePermissions({ zoneId });
 
   const onOptions = useOptionsSheet(
@@ -102,28 +60,40 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               })
             : null,
       },
-      "Cambiar nombre del sector": () => {
-        headerMethods.setEditing(true);
+      "Editar sector": {
+        hide: !permission.has("Update"),
+        action: () =>
+          data
+            ? navigation.navigate(ClimbsNavigationRoutes.AddSector, {
+                sectorId,
+                zoneId,
+                sectorKind: data.sectorKind,
+                name: data.name,
+              })
+            : null,
       },
-      "Eliminar sector": () => {
-        Alert.alert(
-          data ? sectorKindAssets[data.sectorKind].delete : "Eliminar",
-          "¿Seguro que quieres eliminar este sector?",
-          [
-            {
-              text: "Eliminar",
-              onPress: () => {
-                deleteSector.mutate({
-                  isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
-                  sectorId,
-                  zoneId,
-                });
+      "Eliminar sector": {
+        hide: !permission.has("Delete"),
+        action: () => {
+          Alert.alert(
+            data ? sectorKindAssets[data.sectorKind].delete : "Eliminar",
+            "¿Seguro que quieres eliminar este sector?",
+            [
+              {
+                text: "Eliminar",
+                onPress: () => {
+                  deleteSector.mutate({
+                    isDeleted: SoftDeleteSchema.Enum.DeletedPublic,
+                    sectorId,
+                    zoneId,
+                  });
+                },
+                style: "destructive",
               },
-              style: "destructive",
-            },
-            { text: "Cancelar", style: "cancel" },
-          ],
-        );
+              { text: "Cancelar", style: "cancel" },
+            ],
+          );
+        },
       },
     },
     { destructiveButtonIndex: 2 },
@@ -131,22 +101,47 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   if (isLoading)
     return (
-      <Screen justifyContent="center" alignItems="center">
-        <ActivityIndicator size="large" />
+      <Screen padding="m">
+        <Header
+          title={route.params.sectorName}
+          onGoBack={navigation.goBack}
+          marginBottom="m"
+          showOptions={false}
+        />
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <ActivityIndicator size="large" />
+        </Box>
       </Screen>
     );
 
-  if (!data) return null;
+  if (!data)
+    return (
+      <Screen padding="m">
+        <Header
+          title={route.params.sectorName}
+          onGoBack={navigation.goBack}
+          marginBottom="m"
+          showOptions={false}
+        />
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <Text>Oh no! ¡Hubo un error!</Text>
+        </Box>
+      </Screen>
+    );
 
   return (
     <Screen padding="m">
-      <FormProvider {...methods}>
-        <Header
-          title={route.params.sectorName}
-          editingTitle={headerMethods.editing}
-          headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
-        />
-      </FormProvider>
+      <Header
+        title={route.params.sectorName}
+        onGoBack={() =>
+          navigation.navigate(ClimbsNavigationRoutes.Zone, {
+            zoneId,
+            zoneName: data?.Zone.name,
+          })
+        }
+        onOptions={onOptions}
+        marginBottom="m"
+      />
       <Box flex={1}>
         <FlatList
           data={data.walls}
