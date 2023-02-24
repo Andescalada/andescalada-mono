@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
   canSave: boolean;
@@ -45,6 +46,10 @@ const DrawingTools = ({
 }: Props) => {
   const dispatch = useAppDispatch();
   const { showRoutes } = useAppSelector((state) => state.localConfig);
+
+  const inset = useSafeAreaInsets();
+
+  console.log(inset);
 
   return (
     <>
@@ -97,7 +102,7 @@ const DrawingTools = ({
         right={0}
         left={0}
         paddingTop="m"
-        paddingBottom="xl"
+        style={{ paddingBottom: inset.bottom + 16 }}
         paddingHorizontal="m"
         entering={FadeIn}
         exiting={FadeOut}
