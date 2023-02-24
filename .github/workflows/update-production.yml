@@ -5,8 +5,7 @@ on:
       - production
 
 jobs:
-  if_merged:
-    if:  github.event.pull_request.merged == true
+  update:
     name: EAS Update Production
     runs-on: ubuntu-latest
     environment: Production
