@@ -1,7 +1,8 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
-import { SoftDeleteSchema } from "@andescalada/db/zod";
+import { SoftDeleteSchema, StatusSchema } from "@andescalada/db/zod";
+import { Icon } from "@andescalada/icons/WebIcons";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
@@ -69,6 +70,26 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = trpc.zones.publicWallById.useQuery(id);
   const topo = data?.topos.find((t) => t.main);
+
+  if (data?.Sector.Zone.currentStatus !== StatusSchema.enum.Published) {
+    return (
+      <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex flex-col flex-1">
+        <div className="flex">
+          <h1>{data?.name}</h1>
+        </div>
+        <div className="flex flex-col mt-5">
+          <Icon name="eyes-color" size={50} />
+          <h2>Zona no publicada</h2>
+        </div>
+        <div>
+          <p>
+            Esta zona de escalada no se encuentra publicada para que otros
+            usuarios puedan acceder.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-grayscale-black text-white flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">

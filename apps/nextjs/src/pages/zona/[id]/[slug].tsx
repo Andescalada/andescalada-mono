@@ -5,6 +5,7 @@ import {
   AgreementLevelSchema,
   InfoAccessSchema,
   SoftDeleteSchema,
+  StatusSchema,
 } from "@andescalada/db/zod";
 import { Icon, IconNames } from "@andescalada/icons/WebIcons";
 import agreementLevelAssets from "@andescalada/utils/agreementLevel";
@@ -78,6 +79,28 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
     () => infoAccessAssets[data?.infoAccess || InfoAccessSchema.enum.Public],
     [data?.infoAccess],
   );
+
+  console.log(data?.currentStatus);
+
+  if (data?.currentStatus !== StatusSchema.enum.Published) {
+    return (
+      <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex flex-col flex-1">
+        <div className="flex">
+          <h1>{data?.name}</h1>
+        </div>
+        <div className="flex flex-col mt-5">
+          <Icon name="eyes-color" size={50} />
+          <h2>Zona no publicada</h2>
+        </div>
+        <div>
+          <p>
+            Esta zona de escalada no se encuentra publicada para que otros
+            usuarios puedan acceder.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex justify-between flex-col flex-1">
