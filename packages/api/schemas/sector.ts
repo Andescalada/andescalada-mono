@@ -3,6 +3,7 @@ import { SectorKindSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 
 const schema = z.object({
+  sectorId: z.string().optional(),
   name: z
     .string({ required_error: "Requerido" })
     .trim()
@@ -16,6 +17,13 @@ const schema = z.object({
 
 const id = z.object({ sectorId: z.string() });
 
-const edit = schema.pick({ name: true }).merge(id);
+const edit = schema
+  .pick({ name: true })
+  .merge(id)
+  .merge(
+    z.object({
+      sectorKind: z.nativeEnum(SectorKindSchema.enum).optional(),
+    }),
+  );
 
 export default { schema, id, edit };

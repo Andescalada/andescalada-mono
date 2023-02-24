@@ -19,7 +19,7 @@ import {
 } from "@features/climbs/Navigation/types";
 import conditionalVars from "@utils/conditionalVars";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
-import type { FC } from "react";
+import { FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 import { Alert } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
@@ -28,26 +28,37 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddSector>;
 
 const { schema } = sector;
 
-const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
-  const { zoneId } = route.params;
+const AddSectorScreen: FC<Props> = ({
+  route: {
+    params: { zoneId, sectorId, ...defaultValues },
+  },
+  navigation,
+}) => {
+  const text = useMemo(() => {
+    if (!sectorId) return { title: "Agregar sector", button: "Agregar" };
+    return { title: "Editar sector", button: "Editar" };
+  }, [sectorId]);
+
   const utils = trpc.useContext();
   const { mutate, isLoading } = trpc.sectors.add.useMutation({
     onSuccess: (data, params) => {
+      if (sectorId) utils.sectors.allWalls.invalidate({ sectorId });
+      utils.zones.allSectors.invalidate({ zoneId });
       navigation.replace(ClimbsNavigationRoutes.Sector, {
         sectorId: data.id,
         sectorName: data.name,
         zoneId: params.zoneId,
       });
-      utils.zones.allSectors.invalidate({ zoneId });
     },
   });
 
   const { handleSubmit, control } = useZodForm({
     schema,
+    defaultValues,
   });
 
   const {
-    field: { onChange },
+    field: { onChange, value },
     fieldState: { error, isDirty },
   } = useController({
     control,
@@ -60,7 +71,12 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
   });
 
   const onSubmit = handleSubmit((input) => {
-    mutate({ zoneId, name: input.name, sectorKind: input.sectorKind });
+    mutate({
+      zoneId,
+      name: input.name,
+      sectorKind: input.sectorKind,
+      sectorId,
+    });
   });
 
   const onCancel = () => {
@@ -82,12 +98,16 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
 
   return (
     <Screen padding="m" safeAreaDisabled={conditionalVars.disableForAndroid}>
-      <Text variant="h1">Agregar sector</Text>
+      <Text variant="h1">{text.title}</Text>
       <Box marginTop="m">
         <Text variant="p1R" marginBottom="s">
           Nombre del sector
         </Text>
-        <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
+        <TextInput
+          value={value}
+          onChangeText={onChange}
+          containerProps={{ height: 40 }}
+        />
         <Text marginTop="xs" color="semantic.error">
           {error?.message}
         </Text>
@@ -131,7 +151,7 @@ const AddSectorScreen: FC<Props> = ({ route, navigation }) => {
       )}
       <Button
         variant="primary"
-        title="Agregar"
+        title={text.button}
         onPress={onSubmit}
         isLoading={isLoading}
         marginTop="m"
