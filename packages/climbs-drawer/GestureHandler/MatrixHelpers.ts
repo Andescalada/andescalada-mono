@@ -23,13 +23,22 @@ export const initial4 = ({
 }) => {
   "worklet";
   if (skipTransformation)
-    return multiply4(
-      identity4,
-      processTransform3d([{ translateY: 0 }, { scale: 1 }]),
-    );
+    return {
+      initialValue: multiply4(
+        identity4,
+        processTransform3d([{ translateY: 0 }, { scale: 1 }]),
+      ),
+      scale: 1,
+    };
   const scale = SCREEN_WIDTH / width;
   const translateY = (SCREEN_HEIGHT - height * scale) / 2;
-  return multiply4(identity4, processTransform3d([{ translateY }, { scale }]));
+  return {
+    initialValue: multiply4(
+      identity4,
+      processTransform3d([{ translateY }, { scale }]),
+    ),
+    scale,
+  };
 };
 
 export const transformOrigin3d = (

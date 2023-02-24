@@ -12,24 +12,23 @@ export const fitContent = (
     height: number;
   },
   fit: "width" | "height" = "width",
-  fitTo?: number,
+  fitTo: number = fit === "width" ? SCREEN_WIDTH : SCREEN_HEIGHT,
 ) => {
   const aspectRatio = height / width;
 
   if (fit === "width") {
-    const valueToFit = fitTo !== undefined ? fitTo : SCREEN_WIDTH;
     return {
-      height: valueToFit * aspectRatio,
-      width: valueToFit,
+      height: fitTo * aspectRatio,
+      width: fitTo,
       aspectRatio,
-      scale: valueToFit / width,
+      scale: fitTo / width,
     };
   }
-  const valueToFit = fitTo !== undefined ? fitTo : SCREEN_HEIGHT;
+
   return {
-    height: valueToFit,
-    width: valueToFit / aspectRatio,
+    height: fitTo,
+    width: fitTo / aspectRatio,
     aspectRatio,
-    scale: valueToFit / height,
+    scale: fitTo / height,
   };
 };

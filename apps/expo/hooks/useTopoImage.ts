@@ -11,7 +11,7 @@ interface Args {
   imageQuality?: number;
 }
 
-const useTopoImage = ({ wallId, zoneId, imageQuality = 100 }: Args) => {
+const useTopoImage = ({ wallId, zoneId, imageQuality }: Args) => {
   const { data } = trpc.walls.byId.useQuery({ wallId, zoneId });
   const { height, width, publicId } = data?.topos[0].image || {
     height: 0,

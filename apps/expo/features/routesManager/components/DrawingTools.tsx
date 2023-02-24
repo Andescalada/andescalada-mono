@@ -49,8 +49,6 @@ const DrawingTools = ({
 
   const inset = useSafeAreaInsets();
 
-  console.log(inset);
-
   return (
     <>
       {!showConfig && (

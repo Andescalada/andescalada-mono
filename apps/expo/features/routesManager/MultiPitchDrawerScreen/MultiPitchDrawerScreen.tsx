@@ -99,6 +99,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
     wallId,
     zoneId,
+    imageQuality: 100,
   });
 
   const [hideStart, setHideStart] = useState(

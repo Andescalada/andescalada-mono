@@ -27,7 +27,11 @@ export const GestureHandler = ({
 }: GestureHandlerProps) => {
   const x = 0;
   const y = 0;
-  const initialValue = initial4({ height, width, skipTransformation: !center });
+  const { initialValue, scale: initialScale } = initial4({
+    height,
+    width,
+    skipTransformation: !center,
+  });
 
   const origin = useSharedValue(vec3(0, 0, 0));
   const matrix = useSharedValue(initialValue);
@@ -46,11 +50,11 @@ export const GestureHandler = ({
         })
         .onEnd(() => {
           const currentScale = matrix.value[0];
-          if (currentScale <= 1) {
+          if (currentScale <= initialScale) {
             matrix.value = initialValue;
           }
         }),
-    [initialValue, matrix, disableGesture],
+    [initialValue, matrix, disableGesture, initialScale],
   );
 
   const scale = useMemo(
@@ -68,11 +72,11 @@ export const GestureHandler = ({
         })
         .onEnd(() => {
           const currentScale = matrix.value[0];
-          if (currentScale < 1) {
+          if (currentScale < initialScale) {
             matrix.value = concat(initialValue, [0, 0, 0], [{ scale: 1 }]);
           }
         }),
-    [initialValue, matrix, offset, origin, disableGesture],
+    [initialValue, matrix, offset, origin, disableGesture, initialScale],
   );
 
   const style = useAnimatedStyle(() => ({
