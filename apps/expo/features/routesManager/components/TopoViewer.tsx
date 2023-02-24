@@ -17,6 +17,7 @@ import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
 import selectRouteByPoint from "@utils/selectRouteByPoint";
 import { FC, memo, useMemo, useState } from "react";
+import { Dimensions } from "react-native";
 
 type PathItem = inferProcedureOutput<
   AppRouter["topos"]["byId"]
@@ -32,6 +33,7 @@ interface Props {
   hide?: boolean;
   onSelectedRoute?: (id: string | undefined) => void;
   zoneId: Zone["id"];
+  imageQuality?: number;
 }
 
 const TopoViewer: FC<Props> = ({
@@ -43,19 +45,24 @@ const TopoViewer: FC<Props> = ({
   hide = false,
   zoneId,
   onSelectedRoute,
+  imageQuality,
 }) => {
   const { data } = trpc.topos.byId.useQuery({ topoId, zoneId });
 
-  const image = optimizedImage(data?.image.publicId || undefined);
+  const image = optimizedImage(data?.image.publicId || undefined, imageQuality);
 
   const { fileUrl } = useCachedImage(image);
 
   const coords = useValue({ x: 0, y: 0 });
 
   const { height, width } = data?.image || {};
+
   const fitted = fitContent(
     { height: height ? height : 0, width: width ? width : 0 },
     "width",
+    !!imageQuality && width
+      ? Math.min(1024, width)
+      : Dimensions.get("window").width,
   );
 
   const paths = data?.RoutePath || [];
@@ -89,9 +96,6 @@ const TopoViewer: FC<Props> = ({
     );
 
   if (data) {
-    const { height, width } = data?.image;
-    const fitted = fitContent({ height, width }, "width");
-
     return (
       <SkiaRouteCanvas
         imageUrl={fileUrl}
