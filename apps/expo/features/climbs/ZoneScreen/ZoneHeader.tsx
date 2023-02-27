@@ -24,6 +24,7 @@ import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { GlobalPermissions } from "@utils/auth0/types";
 import { createShareableLink } from "@utils/createSharableLink";
 import featureFlags from "@utils/featureFlags";
+import { isAndroid } from "@utils/platform";
 import zoneStatus from "@utils/zoneStatus";
 import { useMemo } from "react";
 import { Share } from "react-native";
@@ -196,7 +197,9 @@ const ZoneHeader = () => {
               alignItems="center"
               onPress={() =>
                 Share.share({
-                  message: createShareableLink({ zoneId, zoneName }),
+                  message: `Estos son los topos de ${zoneName} ${
+                    isAndroid ? createShareableLink({ zoneId, zoneName }) : ""
+                  }`,
                   url: createShareableLink({ zoneId, zoneName }),
                   title: `Zona ${zoneName}`,
                 })
