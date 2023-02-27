@@ -1,7 +1,8 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
-import { SoftDeleteSchema } from "@andescalada/db/zod";
+import { SoftDeleteSchema, StatusSchema } from "@andescalada/db/zod";
+import { Icon } from "@andescalada/icons/WebIcons";
 import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
@@ -10,6 +11,7 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import TopoViewer from "pages/zona/[id]/TopoViewer";
 import gradeLabel from "utils/gradeLabel";
@@ -70,8 +72,53 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = trpc.zones.publicWallById.useQuery(id);
   const topo = data?.topos.find((t) => t.main);
 
+  if (data?.Sector.Zone.currentStatus !== StatusSchema.enum.Published) {
+    return (
+      <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex flex-col flex-1">
+        <div className="flex">
+          <h1>{data?.name}</h1>
+        </div>
+        <div className="flex flex-col mt-5">
+          <Icon name="eyes-color" size={50} />
+          <h2>Zona no publicada</h2>
+        </div>
+        <div>
+          <p>
+            Esta zona de escalada no se encuentra publicada para que otros
+            usuarios puedan acceder.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-grayscale-black text-white flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">
+      <Head>
+        <title>{data?.name}</title>
+        <meta
+          property="og:image"
+          content={`https://www.andescalada.org/api/og/zone?title=${
+            data.name
+          }&description=${`${data?.Sector.Zone.name} / ${data?.Sector.name}}`}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content={`https://www.andescalada.org/zona/${data.id}/${data.slug}`}
+        />
+        <meta property="og:title" content={data.name} />
+        <meta property="og:site_name" content="Andescalada" />
+        <meta
+          property="og:description"
+          content="Conoce toda la info de esta pared"
+        />
+        <meta
+          name="description"
+          content="Andescalada, la app de la Fundación Andescalada para gestionar la información y a la comunidad escaladora."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="p-5">
         <h1>
           <span className="text-brand-primaryA underline">

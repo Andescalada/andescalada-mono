@@ -13,6 +13,7 @@ const publicById = t.procedure
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input },
       include: {
+        description: { select: { originalText: true } },
         agreements: {
           orderBy: { level: "asc" },
           include: {

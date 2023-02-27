@@ -22,9 +22,11 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { useNavigation, useRoute } from "@react-navigation/native";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { GlobalPermissions } from "@utils/auth0/types";
+import { createShareableLink } from "@utils/createSharableLink";
 import featureFlags from "@utils/featureFlags";
 import zoneStatus from "@utils/zoneStatus";
 import { useMemo } from "react";
+import { Share } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 const ZoneHeader = () => {
@@ -124,58 +126,86 @@ const ZoneHeader = () => {
             />
             {featureFlags.storyBar && <StoryButton title="Flora y fauna" />}
           </Box>
-
-          <Pressable
-            marginTop="s"
-            alignItems="center"
-            alignSelf="flex-start"
+          <Box
             flexDirection="row"
-            onPress={() =>
-              rootNavigation.navigate(RootNavigationRoutes.InfoAccessManager, {
-                screen: InfoAccessManagerRoutes.MembersScreen,
-                params: { zoneId, zoneName },
-              })
-            }
+            alignItems="center"
+            justifyContent="space-between"
           >
-            <Box
-              borderRadius={16}
-              padding="s"
-              backgroundColor={
-                infoAccessAssets[data?.infoAccess].backgroundColor
+            <Pressable
+              marginTop="s"
+              alignItems="center"
+              alignSelf="flex-start"
+              flexDirection="row"
+              onPress={() =>
+                rootNavigation.navigate(
+                  RootNavigationRoutes.InfoAccessManager,
+                  {
+                    screen: InfoAccessManagerRoutes.MembersScreen,
+                    params: { zoneId, zoneName },
+                  },
+                )
               }
             >
-              <Text color={infoAccessAssets[data?.infoAccess].color}>
-                {`Guía ${infoAccessAssets[data?.infoAccess]?.label}`}
-              </Text>
-            </Box>
-
-            <Box flexDirection="row" marginLeft="s">
-              {members.map((role, index) => (
-                <UserProfileImage
-                  key={role.User.id}
-                  publicId={role.User.profilePhoto?.publicId || undefined}
-                  style={{
-                    height: 32,
-                    width: 32,
-                    borderRadius: 16,
-                    marginLeft: index > 0 ? -10 : 0,
-                  }}
-                  zIndex={-10 * index + 10}
-                />
-              ))}
-              <Pressable
-                height={32}
-                width={32}
-                style={{ marginLeft: -10, zIndex: -100 }}
+              <Box
                 borderRadius={16}
-                justifyContent="center"
-                alignItems="center"
-                backgroundColor="transparentButtonBackground"
+                padding="s"
+                backgroundColor={
+                  infoAccessAssets[data?.infoAccess].backgroundColor
+                }
               >
-                <Ionicons name="ellipsis-horizontal-sharp" size={20} />
-              </Pressable>
-            </Box>
-          </Pressable>
+                <Text color={infoAccessAssets[data?.infoAccess].color}>
+                  {`Guía ${infoAccessAssets[data?.infoAccess]?.label}`}
+                </Text>
+              </Box>
+
+              <Box flexDirection="row" marginLeft="s">
+                {members.map((role, index) => (
+                  <UserProfileImage
+                    key={role.User.id}
+                    publicId={role.User.profilePhoto?.publicId || undefined}
+                    style={{
+                      height: 32,
+                      width: 32,
+                      borderRadius: 16,
+                      marginLeft: index > 0 ? -10 : 0,
+                    }}
+                    zIndex={-10 * index + 10}
+                  />
+                ))}
+                <Pressable
+                  height={32}
+                  width={32}
+                  style={{ marginLeft: -10, zIndex: -100 }}
+                  borderRadius={16}
+                  justifyContent="center"
+                  alignItems="center"
+                  backgroundColor="transparentButtonBackground"
+                >
+                  <Ionicons name="ellipsis-horizontal-sharp" size={20} />
+                </Pressable>
+              </Box>
+            </Pressable>
+            <Pressable
+              height={32}
+              width={32}
+              borderRadius={32}
+              bg="zoneOptionsIcons"
+              overflow="hidden"
+              borderColor="text"
+              justifyContent="center"
+              alignItems="center"
+              onPress={() =>
+                Share.share({
+                  message: createShareableLink({ zoneId, zoneName }),
+                  title: `Zona ${zoneName}`,
+                })
+              }
+            >
+              <Box position="absolute" top={5} right={5} height={20} width={20}>
+                <Ionicons name="share" color="background" size={20} />
+              </Box>
+            </Pressable>
+          </Box>
           <ToolBar
             isDownloaded={isDownloaded}
             isFavorite={isFavorite}

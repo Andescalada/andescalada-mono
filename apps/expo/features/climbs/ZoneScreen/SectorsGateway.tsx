@@ -1,8 +1,13 @@
-import { InfoAccessSchema, RequestStatusSchema } from "@andescalada/db/zod";
+import {
+  InfoAccessSchema,
+  RequestStatusSchema,
+  StatusSchema,
+} from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
   Button,
+  Icon,
   Screen,
   ScrollView,
   Text,
@@ -39,6 +44,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
       UserZoneAgreementHistory = [],
       infoAccess,
       hasAccess,
+      currentStatus,
     } = {},
     isLoading,
     isError,
@@ -62,9 +68,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
 
   const hasNotAcceptedAgreement = useMemo(
     () =>
-      !isLoading &&
       hasAccess &&
-      !isError &&
       (requestStatus === RequestStatusSchema.enum.Accepted ||
         infoAccess === InfoAccessSchema.enum.Public) &&
       !permission?.has("EditZoneAgreements") &&
@@ -73,8 +77,6 @@ const SectorsGateway: FC<Props> = ({ children }) => {
       UserZoneAgreementHistory,
       hasAccess,
       infoAccess,
-      isError,
-      isLoading,
       permission,
       requestStatus,
     ],
@@ -102,7 +104,38 @@ const SectorsGateway: FC<Props> = ({ children }) => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
-
+  if (isError) {
+    return (
+      <Screen safeAreaDisabled padding="m">
+        <Box marginBottom="s" marginTop="xl">
+          <Icon name="eyes-color" size={50} />
+          <Text variant="h1" fontFamily="Rubik-700">
+            Hubo un error!
+          </Text>
+        </Box>
+        <Text variant="p2R">Estas cosas le pasan a l@s mejores</Text>
+        <Text variant="p2R">
+          Intenta reiniciar la app o puedes contactarnos si persiste.
+        </Text>
+      </Screen>
+    );
+  }
+  if (currentStatus !== StatusSchema.Enum.Published && !hasAccess) {
+    return (
+      <Screen safeAreaDisabled padding="m">
+        <Box marginBottom="s" marginTop="xl">
+          <Icon name="eyes-color" size={50} />
+          <Text variant="h1" fontFamily="Rubik-700">
+            Zona no publicada
+          </Text>
+        </Box>
+        <Text variant="p2R">
+          Esta zona de escalada no se encuentra publicada para que otros
+          usuarios puedan acceder.
+        </Text>
+      </Screen>
+    );
+  }
   if (hasNotAcceptedAgreement) {
     return (
       <Screen safeAreaDisabled>
@@ -131,7 +164,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
     );
   }
 
-  if (!hasAccess && !isError && !!infoAccess) {
+  if (!hasAccess && !!infoAccess) {
     const { requestTitle, requestDescription } = infoAccessAssets[infoAccess];
 
     return (
