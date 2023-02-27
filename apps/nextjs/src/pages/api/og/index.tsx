@@ -38,7 +38,7 @@ const OgImageHandler = async () => {
       </div>
     ),
     {
-      width: 1200,
+      width: 600,
       height: 600,
       fonts: [
         {
