@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unknown-property */
 import { ImageResponse } from "@vercel/og";
-import { NextRequest } from "next/server";
 
 export const config = {
   runtime: "experimental-edge",
@@ -38,8 +37,8 @@ const OgImageHandler = async () => {
       </div>
     ),
     {
-      width: 600,
-      height: 600,
+      width: 400,
+      height: 400,
       fonts: [
         {
           name: "Rubik",

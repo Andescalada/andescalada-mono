@@ -47,8 +47,8 @@ const OgImageHandler = async (req: NextRequest) => {
       </div>
     ),
     {
-      width: 600,
-      height: 600,
+      width: 400,
+      height: 400,
       fonts: [
         {
           name: "Rubik",

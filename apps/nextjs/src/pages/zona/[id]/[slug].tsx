@@ -117,6 +117,8 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         />
         <meta property="og:title" content={data?.name} />
         <meta property="og:site_name" content="Andescalada" />
+        <meta property="og:image:width" content="400"></meta>
+        <meta property="og:image:height" content="400"></meta>
         <meta
           property="og:description"
           content={

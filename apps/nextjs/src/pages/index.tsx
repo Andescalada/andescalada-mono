@@ -43,8 +43,11 @@ export default function IndexPage() {
         />
         <meta
           property="og:image"
+          itemProp="image"
           content={`https://www.andescalada.org/api/og`}
         />
+        <meta property="og:image:width" content="400"></meta>
+        <meta property="og:image:height" content="400"></meta>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="text-white bg-gradient-to-r from-brand-primaryA to-brand-primaryB flex flex-1 flex-col min-w-screen">

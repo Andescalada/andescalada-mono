@@ -98,6 +98,7 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <title>{data?.name}</title>
         <meta
           property="og:image"
+          itemProp="image"
           content={`https://www.andescalada.org/api/og/zone?title=${
             data.name
           }&description=${`${data?.Sector.Zone.name} / ${data?.Sector.name}}`}`}
@@ -117,6 +118,8 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
           name="description"
           content="Andescalada, la app de la Fundación Andescalada para gestionar la información y a la comunidad escaladora."
         />
+        <meta property="og:image:width" content="400"></meta>
+        <meta property="og:image:height" content="400"></meta>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="p-5">
