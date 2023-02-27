@@ -107,6 +107,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <title>{data?.name}</title>
         <meta
           property="og:image"
+          itemProp="image"
           content={`https://www.andescalada.org/api/og/zone?title=${data.name}`}
         />
         <meta property="og:type" content="website" />

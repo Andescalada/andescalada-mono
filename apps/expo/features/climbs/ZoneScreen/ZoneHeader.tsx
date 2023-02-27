@@ -197,6 +197,7 @@ const ZoneHeader = () => {
               onPress={() =>
                 Share.share({
                   message: createShareableLink({ zoneId, zoneName }),
+                  url: createShareableLink({ zoneId, zoneName }),
                   title: `Zona ${zoneName}`,
                 })
               }
