@@ -41,7 +41,7 @@ const OgImageHandler = async (req: NextRequest) => {
           />
         </div>
         <div tw="flex flex-1 flex-col items-center justify-center">
-          <h1 tw="text-[70px] text-white font-bold text-center">🪨 {title}</h1>
+          <h1 tw="text-[70px] text-white font-bold text-center">{title}</h1>
           <h2 tw="text-gray-400 text-[30px]">{descriptionText}</h2>
         </div>
       </div>
