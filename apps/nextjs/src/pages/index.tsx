@@ -4,6 +4,7 @@ import { transformer } from "@andescalada/api/src/transformer";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
+import Head from "next/head";
 import Link from "next/link";
 import Challenges from "pages/challenges";
 import Why from "pages/why";
@@ -26,6 +27,26 @@ export default function IndexPage() {
 
   return (
     <div>
+      <Head>
+        <title>Andescalada App</title>
+        <meta
+          name="description"
+          content="Andescalada, la app de la Fundación Andescalada para gestionar la información y a la comunidad escaladora."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.andescalada.org/" />
+        <meta property="og:title" content="Andescalada" />
+        <meta property="og:site_name" content="Andescalada" />
+        <meta
+          property="og:description"
+          content="App de la Fundación Andescalada para gestionar la información y a la comunidad escaladora."
+        />
+        <meta
+          property="og:image"
+          content={`https://www.andescalada.org/api/og`}
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="text-white bg-gradient-to-r from-brand-primaryA to-brand-primaryB flex flex-1 flex-col min-w-screen">
         <div className=" flex flex-1 flex-col justify-center items-center">
           <div className=" w-full  flex flex-col items-center">

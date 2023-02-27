@@ -11,6 +11,7 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import TopoViewer from "pages/zona/[id]/TopoViewer";
 import gradeLabel from "utils/gradeLabel";
@@ -93,6 +94,31 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <div className="bg-grayscale-black text-white flex flex-col justify-start items-stretch flex-1 min-h-screen max-w-full">
+      <Head>
+        <title>{data?.name}</title>
+        <meta
+          property="og:image"
+          content={`https://www.andescalada.org/api/og/zone?title=${
+            data.name
+          }&description=${`${data?.Sector.Zone.name} / ${data?.Sector.name}}`}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content={`https://www.andescalada.org/zona/${data.id}/${data.slug}`}
+        />
+        <meta property="og:title" content={data.name} />
+        <meta property="og:site_name" content="Andescalada" />
+        <meta
+          property="og:description"
+          content="Conoce toda la info de esta pared"
+        />
+        <meta
+          name="description"
+          content="Andescalada, la app de la Fundación Andescalada para gestionar la información y a la comunidad escaladora."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="p-5">
         <h1>
           <span className="text-brand-primaryA underline">

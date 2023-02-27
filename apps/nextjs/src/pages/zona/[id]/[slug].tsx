@@ -17,6 +17,7 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import { useMemo } from "react";
 import { trpc } from "utils/trpc";
@@ -102,6 +103,31 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex justify-between flex-col flex-1">
+      <Head>
+        <title>{data?.name}</title>
+        <meta
+          property="og:image"
+          content={`https://www.andescalada.org/api/og/zone?title=${data.name}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content={`https://www.andescalada.org/zona/${data.id}/${data.slug}`}
+        />
+        <meta property="og:title" content={data?.name} />
+        <meta property="og:site_name" content="Andescalada" />
+        <meta
+          property="og:description"
+          content={
+            data.description?.originalText ? data.description?.originalText : ""
+          }
+        />
+        <meta
+          name="description"
+          content="Andescalada, la app de la Fundación Andescalada para gestionar la información y a la comunidad escaladora."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="flex">
         <h1>{data?.name}</h1>
         <div className="flex ml-5">
