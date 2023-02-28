@@ -249,8 +249,8 @@ model Zone {
   UserZoneAgreementHistory UserZoneAgreementRecord[]
   ZoneDirections           ZoneDirections[]
   searchVisibility         SearchVisibility          @default(Listed)
-  Author                   User?                     @relation("AuthorZone", fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  authorId                 String?
+  Author                   User                      @relation("AuthorZone", fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  authorId                 String
   coAuthors                User[]                    @relation("CoAuthorZone")
 
   @@index([locationId])
