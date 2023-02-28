@@ -14,7 +14,9 @@ const create = protectedProcedure
           create: {
             name: input.name,
             slug: slug(input.name),
+            searchVisibility: input.searchVisibility,
             infoAccess: input.infoAccess,
+            Author: { connect: { email: ctx.user.email } },
             statusHistory: {
               create: {
                 modifiedBy: { connect: { email: ctx.user.email } },

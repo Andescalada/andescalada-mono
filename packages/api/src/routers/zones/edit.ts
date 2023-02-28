@@ -2,6 +2,7 @@ import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -10,14 +11,21 @@ const edit = protectedZoneProcedure
     z.object({
       name: zone.schema.shape.name.optional(),
       coordinates: zone.schema.shape.coordinates,
+      searchVisibility: z.nativeEnum(SearchVisibilitySchema.Enum).optional(),
+      infoAccess: z.nativeEnum(InfoAccessSchema.Enum).optional(),
     }),
   )
   .mutation(async ({ ctx, input }) => {
-    if (!ctx.permissions.has("Update")) {
+    if (!ctx.permissions.has("EditZoneInfo")) {
       throw new TRPCError(
-        error.unauthorizedActionForZone(input.zoneId, "Update"),
+        error.unauthorizedActionForZone(input.zoneId, "EditZoneInfo"),
       );
     }
+
+    const selectedZone = await ctx.prisma.zone.findUniqueOrThrow({
+      where: { id: input.zoneId },
+      select: { Author: { select: { email: true } } },
+    });
 
     const zone = await ctx.prisma.zone.update({
       where: { id: input.zoneId },
@@ -28,7 +36,13 @@ const edit = protectedZoneProcedure
             create: input.coordinates,
           },
         }),
+        searchVisibility: input.searchVisibility,
+        infoAccess: input.infoAccess,
         version: { increment: 1 },
+        coAuthors:
+          selectedZone.Author?.email === ctx.user.email
+            ? { connect: { email: ctx.user.email } }
+            : undefined,
       },
     });
     return zone;

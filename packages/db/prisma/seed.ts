@@ -7,7 +7,6 @@ import permissions2 from "./aplied_scripts/seed_new_permissions_21-01-2023";
 import permissions3 from "./aplied_scripts/seed_new_permissions_22-01-2023";
 import permissions0 from "./aplied_scripts/seed_new_permissions_27_12_2022";
 import seedRoles from "./aplied_scripts/seed_roles";
-import grantPermission from "./grant_permissions";
 
 const prisma = new PrismaClient();
 
@@ -31,7 +30,6 @@ async function main() {
   await permissions1();
   await permissions2();
   await permissions3();
-  await grantPermission();
 }
 
 main()

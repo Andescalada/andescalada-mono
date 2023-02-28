@@ -30,6 +30,8 @@ model User {
   profilePhotoId             String?
   firstLogin                 Boolean                   @default(true)
   auth0id                    String?
+  authorZone                 Zone[]                    @relation("AuthorZone")
+  coAuthorZone               Zone[]                    @relation("CoAuthorZone")
   authorSector               Sector[]                  @relation("AuthorSector")
   coAuthorSector             Sector[]                  @relation("CoAuthorSector")
   authorWall                 Wall[]                    @relation("AuthorWall")
@@ -192,6 +194,7 @@ enum PermissionActions {
   RevokeZoneRole
   PauseZoneAccess
   EditZoneAgreements
+  EditZoneInfo
 }
 
 model ZoneAccessRequest {
@@ -245,9 +248,14 @@ model Zone {
   ZoneAccessRequest        ZoneAccessRequest[]
   UserZoneAgreementHistory UserZoneAgreementRecord[]
   ZoneDirections           ZoneDirections[]
+  searchVisibility         SearchVisibility          @default(Listed)
+  Author                   User                      @relation("AuthorZone", fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  authorId                 String
+  coAuthors                User[]                    @relation("CoAuthorZone")
 
   @@index([locationId])
   @@index([descriptionId])
+  @@index([authorId])
 }
 
 model ZoneStatus {
@@ -271,6 +279,11 @@ enum Status {
   Approved
   InReview
   Unpublished
+}
+
+enum SearchVisibility {
+  Listed
+  Unlisted
 }
 
 model ZoneAgreement {
