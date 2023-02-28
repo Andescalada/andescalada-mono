@@ -102,7 +102,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   }
 
   return (
-    <div className="bg-grayscale-black text-white min-h-screen min-w-full p-5 flex justify-between flex-col flex-1">
+    <>
       <Head>
         <title>{data?.name}</title>
         <meta
@@ -133,99 +133,112 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex">
-        <h1>{data?.name}</h1>
-        <div className="flex ml-5">
-          <div
-            className={`flex justify-center items-center px-4 bg-[theme(colors.${iA.backgroundColor})] self-stretch rounded-full`}
-          >
-            <h4 className="text-center">{`Guía ${iA.label}`}</h4>
+      <div className="bg-grayscale-black text-white min-w-full p-5 flex justify-between flex-col flex-1">
+        <div className="flex">
+          <h1>{data?.name}</h1>
+
+          <div className="flex ml-5">
+            <div
+              className={`flex justify-center items-center px-4 bg-[theme(colors.${iA.backgroundColor})] self-stretch rounded-full`}
+            >
+              <h4 className="text-center">{`Guía ${iA.label}`}</h4>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col md:flex-row flex-1 items-stretch">
-        {data?.agreements && data?.agreements?.length > 0 && (
-          <div className="flex-1 md:flex-2 md:px-8">
-            <h2 className="my-4">Acuerdos</h2>
-            <div>
-              {data?.agreements?.map((agreement) => (
-                <div
-                  key={agreement.id}
-                  className="bg-white p-2 my-4 rounded-md flex relative"
-                >
-                  <Icon
-                    name={`${agreement.Agreement.icon}-color` as IconNames}
-                  />
-                  <p className="text-black ml-4">
-                    {agreement.Agreement.title.originalText}
-                  </p>
-                  {agreement.level !==
-                    AgreementLevelSchema.enum.NotAplicable && (
-                    <div
-                      className={`px-2 h-6 rounded-full absolute -bottom-2 right-2 flex justify-center items-center bg-[theme(colors.${
-                        agreementLevelAssets(agreement.level).backgroundColor
-                      })]`}
-                    >
-                      <p
-                        className={`text-sm text-[theme(colors.${
-                          agreementLevelAssets(agreement.level).color
+        <div className="flex flex-col md:flex-row flex-1 items-stretch mb-5">
+          {data?.agreements && data?.agreements?.length > 0 && (
+            <div className="flex-1 md:flex-2 md:px-8">
+              {!!data?.description && (
+                <>
+                  <h2 className="my-4">Descripción</h2>
+                  <p>{data?.description?.originalText}</p>
+                </>
+              )}
+              <h2 className="my-4">Acuerdos</h2>
+              <div>
+                {data?.agreements?.map((agreement) => (
+                  <div
+                    key={agreement.id}
+                    className="bg-white p-2 my-4 rounded-md flex relative"
+                  >
+                    <Icon
+                      name={`${agreement.Agreement.icon}-color` as IconNames}
+                    />
+                    <p className="text-black ml-4">
+                      {agreement.Agreement.title.originalText}
+                    </p>
+                    {agreement.level !==
+                      AgreementLevelSchema.enum.NotAplicable && (
+                      <div
+                        className={`px-2 h-6 rounded-full absolute -bottom-2 right-2 flex justify-center items-center bg-[theme(colors.${
+                          agreementLevelAssets(agreement.level).backgroundColor
                         })]`}
                       >
-                        {agreementLevelAssets(agreement.level).label}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        {data?.sectors?.length === 0 && (
-          <div className="flex-1 md:flex-2 md:px-8">
-            <h3 className="my-4">{iA.requestTitle}</h3>
-            <p className="mb-6">{iA.requestDescription}</p>
-            <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
-              <p className="text-sm">Descarga la app para solicitar acceso.</p>
-              <StoreBadges />
-            </div>
-          </div>
-        )}
-        {data?.sectors && data?.sectors?.length && (
-          <div className="flex-1 md:flex-2 md:px-8">
-            <h2 className="my-4">Sectores</h2>
-            <div>
-              {data?.sectors?.map((sector) => (
-                <div key={sector.id} className="my-4">
-                  <div className="border-2 p-4 rounded-md border-brand-primaryA">
-                    <p>{sector.name}</p>
-                  </div>
-                  <div>
-                    {sector.walls.map((wall) => (
-                      <>
-                        <div
-                          key={wall.id}
-                          className="border-l border-r border-b last:border-b last:rounded-b-md mx-2 p-2 text-sm font-light"
+                        <p
+                          className={`text-sm text-[theme(colors.${
+                            agreementLevelAssets(agreement.level).color
+                          })]`}
                         >
-                          <p>
-                            <Link href={`/topo/${wall.id}/${wall.slug}`}>
-                              {wall.name}
-                            </Link>
-                          </p>
-                        </div>
-                      </>
-                    ))}
+                          {agreementLevelAssets(agreement.level).label}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+          )}
+          {data?.sectors?.length === 0 && (
+            <div className="flex-1 md:flex-2 md:px-8">
+              <h3 className="my-4">{iA.requestTitle}</h3>
+              <p className="mb-6">{iA.requestDescription}</p>
+              <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
+                <p className="text-sm">
+                  Descarga la app para solicitar acceso.
+                </p>
+                <StoreBadges />
+              </div>
+            </div>
+          )}
+          {data?.sectors?.length !== 0 && (
+            <div className="flex-1 md:flex-2 md:px-8">
+              <h2 className="my-4">Sectores</h2>
+              <div>
+                {data?.sectors?.map((sector) => (
+                  <div key={sector.id} className="my-4">
+                    <div className="border-2 p-4 rounded-md border-brand-primaryA">
+                      <p>{sector.name}</p>
+                    </div>
+                    <div>
+                      {sector.walls.map((wall) => (
+                        <>
+                          <div
+                            key={wall.id}
+                            className="border-l border-r border-b last:border-b last:rounded-b-md mx-2 p-2 text-sm font-light"
+                          >
+                            <p>
+                              <Link href={`/topo/${wall.id}/${wall.slug}`}>
+                                {wall.name}
+                              </Link>
+                            </p>
+                          </div>
+                        </>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        {data?.sectors?.length !== 0 && (
+          <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
+            <p className="text-sm">Descarga nuestra App Movil</p>
+            <StoreBadges />
           </div>
         )}
       </div>
-      <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
-        <p className="text-sm">Descarga nuestra App Movil</p>
-        <StoreBadges />
-      </div>
-    </div>
+    </>
   );
 };
 
