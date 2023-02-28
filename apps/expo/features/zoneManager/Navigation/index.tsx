@@ -1,4 +1,5 @@
 import AddNewZoneScreen from "@features/zoneManager/AddNewZoneScreen";
+import EditZoneScreen from "@features/zoneManager/EditZoneScreen";
 import EditZoneStatusScreen from "@features/zoneManager/EditZoneStatusScreen";
 import {
   ZoneManagerNavigationParamList,
@@ -20,6 +21,14 @@ const Navigator = () => {
         component={AddNewZoneScreen}
         options={{
           title: "Crea una nueva zona",
+          ...backHeader,
+        }}
+      />
+      <Stack.Screen
+        name={ZoneManagerRoutes.EditZone}
+        component={EditZoneScreen}
+        options={{
+          title: "Editar zona",
           ...backHeader,
         }}
       />

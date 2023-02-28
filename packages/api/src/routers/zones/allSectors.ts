@@ -9,6 +9,7 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
     where: { id: input.zoneId },
     select: {
       name: true,
+      searchVisibility: true,
       isDeleted: true,
       ZoneAccessRequest: {
         where: {

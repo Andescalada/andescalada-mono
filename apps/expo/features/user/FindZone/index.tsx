@@ -98,7 +98,6 @@ const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
               <FlatList
                 data={data}
                 keyExtractor={(item) => item.id}
-                contentContainerStyle={{ flex: 1 }}
                 ListEmptyComponent={() => (
                   <Box flex={1} justifyContent="center" alignItems="center">
                     <Text variant="p1R">No se encontraron zonas</Text>

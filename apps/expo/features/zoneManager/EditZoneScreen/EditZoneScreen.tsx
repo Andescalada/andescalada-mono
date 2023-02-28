@@ -23,26 +23,36 @@ import { useController } from "react-hook-form";
 
 const { schema } = zone;
 
-type Props = ZoneManagerScreenProps<ZoneManagerRoutes.AddNewZoneScreen>;
+type Props = ZoneManagerScreenProps<ZoneManagerRoutes.EditZone>;
 
-const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
-  const { control, ...form } = useZodForm({ schema, mode: "onChange" });
+const EditZoneScreen: FC<Props> = ({ navigation, route: { params } }) => {
+  const { control, ...form } = useZodForm({
+    schema,
+    mode: "onChange",
+    defaultValues: {
+      name: params?.zoneName,
+      infoAccess: params?.infoAccess,
+      searchVisibility: params?.searchVisibility,
+    },
+  });
 
   const zoneName = useController({ control, name: "name" });
   const access = useController({ control, name: "infoAccess" });
   const visibility = useController({ control, name: "searchVisibility" });
 
-  const addZone = trpc.zones.create.useMutation({
-    onSuccess: ({ zoneId }) => {
-      navigation.navigate(ZoneManagerRoutes.SelectZoneLocation, {
-        zoneId,
-        zoneName: zoneName.field.value,
-      });
+  const utils = trpc.useContext();
+  const editZone = trpc.zones.edit.useMutation({
+    onSuccess: ({}) => {
+      utils.zones.invalidate();
+      utils.sectors.invalidate();
+      utils.walls.invalidate();
+      utils.topos.invalidate();
+      navigation.goBack();
     },
   });
 
   const handleContinue = form.handleSubmit((data) => {
-    addZone.mutate(data);
+    editZone.mutate({ zoneId: params.zoneId, ...data });
   });
 
   return (
@@ -158,7 +168,7 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
               title="Continuar"
               disabled={!form.formState.isValid}
               onPress={handleContinue}
-              isLoading={addZone.isLoading}
+              isLoading={editZone.isLoading}
             />
           </Box>
         </KeyboardDismiss>
@@ -167,4 +177,4 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
   );
 };
 
-export default AddNewZoneScreen;
+export default EditZoneScreen;

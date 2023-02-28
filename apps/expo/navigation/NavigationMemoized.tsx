@@ -1,5 +1,4 @@
 import { slug, unSlug } from "@andescalada/api/src/utils/slug";
-import { Text } from "@andescalada/ui";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";

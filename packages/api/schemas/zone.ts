@@ -2,6 +2,7 @@ import global from "@andescalada/api/schemas/global";
 import { r } from "@andescalada/api/src/utils/regex";
 import {
   InfoAccessSchema,
+  SearchVisibilitySchema,
   StatusSchema,
   TransportationModeSchema,
 } from "@andescalada/db/zod";
@@ -19,6 +20,9 @@ const schema = z.object({
   infoAccess: z.nativeEnum(InfoAccessSchema.Enum, {
     required_error: "Requerido",
     invalid_type_error: "Requerido",
+  }),
+  searchVisibility: z.nativeEnum(SearchVisibilitySchema.Enum, {
+    required_error: "Requerido",
   }),
   coordinates: global.coordinates.optional(),
 });
