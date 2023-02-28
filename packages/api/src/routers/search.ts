@@ -1,6 +1,6 @@
 import { SearchType } from "@andescalada/api/schemas/search";
 import { isDefined } from "@andescalada/api/src/utils/filterGuards";
-import { SoftDelete, Status } from "@prisma/client";
+import { SearchVisibility, SoftDelete, Status } from "@prisma/client";
 import { z } from "zod";
 
 import { t } from "../createRouter";
@@ -13,6 +13,7 @@ export const searchRouter = t.router({
           name: { contains: input },
           isDeleted: SoftDelete.NotDeleted,
           currentStatus: Status.Published,
+          SearchVisibility: SearchVisibility.Listed,
         },
         select: { id: true, name: true, slug: true },
       })
@@ -97,7 +98,14 @@ export const searchRouter = t.router({
         where: {
           name: { contains: input },
           isDeleted: SoftDelete.NotDeleted,
-          Wall: { Sector: { Zone: { currentStatus: "Published" } } },
+          Wall: {
+            Sector: {
+              Zone: {
+                currentStatus: "Published",
+                SearchVisibility: SearchVisibility.Listed,
+              },
+            },
+          },
         },
         select: {
           id: true,
