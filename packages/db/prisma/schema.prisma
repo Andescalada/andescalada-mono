@@ -245,6 +245,7 @@ model Zone {
   ZoneAccessRequest        ZoneAccessRequest[]
   UserZoneAgreementHistory UserZoneAgreementRecord[]
   ZoneDirections           ZoneDirections[]
+  SearchVisibility         SearchVisibility          @default(Listed)
 
   @@index([locationId])
   @@index([descriptionId])
@@ -271,6 +272,11 @@ enum Status {
   Approved
   InReview
   Unpublished
+}
+
+enum SearchVisibility {
+  Listed
+  Unlisted
 }
 
 model ZoneAgreement {
