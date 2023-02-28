@@ -99,9 +99,11 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <meta
           property="og:image"
           itemProp="image"
-          content={`https://www.andescalada.org/api/og/zone?title=${
-            data.name
-          }&description=${`${data?.Sector.Zone.name} / ${data?.Sector.name}}`}`}
+          content={`https://www.andescalada.org/api/og/zone?title=${encodeURIComponent(
+            data.name,
+          )}&description=${encodeURIComponent(
+            `${data?.Sector.Zone.name} / ${data?.Sector.name}}`,
+          )}`}
         />
         <meta property="og:type" content="website" />
         <meta
