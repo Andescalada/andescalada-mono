@@ -1,6 +1,7 @@
 import AddNewZoneScreen from "@features/zoneManager/AddNewZoneScreen";
 import EditZoneScreen from "@features/zoneManager/EditZoneScreen";
 import EditZoneStatusScreen from "@features/zoneManager/EditZoneStatusScreen";
+import HowToPublishScreen from "@features/zoneManager/HowToPublishScreen";
 import {
   ZoneManagerNavigationParamList,
   ZoneManagerRoutes,
@@ -43,6 +44,10 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneManagerRoutes.SelectZoneLocation}
         component={SelectZoneLocationScreen}
+      />
+      <Stack.Screen
+        name={ZoneManagerRoutes.HowToPublish}
+        component={HowToPublishScreen}
       />
       <Stack.Screen
         name={ZoneManagerRoutes.ZoneOnboarding}

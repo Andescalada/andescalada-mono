@@ -3,6 +3,7 @@ import { StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
   Box,
+  Ionicons,
   KeyboardAvoidingBox,
   KeyboardDismiss,
   Screen,
@@ -33,6 +34,7 @@ type Props = ZoneManagerScreenProps<ZoneManagerRoutes.EditZoneStatus>;
 type Item = inferProcedureOutput<AppRouter["zones"]["statusById"]>;
 
 const EditZoneStatus: FC<Props> = ({
+  navigation,
   route: {
     params: { zoneId, zoneName },
   },
@@ -112,9 +114,21 @@ const EditZoneStatus: FC<Props> = ({
           refreshControl={refresh}
         >
           <KeyboardDismiss>
-            <Text variant="h1" marginBottom="m">
-              {zoneName}
-            </Text>
+            <Box
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+              marginBottom="m"
+            >
+              <Text variant="h1">{zoneName}</Text>
+              <Ionicons
+                name="information-circle"
+                size={24}
+                onPress={() =>
+                  navigation.navigate(ZoneManagerRoutes.HowToPublish)
+                }
+              />
+            </Box>
             {data && (
               <>
                 <Text variant="h4" marginBottom="s">

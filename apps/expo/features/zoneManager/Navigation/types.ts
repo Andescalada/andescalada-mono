@@ -10,6 +10,7 @@ export enum ZoneManagerRoutes {
   ZoneOnboarding = "ZoneOnboarding",
   EditZoneStatus = "EditZoneStatus",
   ZonesByRole = "ZonesByRole",
+  HowToPublish = "HowToPublish",
 }
 
 export type ZoneManagerNavigationParamList = {
@@ -27,6 +28,7 @@ export type ZoneManagerNavigationParamList = {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
   };
+  [ZoneManagerRoutes.HowToPublish]: undefined;
   [ZoneManagerRoutes.EditZone]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
