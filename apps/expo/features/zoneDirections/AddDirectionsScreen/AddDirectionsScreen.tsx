@@ -24,7 +24,7 @@ import { FC, useState } from "react";
 import { useController } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { useNotifications } from "react-native-notificated";
-import { FadeIn, FadeOut, SlideOutUp } from "react-native-reanimated";
+import { FadeIn } from "react-native-reanimated";
 
 type Props = ZoneDirectionsScreenProps<ZoneDirectionsRoutes.AddDirections>;
 
