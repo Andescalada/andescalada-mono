@@ -218,7 +218,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
               label={String(
                 pitchNumber ?? topos?.selectedRoute?.Route.Pitch?.number,
               )}
-              scale={fitted.scale}
+              scale={fitted.scale * routeStrokeWidth}
               c={movement}
             />
           )}
