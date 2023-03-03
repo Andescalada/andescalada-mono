@@ -3,7 +3,6 @@ import AddPitchScreen from "@features/multiPitchManager/AddPitchScreen";
 import EditPitchScreen from "@features/multiPitchManager/EditPitchScreen";
 import MultiPitchManagerScreen from "@features/multiPitchManager/MultiPitchManagerScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import backHeader from "@utils/navigationBackHeader";
 
 import {
   MultiPitchManagerNavigationParamList,
