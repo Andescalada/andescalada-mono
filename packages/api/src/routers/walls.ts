@@ -78,7 +78,7 @@ export const wallsRouter = t.router({
           },
         },
         topos: {
-          where: { main: true },
+          where: { main: true, isDeleted: SoftDelete.NotDeleted },
           take: 1,
           select: {
             id: true,
@@ -287,14 +287,14 @@ export const wallsRouter = t.router({
         where: { id: input.wallId },
         select: {
           topos: {
-            where: { main: true },
+            where: { main: true, isDeleted: SoftDelete.NotDeleted },
             select: { id: true },
           },
         },
       });
 
       if (!mainTopo || !mainTopo.topos.length || !mainTopo.topos[0].id) {
-        return undefined;
+        return null;
       }
       return mainTopo.topos[0].id;
     }),
