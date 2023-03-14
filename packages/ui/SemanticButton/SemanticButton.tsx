@@ -36,7 +36,6 @@ const Button: FC<Props> = ({
     <Pressable {...props}>
       <Text
         variant={titleVariant}
-        fontFamily="Rubik-400"
         {...titleProps}
         color={`${variant}SemanticButtonText` as Colors}
       >

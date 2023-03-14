@@ -18,6 +18,7 @@ export const toposRouter = t.router({
         Wall: { select: { Sector: { select: { sectorKind: true } } } },
         RoutePath: {
           where: { Route: { isDeleted: SoftDelete.NotDeleted } },
+          orderBy: { Route: { Pitch: { number: "desc" } } },
           include: {
             Route: {
               select: {
@@ -70,6 +71,35 @@ export const toposRouter = t.router({
       return ctx.prisma.topo.update({
         where: { id: input.topoId },
         data: { routeStrokeWidth: input.routeStrokeWidth },
+      });
+    }),
+  delete: protectedZoneProcedure
+    .input(topo.id)
+    .mutation(async ({ ctx, input }) => {
+      const currentTopo = await ctx.prisma.topo.findUniqueOrThrow({
+        where: { id: input.topoId },
+        select: { Author: true },
+      });
+
+      if (
+        !ctx.permissions.has("Delete") &&
+        currentTopo.Author.email !== ctx.user.email
+      ) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Delete"),
+        );
+      }
+
+      return ctx.prisma.topo.update({
+        where: { id: input.topoId },
+        data: {
+          isDeleted: SoftDelete.DeletedPublic,
+          main: false,
+          coAuthors:
+            currentTopo.Author.email === ctx.user.email
+              ? undefined
+              : { connect: { email: ctx.user.email } },
+        },
       });
     }),
 });

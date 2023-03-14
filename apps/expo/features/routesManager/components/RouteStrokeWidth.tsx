@@ -12,6 +12,8 @@ interface Props {
   defaultRouteStrokeWidth?: number;
 }
 
+const HEIGHT = 250;
+
 const RouteStrokeWidth: FC<Props> = ({
   show,
   setShow,
@@ -31,7 +33,7 @@ const RouteStrokeWidth: FC<Props> = ({
         position="absolute"
         top={50}
         right={0}
-        height={200}
+        height={HEIGHT}
         margin="s"
         marginTop="l"
         flexDirection="row"
@@ -49,9 +51,9 @@ const RouteStrokeWidth: FC<Props> = ({
         <Box>
           <Slider
             value={routeStrokeWidth}
-            min={0.5}
+            min={0.1}
             max={1.5}
-            height={150}
+            height={HEIGHT + 50}
             width={20}
             minimumTrackTintColor={theme.colors["grayscale.transparent.80.200"]}
             maximumTrackTintColor={theme.colors["grayscale.transparent.80.600"]}

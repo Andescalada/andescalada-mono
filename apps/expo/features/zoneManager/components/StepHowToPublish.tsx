@@ -1,23 +1,16 @@
 import { Box, Button, Icon, Screen, Text } from "@andescalada/ui";
-import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
-import {
-  ZoneManagerRouteProps,
-  ZoneManagerRoutes,
-} from "@features/zoneManager/Navigation/types";
-import useRootNavigation from "@hooks/useRootNavigation";
-import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { useRoute } from "@react-navigation/native";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { ComponentProps, FC, ReactNode } from "react";
 
 interface Props {
   onNext: () => void;
+  onNextButtonTitle?: string;
 }
 
-const StepHowToPublish: FC<Props> = ({}) => {
-  const routes =
-    useRoute<ZoneManagerRouteProps<ZoneManagerRoutes.ZoneOnboarding>>();
-  const rootNavigation = useRootNavigation();
+const StepHowToPublish: FC<Props> = ({
+  onNextButtonTitle: title = "Comencemos",
+  onNext,
+}) => {
   return (
     <Screen
       flex={1}
@@ -56,12 +49,15 @@ const StepHowToPublish: FC<Props> = ({}) => {
           <Icon name="checklist-color" color="semantic.success" size={50} />
           <Box flex={1}>
             <Text variant="p2R" color="grayscale.black" marginLeft={"m"}>
-              En un principio, la zona estará en{" "}
+              En un principio, la zona estará{" "}
               <Text variant="p2B" color="grayscale.black">
-                &quot;En revisión&quot;
+                &quot;No publicada&quot;
               </Text>
-              , puede que el equipo Andescalada necesite más información para
-              aprobar la publicación de esta zona.
+              , cuando sientas que estas listo para que otros usuarios puedan
+              verla, apreta el botón{" "}
+              <Text variant="p2B" color="grayscale.black">
+                &quot;Solicitar revisión&quot;
+              </Text>
             </Text>
           </Box>
         </InstructionContainer>
@@ -80,17 +76,9 @@ const StepHowToPublish: FC<Props> = ({}) => {
       </Box>
       <Button
         variant="transparent"
-        title="Comencemos"
+        title={title}
         marginBottom="xxl"
-        onPress={() => {
-          rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-            screen: ClimbsNavigationRoutes.Zone,
-            params: {
-              zoneId: routes.params.zoneId,
-              zoneName: routes.params.zoneName,
-            },
-          });
-        }}
+        onPress={onNext}
       />
     </Screen>
   );

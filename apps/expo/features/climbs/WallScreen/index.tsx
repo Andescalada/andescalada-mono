@@ -1,7 +1,7 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { Screen } from "@andescalada/ui";
+import { ActivityIndicator, Modal, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -28,7 +28,19 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 const WallScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId, zoneId, sectorId, wallName, sectorKind } = route.params;
 
+  const utils = trpc.useContext();
+
   const editWall = trpc.walls.edit.useMutation();
+
+  const deleteTopo = trpc.topos.delete.useMutation({
+    onSuccess: () => {
+      utils.walls.invalidate();
+      utils.topos.invalidate();
+    },
+  });
+
+  const mainTopoId = trpc.walls.mainTopo.useQuery({ wallId, zoneId });
+
   const methods = useZodForm({ schema });
 
   const { permission } = usePermissions({ zoneId });
@@ -58,9 +70,9 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
       headerMethods.setEditing(false);
     },
   );
+
   const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
 
-  const utils = trpc.useContext();
   const deleteWall = trpc.walls.delete.useMutation({
     onMutate: () => {
       navigation.goBack();
@@ -127,12 +139,32 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           );
         },
       },
+      "Eliminar topo": {
+        hide: !permission?.has("Delete") || !mainTopoId?.data,
+        action: () => {
+          Alert.alert("Eliminar topo", "¿Estás seguro de eliminar el topo?", [
+            {
+              text: "Eliminar",
+              onPress: () => {
+                if (!mainTopoId?.data) return;
+                deleteTopo.mutate({ topoId: mainTopoId.data, zoneId });
+              },
+              style: "destructive",
+            },
+            { text: "Cancelar", style: "cancel" },
+          ]);
+        },
+      },
     },
-    { destructiveButtonIndex: 3 },
+    { destructiveButtonIndex: !!mainTopoId?.data ? [3, 4] : 3 },
   );
 
   return (
     <Screen>
+      <Modal visible={deleteTopo.isLoading} padding="xxl" onDismiss={() => ""}>
+        <Text marginBottom="s">Borrando topo</Text>
+        <ActivityIndicator size="large" />
+      </Modal>
       <FormProvider {...methods}>
         <Header
           title={wallName}

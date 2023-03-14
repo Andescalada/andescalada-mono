@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import Env from "@utils/env";
-import { useNotifications } from "@utils/notificated";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
@@ -39,21 +38,9 @@ const url =
     : Env.API_URL;
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
-  const { notify } = useNotifications();
   const [queryClient] = useState(() => {
     const client = new QueryClient({
       defaultOptions: {
-        mutations: {
-          onError(err) {
-            const description =
-              err instanceof Error && process.env.APP_VARIANT !== "production"
-                ? err.message
-                : "No pudimos procesar tu solicitud";
-            notify("error", {
-              params: { title: "Hubo un error", description },
-            });
-          },
-        },
         queries: {
           retry: false,
           staleTime: 1 * (60 * 1000), // 5 mins

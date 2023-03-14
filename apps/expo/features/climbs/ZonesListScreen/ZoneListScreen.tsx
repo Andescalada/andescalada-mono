@@ -33,8 +33,7 @@ const InfoAccessColor = (infoAccess: InfoAccess) => {
 };
 
 const ZonesListScreen = ({ navigation }: Props) => {
-  const { data, refetch, isLoading, isFetching } =
-    trpc.zones.all.useQuery(undefined);
+  const { data, refetch, isLoading, isFetching } = trpc.zones.all.useQuery();
   const refresh = useRefresh(refetch, isFetching && !isLoading);
 
   if (isLoading)

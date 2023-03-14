@@ -1,11 +1,14 @@
 import { Screen } from "@andescalada/ui";
+import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
+import StepHowToPublish from "@features/zoneManager/components/StepHowToPublish";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
-import StepHowToPublish from "@features/zoneManager/ZoneOnboardingScreen/StepHowToPublish";
 import StepRoles from "@features/zoneManager/ZoneOnboardingScreen/StepRoles";
 import StepSuccess from "@features/zoneManager/ZoneOnboardingScreen/StepSuccess";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, useRef } from "react";
 import { FlatList } from "react-native";
@@ -27,8 +30,27 @@ const data = [
   },
 ];
 
-const ZoneOnboardingScreen: FC<Props> = () => {
+const ZoneOnboardingScreen: FC<Props> = ({
+  route: {
+    params: { zoneId, zoneName },
+  },
+}) => {
   const ref = useRef<FlatList>(null);
+  const moveToNextStep = (index: number) => {
+    ref.current?.scrollToIndex({ index: index + 1 });
+  };
+
+  const rootNavigation = useRootNavigation();
+
+  const navigateToZone = () => {
+    rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+      screen: ClimbsNavigationRoutes.Zone,
+      params: {
+        zoneId,
+        zoneName,
+      },
+    });
+  };
 
   return (
     <Screen safeAreaDisabled>
@@ -40,7 +62,9 @@ const ZoneOnboardingScreen: FC<Props> = () => {
         snapToInterval={SCREEN_WIDTH}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) =>
-          item.screen(() => ref.current?.scrollToIndex({ index: index + 1 }))
+          item.screen(
+            item.id === "3" ? navigateToZone : () => moveToNextStep(index),
+          )
         }
       />
     </Screen>
