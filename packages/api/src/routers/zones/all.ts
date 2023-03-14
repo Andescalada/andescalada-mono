@@ -6,7 +6,7 @@ const all = t.procedure.query(({ ctx }) =>
     where: {
       isDeleted: SoftDelete.NotDeleted,
       currentStatus: Status.Published,
-      SearchVisibility: SearchVisibility.Listed,
+      searchVisibility: SearchVisibility.Listed,
     },
   }),
 );

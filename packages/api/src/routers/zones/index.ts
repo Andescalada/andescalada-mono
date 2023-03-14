@@ -21,7 +21,7 @@ export const zonesRouter = t.router({
   location,
   editLocation,
   find,
-  all,
+  all: all,
   recentlyAdded,
   publicById,
   publicWallById,
