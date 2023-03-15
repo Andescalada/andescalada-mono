@@ -5,6 +5,8 @@ export const lisItemVariantsColors = {
   listItemBackground: pallete.grayscale.transparent[50][600],
 };
 
+export const SQUARED_LIST_ITEM_SIZE = 100;
+
 const listItemVariants = createBoxVariant({
   defaults: {
     borderColor: "listItemBackground",
@@ -30,15 +32,23 @@ const listItemVariants = createBoxVariant({
     borderColor: undefined,
   },
   squared: {
-    height: 100,
-    width: 100,
+    height: SQUARED_LIST_ITEM_SIZE,
+    width: SQUARED_LIST_ITEM_SIZE,
     borderRadius: 16,
   },
-  squaredPrimary: {
-    height: 100,
-    width: 100,
+  squaredPrimaryA: {
+    height: SQUARED_LIST_ITEM_SIZE,
+    width: SQUARED_LIST_ITEM_SIZE,
     borderRadius: 16,
     borderColor: "brand.primaryA",
+    backgroundColor: "brand.primaryA",
+  },
+  squaredPrimaryB: {
+    height: SQUARED_LIST_ITEM_SIZE,
+    width: SQUARED_LIST_ITEM_SIZE,
+    borderRadius: 16,
+    borderColor: "brand.primaryB",
+    backgroundColor: "brand.primaryB",
   },
 });
 
