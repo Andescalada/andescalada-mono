@@ -83,7 +83,7 @@
     "expo-system-ui": "~2.0.1",
     "expo-task-manager": "~11.0.1",
     "expo-tracking-transparency": "~3.0.1",
-    "expo-updates": "~0.15.6",
+    "expo-updates": "^0.16.3",
     "jotai": "^1.13.1",
     "jwt-decode": "^3.1.2",
     "react": "18.1.0",

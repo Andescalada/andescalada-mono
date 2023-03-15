@@ -76,11 +76,11 @@ const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
                 <Pressable
                   height={100}
                   width={100}
-                  padding="s"
                   justifyContent="center"
                   borderColor={roleNameAssets[item.role].color}
                   borderWidth={3}
                   borderRadius={16}
+                  padding="s"
                   marginRight="xs"
                   marginLeft={index === 0 ? "none" : "xs"}
                   onPress={() =>

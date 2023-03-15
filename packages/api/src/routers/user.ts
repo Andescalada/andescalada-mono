@@ -39,6 +39,12 @@ export const userRouter = t.router({
         NotificationReceived: {
           select: { Object: { select: { createdAt: true } }, id: true },
         },
+        RoleByZone: {
+          distinct: ["zoneId"],
+          select: {
+            Zone: { select: { id: true, name: true, infoAccess: true } },
+          },
+        },
       },
     }),
   ),
