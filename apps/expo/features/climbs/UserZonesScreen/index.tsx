@@ -23,6 +23,7 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import useRefresh from "@hooks/useRefresh";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { useNavigation } from "@react-navigation/native";
+import { FlatList } from "react-native";
 
 type InfoAccess = keyof typeof InfoAccessSchema.Enum;
 
@@ -172,31 +173,31 @@ const UserZonesScreen = () => {
               <Text>No tienes favoritas aún</Text>
             </Box>
           )}
-          {data?.FavoriteZones.map((item) => (
-            <ListItem
-              key={item.id}
-              marginVertical={"s"}
-              onPress={() =>
-                navigation.navigate(ClimbsNavigationRoutes.Zone, {
-                  zoneId: item.id,
-                  zoneName: item.name,
-                })
-              }
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="flex-end"
-            >
-              <Text variant="p1R">{item.name}</Text>
-              {INFO_ACCESS_FLAG && (
-                <Box
-                  width={15}
-                  height={15}
-                  backgroundColor={InfoAccessColor(item.infoAccess)}
-                  borderRadius={10}
-                />
-              )}
-            </ListItem>
-          ))}
+          <FlatList
+            horizontal
+            data={data?.FavoriteZones}
+            renderItem={({ item, index }) => (
+              <ListItem
+                key={item.id}
+                marginVertical={"s"}
+                onPress={() =>
+                  navigation.navigate(ClimbsNavigationRoutes.Zone, {
+                    zoneId: item.id,
+                    zoneName: item.name,
+                  })
+                }
+                variant="squaredPrimary"
+                borderColor="brand.primaryA"
+                justifyContent="flex-end"
+                marginRight="xs"
+                marginLeft={index === 0 ? "none" : "xs"}
+              >
+                <Text variant="p3R" numberOfLines={3} ellipsizeMode="tail">
+                  {item.name}
+                </Text>
+              </ListItem>
+            )}
+          />
         </Box>
         <Box>
           <Box
@@ -224,6 +225,7 @@ const UserZonesScreen = () => {
               />
             )}
           </Box>
+
           {recentZones?.data?.length === 0 && (
             <Box marginTop={"s"}>
               <Text>No hay zonas recientes</Text>
@@ -234,41 +236,49 @@ const UserZonesScreen = () => {
               <ActivityIndicator size="large" />
             </Box>
           )}
-          {recentZones.data?.map((item) => (
-            <ListItem
-              key={item.id}
-              marginVertical={"s"}
-              onPress={() =>
-                navigation.navigate(ClimbsNavigationRoutes.Zone, {
-                  zoneId: item.id,
-                  zoneName: item.name,
-                })
-              }
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Text variant="p1R">{item.name}</Text>
-              <Box justifyContent="center">
-                <Ionicons
-                  color="grayscale.white"
-                  name="close"
-                  size={20}
-                  onPress={() => {
-                    removeRecentZone.mutate({ zoneId: item.id });
-                  }}
-                />
-              </Box>
-              {INFO_ACCESS_FLAG && (
-                <Box
-                  width={15}
-                  height={15}
-                  backgroundColor={InfoAccessColor(item.infoAccess)}
-                  borderRadius={10}
-                />
+
+          {recentZones?.data && recentZones?.data?.length > 0 && (
+            <FlatList
+              horizontal
+              data={recentZones.data}
+              renderItem={({ item, index }) => (
+                <ListItem
+                  key={item.id}
+                  marginVertical={"s"}
+                  onPress={() =>
+                    navigation.navigate(ClimbsNavigationRoutes.Zone, {
+                      zoneId: item.id,
+                      zoneName: item.name,
+                    })
+                  }
+                  justifyContent="flex-end"
+                  alignItems="flex-end"
+                  variant="squared"
+                  marginRight="xs"
+                  marginLeft={index === 0 ? "none" : "xs"}
+                >
+                  <Box position="absolute" top={0} right={0} margin="xs">
+                    <Ionicons
+                      color="grayscale.white"
+                      name="close"
+                      size={20}
+                      onPress={() => {
+                        removeRecentZone.mutate({ zoneId: item.id });
+                      }}
+                    />
+                  </Box>
+                  <Text
+                    variant="p3R"
+                    padding="xs"
+                    numberOfLines={3}
+                    ellipsizeMode="tail"
+                  >
+                    {item.name}
+                  </Text>
+                </ListItem>
               )}
-            </ListItem>
-          ))}
+            />
+          )}
         </Box>
       </ScrollView>
     </Screen>

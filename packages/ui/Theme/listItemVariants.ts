@@ -29,6 +29,17 @@ const listItemVariants = createBoxVariant({
     borderWidth: 0,
     borderColor: undefined,
   },
+  squared: {
+    height: 100,
+    width: 100,
+    borderRadius: 16,
+  },
+  squaredPrimary: {
+    height: 100,
+    width: 100,
+    borderRadius: 16,
+    borderColor: "brand.primaryA",
+  },
 });
 
 export default listItemVariants;
