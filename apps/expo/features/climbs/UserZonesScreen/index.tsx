@@ -170,7 +170,7 @@ const UserZonesScreen = () => {
             renderItem={({ item, index }) => (
               <ListItem
                 key={item.id}
-                marginVertical={"s"}
+                marginVertical="s"
                 onPress={() =>
                   navigation.navigate(ClimbsNavigationRoutes.Zone, {
                     zoneId: item.id,
@@ -233,7 +233,7 @@ const UserZonesScreen = () => {
               renderItem={({ item: { Zone: item }, index }) => (
                 <ListItem
                   key={item.id}
-                  marginVertical={"s"}
+                  marginVertical="s"
                   onPress={() =>
                     navigation.navigate(ClimbsNavigationRoutes.Zone, {
                       zoneId: item.id,
@@ -246,12 +246,7 @@ const UserZonesScreen = () => {
                   marginRight="xs"
                   marginLeft={index === 0 ? "none" : "xs"}
                 >
-                  <Text
-                    variant="p3B"
-                    padding="xs"
-                    numberOfLines={3}
-                    ellipsizeMode="tail"
-                  >
+                  <Text variant="p3B" numberOfLines={3} ellipsizeMode="tail">
                     {item.name}
                   </Text>
                 </ListItem>
@@ -337,12 +332,7 @@ const UserZonesScreen = () => {
                       }}
                     />
                   </Box>
-                  <Text
-                    variant="p3B"
-                    padding="xs"
-                    numberOfLines={3}
-                    ellipsizeMode="tail"
-                  >
+                  <Text variant="p3B" numberOfLines={3} ellipsizeMode="tail">
                     {item.name}
                   </Text>
                 </ListItem>
