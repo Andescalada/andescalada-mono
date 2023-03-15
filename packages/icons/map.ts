@@ -14,6 +14,8 @@ export const Icons = {
   "checklist": require(base + "checklist").default,
   "climber-rappeling-color": require(base + "climber-rappeling-color").default,
   "climber-rappeling": require(base + "climber-rappeling").default,
+  "dancing-dinosaur-color": require(base + "dancing-dinosaur-color").default,
+  "dancing-dinosaur": require(base + "dancing-dinosaur").default,
   "destination-color": require(base + "destination-color").default,
   "destination": require(base + "destination").default,
   "dog-color": require(base + "dog-color").default,
