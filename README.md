@@ -1,68 +1,101 @@
 # Andescalada Monorepo
 
-## Para comenzar
+## I want to contribute
 
-1. Instalar PlanetScale CLI
+If you really want to contribute write me contacto@andescalada.org with the subject "I want to contribute" and I give you access to our services and env variables.
+
+## I want to run this project local:
+
+1. Create accounts
+
+You'll need to create an account in: 
+ - PlanetScale
+ - Upstash 
+ - Cloudinary
+ - Auth0
+ - Sentry
+ - Google (for maps)
+ 
+
+1. Add .env variables 
+
+In the .env at the root of the project
+
+`.env`
+```bash
+DATABASE_URL=""
+AUTH0_DOMAIN=""
+AUTH0_AUDIENCE=""
+AUTH0_AUDIENCE=""
+AUTH0_NEXTJS_CLIENT_ID=""
+AUTH0_NEXTJS_CLIENT_SECRET=""
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=""
+UPSTASH_REDIS_REST_URL=""
+UPSTASH_REDIS_REST_TOKEN=""
+CLOUDINARY_API_KEY=""
+CLOUDINARY_API_SECRET=""
+```
+
+`apps/expo/.env`
+```bash
+SENTRY_AUTH_TOKEN=""
+GOOGLE_MAPS_API_KEY_ANDROID=""
+GOOGLE_MAPS_API_KEY_IOS=""
+CLOUDINARY_API_KEY=""
+```
+
+
+
+
+## In either case: 
+
+1. Install PlanetScale CLI
 
 ```console
 brew install planetscale/tap/pscale
 ```
 
-2. Hacer Login en PlanetScale 
+2. Login to PlanetScale in the CLI
 
 ```
 pscale login
 ```
 
-3. Cambiar a Organizacion en PlanetScale **elevy**
+3. Switch to your org or Andescalada org named **elevy**
 
 ```console
 pscale org switch elevy
 ```
 
-4. Solicitar variables de entorno
-###  Envs globales `"."`
-```bash
-DATABASE_URL=
-AUTH0_DOMAIN=
-AUTH0_AUDIENCE=
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-```
-###  Envs expo-app `./apps/expo`
+4. Run the project
 
-Crear un `.env.production` y `.env.development`
-
-```bash
-AUTH0_DOMAIN=
-AUTH0_CLIENT_ID=
-AUTH0_AUDIENCE=
-CLOUDINARY_UPLOAD_PRESET=
-CLOUDINARY_URL=upload
-ROLLBAR_ACCESS_TOKEN=
+```console
+  yarn dev
 ```
 
-## Comandos 
 
-Correr `NextJs`, `PlanetScale` y `Expo` en ambiente `development`
+
+## Useful scripts  
+
+Run `NextJs`, `PlanetScale` y `Expo`  in `development`
 
 ```console
 yarn dev 
 ```
 
-Para filtrar alguna app correr agregar `--filter`
+Filter an app or package from starting `--filter`
 
-Ej 1: Correr solo NextJS
+Ej 1: RUn NextJS only
 ```bash
 yarn dev --filter=@andescalada/nextjs
 ```
 
-Ej 2: Correr todo menos Expo
+Ej 2: Run everything but expo
 ```bash
 yarn dev --filter=\!expo-app
 ```
 
-Abrir Prisma Studio
+Open Prisma Studio
 ```bash 
 prisma studio  
 ```
@@ -95,7 +128,7 @@ prisma studio
 - Mailgun as mailing server
 - Sentry for error logging
 
-## Licencia 
+## License  
 
 Software: andescalada-mono
 
