@@ -2,7 +2,7 @@
 
 ## I want to contribute
 
-If you really want to contribute write me contacto@andescalada.org with the subject "I want to contribute" and I give you access to our services and env variables.
+If you really want to contribute write me an email with the subject "I want to contribute" and I give you access to our services and env variables.
 
 ## I want to run this project local:
 
