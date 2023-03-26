@@ -43,7 +43,8 @@ const create = protectedProcedure
     const email = roleByZone.User.email;
     const zoneId = roleByZone.zoneId;
     const permissions = roleByZone.Role.permissions.flatMap((p) => p.action);
-    await updateRedisPermissions(ctx.access, email, zoneId, permissions);
+    const permissionSet = new Set(permissions);
+    await updateRedisPermissions(ctx.access, email, zoneId, permissionSet);
 
     return roleByZone;
   });

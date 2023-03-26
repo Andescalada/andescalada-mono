@@ -4,6 +4,7 @@ import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
+import getAndParsePermissions from "@andescalada/api/src/utils/getAndParsePermissions";
 import parseZonesToRole from "@andescalada/api/src/utils/parseZonesToRole";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
@@ -157,36 +158,27 @@ export const userRouter = t.router({
   zonePermissions: protectedProcedure
     .input(zone.id)
     .query(async ({ ctx, input }) => {
-      const res = await ctx.access.hget<Access>(ctx.user.email, input.zoneId);
       let permissions: Permissions = new Set();
-      if (res) {
-        permissions = deserialize<Permissions>(res);
-        return permissions;
+      try {
+        const res = await ctx.access.hget<Access>(ctx.user.email, input.zoneId);
+        if (res) {
+          permissions = deserialize<Permissions>(res);
+          return permissions;
+        } else {
+          throw new Error("No permissions in Upstash");
+        }
+      } catch {
+        const permissionSet = await getAndParsePermissions(ctx, input.zoneId);
+
+        const updatedPermissions = await updateRedisPermissions(
+          ctx.access,
+          ctx.user.email,
+          input.zoneId,
+          permissionSet,
+        );
+
+        return updatedPermissions;
       }
-
-      const roles = await ctx.prisma.roleByZone.findMany({
-        where: { User: { email: ctx.user.email }, Zone: { id: input.zoneId } },
-        select: {
-          Role: {
-            select: { permissions: { select: { action: true } } },
-          },
-        },
-      });
-
-      if (!roles) return permissions;
-
-      const newPermissions = roles
-        .flatMap((r) => r.Role.permissions)
-        .flatMap((p) => p.action);
-
-      const updatedPermissions = await updateRedisPermissions(
-        ctx.access,
-        ctx.user.email,
-        input.zoneId,
-        newPermissions,
-      );
-
-      return updatedPermissions;
     }),
   zonesByRole: protectedProcedure.query(({ ctx }) =>
     ctx.prisma.user

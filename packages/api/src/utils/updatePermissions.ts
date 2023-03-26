@@ -6,10 +6,8 @@ const updateRedisPermissions = async (
   access: Redis,
   userEmail: string,
   zoneId: string,
-  newPermissions: PermissionActions[],
+  updatedPermissions: Set<PermissionActions>,
 ) => {
-  const updatedPermissions = new Set(newPermissions);
-
   await access.hset(userEmail, {
     [zoneId]: serialize(updatedPermissions),
   });
