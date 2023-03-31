@@ -88,15 +88,15 @@ export const autoLoginAuth0 = createAsyncThunk(
         throw new Error("No encontramos una sesión activa");
       }
 
-      const decodedToken = tokenDecode<DecodedAccessToken>(token);
-      const hasExpired = isTokenExpired(decodedToken.exp);
+      const decodedToken = tokenDecode<DecodedAccessToken | undefined>(token);
 
+      const hasExpired = isTokenExpired(decodedToken?.exp);
       if (!hasExpired || !isConnected) {
         return {
           isAuth: true,
           accessToken: token,
           email: decodedIdToken.name,
-          globalPermissions: decodedToken.permissions,
+          globalPermissions: decodedToken?.permissions,
         };
       }
 
@@ -107,7 +107,7 @@ export const autoLoginAuth0 = createAsyncThunk(
           isAuth: true,
           accessToken: res.accessToken,
           email: decodedIdToken.name,
-          globalPermissions: decodedToken.permissions,
+          globalPermissions: decodedToken?.permissions,
         };
       } else {
         throw new Error(
