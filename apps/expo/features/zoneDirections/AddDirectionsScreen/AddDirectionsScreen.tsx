@@ -1,4 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
+import transportationModeAssets from "@andescalada/common-assets/transportationModesAssets";
 import { TransportationModeSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
@@ -14,7 +15,6 @@ import {
   Text,
   TextInput,
 } from "@andescalada/ui";
-import transportationModeAssets from "@andescalada/utils/transportationModesAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneDirectionsRoutes,

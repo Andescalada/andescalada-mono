@@ -1,3 +1,4 @@
+import transportationModeAssets from "@andescalada/common-assets/transportationModesAssets";
 import {
   ActivityIndicator,
   AddButton,
@@ -6,7 +7,6 @@ import {
   Text,
   TextButton,
 } from "@andescalada/ui";
-import transportationModeAssets from "@andescalada/utils/transportationModesAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneDirectionsRoutes,
