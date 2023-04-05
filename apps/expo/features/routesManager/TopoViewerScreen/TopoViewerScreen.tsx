@@ -1,3 +1,4 @@
+import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { SectorKindSchema } from "@andescalada/db/zod";
 import {
   A,
@@ -8,7 +9,6 @@ import {
   Screen,
   Text,
 } from "@andescalada/ui";
-import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";

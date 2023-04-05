@@ -1,8 +1,8 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
+import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { ActivityIndicator, Box, ThemeProvider } from "@andescalada/ui";
-import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";

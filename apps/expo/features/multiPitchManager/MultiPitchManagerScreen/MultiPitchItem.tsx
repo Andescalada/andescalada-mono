@@ -1,6 +1,6 @@
+import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import { A, Box, ListItem, SubItem, Text } from "@andescalada/ui";
-import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   MultiPitchManagerNavigationProps,

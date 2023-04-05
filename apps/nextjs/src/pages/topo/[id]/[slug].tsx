@@ -1,9 +1,9 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
+import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { SoftDeleteSchema, StatusSchema } from "@andescalada/db/zod";
 import { Icon } from "@andescalada/icons/WebIcons";
-import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
 import {

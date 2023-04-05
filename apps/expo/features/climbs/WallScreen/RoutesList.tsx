@@ -1,6 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { A, ScrollView, Text, TextButton } from "@andescalada/ui";
-import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,

@@ -1,4 +1,5 @@
 import route from "@andescalada/api/schemas/route";
+import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
@@ -10,7 +11,6 @@ import {
   SemanticButton,
   Text,
 } from "@andescalada/ui";
-import { routeKindLabel } from "@andescalada/utils/routeKind";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   MultiPitchManagerRoutes,
