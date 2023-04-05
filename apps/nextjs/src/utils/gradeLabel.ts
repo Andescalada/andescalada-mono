@@ -1,5 +1,5 @@
-import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import { gradeUnits } from "@andescalada/common-assets/climbingGrades";
+import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import { RouteGrade } from "@prisma/client";
 
 const gradeLabel = (

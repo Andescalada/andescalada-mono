@@ -5,5 +5,12 @@
   "main": "index.js",
   "author": "elevyg",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .ts,.js,.json"
+  },
+  "dependencies": {
+    "@andescalada/ui": "*",
+    "@andescalada/db": "*"
+  }
 }

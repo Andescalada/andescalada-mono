@@ -2,7 +2,9 @@
   "name": "@andescalada/ui",
   "version": "1.0.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint . --ext .tsx,.ts,.js,.json"
+  },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@shopify/restyle": "^2.1.0",

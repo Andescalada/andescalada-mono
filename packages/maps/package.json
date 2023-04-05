@@ -4,6 +4,9 @@
   "description": "Map module with default provider",
   "main": "index.ts",
   "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .tsx,.ts,.js,.json"
+  },
   "devDependencies": {
     "react-native-maps": "*",
     "react": "*",

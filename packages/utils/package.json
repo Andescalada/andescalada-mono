@@ -2,9 +2,10 @@
   "name": "@andescalada/utils",
   "version": "1.0.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint . --ext .ts,.js,.json"
+  },
   "dependencies": {
-    "@andescalada/ui": "*",
     "@cloudinary/url-gen": "^1.9.0",
     "deepmerge": "^4.2.2"
   },

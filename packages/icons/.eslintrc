@@ -1,6 +1,0 @@
-{
-  "extends": "tslint:recommended",
-  "rules": {
-    "@typescript-eslint/no-var-requires": "off"
-  }
-}

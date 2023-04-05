@@ -4,6 +4,9 @@
   "description": "Reusable React hooks",
   "author": "elevyg",
   "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .ts,.js,.json"
+  },
   "peerDependencies": {
     "react": "*",
     "react-router-dom": "*",
