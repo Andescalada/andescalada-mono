@@ -1,3 +1,4 @@
+import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import {
   InfoAccessSchema,
   RequestStatusSchema,
@@ -12,7 +13,6 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
-import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRouteProps,

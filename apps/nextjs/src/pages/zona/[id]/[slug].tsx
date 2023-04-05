@@ -2,6 +2,7 @@ import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
 import agreementLevelAssets from "@andescalada/common-assets/agreementLevel";
+import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import {
   AgreementLevelSchema,
   InfoAccessSchema,
@@ -9,7 +10,6 @@ import {
   StatusSchema,
 } from "@andescalada/db/zod";
 import { Icon, IconNames } from "@andescalada/icons/WebIcons";
-import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import StoreBadges from "components/StoreBadges";
 import {

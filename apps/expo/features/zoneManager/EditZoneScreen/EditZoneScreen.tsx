@@ -1,4 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
+import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
@@ -11,7 +12,6 @@ import {
   Text,
   TextInput,
 } from "@andescalada/ui";
-import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ZoneManagerRoutes,

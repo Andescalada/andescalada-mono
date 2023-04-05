@@ -1,5 +1,5 @@
+import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
-import infoAccessAssets from "@andescalada/utils/infoAccessAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,
