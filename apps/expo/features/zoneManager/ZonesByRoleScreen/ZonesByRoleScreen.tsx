@@ -1,3 +1,4 @@
+import roleNameAssets from "@andescalada/common-assets/roleNameAssets";
 import {
   ActivityIndicator,
   AddButton,
@@ -6,7 +7,6 @@ import {
   Screen,
   Text,
 } from "@andescalada/ui";
-import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {

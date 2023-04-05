@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@andescalada/utils": "*",
+    "@andescalada/common-assets": "*",
     "@auth0/nextjs-auth0": "^1.9.1",
     "@upstash/redis": "^1.13.1",
     "accept-language": "^3.0.18",

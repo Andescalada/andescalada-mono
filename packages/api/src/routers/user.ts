@@ -13,7 +13,7 @@ import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { RoleNamesSchema } from "@andescalada/db/zod";
-import roleNameAssets from "@andescalada/utils/roleNameAssets";
+import roleNameAssets from "@andescalada/common-assets/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";

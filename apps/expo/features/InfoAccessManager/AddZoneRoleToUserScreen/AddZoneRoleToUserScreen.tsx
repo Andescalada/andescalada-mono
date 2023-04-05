@@ -1,3 +1,4 @@
+import roleNameAssets from "@andescalada/common-assets/roleNameAssets";
 import { RoleNamesSchema } from "@andescalada/db/zod";
 import {
   A,
@@ -9,7 +10,6 @@ import {
   SemanticButton,
   Text,
 } from "@andescalada/ui";
-import roleNameAssets from "@andescalada/utils/roleNameAssets";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   InfoAccessManagerRoutes,
