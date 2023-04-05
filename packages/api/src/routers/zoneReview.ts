@@ -7,8 +7,8 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateZoneStatus from "@andescalada/api/src/utils/updateZoneStatus";
+import Auth0Roles from "@andescalada/common-assets/Auth0Roles";
 import { StatusSchema } from "@andescalada/db/zod";
-import Auth0Roles from "@andescalada/utils/Auth0Roles";
 import { Status } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";

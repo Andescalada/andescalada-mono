@@ -1,0 +1,9 @@
+{
+  "name": "@andescalada/common-assets",
+  "version": "1.0.0",
+  "description": "Shared assets ",
+  "main": "index.js",
+  "author": "elevyg",
+  "license": "MIT",
+  "private": true
+}

@@ -1,4 +1,4 @@
-import Auth0Roles from "@andescalada/utils/Auth0Roles";
+import Auth0Roles from "@andescalada/common-assets/Auth0Roles";
 
 interface ManagementApiTokenResponse {
   access_token: string;
