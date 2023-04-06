@@ -132,8 +132,5 @@
     "react-dom": "*",
     "zod": "*"
   },
-  "resolutions": {
-    "@types/react": "17.0.43"
-  },
   "private": true
 }
