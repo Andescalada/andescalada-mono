@@ -14,6 +14,7 @@ const config = {
     "@andescalada/hooks",
     "@andescalada/climbs-drawer",
     "@andescalada/icons",
+    "@andescalada/common-assets",
   ],
   webpack: (config) => {
     config.module.rules.push({
