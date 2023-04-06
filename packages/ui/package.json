@@ -10,7 +10,7 @@
     "@shopify/restyle": "^2.1.0",
     "@types/react-native": "^0.70.2",
     "deepmerge": "^4.2.2",
-    "react-native": "0.69.5"
+    "react-native": "0.70.8"
   },
   "devDependencies": {
     "@shopify/react-native-skia": "*",
