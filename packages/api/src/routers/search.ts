@@ -13,7 +13,7 @@ export const searchRouter = t.router({
           name: { contains: input },
           isDeleted: SoftDelete.NotDeleted,
           currentStatus: Status.Published,
-          SearchVisibility: SearchVisibility.Listed,
+          searchVisibility: SearchVisibility.Listed,
         },
         select: { id: true, name: true, slug: true },
       })
@@ -102,7 +102,7 @@ export const searchRouter = t.router({
             Sector: {
               Zone: {
                 currentStatus: "Published",
-                SearchVisibility: SearchVisibility.Listed,
+                searchVisibility: SearchVisibility.Listed,
               },
             },
           },

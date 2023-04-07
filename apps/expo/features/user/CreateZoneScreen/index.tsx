@@ -1,5 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
-import { InfoAccessSchema } from "@andescalada/db/zod";
+import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   Box,
@@ -70,8 +70,8 @@ const CreateZoneScreen: FC<Props> = () => {
     if (!user) return;
     mutate({
       name: input.name,
-
       infoAccess: InfoAccessSchema.Enum.Public,
+      searchVisibility: SearchVisibilitySchema.Enum.Unlisted,
     });
   });
 

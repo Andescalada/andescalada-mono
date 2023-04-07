@@ -35,9 +35,6 @@ Sentry.init({
   environment: Env.SENTRY_DEPLOY_ENV,
 });
 
-const captureException = (error: Error) =>
-  Sentry.Native.captureException(error);
-
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
   "The native module for Flipper seems unavailable. Please verify that `react-native-flipper` is installed as yarn dependency to your project and, for iOS, that `pod install` is run in the `ios` directory.",
@@ -47,23 +44,18 @@ export default function App() {
   return (
     <ThemeProvider>
       <SafeAreaProvider>
-        <ErrorBoundary
-          onError={captureException}
-          FallbackComponent={FallbackErrorScreen}
-        >
-          <NotificationsProvider>
-            <StoreProvider store={Store}>
-              <ActionSheetProvider>
-                <GestureHandlerRootView style={{ flex: 1 }}>
-                  <NavigationMemoized theme={darkTheme}>
-                    <StatusBar style="light" />
-                    <AppNavigation />
-                  </NavigationMemoized>
-                </GestureHandlerRootView>
-              </ActionSheetProvider>
-            </StoreProvider>
-          </NotificationsProvider>
-        </ErrorBoundary>
+        <NotificationsProvider>
+          <StoreProvider store={Store}>
+            <ActionSheetProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <NavigationMemoized theme={darkTheme}>
+                  <StatusBar style="light" />
+                  <AppNavigation />
+                </NavigationMemoized>
+              </GestureHandlerRootView>
+            </ActionSheetProvider>
+          </StoreProvider>
+        </NotificationsProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );

@@ -1,11 +1,12 @@
 import { pallete } from "@andescalada/ui/Theme/pallete";
+import { FC, ReactNode } from "react";
 import {
   createNotifications,
   ZoomInDownZoomOutUp,
 } from "react-native-notificated";
 
-export const { NotificationsProvider, useNotifications, notify } =
-  createNotifications({
+const { NotificationsProvider, useNotifications, notify } = createNotifications(
+  {
     notificationPosition: "top",
     isNotch: true,
     animationConfig: ZoomInDownZoomOutUp,
@@ -32,4 +33,9 @@ export const { NotificationsProvider, useNotifications, notify } =
         accentColor: pallete.semantic.info,
       },
     },
-  });
+  },
+);
+
+const n = NotificationsProvider as FC<{ children: ReactNode }>;
+
+export { n as NotificationsProvider, notify, useNotifications };

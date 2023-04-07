@@ -1,8 +1,8 @@
 import { Box, Icon, Ionicons, Pressable, Screen, Text } from "@andescalada/ui";
-import { useState } from "react";
+import { FC, useState } from "react";
 interface Props {
-  error: Error;
-  resetError: () => void;
+  error?: Error;
+  resetError?: () => void;
 }
 
 const FallbackErrorScreen = ({ error }: Props) => {

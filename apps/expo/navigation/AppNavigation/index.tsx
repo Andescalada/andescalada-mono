@@ -1,5 +1,6 @@
 import { Box, Button, Icon, Screen, Text } from "@andescalada/ui";
 import AuthNavigation from "@features/auth/Navigation";
+import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import RootNavigation from "@navigation/AppNavigation/RootNavigation";
 import useAutoLogin from "@navigation/AppNavigation/useAutoLogin";
 import useHideSplashScreen from "@navigation/AppNavigation/useHideSplashScreen";
@@ -7,6 +8,7 @@ import TRPCProvider from "@utils/trpc/Provider";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import { useState } from "react";
+import ErrorBoundary from "react-native-error-boundary";
 import * as Sentry from "sentry-expo";
 
 SplashScreen.preventAutoHideAsync();
@@ -26,6 +28,9 @@ const Navigator = () => {
       setNewUpdateAvailable(true);
     }
   };
+
+  const captureException = (error: Error) =>
+    Sentry.Native.captureException(error);
 
   Updates.useUpdateEvents(eventListener);
 
@@ -57,7 +62,10 @@ const Navigator = () => {
   }
 
   return (
-    <>
+    <ErrorBoundary
+      onError={captureException}
+      FallbackComponent={FallbackErrorScreen}
+    >
       {isAuth && accessToken ? (
         <TRPCProvider accessToken={accessToken}>
           <RootNavigation />
@@ -65,7 +73,7 @@ const Navigator = () => {
       ) : (
         <AuthNavigation />
       )}
-    </>
+    </ErrorBoundary>
   );
 };
 

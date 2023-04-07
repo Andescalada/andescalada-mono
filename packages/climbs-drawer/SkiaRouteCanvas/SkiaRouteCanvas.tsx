@@ -3,7 +3,7 @@ import {
   SkiaMutableValue,
   useMultiTouchHandler,
 } from "@shopify/react-native-skia";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { Dimensions, Platform } from "react-native";
 
 import { GestureHandler } from "../GestureHandler/GestureHandler";
@@ -14,6 +14,7 @@ export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
   Dimensions.get("window");
 
 interface Props {
+  children: ReactNode;
   imageUrl: string;
   height: number;
   width: number;

@@ -37,7 +37,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
   },
 }) => {
   const { location } = useLocation();
-  const mapRef = useRef<MapRefType | null>(null);
+  const mapRef = useRef<MapRefType>();
 
   const [region, setRegion] = useState<Region>();
 

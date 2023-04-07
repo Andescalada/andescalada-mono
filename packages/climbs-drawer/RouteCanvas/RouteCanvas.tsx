@@ -2,7 +2,7 @@ import {
   ReactNativeZoomableView as ZoomView,
   ReactNativeZoomableViewProps,
 } from "@openspacelabs/react-native-zoomable-view";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
 import {
   HandlerStateChangeEvent,
@@ -18,6 +18,7 @@ interface Coords {
 }
 
 interface Props {
+  children: ReactNode;
   value?: Coords | undefined;
   setValue?: (_coords: Coords | undefined) => void;
   height?: number;

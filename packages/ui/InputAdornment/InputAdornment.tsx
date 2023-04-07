@@ -4,6 +4,7 @@ import Box from "../Box/Box";
 import Text from "../Text/Text";
 
 interface Props {
+  children: ReactNode;
   startAdornment?: string | ReactNode;
   startAdornmentProps?: Omit<ComponentProps<typeof Text>, "variant">;
   startAdornmentContainerProps?: ComponentProps<typeof Box>;

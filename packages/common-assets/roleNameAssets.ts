@@ -7,7 +7,7 @@ type RoleNameAssets = {
     label: string;
     plural: string;
     description?: string;
-    availableFor?: typeof InfoAccessSchema._type[];
+    availableFor?: (typeof InfoAccessSchema._type)[];
   };
 };
 

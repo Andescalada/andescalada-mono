@@ -81,11 +81,13 @@ const assignAndCacheRole = async (
     .flatMap((r) => r.Role.permissions)
     .flatMap((p) => p.action);
 
+  const permissionSet = new Set(newPermissions);
+
   await updateRedisPermissions(
     ctx.access,
     roles.User.email,
     input.zoneId,
-    newPermissions,
+    permissionSet,
   );
 
   return { filteredRoles, data: roles };

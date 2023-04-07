@@ -117,6 +117,7 @@ const AddMultiPitchScreen: FC<Props> = ({
     onSuccess: ({ id, name }) => {
       utils.walls.invalidate();
       utils.multiPitch.invalidate();
+      if (!mainTopo.data) return;
       rootNavigation.replace(RootNavigationRoutes.MultiPitchManager, {
         screen: MultiPitchManagerRoutes.MultiPitchManager,
         params: {

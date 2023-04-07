@@ -162,7 +162,7 @@ const RoutePath: React.ForwardRefRenderFunction<Ref, Props> = (
               y={start.y + 5}
               fill="black"
               fontSize={12}
-              stroke={1}
+              stroke=""
               textAnchor="middle"
             >
               {label}

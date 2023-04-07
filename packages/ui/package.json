@@ -10,11 +10,11 @@
     "@shopify/restyle": "^2.1.0",
     "@types/react-native": "^0.70.2",
     "deepmerge": "^4.2.2",
-    "react-native": "0.70.8"
+    "react-native": "0.70.8",
+    "react-native-gesture-handler": "~2.8.0"
   },
   "devDependencies": {
-    "@shopify/react-native-skia": "*",
-    "react-native-gesture-handler": "*"
+    "@shopify/react-native-skia": "*"
   },
   "peerDependencies": {
     "@andescalada/icons": "*",
@@ -24,7 +24,6 @@
     "expo": "*",
     "react": "*",
     "react-hook-form": "*",
-    "react-native-gesture-handler": "*",
     "react-native-reanimated": "*",
     "zod": "*"
   }

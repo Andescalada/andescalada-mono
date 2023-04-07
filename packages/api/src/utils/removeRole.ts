@@ -46,12 +46,9 @@ const removeRole = async (
       .flatMap((r) => r.permissions)
       .flatMap((p) => p.action);
 
-    await updateRedisPermissions(
-      ctx.access,
-      user.email,
-      zoneId,
-      newPermissions,
-    );
+    const permissionSet = new Set(newPermissions);
+
+    await updateRedisPermissions(ctx.access, user.email, zoneId, permissionSet);
   }
 
   return { userId, zoneId };
