@@ -37,7 +37,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
   },
 }) => {
   const { location } = useLocation();
-  const mapRef = useRef<MapRefType>();
+  const mapRef = useRef<MapRefType | null>();
 
   const [region, setRegion] = useState<Region>();
 
@@ -94,7 +94,9 @@ const SelectZoneLocationScreen: FC<Props> = ({
     <Screen safeAreaDisabled justifyContent={"center"} alignItems="center">
       <MapView
         mapType={mapTypeProps.mapType}
-        ref={mapRef}
+        ref={(ref) => {
+          mapRef.current = ref as MapRefType | null;
+        }}
         initialRegion={{
           latitude: LATITUDE,
           longitude: LONGITUDE,
