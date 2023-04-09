@@ -23,7 +23,8 @@ export const requestNotificationToken = async () => {
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
-    throw new Error("Physical device is required for push notifications!");
+    console.error("Physical device is required for push notifications!");
+    return;
   }
 
   if (Platform.OS === "android") {
