@@ -19,7 +19,9 @@ interface Props extends RestyleProps {
   titleProps?: Omit<ComponentProps<typeof Text>, "variant">;
 }
 
-const buttonVariant = createVariant({ themeKey: "semanticButtonVariants" });
+const buttonVariant = createVariant<Theme, "semanticButtonVariants">({
+  themeKey: "semanticButtonVariants",
+});
 const restyleFunction = composeRestyleFunctions<Theme, RestyleProps>([
   buttonVariant,
 ]);

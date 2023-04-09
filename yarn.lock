@@ -3099,7 +3099,7 @@
     canvaskit-wasm "0.36.1"
     react-reconciler "^0.27.0"
 
-"@shopify/restyle@*", "@shopify/restyle@^2.1.0":
+"@shopify/restyle@*", "@shopify/restyle@^2.4.2":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@shopify/restyle/-/restyle-2.4.2.tgz#bffb5cec619d6ea61e1fab1ec40dec9482946460"
   integrity sha512-r01j9bbXkhZZkGkLnE6jsJvSCkcjwXBySfe8bQCB7duEfQn36mU6WumNc2pndzXpZhPSevppyXzFZ2jY3XUakw==

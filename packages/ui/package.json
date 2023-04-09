@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
-    "@shopify/restyle": "^2.1.0",
+    "@shopify/restyle": "^2.4.2",
     "@types/react-native": "^0.70.2",
     "deepmerge": "^4.2.2",
     "react-native": "0.70.8",
