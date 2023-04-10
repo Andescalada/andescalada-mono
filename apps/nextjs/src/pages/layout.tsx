@@ -1,4 +1,4 @@
-import { Rubik } from "next/font/google";
+import { Rubik } from "@next/font/google";
 import Footer from "pages/footer";
 import Navbar from "pages/navbar";
 import { FC, ReactNode } from "react";

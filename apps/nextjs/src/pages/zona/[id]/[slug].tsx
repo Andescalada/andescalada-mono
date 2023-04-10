@@ -10,7 +10,7 @@ import {
   StatusSchema,
 } from "@andescalada/db/zod";
 import { Icon, IconNames } from "@andescalada/icons/WebIcons";
-import { createServerSideHelpers } from "@trpc/react-query/dist/server";
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import StoreBadges from "components/StoreBadges";
 import {
   GetStaticPaths,

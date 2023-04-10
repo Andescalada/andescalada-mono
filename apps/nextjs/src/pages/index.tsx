@@ -2,7 +2,7 @@ import { createContext } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { createServerSideHelpers } from "@trpc/react-query/dist/server";
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import StoreBadges from "components/StoreBadges";
 import Head from "next/head";
 import Link from "next/link";

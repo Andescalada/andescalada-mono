@@ -4,7 +4,7 @@ import { transformer } from "@andescalada/api/src/transformer";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { SoftDeleteSchema, StatusSchema } from "@andescalada/db/zod";
 import { Icon } from "@andescalada/icons/WebIcons";
-import { createServerSideHelpers } from "@trpc/react-query/dist/server";
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import StoreBadges from "components/StoreBadges";
 import {
   GetStaticPaths,
