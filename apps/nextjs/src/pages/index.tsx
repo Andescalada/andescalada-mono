@@ -2,7 +2,7 @@ import { createContext } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { createServerSideHelpers } from "@trpc/react-query/dist/server";
 import StoreBadges from "components/StoreBadges";
 import Head from "next/head";
 import Link from "next/link";
@@ -131,7 +131,7 @@ export default function IndexPage() {
 }
 
 export async function getStaticProps() {
-  const ssg = createProxySSGHelpers({
+  const ssg = createServerSideHelpers({
     router: appRouter,
     ctx: await createContext(),
     transformer,

@@ -4,7 +4,7 @@ import { transformer } from "@andescalada/api/src/transformer";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { SoftDeleteSchema, StatusSchema } from "@andescalada/db/zod";
 import { Icon } from "@andescalada/icons/WebIcons";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { createServerSideHelpers } from "@trpc/react-query/dist/server";
 import StoreBadges from "components/StoreBadges";
 import {
   GetStaticPaths,
@@ -20,7 +20,7 @@ import { trpc } from "utils/trpc";
 export async function getStaticProps(
   context: GetStaticPropsContext<{ id: string; slug: string }>,
 ) {
-  const ssg = createProxySSGHelpers({
+  const ssg = createServerSideHelpers({
     router: appRouter,
     ctx: await createContext(),
     transformer,
