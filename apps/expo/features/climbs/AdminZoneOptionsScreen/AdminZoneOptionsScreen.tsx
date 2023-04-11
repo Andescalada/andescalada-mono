@@ -81,6 +81,23 @@ const AdminZoneOptionsScreen: FC<Props> = ({
           Editar descripción
         </ListItemOption>
       )}
+      {permission?.has("EditZoneInfo") && data?.Location && (
+        <ListItemOption
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+              screen: ZoneManagerRoutes.EditZoneLocation,
+              params: {
+                zoneId,
+                zoneName,
+                latitude: data.Location?.latitude,
+                longitude: data.Location?.longitude,
+              },
+            })
+          }
+        >
+          Editar ubicación
+        </ListItemOption>
+      )}
     </Screen>
   );
 };

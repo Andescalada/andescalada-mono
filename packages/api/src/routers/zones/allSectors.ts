@@ -20,6 +20,7 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
         take: 1,
         select: { status: true },
       },
+      Location: true,
       UserZoneAgreementHistory: {
         where: {
           User: { email: ctx.user.email },

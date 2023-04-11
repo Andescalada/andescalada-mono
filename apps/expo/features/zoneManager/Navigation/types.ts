@@ -1,5 +1,5 @@
 import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
-import { Zone } from "@prisma/client";
+import { Location, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -11,6 +11,7 @@ export enum ZoneManagerRoutes {
   EditZoneStatus = "EditZoneStatus",
   ZonesByRole = "ZonesByRole",
   HowToPublish = "HowToPublish",
+  EditZoneLocation = "EditZoneLocation",
 }
 
 export type ZoneManagerNavigationParamList = {
@@ -36,6 +37,12 @@ export type ZoneManagerNavigationParamList = {
     searchVisibility?: typeof SearchVisibilitySchema._type;
   };
   [ZoneManagerRoutes.ZonesByRole]: undefined;
+  [ZoneManagerRoutes.EditZoneLocation]: {
+    zoneId: Zone["id"];
+    zoneName: Zone["name"];
+    latitude?: Location["latitude"];
+    longitude?: Location["longitude"];
+  };
 };
 
 export type ZoneManagerRouteProps<T extends ZoneManagerRoutes> = RouteProp<
