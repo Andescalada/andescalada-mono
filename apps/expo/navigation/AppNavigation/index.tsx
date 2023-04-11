@@ -1,13 +1,14 @@
 import { Box, Button, Icon, Screen, Text } from "@andescalada/ui";
 import AuthNavigation from "@features/auth/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
+import useUpdateChecker from "@hooks/useUpdateChecker";
 import RootNavigation from "@navigation/AppNavigation/RootNavigation";
 import useAutoLogin from "@navigation/AppNavigation/useAutoLogin";
 import useHideSplashScreen from "@navigation/AppNavigation/useHideSplashScreen";
+import goToAppStore from "@utils/goToAppStore";
 import TRPCProvider from "@utils/trpc/Provider";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
-import { useState } from "react";
 import ErrorBoundary from "react-native-error-boundary";
 import * as Sentry from "sentry-expo";
 
@@ -17,28 +18,34 @@ const Navigator = () => {
   const { accessToken, isAuth, fontsLoaded } = useHideSplashScreen();
   useAutoLogin();
 
-  const [newUpdateAvailable, setNewUpdateAvailable] = useState(false);
-
-  const eventListener = (event: Updates.UpdateEvent) => {
-    if (event.type === Updates.UpdateEventType.ERROR) {
-      Sentry.Native.captureEvent(new Error(event.message));
-    } else if (event.type === Updates.UpdateEventType.NO_UPDATE_AVAILABLE) {
-      setNewUpdateAvailable(false);
-    } else if (event.type === Updates.UpdateEventType.UPDATE_AVAILABLE) {
-      setNewUpdateAvailable(true);
-    }
-  };
-
+  const { newBuildUpdate, newSoftUpdate } = useUpdateChecker();
   const captureException = (error: Error) =>
     Sentry.Native.captureException(error);
-
-  Updates.useUpdateEvents(eventListener);
 
   if (!fontsLoaded) {
     return <Screen backgroundColor="transitionScreen" />;
   }
 
-  if (newUpdateAvailable) {
+  if (newBuildUpdate) {
+    return (
+      <Screen
+        backgroundColor="transitionScreen"
+        padding="m"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Text variant="h2" marginHorizontal="l" textAlign="center">
+          Hay una nueva versión disponible en la tienda de aplicaciones
+        </Text>
+        <Box marginVertical="xl">
+          <Icon name="cool-dinosaur-color" size={100} />
+        </Box>
+        <Button variant="info" title="Ir a la tienda" onPress={goToAppStore} />
+      </Screen>
+    );
+  }
+
+  if (newSoftUpdate) {
     return (
       <Screen
         backgroundColor="transitionScreen"
