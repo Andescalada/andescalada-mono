@@ -21,8 +21,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import { Dimensions, Image } from "react-native";
 import MapRefType, { Details, Region } from "react-native-maps";
 
-import ZoneScreen from "../../climbs/ZoneScreen/ZoneScreen";
-
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.EditZoneLocation>;
 
 const { width, height } = Dimensions.get("window");
@@ -69,7 +67,7 @@ const EditZoneLocationScreen: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (location) {
+    if ((!latitude || !longitude) && location) {
       mapRef.current?.animateToRegion({
         latitude: Number(latitude) || location.coords.latitude,
         longitude: Number(longitude) || location.coords.longitude,
@@ -77,7 +75,7 @@ const EditZoneLocationScreen: FC<Props> = ({
         longitudeDelta: LONGITUDE_DELTA,
       });
     }
-  }, [location]);
+  }, [latitude, location, longitude]);
 
   const onRegionChangeComplete = (region: Region, details: Details) => {
     if (details.isGesture) {
