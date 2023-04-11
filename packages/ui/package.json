@@ -14,17 +14,17 @@
     "react-native-gesture-handler": "~2.8.0"
   },
   "devDependencies": {
-    "@shopify/react-native-skia": "*"
+    "@shopify/react-native-skia": "0.1.182"
   },
   "peerDependencies": {
     "@andescalada/icons": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
-    "@shopify/react-native-skia": "*",
+    "@shopify/react-native-skia": "0.1.182",
     "expo": "*",
     "react": "*",
     "react-hook-form": "*",
-    "react-native-reanimated": "*",
+    "react-native-reanimated": "2.12.0",
     "zod": "*"
   }
 }

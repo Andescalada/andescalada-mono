@@ -11,16 +11,16 @@
   },
   "peerDependencies": {
     "@shopify/restyle": "*",
-    "@shopify/react-native-skia": "*",
+    "@shopify/react-native-skia": "0.1.182",
     "react-native-redash": "*",
     "@openspacelabs/react-native-zoomable-view": "*",
-    "react-native-reanimated": "*"
+    "react-native-reanimated": "2.12.0"
   },
   "devDependencies": {
     "@shopify/restyle": "*",
     "react-native-redash": "*",
-    "@shopify/react-native-skia": "*",
+    "@shopify/react-native-skia": "0.1.182",
     "@types/react-native": "*",
-    "react-native-reanimated": "*"
+    "react-native-reanimated": "2.12.0"
   }
 }
