@@ -13,6 +13,8 @@ export const Icons = {
   "checklist": require( "./components-web/checklist").default,
   "climber-rappeling-color": require( "./components-web/climber-rappeling-color").default,
   "climber-rappeling": require( "./components-web/climber-rappeling").default,
+  "cool-dinosaur-color": require( "./components-web/cool-dinosaur-color").default,
+  "cool-dinosaur": require( "./components-web/cool-dinosaur").default,
   "dancing-dinosaur-color": require( "./components-web/dancing-dinosaur-color").default,
   "dancing-dinosaur": require( "./components-web/dancing-dinosaur").default,
   "destination-color": require( "./components-web/destination-color").default,
