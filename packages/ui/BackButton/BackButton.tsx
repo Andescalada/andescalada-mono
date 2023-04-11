@@ -1,13 +1,7 @@
 import {
-  add,
   Canvas,
   Circle,
-  Easing,
   LinearGradient,
-  mix,
-  sub,
-  useComputedValue,
-  useLoop,
   vec,
 } from "@shopify/react-native-skia";
 import { useTheme } from "@shopify/restyle";
@@ -29,16 +23,7 @@ const BackButton: FC<Props> & { Transparent: typeof Transparent } = ({
   ...props
 }) => {
   const theme = useTheme<Theme>();
-  const progress = useLoop({ duration: 1000, easing: Easing.cubic });
 
-  const start = useComputedValue(
-    () => sub(vec(0, 0), vec(mix(progress.current, 0, SIZE * Math.PI), 0)),
-    [progress],
-  );
-  const end = useComputedValue(
-    () => add(vec(SIZE, 0), vec(0, mix(progress.current, 0, SIZE * Math.PI))),
-    [progress],
-  );
   return (
     <Pressable
       onPress={props.onPress}
@@ -55,8 +40,8 @@ const BackButton: FC<Props> & { Transparent: typeof Transparent } = ({
       >
         <Circle r={SIZE / 2} cx={SIZE / 2} cy={SIZE / 2}>
           <LinearGradient
-            start={start}
-            end={end}
+            start={vec(0, 0)}
+            end={vec(SIZE / 2, SIZE)}
             colors={[theme.colors.gradientB, theme.colors.gradientA]}
           />
         </Circle>

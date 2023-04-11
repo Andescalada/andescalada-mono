@@ -10,18 +10,13 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import {
-  add,
   Canvas,
-  Easing,
   FitBox,
   Group,
   LinearGradient,
-  mix,
   Rect,
   rect,
   Skia,
-  useComputedValue,
-  useLoop,
   vec,
 } from "@shopify/react-native-skia";
 import { useResponsiveProp } from "@shopify/restyle";
@@ -52,27 +47,6 @@ const UserHeader = () => {
     [responsiveScale],
   );
 
-  const progress = useLoop({ duration: 3000, easing: Easing.cubic });
-
-  const start = useComputedValue(
-    () =>
-      add(
-        vec(0, 0),
-        vec(mix(progress.current, 0, 50), mix(progress.current, 0, 100)),
-      ),
-    [progress],
-  );
-  const end = useComputedValue(
-    () =>
-      add(
-        vec(HEADER_HEIGHT, 0),
-        vec(
-          mix(progress.current, 0, CANVAS_WIDTH),
-          mix(progress.current, 0, CANVAS_WIDTH),
-        ),
-      ),
-    [progress],
-  );
   const dispatch = useAppDispatch();
 
   const rootNavigation = useRootNavigation();
@@ -143,8 +117,8 @@ const UserHeader = () => {
           <Group clip={andescaladaPath}>
             <Rect x={0} y={0} width={CANVAS_WIDTH} height={16}>
               <LinearGradient
-                start={start}
-                end={end}
+                start={vec(0, 0)}
+                end={vec(HEADER_HEIGHT, CANVAS_WIDTH / 5)}
                 colors={[theme.colors.gradientB, theme.colors.gradientA]}
               />
             </Rect>
