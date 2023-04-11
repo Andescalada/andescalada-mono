@@ -14,6 +14,13 @@ const useCacheImage = (imageUrl: string) => {
     getImage();
   }, [getImage]);
 
+  useEffect(
+    () => () => {
+      image?.dispose();
+    },
+    [image],
+  );
+
   return image;
 };
 
