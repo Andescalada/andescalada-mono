@@ -15,6 +15,7 @@ import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigatio
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import emptyArray from "@utils/emptyArray";
 import featureFlags from "@utils/featureFlags";
 import parseGrade from "@utils/parseGrade";
 import { FC } from "react";
@@ -117,7 +118,7 @@ const EditOptions: FC<Props> = ({
       >
         Editar información
       </ListItemOption>
-      {Wall.topos.length > 0 && (
+      {!emptyArray(Wall.topos) && (
         <ListItemOption
           onPress={navigateToDrawRoute}
           visible={permission.has("Update")}

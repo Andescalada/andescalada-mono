@@ -26,6 +26,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation } from "@react-navigation/native";
+import emptyArray from "@utils/emptyArray";
 import { FlatList } from "react-native";
 
 const UserZonesScreen = () => {
@@ -158,7 +159,7 @@ const UserZonesScreen = () => {
             </Text>
             <Octicons name="heart" size={24} color={theme.colors.text} />
           </Box>
-          {data?.FavoriteZones?.length === 0 && (
+          {emptyArray(data?.FavoriteZones) && (
             <Box marginTop={"s"}>
               <Text>No tienes favoritas aún</Text>
             </Box>
@@ -216,7 +217,7 @@ const UserZonesScreen = () => {
             />
           </Box>
 
-          {data?.RoleByZone.length === 0 && (
+          {emptyArray(data?.RoleByZone) && (
             <Box
               marginTop={"s"}
               height={SQUARED_LIST_ITEM_SIZE}
@@ -225,7 +226,7 @@ const UserZonesScreen = () => {
               <Text>No tienes ninguna zona</Text>
             </Box>
           )}
-          {data?.RoleByZone && data?.RoleByZone.length > 0 && (
+          {!emptyArray(data?.RoleByZone) && (
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -267,7 +268,7 @@ const UserZonesScreen = () => {
               </Text>
               <Octicons name="history" size={24} color={theme.colors.text} />
             </Box>
-            {recentZones.data?.length !== 0 && (
+            {!emptyArray(recentZones.data) && (
               <Button
                 variant="transparentSimplified"
                 title="Borrar todo"
@@ -281,7 +282,7 @@ const UserZonesScreen = () => {
             )}
           </Box>
 
-          {recentZones?.data?.length === 0 && (
+          {emptyArray(recentZones?.data) && (
             <Box
               marginTop={"s"}
               height={SQUARED_LIST_ITEM_SIZE}
@@ -301,7 +302,7 @@ const UserZonesScreen = () => {
             </Box>
           )}
 
-          {recentZones?.data && recentZones?.data?.length > 0 && (
+          {!emptyArray(recentZones?.data) && (
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}

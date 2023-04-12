@@ -26,6 +26,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import { skipAgreementsIntro } from "@templates/AgreementsIntro/AgreementsIntro";
+import emptyArray from "@utils/emptyArray";
 import { useAtom } from "jotai";
 import { FC, ReactElement, useCallback, useMemo } from "react";
 
@@ -53,7 +54,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
   } = trpc.zones.allSectors.useQuery({ zoneId });
 
   const requestStatus = useMemo(() => {
-    if (ZoneAccessRequest?.length === 0) return undefined;
+    if (emptyArray(ZoneAccessRequest)) return undefined;
     return ZoneAccessRequest?.[0].status;
   }, [ZoneAccessRequest]);
 

@@ -12,6 +12,7 @@ import {
 } from "@features/climbs/Navigation/types";
 import useOwnInfo from "@hooks/useOwnInfo";
 import { useNavigation } from "@react-navigation/native";
+import emptyArray from "@utils/emptyArray";
 
 const OfflineZonesScreen = () => {
   const { data } = useOwnInfo();
@@ -34,7 +35,7 @@ const OfflineZonesScreen = () => {
             <Ionicons name="arrow-down-circle-sharp" size={24} color="text" />
           </Box>
         </Box>
-        {data?.DownloadedZones.length === 0 && (
+        {emptyArray(data?.DownloadedZones) && (
           <Box marginTop={"s"}>
             <Text>No tienes zonas descargadas</Text>
           </Box>
