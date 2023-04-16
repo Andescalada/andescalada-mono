@@ -1,4 +1,4 @@
-import type { Route, Sector, Wall, Zone } from "@prisma/client";
+import type { MultiPitch, Route, Sector, Wall, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ParseGrade } from "@utils/parseGrade";
@@ -21,6 +21,7 @@ export enum ClimbsNavigationRoutes {
   ZoneAgreements = "ZoneAgreements",
   AgreementsIntro = "ClimbsAgreementsIntro",
   AddAndEditDescription = "AddAndEditDescription",
+  MultiPitch = "MultiPitchScreen",
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -85,6 +86,12 @@ export type ClimbsNavigationNavigationParamList = {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
     description?: string;
+  };
+  [ClimbsNavigationRoutes.MultiPitch]: {
+    multiPitchId: MultiPitch["id"];
+    wallId: Wall["id"];
+    zoneId: Zone["id"];
+    multiPitchName: MultiPitch["name"];
   };
 };
 

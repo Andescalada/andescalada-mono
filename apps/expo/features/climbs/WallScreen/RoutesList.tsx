@@ -209,8 +209,15 @@ const RoutesList: FC = () => {
                 !isOfflineMode
               }
               onPress={() => {
-                // TODO: Handle on press Multi Pitch
-                if (item.isMultiPitch) return;
+                if (item.isMultiPitch) {
+                  navigation.navigate(ClimbsNavigationRoutes.MultiPitch, {
+                    multiPitchId: item.id,
+                    multiPitchName: item.name,
+                    wallId,
+                    zoneId,
+                  });
+                  return;
+                }
                 onPress({ routeId: item.id, zoneId, topoId: mainTopo?.id });
               }}
               onTouch={() => {
