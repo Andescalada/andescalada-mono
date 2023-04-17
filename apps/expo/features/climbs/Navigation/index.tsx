@@ -6,6 +6,7 @@ import AddWallScreen from "@features/climbs/AddWallScreen";
 import AdminZoneOptionsScreen from "@features/climbs/AdminZoneOptionsScreen";
 import AgreementsIntroScreen from "@features/climbs/AgreementsIntroScreen";
 import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
+import EditRoutePositionScreen from "@features/climbs/EditRoutePositionScreen";
 import MultiPitchScreen from "@features/climbs/MultiPitchScreen";
 import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
@@ -124,6 +125,10 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.MultiPitch}
           component={MultiPitchScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.EditRoutePosition}
+          component={EditRoutePositionScreen}
         />
       </Stack.Navigator>
       <OfflineNotification />

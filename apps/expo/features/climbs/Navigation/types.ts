@@ -22,6 +22,7 @@ export enum ClimbsNavigationRoutes {
   AgreementsIntro = "ClimbsAgreementsIntro",
   AddAndEditDescription = "AddAndEditDescription",
   MultiPitch = "MultiPitchScreen",
+  EditRoutePosition = "EditRoutePosition",
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -48,6 +49,13 @@ export type ClimbsNavigationNavigationParamList = {
     sectorName: Sector["name"];
   };
   [ClimbsNavigationRoutes.Wall]: {
+    wallId: Wall["id"];
+    wallName: Wall["name"];
+    sectorId: Sector["id"];
+    zoneId: Zone["id"];
+    sectorKind: Sector["sectorKind"];
+  };
+  [ClimbsNavigationRoutes.EditRoutePosition]: {
     wallId: Wall["id"];
     wallName: Wall["name"];
     sectorId: Sector["id"];
