@@ -2,13 +2,13 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { A, ScrollView, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import RouteItem from "@features/climbs/components/RouteItem";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { ListItemRef } from "@features/climbs/WallScreen/ListItem";
-import RouteItem from "@features/climbs/WallScreen/RouteItem";
 import useRouteOptions from "@features/climbs/WallScreen/useRouteOptions";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useOfflineMode from "@hooks/useOfflineMode";
