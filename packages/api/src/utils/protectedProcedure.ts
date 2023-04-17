@@ -1,8 +1,9 @@
+import { InferContext } from "@andescalada/api/src/utils/inferContext";
 import { TRPCError } from "@trpc/server";
 
 import { t } from "../createRouter";
 
-const isAuth = t.middleware(async ({ ctx, next }) => {
+export const isAuth = t.middleware(async ({ ctx, next }) => {
   const { user, verified } = ctx;
   if (verified === false) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -21,3 +22,5 @@ const isAuth = t.middleware(async ({ ctx, next }) => {
 });
 
 export const protectedProcedure = t.procedure.use(isAuth);
+
+export type ProtectedContext = InferContext<typeof isAuth>;
