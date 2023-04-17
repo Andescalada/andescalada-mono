@@ -14,9 +14,11 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
+import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
@@ -49,6 +51,8 @@ const MultiPitchScreen: FC<Props> = ({
 
   const rootNavigation = useRootNavigation();
 
+  const { permission } = usePermissions({ zoneId });
+
   const onPressHandler = useCallback(
     ({
       routeId,
@@ -72,10 +76,38 @@ const MultiPitchScreen: FC<Props> = ({
     [rootNavigation],
   );
 
+  const onOptions = ({
+    id,
+    name,
+    zoneId,
+  }: {
+    id: string;
+    zoneId: string;
+    name: string;
+  }) => {
+    rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
+      screen: MultiPitchManagerRoutes.MultiPitchManager,
+      params: {
+        multiPitchId: id,
+        multiPitchName: name,
+        zoneId,
+        topoId: mainTopo?.id,
+        wallId,
+      },
+    });
+  };
+
   if (isLoadingWall || isLoading)
     return (
-      <Screen justifyContent="center" alignItems="center">
-        <ActivityIndicator size="large" />
+      <Screen padding="m">
+        <Header
+          title={multiPitchName}
+          onGoBack={navigation.goBack}
+          showOptions={false}
+        />
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <ActivityIndicator size="large" />
+        </Box>
       </Screen>
     );
 
@@ -84,7 +116,14 @@ const MultiPitchScreen: FC<Props> = ({
       <Header
         title={multiPitchName}
         onGoBack={navigation.goBack}
-        showOptions={false}
+        showOptions={permission.has("Create")}
+        onOptions={() => {
+          onOptions({
+            id: multiPitchId,
+            name: multiPitchName,
+            zoneId,
+          });
+        }}
         padding="m"
       />
       <Box flex={0.5}>
