@@ -1,7 +1,13 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { ActivityIndicator, Modal, Screen, Text } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  LoadingModal,
+  Modal,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -173,10 +179,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
 
   return (
     <Screen>
-      <Modal visible={deleteTopo.isLoading} padding="xxl" onDismiss={() => ""}>
-        <Text marginBottom="s">Borrando topo</Text>
-        <ActivityIndicator size="large" />
-      </Modal>
+      <LoadingModal isLoading={deleteTopo.isLoading} text="Borrando topo" />
       <FormProvider {...methods}>
         <Header
           title={wallName}

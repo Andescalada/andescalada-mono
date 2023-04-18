@@ -19,6 +19,7 @@ export { default as KeyboardAvoidingBox } from "./KeyboardAvoidingBox/KeyboardAv
 export { default as KeyboardDismiss } from "./KeyboardDismiss/KeyboardDismiss";
 export { default as ListItem } from "./ListItem/ListItem";
 export { default as ListItemOption } from "./ListItemOption/ListItemOption";
+export { default as LoadingModal } from "./LoadingModal/LoadingModal";
 export { default as LoadingScreen } from "./LoadingScreen/LoadingScreen";
 export {
   default as MapTypeToolbar,

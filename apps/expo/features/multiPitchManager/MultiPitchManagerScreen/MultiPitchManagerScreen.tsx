@@ -3,6 +3,7 @@ import {
   AddButton,
   Box,
   Header,
+  LoadingModal,
   Pressable,
   Screen,
   Text,
@@ -17,7 +18,9 @@ import {
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
+import { useNotifications } from "@utils/notificated";
 import { FC, useCallback, useState } from "react";
+import { Alert } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 type Props =
@@ -53,19 +56,51 @@ const MultiPitchManagerScreen: FC<Props> = ({
 
   const { permission } = usePermissions({ zoneId });
 
-  const onOptions = useOptionsSheet({
-    "Cambiar Nombre": {
-      action: () =>
-        navigation.navigate(MultiPitchManagerRoutes.AddMultiPitch, {
-          wallId,
-          zoneId,
-          multiPitchId,
-          multiPitchName: data?.name,
-          unknownName: data?.unknownName,
-        }),
-      hide: !permission?.has("Update"),
+  const utils = trpc.useContext();
+  const notification = useNotifications();
+  const deleteMultiPitch = trpc.multiPitch.delete.useMutation({
+    onSuccess: () => {
+      utils.walls.invalidate();
+      notification.notify("success", {
+        params: { title: "Multi largo eliminado", hideCloseButton: true },
+        config: { duration: 500 },
+      });
+      navigation.goBack();
     },
   });
+
+  const onOptions = useOptionsSheet(
+    {
+      "Cambiar nombre": {
+        action: () =>
+          navigation.navigate(MultiPitchManagerRoutes.AddMultiPitch, {
+            wallId,
+            zoneId,
+            multiPitchId,
+            multiPitchName: data?.name,
+            unknownName: data?.unknownName,
+          }),
+        hide: !permission?.has("Update"),
+      },
+      "Eliminar multi largo": {
+        action: () => {
+          Alert.alert("Eliminar multi largo", "¿Estás seguro?", [
+            {
+              text: "Cancelar",
+              style: "cancel",
+            },
+            {
+              text: "Eliminar",
+              style: "destructive",
+              onPress: () => deleteMultiPitch.mutate({ multiPitchId, zoneId }),
+            },
+          ]);
+        },
+        hide: !permission?.has("Delete"),
+      },
+    },
+    { destructiveButtonIndex: 1 },
+  );
 
   if (isLoading)
     return (
@@ -82,6 +117,10 @@ const MultiPitchManagerScreen: FC<Props> = ({
     );
   return (
     <Screen padding="m">
+      <LoadingModal
+        isLoading={deleteMultiPitch.isLoading}
+        text="Borrando multi largo"
+      />
       <Header
         title={multiPitchName}
         onGoBack={navigation.goBack}
