@@ -1,6 +1,7 @@
 import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import updatePositionsOnDelete from "@andescalada/api/src/utils/updatePositionsOnDelete";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
@@ -21,12 +22,28 @@ const deleteById = protectedZoneProcedure
         error.unauthorizedActionForZone(input.zoneId, "Delete"),
       );
     }
-    return ctx.prisma.multiPitch.update({
+    const deletedMultiPitch = await ctx.prisma.multiPitch.update({
       where: { id: input.multiPitchId },
       data: {
         isDeleted: SoftDelete.DeletedPublic,
       },
     });
+
+    await ctx.prisma.wall.update({
+      where: { id: deletedMultiPitch.wallId },
+      data: {
+        version: { increment: 1 },
+      },
+    });
+
+    await updatePositionsOnDelete({
+      ctx,
+      wallId: deletedMultiPitch.wallId,
+      deletedPosition: deletedMultiPitch.position,
+      zoneId: input.zoneId,
+    });
+
+    return deletedMultiPitch;
   });
 
 export default deleteById;
