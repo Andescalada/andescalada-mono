@@ -4,19 +4,35 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 const editPosition = protectedZoneProcedure
-  .input(z.object({ positions: z.record(z.number()) }))
+  .input(
+    z.object({
+      positions: z
+        .object({
+          id: z.string(),
+          position: z.number(),
+          isMultiPitch: z.boolean(),
+        })
+        .array(),
+    }),
+  )
   .mutation(async ({ ctx, input: { positions, ...input } }) => {
     if (!ctx.permissions.has("Update")) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Update"),
       );
     }
-    const updatePositions = Object.entries(positions).map(([id, position]) =>
-      ctx.prisma.route.update({
+    const updatePositions = positions.map(({ id, position, isMultiPitch }) => {
+      if (isMultiPitch) {
+        return ctx.prisma.multiPitch.update({
+          where: { id },
+          data: { position },
+        });
+      }
+      return ctx.prisma.route.update({
         where: { id },
         data: { position },
-      }),
-    );
+      });
+    });
 
     const res = await ctx.prisma.$transaction(updatePositions);
     const wallId = res[0].wallId;

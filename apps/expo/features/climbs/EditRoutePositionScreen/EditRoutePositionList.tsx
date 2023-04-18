@@ -1,4 +1,5 @@
 import { BackButton, Box, Button, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ROUTE_ITEM_HEIGHT,
   ScrollDirection,
@@ -6,6 +7,7 @@ import {
 import MovableListItem from "@features/climbs/EditRoutePositionScreen/MovableListItem";
 import { RouteListData } from "@hooks/useRouteList";
 import { useNavigation } from "@react-navigation/native";
+import { useNotifications } from "@utils/notificated";
 import { FC } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {
@@ -18,13 +20,14 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
-  data: RouteListData;
+  data: Exclude<RouteListData, undefined>;
   wallName: string;
+  zoneId: string;
 }
 
 const TOOLBAR_HEIGHT = 50;
 
-const EditRoutePositionList: FC<Props> = ({ data, wallName }) => {
+const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
   const navigation = useNavigation();
   const positions = useSharedValue(listToObject(data));
 
@@ -33,6 +36,22 @@ const EditRoutePositionList: FC<Props> = ({ data, wallName }) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>();
   const dimensions = useWindowDimensions();
   const insets = useSafeAreaInsets();
+
+  const notification = useNotifications();
+
+  const utils = trpc.useContext();
+  const editPositions = trpc.routes.editPositions.useMutation({
+    onSuccess: () => {
+      notification.notify("success", {
+        params: {
+          title: "Posiciones modificadas con éxito",
+          hideCloseButton: true,
+        },
+        config: { duration: 500 },
+      });
+      utils.walls.invalidate();
+    },
+  });
 
   useAnimatedReaction(
     () => scrollY.value,
@@ -66,6 +85,7 @@ const EditRoutePositionList: FC<Props> = ({ data, wallName }) => {
         <Button
           titleVariant="p3R"
           title="Guardar"
+          isLoading={editPositions.isLoading}
           titleProps={{ lineHeight: undefined }}
           variant="infoSmall"
           height={40}
@@ -73,10 +93,18 @@ const EditRoutePositionList: FC<Props> = ({ data, wallName }) => {
           onPress={() => {
             const newPositions = positions.value;
 
-            Object.entries(newPositions).forEach(([id, position]) => {
-              const route = data?.routes.find((route) => route.id === id);
-              console.log(route?.name, position + 1);
-            });
+            const positionsArray = Object.entries(newPositions).map(
+              ([id, position]) => {
+                const route = data.routes.find((route) => route.id === id);
+                return {
+                  id,
+                  isMultiPitch: !!route?.isMultiPitch,
+                  position: position + 1,
+                };
+              },
+            );
+
+            editPositions.mutate({ zoneId, positions: positionsArray });
           }}
         />
       </Box>
