@@ -110,6 +110,18 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             },
           }),
       },
+      "Editar posiciones": {
+        hide: !permission?.has("Update"),
+        action: () => {
+          navigation.navigate(ClimbsNavigationRoutes.EditRoutePosition, {
+            wallId,
+            zoneId,
+            sectorId,
+            sectorKind,
+            wallName,
+          });
+        },
+      },
       "Cambiar nombre": {
         hide: !permission?.has("Update"),
         action: () => {

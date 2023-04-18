@@ -21,5 +21,6 @@
   "workbench.colorTheme": "Dracula Soft",
   "githubPullRequests.ignoredPullRequestBranches": [
     "main"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
