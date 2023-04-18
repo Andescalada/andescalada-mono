@@ -21,6 +21,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useIsConnected from "@hooks/useIsConnected";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
+import useRecentZones from "@hooks/useRecentZones";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
@@ -47,7 +48,7 @@ const UserZonesScreen = () => {
 
   const { activateOfflineMode } = useOfflineMode();
 
-  const recentZones = trpc.user.zoneHistory.useQuery();
+  const recentZones = useRecentZones();
 
   const removeAllRecentZones = trpc.user.removeAllRecentZones.useMutation({
     onMutate: async () => {
@@ -282,7 +283,7 @@ const UserZonesScreen = () => {
             )}
           </Box>
 
-          {emptyArray(recentZones?.data) && (
+          {emptyArray(recentZones?.data) && !recentZones.isLoading && (
             <Box
               marginTop={"s"}
               height={SQUARED_LIST_ITEM_SIZE}
