@@ -1,5 +1,6 @@
 import global from "@andescalada/api/schemas/global";
 import routeSchema from "@andescalada/api/schemas/route";
+import editPosition from "@andescalada/api/src/routers/routes/editPositions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -7,9 +8,10 @@ import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { t } from "../createRouter";
+import { t } from "../../createRouter";
 
 export const routesRouter = t.router({
+  editPositions: editPosition,
   byId: t.procedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
