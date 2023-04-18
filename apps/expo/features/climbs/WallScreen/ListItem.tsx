@@ -16,12 +16,9 @@ import {
   GestureType,
 } from "react-native-gesture-handler";
 import {
-  FadeInDown,
   FadeOutLeft,
-  Layout,
   runOnJS,
   SharedValue,
-  SlideOutLeft,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -235,13 +232,7 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
 
   return (
     <GestureDetector gesture={pan}>
-      <A.Box
-        entering={FadeInDown.delay(100 * index)}
-        exiting={SlideOutLeft}
-        layout={Layout.delay(500).springify()}
-        collapsable={Conditional.disableForAndroid}
-        {...containerProps}
-      >
+      <A.Box collapsable={Conditional.disableForAndroid} {...containerProps}>
         <A.Pressable
           style={[rightStyle]}
           collapsable={false}

@@ -58,7 +58,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
 
   const utils = trpc.useContext();
   const notification = useNotifications();
-  const deleteMultiPitch = trpc.multiPitch.delete.useMutation({
+  const deleteMultiPitch = trpc.multiPitch.deleteById.useMutation({
     onSuccess: () => {
       utils.walls.invalidate();
       notification.notify("success", {
