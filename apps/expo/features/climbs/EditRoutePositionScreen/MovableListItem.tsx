@@ -2,6 +2,7 @@ import { Box, Ionicons, Text } from "@andescalada/ui";
 import {
   ROUTE_ITEM_HEIGHT,
   ScrollDirection,
+  TOOLBAR_HEIGHT,
 } from "@features/climbs/EditRoutePositionScreen/config";
 import { useAppTheme } from "@hooks/useAppTheme";
 import { useState } from "react";
@@ -165,7 +166,8 @@ const MovableListItem = ({
       runOnJS(setMoving)(true);
     },
     onActive(event) {
-      positionY.value = event.absoluteY + lowerBound.value - ROUTE_ITEM_HEIGHT;
+      positionY.value =
+        event.absoluteY + lowerBound.value - ROUTE_ITEM_HEIGHT - TOOLBAR_HEIGHT;
     },
     onFinish() {
       const finishPosition = positions.value[id] * ROUTE_ITEM_HEIGHT;

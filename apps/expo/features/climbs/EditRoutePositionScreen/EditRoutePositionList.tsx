@@ -3,6 +3,7 @@ import { trpc } from "@andescalada/utils/trpc";
 import {
   ROUTE_ITEM_HEIGHT,
   ScrollDirection,
+  TOOLBAR_HEIGHT,
 } from "@features/climbs/EditRoutePositionScreen/config";
 import MovableListItem from "@features/climbs/EditRoutePositionScreen/MovableListItem";
 import { RouteListData } from "@hooks/useRouteList";
@@ -24,8 +25,6 @@ interface Props {
   wallName: string;
   zoneId: string;
 }
-
-const TOOLBAR_HEIGHT = 70;
 
 const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
   const navigation = useNavigation();
