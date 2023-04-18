@@ -1,5 +1,5 @@
 import wall from "@andescalada/api/schemas/wall";
-import parsedWall from "@andescalada/api/src/routers/walls/parsedWall";
+import parsedWall from "@andescalada/api/src/utils/parsedWall";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 
 const routeList = protectedZoneProcedure

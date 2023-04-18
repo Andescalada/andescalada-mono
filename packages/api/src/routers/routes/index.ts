@@ -4,6 +4,7 @@ import editPosition from "@andescalada/api/src/routers/routes/editPositions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
+import updatePositionsOnDelete from "@andescalada/api/src/utils/updatePositionsOnDelete";
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -246,14 +247,23 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
+      const deletedRoute = await ctx.prisma.route.update({
+        where: { id: input.routeId },
+        data: { isDeleted: input.isDeleted },
+      });
+
       await ctx.prisma.wall.update({
         where: { id: route?.wallId },
         data: { version: { increment: 1 } },
       });
 
-      return ctx.prisma.route.update({
-        where: { id: input.routeId },
-        data: { isDeleted: input.isDeleted },
+      await updatePositionsOnDelete({
+        ctx,
+        deletedPosition: deletedRoute.position,
+        wallId: deletedRoute?.wallId,
+        zoneId: input.zoneId,
       });
+
+      return deletedRoute;
     }),
 });
