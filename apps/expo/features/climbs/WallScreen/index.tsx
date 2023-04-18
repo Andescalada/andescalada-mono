@@ -1,13 +1,7 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import {
-  ActivityIndicator,
-  LoadingModal,
-  Modal,
-  Screen,
-  Text,
-} from "@andescalada/ui";
+import { LoadingModal, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
