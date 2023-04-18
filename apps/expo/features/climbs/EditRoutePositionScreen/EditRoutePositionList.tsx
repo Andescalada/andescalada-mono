@@ -25,7 +25,7 @@ interface Props {
   zoneId: string;
 }
 
-const TOOLBAR_HEIGHT = 50;
+const TOOLBAR_HEIGHT = 70;
 
 const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
   const navigation = useNavigation();
@@ -70,6 +70,23 @@ const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
     ? data?.routes?.length * ROUTE_ITEM_HEIGHT
     : 0;
 
+  const onSavePositions = () => {
+    const newPositions = positions.value;
+
+    const positionsArray = Object.entries(newPositions).map(
+      ([id, position]) => {
+        const route = data.routes.find((route) => route.id === id);
+        return {
+          id,
+          isMultiPitch: !!route?.isMultiPitch,
+          position: position + 1,
+        };
+      },
+    );
+
+    editPositions.mutate({ zoneId, positions: positionsArray });
+  };
+
   return (
     <Screen padding="m">
       <Box
@@ -83,29 +100,14 @@ const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
           {wallName}
         </Text>
         <Button
-          titleVariant="p3R"
+          titleVariant="p3B"
           title="Guardar"
           isLoading={editPositions.isLoading}
           titleProps={{ lineHeight: undefined }}
           variant="infoSmall"
           height={40}
           width={"30%"}
-          onPress={() => {
-            const newPositions = positions.value;
-
-            const positionsArray = Object.entries(newPositions).map(
-              ([id, position]) => {
-                const route = data.routes.find((route) => route.id === id);
-                return {
-                  id,
-                  isMultiPitch: !!route?.isMultiPitch,
-                  position: position + 1,
-                };
-              },
-            );
-
-            editPositions.mutate({ zoneId, positions: positionsArray });
-          }}
+          onPress={onSavePositions}
         />
       </Box>
       <Animated.ScrollView
