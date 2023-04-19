@@ -155,6 +155,19 @@ const MultiPitchScreen: FC<Props> = ({
             />
           </A.Pressable>
         )}
+        {!mainTopo?.image.publicId && (
+          <A.Pressable
+            flex={1}
+            height={100}
+            width={SCREEN_WIDTH}
+            entering={FadeIn}
+            exiting={FadeOut}
+            justifyContent="center"
+            alignItems={"center"}
+          >
+            <Text variant="p1R">Pared sin topo</Text>
+          </A.Pressable>
+        )}
       </Box>
       <ScrollView
         flex={1}
