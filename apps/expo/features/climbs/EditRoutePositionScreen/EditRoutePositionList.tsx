@@ -49,6 +49,7 @@ const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
         config: { duration: 500 },
       });
       utils.walls.invalidate();
+      utils.topos.invalidate();
     },
   });
 

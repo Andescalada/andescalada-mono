@@ -61,6 +61,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
   const deleteMultiPitch = trpc.multiPitch.deleteById.useMutation({
     onSuccess: () => {
       utils.walls.invalidate();
+      utils.topos.invalidate();
       notification.notify("success", {
         params: { title: "Multi largo eliminado", hideCloseButton: true },
         config: { duration: 500 },
