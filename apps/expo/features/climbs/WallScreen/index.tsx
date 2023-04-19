@@ -168,7 +168,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         },
       },
     },
-    { destructiveButtonIndex: !!mainTopoId?.data ? [3, 4] : 3 },
+    { destructiveButtonIndex: !!mainTopoId?.data ? [4, 5] : 4 },
   );
 
   return (
