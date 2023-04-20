@@ -523,7 +523,7 @@ model Pitch {
   Route          Route      @relation(fields: [routeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   routeId        String     @unique
   MultiPitch     MultiPitch @relation(fields: [multiPitchId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  multiPitchId   String     @unique
+  multiPitchId   String
   isDeleted      SoftDelete @default(NotDeleted)
   version        Int        @default(0)
   variantPitchId String?
