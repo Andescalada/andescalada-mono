@@ -1,12 +1,14 @@
-import { Context } from "@andescalada/api/src/createContext";
 import { Permissions } from "@andescalada/api/src/types/permissions";
+import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 
-const getAndParsePermissions = async (ctx: Context, zoneId: string) => {
+const getAndParsePermissions = async (
+  ctx: ProtectedContext,
+  zoneId: string,
+) => {
   const permissions: Permissions = new Set();
 
   const roles = await ctx.prisma.roleByZone.findMany({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    where: { User: { email: ctx.user!.email }, Zone: { id: zoneId } },
+    where: { User: { email: ctx.user.email }, Zone: { id: zoneId } },
     select: {
       Role: {
         select: { permissions: { select: { action: true } } },
