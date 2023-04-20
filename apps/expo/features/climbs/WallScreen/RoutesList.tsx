@@ -117,8 +117,6 @@ const RoutesList: FC = () => {
     },
   );
 
-  const refresh = useRefresh(refetch, isFetching);
-
   const mainTopo = useMemo(() => data?.topos[0], [data?.topos]);
 
   const routesCount = useMemo(
@@ -141,6 +139,14 @@ const RoutesList: FC = () => {
       wallId,
       reset,
     });
+
+  const refresh = useRefresh(() => {
+    refetch();
+    utils.topos.byId.invalidate({
+      topoId: mainTopo?.id,
+      zoneId,
+    });
+  }, isFetching);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setTouchRouteId] = useState<string | null>(null);
