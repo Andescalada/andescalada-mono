@@ -23,6 +23,8 @@ const useRouteList = ({
   const wallQuery = trpc.walls.routeList.useQuery(
     { wallId, zoneId },
     {
+      staleTime: 0,
+      cacheTime: 0,
       select: useCallback(
         (wall: Wall) => {
           const multiPitch = wall.MultiPitch.map((multiPitch) => ({
