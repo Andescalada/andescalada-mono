@@ -28,7 +28,12 @@ const EditRoutePositionScreen: FC<Props> = ({
   if (!data) return null;
 
   return (
-    <EditRoutePositionList data={data} wallName={wallName} zoneId={zoneId} />
+    <EditRoutePositionList
+      data={data}
+      wallName={wallName}
+      zoneId={zoneId}
+      wallId={wallId}
+    />
   );
 };
 

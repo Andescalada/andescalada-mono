@@ -24,9 +24,15 @@ interface Props {
   data: Exclude<RouteListData, undefined>;
   wallName: string;
   zoneId: string;
+  wallId: string;
 }
 
-const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
+const EditRoutePositionList: FC<Props> = ({
+  data,
+  wallName,
+  zoneId,
+  wallId,
+}) => {
   const navigation = useNavigation();
   const positions = useSharedValue(listToObject(data));
 
@@ -84,7 +90,7 @@ const EditRoutePositionList: FC<Props> = ({ data, wallName, zoneId }) => {
       },
     );
 
-    editPositions.mutate({ zoneId, positions: positionsArray });
+    editPositions.mutate({ zoneId, positions: positionsArray, wallId });
   };
 
   return (
