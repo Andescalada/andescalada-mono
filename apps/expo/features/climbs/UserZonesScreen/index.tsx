@@ -161,7 +161,11 @@ const UserZonesScreen = () => {
             <Octicons name="heart" size={24} color={theme.colors.text} />
           </Box>
           {emptyArray(data?.FavoriteZones) && (
-            <Box marginTop={"s"}>
+            <Box
+              marginTop={"s"}
+              height={SQUARED_LIST_ITEM_SIZE}
+              justifyContent="center"
+            >
               <Text>No tienes favoritas aún</Text>
             </Box>
           )}
@@ -206,7 +210,7 @@ const UserZonesScreen = () => {
             </Box>
             <Button
               variant="transparentSimplified"
-              title="Ver más"
+              title={emptyArray(data?.RoleByZone) ? "Agregar zona" : "Ver más"}
               titleVariant="p3R"
               paddingHorizontal="s"
               height={30}
