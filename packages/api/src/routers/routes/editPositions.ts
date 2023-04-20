@@ -40,12 +40,12 @@ const editPosition = protectedZoneProcedure
 
     const updatePitch = positions
       .filter(({ isMultiPitch }) => isMultiPitch)
-      .map(({ id, position }) =>
-        ctx.prisma.pitch.update({
-          where: { multiPitchId: id },
-          data: { Route: { update: { position } } },
-        }),
-      );
+      .map(({ id, position }) => {
+        return ctx.prisma.route.updateMany({
+          where: { Pitch: { multiPitchId: id } },
+          data: { position },
+        });
+      });
 
     const updateFunctions = [...updatePositions, ...updatePitch];
 
