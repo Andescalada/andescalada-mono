@@ -1,12 +1,12 @@
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import {
-  A,
   ActivityIndicator,
   Box,
   Header,
   Screen,
   ScrollView,
   Text,
+  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import RouteItem from "@features/climbs/components/RouteItem";
@@ -15,15 +15,12 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
-import TopoViewer from "@features/routesManager/components/TopoViewer";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, useCallback } from "react";
-import { FadeIn, FadeOut } from "react-native-reanimated";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.MultiPitch>;
 
@@ -126,83 +123,69 @@ const MultiPitchScreen: FC<Props> = ({
         }}
         padding="m"
       />
-      <Box flex={0.5}>
-        {mainTopo?.image.publicId && (
-          <A.Pressable
-            flex={1}
-            height={100}
-            width={SCREEN_WIDTH}
-            entering={FadeIn}
-            exiting={FadeOut}
-            justifyContent="center"
-            alignItems={"center"}
-            onPress={() => {
-              rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-                screen: RoutesManagerNavigationRoutes.TopoViewer,
-                params: {
-                  topoId: mainTopo.id,
-                  zoneId,
-                },
-              });
-            }}
-          >
-            <TopoViewer
-              topoId={mainTopo.id}
-              zoneId={zoneId}
-              center={false}
-              disableGesture
-              strokeWidth={Number(mainTopo.routeStrokeWidth)}
-            />
-          </A.Pressable>
-        )}
-        {!mainTopo?.image.publicId && (
-          <A.Pressable
-            flex={1}
-            height={100}
-            width={SCREEN_WIDTH}
-            entering={FadeIn}
-            exiting={FadeOut}
-            justifyContent="center"
-            alignItems={"center"}
-          >
-            <Text variant="p1R">Pared sin topo</Text>
-          </A.Pressable>
-        )}
-      </Box>
-      <ScrollView
-        flex={1}
-        overflow="hidden"
-        backgroundColor="background"
-        borderTopLeftRadius={16}
-        borderTopRightRadius={16}
-        padding="m"
-      >
+      <ScrollView flex={1} padding="m">
         <Text variant="p1R" marginBottom="m">
           {data?.description}
         </Text>
-        {data?.Pitches.map((pitch, index) => (
-          <RouteItem
-            key={pitch.id}
-            grade={gradeLabel(
-              {
-                grade: pitch.Route.RouteGrade?.grade || null,
-                project: !!pitch.Route.RouteGrade?.project,
-              },
-              pitch.Route.kind,
+
+        {!!data &&
+          data?.Pitches.length > 0 &&
+          data?.Pitches.map((pitch, index) => (
+            <RouteItem
+              key={pitch.id}
+              grade={gradeLabel(
+                {
+                  grade: pitch.Route.RouteGrade?.grade || null,
+                  project: !!pitch.Route.RouteGrade?.project,
+                },
+                pitch.Route.kind,
+              )}
+              kind={routeKindLabel(pitch.Route.kind).long}
+              title={`Largo ${pitch.number}`}
+              index={index}
+              marginBottom="s"
+              onPress={() => {
+                onPressHandler({
+                  routeId: pitch.Route.id,
+                  zoneId,
+                  topoId: mainTopo?.id,
+                });
+              }}
+            />
+          ))}
+        {data?.Pitches.length === 0 && (
+          <Box
+            marginTop="xxxl"
+            padding="m"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Text variant="p2R">Sin información 🫤</Text>
+            {permission.has("Create") && (
+              <TextButton
+                variant="info"
+                onPress={() =>
+                  rootNavigation.navigate(
+                    RootNavigationRoutes.MultiPitchManager,
+                    {
+                      screen: MultiPitchManagerRoutes.AddPitch,
+                      params: {
+                        multiPitchId,
+                        multiPitchName,
+                        zoneId,
+                        topoId: mainTopo?.id,
+                        wallId,
+                        previousPitchKind: undefined,
+                      },
+                    },
+                  )
+                }
+              >
+                Agregar largo
+              </TextButton>
             )}
-            kind={routeKindLabel(pitch.Route.kind).long}
-            title={`Largo ${pitch.number}`}
-            index={index}
-            marginBottom="s"
-            onPress={() => {
-              onPressHandler({
-                routeId: pitch.Route.id,
-                zoneId,
-                topoId: mainTopo?.id,
-              });
-            }}
-          />
-        ))}
+          </Box>
+        )}
       </ScrollView>
     </Screen>
   );

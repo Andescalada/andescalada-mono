@@ -139,7 +139,7 @@ const AddPitchScreen: FC<Props> = ({
   };
 
   return (
-    <Screen safeAreaDisabled={Platform.OS !== "android"}>
+    <Screen safeAreaDisabled={Platform.OS !== "android"} marginTop="s">
       <ScrollView
         padding="m"
         paddingTop="l"
