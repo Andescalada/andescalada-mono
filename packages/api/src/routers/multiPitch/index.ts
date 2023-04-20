@@ -11,7 +11,7 @@ import pitchById from "@andescalada/api/src/routers/multiPitch/pitchById";
 export const multiPitchRouter = t.router({
   convertRoute,
   byId,
-  addPitch,
+  addPitch: addPitch,
   deleteById,
   editPitch,
   deletePitch,

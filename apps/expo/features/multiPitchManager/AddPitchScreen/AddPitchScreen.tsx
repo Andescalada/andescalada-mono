@@ -75,6 +75,8 @@ const AddPitchScreen: FC<Props> = ({
           wallId: MultiPitch.wallId,
           topoId,
           zoneId,
+          multiPitchId: MultiPitch.id,
+          multiPitchName: MultiPitch.name,
         },
       });
     },

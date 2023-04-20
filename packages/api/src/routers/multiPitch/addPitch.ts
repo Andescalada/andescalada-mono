@@ -57,6 +57,8 @@ const addPitch = protectedZoneProcedure
       include: {
         MultiPitch: {
           select: {
+            name: true,
+            id: true,
             position: true,
             wallId: true,
             Wall: { select: { topos: { where: { main: true }, take: 1 } } },

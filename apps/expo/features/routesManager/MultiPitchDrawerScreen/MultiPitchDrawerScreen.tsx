@@ -11,6 +11,7 @@ import {
 } from "@andescalada/climbs-drawer/utils";
 import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
 import Instructions from "@features/routesManager/components/Instructions";
 import RouteStrokeWidth from "@features/routesManager/components/RouteStrokeWidth";
@@ -20,8 +21,10 @@ import {
 } from "@features/routesManager/Navigation/types";
 import { useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useRootNavigation from "@hooks/useRootNavigation";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import useTopoImage from "@hooks/useTopoImage";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { inferRouterOutputs } from "@trpc/server";
 import { FC, useCallback, useMemo, useState } from "react";
 
@@ -40,6 +43,8 @@ const MultiPitchDrawerScreen: FC<Props> = ({
       previousPitchId,
       newPitch,
       pitchNumber,
+      multiPitchId,
+      multiPitchName,
     },
   },
   navigation,
@@ -106,6 +111,8 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     !!topos?.selectedRoute?.hideStart && !newPitch,
   );
 
+  const rootNavigation = useRootNavigation();
+
   const {
     canSave,
     coords,
@@ -131,6 +138,18 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     scale: fitted.scale,
     withLabel: true,
     hideStart,
+    navigateOnSuccess: () => {
+      rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
+        screen: MultiPitchManagerRoutes.MultiPitchManager,
+        params: {
+          wallId,
+          zoneId,
+          topoId,
+          multiPitchId: multiPitchId,
+          multiPitchName: multiPitchName,
+        },
+      });
+    },
   });
 
   const onUndo = () => {
