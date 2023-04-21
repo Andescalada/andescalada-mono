@@ -1,4 +1,5 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { blurImage } from "@andescalada/utils/cloudinary";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
 import { optimizedImage } from "@utils/cloudinary";
@@ -10,7 +11,14 @@ type ListToDownload = inferProcedureOutput<
   AppRouter["user"]["getDownloadedAssets"]
 >;
 
-const setImagesToFileSystem = async (
+export const imageVariantsSavedOffline = (publicId: string) => {
+  const mainImage = optimizedImage(publicId);
+  const thumbnailImage = blurImage(publicId);
+
+  return [thumbnailImage, mainImage];
+};
+
+export const saveImagesToFileSystem = async (
   assetsToDownload: ListToDownload["imagesToDownload"],
 ) => {
   if (!assetsToDownload) return;
@@ -30,9 +38,15 @@ const setImagesToFileSystem = async (
 
     if (!publicId) return prevImage;
 
-    const mainImage = optimizedImage(publicId);
-    if (!mainImage) return prevImage;
-    await fileSystem.deleteImage(mainImage.uniqueId);
+    const variantsToDelete = imageVariantsSavedOffline(publicId).map(
+      (imageObject) => {
+        if (!imageObject) throw new Error("Image not found");
+        return fileSystem.deleteImage(imageObject.uniqueId);
+      },
+    );
+
+    await allSettled(variantsToDelete);
+
     return prevImage;
   }, Promise.resolve());
 
@@ -40,18 +54,7 @@ const setImagesToFileSystem = async (
     const { publicId } = asset;
     if (!publicId) return (await prevAsset) + 1;
 
-    const mainImage = optimizedImage(publicId);
-    const cachedMainImage = async () =>
-      mainImage &&
-      (await fileSystem.storeImage(
-        {
-          url: mainImage.url,
-          uniqueId: mainImage.uniqueId,
-        },
-        "permanent",
-      ));
-
-    await allSettled([cachedMainImage()]);
+    await deleteSavedImages(publicId);
 
     return (await prevAsset) + 1;
   }, Promise.resolve(0));
@@ -59,4 +62,18 @@ const setImagesToFileSystem = async (
   storage.set(Storage.DOWNLOADED_IMAGES, stringify(assetsToDownload));
 };
 
-export default setImagesToFileSystem;
+export const deleteSavedImages = (publicId: string) => {
+  const variantsToSave = imageVariantsSavedOffline(publicId).map(
+    (imageObject) => {
+      if (!imageObject) throw new Error("Image not found");
+      return fileSystem.storeImage(
+        {
+          url: imageObject.url,
+          uniqueId: imageObject.uniqueId,
+        },
+        "permanent",
+      );
+    },
+  );
+  return allSettled(variantsToSave);
+};

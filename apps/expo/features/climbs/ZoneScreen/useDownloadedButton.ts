@@ -1,12 +1,15 @@
 import { trpc } from "@andescalada/utils/trpc";
 import type { Zone } from "@prisma/client";
-import deleteSavedImages from "@utils/deleteSavedImages";
+import deleteZoneSavedImages from "@utils/deleteZoneSavedImages";
+import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { Alert } from "react-native";
 
 const useDownloadedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
   const { data } = trpc.zones.allSectors.useQuery({ zoneId });
+
+  const notification = useNotifications();
 
   const addToDownloadedList = trpc.user.addToDownloadedZones.useMutation({
     onMutate: async () => {
@@ -49,6 +52,9 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
   });
 
   const onDownloadPress = () => {
+    if (addToDownloadedList.isLoading || removeToDownloadedList.isLoading) {
+      return;
+    }
     if (!data?.isDownloaded) {
       addToDownloadedList.mutate({ zoneId });
     } else {
@@ -61,11 +67,21 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
           text: "Borrar",
           style: "destructive",
           onPress: async () => {
-            const db = offlineDb.open();
-            await offlineDb.deleteZone(db, zoneId);
-            db.close();
-            await deleteSavedImages(zoneId);
-            removeToDownloadedList.mutateAsync({ zoneId });
+            try {
+              const db = offlineDb.open();
+              await offlineDb.deleteZone(db, zoneId);
+              db.close();
+              await deleteZoneSavedImages(zoneId);
+              removeToDownloadedList.mutateAsync({ zoneId });
+            } catch {
+              notification.notify("error", {
+                params: {
+                  title: "Ha ocurrido un error",
+                  description: "No se ha podido borrar la zona de descargas",
+                  hideCloseButton: true,
+                },
+              });
+            }
           },
         },
       ]);

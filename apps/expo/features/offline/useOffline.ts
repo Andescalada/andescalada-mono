@@ -1,7 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
+import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
 import setAssetsToDb from "@features/offline/utils/setAssetsToDb";
-import setImagesToFileSystem from "@features/offline/utils/setImagesToFileSystem";
 import { useAppSelector } from "@hooks/redux";
 import useOfflineMode from "@hooks/useOfflineMode";
 import { onlineManager } from "@tanstack/react-query";
@@ -38,7 +38,7 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
 
       await allSettled([
         setAssetsToDb(assetsToDownload),
-        setImagesToFileSystem(imagesToDownload),
+        saveImagesToFileSystem(imagesToDownload),
       ]);
     },
   });
