@@ -28,6 +28,7 @@ const storeImage = async (
   const cacheFileUri = cacheImageFileUri(uniqueId);
   const cacheFileInfo = await FileSystem.getInfoAsync(cacheFileUri);
   if (!cacheFileInfo.exists) {
+    console.log("Downloading image: ", url);
     await FileSystem.downloadAsync(url, cacheFileUri);
   }
 
@@ -50,10 +51,13 @@ const ensureDirExists = async () => {
   }
 };
 
-export const deleteImage = async (uniqueId: string) => {
+export const deleteImage = async (uniqueId: string, cache = false) => {
+  console.log(uniqueId);
   const fileUri = imageFileUri(uniqueId);
   const fileInfo = await FileSystem.getInfoAsync(fileUri);
+  console.log(fileInfo);
   if (fileInfo.exists) {
+    console.log("HEEEREE");
     await FileSystem.deleteAsync(fileUri);
   }
 };

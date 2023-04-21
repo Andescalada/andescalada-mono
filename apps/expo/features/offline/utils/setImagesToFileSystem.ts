@@ -1,7 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
-import { getThumbnail, optimizedImage } from "@utils/cloudinary";
+import { optimizedImage } from "@utils/cloudinary";
 import fileSystem from "@utils/FileSystem";
 import storage, { Storage } from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
@@ -26,26 +26,19 @@ const setImagesToFileSystem = async (
   );
 
   await imagesToDelete.reduce(async (prevImage, image) => {
-    const { id } = image;
-    await fileSystem.deleteImage(id);
+    const { publicId } = image;
+    console.log(image);
+    if (!publicId) return prevImage;
+
+    const mainImage = optimizedImage(publicId);
+    if (!mainImage) return prevImage;
+    await fileSystem.deleteImage(mainImage.uniqueId);
     return prevImage;
   }, Promise.resolve());
 
   await assetsToDownload.reduce(async (prevAsset, asset) => {
     const { publicId } = asset;
     if (!publicId) return (await prevAsset) + 1;
-
-    const thumbnail = getThumbnail(publicId);
-
-    const cachedThumbnail = async () =>
-      thumbnail &&
-      (await fileSystem.storeImage(
-        {
-          url: thumbnail.url,
-          uniqueId: thumbnail.uniqueId,
-        },
-        "permanent",
-      ));
 
     const mainImage = optimizedImage(publicId);
     const cachedMainImage = async () =>
@@ -58,7 +51,7 @@ const setImagesToFileSystem = async (
         "permanent",
       ));
 
-    await allSettled([cachedThumbnail(), cachedMainImage()]);
+    await allSettled([cachedMainImage()]);
 
     return (await prevAsset) + 1;
   }, Promise.resolve(0));

@@ -58,7 +58,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         onSelectedRoute={setSelectedRoute}
         imageQuality={
           data?.Wall.Sector.sectorKind === SectorKindSchema.enum.BigWall
-            ? 100
+            ? 80
             : 60
         }
       />

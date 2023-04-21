@@ -62,6 +62,7 @@ const TopoImage: FC = () => {
             center={false}
             disableGesture
             strokeWidth={Number(mainTopo.routeStrokeWidth)}
+            imageQuality={50}
           />
         </A.Pressable>
       )}

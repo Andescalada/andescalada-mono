@@ -1,5 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { inferProcedureOutput } from "@trpc/server";
+import { optimizedImage } from "@utils/cloudinary";
 import fileSystem from "@utils/FileSystem";
 import storage, { Storage } from "@utils/mmkv/storage";
 import { parse } from "superjson";
@@ -17,7 +18,9 @@ const deleteSavedImages = async (zoneId: string) => {
     .forEach(async (asset) => {
       const { publicId } = asset;
       if (!publicId) return;
-      await fileSystem.deleteImage(publicId);
+      const mainImage = optimizedImage(publicId);
+      if (!mainImage) return;
+      await fileSystem.deleteImage(mainImage.uniqueId);
     });
 };
 
