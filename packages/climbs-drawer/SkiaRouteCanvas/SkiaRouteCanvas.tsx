@@ -3,11 +3,11 @@ import {
   SkiaMutableValue,
   useMultiTouchHandler,
 } from "@shopify/react-native-skia";
-import { FC, ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 import { Dimensions, Platform } from "react-native";
 
 import { GestureHandler } from "../GestureHandler/GestureHandler";
-import { Picture } from "../SkiaPicture/SkiaPicture";
+import Picture from "../SkiaPicture/SkiaPicture";
 import useCacheImage from "../useCacheImage/useCacheImage";
 
 export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
@@ -100,4 +100,4 @@ const SkiaRouteCanvas: FC<Props> = ({
   return null;
 };
 
-export default SkiaRouteCanvas;
+export default memo(SkiaRouteCanvas);
