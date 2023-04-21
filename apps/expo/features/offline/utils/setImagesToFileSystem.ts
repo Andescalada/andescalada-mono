@@ -27,7 +27,7 @@ const setImagesToFileSystem = async (
 
   await imagesToDelete.reduce(async (prevImage, image) => {
     const { publicId } = image;
-    console.log(image);
+
     if (!publicId) return prevImage;
 
     const mainImage = optimizedImage(publicId);

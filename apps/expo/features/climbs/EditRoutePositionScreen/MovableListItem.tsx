@@ -125,7 +125,6 @@ const MovableListItem = ({
             break;
           }
           case ScrollDirection.Down: {
-            console.log("here");
             const contentHeight = routesCount * ROUTE_ITEM_HEIGHT;
             const maxScroll = contentHeight - containerHeight;
 

@@ -11,13 +11,8 @@ const useCachedImage = (args: { url: string; uniqueId: string } | null) => {
     const { uniqueId, url } = args;
     const res = await fileSystem.storeImage({ url, uniqueId });
 
-    console.log(res);
     setFileUrl(res);
   }, [args]);
-
-  const deleteImage = async (uniqueId: string) => {
-    await fileSystem.deleteImage(uniqueId, true);
-  };
 
   useEffect(() => {
     getCachedImage();
