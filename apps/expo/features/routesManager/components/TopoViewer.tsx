@@ -16,7 +16,7 @@ import { inferProcedureOutput } from "@trpc/server";
 import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
 import selectRouteByPoint from "@utils/selectRouteByPoint";
-import { FC, useMemo, useState } from "react";
+import { FC, memo, useMemo, useState } from "react";
 import { Dimensions } from "react-native";
 
 type PathItem = inferProcedureOutput<
@@ -125,7 +125,7 @@ const TopoViewer: FC<Props> = ({
   return null;
 };
 
-export default TopoViewer;
+export default memo(TopoViewer);
 
 interface ColoredRouteProps {
   path: PathItem;

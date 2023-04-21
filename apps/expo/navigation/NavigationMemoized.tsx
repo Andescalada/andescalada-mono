@@ -27,8 +27,6 @@ interface Props extends ComponentProps<typeof NavigationContainer> {
   children: React.ReactNode;
 }
 
-const isProduction = !__DEV__;
-
 const config = {
   screens: {
     [RootNavigationRoutes.Climbs]: {
@@ -65,7 +63,7 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   const [initialState, setInitialState] = useState<InitialState | undefined>();
 
   useEffect(() => {
-    if (process.env.AVOID_MEMOIZED_NAVIGATION === "true" || isProduction) {
+    if (process.env.AVOID_MEMOIZED_NAVIGATION === "true") {
       dispatch(setIsNavigationReady(true));
       return;
     }
