@@ -5,7 +5,7 @@ import {
   SkPoint,
   useValue,
 } from "@shopify/react-native-skia";
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 
 import usePathToPoints from "../usePathToPoints/usePathToPoints";
 import { pointToVector } from "../utils";
@@ -79,7 +79,7 @@ const SkiaRoutePath: FC<Props> = ({
   );
 };
 
-export default SkiaRoutePath;
+export default memo(SkiaRoutePath);
 
 interface StartComponentProps {
   color: string;
