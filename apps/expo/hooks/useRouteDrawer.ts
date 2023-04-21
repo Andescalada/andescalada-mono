@@ -121,7 +121,7 @@ const useRouteDrawer = ({
     }
     if (route.path && data) {
       if (route.path.length <= 1) {
-        rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+        rootNavigation.replace(RootNavigationRoutes.Climbs, {
           screen: ClimbsNavigationRoutes.Wall,
           params: {
             wallId,

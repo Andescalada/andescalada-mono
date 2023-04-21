@@ -139,7 +139,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     withLabel: true,
     hideStart,
     navigateOnSuccess: () => {
-      rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
+      rootNavigation.replace(RootNavigationRoutes.MultiPitchManager, {
         screen: MultiPitchManagerRoutes.MultiPitchManager,
         params: {
           wallId,
