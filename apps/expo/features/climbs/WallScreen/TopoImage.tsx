@@ -1,18 +1,20 @@
-import { A, ActivityIndicator, Box } from "@andescalada/ui";
+import { A, ActivityIndicator, Box, Image, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import AddTopoImage from "@features/climbs/WallScreen/AddTopoImage";
-import TopoViewer from "@features/routesManager/components/TopoViewer";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useCachedImage from "@hooks/useCachedImage";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
+
+import { blurImage } from "../../../../../packages/utils/cloudinary";
 
 type NavigationRoute =
   ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>["route"];
@@ -27,6 +29,10 @@ const TopoImage: FC = () => {
 
   const mainTopo = data?.topos[0];
 
+  const image = blurImage(mainTopo?.image.publicId || undefined, 1000);
+
+  const { fileUrl } = useCachedImage(image);
+
   const rootNavigation = useRootNavigation();
 
   return (
@@ -37,11 +43,13 @@ const TopoImage: FC = () => {
         </Box>
       )}
       <AddTopoImage />
-      {mainTopo?.image.publicId && (
+      {fileUrl && mainTopo && (
         <A.Pressable
           overflow="hidden"
           flex={1}
           height={100}
+          justifyContent="center"
+          alignItems="center"
           width={SCREEN_WIDTH}
           entering={FadeIn}
           exiting={FadeOut}
@@ -55,14 +63,20 @@ const TopoImage: FC = () => {
             });
           }}
         >
-          <TopoViewer
-            topoId={mainTopo.id}
-            zoneId={zoneId}
-            center={false}
-            disableGesture
-            strokeWidth={Number(mainTopo.routeStrokeWidth)}
-            imageQuality={20}
+          <Image
+            position="absolute"
+            source={{ uri: fileUrl }}
+            height={200}
+            width={SCREEN_WIDTH}
           />
+          <Box
+            py="s"
+            px="m"
+            borderRadius={32}
+            backgroundColor="grayscale.transparent.50.600"
+          >
+            <Text variant="h2">Ver topo</Text>
+          </Box>
         </A.Pressable>
       )}
     </Box>

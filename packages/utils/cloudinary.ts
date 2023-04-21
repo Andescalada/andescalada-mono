@@ -1,5 +1,5 @@
-// Import the Cloudinary class
 import { Cloudinary, CloudinaryImage } from "@cloudinary/url-gen";
+import { blur } from "@cloudinary/url-gen/actions/effect"; // Import the Cloudinary class
 import { Resize } from "@cloudinary/url-gen/actions/resize";
 
 // Create your instance
@@ -26,6 +26,15 @@ export const optimizedImage = (publicId?: string | null, quality = 100) =>
       .image(publicId || undefined)
       .format("auto")
       .quality(quality),
+    publicId,
+  );
+export const blurImage = (publicId?: string | null, blurness = 500) =>
+  imageObject(
+    cld
+      .image(publicId || undefined)
+      .format("auto")
+      .effect(blur(blurness))
+      .quality(50),
     publicId,
   );
 
