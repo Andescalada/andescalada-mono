@@ -1,9 +1,10 @@
 import {
   Canvas,
+  SkiaDomView,
   SkiaMutableValue,
   useMultiTouchHandler,
 } from "@shopify/react-native-skia";
-import { FC, memo, ReactNode } from "react";
+import { FC, memo, ReactNode, useEffect, useRef } from "react";
 import { Dimensions, Platform } from "react-native";
 
 import { GestureHandler } from "../GestureHandler/GestureHandler";
@@ -76,6 +77,15 @@ const SkiaRouteCanvas: FC<Props> = ({
 
   const image = useCacheImage(imageUrl);
 
+  const ref = useRef<SkiaDomView>(null);
+
+  useEffect(
+    () => () => {
+      ref.current?.componentWillUnmount();
+    },
+    [],
+  );
+
   if (image)
     return (
       <GestureHandler
@@ -90,6 +100,7 @@ const SkiaRouteCanvas: FC<Props> = ({
             width,
           }}
           onTouch={touchHandler}
+          ref={ref}
         >
           <Picture height={height} width={width} image={image} />
           {children}
