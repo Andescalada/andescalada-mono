@@ -179,8 +179,7 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           title={wallName}
           editingTitle={headerMethods.editing}
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
-          padding="m"
-          paddingHorizontal="s"
+          padding="s"
         />
       </FormProvider>
       <TopoImage />

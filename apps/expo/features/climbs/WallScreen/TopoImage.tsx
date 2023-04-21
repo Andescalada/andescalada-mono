@@ -30,7 +30,7 @@ const TopoImage: FC = () => {
   const rootNavigation = useRootNavigation();
 
   return (
-    <Box flex={0.5}>
+    <Box height={200}>
       {isLoadingWall && (
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" />
@@ -39,13 +39,12 @@ const TopoImage: FC = () => {
       <AddTopoImage />
       {mainTopo?.image.publicId && (
         <A.Pressable
+          overflow="hidden"
           flex={1}
           height={100}
           width={SCREEN_WIDTH}
           entering={FadeIn}
           exiting={FadeOut}
-          justifyContent="center"
-          alignItems={"center"}
           onPress={() => {
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
               screen: RoutesManagerNavigationRoutes.TopoViewer,
@@ -62,7 +61,7 @@ const TopoImage: FC = () => {
             center={false}
             disableGesture
             strokeWidth={Number(mainTopo.routeStrokeWidth)}
-            imageQuality={50}
+            imageQuality={20}
           />
         </A.Pressable>
       )}
