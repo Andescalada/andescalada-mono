@@ -1,4 +1,3 @@
-import { Image } from "@andescalada/ui";
 import {
   Canvas,
   SkiaDomView,
@@ -9,6 +8,8 @@ import { FC, memo, ReactNode, useEffect, useRef } from "react";
 import { Dimensions, Platform } from "react-native";
 
 import { GestureHandler } from "../GestureHandler/GestureHandler";
+import Picture from "../SkiaPicture/SkiaPicture";
+import useCacheImage from "../useCacheImage/useCacheImage";
 
 export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
   Dimensions.get("window");
@@ -74,6 +75,8 @@ const SkiaRouteCanvas: FC<Props> = ({
     [disableGesture],
   );
 
+  const image = useCacheImage(imageUrl);
+
   const ref = useRef<SkiaDomView>(null);
 
   useEffect(
@@ -83,7 +86,7 @@ const SkiaRouteCanvas: FC<Props> = ({
     [],
   );
 
-  if (imageUrl)
+  if (image)
     return (
       <GestureHandler
         height={height}
@@ -91,12 +94,6 @@ const SkiaRouteCanvas: FC<Props> = ({
         disableGesture={disableGesture}
         center={center}
       >
-        <Image
-          source={{ uri: imageUrl }}
-          height={height}
-          width={width}
-          position="absolute"
-        />
         <Canvas
           style={{
             height,
@@ -105,6 +102,7 @@ const SkiaRouteCanvas: FC<Props> = ({
           onTouch={touchHandler}
           ref={ref}
         >
+          <Picture height={height} width={width} image={image} />
           {children}
         </Canvas>
       </GestureHandler>
