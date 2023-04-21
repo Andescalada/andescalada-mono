@@ -3,7 +3,6 @@ import "expo-dev-client";
 import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
 import ThemeProvider from "@andescalada/ui/Theme/ThemeProvider";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import AppNavigation from "@navigation/AppNavigation";
 import NavigationMemoized from "@navigation/NavigationMemoized";
 import { Store } from "@store/index";
@@ -13,12 +12,15 @@ import { NotificationsProvider } from "@utils/notificated";
 import { StatusBar } from "expo-status-bar";
 import { connectToDevTools } from "react-devtools-core";
 import { LogBox } from "react-native";
-import ErrorBoundary from "react-native-error-boundary";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { initializeMMKVFlipper } from "react-native-mmkv-flipper-plugin";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { enableFreeze, enableScreens } from "react-native-screens";
 import { Provider as StoreProvider } from "react-redux";
 import * as Sentry from "sentry-expo";
+
+enableFreeze();
+enableScreens();
 
 if (__DEV__) {
   connectToDevTools({
