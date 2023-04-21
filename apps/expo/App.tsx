@@ -15,12 +15,8 @@ import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { initializeMMKVFlipper } from "react-native-mmkv-flipper-plugin";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { enableFreeze, enableScreens } from "react-native-screens";
 import { Provider as StoreProvider } from "react-redux";
 import * as Sentry from "sentry-expo";
-
-enableFreeze();
-enableScreens();
 
 if (__DEV__) {
   connectToDevTools({
