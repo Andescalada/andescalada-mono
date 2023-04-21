@@ -71,7 +71,6 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.AddRoute}
           component={AddRouteScreen}
-          options={{ presentation: "modal" }}
         />
         <Stack.Screen
           name={ClimbsNavigationRoutes.Wall}

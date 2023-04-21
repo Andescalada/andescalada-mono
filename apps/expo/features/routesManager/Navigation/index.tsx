@@ -17,7 +17,6 @@ const Navigator = () => {
       screenOptions={{
         headerShown: false,
         freezeOnBlur: true,
-        detachPreviousScreen: true,
       }}
     >
       <Stack.Screen

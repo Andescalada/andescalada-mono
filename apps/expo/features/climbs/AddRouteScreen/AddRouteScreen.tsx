@@ -248,7 +248,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const [showNoName, setShowNoName] = useState(true);
 
   return (
-    <Screen safeAreaDisabled={Platform.OS !== "android"}>
+    <Screen>
       <ScrollView
         padding="m"
         paddingTop="l"
