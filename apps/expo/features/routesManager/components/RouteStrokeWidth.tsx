@@ -1,31 +1,20 @@
 import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
-import { setRouteStrokeWidth } from "@store/localConfigs";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import Slider from "rn-vertical-slider";
 
 interface Props {
   show: boolean;
   setShow: (show: boolean) => void;
-  defaultRouteStrokeWidth?: number;
+  value: number;
+  onChange: (v: number) => void;
 }
 
 const HEIGHT = 250;
 
-const RouteStrokeWidth: FC<Props> = ({
-  show,
-  setShow,
-  defaultRouteStrokeWidth = 1,
-}) => {
+const RouteStrokeWidth: FC<Props> = ({ show, setShow, value, onChange }) => {
   const theme = useAppTheme();
-  const dispatch = useAppDispatch();
-  const { routeStrokeWidth } = useAppSelector((state) => state.localConfig);
-
-  useEffect(() => {
-    dispatch(setRouteStrokeWidth(defaultRouteStrokeWidth));
-  }, [defaultRouteStrokeWidth, dispatch]);
 
   if (show) {
     return (
@@ -50,14 +39,14 @@ const RouteStrokeWidth: FC<Props> = ({
         </Pressable>
         <Box>
           <Slider
-            value={routeStrokeWidth}
+            value={value}
             min={0.1}
             max={1.5}
             height={HEIGHT + 50}
             width={20}
             minimumTrackTintColor={theme.colors["grayscale.transparent.80.200"]}
             maximumTrackTintColor={theme.colors["grayscale.transparent.80.600"]}
-            onChange={(v) => dispatch(setRouteStrokeWidth(v))}
+            onChange={onChange}
           />
         </Box>
       </A.Box>

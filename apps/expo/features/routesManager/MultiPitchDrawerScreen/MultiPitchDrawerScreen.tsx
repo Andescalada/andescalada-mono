@@ -72,9 +72,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     return undefined;
   }, [previousPitch]);
 
-  const { routeStrokeWidth, showRoutes } = useAppSelector(
-    (state) => state.localConfig,
-  );
+  const { showRoutes } = useAppSelector((state) => state.localConfig);
 
   const { data: topos } = trpc.topos.byId.useQuery(
     { topoId, zoneId },
@@ -90,6 +88,8 @@ const MultiPitchDrawerScreen: FC<Props> = ({
             (r) => r.Route.id === routeParams.id,
           );
 
+          setRouteStrokeWidth(Number(topo.routeStrokeWidth));
+
           return {
             otherRoutes,
             selectedRoute,
@@ -100,6 +100,8 @@ const MultiPitchDrawerScreen: FC<Props> = ({
       ),
     },
   );
+
+  const [routeStrokeWidth, setRouteStrokeWidth] = useState(1);
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
     wallId,
@@ -253,7 +255,8 @@ const MultiPitchDrawerScreen: FC<Props> = ({
         <RouteStrokeWidth
           show={showConfig}
           setShow={setShowConfig}
-          defaultRouteStrokeWidth={topos?.routeStrokeWidth}
+          value={routeStrokeWidth}
+          onChange={setRouteStrokeWidth}
         />
         <DrawingTools
           isMultiPitch
