@@ -24,7 +24,7 @@
     "expo": "*",
     "react": "*",
     "react-hook-form": "*",
-    "react-native-reanimated": "2.14.0",
+    "react-native-reanimated": "2.14.4",
     "zod": "*"
   }
 }
