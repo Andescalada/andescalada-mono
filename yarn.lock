@@ -2838,7 +2838,7 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/native@^6.0.12":
+"@react-navigation/native@^6.1.6":
   version "6.1.6"
   resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-6.1.6.tgz#84ff5cf85b91f660470fa9407c06c8ee393d5792"
   integrity sha512-14PmSy4JR8HHEk04QkxQ0ZLuqtiQfb4BV9kkMXD2/jI4TZ+yc43OnO6fQ2o9wm+Bq8pY3DxyerC2AjNUz+oH7Q==
@@ -2855,7 +2855,7 @@
   dependencies:
     nanoid "^3.1.23"
 
-"@react-navigation/stack@^6.2.3":
+"@react-navigation/stack@^6.3.16":
   version "6.3.16"
   resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-6.3.16.tgz#cf94e3c8c1587455515743e91d328beef722e0ab"
   integrity sha512-KTOn9cNuZ6p154Htbl2DiR95Wl+c7niLPRiGs7gjOkyVDGiaGQF9ODNQTYBDE1OxZGHe/EyYc6T2CbmiItLWDg==
