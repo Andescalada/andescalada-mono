@@ -38,6 +38,12 @@
         "FLIPPER_DISABLE": "1"
       }
     },
+    "preview-simulator": {
+      "extends": "preview",
+      "ios": {
+        "simulator": true
+      }
+    },
     "production": {
       "extends": "base",
       "autoIncrement": true,
