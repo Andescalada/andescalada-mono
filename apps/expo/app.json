@@ -101,9 +101,11 @@
       ],
       "expo-tracking-transparency",
       [
-        "expo-community-flipper",
+        "expo-build-properties",
         {
-          "version": "0.146.0"
+          "ios": {
+            "flipper": true
+          }
         }
       ],
       "react-native-flipper-performance-plugin",
