@@ -55,7 +55,7 @@ const Navigator = () => {
 
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, freezeOnBlur: true }}
+      screenOptions={{ headerShown: false }}
       initialRouteName={RootNavigationRoutes.Climbs}
     >
       {isLoading ? (

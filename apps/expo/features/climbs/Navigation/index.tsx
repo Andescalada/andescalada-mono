@@ -34,7 +34,7 @@ const Navigator = () => {
     <Box flex={1}>
       <OfflineUpdateNotification />
       <Stack.Navigator
-        screenOptions={{ headerShown: false, freezeOnBlur: true }}
+        screenOptions={{ headerShown: false }}
         initialRouteName={ClimbsNavigationRoutes.Home}
       >
         <Stack.Screen

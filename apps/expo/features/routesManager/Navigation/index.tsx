@@ -16,7 +16,6 @@ const Navigator = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        freezeOnBlur: true,
       }}
     >
       <Stack.Screen
