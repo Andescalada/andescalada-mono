@@ -34,6 +34,7 @@ const productionConfig = (config: ConfigContext["config"]): ExpoConfig => ({
   extra: {
     ...config.extra,
     featureFlags: featureFlags.production,
+    appVariant: "production",
     API_URL: "https://andescalada-mono.vercel.app",
     SENTRY_DEPLOY_ENV: "production",
     AUTH0_DOMAIN: "andescalada.us.auth0.com",

@@ -1,3 +1,4 @@
+import Env from "@utils/env";
 import { isAndroid } from "@utils/platform";
 import client from "@utils/trpc/client";
 import * as Application from "expo-application";
@@ -28,7 +29,10 @@ const useUpdateChecker = () => {
     const supportedVersions = await client.system.upToDateVersion.query(
       isAndroid ? "Android" : "iOS",
     );
-    if (Number(currentBuildVersion) < supportedVersions)
+    if (
+      Number(currentBuildVersion) < supportedVersions &&
+      Env.APP_VARIANT === "production"
+    )
       setNewBuildUpdate(true);
   }, [currentBuildVersion]);
 
