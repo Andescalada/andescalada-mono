@@ -1,28 +1,27 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { images } from "@assets/images";
-import { useQuery } from "@tanstack/react-query";
 import fileSystem from "@utils/FileSystem";
+import { useCallback, useEffect, useState } from "react";
 
-type Args = { url: string; uniqueId: string } | null;
+const useCachedImage = (args: { url: string; uniqueId: string } | null) => {
+  const [fileUrl, setFileUrl] = useState("");
 
-const getCachedImage = async (args: Args) => {
-  if (!args) return null;
-  const { uniqueId, url } = args;
-  const res = await fileSystem.storeImage({ url, uniqueId });
-  return res;
-};
+  const getCachedImage = useCallback(async () => {
+    if (!args) return;
+    const { uniqueId, url } = args;
+    const res = await fileSystem.storeImage({ url, uniqueId });
 
-const useCachedImage = (args: Args) => {
-  const { data, ...rest } = useQuery({
-    queryKey: ["storedImage", args],
-    queryFn: () => getCachedImage(args),
-  });
+    setFileUrl(res);
+  }, [args]);
+
+  useEffect(() => {
+    getCachedImage();
+  }, [args?.uniqueId, getCachedImage]);
 
   return {
-    fileUrl: data || "",
+    fileUrl,
     getCachedImage,
-    uri: data ? { uri: data } : images.placeholder.file,
-    ...rest,
+    uri: fileUrl ? { uri: fileUrl } : images.placeholder.file,
   };
 };
 
