@@ -31,7 +31,7 @@ const TopoImage: FC = () => {
 
   const image = blurImage(mainTopo?.image.publicId || undefined, 1000);
 
-  const { fileUrl } = useCachedImage(image);
+  const { uri, isLoading } = useCachedImage(image);
 
   const rootNavigation = useRootNavigation();
 
@@ -43,11 +43,10 @@ const TopoImage: FC = () => {
         </Box>
       )}
       <AddTopoImage />
-      {fileUrl && mainTopo && (
+      {mainTopo && (
         <A.Pressable
           overflow="hidden"
           flex={1}
-          height={100}
           justifyContent="center"
           alignItems="center"
           width={SCREEN_WIDTH}
@@ -63,20 +62,33 @@ const TopoImage: FC = () => {
             });
           }}
         >
-          <Image
-            position="absolute"
-            source={{ uri: fileUrl }}
-            height={200}
-            width={SCREEN_WIDTH}
-          />
-          <Box
-            py="s"
-            px="m"
-            borderRadius={32}
-            backgroundColor="grayscale.transparent.50.600"
-          >
-            <Text variant="h2">Ver topo</Text>
-          </Box>
+          {isLoading ? (
+            <Box
+              height={200}
+              width={SCREEN_WIDTH}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <ActivityIndicator />
+            </Box>
+          ) : (
+            <>
+              <Image
+                position="absolute"
+                source={uri}
+                height={200}
+                width={SCREEN_WIDTH}
+              />
+              <Box
+                py="s"
+                px="m"
+                borderRadius={32}
+                backgroundColor="grayscale.transparent.50.600"
+              >
+                <Text variant="h2">Ver topo</Text>
+              </Box>
+            </>
+          )}
         </A.Pressable>
       )}
     </Box>

@@ -81,6 +81,7 @@ const TopoViewer: FC<Props> = ({
   );
 
   useValueEffect(coords, (point) => {
+    console.log(JSON.stringify(coords));
     const selectedRoute = selectRouteByPoint(routeStarts, point);
     setSelectedRoute(selectedRoute);
     onSelectedRoute?.(selectedRoute);
