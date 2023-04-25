@@ -13,7 +13,11 @@ const Stack = createStackNavigator<RoutesManagerNavigationParamList>();
 
 const Navigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.RouteDrawer}
         component={RouteDrawerScreen}

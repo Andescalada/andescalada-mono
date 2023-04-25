@@ -75,6 +75,8 @@ const AddPitchScreen: FC<Props> = ({
           wallId: MultiPitch.wallId,
           topoId,
           zoneId,
+          multiPitchId: MultiPitch.id,
+          multiPitchName: MultiPitch.name,
         },
       });
     },
@@ -137,7 +139,7 @@ const AddPitchScreen: FC<Props> = ({
   };
 
   return (
-    <Screen safeAreaDisabled={Platform.OS !== "android"}>
+    <Screen>
       <ScrollView
         padding="m"
         paddingTop="l"

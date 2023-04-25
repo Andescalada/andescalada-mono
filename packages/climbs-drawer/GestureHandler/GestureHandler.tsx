@@ -1,4 +1,4 @@
-import { SkRect } from "@shopify/react-native-skia";
+import type { SkRect } from "@shopify/react-native-skia";
 import React, { ReactNode, useMemo } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {

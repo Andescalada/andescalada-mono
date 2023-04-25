@@ -7,7 +7,6 @@ import {
 import { ActivityIndicator, BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
-import Instructions from "@features/routesManager/components/Instructions";
 import RouteStrokeWidth from "@features/routesManager/components/RouteStrokeWidth";
 import {
   RoutesManagerNavigationRoutes,
@@ -18,7 +17,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import useTopoImage from "@hooks/useTopoImage";
 import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useState } from "react";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
@@ -33,9 +32,7 @@ const DrawRoute: FC<Props> = ({
 }) => {
   const theme = useAppTheme();
 
-  const { routeStrokeWidth, showRoutes } = useAppSelector(
-    (state) => state.localConfig,
-  );
+  const { showRoutes } = useAppSelector((state) => state.localConfig);
 
   const { data: topos } = trpc.topos.byId.useQuery(
     { topoId, zoneId },
@@ -50,6 +47,8 @@ const DrawRoute: FC<Props> = ({
             (r) => r.Route.id === routeParams.id,
           );
 
+          setRouteStrokeWidth(Number(topo.routeStrokeWidth));
+
           return {
             otherRoutes,
             selectedRoute,
@@ -60,6 +59,8 @@ const DrawRoute: FC<Props> = ({
       ),
     },
   );
+
+  const [routeStrokeWidth, setRouteStrokeWidth] = useState(1);
 
   const {
     canSave,
@@ -132,15 +133,11 @@ const DrawRoute: FC<Props> = ({
           iconProps={{ color: "grayscale.black" }}
           onPress={navigation.goBack}
         />
-        <Instructions>
-          {!!topos?.selectedRoute?.path
-            ? 'Pulsa "deshacer" para borrar el último punto o "borrar" para borrar todo'
-            : "Pulsa sobre la imagen para dibujar la ruta"}
-        </Instructions>
         <RouteStrokeWidth
           show={showConfig}
           setShow={setShowConfig}
-          defaultRouteStrokeWidth={topos?.routeStrokeWidth}
+          value={routeStrokeWidth}
+          onChange={setRouteStrokeWidth}
         />
         <DrawingTools
           canSave={canSave}

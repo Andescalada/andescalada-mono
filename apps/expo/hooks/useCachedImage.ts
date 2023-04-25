@@ -10,12 +10,13 @@ const useCachedImage = (args: { url: string; uniqueId: string } | null) => {
     if (!args) return;
     const { uniqueId, url } = args;
     const res = await fileSystem.storeImage({ url, uniqueId });
+
     setFileUrl(res);
   }, [args]);
 
   useEffect(() => {
     getCachedImage();
-  }, [getCachedImage]);
+  }, [args?.uniqueId, getCachedImage]);
 
   return {
     fileUrl,

@@ -30,9 +30,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
     routeId || undefined,
   );
 
-  const { routeStrokeWidth, showRoutes } = useAppSelector(
-    (state) => state.localConfig,
-  );
+  const { showRoutes } = useAppSelector((state) => state.localConfig);
 
   const { data } = trpc.topos.byId.useQuery({ topoId, zoneId });
 
@@ -53,13 +51,13 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
         routeId={routeId}
         topoId={topoId}
         zoneId={zoneId}
-        strokeWidth={Number(data?.routeStrokeWidth) || routeStrokeWidth}
+        strokeWidth={Number(data?.routeStrokeWidth)}
         hide={!showRoutes}
         onSelectedRoute={setSelectedRoute}
         imageQuality={
           data?.Wall.Sector.sectorKind === SectorKindSchema.enum.BigWall
-            ? 100
-            : 60
+            ? 60
+            : 40
         }
       />
       <BackButton.Transparent

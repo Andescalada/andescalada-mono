@@ -57,7 +57,7 @@ const MultiPitchRouteItem = ({
     >();
 
   const {
-    params: { zoneId, multiPitchId },
+    params: { zoneId, multiPitchId, multiPitchName },
   } =
     useRoute<
       MultiPitchManagerRouteProps<MultiPitchManagerRoutes.MultiPitchManager>
@@ -150,9 +150,11 @@ const MultiPitchRouteItem = ({
                     },
                     previousPitchId,
                     pitchNumber,
+                    zoneId,
                     wallId,
                     topoId,
-                    zoneId,
+                    multiPitchId,
+                    multiPitchName,
                   },
                 });
               }}

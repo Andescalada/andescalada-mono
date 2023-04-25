@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
@@ -101,9 +101,11 @@
       ],
       "expo-tracking-transparency",
       [
-        "expo-community-flipper",
+        "expo-build-properties",
         {
-          "version": "0.146.0"
+          "ios": {
+            "flipper": true
+          }
         }
       ],
       "react-native-flipper-performance-plugin",

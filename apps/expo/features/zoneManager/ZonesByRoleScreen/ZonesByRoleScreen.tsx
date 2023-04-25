@@ -48,7 +48,7 @@ const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Text variant="h3">Crear una zona</Text>
+            <Text variant="h3">Agregar una zona</Text>
             <AddButton
               onPress={() =>
                 navigation.navigate(ZoneManagerRoutes.AddNewZoneScreen)

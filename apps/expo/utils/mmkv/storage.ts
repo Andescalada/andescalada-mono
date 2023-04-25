@@ -13,6 +13,7 @@ export enum Storage {
   ROUTE_STROKE_WIDTH = "ROUTE_STROKE_WIDTH",
   NEW_NOTIFICATION = "NEW_NOTIFICATION",
   SKIP_AGREEMENTS_INTRO = "DO_NOT_SHOW_AGREEMENT_INTRO",
+  RECENT_ZONES = "RECENT_ZONES",
 }
 function getItem<T>(key: string): T | null {
   const value = storage.getString(key);

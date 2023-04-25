@@ -1,5 +1,6 @@
 import global from "@andescalada/api/schemas/global";
 import wall from "@andescalada/api/schemas/wall";
+import routeList from "@andescalada/api/src/routers/walls/routeList";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -12,7 +13,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { t } from "../createRouter";
+import { t } from "../../createRouter";
 
 const Route = {
   name: true,
@@ -32,6 +33,7 @@ export const wallsRouter = t.router({
       orderBy: { position: "asc" },
     }),
   ),
+  routeList: routeList,
   // Asset being downloaded
   byId: protectedZoneProcedure.input(wall.id).query(async ({ ctx, input }) => {
     const wall = await ctx.prisma.wall.findUnique({
@@ -161,6 +163,7 @@ export const wallsRouter = t.router({
     const parsedWall = { ...wall, MultiPitch: parsedMultiPitch };
     return parsedWall;
   }),
+
   add: protectedZoneProcedure
     .input(z.object({ sectorId: z.string(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {

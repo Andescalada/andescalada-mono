@@ -2,13 +2,13 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { A, ScrollView, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import RouteItem from "@features/climbs/components/RouteItem";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { ListItemRef } from "@features/climbs/WallScreen/ListItem";
-import RouteItem from "@features/climbs/WallScreen/RouteItem";
 import useRouteOptions from "@features/climbs/WallScreen/useRouteOptions";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useOfflineMode from "@hooks/useOfflineMode";
@@ -117,8 +117,6 @@ const RoutesList: FC = () => {
     },
   );
 
-  const refresh = useRefresh(refetch, isFetching);
-
   const mainTopo = useMemo(() => data?.topos[0], [data?.topos]);
 
   const routesCount = useMemo(
@@ -141,6 +139,14 @@ const RoutesList: FC = () => {
       wallId,
       reset,
     });
+
+  const refresh = useRefresh(() => {
+    refetch();
+    utils.topos.byId.invalidate({
+      topoId: mainTopo?.id,
+      zoneId,
+    });
+  }, isFetching);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setTouchRouteId] = useState<string | null>(null);
@@ -209,8 +215,15 @@ const RoutesList: FC = () => {
                 !isOfflineMode
               }
               onPress={() => {
-                // TODO: Handle on press Multi Pitch
-                if (item.isMultiPitch) return;
+                if (item.isMultiPitch) {
+                  navigation.navigate(ClimbsNavigationRoutes.MultiPitch, {
+                    multiPitchId: item.id,
+                    multiPitchName: item.name,
+                    wallId,
+                    zoneId,
+                  });
+                  return;
+                }
                 onPress({ routeId: item.id, zoneId, topoId: mainTopo?.id });
               }}
               onTouch={() => {

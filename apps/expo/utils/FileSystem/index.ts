@@ -18,20 +18,34 @@ const storeImage = async (
   await ensureDirExists();
 
   const fileUri = imageFileUri(uniqueId);
-  const fileInfo = await FileSystem.getInfoAsync(fileUri);
+
+  const fileInfo = await safeGetInfo(fileUri);
+
   if (directory === "permanent" && !fileInfo.exists) {
     await FileSystem.downloadAsync(url, fileUri);
   }
 
-  if (fileInfo.exists) return fileUri;
+  if (fileInfo.exists) {
+    return fileUri;
+  }
 
   const cacheFileUri = cacheImageFileUri(uniqueId);
-  const cacheFileInfo = await FileSystem.getInfoAsync(cacheFileUri);
+
+  const cacheFileInfo = await safeGetInfo(cacheFileUri);
   if (!cacheFileInfo.exists) {
     await FileSystem.downloadAsync(url, cacheFileUri);
   }
 
   return cacheFileUri;
+};
+
+const safeGetInfo = async (fileUri: string) => {
+  try {
+    const res = await FileSystem.getInfoAsync(fileUri);
+    return res;
+  } catch {
+    return { exists: false };
+  }
 };
 
 const ensureDirExists = async () => {
@@ -50,7 +64,7 @@ const ensureDirExists = async () => {
   }
 };
 
-export const deleteImage = async (uniqueId: string) => {
+export const deleteImage = async (uniqueId: string, cache = false) => {
   const fileUri = imageFileUri(uniqueId);
   const fileInfo = await FileSystem.getInfoAsync(fileUri);
   if (fileInfo.exists) {

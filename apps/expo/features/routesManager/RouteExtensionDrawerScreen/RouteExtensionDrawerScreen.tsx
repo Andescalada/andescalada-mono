@@ -19,7 +19,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import useTopoImage from "@hooks/useTopoImage";
 import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
@@ -53,9 +53,7 @@ const DrawRoute: FC<Props> = ({
     return undefined;
   }, [extendedRoute, topoId]);
 
-  const { routeStrokeWidth, showRoutes } = useAppSelector(
-    (state) => state.localConfig,
-  );
+  const { showRoutes } = useAppSelector((state) => state.localConfig);
 
   const { data: topos } = trpc.topos.byId.useQuery(
     { topoId, zoneId },
@@ -70,6 +68,8 @@ const DrawRoute: FC<Props> = ({
             (r) => r.Route.id === routeParams.id,
           );
 
+          setRouteStrokeWidth(Number(topo.routeStrokeWidth));
+
           return {
             otherRoutes,
             selectedRoute,
@@ -80,6 +80,8 @@ const DrawRoute: FC<Props> = ({
       ),
     },
   );
+
+  const [routeStrokeWidth, setRouteStrokeWidth] = useState(1);
 
   const {
     canSave,
@@ -167,7 +169,8 @@ const DrawRoute: FC<Props> = ({
         <RouteStrokeWidth
           show={showConfig}
           setShow={setShowConfig}
-          defaultRouteStrokeWidth={topos?.routeStrokeWidth}
+          value={routeStrokeWidth}
+          onChange={setRouteStrokeWidth}
         />
         <DrawingTools
           canSave={canSave}

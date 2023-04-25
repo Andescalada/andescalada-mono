@@ -1,8 +1,19 @@
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import getAndParsePermissions from "@andescalada/api/src/utils/getAndParsePermissions";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { InferContext } from "@andescalada/api/src/utils/inferContext";
+import {
+  isAuth,
+  protectedProcedure,
+} from "@andescalada/api/src/utils/protectedProcedure";
 import { deserialize } from "superjson";
 import { z } from "zod";
+
+const _protectedZoneMiddleware = isAuth.unstable_pipe(({ ctx, next }) => {
+  const permissions: Permissions = new Set();
+  return next({
+    ctx: { ...ctx, permissions },
+  });
+});
 
 export const protectedZoneProcedure = protectedProcedure
   .input(z.object({ zoneId: z.string() }))
@@ -23,3 +34,7 @@ export const protectedZoneProcedure = protectedProcedure
       ctx: { ...ctx, permissions },
     });
   });
+
+export type ProtectedZoneContext = InferContext<
+  typeof _protectedZoneMiddleware
+>;

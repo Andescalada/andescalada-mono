@@ -21,6 +21,7 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useIsConnected from "@hooks/useIsConnected";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
+import useRecentZones from "@hooks/useRecentZones";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useSentryWithPermission from "@hooks/useSentryWithPermission";
@@ -47,7 +48,7 @@ const UserZonesScreen = () => {
 
   const { activateOfflineMode } = useOfflineMode();
 
-  const recentZones = trpc.user.zoneHistory.useQuery();
+  const recentZones = useRecentZones();
 
   const removeAllRecentZones = trpc.user.removeAllRecentZones.useMutation({
     onMutate: async () => {
@@ -160,7 +161,11 @@ const UserZonesScreen = () => {
             <Octicons name="heart" size={24} color={theme.colors.text} />
           </Box>
           {emptyArray(data?.FavoriteZones) && (
-            <Box marginTop={"s"}>
+            <Box
+              marginTop={"s"}
+              height={SQUARED_LIST_ITEM_SIZE}
+              justifyContent="center"
+            >
               <Text>No tienes favoritas aún</Text>
             </Box>
           )}
@@ -205,7 +210,7 @@ const UserZonesScreen = () => {
             </Box>
             <Button
               variant="transparentSimplified"
-              title="Ver más"
+              title={emptyArray(data?.RoleByZone) ? "Agregar zona" : "Ver más"}
               titleVariant="p3R"
               paddingHorizontal="s"
               height={30}
@@ -282,7 +287,7 @@ const UserZonesScreen = () => {
             )}
           </Box>
 
-          {emptyArray(recentZones?.data) && (
+          {emptyArray(recentZones?.data) && !recentZones.isLoading && (
             <Box
               marginTop={"s"}
               height={SQUARED_LIST_ITEM_SIZE}

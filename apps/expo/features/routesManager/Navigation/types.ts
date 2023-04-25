@@ -1,4 +1,4 @@
-import type { Route, Topo, Wall, Zone } from "@prisma/client";
+import type { MultiPitch, Route, Topo, Wall, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -40,6 +40,8 @@ export type RoutesManagerNavigationParamList = {
     zoneId: Zone["id"];
     wallId: Wall["id"];
     topoId: Topo["id"];
+    multiPitchId: MultiPitch["id"];
+    multiPitchName: MultiPitch["name"];
   };
   [RoutesManagerNavigationRoutes.TopoViewer]: {
     topoId: Topo["id"];

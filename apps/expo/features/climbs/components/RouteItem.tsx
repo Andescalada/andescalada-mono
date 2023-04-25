@@ -14,8 +14,8 @@ interface Props extends CustomListItemProps {
   title: string;
   kind: string;
   position?: number;
-  onOptions: () => void;
-  onDelete: () => void;
+  onOptions?: () => void;
+  onDelete?: () => void;
 }
 
 const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (

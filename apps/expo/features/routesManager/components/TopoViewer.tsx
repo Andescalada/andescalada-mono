@@ -60,9 +60,7 @@ const TopoViewer: FC<Props> = ({
   const fitted = fitContent(
     { height: height ? height : 0, width: width ? width : 0 },
     "width",
-    !!imageQuality && width
-      ? Math.min(1024, width)
-      : Dimensions.get("window").width,
+    Dimensions.get("window").width,
   );
 
   const paths = data?.RoutePath || [];
@@ -83,6 +81,7 @@ const TopoViewer: FC<Props> = ({
   );
 
   useValueEffect(coords, (point) => {
+    console.log(JSON.stringify(coords));
     const selectedRoute = selectRouteByPoint(routeStarts, point);
     setSelectedRoute(selectedRoute);
     onSelectedRoute?.(selectedRoute);

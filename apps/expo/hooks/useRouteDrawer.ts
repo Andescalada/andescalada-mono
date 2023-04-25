@@ -30,6 +30,7 @@ interface Args {
   scale?: number;
   withLabel?: boolean;
   hideStart?: boolean;
+  navigateOnSuccess?: () => void;
 }
 
 const useRouteDrawer = ({
@@ -44,6 +45,7 @@ const useRouteDrawer = ({
   scale = 1,
   withLabel = false,
   hideStart = false,
+  navigateOnSuccess,
 }: Args) => {
   const movement = useValue<SkPoint>(pointToVector(pitchLabelPoint, scale));
 
@@ -56,22 +58,24 @@ const useRouteDrawer = ({
     onSuccess: () => {
       utils.topos.byId.invalidate({ topoId, zoneId });
       utils.walls.byId.invalidate({ wallId, zoneId });
-      setTimeout(
-        () =>
-          data
-            ? rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-                screen: ClimbsNavigationRoutes.Wall,
-                params: {
-                  wallId,
-                  wallName: data.name,
-                  sectorId: data.sectorId,
-                  zoneId: data.Sector.zoneId,
-                  sectorKind: data.Sector.sectorKind,
-                },
-              })
-            : undefined,
-        500,
-      );
+      setTimeout(() => {
+        if (data) {
+          if (navigateOnSuccess) {
+            navigateOnSuccess();
+          } else {
+            rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+              screen: ClimbsNavigationRoutes.Wall,
+              params: {
+                wallId,
+                wallName: data.name,
+                sectorId: data.sectorId,
+                zoneId: data.Sector.zoneId,
+                sectorKind: data.Sector.sectorKind,
+              },
+            });
+          }
+        }
+      }, 500);
     },
   });
 
@@ -117,7 +121,7 @@ const useRouteDrawer = ({
     }
     if (route.path && data) {
       if (route.path.length <= 1) {
-        rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+        rootNavigation.replace(RootNavigationRoutes.Climbs, {
           screen: ClimbsNavigationRoutes.Wall,
           params: {
             wallId,

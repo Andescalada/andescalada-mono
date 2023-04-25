@@ -11,14 +11,7 @@ import { setIsNavigationReady } from "@store/localConfigs";
 import storage from "@utils/mmkv/storage";
 import Constants from "expo-constants";
 import * as Linking from "expo-linking";
-import {
-  ComponentProps,
-  FC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ComponentProps, FC, useCallback, useEffect, useState } from "react";
 
 const NAVIGATION_STATE_KEY = `NAVIGATION_STATE_KEY-${
   Constants.manifest && Constants.manifest.sdkVersion
@@ -88,8 +81,6 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
     if (state) storage.set(NAVIGATION_STATE_KEY, JSON.stringify(state));
   }, []);
 
-  const navigationRef = useRef(null);
-
   if (!navigationReady) {
     return null;
   }
@@ -97,7 +88,6 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
     <NavigationContainer
       linking={linking}
       {...{ onStateChange, initialState, ...props }}
-      ref={navigationRef}
     >
       {children}
     </NavigationContainer>

@@ -21,9 +21,6 @@ const Navigator = () => {
       <Stack.Screen
         name={MultiPitchManagerRoutes.AddPitch}
         component={AddPitchScreen}
-        options={{
-          presentation: "modal",
-        }}
       />
       <Stack.Screen
         name={MultiPitchManagerRoutes.EditPitch}

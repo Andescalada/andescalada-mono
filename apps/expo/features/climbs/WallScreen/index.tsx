@@ -1,7 +1,7 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { ActivityIndicator, Modal, Screen, Text } from "@andescalada/ui";
+import { LoadingModal, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -110,6 +110,18 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             },
           }),
       },
+      "Editar posiciones": {
+        hide: !permission?.has("Update"),
+        action: () => {
+          navigation.navigate(ClimbsNavigationRoutes.EditRoutePosition, {
+            wallId,
+            zoneId,
+            sectorId,
+            sectorKind,
+            wallName,
+          });
+        },
+      },
       "Cambiar nombre": {
         hide: !permission?.has("Update"),
         action: () => {
@@ -156,22 +168,18 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         },
       },
     },
-    { destructiveButtonIndex: !!mainTopoId?.data ? [3, 4] : 3 },
+    { destructiveButtonIndex: !!mainTopoId?.data ? [4, 5] : 4 },
   );
 
   return (
     <Screen>
-      <Modal visible={deleteTopo.isLoading} padding="xxl" onDismiss={() => ""}>
-        <Text marginBottom="s">Borrando topo</Text>
-        <ActivityIndicator size="large" />
-      </Modal>
+      <LoadingModal isLoading={deleteTopo.isLoading} text="Borrando topo" />
       <FormProvider {...methods}>
         <Header
           title={wallName}
           editingTitle={headerMethods.editing}
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
-          padding="m"
-          paddingHorizontal="s"
+          padding="s"
         />
       </FormProvider>
       <TopoImage />

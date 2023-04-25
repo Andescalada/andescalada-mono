@@ -1,6 +1,6 @@
 import type { SkImage } from "@shopify/react-native-skia";
 import { Image } from "@shopify/react-native-skia";
-import React from "react";
+import React, { memo } from "react";
 
 interface PictureProps {
   image: SkImage;
@@ -8,7 +8,7 @@ interface PictureProps {
   height: number;
 }
 
-export const Picture = ({ image, width, height }: PictureProps) => {
+const Picture = ({ image, width, height }: PictureProps) => {
   return (
     <Image
       x={0}
@@ -20,3 +20,5 @@ export const Picture = ({ image, width, height }: PictureProps) => {
     />
   );
 };
+
+export default memo(Picture);

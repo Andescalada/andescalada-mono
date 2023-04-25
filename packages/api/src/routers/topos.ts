@@ -17,7 +17,30 @@ export const toposRouter = t.router({
       include: {
         Wall: { select: { Sector: { select: { sectorKind: true } } } },
         RoutePath: {
-          where: { Route: { isDeleted: SoftDelete.NotDeleted } },
+          where: {
+            Route: {
+              AND: [
+                { isDeleted: SoftDelete.NotDeleted },
+                {
+                  OR: [
+                    {
+                      Pitch: {
+                        MultiPitch: { isDeleted: SoftDelete.NotDeleted },
+                      },
+                    },
+
+                    { Pitch: null },
+                  ],
+                },
+                {
+                  OR: [
+                    { Pitch: { isDeleted: SoftDelete.NotDeleted } },
+                    { Pitch: null },
+                  ],
+                },
+              ],
+            },
+          },
           orderBy: { Route: { Pitch: { number: "desc" } } },
           include: {
             Route: {

@@ -1,9 +1,9 @@
-import { Context } from "@andescalada/api/src/createContext";
+import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { RoleNames, User, Zone } from "@prisma/client";
 
 const removeRole = async (
-  ctx: Context,
+  ctx: ProtectedContext,
   input: {
     id?: string;
     relation?: { roleName: RoleNames; zoneId: Zone["id"]; userId: User["id"] };

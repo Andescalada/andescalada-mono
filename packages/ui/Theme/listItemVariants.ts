@@ -15,6 +15,13 @@ const listItemVariants = createBoxVariant({
     padding: "m",
     borderRadius: 5,
   },
+  noPadding: {
+    borderColor: "listItemBackground",
+    borderWidth: 3,
+    alignItems: "stretch",
+    padding: "none",
+    borderRadius: 5,
+  },
   fill: {
     backgroundColor: "listItemBackground",
   },

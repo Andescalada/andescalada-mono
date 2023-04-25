@@ -58,7 +58,7 @@ const ZoneMapScreen: FC<Props> = ({
       <Screen justifyContent="center" alignItems="center">
         <BackButton.Transparent onPress={navigation.goBack} />
         <Text variant="p3R">No tenemos la ubicación de esta zona aún ☹️</Text>
-        {permission?.has("Create") && (
+        {permission?.has("EditZoneInfo") && (
           <TextButton
             variant="info"
             marginTop="m"
