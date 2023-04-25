@@ -7,6 +7,7 @@ import {
   Button,
   ButtonGroup,
   Ionicons,
+  KeyboardDismiss,
   Screen,
   SemanticButton,
   Text,
@@ -98,65 +99,67 @@ const AddSectorScreen: FC<Props> = ({
 
   return (
     <Screen padding="m" safeAreaDisabled={conditionalVars.disableForAndroid}>
-      <Text variant="h1">{text.title}</Text>
-      <Box marginTop="m">
-        <Text variant="p1R" marginBottom="s">
-          Nombre del sector
-        </Text>
-        <TextInput
-          value={value}
-          onChangeText={onChange}
-          containerProps={{ height: 40 }}
-        />
-        <Text marginTop="xs" color="semantic.error">
-          {error?.message}
-        </Text>
-      </Box>
-      <ButtonGroup
-        value={sectorKind.field.value}
-        onChange={sectorKind.field.onChange}
-      >
-        <Text variant="p1R" marginBottom="s">
-          Tipo de sector
-        </Text>
-        <Box flexDirection="row" flexWrap="wrap">
-          {SectorKindSchema.options.map((kind) => (
-            <ButtonGroup.Item
-              key={kind}
-              value={kind}
-              label={sectorKindAssets[kind].label}
-            />
-          ))}
-        </Box>
-        {sectorKind.fieldState?.error?.message && (
-          <Text marginTop={"xs"} color="semantic.error">
-            {sectorKind.fieldState?.error?.message}
+      <KeyboardDismiss>
+        <Text variant="h1">{text.title}</Text>
+        <Box marginTop="m">
+          <Text variant="p1R" marginBottom="s">
+            Nombre del sector
           </Text>
-        )}
-      </ButtonGroup>
-      {sectorKind.field.value && (
-        <A.Box
-          entering={FadeIn}
-          exiting={FadeOut}
-          flexDirection="row"
-          alignItems="stretch"
+          <TextInput
+            value={value}
+            onChangeText={onChange}
+            containerProps={{ height: 40 }}
+          />
+          <Text marginTop="xs" color="semantic.error">
+            {error?.message}
+          </Text>
+        </Box>
+        <ButtonGroup
+          value={sectorKind.field.value}
+          onChange={sectorKind.field.onChange}
         >
-          <Ionicons name="information-circle-sharp" size={30} />
-          <Box marginHorizontal="xs" flexShrink={1}>
-            <Text variant="p2R" marginLeft={"s"} textAlign="justify">
-              {sectorKindAssets[sectorKind.field.value].info}
-            </Text>
+          <Text variant="p1R" marginBottom="s">
+            Tipo de sector
+          </Text>
+          <Box flexDirection="row" flexWrap="wrap">
+            {SectorKindSchema.options.map((kind) => (
+              <ButtonGroup.Item
+                key={kind}
+                value={kind}
+                label={sectorKindAssets[kind].label}
+              />
+            ))}
           </Box>
-        </A.Box>
-      )}
-      <Button
-        variant="primary"
-        title={text.button}
-        onPress={onSubmit}
-        isLoading={isLoading}
-        marginTop="m"
-      />
-      <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
+          {sectorKind.fieldState?.error?.message && (
+            <Text marginTop={"xs"} color="semantic.error">
+              {sectorKind.fieldState?.error?.message}
+            </Text>
+          )}
+        </ButtonGroup>
+        {sectorKind.field.value && (
+          <A.Box
+            entering={FadeIn}
+            exiting={FadeOut}
+            flexDirection="row"
+            alignItems="stretch"
+          >
+            <Ionicons name="information-circle-sharp" size={30} />
+            <Box marginHorizontal="xs" flexShrink={1}>
+              <Text variant="p2R" marginLeft={"s"} textAlign="justify">
+                {sectorKindAssets[sectorKind.field.value].info}
+              </Text>
+            </Box>
+          </A.Box>
+        )}
+        <Button
+          variant="primary"
+          title={text.button}
+          onPress={onSubmit}
+          isLoading={isLoading}
+          marginTop="m"
+        />
+        <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
+      </KeyboardDismiss>
     </Screen>
   );
 };
