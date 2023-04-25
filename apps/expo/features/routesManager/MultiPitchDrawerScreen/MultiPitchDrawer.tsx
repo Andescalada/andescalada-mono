@@ -84,7 +84,9 @@ const MultiPitchDrawer: FC<Props> = ({
 
   const { showRoutes } = useAppSelector((state) => state.localConfig);
 
-  const [routeStrokeWidth, setRouteStrokeWidth] = useState(1);
+  const [routeStrokeWidth, setRouteStrokeWidth] = useState(
+    topos.routeStrokeWidth,
+  );
 
   const [hideStart, setHideStart] = useState(
     !!topos?.selectedRoute?.hideStart && !newPitch,
