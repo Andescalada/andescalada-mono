@@ -36,14 +36,18 @@ const DrawRoute: FC<Props> = ({
     zoneId,
   });
 
+  console.log(topos && isImageLoaded);
+
   if (topos && isImageLoaded) {
-    <RouteDrawer
-      fileUrl={fileUrl}
-      height={fitted.height}
-      width={fitted.width}
-      scale={fitted.scale}
-      topos={topos}
-    />;
+    return (
+      <RouteDrawer
+        fileUrl={fileUrl}
+        height={fitted.height}
+        width={fitted.width}
+        scale={fitted.scale}
+        topos={topos}
+      />
+    );
   }
 
   return (

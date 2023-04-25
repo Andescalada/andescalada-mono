@@ -61,13 +61,15 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   });
 
   if (topos && isImageLoaded && (!previousPitchId || !!previousPitchStart)) {
-    <MultiPitchDrawer
-      topos={topos}
-      fileUrl={fileUrl}
-      height={fitted.height}
-      width={fitted.width}
-      scale={fitted.scale}
-    />;
+    return (
+      <MultiPitchDrawer
+        topos={topos}
+        fileUrl={fileUrl}
+        height={fitted.height}
+        width={fitted.width}
+        scale={fitted.scale}
+      />
+    );
   }
 
   return (
