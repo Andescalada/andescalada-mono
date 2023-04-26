@@ -2,12 +2,10 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
-import { ActivityIndicator, Box, ThemeProvider } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
+import { ThemeProvider } from "@andescalada/ui";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
-import { Zone } from "@prisma/client";
 import {
   useComputedValue,
   useValue,
@@ -19,11 +17,11 @@ import selectRouteByPoint from "@utils/selectRouteByPoint";
 import { FC, memo, useMemo, useState } from "react";
 import { Dimensions } from "react-native";
 
-type PathItem = inferProcedureOutput<
-  AppRouter["topos"]["byId"]
->["RoutePath"][0];
+type Data = inferProcedureOutput<AppRouter["topos"]["byId"]>;
+
+type PathItem = Data["RoutePath"][0];
+
 interface Props {
-  topoId: string;
   routeId?: string | undefined;
   height?: number;
   width?: number;
@@ -32,23 +30,20 @@ interface Props {
   strokeWidth?: number;
   hide?: boolean;
   onSelectedRoute?: (id: string | undefined) => void;
-  zoneId: Zone["id"];
   imageQuality?: number;
+  data: Data;
 }
 
 const TopoViewer: FC<Props> = ({
   routeId,
-  topoId,
   center,
   disableGesture,
   strokeWidth = 1,
   hide = false,
-  zoneId,
   onSelectedRoute,
   imageQuality,
+  data,
 }) => {
-  const { data } = trpc.topos.byId.useQuery({ topoId, zoneId });
-
   const image = useCloudinaryUrl("optimizedImage", {
     publicId: data?.image.publicId,
     quality: imageQuality,
@@ -58,7 +53,7 @@ const TopoViewer: FC<Props> = ({
 
   const coords = useValue({ x: 0, y: 0 });
 
-  const { height, width } = data?.image || {};
+  const { height, width } = data.image;
 
   const fitted = fitContent(
     { height: height ? height : 0, width: width ? width : 0 },
@@ -66,10 +61,8 @@ const TopoViewer: FC<Props> = ({
     Dimensions.get("window").width,
   );
 
-  const paths = data?.RoutePath || [];
-
-  const routeStarts = useComputedValue(() => {
-    return paths.map((path) => ({
+  const vectorRoutes = useComputedValue(() => {
+    return data.RoutePath.map((path) => ({
       ...path,
       pitchLabelPoint: path.pitchLabelPoint,
       routeId: path.routeId,
@@ -77,56 +70,46 @@ const TopoViewer: FC<Props> = ({
       start: pathToVector(path.path, fitted.scale)[0],
       end: pathToVector(path.path, fitted.scale).pop(),
     }));
-  }, [paths]);
+  }, [data.RoutePath]);
 
   const [selectedRoute, setSelectedRoute] = useState<string | undefined>(
     routeId || "",
   );
 
   useValueEffect(coords, (point) => {
-    const selectedRoute = selectRouteByPoint(routeStarts, point);
+    const selectedRoute = selectRouteByPoint(vectorRoutes, point);
     setSelectedRoute(selectedRoute);
     onSelectedRoute?.(selectedRoute);
   });
 
-  if (!data || !fileUrl)
-    return (
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <ActivityIndicator />
-      </Box>
-    );
-
-  if (data) {
-    return (
-      <SkiaRouteCanvas
-        imageUrl={fileUrl}
-        height={fitted.height}
-        width={fitted.width}
-        center={center}
-        disableGesture={disableGesture}
-        coords={coords}
-      >
-        <ThemeProvider>
-          {!hide &&
-            paths.map((path) => (
-              <ColoredRoute
-                key={path.id}
-                path={path}
-                pitchLabelPoint={path.pitchLabelPoint || undefined}
-                pitchLabelTitle={String(path.Route.Pitch?.number)}
-                scale={fitted.scale}
-                selectedRoute={selectedRoute}
-                strokeWidth={strokeWidth}
-              />
-            ))}
-        </ThemeProvider>
-      </SkiaRouteCanvas>
-    );
-  }
-  return null;
+  return (
+    <SkiaRouteCanvas
+      imageUrl={fileUrl}
+      height={fitted.height}
+      width={fitted.width}
+      center={center}
+      disableGesture={disableGesture}
+      coords={coords}
+    >
+      <ThemeProvider>
+        {!hide &&
+          data.RoutePath.map((path) => (
+            <ColoredRoute
+              key={path.id}
+              path={path}
+              pitchLabelPoint={path.pitchLabelPoint || undefined}
+              pitchLabelTitle={String(path.Route.Pitch?.number)}
+              scale={fitted.scale}
+              selectedRoute={selectedRoute}
+              strokeWidth={strokeWidth}
+            />
+          ))}
+      </ThemeProvider>
+    </SkiaRouteCanvas>
+  );
 };
 
-export default memo(TopoViewer);
+export default TopoViewer;
 
 interface ColoredRouteProps {
   path: PathItem;
