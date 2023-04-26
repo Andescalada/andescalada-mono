@@ -1,7 +1,7 @@
 import { Image, Pressable, Text } from "@andescalada/ui";
+import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { PickImage, SelectedImage } from "@hooks/usePickImage";
 import { useResponsiveProp } from "@shopify/restyle";
-import { getProfileImage } from "@utils/cloudinary";
 import { FC } from "react";
 import { FadeIn } from "react-native-reanimated";
 
@@ -20,10 +20,10 @@ const ProfileImagePicker: FC<Props> = ({
 }) => {
   const isTablet = useResponsiveProp({ mobile: 0, table: 1 });
 
-  const defaultImage = getProfileImage(
-    defaultValue,
-    isTablet ? responsiveImageSize.tablet : responsiveImageSize.mobile,
-  );
+  const defaultImage = useCloudinaryUrl("getProfileImage", {
+    publicId: defaultValue,
+    size: isTablet ? responsiveImageSize.tablet : responsiveImageSize.mobile,
+  });
 
   return (
     <Pressable

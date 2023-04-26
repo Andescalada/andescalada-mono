@@ -12,7 +12,15 @@ const cld = new Cloudinary({
   },
 });
 
-export const getImage = (publicId: string, width: number, height: number) => {
+const getImage = ({
+  height,
+  publicId,
+  width,
+}: {
+  publicId: string;
+  width: number;
+  height: number;
+}) => {
   const image = cld
     .image(publicId)
     .resize(Resize.scale().width(width).height(height));
@@ -20,7 +28,13 @@ export const getImage = (publicId: string, width: number, height: number) => {
   return imageObject(image, publicId);
 };
 
-export const optimizedImage = (publicId?: string | null, quality = 100) =>
+const optimizedImage = ({
+  publicId,
+  quality = 100,
+}: {
+  publicId?: string | null;
+  quality?: number;
+}) =>
   imageObject(
     cld
       .image(publicId || undefined)
@@ -28,7 +42,13 @@ export const optimizedImage = (publicId?: string | null, quality = 100) =>
       .quality(quality),
     publicId,
   );
-export const blurImage = (publicId?: string | null, blurness = 500) =>
+const blurImage = ({
+  publicId,
+  blurness = 500,
+}: {
+  publicId?: string | null;
+  blurness?: number;
+}) =>
   imageObject(
     cld
       .image(publicId || undefined)
@@ -38,7 +58,7 @@ export const blurImage = (publicId?: string | null, blurness = 500) =>
     publicId,
   );
 
-export const lowQuality = (publicId?: string | null) =>
+const lowQuality = ({ publicId }: { publicId?: string | null }) =>
   imageObject(
     cld
       .image(publicId || undefined)
@@ -47,23 +67,19 @@ export const lowQuality = (publicId?: string | null) =>
     publicId,
   );
 
-export const getThumbnail = ({
-  width,
-  publicId,
-}: {
-  publicId?: string;
-  width: number;
-}) => {
-  const image = cld
-    .image(publicId)
-    .resize(Resize.scale(width))
-    .format("auto")
-    .quality(100);
+const getThumbnail = ({ publicId }: { publicId?: string; width?: number }) => {
+  const image = cld.image(publicId).format("auto").quality(100);
 
   return imageObject(image, publicId);
 };
 
-export const getProfileImage = (publicId?: string, size?: number) => {
+const getProfileImage = ({
+  publicId,
+  size,
+}: {
+  publicId?: string;
+  size?: number;
+}) => {
   const image = cld
     .image(publicId)
     .resize(Resize.scale(size))
@@ -82,3 +98,12 @@ const imageObject = (image?: CloudinaryImage, publicId?: string | null) => {
     uniqueId,
   };
 };
+
+export const urlGen = {
+  getImage,
+  optimizedImage,
+  blurImage,
+  lowQuality,
+  getThumbnail,
+  getProfileImage,
+} as const;

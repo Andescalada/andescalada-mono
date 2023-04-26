@@ -6,6 +6,7 @@ import { ActivityIndicator, Box, ThemeProvider } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
+import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { Zone } from "@prisma/client";
 import {
   useComputedValue,
@@ -13,7 +14,6 @@ import {
   useValueEffect,
 } from "@shopify/react-native-skia";
 import { inferProcedureOutput } from "@trpc/server";
-import { optimizedImage } from "@utils/cloudinary";
 import { fitContent } from "@utils/Dimensions";
 import selectRouteByPoint from "@utils/selectRouteByPoint";
 import { FC, memo, useMemo, useState } from "react";
@@ -49,7 +49,10 @@ const TopoViewer: FC<Props> = ({
 }) => {
   const { data } = trpc.topos.byId.useQuery({ topoId, zoneId });
 
-  const image = optimizedImage(data?.image.publicId || undefined, imageQuality);
+  const image = useCloudinaryUrl("optimizedImage", {
+    publicId: data?.image.publicId,
+    quality: imageQuality,
+  });
 
   const { fileUrl } = useCachedImage(image);
 
