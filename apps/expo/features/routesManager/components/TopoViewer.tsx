@@ -14,7 +14,7 @@ import {
 import { inferProcedureOutput } from "@trpc/server";
 import { fitContent } from "@utils/Dimensions";
 import selectRouteByPoint from "@utils/selectRouteByPoint";
-import { FC, memo, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Dimensions } from "react-native";
 
 type Data = inferProcedureOutput<AppRouter["topos"]["byId"]>;
