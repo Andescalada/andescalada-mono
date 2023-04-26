@@ -62,7 +62,7 @@ const AddPitchScreen: FC<Props> = ({
         return;
       }
 
-      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+      rootNavigation.replace(RootNavigationRoutes.RouteManager, {
         screen: RoutesManagerNavigationRoutes.MultiPitchDrawer,
         params: {
           route: {
