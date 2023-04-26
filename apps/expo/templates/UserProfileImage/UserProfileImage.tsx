@@ -1,6 +1,6 @@
 import { Image } from "@andescalada/ui";
 import useCachedImage from "@hooks/useCachedImage";
-import { getThumbnail } from "@utils/cloudinary";
+import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { ComponentProps, FC } from "react";
 
 interface Props extends Omit<ComponentProps<typeof Image>, "source"> {
@@ -8,7 +8,7 @@ interface Props extends Omit<ComponentProps<typeof Image>, "source"> {
 }
 
 const UserProfileImage: FC<Props> = ({ publicId, ...props }) => {
-  const image = getThumbnail(publicId);
+  const image = useCloudinaryUrl("getThumbnail", { publicId });
   const { uri } = useCachedImage(image);
   return <Image source={uri} {...props} />;
 };

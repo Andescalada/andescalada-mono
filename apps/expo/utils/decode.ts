@@ -1,6 +1,5 @@
 import { Buffer } from "buffer";
 import * as Crypto from "expo-crypto";
-import * as Random from "expo-random";
 import jwtDecode from "jwt-decode";
 
 export const URLEncode = (str: string): string =>
@@ -8,7 +7,7 @@ export const URLEncode = (str: string): string =>
 export const base64encode = (data: ArrayBuffer): string =>
   Buffer.from(data).toString("base64");
 export const getRandomBytes = (bytesCount: number): Uint8Array =>
-  Random.getRandomBytes(bytesCount);
+  Crypto.getRandomBytes(bytesCount);
 export const sha256 = async (str: string): Promise<string> =>
   Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, str, {
     encoding: Crypto.CryptoEncoding.BASE64,

@@ -7,14 +7,13 @@ import {
 import AddTopoImage from "@features/climbs/WallScreen/AddTopoImage";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useCachedImage from "@hooks/useCachedImage";
+import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
-
-import { blurImage } from "../../../../../packages/utils/cloudinary";
 
 type NavigationRoute =
   ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>["route"];
@@ -29,7 +28,10 @@ const TopoImage: FC = () => {
 
   const mainTopo = data?.topos[0];
 
-  const image = blurImage(mainTopo?.image.publicId || undefined, 1000);
+  const image = useCloudinaryUrl("blurImage", {
+    publicId: mainTopo?.image.publicId,
+    blurness: 1000,
+  });
 
   const { uri, isLoading } = useCachedImage(image);
 

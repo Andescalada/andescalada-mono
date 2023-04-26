@@ -36,8 +36,6 @@ const DrawRoute: FC<Props> = ({
     zoneId,
   });
 
-  console.log(topos && isImageLoaded);
-
   if (topos && isImageLoaded) {
     return (
       <RouteDrawer

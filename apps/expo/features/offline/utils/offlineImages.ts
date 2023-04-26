@@ -1,8 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { blurImage } from "@andescalada/utils/cloudinary";
+import { urlGen } from "@andescalada/utils/cloudinary";
 import { inferProcedureOutput } from "@trpc/server";
 import allSettled from "@utils/allSetled";
-import { optimizedImage } from "@utils/cloudinary";
 import fileSystem from "@utils/FileSystem";
 import storage, { Storage } from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
@@ -12,8 +11,8 @@ type ListToDownload = inferProcedureOutput<
 >;
 
 export const imageVariantsSavedOffline = (publicId: string) => {
-  const mainImage = optimizedImage(publicId);
-  const thumbnailImage = blurImage(publicId);
+  const mainImage = urlGen.optimizedImage({ publicId });
+  const thumbnailImage = urlGen.blurImage({ publicId });
 
   return [thumbnailImage, mainImage];
 };

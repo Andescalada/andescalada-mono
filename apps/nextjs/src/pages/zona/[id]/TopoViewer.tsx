@@ -1,5 +1,5 @@
 import { pathToArray } from "@andescalada/climbs-drawer/utils";
-import { lowQuality } from "@andescalada/utils/cloudinary";
+import { urlGen } from "@andescalada/utils/cloudinary";
 import type { Image as ImageType, RoutePath, Topo } from "@prisma/client";
 import Image from "next/image";
 
@@ -27,7 +27,7 @@ const TopoViewer = ({ topo }: Props) => {
         width={topo.image.width}
         height={topo.image.height}
         placeholder="blur"
-        blurDataURL={lowQuality(topo.image.publicId)?.url}
+        blurDataURL={urlGen.lowQuality({ publicId: topo.image.publicId })?.url}
         className="flex-1"
         priority
         sizes="(min-width: 60em) 24vw,
