@@ -29,7 +29,6 @@ const selectRouteByPoint = (
     { distances: { dx: 1_000_000, dy: 1_000_000 }, routeId: undefined },
   );
 
-  console.log(selectClosestRoute);
   return selectClosestRoute?.routeId;
 };
 

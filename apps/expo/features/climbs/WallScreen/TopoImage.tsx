@@ -34,7 +34,6 @@ const TopoImage: FC = () => {
   });
 
   const { uri, isLoading } = useCachedImage(image);
-  console.log(uri);
 
   const rootNavigation = useRootNavigation();
 
