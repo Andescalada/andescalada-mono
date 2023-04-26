@@ -74,7 +74,6 @@
     "expo-linking": "~4.0.1",
     "expo-location": "~15.1.1",
     "expo-notifications": "~0.18.1",
-    "expo-random": "~13.1.1",
     "expo-screen-orientation": "~5.1.1",
     "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.0",
