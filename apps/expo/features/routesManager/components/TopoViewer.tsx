@@ -94,7 +94,7 @@ const TopoViewer: FC<Props> = ({
       <ThemeProvider>
         {!hide &&
           data.RoutePath.map((path) => (
-            <MemoColoredRoute
+            <ColoredRoute
               key={path.id}
               path={path}
               pitchLabelPoint={path.pitchLabelPoint || undefined}
@@ -152,5 +152,3 @@ const ColoredRoute = ({
     />
   );
 };
-
-const MemoColoredRoute = memo(ColoredRoute);

@@ -153,6 +153,10 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
 
   return (
     <Screen justifyContent="center" alignItems="center">
+      <BackButton.Transparent
+        onPress={() => navigation.pop()}
+        iconProps={{ color: "grayscale.black" }}
+      />
       <ActivityIndicator size="large" />
     </Screen>
   );
