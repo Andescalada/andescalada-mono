@@ -74,7 +74,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     onSuccess: ({ id, position }) => {
       if (mainTopo.data) {
         if (isExtension) {
-          rootNavigation.replace(RootNavigationRoutes.RouteManager, {
+          rootNavigation.pop();
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
             screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
             params: {
               route: { id, position, extendedRouteId },
@@ -84,7 +85,8 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             },
           });
         } else {
-          rootNavigation.replace(RootNavigationRoutes.RouteManager, {
+          rootNavigation.pop();
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
             screen: RoutesManagerNavigationRoutes.RouteDrawer,
             params: {
               route: { id, position },
