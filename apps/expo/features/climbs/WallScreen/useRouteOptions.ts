@@ -2,7 +2,6 @@ import { SoftDeleteSchema } from "@andescalada/db/zod";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
-import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useCallback } from "react";
@@ -131,23 +130,23 @@ const useRouteOptions = ({
     ({
       routeId,
       zoneId,
-      topoId,
+      routeName,
     }: {
-      topoId?: string;
+      routeName: string;
       routeId: string;
       zoneId: string;
     }) => {
       if (!topoId) return;
-      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-        screen: RoutesManagerNavigationRoutes.TopoViewer,
+      rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+        screen: ClimbsNavigationRoutes.Route,
         params: {
-          topoId,
           routeId,
+          routeName,
           zoneId,
         },
       });
     },
-    [rootNavigation],
+    [rootNavigation, topoId],
   );
 
   const onRouteOptions = ({

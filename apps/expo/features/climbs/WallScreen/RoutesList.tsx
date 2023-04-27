@@ -224,7 +224,7 @@ const RoutesList: FC = () => {
                   });
                   return;
                 }
-                onPress({ routeId: item.id, zoneId, topoId: mainTopo?.id });
+                onPress({ routeId: item.id, zoneId, routeName: item.name });
               }}
               onTouch={() => {
                 setTouchRouteId((prev) => {
@@ -268,7 +268,7 @@ const RoutesList: FC = () => {
                   onPress({
                     routeId: extension.id,
                     zoneId,
-                    topoId: mainTopo?.id,
+                    routeName: extension.name,
                   });
                 }}
                 allowEdit={
