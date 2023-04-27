@@ -13,6 +13,14 @@ generator erd {
   output   = "../ERD.pdf"
 }
 
+generator dbml {
+  provider            = "prisma-dbml-generator"
+  output              = "../dbml"
+  outputName          = "andescalada-db.dbml"
+  projectName         = "AndescaladaApp"
+  projectDatabaseType = "MySQL"
+}
+
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
@@ -65,6 +73,7 @@ model User {
   UserZoneAgreementHistory   UserZoneAgreementRecord[]
   authorZoneDirections       ZoneDirections[]          @relation("AuthorZoneDirections")
   coAuthorZoneDirections     ZoneDirections[]          @relation("CoAuthorZoneDirections")
+  RouteEvaluation            RouteEvaluation[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -457,35 +466,36 @@ model Topo {
 }
 
 model Route {
-  id              String      @id @default(uuid())
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id              String            @id @default(uuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   name            String
   slug            String
-  unknownName     Boolean     @default(false)
-  position        Int         @default(0)
+  unknownName     Boolean           @default(false)
+  position        Int               @default(0)
   leftRouteId     String?
   rightRouteId    String?
-  classic         Boolean     @default(false)
+  classic         Boolean           @default(false)
   kind            RouteKind
-  Wall            Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  Wall            Wall              @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId          String
-  description     String?     @db.LongText
+  description     String?           @db.LongText
   RoutePath       RoutePath[]
   RouteGrade      RouteGrade?
-  Author          User        @relation("AuthorRoute", fields: [authorId], references: [id])
+  Author          User              @relation("AuthorRoute", fields: [authorId], references: [id])
   authorId        String
-  coAuthors       User[]      @relation("CoAuthorRoute")
-  isDeleted       SoftDelete  @default(NotDeleted)
-  version         Int         @default(0)
+  coAuthors       User[]            @relation("CoAuthorRoute")
+  isDeleted       SoftDelete        @default(NotDeleted)
+  version         Int               @default(0)
   extendedRouteId String?
-  ExtendedRoute   Route?      @relation("ExtensionOf", fields: [extendedRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Extension       Route[]     @relation("ExtensionOf")
-  isVariant       Boolean?    @default(false)
+  ExtendedRoute   Route?            @relation("ExtensionOf", fields: [extendedRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Extension       Route[]           @relation("ExtensionOf")
+  isVariant       Boolean?          @default(false)
   variantRouteId  String?
-  VariantRoute    Route?      @relation("VariantOf", fields: [variantRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Variant         Route[]     @relation("VariantOf")
+  VariantRoute    Route?            @relation("VariantOf", fields: [variantRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Variant         Route[]           @relation("VariantOf")
   Pitch           Pitch?
+  RouteEvaluation RouteEvaluation[]
 
   @@index([wallId])
   @@index([authorId])
@@ -578,6 +588,20 @@ model RoutePath {
   @@index([topoId])
   @@index([routeId])
   @@index([authorId])
+}
+
+model RouteEvaluation {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  evaluation Decimal  @db.Decimal(3, 2)
+  Route      Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  routeId    String
+  User       User     @relation(fields: [userId], references: [id])
+  userId     String
+
+  @@index([routeId])
+  @@index([userId])
 }
 
 model Image {
