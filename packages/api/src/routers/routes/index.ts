@@ -1,5 +1,7 @@
 import global from "@andescalada/api/schemas/global";
 import routeSchema from "@andescalada/api/schemas/route";
+import addEvaluation from "@andescalada/api/src/routers/routes/addEvaluation";
+import byIdWithEvaluation from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
 import editPosition from "@andescalada/api/src/routers/routes/editPositions";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
@@ -13,6 +15,8 @@ import { t } from "../../createRouter";
 
 export const routesRouter = t.router({
   editPositions: editPosition,
+  addEvaluation: addEvaluation,
+  byIdWithEvaluation: byIdWithEvaluation,
   byId: t.procedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
