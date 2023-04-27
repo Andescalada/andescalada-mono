@@ -16,6 +16,7 @@ import { t } from "../../createRouter";
 export const routesRouter = t.router({
   editPositions: editPosition,
   addEvaluation: addEvaluation,
+  // Asset being downloaded
   byIdWithEvaluation: byIdWithEvaluation,
   byId: t.procedure
     .input(z.string().optional())
