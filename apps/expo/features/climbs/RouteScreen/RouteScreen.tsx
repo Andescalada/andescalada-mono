@@ -46,7 +46,7 @@ const RouteContainer = ({
   isLoading: boolean;
   route: Route | undefined;
 }) => {
-  const { gradeLabel } = useGradeSystem();
+  const { gradeLabel, gradeSystem, changeGradeSystem } = useGradeSystem();
   if (!route || isLoading)
     return (
       <Box flex={1} justifyContent="center" alignItems="center">
@@ -55,7 +55,7 @@ const RouteContainer = ({
     );
   return (
     <Box my="m" flex={1}>
-      <Box flexDirection="row">
+      <Pressable flexDirection="row" onPress={changeGradeSystem}>
         <Box padding="s" flex={1}>
           <Text fontSize={40} lineHeight={50}>
             {gradeLabel(route.RouteGrade, route.kind)}
@@ -73,7 +73,7 @@ const RouteContainer = ({
         >
           <Text variant="p1R">Ver topo</Text>
         </Pressable>
-      </Box>
+      </Pressable>
     </Box>
   );
 };
