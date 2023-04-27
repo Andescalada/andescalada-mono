@@ -34,7 +34,7 @@ const localHost =
 
 const url =
   process.env.APP_VARIANT === "development"
-    ? `http://${localHost?.split(":").shift()}:3001`
+    ? `http://${localHost?.split(":").shift()}:3000`
     : Env.API_URL;
 
 const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
