@@ -41,7 +41,11 @@ const byIdWithEvaluation = protectedZoneProcedure
       getEvaluationAverage,
     ]);
 
-    return { ...route, evaluationAverage: evaluationAverage._avg.evaluation };
+    return {
+      ...route,
+      mainTopo: route.Wall.topos[0],
+      evaluationAverage: evaluationAverage._avg.evaluation,
+    };
   });
 
 export default byIdWithEvaluation;

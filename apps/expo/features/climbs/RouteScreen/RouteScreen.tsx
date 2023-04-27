@@ -13,7 +13,10 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { inferProcedureOutput } from "@trpc/server";
 import { FC } from "react";
 
@@ -46,6 +49,7 @@ const RouteContainer = ({
   isLoading: boolean;
   route: Route | undefined;
 }) => {
+  const rootNavigation = useRootNavigation();
   const { gradeLabel, gradeSystem, changeGradeSystem } = useGradeSystem();
   if (!route || isLoading)
     return (
@@ -70,6 +74,16 @@ const RouteContainer = ({
           bg="semantic.info"
           justifyContent="center"
           alignItems="center"
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+              screen: RoutesManagerNavigationRoutes.TopoViewer,
+              params: {
+                topoId: route.mainTopo.id,
+                routeId: route.id,
+                zoneId: route.Wall.Sector.zoneId,
+              },
+            })
+          }
         >
           <Text variant="p1R">Ver topo</Text>
         </Pressable>
