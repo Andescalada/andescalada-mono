@@ -4,25 +4,26 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { ParseGrade } from "@utils/parseGrade";
 
 export enum ClimbsNavigationRoutes {
-  ZonesList = "ZonesList",
-  Zone = "Zone",
-  AddSector = "AddSector",
-  Sector = "Sector",
-  AddWall = "AddWall",
-  Wall = "Wall",
-  AddRoute = "AddRoute",
-  UserZones = "UserZones",
-  SearchClimbs = "SearchClimbs",
-  OfflineZones = "OfflineZones",
-  Home = "Home",
-  RouteOptions = "RouteOptions",
-  AdminZoneOptions = "AdminZoneOptions",
-  ZoneAgreementsEditor = "ZoneAgreementsEditor",
-  ZoneAgreements = "ZoneAgreements",
-  AgreementsIntro = "ClimbsAgreementsIntro",
-  AddAndEditDescription = "AddAndEditDescription",
-  MultiPitch = "MultiPitchScreen",
-  EditRoutePosition = "EditRoutePosition",
+  ZonesList = "Climbs-ZonesList",
+  Zone = "Climbs-Zone",
+  AddSector = "Climbs-AddSector",
+  Sector = "Climbs-Sector",
+  AddWall = "Climbs-AddWall",
+  Wall = "Climbs-Wall",
+  Route = "Climbs-Route",
+  AddRoute = "Climbs-AddRoute",
+  UserZones = "Climbs-UserZones",
+  SearchClimbs = "Climbs-SearchClimbs",
+  OfflineZones = "Climbs-OfflineZones",
+  Home = "Climbs-Home",
+  RouteOptions = "Climbs-RouteOptions",
+  AdminZoneOptions = "Climbs-AdminZoneOptions",
+  ZoneAgreementsEditor = "Climbs-ZoneAgreementsEditor",
+  ZoneAgreements = "Climbs-ZoneAgreements",
+  AgreementsIntro = "Climbs-ClimbsAgreementsIntro",
+  AddAndEditDescription = "Climbs-AddAndEditDescription",
+  MultiPitch = "Climbs-MultiPitchScreen",
+  EditRoutePosition = "Climbs-EditRoutePosition",
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -32,6 +33,11 @@ export type ClimbsNavigationNavigationParamList = {
   [ClimbsNavigationRoutes.Home]: undefined;
   [ClimbsNavigationRoutes.SearchClimbs]: undefined;
   [ClimbsNavigationRoutes.Zone]: { zoneId: Zone["id"]; zoneName: Zone["name"] };
+  [ClimbsNavigationRoutes.Route]: {
+    zoneId: Zone["id"];
+    routeName: Route["name"];
+    routeId: Route["id"];
+  };
   [ClimbsNavigationRoutes.AddSector]: {
     zoneId: Zone["id"];
     name?: Sector["name"];
