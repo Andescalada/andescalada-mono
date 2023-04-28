@@ -480,6 +480,7 @@ model Route {
   Wall            Wall              @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId          String
   description     String?           @db.LongText
+  RouteLength     RouteLength?
   RoutePath       RoutePath[]
   RouteGrade      RouteGrade?
   Author          User              @relation("AuthorRoute", fields: [authorId], references: [id])
@@ -501,6 +502,23 @@ model Route {
   @@index([authorId])
   @@index([extendedRouteId])
   @@index([variantRouteId])
+}
+
+model RouteLength {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  length    Decimal  @db.Decimal(6, 2)
+  unit      Unit
+  Route     Route    @relation(fields: [routeId], references: [id])
+  routeId   String   @unique
+
+  @@index([routeId])
+}
+
+enum Unit {
+  Metric
+  Imperial
 }
 
 model MultiPitch {
