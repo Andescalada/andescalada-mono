@@ -600,6 +600,7 @@ model RouteEvaluation {
   User       User     @relation(fields: [userId], references: [id])
   userId     String
 
+  @@unique([routeId, userId], name: "user_route_unique")
   @@index([routeId])
   @@index([userId])
 }

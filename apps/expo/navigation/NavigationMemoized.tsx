@@ -72,9 +72,10 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
       }
     };
 
-    if (!navigationReady) {
-      restoreState();
-    }
+    // if (!navigationReady) {
+    console.log("here");
+    restoreState();
+    // }
   }, [dispatch, navigationReady]);
 
   const onStateChange = useCallback((state: InitialState | undefined) => {

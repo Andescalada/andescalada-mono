@@ -34,6 +34,7 @@ const byIdWithEvaluation = protectedZoneProcedure
     const getEvaluationAverage = ctx.prisma.routeEvaluation.aggregate({
       where: { routeId: input.routeId },
       _avg: { evaluation: true },
+      _count: { evaluation: true },
     });
 
     const [route, evaluationAverage] = await ctx.prisma.$transaction([
@@ -44,7 +45,12 @@ const byIdWithEvaluation = protectedZoneProcedure
     return {
       ...route,
       mainTopo: route.Wall.topos[0],
-      evaluationAverage: evaluationAverage._avg.evaluation,
+      evaluation: {
+        average: evaluationAverage._avg.evaluation
+          ? Number(evaluationAverage._avg.evaluation)
+          : 0,
+        count: evaluationAverage._count.evaluation,
+      },
     };
   });
 
