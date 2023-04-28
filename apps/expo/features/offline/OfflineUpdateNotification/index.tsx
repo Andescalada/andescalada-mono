@@ -16,6 +16,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const OfflineUpdateNotification = () => {
   const { isDownloading, progress } = useOffline();
 
+  const { width: screenWidth } = useWindowDimensions();
+
   const [show, setShow] = useState(false);
 
   useEffect(() => {

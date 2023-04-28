@@ -1,7 +1,7 @@
 import { A, Box, Text } from "@andescalada/ui";
 import useOfflineMode from "@hooks/useOfflineMode";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { memo } from "react";
+import { useWindowDimensions } from "react-native/types";
 import { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -9,11 +9,13 @@ const OfflineNotification = () => {
   const insets = useSafeAreaInsets();
   const { isOfflineMode } = useOfflineMode();
 
+  const { width: screenWidth } = useWindowDimensions();
+
   if (!isOfflineMode) return <Box key="OFFLINE_NOTIFICATION" />;
   return (
     <A.Pressable
       height={5 + insets.bottom}
-      width={SCREEN_WIDTH}
+      width={screenWidth}
       key="OFFLINE_NOTIFICATION"
       entering={SlideInDown.duration(500)}
       exiting={SlideOutDown.duration(1000)}
