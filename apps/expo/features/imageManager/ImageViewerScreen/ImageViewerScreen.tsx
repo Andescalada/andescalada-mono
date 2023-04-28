@@ -5,7 +5,7 @@ import {
 } from "@features/imageManager/Navigation/types";
 import { useFitContent } from "@hooks/useFitContent";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { Image, ImageURISource, useWindowDimensions } from "react-native";
 
 type Props = ImageManagerScreenProps<ImageManagerRoutes.ImageViewer>;
