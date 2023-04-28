@@ -22,7 +22,11 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { inferProcedureOutput } from "@trpc/server";
 import React, { FC, useState } from "react";
-import { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import StarRating from "react-native-star-rating-widget";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Route>;
@@ -44,25 +48,28 @@ const RouteScreen: FC<Props> = ({
 
   const { data: evaluation } = trpc.routes.evaluationById.useQuery({ routeId });
 
+  if (!data || isLoading || !evaluation)
+    return (
+      <Screen padding="m">
+        <Header title={routeName} onGoBack={navigation.goBack} />
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <ActivityIndicator size="large" />
+        </Box>
+      </Screen>
+    );
   return (
     <Screen padding="m">
       <Header title={routeName} onGoBack={navigation.goBack} />
-      <RouteContainer
-        route={data}
-        isLoading={isLoading}
-        evaluationValue={evaluation?.value || 0}
-      />
+      <RouteContainer route={data} evaluationValue={evaluation.value} />
     </Screen>
   );
 };
 
 const RouteContainer = ({
-  isLoading,
   route,
   evaluationValue,
 }: {
-  isLoading: boolean;
-  route: Route | undefined;
+  route: Route;
   evaluationValue: number;
 }) => {
   const [evaluation, setEvaluation] = useState(evaluationValue);
@@ -78,7 +85,10 @@ const RouteContainer = ({
     },
   });
 
+  const hasMutated = useSharedValue(false);
+
   const mutate = (evaluation: number, routeId: string) => {
+    hasMutated.value = true;
     addOrEditEvaluation.mutate({
       routeId,
       evaluation,
@@ -88,20 +98,14 @@ const RouteContainer = ({
   const mutateDebounce = useDebounce(mutate, 1000);
 
   const evaluationBadgeStyle = useAnimatedStyle(() => ({
-    backgroundColor: withTiming(
-      addOrEditEvaluation.isLoading
-        ? theme.colors["grayscale.800"]
-        : theme.colors.stars,
-      { duration: 1000 },
-    ),
+    transform: [
+      {
+        scale: withTiming(hasMutated.value ? 1.2 : 1, { duration: 500 }, () => {
+          hasMutated.value = false;
+        }),
+      },
+    ],
   }));
-
-  if (!route || isLoading)
-    return (
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <ActivityIndicator size="large" />
-      </Box>
-    );
 
   return (
     <Box flex={1}>
@@ -134,44 +138,46 @@ const RouteContainer = ({
           <Text variant="p1R">Ver topo</Text>
         </Pressable>
       </Box>
-      <Box mt="s" flexDirection="row" alignItems="center" height={STAR_SIZE}>
-        <Box width={STAR_SIZE * 4.5}>
-          <StarRating
-            rating={evaluation}
-            onChange={(e) => {
-              setEvaluation(e);
-              mutateDebounce(e, route.id);
-            }}
-            emptyColor={theme.colors["grayscale.500"]}
-            color={theme.colors.stars}
-            starSize={STAR_SIZE}
-            style={{ maxWidth: STAR_SIZE }}
-            starStyle={{ width: STAR_SIZE / 2 }}
-          />
-        </Box>
+      <Box mt="s" alignItems="flex-start">
+        <Box flexDirection="row">
+          <Box width={STAR_SIZE * 4.5}>
+            <StarRating
+              rating={evaluation}
+              onChange={(e) => {
+                setEvaluation(e);
+                mutateDebounce(e, route.id);
+              }}
+              emptyColor={theme.colors["grayscale.500"]}
+              color={theme.colors.stars}
+              starSize={STAR_SIZE}
+              style={{ maxWidth: STAR_SIZE }}
+              starStyle={{ width: STAR_SIZE / 2 }}
+            />
+          </Box>
 
-        <A.Box
-          bg={evaluation === 0 ? "grayscale.500" : "stars"}
-          borderRadius={8}
-          padding="xs"
-          height={STAR_SIZE}
-          minWidth={STAR_SIZE}
-          justifyContent="center"
-          alignContent="center"
-          style={evaluationBadgeStyle}
-          mx="s"
-        >
-          <Text
-            fontFamily="Rubik-600"
-            color="background"
-            fontSize={20}
-            lineHeight={0}
-            textAlign="center"
+          <A.Box
+            bg={evaluation === 0 ? "grayscale.500" : "stars"}
+            borderRadius={8}
+            padding="xs"
+            height={STAR_SIZE}
+            minWidth={STAR_SIZE}
+            justifyContent="center"
+            alignContent="center"
+            style={evaluationBadgeStyle}
+            mx="s"
           >
-            {evaluation}
-          </Text>
-        </A.Box>
-        <Box justifyContent="flex-end" height="100%">
+            <Text
+              fontFamily="Rubik-600"
+              color="background"
+              fontSize={20}
+              lineHeight={0}
+              textAlign="center"
+            >
+              {evaluation}
+            </Text>
+          </A.Box>
+        </Box>
+        <Box justifyContent="flex-end" ml="s" mt="xs">
           <Text variant="p2R" numberOfLines={1} ellipsizeMode="tail">
             <Text variant="p2R" color="stars">
               {route.evaluation.average}
