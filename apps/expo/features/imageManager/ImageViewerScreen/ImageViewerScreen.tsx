@@ -3,8 +3,8 @@ import {
   ImageManagerRoutes,
   ImageManagerScreenProps,
 } from "@features/imageManager/Navigation/types";
+import { useFitContent } from "@hooks/useFitContent";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
-import { fitContent } from "@utils/Dimensions";
 import { FC, useMemo } from "react";
 import { Image, ImageURISource, useWindowDimensions } from "react-native";
 
@@ -19,13 +19,10 @@ const ImageViewerScreen: FC<Props> = ({
   const source = s as ImageURISource;
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-  const { height, width } = useMemo(() => {
-    const fitted = fitContent({
-      height: source.height || screenHeight,
-      width: source.width || screenWidth,
-    });
-    return fitted;
-  }, [screenHeight, screenWidth, source.height, source.width]);
+  const { height, width } = useFitContent({
+    height: source.height || screenHeight,
+    width: source.width || screenWidth,
+  });
 
   return (
     <Screen>

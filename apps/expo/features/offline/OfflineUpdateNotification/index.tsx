@@ -1,8 +1,8 @@
 import { A, Box, Text } from "@andescalada/ui";
 import useOffline from "@features/offline/useOffline";
 import { useAppTheme } from "@hooks/useAppTheme";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { useEffect, useState } from "react";
+import { useWindowDimensions } from "react-native/types";
 import {
   FadeIn,
   FadeOut,
@@ -61,7 +61,7 @@ const OfflineUpdateNotification = () => {
       <A.Box
         position="absolute"
         height={50}
-        width={SCREEN_WIDTH}
+        width={screenWidth}
         backgroundColor="background"
         top={0}
         left={0}

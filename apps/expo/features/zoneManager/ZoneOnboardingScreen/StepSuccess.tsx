@@ -1,18 +1,19 @@
 import { Box, Icon, Screen, Text } from "@andescalada/ui";
 import NextButton from "@features/zoneManager/components/NextButton";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { ComponentProps, FC } from "react";
+import { useWindowDimensions } from "react-native/types";
 
 interface Props {
   onNext: () => void;
 }
 
 const StepSuccess: FC<Props> = ({ onNext }) => {
+  const { width: screenWidth } = useWindowDimensions();
   return (
     <Screen
       flex={1}
       backgroundColor="brand.primaryA"
-      width={SCREEN_WIDTH}
+      width={screenWidth}
       padding="m"
       alignItems="stretch"
       justifyContent="space-between"
