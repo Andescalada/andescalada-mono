@@ -12,7 +12,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import { FC } from "react";
-import { useWindowDimensions } from "react-native/types";
+import { useWindowDimensions } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 type NavigationRoute =

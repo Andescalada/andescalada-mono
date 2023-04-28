@@ -1,6 +1,6 @@
 import { Box, Button, Icon, Screen, Text } from "@andescalada/ui";
 import { ComponentProps, FC, ReactNode } from "react";
-import { useWindowDimensions } from "react-native/types";
+import { useWindowDimensions } from "react-native";
 
 interface Props {
   onNext: () => void;

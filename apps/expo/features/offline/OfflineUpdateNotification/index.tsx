@@ -2,7 +2,7 @@ import { A, Box, Text } from "@andescalada/ui";
 import useOffline from "@features/offline/useOffline";
 import { useAppTheme } from "@hooks/useAppTheme";
 import { useEffect, useState } from "react";
-import { useWindowDimensions } from "react-native/types";
+import { useWindowDimensions } from "react-native";
 import {
   FadeIn,
   FadeOut,

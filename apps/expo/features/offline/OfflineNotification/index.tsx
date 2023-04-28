@@ -1,7 +1,7 @@
 import { A, Box, Text } from "@andescalada/ui";
 import useOfflineMode from "@hooks/useOfflineMode";
 import { memo } from "react";
-import { useWindowDimensions } from "react-native/types";
+import { useWindowDimensions } from "react-native";
 import { SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

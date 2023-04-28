@@ -1,7 +1,7 @@
 import { A, Box, Icon, Screen, Text } from "@andescalada/ui";
 import NextButton from "@features/zoneManager/components/NextButton";
 import { FC, ReactNode } from "react";
-import { useWindowDimensions } from "react-native/types";
+import { useWindowDimensions } from "react-native";
 import { FadeIn } from "react-native-reanimated";
 
 interface Props {
