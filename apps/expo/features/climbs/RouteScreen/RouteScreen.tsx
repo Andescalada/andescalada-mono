@@ -22,12 +22,14 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { inferProcedureOutput } from "@trpc/server";
 import React, { FC, useState } from "react";
-import { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import StarRating from "react-native-star-rating-widget";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Route>;
 
 type Route = inferProcedureOutput<AppRouter["routes"]["byIdWithEvaluation"]>;
+
+const STAR_SIZE = 30;
 
 const RouteScreen: FC<Props> = ({
   route: {
@@ -66,16 +68,10 @@ const RouteContainer = ({
   const [evaluation, setEvaluation] = useState(evaluationValue);
   const theme = useAppTheme();
   const rootNavigation = useRootNavigation();
-  const { gradeLabel, gradeSystem, changeGradeSystem } = useGradeSystem();
-
-  const [isMutated, setIsMutated] = useState(false);
+  const { gradeLabel, changeGradeSystem } = useGradeSystem();
 
   const utils = trpc.useContext();
   const addOrEditEvaluation = trpc.routes.addOrEditEvaluation.useMutation({
-    onMutate: ({ evaluation }) => {
-      console.log(evaluation);
-      setTimeout(() => setIsMutated(false), 300);
-    },
     onSuccess: ({ routeId }) => {
       utils.routes.evaluationById.invalidate({ routeId });
       utils.routes.byIdWithEvaluation.invalidate({ routeId });
@@ -83,7 +79,6 @@ const RouteContainer = ({
   });
 
   const mutate = (evaluation: number, routeId: string) => {
-    setIsMutated(true);
     addOrEditEvaluation.mutate({
       routeId,
       evaluation,
@@ -92,7 +87,7 @@ const RouteContainer = ({
 
   const mutateDebounce = useDebounce(mutate, 1000);
 
-  const aStyle = useAnimatedStyle(() => ({
+  const evaluationBadgeStyle = useAnimatedStyle(() => ({
     backgroundColor: withTiming(
       addOrEditEvaluation.isLoading
         ? theme.colors["grayscale.800"]
@@ -107,8 +102,9 @@ const RouteContainer = ({
         <ActivityIndicator size="large" />
       </Box>
     );
+
   return (
-    <Box my="m" flex={1}>
+    <Box flex={1}>
       <Box flexDirection="row">
         <Pressable padding="s" flex={1} onPress={changeGradeSystem}>
           <Text fontSize={40} lineHeight={50}>
@@ -138,66 +134,54 @@ const RouteContainer = ({
           <Text variant="p1R">Ver topo</Text>
         </Pressable>
       </Box>
-      <Box
-        mt="s"
-        flexDirection="row"
-        justifyContent="space-around"
-        alignItems="center"
-      >
-        <Box width={30 * 4.5}>
+      <Box mt="s" flexDirection="row" alignItems="center" height={STAR_SIZE}>
+        <Box width={STAR_SIZE * 4.5}>
           <StarRating
             rating={evaluation}
             onChange={(e) => {
-              console.log(e, "slider");
               setEvaluation(e);
               mutateDebounce(e, route.id);
             }}
             emptyColor={theme.colors["grayscale.500"]}
             color={theme.colors.stars}
-            starSize={30}
-            style={{ maxWidth: 30 }}
-            starStyle={{ width: 15 }}
+            starSize={STAR_SIZE}
+            style={{ maxWidth: STAR_SIZE }}
+            starStyle={{ width: STAR_SIZE / 2 }}
           />
         </Box>
-        <Box
-          flex={2}
-          paddingLeft="s"
-          justifyContent="space-between"
-          height={30}
-          flexDirection="row"
+
+        <A.Box
+          bg={evaluation === 0 ? "grayscale.500" : "stars"}
+          borderRadius={8}
+          padding="xs"
+          height={STAR_SIZE}
+          minWidth={STAR_SIZE}
+          justifyContent="center"
+          alignContent="center"
+          style={evaluationBadgeStyle}
+          mx="s"
         >
-          <A.Box
-            bg={evaluation === 0 ? "grayscale.500" : "stars"}
-            borderRadius={8}
-            padding="xs"
-            height={30}
-            minWidth={30}
-            justifyContent="center"
-            alignContent="center"
-            style={aStyle}
+          <Text
+            fontFamily="Rubik-600"
+            color="background"
+            fontSize={20}
+            lineHeight={0}
+            textAlign="center"
           >
-            <Text
-              fontFamily="Rubik-600"
-              color="background"
-              fontSize={20}
-              lineHeight={0}
-              textAlign="center"
-            >
-              {evaluation}
-            </Text>
-          </A.Box>
-          <Box justifyContent="flex-end" height="100%">
-            <Text variant="p2R">
-              <Text variant="p2R" color="stars">
-                {route.evaluation.average}
-              </Text>{" "}
-              estrellas en{" "}
-              <Text variant="p2R" color="semantic.info">
-                {route.evaluation.count}
-              </Text>{" "}
-              votos
-            </Text>
-          </Box>
+            {evaluation}
+          </Text>
+        </A.Box>
+        <Box justifyContent="flex-end" height="100%">
+          <Text variant="p2R" numberOfLines={1} ellipsizeMode="tail">
+            <Text variant="p2R" color="stars">
+              {route.evaluation.average}
+            </Text>{" "}
+            estrellas en{" "}
+            <Text variant="p2R" color="semantic.info">
+              {route.evaluation.count}
+            </Text>{" "}
+            votos
+          </Text>
         </Box>
       </Box>
     </Box>
