@@ -21,7 +21,8 @@ export enum ClimbsNavigationRoutes {
   ZoneAgreementsEditor = "Climbs-ZoneAgreementsEditor",
   ZoneAgreements = "Climbs-ZoneAgreements",
   AgreementsIntro = "Climbs-ClimbsAgreementsIntro",
-  AddAndEditDescription = "Climbs-AddAndEditDescription",
+  AddAndEditZoneDescription = "Climbs-AddAndEditZoneDescription",
+  AddAndEditRouteDescription = "Climbs-AddAndEditRouteDescription",
   MultiPitch = "Climbs-MultiPitchScreen",
   EditRoutePosition = "Climbs-EditRoutePosition",
 }
@@ -96,9 +97,14 @@ export type ClimbsNavigationNavigationParamList = {
     zoneName: Zone["name"];
   };
   [ClimbsNavigationRoutes.AgreementsIntro]: undefined;
-  [ClimbsNavigationRoutes.AddAndEditDescription]: {
+  [ClimbsNavigationRoutes.AddAndEditZoneDescription]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
+    description?: string;
+  };
+  [ClimbsNavigationRoutes.AddAndEditRouteDescription]: {
+    zoneId: Zone["id"];
+    routeId: Route["id"];
     description?: string;
   };
   [ClimbsNavigationRoutes.MultiPitch]: {

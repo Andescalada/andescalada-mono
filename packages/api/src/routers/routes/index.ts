@@ -17,6 +17,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { t } from "../../createRouter";
+import upsertDescription from "./upsertDescription";
 
 export const routesRouter = t.router({
   editPositions: editPosition,
@@ -26,6 +27,7 @@ export const routesRouter = t.router({
   evaluationById: evaluationById,
   editRouteLength: editRouteLength,
   addRouteLength: addRouteLength,
+  upsertDescription: upsertDescription,
   byId: t.procedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {

@@ -15,6 +15,7 @@ import {
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
+  ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
@@ -25,6 +26,7 @@ import useGradeSystem from "@hooks/useGradeSystem";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { useNavigation } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import React, { FC, useRef, useState } from "react";
 import type { TextInput as TextInputRef } from "react-native";
@@ -136,6 +138,85 @@ const RouteContainer = ({
         evaluationAverage={route.evaluation.average}
         evaluationCount={route.evaluation.count}
       />
+      <RouteDescription
+        description={route.description}
+        zoneId={zoneId}
+        routeId={routeId}
+      />
+    </Box>
+  );
+};
+
+const RouteDescription = ({
+  description,
+  zoneId,
+  routeId,
+}: {
+  zoneId: string;
+  routeId: string;
+  description: string | undefined;
+}) => {
+  const { permission } = usePermissions({ zoneId });
+
+  const navigation =
+    useNavigation<
+      ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Route>
+    >();
+
+  const navigateToEditDescription = () => {
+    navigation.navigate(ClimbsNavigationRoutes.AddAndEditRouteDescription, {
+      routeId,
+      zoneId,
+      description,
+    });
+  };
+
+  if (description && permission.has("Update")) {
+    return (
+      <Box mt="m" padding="m" bg="backgroundContrast" borderRadius={16}>
+        <Box flexDirection="row" justifyContent="space-between" mb="s">
+          <Text variant="h4" color="background">
+            Descripción
+          </Text>
+          <TextButton onPress={navigateToEditDescription} variant="info">
+            Editar
+          </TextButton>
+        </Box>
+        <Text color="background">{description}</Text>
+      </Box>
+    );
+  }
+
+  if (description) {
+    return (
+      <Box mt="m" padding="m" bg="backgroundContrast" borderRadius={16}>
+        <Text variant="h4" color="background" mb="s">
+          Descripción
+        </Text>
+        <Text color="background">{description}</Text>
+      </Box>
+    );
+  }
+
+  if (permission.has("Create")) {
+    return (
+      <Box mt="m" padding="m" bg="backgroundContrast" borderRadius={16}>
+        <Text variant="h4" color="background">
+          Descripción
+        </Text>
+        <TextButton variant="info" onPress={navigateToEditDescription}>
+          Agregar descripción
+        </TextButton>
+      </Box>
+    );
+  }
+
+  return (
+    <Box mt="m" padding="m" bg="backgroundContrast" borderRadius={16}>
+      <Text variant="h4" color="background" mb="s">
+        Descripción
+      </Text>
+      <Text color="background">Sin información</Text>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import zone, { descriptionLength } from "@andescalada/api/schemas/zone";
+import route, { descriptionLength } from "@andescalada/api/schemas/route";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   Box,
@@ -19,31 +19,48 @@ import { FC, RefObject, useRef } from "react";
 import { useController } from "react-hook-form";
 
 type Props =
-  ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddAndEditZoneDescription>;
+  ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddAndEditRouteDescription>;
 
 const AddAndEditZoneDescription: FC<Props> = ({
   navigation,
   route: {
-    params: { zoneId, description: defaultDescription },
+    params: { zoneId, description: defaultDescription, routeId },
   },
 }) => {
   const textRef = useRef<TextInputRef>() as RefObject<TextInputRef>;
-  const form = useZodForm({ schema: zone.description });
+  const form = useZodForm({ schema: route.description });
   const description = useController({
     name: "description",
     control: form.control,
     defaultValue: defaultDescription || "",
   });
   const utils = trpc.useContext();
-  const upsertDescription = trpc.zones.upsertDescription.useMutation({
-    onSuccess: () => {
-      utils.zones.allSectors.invalidate({ zoneId });
-      navigation.goBack();
+  const upsertDescription = trpc.routes.upsertDescription.useMutation({
+    onMutate: ({ description }) => {
+      if (!description) return;
+      utils.routes.byIdWithEvaluation.cancel({ routeId, zoneId });
+      const previousData = utils.routes.byIdWithEvaluation.getData();
+      utils.routes.byIdWithEvaluation.setData({ routeId, zoneId }, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          description,
+        };
+      });
+
+      return { previousData };
+    },
+    onError: (_, variables, context) => {
+      utils.routes.byIdWithEvaluation.setData(variables, context?.previousData);
+    },
+    onSettled: () => {
+      utils.routes.byIdWithEvaluation.invalidate({ routeId, zoneId });
     },
   });
 
   const onSubmit = form.handleSubmit(({ description }) => {
-    upsertDescription.mutate({ zoneId, description });
+    navigation.goBack();
+    upsertDescription.mutate({ zoneId, description, routeId });
   });
 
   const notValidLength = (value: string) => {

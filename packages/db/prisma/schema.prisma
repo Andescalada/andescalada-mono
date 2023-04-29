@@ -479,7 +479,8 @@ model Route {
   kind            RouteKind
   Wall            Wall              @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId          String
-  description     String?           @db.LongText
+  description     TextContent?      @relation(fields: [descriptionId], references: [id])
+  descriptionId   String?
   RouteLength     RouteLength?
   RoutePath       RoutePath[]
   RouteGrade      RouteGrade?
@@ -502,6 +503,7 @@ model Route {
   @@index([authorId])
   @@index([extendedRouteId])
   @@index([variantRouteId])
+  @@index([descriptionId])
 }
 
 model RouteLength {
@@ -688,6 +690,7 @@ model TextContent {
   ZoneDirections       ZoneDirections[]
   ZoneDirectionsName   ZoneDirections[]    @relation("ZoneDirectionsName")
   Zone                 Zone[]
+  Route                Route[]
 
   @@index([languageId])
 }

@@ -19,6 +19,7 @@ const byIdWithEvaluation = protectedZoneProcedure
     const findRoute = ctx.prisma.route.findUniqueOrThrow({
       where: { id: input.routeId },
       include: {
+        description: true,
         RouteLength: true,
         RouteGrade: true,
         Wall: {
@@ -46,6 +47,7 @@ const byIdWithEvaluation = protectedZoneProcedure
     return {
       ...route,
       mainTopo: route.Wall.topos[0],
+      description: route.description?.originalText,
       length: route.RouteLength?.length
         ? Number(route.RouteLength.length)
         : null,

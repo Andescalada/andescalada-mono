@@ -71,11 +71,14 @@ const AdminZoneOptionsScreen: FC<Props> = ({
       {permission?.has("Update") && data?.description?.originalText && (
         <ListItemOption
           onPress={() =>
-            navigation.navigate(ClimbsNavigationRoutes.AddAndEditDescription, {
-              zoneId,
-              zoneName,
-              description: data.description?.originalText,
-            })
+            navigation.navigate(
+              ClimbsNavigationRoutes.AddAndEditZoneDescription,
+              {
+                zoneId,
+                zoneName,
+                description: data.description?.originalText,
+              },
+            )
           }
         >
           Editar descripción

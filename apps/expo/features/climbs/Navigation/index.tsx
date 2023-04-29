@@ -1,4 +1,5 @@
 import { Box } from "@andescalada/ui";
+import AddAndEditRouteDescription from "@features/climbs/AddAndEditRouteDescription";
 import AddAndEditZoneDescription from "@features/climbs/AddAndEditZoneDescription";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
@@ -119,8 +120,16 @@ const Navigator = () => {
           }}
         />
         <Stack.Screen
-          name={ClimbsNavigationRoutes.AddAndEditDescription}
+          name={ClimbsNavigationRoutes.AddAndEditZoneDescription}
           component={AddAndEditZoneDescription}
+          options={{
+            title: `Descripción`,
+            ...backHeader,
+          }}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.AddAndEditRouteDescription}
+          component={AddAndEditRouteDescription}
           options={{
             title: `Descripción`,
             ...backHeader,
