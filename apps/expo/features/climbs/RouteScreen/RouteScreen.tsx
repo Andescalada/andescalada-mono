@@ -70,6 +70,7 @@ const RouteScreen: FC<Props> = ({
         route={data}
         evaluationValue={evaluation.value}
         zoneId={zoneId}
+        routeId={routeId}
       />
     </Screen>
   );
@@ -79,15 +80,79 @@ const RouteContainer = ({
   route,
   evaluationValue,
   zoneId,
+  routeId,
 }: {
   route: Route;
   evaluationValue: number;
   zoneId: string;
+  routeId: string;
+}) => {
+  const rootNavigation = useRootNavigation();
+  const { gradeLabel, changeGradeSystem } = useGradeSystem();
+
+  return (
+    <Box flex={1}>
+      <Box flexDirection="row">
+        <Box flex={1} flexDirection="row" alignItems="center">
+          <Pressable padding="s" onPress={changeGradeSystem}>
+            <Text fontSize={40} lineHeight={50}>
+              {gradeLabel(route.RouteGrade, route.kind)}
+            </Text>
+            <Text>{routeKindLabel(route.kind).long}</Text>
+          </Pressable>
+          <Box>
+            <RouteLength
+              length={route.length}
+              zoneId={zoneId}
+              routeId={routeId}
+            />
+          </Box>
+        </Box>
+        <Pressable
+          flex={1}
+          borderRadius={16}
+          borderWidth={3}
+          borderColor="backgroundContrast"
+          bg="semantic.info"
+          justifyContent="center"
+          alignItems="center"
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+              screen: RoutesManagerNavigationRoutes.TopoViewer,
+              params: {
+                topoId: route.mainTopo.id,
+                routeId: route.id,
+                zoneId: route.Wall.Sector.zoneId,
+              },
+            })
+          }
+        >
+          <Text variant="p1R">Ver topo</Text>
+        </Pressable>
+      </Box>
+      <RouteEvaluation
+        evaluationValue={evaluationValue}
+        routeId={routeId}
+        evaluationAverage={route.evaluation.average}
+        evaluationCount={route.evaluation.count}
+      />
+    </Box>
+  );
+};
+
+const RouteEvaluation = ({
+  evaluationValue,
+  routeId,
+  evaluationAverage,
+  evaluationCount,
+}: {
+  evaluationValue: number;
+  routeId: string;
+  evaluationAverage: number;
+  evaluationCount: number;
 }) => {
   const [evaluation, setEvaluation] = useState(evaluationValue);
   const theme = useAppTheme();
-  const rootNavigation = useRootNavigation();
-  const { gradeLabel, changeGradeSystem } = useGradeSystem();
 
   const utils = trpc.useContext();
   const addOrEditEvaluation = trpc.routes.addOrEditEvaluation.useMutation({
@@ -120,96 +185,56 @@ const RouteContainer = ({
   }));
 
   return (
-    <Box flex={1}>
+    <Box mt="m" alignItems="flex-start">
       <Box flexDirection="row">
-        <Box flex={1} flexDirection="row" alignItems="center">
-          <Pressable padding="s" onPress={changeGradeSystem}>
-            <Text fontSize={40} lineHeight={50}>
-              {gradeLabel(route.RouteGrade, route.kind)}
-            </Text>
-            <Text>{routeKindLabel(route.kind).long}</Text>
-          </Pressable>
-          <Box>
-            <RouteLength
-              length={route.length}
-              zoneId={zoneId}
-              routeId={route.id}
-            />
-          </Box>
+        <Box width={STAR_SIZE * 4.5}>
+          <StarRating
+            rating={evaluation}
+            onChange={(e) => {
+              setEvaluation(e);
+              mutateDebounce(e, routeId);
+            }}
+            emptyColor={theme.colors["grayscale.500"]}
+            color={theme.colors.stars}
+            starSize={STAR_SIZE}
+            style={{ maxWidth: STAR_SIZE }}
+            starStyle={{ width: STAR_SIZE / 2 }}
+          />
         </Box>
-        <Pressable
-          flex={1}
-          borderRadius={16}
-          borderWidth={3}
-          borderColor="backgroundContrast"
-          bg="semantic.info"
-          justifyContent="center"
-          alignItems="center"
-          onPress={() =>
-            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-              screen: RoutesManagerNavigationRoutes.TopoViewer,
-              params: {
-                topoId: route.mainTopo.id,
-                routeId: route.id,
-                zoneId: route.Wall.Sector.zoneId,
-              },
-            })
-          }
-        >
-          <Text variant="p1R">Ver topo</Text>
-        </Pressable>
-      </Box>
-      <Box mt="s" alignItems="flex-start">
-        <Box flexDirection="row">
-          <Box width={STAR_SIZE * 4.5}>
-            <StarRating
-              rating={evaluation}
-              onChange={(e) => {
-                setEvaluation(e);
-                mutateDebounce(e, route.id);
-              }}
-              emptyColor={theme.colors["grayscale.500"]}
-              color={theme.colors.stars}
-              starSize={STAR_SIZE}
-              style={{ maxWidth: STAR_SIZE }}
-              starStyle={{ width: STAR_SIZE / 2 }}
-            />
-          </Box>
 
-          <A.Box
-            bg={evaluation === 0 ? "grayscale.500" : "stars"}
-            borderRadius={8}
-            padding="xs"
-            height={STAR_SIZE}
-            minWidth={STAR_SIZE}
-            justifyContent="center"
-            alignContent="center"
-            style={evaluationBadgeStyle}
-            mx="s"
+        <A.Box
+          bg={evaluation === 0 ? "grayscale.500" : "stars"}
+          borderRadius={8}
+          padding="xs"
+          height={STAR_SIZE}
+          minWidth={STAR_SIZE}
+          justifyContent="center"
+          alignContent="center"
+          style={evaluationBadgeStyle}
+          mx="s"
+        >
+          <Text
+            fontFamily="Rubik-600"
+            color="background"
+            fontSize={20}
+            lineHeight={0}
+            textAlign="center"
           >
-            <Text
-              fontFamily="Rubik-600"
-              color="background"
-              fontSize={20}
-              lineHeight={0}
-              textAlign="center"
-            >
-              {evaluation}
-            </Text>
-          </A.Box>
-        </Box>
-        <Box justifyContent="flex-end" ml="s" mt="xs">
-          <Text variant="p2R" numberOfLines={1} ellipsizeMode="tail">
-            <Text variant="p2R" color="stars">
-              {route.evaluation.average}
-            </Text>{" "}
-            estrellas en{" "}
-            <Text variant="p2R" color="semantic.info">
-              {route.evaluation.count}
-            </Text>{" "}
-            votos
+            {evaluation}
           </Text>
-        </Box>
+        </A.Box>
+      </Box>
+      <Box justifyContent="flex-end" ml="s" mt="xs">
+        <Text variant="p2R" numberOfLines={1} ellipsizeMode="tail">
+          <Text variant="p2R" color="stars">
+            {evaluationAverage}
+          </Text>{" "}
+          estrellas en{" "}
+          <Text variant="p2R" color="semantic.info">
+            {evaluationCount}
+          </Text>{" "}
+          votos
+        </Text>
       </Box>
     </Box>
   );
