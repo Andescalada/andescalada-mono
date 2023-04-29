@@ -381,7 +381,7 @@ const EditRouteLength = ({
           setModalVisible(true);
         }}
       >
-        {length + "m" ?? "?m"}
+        {length !== null ? length + "m" : "?m"}
       </TextButton>
     </>
   );
