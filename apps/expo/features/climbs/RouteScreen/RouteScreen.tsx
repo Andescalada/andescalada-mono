@@ -59,7 +59,11 @@ const RouteScreen: FC<Props> = ({
   if (!data || isLoading || !evaluation)
     return (
       <Screen padding="m">
-        <Header title={routeName} onGoBack={navigation.goBack} />
+        <Header
+          title={routeName}
+          onGoBack={navigation.goBack}
+          showOptions={false}
+        />
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" />
         </Box>
@@ -67,7 +71,11 @@ const RouteScreen: FC<Props> = ({
     );
   return (
     <Screen padding="m">
-      <Header title={routeName} onGoBack={navigation.goBack} />
+      <Header
+        title={routeName}
+        onGoBack={navigation.goBack}
+        showOptions={false}
+      />
       <RouteContainer
         route={data}
         evaluationValue={evaluation.value}
@@ -471,7 +479,7 @@ const EditRouteLength = ({
         <Button
           variant="infoSmall"
           px="s"
-          titleVariant="p1R"
+          titleVariant="p2R"
           title="Guardar"
           onPress={() => {
             if (lengthValue == null) return;
