@@ -438,6 +438,8 @@ const EditRouteLength = ({
   const [lengthValue, setLengthValue] = useState(length);
   const textInputRef = useRef<TextInputRef>(null);
 
+  console.log(length);
+
   return (
     <>
       <Modal
@@ -495,7 +497,7 @@ const EditRouteLength = ({
           setModalVisible(true);
         }}
       >
-        {length !== null ? length + "m" : "?m"}
+        {typeof length === "number" ? length + "m" : "?m"}
       </TextButton>
     </>
   );
