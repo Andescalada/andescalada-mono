@@ -4,6 +4,10 @@ import addOrEditEvaluation from "@andescalada/api/src/routers/routes/addOrEditEv
 import byIdWithEvaluation from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
 import editPosition from "@andescalada/api/src/routers/routes/editPositions";
 import evaluationById from "@andescalada/api/src/routers/routes/evaluationById";
+import {
+  addRouteLength,
+  editRouteLength,
+} from "@andescalada/api/src/routers/routes/routeLength";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -20,6 +24,8 @@ export const routesRouter = t.router({
   // Asset being downloaded
   byIdWithEvaluation: byIdWithEvaluation,
   evaluationById: evaluationById,
+  editRouteLength: editRouteLength,
+  addRouteLength: addRouteLength,
   byId: t.procedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {

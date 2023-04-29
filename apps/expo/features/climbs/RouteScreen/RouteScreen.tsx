@@ -4,10 +4,14 @@ import {
   A,
   ActivityIndicator,
   Box,
+  Button,
   Header,
+  Modal,
   Pressable,
   Screen,
   Text,
+  TextButton,
+  TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -18,10 +22,12 @@ import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigatio
 import { useAppTheme } from "@hooks/useAppTheme";
 import useDebounce from "@hooks/useDebounce";
 import useGradeSystem from "@hooks/useGradeSystem";
+import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { inferProcedureOutput } from "@trpc/server";
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
+import type { TextInput as TextInputRef } from "react-native";
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -60,7 +66,11 @@ const RouteScreen: FC<Props> = ({
   return (
     <Screen padding="m">
       <Header title={routeName} onGoBack={navigation.goBack} />
-      <RouteContainer route={data} evaluationValue={evaluation.value} />
+      <RouteContainer
+        route={data}
+        evaluationValue={evaluation.value}
+        zoneId={zoneId}
+      />
     </Screen>
   );
 };
@@ -68,9 +78,11 @@ const RouteScreen: FC<Props> = ({
 const RouteContainer = ({
   route,
   evaluationValue,
+  zoneId,
 }: {
   route: Route;
   evaluationValue: number;
+  zoneId: string;
 }) => {
   const [evaluation, setEvaluation] = useState(evaluationValue);
   const theme = useAppTheme();
@@ -110,12 +122,21 @@ const RouteContainer = ({
   return (
     <Box flex={1}>
       <Box flexDirection="row">
-        <Pressable padding="s" flex={1} onPress={changeGradeSystem}>
-          <Text fontSize={40} lineHeight={50}>
-            {gradeLabel(route.RouteGrade, route.kind)}
-          </Text>
-          <Text>{routeKindLabel(route.kind).long}</Text>
-        </Pressable>
+        <Box flex={1} flexDirection="row" alignItems="center">
+          <Pressable padding="s" onPress={changeGradeSystem}>
+            <Text fontSize={40} lineHeight={50}>
+              {gradeLabel(route.RouteGrade, route.kind)}
+            </Text>
+            <Text>{routeKindLabel(route.kind).long}</Text>
+          </Pressable>
+          <Box>
+            <RouteLength
+              length={route.length}
+              zoneId={zoneId}
+              routeId={route.id}
+            />
+          </Box>
+        </Box>
         <Pressable
           flex={1}
           borderRadius={16}
@@ -191,6 +212,178 @@ const RouteContainer = ({
         </Box>
       </Box>
     </Box>
+  );
+};
+
+const RouteLength = ({
+  length,
+  zoneId,
+  routeId,
+}: {
+  length: number | null;
+  zoneId: string;
+  routeId: string;
+}) => {
+  const { permission } = usePermissions({ zoneId });
+
+  const utils = trpc.useContext();
+
+  const addLength = trpc.routes.addRouteLength.useMutation({
+    onMutate: ({ routeLength }) => {
+      if (!routeLength) return;
+      utils.routes.byIdWithEvaluation.cancel({ routeId, zoneId });
+      const previousData = utils.routes.byIdWithEvaluation.getData();
+      utils.routes.byIdWithEvaluation.setData({ routeId, zoneId }, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          length: routeLength,
+        };
+      });
+
+      return { previousData };
+    },
+    onError: (_, variables, context) => {
+      utils.routes.byIdWithEvaluation.setData(variables, context?.previousData);
+    },
+    onSettled: () => {
+      utils.routes.byIdWithEvaluation.invalidate({ routeId, zoneId });
+    },
+  });
+
+  const editLength = trpc.routes.editRouteLength.useMutation({
+    onMutate: ({ routeLength }) => {
+      if (!routeLength) return;
+      utils.routes.byIdWithEvaluation.cancel({ routeId, zoneId });
+      const previousData = utils.routes.byIdWithEvaluation.getData();
+      utils.routes.byIdWithEvaluation.setData({ routeId, zoneId }, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          length: routeLength,
+        };
+      });
+
+      return { previousData };
+    },
+    onError: (error, variables, context) => {
+      utils.routes.byIdWithEvaluation.setData(variables, context?.previousData);
+    },
+    onSettled: () => {
+      utils.routes.byIdWithEvaluation.invalidate({ routeId, zoneId });
+    },
+  });
+
+  if (length && permission.has("Update")) {
+    return (
+      <EditRouteLength
+        length={length}
+        onSave={(routeLength) => {
+          editLength.mutate({ routeId, zoneId, routeLength });
+        }}
+      />
+    );
+  }
+
+  if (length) {
+    return (
+      <Text
+        fontFamily="Rubik-300"
+        fontSize={20}
+        lineHeight={20}
+        color="grayscale.500"
+      >
+        {Number(length).toFixed(0) + " m"}
+      </Text>
+    );
+  }
+
+  if (permission.has("Create")) {
+    return (
+      <EditRouteLength
+        length={length}
+        onSave={(routeLength) => {
+          addLength.mutate({ routeId, zoneId, routeLength });
+        }}
+      />
+    );
+  }
+
+  return <Box />;
+};
+
+const EditRouteLength = ({
+  onSave,
+  length,
+}: {
+  length: number | null;
+  onSave: (l: number) => void;
+}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [lengthValue, setLengthValue] = useState(length);
+  const textInputRef = useRef<TextInputRef>(null);
+
+  return (
+    <>
+      <Modal
+        visible={modalVisible}
+        containerProps={{
+          justifyContent: "flex-start",
+        }}
+        top={100}
+        height={300}
+        width={300}
+        onLayout={() => {
+          textInputRef.current?.focus();
+        }}
+        justifyContent="space-around"
+        alignItems="center"
+        onDismiss={() => {
+          setModalVisible(false);
+        }}
+      >
+        <Text variant="h2">Largo de la ruta</Text>
+        <TextInput
+          value={lengthValue?.toString()}
+          onChangeText={(text) => {
+            setLengthValue(+text);
+          }}
+          adornmentProps={{
+            endAdornment: "m",
+            endAdornmentContainerProps: { justifyContent: "center" },
+          }}
+          ref={textInputRef}
+          keyboardType="numeric"
+          returnKeyType="send"
+          containerProps={{
+            height: 40,
+            width: "30%",
+            paddingLeft: "s",
+          }}
+        />
+        <Button
+          variant="infoSmall"
+          px="s"
+          titleVariant="p1R"
+          title="Guardar"
+          onPress={() => {
+            if (lengthValue == null) return;
+            onSave(lengthValue);
+            setModalVisible(false);
+          }}
+        />
+      </Modal>
+      <TextButton
+        textProps={{ fontSize: 20 }}
+        variant="info"
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        {length + "m" ?? "?m"}
+      </TextButton>
+    </>
   );
 };
 

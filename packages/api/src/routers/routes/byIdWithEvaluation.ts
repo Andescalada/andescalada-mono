@@ -46,6 +46,9 @@ const byIdWithEvaluation = protectedZoneProcedure
     return {
       ...route,
       mainTopo: route.Wall.topos[0],
+      length: route.RouteLength?.length
+        ? Number(route.RouteLength.length)
+        : null,
       evaluation: {
         average: evaluationAverage._avg.evaluation
           ? Number(evaluationAverage._avg.evaluation)
