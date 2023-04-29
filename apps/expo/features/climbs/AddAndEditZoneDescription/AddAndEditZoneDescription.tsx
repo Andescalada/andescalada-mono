@@ -21,7 +21,7 @@ import { useController } from "react-hook-form";
 type Props =
   ClimbsNavigationScreenProps<ClimbsNavigationRoutes.AddAndEditDescription>;
 
-const AddAndEditDescription: FC<Props> = ({
+const AddAndEditZoneDescription: FC<Props> = ({
   navigation,
   route: {
     params: { zoneId, description: defaultDescription },
@@ -105,4 +105,4 @@ const AddAndEditDescription: FC<Props> = ({
   );
 };
 
-export default AddAndEditDescription;
+export default AddAndEditZoneDescription;
