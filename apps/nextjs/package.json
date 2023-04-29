@@ -11,7 +11,6 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
     "@next/font": "13.1.6",
-    "@andescalada/api": "*",
     "@sentry/nextjs": "^7.37.1",
     "@svgr/webpack": "^6.5.1",
     "@tanstack/react-query-devtools": "^4.11.0",
