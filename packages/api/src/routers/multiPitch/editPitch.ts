@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 const editPitch = protectedZoneProcedure
   .input(multiPitch.pitchId.merge(multiPitch.addPitch))
   .mutation(async ({ input, ctx }) => {
-    const { originalGradeSystem, grade, kind } = input;
+    const { originalGradeSystem, grade, kind, originalGrade } = input;
 
     const pitch = await ctx.prisma.pitch.findUnique({
       where: { id: input.pitchId },
@@ -44,6 +44,7 @@ const editPitch = protectedZoneProcedure
                 ...(originalGradeSystem && {
                   originalGradeSystem,
                 }),
+                ...(originalGrade && { originalGrade }),
               },
             },
           },

@@ -22,6 +22,7 @@ export const gradeUnits = {
   [GradeSystemsSchema.Enum.French]: [
     "1",
     "2",
+    "2a",
     "3",
     "4a",
     "4b",

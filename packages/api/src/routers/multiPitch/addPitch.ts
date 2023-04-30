@@ -9,7 +9,7 @@ import { z } from "zod";
 const addPitch = protectedZoneProcedure
   .input(z.object({ multiPitchId: z.string() }).merge(multiPitch.addPitch))
   .mutation(async ({ input, ctx }) => {
-    const { originalGradeSystem, grade, kind } = input;
+    const { originalGradeSystem, grade, kind, originalGrade } = input;
 
     if (!ctx.permissions.has("Create")) {
       throw new TRPCError(
@@ -83,6 +83,7 @@ const addPitch = protectedZoneProcedure
                 ...(originalGradeSystem && {
                   originalGradeSystem,
                 }),
+                ...(originalGrade && { originalGrade }),
               },
             },
           },

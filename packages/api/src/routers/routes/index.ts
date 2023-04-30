@@ -82,7 +82,14 @@ export const routesRouter = t.router({
           Number(maxMultiPitchPosition._max.position),
         ) ?? 0;
 
-      const { grade, kind, name, originalGradeSystem, unknownName } = input;
+      const {
+        grade,
+        kind,
+        name,
+        originalGradeSystem,
+        unknownName,
+        originalGrade,
+      } = input;
 
       const newRoute = await ctx.prisma.route.create({
         data: {
@@ -99,6 +106,7 @@ export const routesRouter = t.router({
               ...(originalGradeSystem && {
                 originalGradeSystem,
               }),
+              ...(originalGrade && { originalGrade }),
             },
           },
           Author: { connect: { email: ctx.user.email } },
@@ -205,7 +213,14 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const { grade, kind, name, unknownName, originalGradeSystem } = input;
+      const {
+        grade,
+        kind,
+        name,
+        unknownName,
+        originalGradeSystem,
+        originalGrade,
+      } = input;
 
       await ctx.prisma.wall.update({
         where: { id: route?.wallId },
@@ -219,6 +234,7 @@ export const routesRouter = t.router({
             update: {
               ...grade,
               ...(originalGradeSystem && { originalGradeSystem }),
+              ...(originalGrade && { originalGrade }),
             },
           },
           name,

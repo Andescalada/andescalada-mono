@@ -575,6 +575,7 @@ model RouteGrade {
   isDeleted           SoftDelete   @default(NotDeleted)
   version             Int          @default(0)
   originalGradeSystem GradeSystems @default(French)
+  originalGrade       String?
 
   @@index([routeId])
 }

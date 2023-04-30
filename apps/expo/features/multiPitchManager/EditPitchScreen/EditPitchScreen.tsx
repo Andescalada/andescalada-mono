@@ -82,6 +82,10 @@ const EditPitchScreen: FC<Props> = ({
       zoneId,
       pitchId,
       originalGradeSystem: getSystem(input.kind),
+      originalGrade:
+        typeof grade.grade === "number"
+          ? gradeSystem(grade.grade, kindWatch)
+          : "",
     };
 
     editPitch.mutate(data);

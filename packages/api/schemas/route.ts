@@ -17,6 +17,7 @@ const schema = z.object({
   }),
   unknownName: z.boolean().optional(),
   originalGradeSystem: z.nativeEnum(GradeSystemsSchema.Enum).optional(),
+  originalGrade: z.string().optional(),
 });
 
 const routeId = z.object({ routeId: z.string() });

@@ -116,6 +116,10 @@ const AddPitchScreen: FC<Props> = ({
       zoneId,
       multiPitchId,
       originalGradeSystem: getSystem(input.kind),
+      originalGrade:
+        typeof grade.grade === "number"
+          ? gradeSystem(grade.grade, kindWatch)
+          : "",
     };
 
     addPitch.mutate(data);
