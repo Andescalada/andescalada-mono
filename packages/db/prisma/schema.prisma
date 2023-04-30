@@ -13,14 +13,6 @@ generator erd {
   output   = "../ERD.pdf"
 }
 
-generator dbml {
-  provider            = "prisma-dbml-generator"
-  output              = "../dbml"
-  outputName          = "andescalada-db.dbml"
-  projectName         = "AndescaladaApp"
-  projectDatabaseType = "MySQL"
-}
-
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")

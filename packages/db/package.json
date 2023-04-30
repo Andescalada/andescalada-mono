@@ -10,7 +10,5 @@
   "peerDependencies": {
     "zod": "*"
   },
-  "devDependencies": {
-    "prisma-dbml-generator": "^0.10.0"
-  }
+  "devDependencies": {}
 }
