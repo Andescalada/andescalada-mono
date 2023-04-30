@@ -11,8 +11,6 @@ const addRouteLength = protectedZoneProcedure
     if (!ctx.permissions.has("Create")) {
     }
 
-    console.log(input);
-
     const createLength = ctx.prisma.routeLength.create({
       data: {
         Route: { connect: { id: input.routeId } },

@@ -438,8 +438,6 @@ const EditRouteLength = ({
   const [lengthValue, setLengthValue] = useState(length);
   const textInputRef = useRef<TextInputRef>(null);
 
-  console.log(length);
-
   return (
     <>
       <Modal
