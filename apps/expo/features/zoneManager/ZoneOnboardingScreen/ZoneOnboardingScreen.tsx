@@ -9,9 +9,8 @@ import StepRoles from "@features/zoneManager/ZoneOnboardingScreen/StepRoles";
 import StepSuccess from "@features/zoneManager/ZoneOnboardingScreen/StepSuccess";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, useRef } from "react";
-import { FlatList } from "react-native";
+import { FlatList, useWindowDimensions } from "react-native";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.ZoneOnboarding>;
 
@@ -52,6 +51,8 @@ const ZoneOnboardingScreen: FC<Props> = ({
     });
   };
 
+  const { width: screenWidth } = useWindowDimensions();
+
   return (
     <Screen safeAreaDisabled>
       <FlatList
@@ -59,7 +60,7 @@ const ZoneOnboardingScreen: FC<Props> = ({
         data={data}
         initialNumToRender={1}
         horizontal
-        snapToInterval={SCREEN_WIDTH}
+        snapToInterval={screenWidth}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) =>
           item.screen(

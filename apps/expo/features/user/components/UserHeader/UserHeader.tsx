@@ -22,10 +22,9 @@ import {
 import { useResponsiveProp } from "@shopify/restyle";
 import { logoutAuth0 } from "@store/auth";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import featureFlags from "@utils/featureFlags";
 import { useCallback, useMemo } from "react";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, StyleSheet, useWindowDimensions } from "react-native";
 
 const HEADER_HEIGHT = 100;
 const CANVAS_WIDTH = pathTitle.width;
@@ -93,6 +92,8 @@ const UserHeader = () => {
 
   const { newNotification } = useAppSelector((state) => state.localConfig);
 
+  const { width: screenWidth } = useWindowDimensions();
+
   return (
     <Screen
       flex={0}
@@ -101,7 +102,7 @@ const UserHeader = () => {
       justifyContent="space-between"
       borderBottomWidth={1}
       safeAreaDisabled
-      width={SCREEN_WIDTH}
+      width={screenWidth}
       borderBottomColor="grayscale.400"
     >
       <Canvas style={styles.canvas} mode="continuous">

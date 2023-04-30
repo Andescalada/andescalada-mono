@@ -6,16 +6,16 @@ import { ThemeProvider } from "@andescalada/ui";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
+import { useFitContent } from "@hooks/useFitContent";
 import {
   useComputedValue,
   useValue,
   useValueEffect,
 } from "@shopify/react-native-skia";
 import { inferProcedureOutput } from "@trpc/server";
-import { fitContent } from "@utils/Dimensions";
 import selectRouteByPoint from "@utils/selectRouteByPoint";
 import { FC, useMemo, useState } from "react";
-import { Dimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 
 type Data = inferProcedureOutput<AppRouter["topos"]["byId"]>;
 
@@ -55,10 +55,12 @@ const TopoViewer: FC<Props> = ({
 
   const { height, width } = data.image;
 
-  const fitted = fitContent(
+  const { width: screenWidth } = useWindowDimensions();
+
+  const fitted = useFitContent(
     { height: height ? height : 0, width: width ? width : 0 },
     "width",
-    Dimensions.get("window").width,
+    screenWidth,
   );
 
   const vectorRoutes = useComputedValue(() => {

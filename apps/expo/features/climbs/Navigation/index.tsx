@@ -1,5 +1,6 @@
 import { Box } from "@andescalada/ui";
-import AddAndEditDescription from "@features/climbs/AddAndEditDescription";
+import AddAndEditRouteDescription from "@features/climbs/AddAndEditRouteDescription";
+import AddAndEditZoneDescription from "@features/climbs/AddAndEditZoneDescription";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
@@ -9,6 +10,7 @@ import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
 import EditRoutePositionScreen from "@features/climbs/EditRoutePositionScreen";
 import MultiPitchScreen from "@features/climbs/MultiPitchScreen";
 import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
+import RouteScreen from "@features/climbs/RouteScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
 import SectorScreen from "@features/climbs/SectorScreen";
 import WallScreen from "@features/climbs/WallScreen";
@@ -77,6 +79,10 @@ const Navigator = () => {
           component={WallScreen}
         />
         <Stack.Screen
+          name={ClimbsNavigationRoutes.Route}
+          component={RouteScreen}
+        />
+        <Stack.Screen
           name={ClimbsNavigationRoutes.AgreementsIntro}
           component={AgreementsIntroScreen}
         />
@@ -114,8 +120,16 @@ const Navigator = () => {
           }}
         />
         <Stack.Screen
-          name={ClimbsNavigationRoutes.AddAndEditDescription}
-          component={AddAndEditDescription}
+          name={ClimbsNavigationRoutes.AddAndEditZoneDescription}
+          component={AddAndEditZoneDescription}
+          options={{
+            title: `Descripción`,
+            ...backHeader,
+          }}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.AddAndEditRouteDescription}
+          component={AddAndEditRouteDescription}
           options={{
             title: `Descripción`,
             ...backHeader,

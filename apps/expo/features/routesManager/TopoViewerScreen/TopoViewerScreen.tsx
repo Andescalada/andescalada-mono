@@ -11,6 +11,7 @@ import {
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import {
@@ -19,6 +20,8 @@ import {
 } from "@features/routesManager/Navigation/types";
 import { useAppSelector } from "@hooks/redux";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useEffect, useMemo, useState } from "react";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
@@ -30,6 +33,8 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
   const [selectedRoute, setSelectedRoute] = useState<string | undefined>(
     routeId || undefined,
   );
+
+  const rootNavigation = useRootNavigation();
 
   const { showRoutes } = useAppSelector((state) => state.localConfig);
 
@@ -111,7 +116,21 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
             flex={1}
           >
             <>
-              <Box flexDirection="row" alignItems="center" flex={1}>
+              <Pressable
+                flexDirection="row"
+                alignItems="center"
+                flex={1}
+                onPress={() => {
+                  rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+                    screen: ClimbsNavigationRoutes.Route,
+                    params: {
+                      routeId: route.id,
+                      zoneId,
+                      routeName: route.name,
+                    },
+                  });
+                }}
+              >
                 <Box
                   marginRight="m"
                   backgroundColor="grayscale.white"
@@ -139,7 +158,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
                   <Text variant="h4">{route.name}</Text>
                   <Text>{routeKindLabel(route.kind).long}</Text>
                 </Box>
-              </Box>
+              </Pressable>
               <Box>
                 <Text variant="p2B">
                   {gradeLabel(route.RouteGrade, route.kind)}

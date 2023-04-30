@@ -11,6 +11,7 @@ const addPitch = route.schema.pick({
   kind: true,
   grade: true,
   originalGradeSystem: true,
+  originalGrade: true,
 });
 
 const id = z.object({ multiPitchId: z.string() });

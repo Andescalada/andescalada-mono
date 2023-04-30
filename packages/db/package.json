@@ -9,5 +9,6 @@
   },
   "peerDependencies": {
     "zod": "*"
-  }
+  },
+  "devDependencies": {}
 }

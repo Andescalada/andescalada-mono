@@ -17,6 +17,7 @@ const schema = z.object({
   }),
   unknownName: z.boolean().optional(),
   originalGradeSystem: z.nativeEnum(GradeSystemsSchema.Enum).optional(),
+  originalGrade: z.string().optional(),
 });
 
 const routeId = z.object({ routeId: z.string() });
@@ -25,4 +26,15 @@ const extensionParams = z.object({
   extendedRouteId: z.string(),
 });
 
-export default { schema, routeId, extensionParams };
+export const descriptionLength = { max: 280, min: 20 };
+
+const description = z.object({
+  description: z
+    .string({ required_error: "Requerido" })
+    .min(descriptionLength.min, { message: "Muy corto, mínimo 50 caracteres" })
+    .max(descriptionLength.max, {
+      message: "Muy largo, máximo 280 caracteres",
+    }),
+});
+
+export default { schema, routeId, extensionParams, description };

@@ -199,6 +199,10 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       unknownName: input.unknownName,
       zoneId,
       originalGradeSystem: getSystem(input.kind),
+      originalGrade:
+        typeof grade.grade === "number"
+          ? gradeSystem(grade.grade, kindWatch)
+          : "",
     };
 
     if (id) {

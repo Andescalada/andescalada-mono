@@ -1,6 +1,13 @@
 import global from "@andescalada/api/schemas/global";
 import routeSchema from "@andescalada/api/schemas/route";
+import addOrEditEvaluation from "@andescalada/api/src/routers/routes/addOrEditEvaluation";
+import byIdWithEvaluation from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
 import editPosition from "@andescalada/api/src/routers/routes/editPositions";
+import evaluationById from "@andescalada/api/src/routers/routes/evaluationById";
+import {
+  addRouteLength,
+  editRouteLength,
+} from "@andescalada/api/src/routers/routes/routeLength";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -10,9 +17,17 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { t } from "../../createRouter";
+import upsertDescription from "./upsertDescription";
 
 export const routesRouter = t.router({
   editPositions: editPosition,
+  addOrEditEvaluation: addOrEditEvaluation,
+  // Asset being downloaded
+  byIdWithEvaluation: byIdWithEvaluation,
+  evaluationById: evaluationById,
+  editRouteLength: editRouteLength,
+  addRouteLength: addRouteLength,
+  upsertDescription: upsertDescription,
   byId: t.procedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
@@ -67,7 +82,14 @@ export const routesRouter = t.router({
           Number(maxMultiPitchPosition._max.position),
         ) ?? 0;
 
-      const { grade, kind, name, originalGradeSystem, unknownName } = input;
+      const {
+        grade,
+        kind,
+        name,
+        originalGradeSystem,
+        unknownName,
+        originalGrade,
+      } = input;
 
       const newRoute = await ctx.prisma.route.create({
         data: {
@@ -84,6 +106,7 @@ export const routesRouter = t.router({
               ...(originalGradeSystem && {
                 originalGradeSystem,
               }),
+              ...(originalGrade && { originalGrade }),
             },
           },
           Author: { connect: { email: ctx.user.email } },
@@ -190,7 +213,14 @@ export const routesRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const { grade, kind, name, unknownName, originalGradeSystem } = input;
+      const {
+        grade,
+        kind,
+        name,
+        unknownName,
+        originalGradeSystem,
+        originalGrade,
+      } = input;
 
       await ctx.prisma.wall.update({
         where: { id: route?.wallId },
@@ -204,6 +234,7 @@ export const routesRouter = t.router({
             update: {
               ...grade,
               ...(originalGradeSystem && { originalGradeSystem }),
+              ...(originalGrade && { originalGrade }),
             },
           },
           name,

@@ -1,6 +1,6 @@
 import { Box, Button, Icon, Screen, Text } from "@andescalada/ui";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { ComponentProps, FC, ReactNode } from "react";
+import { useWindowDimensions } from "react-native";
 
 interface Props {
   onNext: () => void;
@@ -11,11 +11,12 @@ const StepHowToPublish: FC<Props> = ({
   onNextButtonTitle: title = "Comencemos",
   onNext,
 }) => {
+  const { width: screenWidth } = useWindowDimensions();
   return (
     <Screen
       flex={1}
       backgroundColor="brand.secondaryB"
-      width={SCREEN_WIDTH}
+      width={screenWidth}
       padding="m"
       alignItems="stretch"
       justifyContent="space-between"

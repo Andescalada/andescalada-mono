@@ -1,9 +1,6 @@
-import { Dimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 
-export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
-  Dimensions.get("window");
-
-export const fitContent = (
+export const useFitContent = (
   {
     height,
     width,
@@ -12,8 +9,11 @@ export const fitContent = (
     height: number;
   },
   fit: "width" | "height" = "width",
-  fitTo: number = fit === "width" ? SCREEN_WIDTH : SCREEN_HEIGHT,
+  fitTo?: number,
 ) => {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  fitTo = fitTo || (fit === "width" ? screenWidth : screenHeight);
+
   const aspectRatio = height / width;
 
   if (fit === "width") {

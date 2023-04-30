@@ -11,8 +11,8 @@ import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC } from "react";
+import { useWindowDimensions } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 type NavigationRoute =
@@ -34,6 +34,7 @@ const TopoImage: FC = () => {
   });
 
   const { uri, isLoading } = useCachedImage(image);
+  const { width: screenWidth } = useWindowDimensions();
 
   const rootNavigation = useRootNavigation();
 
@@ -51,7 +52,7 @@ const TopoImage: FC = () => {
           flex={1}
           justifyContent="center"
           alignItems="center"
-          width={SCREEN_WIDTH}
+          width={screenWidth}
           entering={FadeIn}
           exiting={FadeOut}
           onPress={() => {
@@ -67,7 +68,7 @@ const TopoImage: FC = () => {
           {isLoading ? (
             <Box
               height={200}
-              width={SCREEN_WIDTH}
+              width={screenWidth}
               justifyContent="center"
               alignItems="center"
             >
@@ -79,7 +80,7 @@ const TopoImage: FC = () => {
                 position="absolute"
                 source={uri}
                 height={200}
-                width={SCREEN_WIDTH}
+                width={screenWidth}
               />
               <Box
                 py="s"

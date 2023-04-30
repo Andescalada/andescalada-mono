@@ -1,37 +1,33 @@
-import zone from "@andescalada/api/schemas/zone";
+import route from "@andescalada/api/schemas/route";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { InfoAccess } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 const upsertDescription = protectedZoneProcedure
-  .input(zone.description)
+  .input(route.description.merge(route.routeId))
   .mutation(async ({ ctx, input }) => {
-    const zone = await ctx.prisma.zone.findUnique({
-      where: { id: input.zoneId },
-      select: { description: true, infoAccess: true },
+    const route = await ctx.prisma.route.findUnique({
+      where: { id: input.routeId },
+      select: { description: true, Author: { select: { email: true } } },
     });
 
-    if (
-      !ctx.permissions.has("Create") &&
-      zone?.infoAccess !== InfoAccess.Public
-    ) {
+    if (!ctx.permissions.has("Create")) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Create"),
       );
     }
 
     if (
-      !!zone?.description &&
-      zone?.infoAccess !== InfoAccess.Public &&
+      !!route?.description &&
+      route.Author.email !== ctx.user?.email &&
       !ctx.permissions.has("Update")
     ) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Update"),
       );
     }
-    return ctx.prisma.zone.update({
-      where: { id: input.zoneId },
+    return ctx.prisma.route.update({
+      where: { id: input.routeId },
       data: {
         version: { increment: 1 },
         description: {

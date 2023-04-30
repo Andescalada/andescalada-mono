@@ -1,11 +1,36 @@
-import { gradeUnits } from "@andescalada/common-assets/climbingGrades";
+import {
+  gradeUnits,
+  gradeUnitsByRouteKind,
+} from "@andescalada/common-assets/climbingGrades";
 import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import useOwnInfo from "@hooks/useOwnInfo";
 import { RouteGrade } from "@prisma/client";
 import { useCallback, useEffect, useState } from "react";
 
+const addOneWrap = (n: number, value: number) => (value + 1) % (n + 1);
+
+const gradeSystemSelector = (
+  kind: typeof RouteKindSchema._type,
+  preferredSystem: typeof GradeSystemsSchema._type,
+  plus: number,
+) => {
+  const index = gradeUnitsByRouteKind[kind].findIndex(
+    (d) => d === preferredSystem,
+  );
+  const gradeUnitsCount = gradeUnitsByRouteKind[kind].length - 1;
+  const correctedIndex = addOneWrap(gradeUnitsCount, index + plus - 1);
+
+  return gradeUnits[gradeUnitsByRouteKind[kind][correctedIndex]];
+};
+
 const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
   const { data } = useOwnInfo();
+
+  const [plus, setPlus] = useState(0);
+
+  const changeGradeSystem = () => {
+    setPlus((prev) => prev + 1);
+  };
 
   const [allGrades, setAllGrades] = useState<number[]>([]);
   const getGradeSystem = useCallback(
@@ -13,11 +38,12 @@ const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
       if (!data) return [];
       switch (kind) {
         case RouteKindSchema.Enum.Boulder:
-          return gradeUnits[data.preferredBoulderGrade];
-        case RouteKindSchema.Enum.Sport:
-          return gradeUnits[data.preferredSportGrade];
+          return gradeSystemSelector(kind, data.preferredBoulderGrade, plus);
+        case RouteKindSchema.Enum.Sport: {
+          return gradeSystemSelector(kind, data.preferredSportGrade, plus);
+        }
         case RouteKindSchema.Enum.Trad:
-          return gradeUnits[data.preferredTradGrade];
+          return gradeSystemSelector(kind, data.preferredTradGrade, plus);
         case RouteKindSchema.Enum.Mixed:
           return gradeUnits.Mixed;
         case RouteKindSchema.Enum.Ice:
@@ -29,7 +55,7 @@ const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
           return [];
       }
     },
-    [data],
+    [data, plus],
   );
 
   const gradeSystem = useCallback(
@@ -93,6 +119,7 @@ const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
   return {
     gradeSystem,
     getAllGrades,
+    changeGradeSystem,
     allGrades,
     getGradeSystem,
     gradeLabel,

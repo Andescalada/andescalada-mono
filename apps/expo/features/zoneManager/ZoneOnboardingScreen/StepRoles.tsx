@@ -1,7 +1,7 @@
 import { A, Box, Icon, Screen, Text } from "@andescalada/ui";
 import NextButton from "@features/zoneManager/components/NextButton";
-import { SCREEN_WIDTH } from "@utils/Dimensions";
 import { FC, ReactNode } from "react";
+import { useWindowDimensions } from "react-native";
 import { FadeIn } from "react-native-reanimated";
 
 interface Props {
@@ -9,11 +9,12 @@ interface Props {
 }
 
 const StepRoles: FC<Props> = ({ onNext }) => {
+  const { width: screenWidth } = useWindowDimensions();
   return (
     <Screen
       flex={1}
       backgroundColor="brand.primaryB"
-      width={SCREEN_WIDTH}
+      width={screenWidth}
       justifyContent="space-between"
       paddingHorizontal="m"
     >

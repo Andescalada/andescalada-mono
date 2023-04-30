@@ -1,9 +1,28 @@
-import { GradeSystemsSchema } from "@andescalada/db/zod";
+import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
+
+export const gradeUnitsByRouteKind = {
+  [RouteKindSchema.Enum.Boulder]: [
+    GradeSystemsSchema.Enum.Hueco,
+    GradeSystemsSchema.Enum.French,
+  ],
+  [RouteKindSchema.Enum.Sport]: [
+    GradeSystemsSchema.Enum.French,
+    GradeSystemsSchema.Enum.Yosemite,
+  ],
+  [RouteKindSchema.Enum.Trad]: [
+    GradeSystemsSchema.Enum.French,
+    GradeSystemsSchema.Enum.Yosemite,
+  ],
+  [RouteKindSchema.Enum.Mixed]: [GradeSystemsSchema.Enum.Mixed],
+  [RouteKindSchema.Enum.Ice]: [GradeSystemsSchema.Enum.Ice],
+  [RouteKindSchema.Enum.Aid]: [GradeSystemsSchema.Enum.Aid],
+};
 
 export const gradeUnits = {
   [GradeSystemsSchema.Enum.French]: [
     "1",
     "2",
+    "2a",
     "3",
     "4a",
     "4b",

@@ -127,7 +127,7 @@ const useRouteOptions = ({
 
   const rootNavigation = useRootNavigation();
 
-  const onPress = useCallback(
+  const onDoublePress = useCallback(
     ({
       routeId,
       zoneId,
@@ -148,6 +148,29 @@ const useRouteOptions = ({
       });
     },
     [rootNavigation],
+  );
+
+  const onPress = useCallback(
+    ({
+      routeId,
+      zoneId,
+      routeName,
+    }: {
+      routeName: string;
+      routeId: string;
+      zoneId: string;
+    }) => {
+      if (!topoId) return;
+      rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+        screen: ClimbsNavigationRoutes.Route,
+        params: {
+          routeId,
+          routeName,
+          zoneId,
+        },
+      });
+    },
+    [rootNavigation, topoId],
   );
 
   const onRouteOptions = ({
@@ -184,7 +207,13 @@ const useRouteOptions = ({
     });
   };
 
-  return { onRouteOptions, onMultiPitchOptions, onDeleteTry, onPress };
+  return {
+    onRouteOptions,
+    onMultiPitchOptions,
+    onDeleteTry,
+    onPress,
+    onDoublePress,
+  };
 };
 
 export default useRouteOptions;

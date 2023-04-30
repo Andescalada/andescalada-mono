@@ -29,10 +29,13 @@ const ZoneDescription = ({ description }: Props) => {
         <TextButton
           variant="info"
           onPress={() =>
-            navigation.navigate(ClimbsNavigationRoutes.AddAndEditDescription, {
-              zoneId,
-              zoneName,
-            })
+            navigation.navigate(
+              ClimbsNavigationRoutes.AddAndEditZoneDescription,
+              {
+                zoneId,
+                zoneName,
+              },
+            )
           }
         >
           Agrega una descripción

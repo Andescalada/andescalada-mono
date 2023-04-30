@@ -65,6 +65,7 @@ model User {
   UserZoneAgreementHistory   UserZoneAgreementRecord[]
   authorZoneDirections       ZoneDirections[]          @relation("AuthorZoneDirections")
   coAuthorZoneDirections     ZoneDirections[]          @relation("CoAuthorZoneDirections")
+  RouteEvaluation            RouteEvaluation[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -457,40 +458,61 @@ model Topo {
 }
 
 model Route {
-  id              String      @id @default(uuid())
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id              String            @id @default(uuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   name            String
   slug            String
-  unknownName     Boolean     @default(false)
-  position        Int         @default(0)
+  unknownName     Boolean           @default(false)
+  position        Int               @default(0)
   leftRouteId     String?
   rightRouteId    String?
-  classic         Boolean     @default(false)
+  classic         Boolean           @default(false)
   kind            RouteKind
-  Wall            Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  Wall            Wall              @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId          String
-  description     String?     @db.LongText
+  description     TextContent?      @relation(fields: [descriptionId], references: [id])
+  descriptionId   String?
+  RouteLength     RouteLength?
   RoutePath       RoutePath[]
   RouteGrade      RouteGrade?
-  Author          User        @relation("AuthorRoute", fields: [authorId], references: [id])
+  Author          User              @relation("AuthorRoute", fields: [authorId], references: [id])
   authorId        String
-  coAuthors       User[]      @relation("CoAuthorRoute")
-  isDeleted       SoftDelete  @default(NotDeleted)
-  version         Int         @default(0)
+  coAuthors       User[]            @relation("CoAuthorRoute")
+  isDeleted       SoftDelete        @default(NotDeleted)
+  version         Int               @default(0)
   extendedRouteId String?
-  ExtendedRoute   Route?      @relation("ExtensionOf", fields: [extendedRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Extension       Route[]     @relation("ExtensionOf")
-  isVariant       Boolean?    @default(false)
+  ExtendedRoute   Route?            @relation("ExtensionOf", fields: [extendedRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Extension       Route[]           @relation("ExtensionOf")
+  isVariant       Boolean?          @default(false)
   variantRouteId  String?
-  VariantRoute    Route?      @relation("VariantOf", fields: [variantRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Variant         Route[]     @relation("VariantOf")
+  VariantRoute    Route?            @relation("VariantOf", fields: [variantRouteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Variant         Route[]           @relation("VariantOf")
   Pitch           Pitch?
+  RouteEvaluation RouteEvaluation[]
 
   @@index([wallId])
   @@index([authorId])
   @@index([extendedRouteId])
   @@index([variantRouteId])
+  @@index([descriptionId])
+}
+
+model RouteLength {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  length    Decimal  @db.Decimal(6, 2)
+  unit      Unit
+  Route     Route    @relation(fields: [routeId], references: [id])
+  routeId   String   @unique
+
+  @@index([routeId])
+}
+
+enum Unit {
+  Metric
+  Imperial
 }
 
 model MultiPitch {
@@ -553,6 +575,7 @@ model RouteGrade {
   isDeleted           SoftDelete   @default(NotDeleted)
   version             Int          @default(0)
   originalGradeSystem GradeSystems @default(French)
+  originalGrade       String?
 
   @@index([routeId])
 }
@@ -578,6 +601,21 @@ model RoutePath {
   @@index([topoId])
   @@index([routeId])
   @@index([authorId])
+}
+
+model RouteEvaluation {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  evaluation Decimal  @db.Decimal(3, 2)
+  Route      Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  routeId    String
+  User       User     @relation(fields: [userId], references: [id])
+  userId     String
+
+  @@unique([routeId, userId], name: "user_route_unique")
+  @@index([routeId])
+  @@index([userId])
 }
 
 model Image {
@@ -645,6 +683,7 @@ model TextContent {
   ZoneDirections       ZoneDirections[]
   ZoneDirectionsName   ZoneDirections[]    @relation("ZoneDirectionsName")
   Zone                 Zone[]
+  Route                Route[]
 
   @@index([languageId])
 }

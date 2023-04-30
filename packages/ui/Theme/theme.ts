@@ -26,6 +26,7 @@ const darkBaseTheme = {
     gradientA: pallete.brand.primaryA,
     gradientB: pallete.brand.primaryB,
     private: pallete.brand.primaryA,
+    stars: pallete.brand.secondaryA,
     drawingRoutePath: pallete.contrast.opaque.green,
     routePath: pallete.contrast.opaque.red,
     extensionRoutePath: pallete.contrast.opaque.blue,

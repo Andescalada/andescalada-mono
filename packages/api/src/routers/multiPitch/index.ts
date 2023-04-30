@@ -13,7 +13,7 @@ export const multiPitchRouter = t.router({
   byId,
   addPitch: addPitch,
   deleteById,
-  editPitch,
+  editPitch: editPitch,
   deletePitch,
   pitchById,
   add,

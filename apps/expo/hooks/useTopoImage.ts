@@ -2,7 +2,7 @@ import { trpc } from "@andescalada/utils/trpc";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import type { Wall, Zone } from "@prisma/client";
-import { fitContent } from "@utils/Dimensions";
+import { useFitContent } from "@hooks/useFitContent";
 import { useMemo } from "react";
 
 interface Args {
@@ -26,7 +26,7 @@ const useTopoImage = ({ wallId, zoneId, imageQuality }: Args) => {
   });
 
   const isImageLoaded = useMemo(() => !!image, [image]);
-  const fitted = fitContent(
+  const fitted = useFitContent(
     { height, width },
     "width",
     Math.min(1024 * 2, width),
