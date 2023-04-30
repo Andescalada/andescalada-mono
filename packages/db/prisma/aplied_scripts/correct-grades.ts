@@ -4,12 +4,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const main = async () => {
-  // console.log("updating french grades");
-  // const gradesUpdated = await prisma.routeGrade.updateMany({
-  //   where: { originalGradeSystem: "French" },
-  //   data: { grade: { increment: 1 } },
-  // });
-  // console.log(`${gradesUpdated.count} french grades updated`);
+  console.log("updating french grades");
+  const gradesUpdated = await prisma.routeGrade.updateMany({
+    where: { originalGradeSystem: "French" },
+    data: { grade: { increment: 1 } },
+  });
+  console.log(`${gradesUpdated.count} french grades updated`);
 
   console.log("updating original system grades");
 
