@@ -101,7 +101,7 @@ const RouteContainer = ({
   const { gradeLabel, changeGradeSystem } = useGradeSystem();
 
   return (
-    <Box flex={1}>
+    <Box flex={1} gap="s">
       <Box flexDirection="row">
         <Box flex={1} flexDirection="row" alignItems="center">
           <Pressable padding="s" onPress={changeGradeSystem}>
@@ -118,14 +118,15 @@ const RouteContainer = ({
             />
           </Box>
         </Box>
+      </Box>
+      <Box>
         <Pressable
-          flex={1}
-          borderRadius={16}
-          borderWidth={3}
-          borderColor="backgroundContrast"
-          bg="semantic.info"
+          borderRadius={8}
+          maxWidth={"30%"}
+          bg="grayscale.transparent.50.500"
           justifyContent="center"
           alignItems="center"
+          py="s"
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
               screen: RoutesManagerNavigationRoutes.TopoViewer,
@@ -137,20 +138,24 @@ const RouteContainer = ({
             })
           }
         >
-          <Text variant="p1R">Ver topo</Text>
+          <Text variant="p3R">Ver topo</Text>
         </Pressable>
       </Box>
-      <RouteEvaluation
-        evaluationValue={evaluationValue}
-        routeId={routeId}
-        evaluationAverage={route.evaluation.average}
-        evaluationCount={route.evaluation.count}
-      />
-      <RouteDescription
-        description={route.description}
-        zoneId={zoneId}
-        routeId={routeId}
-      />
+      <Box>
+        <RouteEvaluation
+          evaluationValue={evaluationValue}
+          routeId={routeId}
+          evaluationAverage={route.evaluation.average}
+          evaluationCount={route.evaluation.count}
+        />
+      </Box>
+      <Box>
+        <RouteDescription
+          description={route.description}
+          zoneId={zoneId}
+          routeId={routeId}
+        />
+      </Box>
     </Box>
   );
 };
@@ -181,7 +186,7 @@ const RouteDescription = ({
 
   if (description && permission.has("Update")) {
     return (
-      <Box mt="m" padding="m" bg="backgroundContrast" borderRadius={16}>
+      <Box padding="m" bg="backgroundContrast" borderRadius={16}>
         <Box flexDirection="row" justifyContent="space-between" mb="s">
           <Text variant="h4" color="background">
             Descripción
@@ -274,7 +279,7 @@ const RouteEvaluation = ({
   }));
 
   return (
-    <Box mt="m" alignItems="flex-start">
+    <Box alignItems="flex-start">
       <Box flexDirection="row">
         <Box width={STAR_SIZE * 4.5}>
           <StarRating
