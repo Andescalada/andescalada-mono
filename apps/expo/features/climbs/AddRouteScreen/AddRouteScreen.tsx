@@ -180,7 +180,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const kindWatch = useWatch({ control, name: "kind" });
 
   const {
-    field: { onChange: onGradeChange, value: gradeValue, onBlur: onGradeBlur },
+    field: { onChange: onGradeChange, value: gradeValue },
   } = useController({
     control,
     name: "grade",
@@ -242,9 +242,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
-  const { allGrades, gradeSystem, getSystem } = useGradeSystem(kindValue);
-
-  const theme = useAppTheme();
+  const { gradeSystem, getSystem } = useGradeSystem(kindValue);
 
   const onUnknownNamePress = () => {
     onChange("Ruta sin nombre");

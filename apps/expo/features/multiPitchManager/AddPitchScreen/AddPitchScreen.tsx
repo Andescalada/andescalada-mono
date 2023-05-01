@@ -47,8 +47,6 @@ const AddPitchScreen: FC<Props> = ({
     },
   },
 }) => {
-  const theme = useAppTheme();
-
   const utils = trpc.useContext();
 
   const rootNavigation = useRootNavigation();
@@ -94,9 +92,7 @@ const AddPitchScreen: FC<Props> = ({
   });
   const grade = useController({ control, name: "grade", defaultValue: null });
 
-  const { allGrades, gradeSystem, getSystem } = useGradeSystem(
-    kind.field.value,
-  );
+  const { gradeSystem, getSystem } = useGradeSystem(kind.field.value);
 
   const kindWatch = useWatch({
     control,

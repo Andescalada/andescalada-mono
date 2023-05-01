@@ -38,8 +38,6 @@ const EditPitchScreen: FC<Props> = ({
     params: { pitchId, zoneId, ...defaultValues },
   },
 }) => {
-  const theme = useAppTheme();
-
   const utils = trpc.useContext();
 
   const editPitch = trpc.multiPitch.editPitch.useMutation({
@@ -61,9 +59,7 @@ const EditPitchScreen: FC<Props> = ({
   });
   const grade = useController({ control, name: "grade" });
 
-  const { allGrades, gradeSystem, getSystem } = useGradeSystem(
-    kind.field.value,
-  );
+  const { gradeSystem, getSystem } = useGradeSystem(kind.field.value);
 
   const kindWatch = useWatch({
     control,
