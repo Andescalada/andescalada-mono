@@ -12,7 +12,7 @@
     "dev:ios": "APP_VARIANT=development yarn ios",
     "dev:android": "APP_VARIANT=development yarn android",
     "dev:clean": "AVOID_MEMOIZED_NAVIGATION=true yarn dev -c",
-    "dev:offline": "yarn dev --offline",
+    "dev:offline": "OFFLINE_DEV=true yarn dev --offline",
     "dev:preview": "APP_VARIANT=preview yarn start",
     "debug": "yarn dev --force-manifest-type=classic",
     "debug:offline": "yarn debug --offline",

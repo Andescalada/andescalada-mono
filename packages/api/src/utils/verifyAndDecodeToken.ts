@@ -2,6 +2,16 @@ import * as jose from "jose";
 import type { NextApiRequest } from "next";
 
 const verifyAndDecodeToken = async (req: NextApiRequest) => {
+  if (process.env.OFFLINE_DEV === "true") {
+    return {
+      verified: true,
+      user: {
+        email: "elevy@andescalada.org",
+        auth0Id: "",
+        permissions: [] as string[],
+      },
+    };
+  }
   try {
     const p = await fetch(
       `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,

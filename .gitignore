@@ -17,3 +17,5 @@ coverage/
 .env
 .env.production
 apps/expo/.env
+
+db-backup/

@@ -86,7 +86,8 @@ const UserZonesScreen = () => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
-  if (!isConnected)
+
+  if (!isConnected && process.env.OFFLINE_DEV !== "true")
     return (
       <Screen alignItems="center" justifyContent="center" safeAreaDisabled>
         <Box height={60} width={60} justifyContent="center" alignItems="center">

@@ -11,6 +11,9 @@
     "dev": {
       "cache": false
     },
+    "dev:offline": {
+      "cache": false
+    },
     "lint": {
       "outputs": []
     }
