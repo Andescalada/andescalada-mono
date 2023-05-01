@@ -377,9 +377,10 @@ const RouteGradeEvaluation = ({
       },
     });
 
-  const [gradeVotedValue, setGradeVotedValue] = useState(
-    typeof routeGrade?.grade !== "number" ? 0 : routeGrade?.grade,
-  );
+  const [gradeVotedValue, setGradeVotedValue] = useState({
+    value: typeof routeGrade?.grade !== "number" ? 0 : routeGrade?.grade,
+    label: routeGrade?.originalGrade || "",
+  });
 
   if (
     !routeGrade?.grade ||
@@ -414,17 +415,9 @@ const RouteGradeEvaluation = ({
           ¿Qué grado te pareció esta ruta?
         </Text>
         <VotingGradePicker
-          value={gradeVotedValue}
+          value={gradeVotedValue.value}
           onChange={(v) => {
-            setGradeVotedValue(v.value);
-            const originalGradeSystem = getSystem(routeKind);
-            if (!originalGradeSystem) return;
-            addOrEditGradeEvaluation.mutate({
-              routeId,
-              evaluation: v.value,
-              originalGrade: v.label,
-              originalGradeSystem,
-            });
+            setGradeVotedValue(v);
           }}
           routeKind={routeKind}
         />
@@ -438,7 +431,14 @@ const RouteGradeEvaluation = ({
           titleVariant="p2R"
           title="Guardar"
           onPress={() => {
-            console.log("save", gradeVotedValue);
+            const originalGradeSystem = getSystem(routeKind);
+            if (!originalGradeSystem) return;
+            addOrEditGradeEvaluation.mutate({
+              routeId,
+              evaluation: gradeVotedValue.value,
+              originalGrade: gradeVotedValue.label,
+              originalGradeSystem,
+            });
             setModalVisible(false);
           }}
         />
