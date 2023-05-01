@@ -39,10 +39,20 @@ const byIdWithEvaluation = protectedZoneProcedure
       _count: { evaluation: true },
     });
 
-    const [route, evaluationAverage] = await ctx.prisma.$transaction([
-      findRoute,
-      getEvaluationAverage,
-    ]);
+    const getGradeEvaluationAverage = ctx.prisma.routeGradeEvaluation.aggregate(
+      {
+        where: { routeId: input.routeId },
+        _avg: { evaluation: true },
+        _count: { evaluation: true },
+      },
+    );
+
+    const [route, evaluationAverage, gradeEvaluationAverage] =
+      await ctx.prisma.$transaction([
+        findRoute,
+        getEvaluationAverage,
+        getGradeEvaluationAverage,
+      ]);
 
     return {
       ...route,
@@ -53,9 +63,15 @@ const byIdWithEvaluation = protectedZoneProcedure
         : null,
       evaluation: {
         average: evaluationAverage._avg.evaluation
-          ? Number(evaluationAverage._avg.evaluation)
+          ? Math.round(Number(evaluationAverage._avg.evaluation))
           : 0,
         count: evaluationAverage._count.evaluation,
+      },
+      gradeEvaluation: {
+        average: gradeEvaluationAverage._avg.evaluation
+          ? Number(gradeEvaluationAverage._avg.evaluation)
+          : null,
+        count: gradeEvaluationAverage._count.evaluation,
       },
     };
   });

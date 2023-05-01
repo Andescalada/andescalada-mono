@@ -66,6 +66,7 @@ model User {
   authorZoneDirections       ZoneDirections[]          @relation("AuthorZoneDirections")
   coAuthorZoneDirections     ZoneDirections[]          @relation("CoAuthorZoneDirections")
   RouteEvaluation            RouteEvaluation[]
+  RouteGradeEvaluation       RouteGradeEvaluation[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -614,6 +615,22 @@ model RouteEvaluation {
   userId     String
 
   @@unique([routeId, userId], name: "user_route_unique")
+  @@index([routeId])
+  @@index([userId])
+}
+
+model RouteGradeEvaluation {
+  id                  String       @id @default(uuid())
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  evaluation          Int
+  originalGradeSystem GradeSystems
+  originalGrade       String
+  routeId             String
+  User                User         @relation(fields: [userId], references: [id])
+  userId              String
+
+  @@unique([routeId, userId], name: "user_route_grade_unique")
   @@index([routeId])
   @@index([userId])
 }

@@ -1,6 +1,8 @@
 import global from "@andescalada/api/schemas/global";
 import routeSchema from "@andescalada/api/schemas/route";
+import { t } from "@andescalada/api/src/createRouter";
 import addOrEditEvaluation from "@andescalada/api/src/routers/routes/addOrEditEvaluation";
+import addOrEditGradeEvaluation from "@andescalada/api/src/routers/routes/addOrEditGradeEvaluation";
 import byIdWithEvaluation from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
 import editPosition from "@andescalada/api/src/routers/routes/editPositions";
 import evaluationById from "@andescalada/api/src/routers/routes/evaluationById";
@@ -8,6 +10,7 @@ import {
   addRouteLength,
   editRouteLength,
 } from "@andescalada/api/src/routers/routes/routeLength";
+import upsertDescription from "@andescalada/api/src/routers/routes/upsertDescription";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -15,9 +18,6 @@ import updatePositionsOnDelete from "@andescalada/api/src/utils/updatePositionsO
 import { SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
-import { t } from "../../createRouter";
-import upsertDescription from "./upsertDescription";
 
 export const routesRouter = t.router({
   editPositions: editPosition,
@@ -28,6 +28,7 @@ export const routesRouter = t.router({
   editRouteLength: editRouteLength,
   addRouteLength: addRouteLength,
   upsertDescription: upsertDescription,
+  addOrEditGradeEvaluation: addOrEditGradeEvaluation,
   byId: t.procedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {

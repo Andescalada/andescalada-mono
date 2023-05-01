@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Header,
+  Ionicons,
   Modal,
   Pressable,
   Screen,
@@ -14,8 +15,10 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import VotingGradePicker from "@features/climbs/components/VotingGradePicker";
 import {
   ClimbsNavigationNavigationProps,
+  ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
@@ -26,7 +29,8 @@ import useGradeSystem from "@hooks/useGradeSystem";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { useNavigation } from "@react-navigation/native";
+import { RouteGrade } from "@prisma/client";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import React, { FC, useRef, useState } from "react";
 import type { TextInput as TextInputRef } from "react-native";
@@ -37,11 +41,20 @@ import {
 } from "react-native-reanimated";
 import StarRating from "react-native-star-rating-widget";
 
+import { RouteKindSchema } from "../../../../../packages/db/zod/enums/RouteKind";
+
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Route>;
 
 type Route = inferProcedureOutput<AppRouter["routes"]["byIdWithEvaluation"]>;
 
 const STAR_SIZE = 30;
+
+const useRouteScreenParams = () => {
+  const route =
+    useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Route>>();
+
+  return route.params;
+};
 
 const RouteScreen: FC<Props> = ({
   route: {
@@ -76,12 +89,7 @@ const RouteScreen: FC<Props> = ({
         onGoBack={navigation.goBack}
         showOptions={false}
       />
-      <RouteContainer
-        route={data}
-        evaluationValue={evaluation.value}
-        zoneId={zoneId}
-        routeId={routeId}
-      />
+      <RouteContainer route={data} evaluationValue={evaluation.value} />
     </Screen>
   );
 };
@@ -89,14 +97,11 @@ const RouteScreen: FC<Props> = ({
 const RouteContainer = ({
   route,
   evaluationValue,
-  zoneId,
-  routeId,
 }: {
   route: Route;
   evaluationValue: number;
-  zoneId: string;
-  routeId: string;
 }) => {
+  const { routeId, zoneId } = useRouteScreenParams();
   const rootNavigation = useRootNavigation();
   const { gradeLabel, changeGradeSystem } = useGradeSystem();
 
@@ -104,18 +109,33 @@ const RouteContainer = ({
     <Box flex={1} gap="s">
       <Box flexDirection="row">
         <Box flex={1} flexDirection="row" alignItems="center">
-          <Pressable padding="s" onPress={changeGradeSystem}>
-            <Text fontSize={40} lineHeight={50}>
-              {gradeLabel(route.RouteGrade, route.kind)}
-            </Text>
-            <Text>{routeKindLabel(route.kind).long}</Text>
-          </Pressable>
-          <Box>
-            <RouteLength
-              length={route.length}
-              zoneId={zoneId}
-              routeId={routeId}
-            />
+          <Box padding="s">
+            <Box flexDirection="row">
+              <Pressable
+                onPress={changeGradeSystem}
+                alignItems="flex-end"
+                justifyContent="flex-end"
+              >
+                <Text fontSize={40} lineHeight={40} textAlign="justify">
+                  {gradeLabel(route.RouteGrade, route.kind)}
+                </Text>
+              </Pressable>
+              <RouteGradeEvaluation
+                routeGrade={route.RouteGrade}
+                evaluation={route.gradeEvaluation.average}
+                routeKind={route.kind}
+              />
+            </Box>
+            <Box flexDirection="row" alignItems="center" gap="s">
+              <Text fontSize={20} lineHeight={20}>
+                {routeKindLabel(route.kind).long}
+              </Text>
+              <RouteLength
+                length={route.length}
+                zoneId={zoneId}
+                routeId={routeId}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -334,6 +354,123 @@ const RouteEvaluation = ({
   );
 };
 
+const RouteGradeEvaluation = ({
+  evaluation,
+  routeKind,
+  routeGrade,
+}: {
+  evaluation: number | null;
+  routeKind: typeof RouteKindSchema._type;
+  routeGrade: RouteGrade | null;
+}) => {
+  const { routeId } = useRouteScreenParams();
+
+  const { gradeLabel, getSystem } = useGradeSystem();
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const utils = trpc.useContext();
+  const addOrEditGradeEvaluation =
+    trpc.routes.addOrEditGradeEvaluation.useMutation({
+      onSuccess: ({ routeId }) => {
+        utils.routes.byIdWithEvaluation.invalidate({ routeId });
+      },
+    });
+
+  const [gradeVotedValue, setGradeVotedValue] = useState(
+    typeof routeGrade?.grade !== "number" ? 0 : routeGrade?.grade,
+  );
+
+  if (
+    !routeGrade?.grade ||
+    typeof routeGrade?.grade !== "number" ||
+    routeGrade?.project
+  ) {
+    return null;
+  }
+
+  return (
+    <>
+      <Modal
+        visible={modalVisible}
+        minHeight={300}
+        width={300}
+        padding="m"
+        justifyContent="space-around"
+        alignItems="center"
+        onDismiss={() => {
+          setModalVisible(false);
+        }}
+      >
+        <Box>
+          <Text variant="h4" textAlign="center">
+            Graduación comunitaria
+          </Text>
+          <Text variant="p3R" textAlign="center">
+            Es el promedio de todas las votaciones
+          </Text>
+        </Box>
+        <Text variant="p3R" textAlign="center">
+          ¿Qué grado te pareció esta ruta?
+        </Text>
+        <VotingGradePicker
+          value={gradeVotedValue}
+          onChange={(v) => {
+            setGradeVotedValue(v.value);
+            const originalGradeSystem = getSystem(routeKind);
+            if (!originalGradeSystem) return;
+            addOrEditGradeEvaluation.mutate({
+              routeId,
+              evaluation: v.value,
+              originalGrade: v.label,
+              originalGradeSystem,
+            });
+          }}
+          routeKind={routeKind}
+        />
+        <Text variant="error">
+          Solo se puede elegir 2 grados más arriba o más abajo del grado oficial
+        </Text>
+
+        <Button
+          variant="infoSmall"
+          px="s"
+          titleVariant="p2R"
+          title="Guardar"
+          onPress={() => {
+            console.log("save", gradeVotedValue);
+            setModalVisible(false);
+          }}
+        />
+      </Modal>
+      <Pressable
+        alignItems="flex-end"
+        justifyContent="flex-end"
+        height={50}
+        flexDirection="row"
+        marginLeft="s"
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <Box style={{ paddingBottom: 7 }}>
+          <Ionicons name="people-circle" size={25} color="grayscale.500" />
+        </Box>
+        <Text
+          fontSize={25}
+          lineHeight={25}
+          textAlignVertical="bottom"
+          textAlign="justify"
+          color="grayscale.500"
+          style={{ paddingBottom: 5 }}
+        >
+          {gradeLabel({ grade: evaluation, project: false }, routeKind)}
+        </Text>
+      </Pressable>
+    </>
+  );
+};
+
 const RouteLength = ({
   length,
   zoneId,
@@ -494,7 +631,7 @@ const EditRouteLength = ({
         />
       </Modal>
       <TextButton
-        textProps={{ fontSize: 20 }}
+        textProps={{ fontSize: 20, lineHeight: 20 }}
         variant="info"
         onPress={() => {
           setModalVisible(true);

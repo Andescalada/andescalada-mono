@@ -20,7 +20,9 @@ const gradeSystemSelector = (
   const gradeUnitsCount = gradeUnitsByRouteKind[kind].length - 1;
   const correctedIndex = addOneWrap(gradeUnitsCount, index + plus - 1);
 
-  return gradeUnits[gradeUnitsByRouteKind[kind][correctedIndex]];
+  return gradeUnits[
+    gradeUnitsByRouteKind[kind][correctedIndex]
+  ] as (typeof GradeSystemsSchema._type)[];
 };
 
 const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {

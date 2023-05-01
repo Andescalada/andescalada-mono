@@ -89,6 +89,7 @@
     "react-native": "0.71.6",
     "react-native-confirmation-code-field": "^7.3.1",
     "react-native-dotenv": "^3.3.1",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-error-boundary": "^1.1.16",
     "react-native-flipper": "0.146.0",
     "react-native-gesture-handler": "~2.9.0",
