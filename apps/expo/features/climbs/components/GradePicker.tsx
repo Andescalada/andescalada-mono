@@ -40,6 +40,9 @@ const GradePicker: FC<Props> = ({ routeKind, value, onChange }) => {
   return (
     <DropDownPicker
       open={open}
+      listMode="MODAL"
+      modalTitle="Selecciona el grado de la ruta"
+      zIndex={1000}
       value={stringValue}
       items={items}
       setOpen={setOpen}
