@@ -17,7 +17,6 @@ import {
   MultiPitchManagerRoutes,
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
-import { useAppTheme } from "@hooks/useAppTheme";
 import useGradeSystem from "@hooks/useGradeSystem";
 import { FC } from "react";
 import { useController, useWatch } from "react-hook-form";

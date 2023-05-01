@@ -22,7 +22,6 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
-import { useAppTheme } from "@hooks/useAppTheme";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
