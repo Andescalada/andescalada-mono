@@ -1,5 +1,10 @@
 import { A, Box, Text } from "@andescalada/ui";
+import {
+  isDownloadingAtom,
+  progressAtom,
+} from "@features/offline/utils/setAssetsToDb";
 import { useAppTheme } from "@hooks/useAppTheme";
+import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
 import {
@@ -13,11 +18,10 @@ import {
 import { mixColor } from "react-native-redash";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface Props {
-  progress: number;
-  isDownloading: boolean;
-}
-const OfflineUpdateNotification = ({ progress, isDownloading }: Props) => {
+const OfflineUpdateNotification = () => {
+  const [progress] = useAtom(progressAtom);
+  const [isDownloading] = useAtom(isDownloadingAtom);
+
   const { width: screenWidth } = useWindowDimensions();
   const [visible, setVisible] = useState(false);
 

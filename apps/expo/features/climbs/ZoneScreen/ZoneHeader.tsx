@@ -56,7 +56,8 @@ const ZoneHeader = () => {
   const { permission } = usePermissions({ zoneId });
   const globalPermissions = useGlobalPermissions();
 
-  const { isDownloaded, onDownloadPress } = useDownloadedButton(zoneId);
+  const { isDownloaded, onDownloadPress, isDownloading } =
+    useDownloadedButton(zoneId);
   const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
 
   if (!data) return <Box />;
@@ -215,6 +216,7 @@ const ZoneHeader = () => {
             isFavorite={isFavorite}
             onDownloadPress={onDownloadPress}
             onFavoritePress={onFavoritePress}
+            isDownloading={isDownloading}
           />
         </Box>
       )}

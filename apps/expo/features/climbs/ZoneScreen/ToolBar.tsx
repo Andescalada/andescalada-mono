@@ -1,4 +1,10 @@
-import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
+import {
+  A,
+  ActivityIndicator,
+  Box,
+  Ionicons,
+  Pressable,
+} from "@andescalada/ui";
 import { atom, useAtom } from "jotai";
 import {
   useAnimatedStyle,
@@ -13,6 +19,7 @@ interface ToolBarProps {
   isFavorite: boolean;
   onDownloadPress: () => void;
   onFavoritePress: () => void;
+  isDownloading: boolean;
 }
 
 const ToolBar = ({
@@ -20,8 +27,10 @@ const ToolBar = ({
   isFavorite,
   onDownloadPress,
   onFavoritePress,
+  isDownloading,
 }: ToolBarProps) => {
   const [openAll, setOpenAll] = useAtom(toggleWalls);
+
   const open = useDerivedValue(() => (openAll ? 0 : -180));
   const degrees = useDerivedValue(() => withTiming(open.value));
 
@@ -30,15 +39,37 @@ const ToolBar = ({
   }));
 
   return (
-    <Box flexDirection="row" justifyContent="flex-end" marginTop="s">
-      <Pressable onPress={onDownloadPress}>
-        <Ionicons
-          name={
-            isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
-          }
-          size={30}
-          color={"zoneOptionsIcons"}
-        />
+    <Box
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="flex-end"
+      marginTop="s"
+    >
+      <Pressable onPress={onDownloadPress} disabled={isDownloading}>
+        {!isDownloading ? (
+          <Ionicons
+            name={
+              isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
+            }
+            size={30}
+            color={"zoneOptionsIcons"}
+          />
+        ) : (
+          <Box
+            width={26}
+            height={26}
+            justifyContent="center"
+            borderWidth={2}
+            borderRadius={14}
+            borderColor="zoneOptionsIcons"
+          >
+            <ActivityIndicator
+              color="zoneOptionsIcons"
+              size="small"
+              style={{ transform: [{ scale: 0.6 }] }}
+            />
+          </Box>
+        )}
       </Pressable>
       <Pressable marginHorizontal="s" onPress={onFavoritePress}>
         <Ionicons

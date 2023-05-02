@@ -1,13 +1,16 @@
 import { trpc } from "@andescalada/utils/trpc";
+import { isDownloadingAtom } from "@features/offline/utils/setAssetsToDb";
 import type { Zone } from "@prisma/client";
 import deleteZoneSavedImages from "@utils/deleteZoneSavedImages";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
+import { useAtom } from "jotai";
 import { Alert } from "react-native";
 
 const useDownloadedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
   const { data } = trpc.zones.allSectors.useQuery({ zoneId });
+  const [isDownloadingGlobal] = useAtom(isDownloadingAtom);
 
   const notification = useNotifications();
 
@@ -90,7 +93,14 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     }
   };
 
-  return { onDownloadPress, isDownloaded: !!data?.isDownloaded };
+  return {
+    onDownloadPress,
+    isDownloaded: !!data?.isDownloaded,
+    isDownloading:
+      addToDownloadedList.isLoading ||
+      removeToDownloadedList.isLoading ||
+      isDownloadingGlobal,
+  };
 };
 
 export default useDownloadedButton;
