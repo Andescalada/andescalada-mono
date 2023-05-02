@@ -1,11 +1,12 @@
 import { transformer } from "@andescalada/api/src/transformer";
 import NetInfo from "@react-native-community/netinfo";
-import { onlineManager, QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import {
+  onlineManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import Env from "@utils/env";
-import { createMMKVStoragePersister } from "@utils/mmkv/createMMKVPersister";
-import storage from "@utils/mmkv/storage";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
@@ -16,8 +17,6 @@ onlineManager.setEventListener((setOnline) => {
     setOnline(!!state.isConnected);
   });
 });
-
-const persister = createMMKVStoragePersister({ storage: storage });
 
 export interface AccessToken {
   exp: number;
@@ -71,15 +70,7 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister }}
-        onSuccess={() => {
-          queryClient.resumePausedMutations();
-        }}
-      >
-        {children}
-      </PersistQueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </trpc.Provider>
   );
 };

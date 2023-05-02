@@ -8,6 +8,7 @@ import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
 import { useCallback, useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
+import * as Sentry from "sentry-expo";
 import { parse, stringify } from "superjson";
 
 type ListToDownload = inferProcedureOutput<
@@ -74,6 +75,8 @@ export const useHydrateOfflineAssets = () => {
     async (status: AppStateStatus) => {
       if (!(status === "active")) return;
       if (isOfflineMode) {
+        Sentry.Native.captureMessage("hydrate offline assets");
+
         hydrate();
       }
     },
@@ -81,6 +84,7 @@ export const useHydrateOfflineAssets = () => {
   );
 
   useEffect(() => {
+    Sentry.Native.captureMessage("use Effect hydrate offline assets");
     const subscription = AppState.addEventListener("change", (status) =>
       shouldHydrate(status),
     );
