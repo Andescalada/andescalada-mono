@@ -48,7 +48,6 @@ const SectorsGateway: FC<Props> = ({ children }) => {
       currentStatus,
     } = {},
     isLoading,
-    isError,
     isFetching,
     refetch,
   } = trpc.zones.allSectors.useQuery({ zoneId });
@@ -105,22 +104,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
         <ActivityIndicator size={"large"} />
       </Screen>
     );
-  if (isError) {
-    return (
-      <Screen safeAreaDisabled padding="m">
-        <Box marginBottom="s" marginTop="xl">
-          <Icon name="eyes-color" size={50} />
-          <Text variant="h1" fontFamily="Rubik-700">
-            Hubo un error!
-          </Text>
-        </Box>
-        <Text variant="p2R">Estas cosas le pasan a l@s mejores</Text>
-        <Text variant="p2R">
-          Intenta reiniciar la app o puedes contactarnos si persiste.
-        </Text>
-      </Screen>
-    );
-  }
+
   if (currentStatus !== StatusSchema.Enum.Published && !hasAccess) {
     return (
       <Screen safeAreaDisabled padding="m">

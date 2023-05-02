@@ -2,15 +2,12 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
 import setAssetsToDb from "@features/offline/utils/setAssetsToDb";
-import { useAppSelector } from "@hooks/redux";
 import useOfflineMode from "@hooks/useOfflineMode";
-import { onlineManager } from "@tanstack/react-query";
 import { inferProcedureOutput } from "@trpc/server";
-import allSettled from "@utils/allSetled";
 import storage, { Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
 import { useCallback, useEffect } from "react";
-import { AppState } from "react-native";
+import { AppState, AppStateStatus } from "react-native";
 import { parse, stringify } from "superjson";
 
 type ListToDownload = inferProcedureOutput<
@@ -21,14 +18,9 @@ interface Args {
   fetchAssets?: boolean;
 }
 
-const useOffline = ({ fetchAssets = false }: Args = {}) => {
-  const { isOfflineMode } = useOfflineMode();
-
-  const utils = trpc.useContext();
-  const { isDownloading, progress, errors } = useAppSelector(
-    (state) => state.offline,
-  );
-
+export const useDownloadOfflineAssets = ({
+  fetchAssets = false,
+}: Args = {}) => {
   trpc.user.getDownloadedAssets.useQuery(undefined, {
     enabled: fetchAssets,
     onSuccess: async (data) => {
@@ -36,12 +28,22 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
 
       const { assetsToDownload, imagesToDownload } = data;
 
-      await allSettled([
+      await Promise.allSettled([
         setAssetsToDb(assetsToDownload),
         saveImagesToFileSystem(imagesToDownload),
       ]);
     },
   });
+
+  return {
+    setAssetsToDb,
+  };
+};
+
+export const useHydrateOfflineAssets = () => {
+  const { isOfflineMode } = useOfflineMode();
+
+  const utils = trpc.useContext();
 
   const hydrate = useCallback(() => {
     const res = storage.getString(Storage.DOWNLOADED_ASSETS);
@@ -67,32 +69,21 @@ const useOffline = ({ fetchAssets = false }: Args = {}) => {
     });
   }, [utils]);
 
-  const shouldHydrate = useCallback(async () => {
-    if (isOfflineMode) {
-      onlineManager.setOnline(false);
-
-      hydrate();
-    } else {
-      onlineManager.setOnline(undefined);
-    }
-  }, [hydrate, isOfflineMode]);
-
-  useEffect(() => {
-    shouldHydrate();
-  }, [shouldHydrate]);
+  const shouldHydrate = useCallback(
+    async (status: AppStateStatus) => {
+      if (!(status === "active")) return;
+      if (isOfflineMode) {
+        hydrate();
+      }
+    },
+    [isOfflineMode, hydrate],
+  );
 
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", shouldHydrate);
+    const subscription = AppState.addEventListener("change", (status) =>
+      shouldHydrate(status),
+    );
 
     return () => subscription.remove();
   }, [shouldHydrate]);
-
-  return {
-    isDownloading,
-    progress,
-    errors,
-    setAssetsToDb,
-  };
 };
-
-export default useOffline;

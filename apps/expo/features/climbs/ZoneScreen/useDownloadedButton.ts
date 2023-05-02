@@ -69,11 +69,12 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
           onPress: async () => {
             try {
               const db = offlineDb.open();
-              await offlineDb.deleteZone(db, zoneId);
+              const deleteFromDb = offlineDb.deleteZone(db, zoneId);
+              const deleteImages = deleteZoneSavedImages(zoneId);
+              await Promise.allSettled([deleteFromDb, deleteImages]);
               db.close();
-              await deleteZoneSavedImages(zoneId);
               removeToDownloadedList.mutateAsync({ zoneId });
-            } catch {
+            } catch (err) {
               notification.notify("error", {
                 params: {
                   title: "Ha ocurrido un error",
@@ -81,6 +82,7 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
                   hideCloseButton: true,
                 },
               });
+              throw err;
             }
           },
         },

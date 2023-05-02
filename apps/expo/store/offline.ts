@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { onlineManager } from "@tanstack/react-query";
 import storage from "@utils/mmkv/storage";
 
 type Error = { [key: string]: string };
@@ -25,10 +26,12 @@ const offlineSlice = createSlice({
       const currentOffline = storage.getString("offline");
       if (currentOffline === undefined) {
         storage.set("offline", "true");
+        onlineManager.setOnline(false);
         state.isOffline = true;
       } else {
         const toBoolean = currentOffline === "true";
         state.isOffline = !toBoolean;
+        onlineManager.setOnline(undefined);
         storage.set("offline", String(!toBoolean));
       }
     },
