@@ -20,9 +20,14 @@ import ZoneScreen from "@features/climbs/ZoneScreen";
 import ZonesListScreen from "@features/climbs/ZonesListScreen";
 import OfflineNotification from "@features/offline/OfflineNotification";
 import OfflineUpdateNotification from "@features/offline/OfflineUpdateNotification";
+import {
+  isDownloadingAtom,
+  progressAtom,
+} from "@features/offline/utils/setAssetsToDb";
 import UserHeader from "@features/user/components/UserHeader/UserHeader";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
+import { useAtom } from "jotai";
 
 import {
   ClimbsNavigationNavigationParamList,
@@ -32,9 +37,15 @@ import {
 const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 
 const Navigator = () => {
+  const [progress] = useAtom(progressAtom);
+  const [isDownloading] = useAtom(isDownloadingAtom);
   return (
     <Box flex={1}>
-      <OfflineUpdateNotification />
+      <OfflineUpdateNotification
+        progress={progress}
+        isDownloading={isDownloading}
+      />
+
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName={ClimbsNavigationRoutes.Home}

@@ -82,7 +82,7 @@
     "expo-task-manager": "~11.1.1",
     "expo-tracking-transparency": "~3.0.1",
     "expo-updates": "~0.16.4",
-    "jotai": "^1.13.1",
+    "jotai": "^2.0.4",
     "jwt-decode": "^3.1.2",
     "react": "18.2.0",
     "react-devtools-core": "^4.26.0",

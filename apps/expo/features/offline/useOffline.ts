@@ -1,7 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
-import setAssetsToDb from "@features/offline/utils/setAssetsToDb";
+import useSetAssetsToDb from "@features/offline/utils/setAssetsToDb";
 import useOfflineMode from "@hooks/useOfflineMode";
 import { inferProcedureOutput } from "@trpc/server";
 import storage, { Storage } from "@utils/mmkv/storage";
@@ -21,6 +21,7 @@ interface Args {
 export const useDownloadOfflineAssets = ({
   fetchAssets = false,
 }: Args = {}) => {
+  const { setAssetsToDb } = useSetAssetsToDb();
   trpc.user.getDownloadedAssets.useQuery(undefined, {
     enabled: fetchAssets,
     onSuccess: async (data) => {
