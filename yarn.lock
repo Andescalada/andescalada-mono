@@ -3230,27 +3230,27 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
-"@trpc/client@^10.9.1":
-  version "10.19.1"
-  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.19.1.tgz#3e8aff4abaff38c39ca275052768c957ff217ea3"
-  integrity sha512-H61dIgoAjiA7/SfuHlUAsqshhaxOSSRFyEfaoBwYvXzLyno+fvQRUXvxpsC4A8IsDuNX2pxiggAK8AwTNKqIzg==
+"@trpc/client@10.23.1":
+  version "10.23.1"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.23.1.tgz#14b82060dc64984b8410dfb255b669b6a98d4839"
+  integrity sha512-0uEUU3oxULvEZpg2P2Qn1pkq3ATNRoWz4AfycWjmP4MN89GZYnwUReIeQQCHmP+mIElBcHwehOYyVkqs/T9o5w==
 
-"@trpc/next@^10.9.1":
-  version "10.19.1"
-  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-10.19.1.tgz#76fb37075750a95ab242536721b2df01018dec75"
-  integrity sha512-xe1Ygp4oGtn+zUJu+pCKhbfZ7aveyVAMyYrka81v0BwZTKAAGzp6YuO4t6JtW+3x+ZSJ7sHphJP2bwThJQo9kQ==
+"@trpc/next@10.23.1":
+  version "10.23.1"
+  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-10.23.1.tgz#5e94c0a36921d33442e202bf9d89bd09ceb23cdd"
+  integrity sha512-Q7rC7eZea0FQFKwea7PNU1/Qn8DrZD9cPrjK+1/7zymvbL+qV2fbbikTTcpO5NpbmZWfHXpvAgGpY9GjyPNJzA==
   dependencies:
     react-ssr-prepass "^1.5.0"
 
-"@trpc/react-query@^10.9.1":
-  version "10.19.1"
-  resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-10.19.1.tgz#629af8cde6e909958b13693668461d50f8cb0e77"
-  integrity sha512-bKtv/hz1ssoH/56i72skRcJ2Q4/gUJhrxvqDD0sJ6PczsPq4xbyO2GDs/cPaVqDpYf2EEAG9nHo48t8fW/XQ/w==
+"@trpc/react-query@10.23.1":
+  version "10.23.1"
+  resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-10.23.1.tgz#dd9e1fceafd73916e55aacbae79bee1242ca2983"
+  integrity sha512-oKNqVicuLwHq0ykO66JYAV8SvjOCsUNJz/BnRORoPlTNPo07jskAoGUBMOcbMDS/4YKTi7vEfuBqKOQhLoIWug==
 
-"@trpc/server@^10.9.1":
-  version "10.19.1"
-  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.19.1.tgz#c7e85da59e4ff67e6d5c9deaaedf627f497377d6"
-  integrity sha512-LAa8BQhMYJL+GU28cigOPKlEogCEBeff1wIKflnUj34ou1ythwTboe7Mi6rjDW3Q9EasP7s9YmqRv9Fkp8fL4Q==
+"@trpc/server@10.23.1":
+  version "10.23.1"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.23.1.tgz#24f11bc5e154da6128175d385871a991ad28e2ca"
+  integrity sha512-sibJRHpcLkNScKC6e3pZS+lDHQIwB+aYjw2A2afQL2u1n5x0/sqHyIYhr3TnpbVRezt+swWRYIYAI2NjanI6sA==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -11007,10 +11007,10 @@ react-native-flipper-performance-plugin@^0.3.1:
   resolved "https://registry.yarnpkg.com/react-native-flipper-performance-plugin/-/react-native-flipper-performance-plugin-0.3.1.tgz#969aea65eb6e6504ee29caab7bf546c75322f817"
   integrity sha512-NDf5VCTqYPUUihvmW5A/scJbjHWZpAxC9FE1kfgFCPsHENjH9EVJxk+7XlLN608dEtHOtZdcWY0HZZT8XLjr6Q==
 
-react-native-flipper@0.146.0:
-  version "0.146.0"
-  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.146.0.tgz#031350cb2bd9ebbc9e0e85be441c3be4b2c25356"
-  integrity sha512-v+7OKTXjmijt5kGZKrZeud7JTPogFHc8/714BLb6+4TRTp1Q3Peyen3LHphRruHIdKRjex5LfJ7v/PEW+deDbQ==
+react-native-flipper@^0.190.0:
+  version "0.190.0"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.190.0.tgz#367e17b02690ddca0b3a02a19cb3c81efcf19574"
+  integrity sha512-hkVked8cWBVUVZJSAX8GY+B4AaJ/sdYDRqeAcLcQ16kyMzyHxU3PWu27mXTYoRJqA2W85iAIaE1rONYoaEiKnA==
 
 react-native-gesture-handler@~2.9.0:
   version "2.9.0"
