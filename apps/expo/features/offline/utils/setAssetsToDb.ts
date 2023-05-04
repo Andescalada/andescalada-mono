@@ -1,5 +1,6 @@
 import { trpc } from "@andescalada/utils/trpc";
 import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
+import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { atom, useAtom } from "jotai";
 import { stringify } from "superjson";
@@ -8,28 +9,38 @@ export const progressAtom = atom(0);
 export const isDownloadingAtom = atom(false);
 
 const useSetAssetsToDb = () => {
-  const [_, setProgress] = useAtom(progressAtom);
-  const [__, setIsDownloading] = useAtom(isDownloadingAtom);
+  const setIsDownloading = useAtom(isDownloadingAtom)[1];
+
+  const notification = useNotifications();
 
   const utils = trpc.useContext();
   const setAssetsToDb = async ({ zoneId }: { zoneId: string }) => {
-    setProgress(0);
     const fetchAssets = utils.user.offlineAssets.fetch;
-    const data = await fetchAssets({ zoneId });
-    if (!data) return;
+    try {
+      const data = await fetchAssets({ zoneId });
+      if (!data) return;
 
-    setIsDownloading(true);
+      setIsDownloading(true);
 
-    const db = offlineDb.open();
+      const db = offlineDb.open();
 
-    for (const asset of data.assets) {
-      const { params, router, procedure, version, zoneId } = asset;
-      const queryKey = stringify({ router, procedure, params });
-      await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
+      const setToDB = data.assets.map((asset) => {
+        const { params, router, procedure, version, zoneId } = asset;
+        const queryKey = stringify({ router, procedure, params });
+        return offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
+      });
+
+      await Promise.allSettled(setToDB);
+      db.close();
+      await saveImagesToFileSystem(data.imagesToDownload);
+    } catch (error) {
+      notification.notify("error", {
+        params: {
+          title: "Error",
+          description: "No se pudo descargar los datos",
+        },
+      });
     }
-    db.close();
-
-    await saveImagesToFileSystem(data.imagesToDownload);
 
     setIsDownloading(false);
   };
