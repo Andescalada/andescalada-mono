@@ -439,13 +439,11 @@ export const userRouter = t.router({
 
     const imagesToDownload: Image[] = [];
 
-    let routeDetailToDownload;
-
     const assetsToDownload = list.DownloadedZones.flatMap((z) => {
       const zoneId = z.id;
       const sectors = z.sectors.flatMap((s) => {
         const walls = s.walls.flatMap((w) => {
-          routeDetailToDownload = w.routes.flatMap((r) => {
+          const routes = w.routes.flatMap((r) => {
             return {
               router: "routes" as const,
               procedure: "byIdWithEvaluation" as const,
@@ -474,6 +472,7 @@ export const userRouter = t.router({
               zoneId,
             },
             ...topos,
+            ...routes,
           ];
         });
         return [

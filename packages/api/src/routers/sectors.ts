@@ -164,6 +164,7 @@ export const sectorsRouter = t.router({
 
 export const selectFromSectorAllWalls = {
   isDeleted: true,
+  id: true,
   sectorKind: true,
   version: true,
   zoneId: true,
