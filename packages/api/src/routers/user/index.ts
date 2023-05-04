@@ -1,5 +1,6 @@
 import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
+import offlineAssets from "@andescalada/api/src/routers/user/offlineAsstes";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
@@ -19,9 +20,10 @@ import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 import { z } from "zod";
 
-import { t } from "../createRouter";
+import { t } from "../../createRouter";
 
 export const userRouter = t.router({
+  offlineAssets: offlineAssets,
   ownInfo: protectedProcedure.query(async ({ ctx }) =>
     ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },
@@ -437,11 +439,13 @@ export const userRouter = t.router({
 
     const imagesToDownload: Image[] = [];
 
+    let routeDetailToDownload;
+
     const assetsToDownload = list.DownloadedZones.flatMap((z) => {
       const zoneId = z.id;
       const sectors = z.sectors.flatMap((s) => {
         const walls = s.walls.flatMap((w) => {
-          const routes = w.routes.flatMap((r) => {
+          routeDetailToDownload = w.routes.flatMap((r) => {
             return {
               router: "routes" as const,
               procedure: "byIdWithEvaluation" as const,
@@ -470,7 +474,6 @@ export const userRouter = t.router({
               zoneId,
             },
             ...topos,
-            ...routes,
           ];
         });
         return [

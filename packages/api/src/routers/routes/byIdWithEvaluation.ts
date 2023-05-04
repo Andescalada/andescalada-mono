@@ -77,3 +77,17 @@ const byIdWithEvaluation = protectedZoneProcedure
   });
 
 export default byIdWithEvaluation;
+
+export const includeInRoute = {
+  description: true,
+  RouteLength: true,
+  RouteGrade: true,
+  Wall: {
+    select: {
+      name: true,
+      id: true,
+      topos: { where: { main: true }, take: 1, include: { image: true } },
+      Sector: { select: { name: true, zoneId: true, id: true } },
+    },
+  },
+};

@@ -3,7 +3,7 @@ import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete } from "@prisma/client";
+import Wall, { Prisma, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -14,52 +14,7 @@ export const toposRouter = t.router({
   byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({
       where: { id: input.topoId },
-      include: {
-        Wall: { select: { Sector: { select: { sectorKind: true } } } },
-        RoutePath: {
-          where: {
-            Route: {
-              AND: [
-                { isDeleted: SoftDelete.NotDeleted },
-                {
-                  OR: [
-                    {
-                      Pitch: {
-                        MultiPitch: { isDeleted: SoftDelete.NotDeleted },
-                      },
-                    },
-
-                    { Pitch: null },
-                  ],
-                },
-                {
-                  OR: [
-                    { Pitch: { isDeleted: SoftDelete.NotDeleted } },
-                    { Pitch: null },
-                  ],
-                },
-              ],
-            },
-          },
-          orderBy: { Route: { Pitch: { number: "desc" } } },
-          include: {
-            Route: {
-              select: {
-                id: true,
-                position: true,
-                extendedRouteId: true,
-                kind: true,
-                name: true,
-                RouteGrade: true,
-                Pitch: { select: { number: true } },
-              },
-            },
-          },
-        },
-        image: {
-          select: { url: true, height: true, width: true, publicId: true },
-        },
-      },
+      include: includeInTopo,
     });
     if (!topo) {
       throw new TRPCError({
@@ -67,6 +22,7 @@ export const toposRouter = t.router({
         message: `No topo with id '${input}'`,
       });
     }
+
     return topo;
   }),
   add: protectedProcedure.input(topo.schema).mutation(({ ctx, input }) =>
@@ -126,3 +82,61 @@ export const toposRouter = t.router({
       });
     }),
 });
+
+export const includeInTopo: Prisma.TopoInclude = {
+  Wall: {
+    include: { Sector: true },
+  },
+  RoutePath: {
+    where: {
+      Route: {
+        AND: [
+          { isDeleted: SoftDelete.NotDeleted },
+          {
+            OR: [
+              {
+                Pitch: {
+                  MultiPitch: {
+                    isDeleted: SoftDelete.NotDeleted,
+                  },
+                },
+              },
+
+              { Pitch: null },
+            ],
+          },
+          {
+            OR: [
+              {
+                Pitch: { isDeleted: SoftDelete.NotDeleted },
+              },
+              { Pitch: null },
+            ],
+          },
+        ],
+      },
+    },
+    orderBy: { Route: { Pitch: { number: "desc" as const } } },
+    include: {
+      Route: {
+        select: {
+          id: true,
+          position: true,
+          extendedRouteId: true,
+          kind: true,
+          name: true,
+          RouteGrade: true,
+          Pitch: { select: { number: true } },
+        },
+      },
+    },
+  },
+  image: {
+    select: {
+      url: true,
+      height: true,
+      width: true,
+      publicId: true,
+    },
+  },
+};
