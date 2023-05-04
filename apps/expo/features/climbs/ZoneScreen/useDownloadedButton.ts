@@ -50,7 +50,7 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
-    onSuccess: (_, { zoneId }) => {
+    onSuccess: () => {
       utils.user.getDownloadedAssets.invalidate();
       utils.user.ownInfo.invalidate();
     },
