@@ -230,7 +230,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     ...parsedZone,
   ];
 
-  return { assets };
+  return { assets, imagesToDownload };
 });
 
 export default offlineAssets;
