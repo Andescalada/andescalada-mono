@@ -135,5 +135,8 @@
     "react-dom": "*",
     "zod": "*"
   },
-  "private": true
+  "private": true,
+  "resolutions": {
+    "react-native-reanimated": "2.14.4"
+  }
 }
