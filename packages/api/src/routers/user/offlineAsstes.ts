@@ -6,9 +6,9 @@ import { includeInWallById } from "@andescalada/api/src/routers/walls";
 import { selectZoneAllSectors } from "@andescalada/api/src/routers/zones/allSectors";
 import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
-import { SoftDelete } from "@prisma/client";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { Image, SoftDelete } from "@prisma/client";
 import { inferProcedureOutput } from "@trpc/server";
-const idAndVersion = { id: true, version: true };
 
 type ZoneAllSectors = inferProcedureOutput<AppRouter["zones"]["allSectors"]>;
 type SectorAllWalls = inferProcedureOutput<AppRouter["sectors"]["allWalls"]>;
@@ -18,13 +18,16 @@ type RouteByIdWithEvaluation = inferProcedureOutput<
   AppRouter["routes"]["byIdWithEvaluation"]
 >;
 
-const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
+const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
   const routes = ctx.prisma.route.findMany({
     where: {
       isDeleted: SoftDelete.NotDeleted,
       Wall: {
         Sector: {
-          Zone: { DownloadedBy: { some: { email: ctx.user.email } } },
+          Zone: {
+            id: input.zoneId,
+            DownloadedBy: { some: { email: ctx.user.email } },
+          },
         },
       },
     },
@@ -42,7 +45,10 @@ const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
       isDeleted: SoftDelete.NotDeleted,
       Wall: {
         Sector: {
-          Zone: { DownloadedBy: { some: { email: ctx.user.email } } },
+          Zone: {
+            id: input.zoneId,
+            DownloadedBy: { some: { email: ctx.user.email } },
+          },
         },
       },
     },
@@ -52,7 +58,10 @@ const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
   const walls = ctx.prisma.wall.findMany({
     where: {
       isDeleted: SoftDelete.NotDeleted,
-      Sector: { Zone: { DownloadedBy: { some: { email: ctx.user.email } } } },
+      Sector: {
+        id: input.zoneId,
+        Zone: { DownloadedBy: { some: { email: ctx.user.email } } },
+      },
     },
     include: includeInWallById,
   });
@@ -60,13 +69,17 @@ const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
   const sectors = ctx.prisma.sector.findMany({
     where: {
       isDeleted: SoftDelete.NotDeleted,
-      Zone: { DownloadedBy: { some: { email: ctx.user.email } } },
+      Zone: {
+        id: input.zoneId,
+        DownloadedBy: { some: { email: ctx.user.email } },
+      },
     },
     select: selectFromSectorAllWalls,
   });
 
   const zones = ctx.prisma.zone.findMany({
     where: {
+      id: input.zoneId,
       isDeleted: SoftDelete.NotDeleted,
       DownloadedBy: { some: { email: ctx.user.email } },
     },
@@ -82,7 +95,9 @@ const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
   ] = await ctx.prisma.$transaction([routes, topos, walls, sectors, zones]);
 
   const parsedRoutes: {
-    queryId: "routes.byIdWithEvaluation";
+    router: "routes";
+    procedure: "byIdWithEvaluation";
+    params: { routeId: string; zoneId: string };
     zoneId: string;
     data: RouteByIdWithEvaluation;
     version: number;
@@ -121,34 +136,49 @@ const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
     };
 
     return {
-      queryId: "routes.byIdWithEvaluation",
+      router: "routes",
+      procedure: "byIdWithEvaluation",
+      params: { routeId: route.id, zoneId: route.Wall.Sector.zoneId },
       zoneId: route.Wall.Sector.zoneId,
       data,
       version: route.version,
     };
   });
 
+  const imagesToDownload: Image[] = [];
+
   const parsedTopos: {
-    queryId: "topos.byId";
+    router: "topos";
+    procedure: "byId";
+    params: { topoId: string; zoneId: string };
     zoneId: string;
     version: number;
     data: ToposById;
-  }[] = toposResults.map((topo) => ({
-    queryId: "topos.byId",
-    zoneId: topo.Wall.Sector.zoneId,
-    data: topo,
-    version: topo.version,
-  }));
+  }[] = toposResults.map((topo) => {
+    if (topo.image) imagesToDownload.push({ ...topo.image });
+    return {
+      router: "topos",
+      procedure: "byId",
+      params: { topoId: topo.id, zoneId: topo.Wall.Sector.zoneId },
+      zoneId: topo.Wall.Sector.zoneId,
+      data: topo,
+      version: topo.version,
+    };
+  });
 
   const parsedWalls: {
-    queryId: "walls.byId";
+    router: "walls";
+    procedure: "byId";
+    params: { wallId: string; zoneId: string };
     zoneId: string;
     version: number;
     data: WallById;
   }[] = wallsResults.map((wall) => {
     const MultiPitch = parseMultiPitch(wall.MultiPitch);
     return {
-      queryId: "walls.byId",
+      router: "walls",
+      procedure: "byId",
+      params: { wallId: wall.id, zoneId: wall.Sector.zoneId },
       zoneId: wall.Sector.zoneId,
       data: { ...wall, MultiPitch },
       version: wall.version,
@@ -156,24 +186,32 @@ const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
   });
 
   const parsedSectors: {
-    queryId: "sectors.allWalls";
+    router: "sectors";
+    procedure: "allWalls";
+    params: { sectorId: string };
     zoneId: string;
     version: number;
     data: SectorAllWalls;
   }[] = sectorsResults.map((sector) => ({
-    queryId: "sectors.allWalls",
+    router: "sectors",
+    procedure: "allWalls",
+    params: { sectorId: sector.id },
     zoneId: sector.zoneId,
     data: sector,
     version: sector.version,
   }));
 
   const parsedZone: {
-    queryId: "zones.allSectors";
+    router: "zones";
+    procedure: "allSectors";
+    params: { zoneId: string };
     zoneId: string;
     version: number;
     data: ZoneAllSectors;
   }[] = zonesResults.map((zone) => ({
-    queryId: "zones.allSectors",
+    router: "zones",
+    procedure: "allSectors",
+    params: { zoneId: zone.id },
     zoneId: zone.id,
     data: {
       ...zone,
@@ -184,13 +222,15 @@ const offlineAssets = protectedProcedure.query(async ({ ctx }) => {
     version: zone.version,
   }));
 
-  return [
+  const assets = [
     ...parsedRoutes,
-    parsedTopos,
+    ...parsedTopos,
     ...parsedWalls,
-    parsedSectors,
-    parsedZone,
+    ...parsedSectors,
+    ...parsedZone,
   ];
+
+  return { assets };
 });
 
 export default offlineAssets;
