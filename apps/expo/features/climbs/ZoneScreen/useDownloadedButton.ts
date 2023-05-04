@@ -1,5 +1,7 @@
 import { trpc } from "@andescalada/utils/trpc";
-import { isDownloadingAtom } from "@features/offline/utils/setAssetsToDb";
+import useSetAssetsToDb, {
+  isDownloadingAtom,
+} from "@features/offline/utils/setAssetsToDb";
 import type { Zone } from "@prisma/client";
 import deleteZoneSavedImages from "@utils/deleteZoneSavedImages";
 import { useNotifications } from "@utils/notificated";
@@ -11,7 +13,7 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
   const { data } = trpc.zones.allSectors.useQuery({ zoneId });
   const [isDownloadingGlobal] = useAtom(isDownloadingAtom);
-
+  const { setAssetsToDb } = useSetAssetsToDb();
   const notification = useNotifications();
 
   const addToDownloadedList = trpc.user.addToDownloadedZones.useMutation({
@@ -48,18 +50,19 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
     onSettled: () => {
       utils.zones.allSectors.invalidate({ zoneId });
     },
-    onSuccess: () => {
+    onSuccess: (_, { zoneId }) => {
       utils.user.getDownloadedAssets.invalidate();
       utils.user.ownInfo.invalidate();
     },
   });
 
-  const onDownloadPress = () => {
+  const onDownloadPress = async () => {
     if (addToDownloadedList.isLoading || removeToDownloadedList.isLoading) {
       return;
     }
     if (!data?.isDownloaded) {
       addToDownloadedList.mutate({ zoneId });
+      await setAssetsToDb({ zoneId });
     } else {
       Alert.alert("Borrar de descargas", "¿Estás seguro?", [
         {

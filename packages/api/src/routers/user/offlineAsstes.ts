@@ -5,7 +5,6 @@ import { includeInTopo } from "@andescalada/api/src/routers/topos";
 import { includeInWallById } from "@andescalada/api/src/routers/walls";
 import { selectZoneAllSectors } from "@andescalada/api/src/routers/zones/allSectors";
 import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { Image, SoftDelete } from "@prisma/client";
 import { inferProcedureOutput } from "@trpc/server";
@@ -26,7 +25,6 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
         Sector: {
           Zone: {
             id: input.zoneId,
-            DownloadedBy: { some: { email: ctx.user.email } },
           },
         },
       },
@@ -47,7 +45,6 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
         Sector: {
           Zone: {
             id: input.zoneId,
-            DownloadedBy: { some: { email: ctx.user.email } },
           },
         },
       },
@@ -71,7 +68,6 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       isDeleted: SoftDelete.NotDeleted,
       Zone: {
         id: input.zoneId,
-        DownloadedBy: { some: { email: ctx.user.email } },
       },
     },
     select: selectFromSectorAllWalls,
@@ -81,7 +77,6 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     where: {
       id: input.zoneId,
       isDeleted: SoftDelete.NotDeleted,
-      DownloadedBy: { some: { email: ctx.user.email } },
     },
     select: selectZoneAllSectors({ userEmail: ctx.user.email }),
   });

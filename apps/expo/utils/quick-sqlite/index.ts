@@ -16,7 +16,7 @@ const createZoneTable = async (zoneId: string) => {
     );`;
 
   const res = await db.executeAsync(query);
-  // db.close();
+
   return res;
 };
 
@@ -59,7 +59,7 @@ const set = async (
   const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
 
   await db.executeAsync(query);
-  // db.close();
+
   return serializedData;
 };
 
@@ -89,7 +89,7 @@ const deleteAsset = async (
 const deleteZone = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `DROP TABLE '${zoneId}';`;
   const res = await db.executeAsync(query);
-  // db.close();
+
   return res;
 };
 

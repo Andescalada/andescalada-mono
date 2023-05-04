@@ -10,25 +10,23 @@ export const isDownloadingAtom = atom(false);
 const useSetAssetsToDb = () => {
   const [_, setProgress] = useAtom(progressAtom);
   const [__, setIsDownloading] = useAtom(isDownloadingAtom);
+
+  const utils = trpc.useContext();
   const setAssetsToDb = async ({ zoneId }: { zoneId: string }) => {
     setProgress(0);
-
-    const utils = trpc.useContext();
-
     const fetchAssets = utils.user.offlineAssets.fetch;
-
     const data = await fetchAssets({ zoneId });
-
     if (!data) return;
 
     setIsDownloading(true);
 
     const db = offlineDb.open();
-    data.assets.forEach(async (asset) => {
+
+    for (const asset of data.assets) {
       const { params, router, procedure, version, zoneId } = asset;
       const queryKey = stringify({ router, procedure, params });
       await offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
-    });
+    }
     db.close();
 
     await saveImagesToFileSystem(data.imagesToDownload);
