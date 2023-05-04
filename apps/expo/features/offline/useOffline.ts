@@ -1,7 +1,5 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
-import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
-import useSetAssetsToDb from "@features/offline/utils/setAssetsToDb";
 import useOfflineMode from "@hooks/useOfflineMode";
 import { inferProcedureOutput } from "@trpc/server";
 import storage, { Storage } from "@utils/mmkv/storage";
@@ -15,31 +13,12 @@ type ListToDownload = inferProcedureOutput<
   AppRouter["user"]["getDownloadedAssets"]
 >;
 
-interface Args {
-  fetchAssets?: boolean;
-}
-
-export const useDownloadOfflineAssets = ({
-  fetchAssets = false,
-}: Args = {}) => {
-  const { setAssetsToDb } = useSetAssetsToDb();
+export const useDownloadOfflineAssetsList = () => {
   trpc.user.getDownloadedAssets.useQuery(undefined, {
-    enabled: fetchAssets,
     onSuccess: async (data) => {
-      if (!fetchAssets) return;
-
-      const { assetsToDownload, imagesToDownload } = data;
-
-      await Promise.allSettled([
-        setAssetsToDb(assetsToDownload),
-        saveImagesToFileSystem(imagesToDownload),
-      ]);
+      storage.set(Storage.DOWNLOADED_ASSETS, stringify(data.assetsToDownload));
     },
   });
-
-  return {
-    setAssetsToDb,
-  };
 };
 
 export const useHydrateOfflineAssets = () => {

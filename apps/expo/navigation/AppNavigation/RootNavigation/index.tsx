@@ -1,4 +1,5 @@
 import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import ErrorStackNavigation from "@features/error/Navigation";
@@ -6,7 +7,7 @@ import ImageManagerNavigation from "@features/imageManager/Navigation";
 import InfoAccessManagerStackNavigation from "@features/InfoAccessManager/Navigation";
 import MultiPitchManagerStackNavigation from "@features/multiPitchManager/Navigation";
 import {
-  useDownloadOfflineAssets,
+  useDownloadOfflineAssetsList,
   useHydrateOfflineAssets,
 } from "@features/offline/useOffline";
 import OnboardingStackNavigation from "@features/onboarding/Navigation";
@@ -33,7 +34,7 @@ const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 const Navigator = () => {
   const { data, isLoading, isError, error, refetch } = useOwnInfo();
 
-  useDownloadOfflineAssets({ fetchAssets: true });
+  useDownloadOfflineAssetsList();
   useHydrateOfflineAssets();
   usePushNotification();
 
