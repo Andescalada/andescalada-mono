@@ -1,22 +1,11 @@
 import { transformer } from "@andescalada/api/src/transformer";
-import NetInfo from "@react-native-community/netinfo";
-import {
-  onlineManager,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import Env from "@utils/env";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
 import { addPlugin } from "react-query-native-devtools";
-
-onlineManager.setEventListener((setOnline) => {
-  return NetInfo.addEventListener((state) => {
-    setOnline(!!state.isConnected);
-  });
-});
 
 export interface AccessToken {
   exp: number;
