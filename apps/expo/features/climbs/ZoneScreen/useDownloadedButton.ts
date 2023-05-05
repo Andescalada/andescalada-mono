@@ -1,8 +1,6 @@
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom } from "@features/offline/useOffline";
-import useSetAssetsToDb, {
-  isDownloadingAtom,
-} from "@features/offline/utils/setAssetsToDb";
+import useSetAssetsToDb, { isDownloadingAtom } from "hookis/useSetAssetsToDb";
 import type { Zone } from "@prisma/client";
 import deleteZoneSavedImages from "@utils/deleteZoneSavedImages";
 import { useNotifications } from "@utils/notificated";

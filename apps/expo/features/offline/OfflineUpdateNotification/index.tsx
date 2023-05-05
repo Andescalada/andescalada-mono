@@ -1,9 +1,6 @@
 import { A, Box, Text } from "@andescalada/ui";
-import {
-  isDownloadingAtom,
-  progressAtom,
-} from "@features/offline/utils/setAssetsToDb";
 import { useAppTheme } from "@hooks/useAppTheme";
+import { isDownloadingAtom, progressAtom } from "hookis/useSetAssetsToDb";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
