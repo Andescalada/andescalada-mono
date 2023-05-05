@@ -1,5 +1,4 @@
 import { agreementsRouter } from "@andescalada/api/src/routers/agreements";
-import { forOfflineRouter } from "@andescalada/api/src/routers/forOffline";
 import { imagesRouter } from "@andescalada/api/src/routers/images";
 import { multiPitchRouter } from "@andescalada/api/src/routers/multiPitch";
 import { notificationsRouter } from "@andescalada/api/src/routers/notifications";
@@ -31,7 +30,6 @@ export const appRouter = t.router({
   images: imagesRouter,
   multiPitch: multiPitchRouter,
   system: systemRouter,
-  forOffline: forOfflineRouter,
 });
 
 export type AppRouter = typeof appRouter;
