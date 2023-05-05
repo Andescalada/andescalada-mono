@@ -16,9 +16,9 @@ export enum Storage {
   RECENT_ZONES = "RECENT_ZONES",
   IS_OFFLINE_MODE = "IS_OFFLINE_MODE",
 }
-function getItem<T>(key: string): T | null {
+function getItem<T>(key: string) {
   const value = storage.getString(key);
-  return value ? JSON.parse(value) : null;
+  return value ? (JSON.parse(value) as T) : null;
 }
 
 function setItem<T>(key: string, value: T): void {
