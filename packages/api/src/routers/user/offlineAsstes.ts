@@ -6,7 +6,7 @@ import { includeInWallById } from "@andescalada/api/src/routers/walls";
 import { selectZoneAllSectors } from "@andescalada/api/src/routers/zones/allSectors";
 import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { Image, SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@prisma/client";
 import { inferProcedureOutput } from "@trpc/server";
 
 type ZoneAllSectors = inferProcedureOutput<AppRouter["zones"]["allSectors"]>;
@@ -16,6 +16,14 @@ type ToposById = inferProcedureOutput<AppRouter["topos"]["byId"]>;
 type RouteByIdWithEvaluation = inferProcedureOutput<
   AppRouter["routes"]["byIdWithEvaluation"]
 >;
+
+interface ImageToDownload {
+  id: string;
+  height: number;
+  width: number;
+  url: string;
+  publicId: string | null;
+}
 
 const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
   const routes = ctx.prisma.route.findMany({
@@ -140,7 +148,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     };
   });
 
-  const imagesToDownload: Image[] = [];
+  const imagesToDownload: ImageToDownload[] = [];
 
   const parsedTopos: {
     router: "topos";

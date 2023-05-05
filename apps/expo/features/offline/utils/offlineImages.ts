@@ -6,9 +6,7 @@ import fileSystem from "@utils/FileSystem";
 import storage, { Storage } from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
 
-type ListToDownload = inferProcedureOutput<
-  AppRouter["user"]["getDownloadedAssets"]
->;
+type ListToDownload = inferProcedureOutput<AppRouter["user"]["offlineAssets"]>;
 
 export const imageVariantsSavedOffline = (publicId: string) => {
   const mainImage = urlGen.optimizedImage({ publicId });

@@ -83,7 +83,7 @@ export const toposRouter = t.router({
     }),
 });
 
-export const includeInTopo: Prisma.TopoInclude = {
+export const includeInTopo = {
   Wall: {
     include: { Sector: true },
   },
@@ -133,6 +133,7 @@ export const includeInTopo: Prisma.TopoInclude = {
   },
   image: {
     select: {
+      id: true,
       url: true,
       height: true,
       width: true,
