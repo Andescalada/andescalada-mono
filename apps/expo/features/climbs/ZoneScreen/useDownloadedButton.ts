@@ -1,10 +1,10 @@
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom } from "@features/offline/useOffline";
-import useSetAssetsToDb, { isDownloadingAtom } from "hookis/useSetAssetsToDb";
 import type { Zone } from "@prisma/client";
 import deleteZoneSavedImages from "@utils/deleteZoneSavedImages";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
+import useSetAssetsToDb, { isDownloadingAtom } from "hooks/useSetAssetsToDb";
 import { useAtom } from "jotai";
 import { Alert } from "react-native";
 
