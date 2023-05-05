@@ -6,7 +6,6 @@ import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
 import InfoAccessManagerStackNavigation from "@features/InfoAccessManager/Navigation";
 import MultiPitchManagerStackNavigation from "@features/multiPitchManager/Navigation";
-import { useHydrateOfflineAssets } from "@features/offline/useOffline";
 import OnboardingStackNavigation from "@features/onboarding/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import UserStackNavigation from "@features/user/Navigation";
@@ -14,6 +13,7 @@ import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation"
 import ZoneDirectionsStackNavigation from "@features/zoneDirections/Navigation";
 import ZoneLocationStackNavigation from "@features/zoneLocation/Navigation";
 import ZoneManagerStackNavigation from "@features/zoneManager/Navigation";
+import { useHydrateOfflineAssetsOnFocus } from "@hooks/useHydrateOfflineAssets";
 import useOwnInfo from "@hooks/useOwnInfo";
 import usePushNotification from "@hooks/usePushNotification";
 import {
@@ -31,7 +31,7 @@ const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 const Navigator = () => {
   const { data, isLoading, isError, error, refetch } = useOwnInfo();
 
-  useHydrateOfflineAssets();
+  useHydrateOfflineAssetsOnFocus();
   usePushNotification();
 
   if (isError) {

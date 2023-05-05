@@ -20,16 +20,16 @@ const createZoneTable = async (zoneId: string) => {
   return res;
 };
 
-const get = <Return>(
+const get = async <Return>(
   db: QuickSQLiteConnection,
   assetId: string,
   zoneId: string,
-): { data: Return; version: number } | undefined => {
+): Promise<{ data: Return; version: number } | undefined> => {
   const query = `SELECT data, version FROM '${zoneId}' WHERE assetId = '${assetId}' LIMIT 1`;
 
   let results;
   try {
-    const { rows } = db.execute(query);
+    const { rows } = await db.executeAsync(query);
 
     const result = rows?._array[0] as {
       data: string;

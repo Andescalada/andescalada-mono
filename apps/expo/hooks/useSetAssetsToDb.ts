@@ -1,6 +1,6 @@
 import { trpc } from "@andescalada/utils/trpc";
-import { downloadedAssetsListAtom } from "@features/offline/useOffline";
 import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
+import { downloadedAssetsListAtom } from "@hooks/useHydrateOfflineAssets";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { atom, useAtom } from "jotai";
