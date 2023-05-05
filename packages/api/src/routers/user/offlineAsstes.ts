@@ -1,4 +1,3 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { includeInRoute } from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
 import { selectFromSectorAllWalls } from "@andescalada/api/src/routers/sectors";
 import { includeInTopo } from "@andescalada/api/src/routers/topos";
@@ -7,15 +6,6 @@ import { selectZoneAllSectors } from "@andescalada/api/src/routers/zones/allSect
 import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@prisma/client";
-import { inferProcedureOutput } from "@trpc/server";
-
-type ZoneAllSectors = inferProcedureOutput<AppRouter["zones"]["allSectors"]>;
-type SectorAllWalls = inferProcedureOutput<AppRouter["sectors"]["allWalls"]>;
-type WallById = inferProcedureOutput<AppRouter["walls"]["byId"]>;
-type ToposById = inferProcedureOutput<AppRouter["topos"]["byId"]>;
-type RouteByIdWithEvaluation = inferProcedureOutput<
-  AppRouter["routes"]["byIdWithEvaluation"]
->;
 
 interface ImageToDownload {
   id: string;
@@ -97,14 +87,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     zonesResults,
   ] = await ctx.prisma.$transaction([routes, topos, walls, sectors, zones]);
 
-  const parsedRoutes: {
-    router: "routes";
-    procedure: "byIdWithEvaluation";
-    params: { routeId: string; zoneId: string };
-    zoneId: string;
-    data: RouteByIdWithEvaluation;
-    version: number;
-  }[] = routesResults.map((route) => {
+  const parsedRoutes = routesResults.map((route) => {
     const evaluation = {
       average:
         route.RouteEvaluation.reduce(
@@ -139,8 +122,8 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     };
 
     return {
-      router: "routes",
-      procedure: "byIdWithEvaluation",
+      router: "routes" as const,
+      procedure: "byIdWithEvaluation" as const,
       params: { routeId: route.id, zoneId: route.Wall.Sector.zoneId },
       zoneId: route.Wall.Sector.zoneId,
       data,
@@ -150,18 +133,11 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
 
   const imagesToDownload: ImageToDownload[] = [];
 
-  const parsedTopos: {
-    router: "topos";
-    procedure: "byId";
-    params: { topoId: string; zoneId: string };
-    zoneId: string;
-    version: number;
-    data: ToposById;
-  }[] = toposResults.map((topo) => {
+  const parsedTopos = toposResults.map((topo) => {
     if (topo.image) imagesToDownload.push({ ...topo.image });
     return {
-      router: "topos",
-      procedure: "byId",
+      router: "topos" as const,
+      procedure: "byId" as const,
       params: { topoId: topo.id, zoneId: topo.Wall.Sector.zoneId },
       zoneId: topo.Wall.Sector.zoneId,
       data: topo,
@@ -169,18 +145,11 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     };
   });
 
-  const parsedWalls: {
-    router: "walls";
-    procedure: "byId";
-    params: { wallId: string; zoneId: string };
-    zoneId: string;
-    version: number;
-    data: WallById;
-  }[] = wallsResults.map((wall) => {
+  const parsedWalls = wallsResults.map((wall) => {
     const MultiPitch = parseMultiPitch(wall.MultiPitch);
     return {
-      router: "walls",
-      procedure: "byId",
+      router: "walls" as const,
+      procedure: "byId" as const,
       params: { wallId: wall.id, zoneId: wall.Sector.zoneId },
       zoneId: wall.Sector.zoneId,
       data: { ...wall, MultiPitch },
@@ -188,32 +157,18 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     };
   });
 
-  const parsedSectors: {
-    router: "sectors";
-    procedure: "allWalls";
-    params: { sectorId: string };
-    zoneId: string;
-    version: number;
-    data: SectorAllWalls;
-  }[] = sectorsResults.map((sector) => ({
-    router: "sectors",
-    procedure: "allWalls",
+  const parsedSectors = sectorsResults.map((sector) => ({
+    router: "sectors" as const,
+    procedure: "allWalls" as const,
     params: { sectorId: sector.id },
     zoneId: sector.zoneId,
     data: sector,
     version: sector.version,
   }));
 
-  const parsedZone: {
-    router: "zones";
-    procedure: "allSectors";
-    params: { zoneId: string };
-    zoneId: string;
-    version: number;
-    data: ZoneAllSectors;
-  }[] = zonesResults.map((zone) => ({
-    router: "zones",
-    procedure: "allSectors",
+  const parsedZone = zonesResults.map((zone) => ({
+    router: "zones" as const,
+    procedure: "allSectors" as const,
     params: { zoneId: zone.id },
     zoneId: zone.id,
     data: {
@@ -233,7 +188,12 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     ...parsedZone,
   ];
 
-  return { assets, imagesToDownload };
+  const assetList = assets.map((asset) => {
+    const { router, params, procedure, version, zoneId } = asset;
+    return { router, params, procedure, version, zoneId };
+  });
+
+  return { assets, imagesToDownload, assetList };
 });
 
 export default offlineAssets;

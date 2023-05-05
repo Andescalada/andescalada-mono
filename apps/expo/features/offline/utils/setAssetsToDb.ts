@@ -1,4 +1,5 @@
 import { trpc } from "@andescalada/utils/trpc";
+import { downloadedAssetsListAtom } from "@features/offline/useOffline";
 import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
@@ -10,6 +11,7 @@ export const isDownloadingAtom = atom(false);
 
 const useSetAssetsToDb = () => {
   const setIsDownloading = useAtom(isDownloadingAtom)[1];
+  const setDownloadedAssetsList = useAtom(downloadedAssetsListAtom)[1];
 
   const notification = useNotifications();
 
@@ -29,8 +31,8 @@ const useSetAssetsToDb = () => {
         const queryKey = stringify({ router, procedure, params });
         return offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
       });
-
       await Promise.allSettled(setToDB);
+      setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
       db.close();
       await saveImagesToFileSystem(data.imagesToDownload);
     } catch (error) {

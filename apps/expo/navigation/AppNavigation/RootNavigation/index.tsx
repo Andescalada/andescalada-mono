@@ -6,10 +6,7 @@ import ErrorStackNavigation from "@features/error/Navigation";
 import ImageManagerNavigation from "@features/imageManager/Navigation";
 import InfoAccessManagerStackNavigation from "@features/InfoAccessManager/Navigation";
 import MultiPitchManagerStackNavigation from "@features/multiPitchManager/Navigation";
-import {
-  useDownloadOfflineAssetsList,
-  useHydrateOfflineAssets,
-} from "@features/offline/useOffline";
+import { useHydrateOfflineAssets } from "@features/offline/useOffline";
 import OnboardingStackNavigation from "@features/onboarding/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import UserStackNavigation from "@features/user/Navigation";
@@ -34,7 +31,6 @@ const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 const Navigator = () => {
   const { data, isLoading, isError, error, refetch } = useOwnInfo();
 
-  useDownloadOfflineAssetsList();
   useHydrateOfflineAssets();
   usePushNotification();
 

@@ -1,4 +1,5 @@
 import { trpc } from "@andescalada/utils/trpc";
+import { downloadedAssetsListAtom } from "@features/offline/useOffline";
 import useSetAssetsToDb, {
   isDownloadingAtom,
 } from "@features/offline/utils/setAssetsToDb";
@@ -13,6 +14,7 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
   const { data } = trpc.zones.allSectors.useQuery({ zoneId });
   const [isDownloadingGlobal] = useAtom(isDownloadingAtom);
+  const setDownloadedAssetsList = useAtom(downloadedAssetsListAtom)[1];
   const { setAssetsToDb } = useSetAssetsToDb();
   const notification = useNotifications();
 
@@ -78,6 +80,9 @@ const useDownloadedButton = (zoneId: Zone["id"]) => {
               const deleteFromDb = offlineDb.deleteZone(db, zoneId);
               const deleteImages = deleteZoneSavedImages(zoneId);
               await Promise.allSettled([deleteFromDb, deleteImages]);
+              setDownloadedAssetsList((old) =>
+                old.filter((asset) => asset.zoneId !== zoneId),
+              );
               db.close();
               removeToDownloadedList.mutateAsync({ zoneId });
             } catch (err) {

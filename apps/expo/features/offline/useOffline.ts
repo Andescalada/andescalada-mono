@@ -2,35 +2,32 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import useOfflineMode from "@hooks/useOfflineMode";
 import { inferProcedureOutput } from "@trpc/server";
-import storage, { Storage } from "@utils/mmkv/storage";
+import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
+import { useAtom } from "jotai";
 import { useCallback, useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
 import * as Sentry from "sentry-expo";
-import { parse, stringify } from "superjson";
+import { stringify } from "superjson";
 
 type ListToDownload = inferProcedureOutput<
-  AppRouter["user"]["getDownloadedAssets"]
->;
+  AppRouter["user"]["offlineAssets"]
+>["assetList"];
 
-export const useDownloadOfflineAssetsList = () => {
-  trpc.user.getDownloadedAssets.useQuery(undefined, {
-    onSuccess: async (data) => {
-      storage.set(Storage.DOWNLOADED_ASSETS, stringify(data.assetsToDownload));
-    },
-  });
-};
+export const downloadedAssetsListAtom = atomWithMMKV<ListToDownload>(
+  Storage.DOWNLOADED_ASSETS,
+  [],
+);
 
 export const useHydrateOfflineAssets = () => {
   const { isOfflineMode } = useOfflineMode();
 
+  const downloadedAssetsList = useAtom(downloadedAssetsListAtom)[0];
+
   const utils = trpc.useContext();
 
   const hydrate = useCallback(() => {
-    const res = storage.getString(Storage.DOWNLOADED_ASSETS);
-    if (!res) return;
-    const downloadedList = parse<ListToDownload["assetsToDownload"]>(res);
-    downloadedList.forEach((asset) => {
+    downloadedAssetsList.forEach((asset) => {
       const { params, router, procedure, zoneId } = asset;
 
       // @ts-expect-error Unable to type procedure
@@ -42,13 +39,11 @@ export const useHydrateOfflineAssets = () => {
         stringify({ router, procedure, params }),
         zoneId,
       );
-
       if (!savedData) return;
-
       selectedUtil.setData(params, savedData.data);
       db.close();
     });
-  }, [utils]);
+  }, [downloadedAssetsList, utils]);
 
   const shouldHydrate = useCallback(
     async (status: AppStateStatus) => {
