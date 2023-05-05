@@ -25,6 +25,7 @@ import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
+import { onlineManager } from "@tanstack/react-query";
 import { skipAgreementsIntro } from "@templates/AgreementsIntro/AgreementsIntro";
 import emptyArray from "@utils/emptyArray";
 import { useAtom } from "jotai";
@@ -49,6 +50,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
     } = {},
     isLoading,
     isFetching,
+    isError,
     refetch,
   } = trpc.zones.allSectors.useQuery({ zoneId });
 
@@ -97,6 +99,25 @@ const SectorsGateway: FC<Props> = ({ children }) => {
       params: { zoneId, zoneName },
     });
   }, [rootNavigation, skip, zoneId, zoneName]);
+
+  if (!onlineManager.isOnline()) return children;
+
+  if (isError) {
+    return (
+      <Screen safeAreaDisabled padding="m">
+        <Box marginBottom="s" marginTop="xl">
+          <Icon name="eyes-color" size={50} />
+          <Text variant="h1" fontFamily="Rubik-700">
+            Hubo un error!
+          </Text>
+        </Box>
+        <Text variant="p2R">Estas cosas le pasan a l@s mejores</Text>
+        <Text variant="p2R">
+          Intenta reiniciar la app o puedes contactarnos si persiste.
+        </Text>
+      </Screen>
+    );
+  }
 
   if (isLoading)
     return (
