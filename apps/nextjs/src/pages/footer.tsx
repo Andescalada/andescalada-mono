@@ -72,7 +72,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="bg-white h-[2px] w-full rounded-sm mt-10" />
-      <p className="text-xs">v1.3-e</p>
+      <p className="text-xs">v1.3-f</p>
     </footer>
   );
 };
