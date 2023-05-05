@@ -7,6 +7,7 @@ import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
 import { useCallback, useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
+import * as Sentry from "sentry-expo";
 import { stringify } from "superjson";
 
 type ListToDownload = inferProcedureOutput<
@@ -25,6 +26,7 @@ export const useHydrateOfflineAssets = () => {
 
   const hydrate = useCallback(async () => {
     const db = offlineDb.open();
+
     const hydrateAsset = downloadedAssetsList.map(async (asset) => {
       const { params, router, procedure, zoneId } = asset;
 
@@ -37,9 +39,10 @@ export const useHydrateOfflineAssets = () => {
         zoneId,
       );
       if (!savedData) return;
-      selectedUtil.setData(params, savedData.data);
+      return selectedUtil.setData(params, savedData.data);
     });
     await Promise.all(hydrateAsset);
+    Sentry.Native.captureMessage(`Hydrated assets: ${hydrateAsset.length}`);
     db.close();
   }, [downloadedAssetsList, utils]);
 

@@ -3,6 +3,7 @@ import { useHydrateOfflineAssets } from "@hooks/useHydrateOfflineAssets";
 import { onlineManager } from "@tanstack/react-query";
 import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
 import { useAtom } from "jotai";
+import * as Sentry from "sentry-expo";
 
 const isOfflineModeAtom = atomWithMMKV(Storage.IS_OFFLINE_MODE, false);
 
@@ -11,6 +12,10 @@ const useOfflineMode = () => {
   const utils = trpc.useContext();
 
   const { hydrate } = useHydrateOfflineAssets();
+
+  Sentry.Native.captureMessage(
+    `isOfflineMode: ${isOfflineMode}, isOnline ${onlineManager.isOnline()}`,
+  );
 
   const setIsOfflineMode = () => {
     utils.invalidate();
