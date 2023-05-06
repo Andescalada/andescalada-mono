@@ -10,7 +10,8 @@
       "@utils/*": ["./utils/*"],
       "@store/*": ["./store/*"],
       "@hooks/*": ["./hooks/*"],
-      "@templates/*": ["./templates/*"]
+      "@templates/*": ["./templates/*"],
+      "@atoms/*": ["./atoms/*"]
     },
     "strict": true
   }

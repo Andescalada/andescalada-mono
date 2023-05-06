@@ -1,11 +1,9 @@
 import { trpc } from "@andescalada/utils/trpc";
+import { isOfflineModeAtom } from "@atoms/index";
 import { useHydrateOfflineAssets } from "@hooks/useHydrateOfflineAssets";
 import { onlineManager } from "@tanstack/react-query";
-import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
 import { useAtom } from "jotai";
 import * as Sentry from "sentry-expo";
-
-const isOfflineModeAtom = atomWithMMKV(Storage.IS_OFFLINE_MODE, false);
 
 const useOfflineMode = () => {
   const [isOfflineMode, setIsOfflineModeAtom] = useAtom(isOfflineModeAtom);

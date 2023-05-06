@@ -24,6 +24,7 @@ module.exports = function (api) {
             "@store": "./store",
             "@hooks": "./hooks",
             "@templates": "./templates",
+            "@atoms": "./atoms",
           },
         },
       ],

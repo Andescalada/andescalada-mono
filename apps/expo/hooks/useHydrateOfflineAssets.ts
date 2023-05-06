@@ -1,6 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
-import useOfflineMode from "@hooks/useOfflineMode";
+import { isOfflineModeAtom } from "@atoms/index";
 import { inferProcedureOutput } from "@trpc/server";
 import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
 import offlineDb from "@utils/quick-sqlite";
@@ -50,7 +50,7 @@ export const useHydrateOfflineAssets = () => {
 };
 
 export const useHydrateOfflineAssetsOnFocus = () => {
-  const { isOfflineMode } = useOfflineMode();
+  const isOfflineMode = useAtom(isOfflineModeAtom)[0];
 
   const { hydrate } = useHydrateOfflineAssets();
 
