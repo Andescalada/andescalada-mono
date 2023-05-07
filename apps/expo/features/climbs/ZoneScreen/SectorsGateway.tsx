@@ -13,13 +13,13 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
 import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -52,7 +52,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
     isFetching,
     isError,
     refetch,
-  } = trpc.zones.allSectors.useQuery({ zoneId });
+  } = useZonesAllSectors({ zoneId });
 
   const requestStatus = useMemo(() => {
     if (emptyArray(ZoneAccessRequest)) return undefined;

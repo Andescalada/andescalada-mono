@@ -1,4 +1,5 @@
 import { trpc } from "@andescalada/utils/trpc";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import { downloadedAssetsListAtom } from "@hooks/useHydrateOfflineAssets";
 import useSetAssetsToDb, { isDownloadingAtom } from "@hooks/useSetAssetsToDb";
 import type { Zone } from "@prisma/client";
@@ -10,7 +11,7 @@ import { Alert } from "react-native";
 
 const useDownloadedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
-  const { data } = trpc.zones.allSectors.useQuery({ zoneId });
+  const { data } = useZonesAllSectors({ zoneId });
   const [isDownloadingGlobal] = useAtom(isDownloadingAtom);
   const setDownloadedAssetsList = useAtom(downloadedAssetsListAtom)[1];
   const { setAssetsToDb } = useSetAssetsToDb();

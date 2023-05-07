@@ -13,6 +13,7 @@ import {
   InfoAccessManagerNavigationProps,
   InfoAccessManagerRoutes,
 } from "@features/InfoAccessManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { Zone } from "@prisma/client";
@@ -70,7 +71,7 @@ const AccessRequestList: FC<Props> = ({ zoneId, zoneName }) => {
     },
   });
 
-  const zone = trpc.zones.allSectors.useQuery({ zoneId });
+  const zone = useZonesAllSectors({ zoneId });
 
   const refresh = useRefresh(refetch, isFetching && !isLoading);
   const { permission } = usePermissions({ zoneId });

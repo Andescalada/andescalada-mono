@@ -1,6 +1,5 @@
 import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRouteProps,
@@ -15,6 +14,7 @@ import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/
 import { ZoneDirectionsRoutes } from "@features/zoneDirections/Navigation/types";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import useGlobalPermissions from "@hooks/useGlobalPermissions";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -42,7 +42,7 @@ const ZoneHeader = () => {
 
   const rootNavigation = useRootNavigation();
 
-  const { data } = trpc.zones.allSectors.useQuery({ zoneId });
+  const { data } = useZonesAllSectors({ zoneId });
 
   const members = useMemo(
     () =>

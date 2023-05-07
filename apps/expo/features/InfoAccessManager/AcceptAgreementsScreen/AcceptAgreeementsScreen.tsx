@@ -13,6 +13,7 @@ import {
   InfoAccessManagerRoutes,
   InfoAccessManagerScreenProps,
 } from "@features/InfoAccessManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import AgreementsList from "@templates/AgreementsList";
@@ -34,7 +35,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
     zoneId,
   });
 
-  const zone = trpc.zones.allSectors.useQuery({ zoneId });
+  const zone = useZonesAllSectors({ zoneId });
 
   const requestAccess = trpc.zoneAccess.requestZoneAccess.useMutation({
     onSuccess: () => {
