@@ -20,7 +20,7 @@ const createZoneTable = async (zoneId: string) => {
   return res;
 };
 
-const get = async <Return>(
+const getAsync = async <Return>(
   db: QuickSQLiteConnection,
   assetId: string,
   zoneId: string,
@@ -44,6 +44,33 @@ const get = async <Return>(
     results = undefined;
   }
   // db.close();
+  return results;
+};
+
+const get = <Return>(
+  db: QuickSQLiteConnection,
+  assetId: string,
+  zoneId: string,
+): { data: Return; version: number } | undefined => {
+  const query = `SELECT data, version FROM '${zoneId}' WHERE assetId = '${assetId}' LIMIT 1`;
+
+  let results;
+  try {
+    const { rows } = db.execute(query);
+
+    const result = rows?._array[0] as {
+      data: string;
+      version: number;
+    };
+
+    const data = parse<Return>(result.data);
+    const version = result.version;
+
+    results = { data, version };
+  } catch {
+    results = undefined;
+  }
+
   return results;
 };
 
@@ -117,6 +144,7 @@ const allAssetsOfZone = (db: QuickSQLiteConnection, zoneId: string) => {
 
 const offlineDb = {
   open,
+  getAsync,
   get,
   set,
   delete: deleteAsset,
