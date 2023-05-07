@@ -29,7 +29,23 @@ const useSetAssetsToDb = () => {
       const setToDB = data.assets.map((asset) => {
         const { params, router, procedure, version, zoneId } = asset;
         const queryKey = stringify({ router, procedure, params });
-        return offlineDb.setOrCreate(db, queryKey, zoneId, data, version);
+
+        const downloadedAsset = data.assets.find(
+          (a) =>
+            a.procedure === procedure &&
+            a.router === router &&
+            a.params === params,
+        );
+
+        if (!downloadedAsset) return;
+
+        return offlineDb.setOrCreate(
+          db,
+          queryKey,
+          zoneId,
+          downloadedAsset.data,
+          version,
+        );
       });
       await Promise.allSettled(setToDB);
       setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
