@@ -38,15 +38,18 @@ const TopoImage: FC = () => {
 
   const rootNavigation = useRootNavigation();
 
-  return (
-    <Box height={200}>
-      {isLoadingWall && (
+  if (isLoadingWall)
+    return (
+      <Box height={200}>
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" />
         </Box>
-      )}
-      <AddTopoImage />
-      {mainTopo && (
+      </Box>
+    );
+
+  if (mainTopo) {
+    return (
+      <Box height={200}>
         <A.Pressable
           overflow="hidden"
           flex={1}
@@ -93,7 +96,13 @@ const TopoImage: FC = () => {
             </>
           )}
         </A.Pressable>
-      )}
+      </Box>
+    );
+  }
+
+  return (
+    <Box height={200}>
+      <AddTopoImage />
     </Box>
   );
 };
