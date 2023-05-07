@@ -26,12 +26,14 @@ if (__DEV__) {
   initializeMMKVFlipper({ default: storage });
 }
 
-Sentry.init({
-  dsn: Env.SENTRY_DNS,
-  debug: __DEV__,
-  enableInExpoDevelopment: false,
-  environment: Env.SENTRY_DEPLOY_ENV,
-});
+if (!__DEV__) {
+  Sentry.init({
+    dsn: Env.SENTRY_DNS,
+    debug: __DEV__,
+    enableInExpoDevelopment: false,
+    environment: Env.SENTRY_DEPLOY_ENV,
+  });
+}
 
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered.",
