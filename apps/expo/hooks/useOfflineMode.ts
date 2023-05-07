@@ -20,10 +20,10 @@ const useOfflineMode = () => {
     setIsOfflineModeAtom((isCurrentlyOfflineModeStatus) => {
       if (isCurrentlyOfflineModeStatus) {
         onlineManager.setOnline(undefined);
-        hydrate();
         return false;
       } else {
         onlineManager.setOnline(false);
+        hydrate();
         return true;
       }
     });
