@@ -189,8 +189,6 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     ...parsedZone,
   ];
 
-  console.log(parsedWalls);
-
   const assetList = assets.map((asset) => {
     const { router, params, procedure, version, zoneId } = asset;
     return { router, params, procedure, version, zoneId };
