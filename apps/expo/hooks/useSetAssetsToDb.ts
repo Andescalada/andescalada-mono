@@ -1,6 +1,6 @@
 import { trpc } from "@andescalada/utils/trpc";
+import { downloadedAssetsListAtom } from "@atoms/index";
 import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
-import { downloadedAssetsListAtom } from "@hooks/useHydrateOfflineAssets";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { atom, useAtom } from "jotai";
@@ -18,11 +18,10 @@ const useSetAssetsToDb = () => {
   const utils = trpc.useContext();
   const setAssetsToDb = async ({ zoneId }: { zoneId: string }) => {
     const fetchAssets = utils.user.offlineAssets.fetch;
+    setIsDownloading(true);
     try {
       const data = await fetchAssets({ zoneId });
       if (!data) return;
-
-      setIsDownloading(true);
 
       const db = offlineDb.open();
 
@@ -59,7 +58,6 @@ const useSetAssetsToDb = () => {
         },
       });
     }
-
     setIsDownloading(false);
   };
   return { setAssetsToDb };

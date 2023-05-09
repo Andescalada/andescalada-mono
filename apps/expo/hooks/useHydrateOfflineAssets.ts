@@ -1,22 +1,10 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
-import { isOfflineModeAtom } from "@atoms/index";
-import { inferProcedureOutput } from "@trpc/server";
-import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
+import { downloadedAssetsListAtom, isOfflineModeAtom } from "@atoms/index";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
 import { useCallback, useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
 import { stringify } from "superjson";
-
-type ListToDownload = inferProcedureOutput<
-  AppRouter["user"]["offlineAssets"]
->["assetList"];
-
-export const downloadedAssetsListAtom = atomWithMMKV<ListToDownload>(
-  Storage.DOWNLOADED_ASSETS,
-  [],
-);
 
 export const useHydrateOfflineAssets = () => {
   const downloadedAssetsList = useAtom(downloadedAssetsListAtom)[0];

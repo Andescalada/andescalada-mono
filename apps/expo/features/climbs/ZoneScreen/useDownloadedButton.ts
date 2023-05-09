@@ -1,6 +1,6 @@
 import { trpc } from "@andescalada/utils/trpc";
+import { downloadedAssetsListAtom } from "@atoms/index";
 import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
-import { downloadedAssetsListAtom } from "@hooks/useHydrateOfflineAssets";
 import useSetAssetsToDb, { isDownloadingAtom } from "@hooks/useSetAssetsToDb";
 import type { Zone } from "@prisma/client";
 import deleteZoneSavedImages from "@utils/deleteZoneSavedImages";
