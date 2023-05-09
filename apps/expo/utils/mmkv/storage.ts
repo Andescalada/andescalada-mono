@@ -15,6 +15,7 @@ export enum Storage {
   SKIP_AGREEMENTS_INTRO = "DO_NOT_SHOW_AGREEMENT_INTRO",
   RECENT_ZONES = "RECENT_ZONES",
   IS_OFFLINE_MODE = "IS_OFFLINE_MODE",
+  DOWNLOADED_ZONES = "DOWNLOADED_ZONES",
 }
 function getItem<T>(key: string) {
   const value = storage.getString(key);

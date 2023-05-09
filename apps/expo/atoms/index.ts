@@ -9,3 +9,11 @@ export const downloadedAssetsListAtom = atomWithMMKV<ListToDownload>(
   Storage.DOWNLOADED_ASSETS,
   [],
 );
+
+export const downloadedZonesAtom = atomWithMMKV<{
+  [zoneId: string]: {
+    downloadedAt: Date;
+    device: string | null;
+    zoneName: string;
+  };
+}>(Storage.DOWNLOADED_ZONES, {});

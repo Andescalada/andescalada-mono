@@ -1,24 +1,44 @@
 import { trpc } from "@andescalada/utils/trpc";
-import { downloadedAssetsListAtom } from "@atoms/index";
+import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
 import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
+import { deviceName } from "expo-device";
 import { atom, useAtom } from "jotai";
+import { useState } from "react";
 import { stringify } from "superjson";
 
 export const progressAtom = atom(0);
-export const isDownloadingAtom = atom(false);
 
 const useSetAssetsToDb = () => {
-  const setIsDownloading = useAtom(isDownloadingAtom)[1];
   const setDownloadedAssetsList = useAtom(downloadedAssetsListAtom)[1];
+  const setIsDownloadedZones = useAtom(downloadedZonesAtom)[1];
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const utils = trpc.useContext();
+
+  const addToDownloadedList = trpc.user.addToDownloadedZones.useMutation({
+    onSuccess: () => {
+      utils.user.ownInfo.invalidate();
+    },
+  });
 
   const notification = useNotifications();
 
-  const utils = trpc.useContext();
-  const setAssetsToDb = async ({ zoneId }: { zoneId: string }) => {
+  const setAssetsToDb = async ({
+    zoneId,
+    zoneName,
+  }: {
+    zoneId: string;
+    zoneName: string;
+  }) => {
     const fetchAssets = utils.user.offlineAssets.fetch;
-    setIsDownloading(true);
+    setIsDownloadedZones((old) => ({
+      ...old,
+      [zoneId]: { device: deviceName, downloadedAt: new Date(), zoneName },
+    }));
+    setIsLoading(true);
     try {
       const data = await fetchAssets({ zoneId });
       if (!data) return;
@@ -50,7 +70,12 @@ const useSetAssetsToDb = () => {
       setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
       db.close();
       await saveImagesToFileSystem(data.imagesToDownload);
+      addToDownloadedList.mutate({ zoneId });
     } catch (error) {
+      setIsDownloadedZones((old) => {
+        delete old[zoneId];
+        return old;
+      });
       notification.notify("error", {
         params: {
           title: "Error",
@@ -58,9 +83,9 @@ const useSetAssetsToDb = () => {
         },
       });
     }
-    setIsDownloading(false);
+    setIsLoading(false);
   };
-  return { setAssetsToDb };
+  return { setAssetsToDb, isLoading };
 };
 
 export default useSetAssetsToDb;
