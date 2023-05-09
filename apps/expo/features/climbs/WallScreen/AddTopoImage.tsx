@@ -11,6 +11,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
@@ -29,7 +30,7 @@ const AddTopoImage: FC = () => {
   const { isOfflineMode } = useOfflineMode();
   const { wallId, zoneId } = route.params;
   const utils = trpc.useContext();
-  const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
+  const { data, isLoading: isLoadingWall } = useWallsById({
     wallId,
     zoneId,
   });

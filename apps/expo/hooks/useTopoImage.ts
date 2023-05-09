@@ -1,8 +1,8 @@
-import { trpc } from "@andescalada/utils/trpc";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
-import type { Wall, Zone } from "@prisma/client";
 import { useFitContent } from "@hooks/useFitContent";
+import type { Wall, Zone } from "@prisma/client";
 import { useMemo } from "react";
 
 interface Args {
@@ -12,7 +12,7 @@ interface Args {
 }
 
 const useTopoImage = ({ wallId, zoneId, imageQuality }: Args) => {
-  const { data } = trpc.walls.byId.useQuery({ wallId, zoneId });
+  const { data } = useWallsById({ wallId, zoneId });
   const { height, width, publicId } = data?.topos[0].image || {
     height: 0,
     width: 0,

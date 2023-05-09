@@ -6,6 +6,7 @@ import {
 } from "@features/climbs/Navigation/types";
 import AddTopoImage from "@features/climbs/WallScreen/AddTopoImage";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -21,7 +22,7 @@ type NavigationRoute =
 const TopoImage: FC = () => {
   const route = useRoute<NavigationRoute>();
   const { wallId, zoneId } = route.params;
-  const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
+  const { data, isLoading: isLoadingWall } = useWallsById({
     wallId,
     zoneId,
   });

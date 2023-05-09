@@ -54,8 +54,9 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     where: {
       isDeleted: SoftDelete.NotDeleted,
       Sector: {
-        id: input.zoneId,
-        Zone: { DownloadedBy: { some: { email: ctx.user.email } } },
+        Zone: {
+          id: input.zoneId,
+        },
       },
     },
     include: includeInWallById,
@@ -187,6 +188,8 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     ...parsedSectors,
     ...parsedZone,
   ];
+
+  console.log(parsedWalls);
 
   const assetList = assets.map((asset) => {
     const { router, params, procedure, version, zoneId } = asset;
