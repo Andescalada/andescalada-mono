@@ -67,14 +67,14 @@ const get = <Return>(
     const version = result.version;
 
     results = { data, version };
-  } catch {
+  } catch (err) {
     results = undefined;
   }
 
   return results;
 };
 
-const set = async (
+const setAsync = async (
   db: QuickSQLiteConnection,
   assetId: string,
   zoneId: string,
@@ -89,6 +89,22 @@ const set = async (
 
   return serializedData;
 };
+const set = (
+  db: QuickSQLiteConnection,
+  assetId: string,
+  zoneId: string,
+  data: unknown,
+  version: number,
+) => {
+  try {
+    const serializedData = stringify(data);
+    const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
+    db.execute(query);
+    return serializedData;
+  } catch {
+    return undefined;
+  }
+};
 
 const setOrCreate = async (
   db: QuickSQLiteConnection,
@@ -98,7 +114,7 @@ const setOrCreate = async (
   version: number,
 ) => {
   await createZoneTable(zoneId);
-  return await set(db, assetId, zoneId, data, version);
+  return await setAsync(db, assetId, zoneId, data, version);
 };
 
 const deleteAsset = async (
@@ -146,6 +162,7 @@ const offlineDb = {
   open,
   getAsync,
   get,
+  setAsync,
   set,
   delete: deleteAsset,
   deleteZone,
