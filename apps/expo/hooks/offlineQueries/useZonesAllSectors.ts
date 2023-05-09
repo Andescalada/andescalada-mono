@@ -19,6 +19,23 @@ const useZonesAllSectors = (params: Params, options?: Options) => {
 
   return trpc.zones.allSectors.useQuery(params, {
     enabled: !isOfflineMode,
+    onSuccess: (data) => {
+      if (data.isDownloaded) {
+        const db = offlineDb.open();
+        offlineDb.set(
+          db,
+          stringify({
+            router: "zones",
+            procedure: "allSectors",
+            params,
+          }),
+          params.zoneId,
+          data,
+          data.version,
+        );
+        db.close();
+      }
+    },
     initialData: () => {
       const db = offlineDb.open();
       const saved = offlineDb.get<Data>(
