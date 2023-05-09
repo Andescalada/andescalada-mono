@@ -4,8 +4,7 @@
   "author": "elevyg",
   "private": true,
   "scripts": {
-    "dev": " pscale connect andescalada develop --port 3309",
-    "build": "pscale connect andescalada develop --port 3309 && npx prisma db push && pscale deploy-request create andescalada develop"
+    "dev": " pscale connect andescalada develop --port 3309"
   },
   "peerDependencies": {
     "zod": "*"
