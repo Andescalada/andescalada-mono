@@ -10,7 +10,6 @@ import {
   Screen,
   Text,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
@@ -18,6 +17,7 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
+import useToposById from "@hooks/offlineQueries/useToposById";
 import { useAppSelector } from "@hooks/redux";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -38,7 +38,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
 
   const { showRoutes } = useAppSelector((state) => state.localConfig);
 
-  const { data } = trpc.topos.byId.useQuery({ topoId, zoneId });
+  const { data } = useToposById({ topoId, zoneId });
 
   const route = useMemo(
     () => data?.RoutePath.find((r) => r.Route.id === selectedRoute)?.Route,

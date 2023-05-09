@@ -1,4 +1,3 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { pathToArray } from "@andescalada/climbs-drawer/utils";
 import { ActivityIndicator, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -8,11 +7,9 @@ import {
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import parsedTopo from "@features/routesManager/utils/parsedTopos";
+import useToposById from "@hooks/offlineQueries/useToposById";
 import useTopoImage from "@hooks/useTopoImage";
-import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback, useMemo } from "react";
-
-type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
+import { FC, useMemo } from "react";
 
 type Props =
   RoutesManagerScreenProps<RoutesManagerNavigationRoutes.MultiPitchDrawer>;
@@ -43,15 +40,16 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     return undefined;
   }, [previousPitch]);
 
-  const { data: topos } = trpc.topos.byId.useQuery(
+  const { data } = useToposById(
     { topoId, zoneId },
     {
       staleTime: 0,
-      select: useCallback(
-        (topo: Topo) => parsedTopo(topo, routeParams.id),
-        [routeParams.id],
-      ),
     },
+  );
+
+  const topos = useMemo(
+    () => parsedTopo(data, routeParams.id),
+    [routeParams.id, data],
   );
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({

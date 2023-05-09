@@ -31,6 +31,7 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
     const client = new QueryClient({
       defaultOptions: {
         queries: {
+          // networkMode: "always",
           retry: false,
           staleTime: 1 * (60 * 1000), // 5 mins
           cacheTime: 5 * (60 * 1000), // 10 mins
@@ -44,7 +45,7 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: `${url}/api/trpc`,
+          url: true ? "" : `${url}/api/trpc`,
 
           async headers() {
             return {

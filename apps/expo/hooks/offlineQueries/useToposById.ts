@@ -7,16 +7,16 @@ import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
 import { stringify } from "superjson";
 
-type Data = inferProcedureOutput<AppRouter["walls"]["byId"]>;
+type Data = inferProcedureOutput<AppRouter["topos"]["byId"]>;
 
-type Params = inferRouterInputs<AppRouter>["walls"]["byId"];
+type Params = inferRouterInputs<AppRouter>["topos"]["byId"];
 
-type Options = inferReactQueryProcedureOptions<AppRouter>["walls"]["byId"];
+type Options = inferReactQueryProcedureOptions<AppRouter>["topos"]["byId"];
 
-const useWallsById = (params: Params, options?: Options) => {
+const useToposById = (params: Params, options?: Options) => {
   const isOfflineMode = useAtom(isOfflineModeAtom)[0];
 
-  return trpc.walls.byId.useQuery(params, {
+  return trpc.topos.byId.useQuery(params, {
     ...options,
     enabled: !isOfflineMode,
     initialData: () => {
@@ -24,7 +24,7 @@ const useWallsById = (params: Params, options?: Options) => {
       const saved = offlineDb.get<Data>(
         db,
         stringify({
-          router: "walls",
+          router: "topos",
           procedure: "byId",
           params,
         }),
@@ -51,4 +51,4 @@ const useWallsById = (params: Params, options?: Options) => {
   });
 };
 
-export default useWallsById;
+export default useToposById;
