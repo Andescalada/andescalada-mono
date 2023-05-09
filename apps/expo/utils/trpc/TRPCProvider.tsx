@@ -61,7 +61,7 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: false ? "" : `${url}/api/trpc`,
+          url: `${url}/api/trpc`,
 
           async headers() {
             return {

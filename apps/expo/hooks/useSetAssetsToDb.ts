@@ -75,6 +75,13 @@ const useSetAssetsToDb = () => {
         imagesToDownload: data.imagesToDownload,
         zoneId,
       });
+      notification.notify("success", {
+        params: {
+          title: "Zona descargada con éxito",
+          description: `Ahora ${zoneName} está disponible offline`,
+          hideCloseButton: true,
+        },
+      });
       addToDownloadedList.mutate({ zoneId });
     } catch (error) {
       setIsDownloadedZones((old) => {
