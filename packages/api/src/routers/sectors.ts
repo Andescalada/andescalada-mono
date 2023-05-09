@@ -120,7 +120,7 @@ export const sectorsRouter = t.router({
       return sector;
     }),
   // Asset being downloaded
-  allWalls: t.procedure
+  allWalls: protectedZoneProcedure
     .input(z.object({ sectorId: z.string() }))
     .query(async ({ ctx, input }) => {
       const res = await ctx.prisma.sector.findUnique({

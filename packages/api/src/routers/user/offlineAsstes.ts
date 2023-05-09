@@ -160,7 +160,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
   const parsedSectors = sectorsResults.map((sector) => ({
     router: "sectors" as const,
     procedure: "allWalls" as const,
-    params: { sectorId: sector.id },
+    params: { sectorId: sector.id, zoneId: sector.zoneId },
     zoneId: sector.zoneId,
     data: sector,
     version: sector.version,
