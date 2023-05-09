@@ -31,7 +31,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     include: {
       ...includeInRoute,
       RouteGradeEvaluation: { select: { evaluation: true } },
-      RouteEvaluation: { select: { evaluation: true } },
+      RouteEvaluation: { select: { evaluation: true, User: true } },
       Author: { select: { email: true } },
     },
   });
@@ -107,6 +107,11 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       count: route.RouteGradeEvaluation.length,
     };
 
+    const userEvaluation =
+      route.RouteEvaluation.find(
+        (evaluation) => evaluation.User.email === ctx.user.email,
+      )?.evaluation.toNumber() || 0;
+
     const mainTopo = route.Wall.topos[0];
     const description = route.description?.originalText;
     const length = route.RouteLength?.length
@@ -120,6 +125,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       length,
       evaluation,
       gradeEvaluation,
+      userEvaluation,
     };
 
     return {

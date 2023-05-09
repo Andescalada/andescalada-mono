@@ -19,17 +19,8 @@ const byIdWithEvaluation = protectedZoneProcedure
     const findRoute = ctx.prisma.route.findUniqueOrThrow({
       where: { id: input.routeId },
       include: {
-        description: true,
-        RouteLength: true,
-        RouteGrade: true,
-        Wall: {
-          select: {
-            name: true,
-            id: true,
-            topos: { where: { main: true }, take: 1, include: { image: true } },
-            Sector: { select: { name: true, zoneId: true, id: true } },
-          },
-        },
+        ...includeInRoute,
+        RouteGradeEvaluation: { where: { User: { email: ctx.user.email } } },
       },
     });
 
@@ -67,6 +58,7 @@ const byIdWithEvaluation = protectedZoneProcedure
           : 0,
         count: evaluationAverage._count.evaluation,
       },
+      userEvaluation: route.RouteGradeEvaluation[0]?.evaluation,
       gradeEvaluation: {
         average: gradeEvaluationAverage._avg.evaluation
           ? Number(gradeEvaluationAverage._avg.evaluation)

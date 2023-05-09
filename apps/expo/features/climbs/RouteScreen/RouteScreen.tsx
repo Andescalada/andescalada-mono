@@ -23,9 +23,11 @@ import {
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useRoutesByIdWithEvaluation from "@hooks/offlineQueries/useRoutesByIdWithEvaluation";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useDebounce from "@hooks/useDebounce";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -62,14 +64,14 @@ const RouteScreen: FC<Props> = ({
   },
   navigation,
 }) => {
-  const { data, isLoading } = trpc.routes.byIdWithEvaluation.useQuery({
+  const { data, isLoading } = useRoutesByIdWithEvaluation({
     routeId,
     zoneId,
   });
 
-  const { data: evaluation } = trpc.routes.evaluationById.useQuery({ routeId });
+  const { isOfflineMode } = useOfflineMode();
 
-  if (!data || isLoading || !evaluation)
+  if ((!data || isLoading) && !isOfflineMode)
     return (
       <Screen padding="m">
         <Header
@@ -82,6 +84,10 @@ const RouteScreen: FC<Props> = ({
         </Box>
       </Screen>
     );
+
+  //TODO: Add screen to this case
+  if (!data && isOfflineMode) return null;
+
   return (
     <Screen padding="m">
       <Header
@@ -89,7 +95,7 @@ const RouteScreen: FC<Props> = ({
         onGoBack={navigation.goBack}
         showOptions={false}
       />
-      <RouteContainer route={data} evaluationValue={evaluation.value} />
+      <RouteContainer route={data} evaluationValue={data.userEvaluation} />
     </Screen>
   );
 };
@@ -271,7 +277,6 @@ const RouteEvaluation = ({
   const utils = trpc.useContext();
   const addOrEditEvaluation = trpc.routes.addOrEditEvaluation.useMutation({
     onSuccess: ({ routeId }) => {
-      utils.routes.evaluationById.invalidate({ routeId });
       utils.routes.byIdWithEvaluation.invalidate({ routeId });
     },
   });
