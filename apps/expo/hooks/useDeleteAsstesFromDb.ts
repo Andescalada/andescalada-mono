@@ -1,7 +1,7 @@
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
+import useDeleteZoneSavedImages from "@hooks/useDeleteZoneSavedImages";
 import type { Zone } from "@prisma/client";
-import deleteZoneSavedImages from "@utils/deleteZoneSavedImages";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
@@ -22,6 +22,8 @@ const useDeleteAssetsFromDb = () => {
     },
   });
 
+  const { deleteZoneSavedImages } = useDeleteZoneSavedImages();
+
   const deleteAssetsFromDb = useCallback(
     async ({ zoneId }: { zoneId: Zone["id"] }) => {
       setIsLoading(true);
@@ -33,7 +35,7 @@ const useDeleteAssetsFromDb = () => {
       try {
         const db = offlineDb.open();
         const deleteFromDb = offlineDb.deleteZone(db, zoneId);
-        const deleteImages = deleteZoneSavedImages(zoneId);
+        const deleteImages = deleteZoneSavedImages({ zoneId });
         await Promise.allSettled([deleteFromDb, deleteImages]);
         setDownloadedAssetsList((old) =>
           old.filter((asset) => asset.zoneId !== zoneId),
@@ -54,6 +56,7 @@ const useDeleteAssetsFromDb = () => {
       setIsLoading(false);
     },
     [
+      deleteZoneSavedImages,
       downloadedZones,
       notification,
       removeToDownloadedList,

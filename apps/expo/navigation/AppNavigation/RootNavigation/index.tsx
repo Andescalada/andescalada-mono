@@ -1,5 +1,4 @@
 import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import ErrorStackNavigation from "@features/error/Navigation";
@@ -13,7 +12,6 @@ import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation"
 import ZoneDirectionsStackNavigation from "@features/zoneDirections/Navigation";
 import ZoneLocationStackNavigation from "@features/zoneLocation/Navigation";
 import ZoneManagerStackNavigation from "@features/zoneManager/Navigation";
-import { useHydrateOfflineAssetsOnFocus } from "@hooks/useHydrateOfflineAssets";
 import useOwnInfo from "@hooks/useOwnInfo";
 import usePushNotification from "@hooks/usePushNotification";
 import {
@@ -31,7 +29,6 @@ const Stack = createStackNavigator<RootNavigationNavigationParamList>();
 const Navigator = () => {
   const { data, isLoading, isError, error, refetch } = useOwnInfo();
 
-  useHydrateOfflineAssetsOnFocus();
   usePushNotification();
 
   if (isError) {

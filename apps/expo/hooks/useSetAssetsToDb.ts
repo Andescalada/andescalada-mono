@@ -1,6 +1,6 @@
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
-import { saveImagesToFileSystem } from "@features/offline/utils/offlineImages";
+import { useSaveImagesToFileSystem } from "@hooks/useSaveImagesToFileSystem";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { deviceName } from "expo-device";
@@ -25,6 +25,8 @@ const useSetAssetsToDb = () => {
   });
 
   const notification = useNotifications();
+
+  const { saveImagesToFileSystem } = useSaveImagesToFileSystem();
 
   const setAssetsToDb = async ({
     zoneId,
@@ -69,7 +71,10 @@ const useSetAssetsToDb = () => {
       await Promise.allSettled(setToDB);
       setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
       db.close();
-      await saveImagesToFileSystem(data.imagesToDownload);
+      await saveImagesToFileSystem({
+        imagesToDownload: data.imagesToDownload,
+        zoneId,
+      });
       addToDownloadedList.mutate({ zoneId });
     } catch (error) {
       setIsDownloadedZones((old) => {
