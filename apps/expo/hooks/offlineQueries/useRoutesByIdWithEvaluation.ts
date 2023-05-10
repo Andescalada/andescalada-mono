@@ -24,6 +24,8 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
   const downloadedZones = useAtom(downloadedZonesAtom)[0];
 
   const offlineStates = useQuery({
+    cacheTime: 0,
+    staleTime: 0,
     queryKey: [
       "offlineData",
       stringify({

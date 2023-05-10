@@ -27,7 +27,6 @@ import useRoutesByIdWithEvaluation from "@hooks/offlineQueries/useRoutesByIdWith
 import { useAppTheme } from "@hooks/useAppTheme";
 import useDebounce from "@hooks/useDebounce";
 import useGradeSystem from "@hooks/useGradeSystem";
-import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -69,9 +68,7 @@ const RouteScreen: FC<Props> = ({
     zoneId,
   });
 
-  const { isOfflineMode } = useOfflineMode();
-
-  if ((!data || isLoading) && !isOfflineMode)
+  if (isLoading || !data)
     return (
       <Screen padding="m">
         <Header
@@ -84,9 +81,6 @@ const RouteScreen: FC<Props> = ({
         </Box>
       </Screen>
     );
-
-  //TODO: Add screen to this case
-  if (!data && isOfflineMode) return null;
 
   return (
     <Screen padding="m">
