@@ -1,5 +1,4 @@
 import { A, ActivityIndicator, Box, Image, Text } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,

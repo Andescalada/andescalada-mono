@@ -14,6 +14,8 @@ const getCachedImage = async (args: Args) => {
 
 const useCachedImage = (args: Args) => {
   const { data, ...rest } = useQuery({
+    staleTime: 0,
+    networkMode: "always",
     queryKey: ["storedImage", args],
     queryFn: () => getCachedImage(args),
   });

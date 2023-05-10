@@ -5,7 +5,7 @@ const useCloudinaryUrl = <F extends keyof typeof urlGen>(
   key: F,
   args: Parameters<(typeof urlGen)[F]>[0],
 ) => {
-  // @ts-expect-error
+  // @ts-expect-error Unable to type this correctly
   const url = useMemo(() => urlGen[key](args), [key, args]);
   return url;
 };

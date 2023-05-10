@@ -1,4 +1,5 @@
 import * as FileSystem from "expo-file-system";
+import * as Sentry from "sentry-expo";
 
 const cachedImageDir = FileSystem.cacheDirectory + "imageDir/";
 const documentImageDir = FileSystem.documentDirectory + "imageDir/";
@@ -43,7 +44,8 @@ const safeGetInfo = async (fileUri: string) => {
   try {
     const res = await FileSystem.getInfoAsync(fileUri);
     return res;
-  } catch {
+  } catch (err) {
+    Sentry.Native.captureException(err);
     return { exists: false };
   }
 };
