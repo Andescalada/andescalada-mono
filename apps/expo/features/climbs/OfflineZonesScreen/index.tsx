@@ -6,16 +6,28 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
+import { downloadedZonesAtom } from "@atoms/index";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
-import useOwnInfo from "@hooks/useOwnInfo";
 import { useNavigation } from "@react-navigation/native";
 import emptyArray from "@utils/emptyArray";
+import { useAtom } from "jotai";
+import { useMemo } from "react";
 
 const OfflineZonesScreen = () => {
-  const { data } = useOwnInfo();
+  const downloadedZones = useAtom(downloadedZonesAtom)[0];
+
+  const data = useMemo(
+    () =>
+      Object.entries(downloadedZones).map(([key, value]) => ({
+        id: key,
+        name: value.zoneName,
+      })),
+    [downloadedZones],
+  );
+
   const navigation =
     useNavigation<
       ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Home>
@@ -35,12 +47,12 @@ const OfflineZonesScreen = () => {
             <Ionicons name="arrow-down-circle-sharp" size={24} color="text" />
           </Box>
         </Box>
-        {emptyArray(data?.DownloadedZones) && (
+        {emptyArray(data) && (
           <Box marginTop={"s"}>
             <Text>No tienes zonas descargadas</Text>
           </Box>
         )}
-        {data?.DownloadedZones.map((item) => (
+        {data.map((item) => (
           <ListItem
             key={item.id}
             marginVertical={"s"}

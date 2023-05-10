@@ -12,12 +12,19 @@ const atomRecentZones = atomWithMMKV<RecentZones | undefined>(
 );
 
 const useRecentZones = () => {
+  const utils = trpc.useContext();
   const [persistedRecentZones, setPersistedRecentZones] =
     useAtom(atomRecentZones);
+
   const recentZones = trpc.user.zoneHistory.useQuery(undefined, {
     initialData: persistedRecentZones,
+    placeholderData: persistedRecentZones,
+    staleTime: 1000 * 60,
     onSuccess: (data) => {
       setPersistedRecentZones(data);
+    },
+    onError() {
+      utils.user.zoneHistory.setData(undefined, persistedRecentZones);
     },
   });
   return recentZones;

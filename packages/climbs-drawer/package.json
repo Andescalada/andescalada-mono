@@ -20,7 +20,6 @@
     "@shopify/restyle": "*",
     "react-native-redash": "*",
     "@shopify/react-native-skia": "0.1.185",
-    "@types/react-native": "*",
-    "react-native-reanimated": "2.14.4"
+    "@types/react-native": "*"
   }
 }

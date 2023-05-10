@@ -16,6 +16,7 @@ import {
 } from "@features/climbs/Navigation/types";
 import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useGradeSystem from "@hooks/useGradeSystem";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -30,12 +31,10 @@ const MultiPitchScreen: FC<Props> = ({
     params: { multiPitchName, wallId, zoneId, multiPitchId },
   },
 }) => {
-  const { data: wallData, isLoading: isLoadingWall } = trpc.walls.byId.useQuery(
-    {
-      wallId,
-      zoneId,
-    },
-  );
+  const { data: wallData, isLoading: isLoadingWall } = useWallsById({
+    wallId,
+    zoneId,
+  });
 
   const { data, isLoading } = trpc.multiPitch.byId.useQuery({
     multiPitchId,

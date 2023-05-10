@@ -1,17 +1,13 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { ActivityIndicator, Screen } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import RouteDrawer from "@features/routesManager/RouteDrawerScreen/RouteDrawer";
 import parsedTopo from "@features/routesManager/utils/parsedTopos";
+import useToposById from "@hooks/offlineQueries/useToposById";
 import useTopoImage from "@hooks/useTopoImage";
-import { inferRouterOutputs } from "@trpc/server";
-import { FC, useCallback } from "react";
-
-type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
+import { FC, useMemo } from "react";
 
 type Props =
   RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteDrawer>;
@@ -21,14 +17,11 @@ const DrawRoute: FC<Props> = ({
     params: { wallId, route: routeParams, topoId, zoneId },
   },
 }) => {
-  const { data: topos } = trpc.topos.byId.useQuery(
-    { topoId, zoneId },
-    {
-      select: useCallback(
-        (topo: Topo) => parsedTopo(topo, routeParams.id),
-        [routeParams.id],
-      ),
-    },
+  const { data } = useToposById({ topoId, zoneId }, {});
+
+  const topos = useMemo(
+    () => parsedTopo(data, routeParams.id),
+    [routeParams.id, data],
   );
 
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({

@@ -10,6 +10,7 @@ import {
 } from "@features/climbs/Navigation/types";
 import { ListItemRef } from "@features/climbs/WallScreen/ListItem";
 import useRouteOptions from "@features/climbs/WallScreen/useRouteOptions";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
@@ -51,71 +52,66 @@ const RoutesList: FC = () => {
   const { gradeLabel } = useGradeSystem();
 
   const {
-    data,
+    data: wall,
     refetch,
     isFetching,
     isLoading: isLoadingWall,
-  } = trpc.walls.byId.useQuery(
-    { wallId, zoneId },
-    {
-      select: useCallback(
-        (wall: Wall) => {
-          const multiPitch = wall.MultiPitch.map((multiPitch) => ({
-            ...multiPitch,
-            id: multiPitch.id,
-            position: multiPitch.position,
-            routeRef: createRef<ListItemRef>(),
-            kindStringify: `Multi largo, ${multiPitch.numberOfPitches} ${
-              multiPitch.numberOfPitches > 1 || multiPitch.numberOfPitches === 0
-                ? "largos"
-                : "largo"
-            } `,
-            gradeStringify: gradeLabel(
-              {
-                grade: multiPitch.grade,
-                project: multiPitch.project,
-              },
-              multiPitch.gradeRouteKind,
-            ),
-            isMultiPitch: true,
-            Extension: [] as ParsedExtension[],
-          }));
-          const routesWithRef = wall.routes.map((route) => ({
-            ...route,
-            isMultiPitch: false,
-            kindStringify: routeKindLabel(route.kind).long,
-            gradeStringify: gradeLabel(
-              {
-                grade: route.RouteGrade?.grade ?? null,
-                project: !!route.RouteGrade?.project,
-              },
-              route.kind,
-            ),
-            routeRef: createRef<ListItemRef>(),
-            Extension: route.Extension.map((extension) => ({
-              ...extension,
-              kindStringify: routeKindLabel(extension.kind).long,
-              gradeStringify: gradeLabel(
-                {
-                  grade: extension.RouteGrade?.grade ?? null,
-                  project: !!extension.RouteGrade?.project,
-                },
-                extension.kind,
-              ),
-              routeRef: createRef<ListItemRef>(),
-            })),
-          }));
-          return {
-            ...wall,
-            routes: [...routesWithRef, ...multiPitch].sort(
-              (a, b) => a.position - b.position,
-            ),
-          };
+  } = useWallsById({ wallId, zoneId });
+
+  const data = useMemo(() => {
+    if (!wall) return null;
+    const multiPitch = wall.MultiPitch.map((multiPitch) => ({
+      ...multiPitch,
+      id: multiPitch.id,
+      position: multiPitch.position,
+      routeRef: createRef<ListItemRef>(),
+      kindStringify: `Multi largo, ${multiPitch.numberOfPitches} ${
+        multiPitch.numberOfPitches > 1 || multiPitch.numberOfPitches === 0
+          ? "largos"
+          : "largo"
+      } `,
+      gradeStringify: gradeLabel(
+        {
+          grade: multiPitch.grade,
+          project: multiPitch.project,
         },
-        [gradeLabel],
+        multiPitch.gradeRouteKind,
       ),
-    },
-  );
+      isMultiPitch: true,
+      Extension: [] as ParsedExtension[],
+    }));
+    const routesWithRef = wall?.routes.map((route) => ({
+      ...route,
+      isMultiPitch: false,
+      kindStringify: routeKindLabel(route.kind).long,
+      gradeStringify: gradeLabel(
+        {
+          grade: route.RouteGrade?.grade ?? null,
+          project: !!route.RouteGrade?.project,
+        },
+        route.kind,
+      ),
+      routeRef: createRef<ListItemRef>(),
+      Extension: route.Extension.map((extension) => ({
+        ...extension,
+        kindStringify: routeKindLabel(extension.kind).long,
+        gradeStringify: gradeLabel(
+          {
+            grade: extension.RouteGrade?.grade ?? null,
+            project: !!extension.RouteGrade?.project,
+          },
+          extension.kind,
+        ),
+        routeRef: createRef<ListItemRef>(),
+      })),
+    }));
+    return {
+      ...wall,
+      routes: [...routesWithRef, ...multiPitch].sort(
+        (a, b) => a.position - b.position,
+      ),
+    };
+  }, [gradeLabel, wall]);
 
   const mainTopo = useMemo(() => data?.topos[0], [data?.topos]);
 

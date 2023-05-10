@@ -120,21 +120,12 @@ export const sectorsRouter = t.router({
       return sector;
     }),
   // Asset being downloaded
-  allWalls: t.procedure
+  allWalls: protectedZoneProcedure
     .input(z.object({ sectorId: z.string() }))
     .query(async ({ ctx, input }) => {
       const res = await ctx.prisma.sector.findUnique({
         where: { id: input.sectorId },
-        select: {
-          isDeleted: true,
-          sectorKind: true,
-          name: true,
-          Zone: { select: { name: true } },
-          walls: {
-            where: { isDeleted: SoftDelete.NotDeleted },
-            select: { id: true, name: true },
-          },
-        },
+        select: selectFromSectorAllWalls,
       });
       if (!res || res?.isDeleted !== SoftDelete.NotDeleted)
         throw new TRPCError({
@@ -170,3 +161,17 @@ export const sectorsRouter = t.router({
       return updatedSector;
     }),
 });
+
+export const selectFromSectorAllWalls = {
+  isDeleted: true,
+  id: true,
+  sectorKind: true,
+  version: true,
+  zoneId: true,
+  name: true,
+  Zone: { select: { name: true } },
+  walls: {
+    where: { isDeleted: SoftDelete.NotDeleted },
+    select: { id: true, name: true },
+  },
+};

@@ -19,7 +19,6 @@ import ZoneAgreementsScreen from "@features/climbs/ZoneAgreementsScreen";
 import ZoneScreen from "@features/climbs/ZoneScreen";
 import ZonesListScreen from "@features/climbs/ZonesListScreen";
 import OfflineNotification from "@features/offline/OfflineNotification";
-import OfflineUpdateNotification from "@features/offline/OfflineUpdateNotification";
 import UserHeader from "@features/user/components/UserHeader/UserHeader";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
@@ -34,7 +33,6 @@ const Stack = createStackNavigator<ClimbsNavigationNavigationParamList>();
 const Navigator = () => {
   return (
     <Box flex={1}>
-      <OfflineUpdateNotification />
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName={ClimbsNavigationRoutes.Home}

@@ -6,6 +6,7 @@ import {
 } from "@features/climbs/Navigation/types";
 import AddTopoImage from "@features/climbs/WallScreen/AddTopoImage";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -21,7 +22,7 @@ type NavigationRoute =
 const TopoImage: FC = () => {
   const route = useRoute<NavigationRoute>();
   const { wallId, zoneId } = route.params;
-  const { data, isLoading: isLoadingWall } = trpc.walls.byId.useQuery({
+  const { data, isLoading: isLoadingWall } = useWallsById({
     wallId,
     zoneId,
   });
@@ -38,15 +39,18 @@ const TopoImage: FC = () => {
 
   const rootNavigation = useRootNavigation();
 
-  return (
-    <Box height={200}>
-      {isLoadingWall && (
+  if (isLoadingWall)
+    return (
+      <Box height={200}>
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" />
         </Box>
-      )}
-      <AddTopoImage />
-      {mainTopo && (
+      </Box>
+    );
+
+  if (mainTopo) {
+    return (
+      <Box height={200}>
         <A.Pressable
           overflow="hidden"
           flex={1}
@@ -93,7 +97,13 @@ const TopoImage: FC = () => {
             </>
           )}
         </A.Pressable>
-      )}
+      </Box>
+    );
+  }
+
+  return (
+    <Box height={200}>
+      <AddTopoImage />
     </Box>
   );
 };

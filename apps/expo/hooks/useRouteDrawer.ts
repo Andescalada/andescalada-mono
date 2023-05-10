@@ -5,6 +5,7 @@ import {
 } from "@andescalada/climbs-drawer/utils";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import type { Route, RoutePath, Topo, Wall, Zone } from "@prisma/client";
@@ -83,7 +84,7 @@ const useRouteDrawer = ({
 
   const [showConfig, setShowConfig] = useState(false);
 
-  const { data } = trpc.walls.byId.useQuery({ wallId, zoneId });
+  const { data } = useWallsById({ wallId, zoneId });
 
   const modifyStrokeWidth = trpc.topos.modifyStrokeWidth.useMutation({
     onSuccess: () => {

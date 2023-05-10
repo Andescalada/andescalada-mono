@@ -6,7 +6,7 @@ import RootNavigation from "@navigation/AppNavigation/RootNavigation";
 import useAutoLogin from "@navigation/AppNavigation/useAutoLogin";
 import useHideSplashScreen from "@navigation/AppNavigation/useHideSplashScreen";
 import goToAppStore from "@utils/goToAppStore";
-import TRPCProvider from "@utils/trpc/Provider";
+import TRPCProvider from "@utils/trpc/TRPCProvider";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import ErrorBoundary from "react-native-error-boundary";

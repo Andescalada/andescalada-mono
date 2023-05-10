@@ -1,5 +1,6 @@
 import user from "@andescalada/api/schemas/user";
 import zone from "@andescalada/api/schemas/zone";
+import offlineAssets from "@andescalada/api/src/routers/user/offlineAsstes";
 import { Access, Permissions } from "@andescalada/api/src/types/permissions";
 import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
@@ -19,9 +20,10 @@ import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 import { z } from "zod";
 
-import { t } from "../createRouter";
+import { t } from "../../createRouter";
 
 export const userRouter = t.router({
+  offlineAssets: offlineAssets,
   ownInfo: protectedProcedure.query(async ({ ctx }) =>
     ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },

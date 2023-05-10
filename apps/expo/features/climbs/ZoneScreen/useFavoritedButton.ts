@@ -1,10 +1,11 @@
 import { trpc } from "@andescalada/utils/trpc";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import type { Zone } from "@prisma/client";
 import { Alert } from "react-native";
 
 const useFavoritedButton = (zoneId: Zone["id"]) => {
   const utils = trpc.useContext();
-  const { data } = trpc.zones.allSectors.useQuery({ zoneId });
+  const { data } = useZonesAllSectors({ zoneId });
 
   const addToFavoriteList = trpc.user.addToFavoriteZones.useMutation({
     onMutate: async () => {

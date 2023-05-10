@@ -16,19 +16,18 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import GradePicker from "@features/climbs/components/GradePicker";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
-import { useAppTheme } from "@hooks/useAppTheme";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { Picker } from "@react-native-picker/picker";
 import { FC, useMemo, useState } from "react";
 import { useController, useWatch } from "react-hook-form";
-import { Alert, Keyboard, Platform } from "react-native";
+import { Alert, Keyboard } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 import { z } from "zod";
 
@@ -180,7 +179,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
   const kindWatch = useWatch({ control, name: "kind" });
 
   const {
-    field: { onChange: onGradeChange, value: gradeValue, onBlur: onGradeBlur },
+    field: { onChange: onGradeChange, value: gradeValue },
   } = useController({
     control,
     name: "grade",
@@ -242,9 +241,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     ]);
   };
 
-  const { allGrades, gradeSystem, getSystem } = useGradeSystem(kindValue);
-
-  const theme = useAppTheme();
+  const { gradeSystem, getSystem } = useGradeSystem(kindValue);
 
   const onUnknownNamePress = () => {
     onChange("Ruta sin nombre");
@@ -352,41 +349,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             <Text variant={"p1R"} marginBottom={"s"}>
               Grado
             </Text>
-            <Picker
-              onValueChange={onGradeChange}
-              selectedValue={gradeValue}
-              onBlur={onGradeBlur}
-              mode="dialog"
-              style={{
-                backgroundColor:
-                  Platform.OS === "android"
-                    ? theme.colors.filledTextInputVariantBackground
-                    : undefined,
-              }}
-            >
-              {allGrades.map((n) => (
-                <Picker.Item
-                  color={Platform.OS === "android" ? "black" : "white"}
-                  fontFamily="Rubik-400"
-                  key={n}
-                  label={gradeSystem(n, kindWatch)}
-                  value={n}
-                />
-              ))}
-              <Picker.Item
-                color={Platform.OS === "android" ? "black" : "white"}
-                fontFamily="Rubik-400"
-                label={"Desconocido"}
-                value={null}
-              />
-              <Picker.Item
-                color={Platform.OS === "android" ? "black" : "white"}
-                fontFamily="Rubik-400"
-                label={"Proyecto"}
-                value={"project"}
-              />
-              <Picker.Item />
-            </Picker>
+            <GradePicker
+              onChange={onGradeChange}
+              value={gradeValue}
+              routeKind={kindWatch}
+            />
           </Box>
         )}
         <Button

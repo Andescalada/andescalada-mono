@@ -10,7 +10,6 @@ import {
   Screen,
   Text,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
@@ -18,8 +17,10 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
+import useToposById from "@hooks/offlineQueries/useToposById";
 import { useAppSelector } from "@hooks/redux";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -38,7 +39,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
 
   const { showRoutes } = useAppSelector((state) => state.localConfig);
 
-  const { data } = trpc.topos.byId.useQuery({ topoId, zoneId });
+  const { data } = useToposById({ topoId, zoneId });
 
   const route = useMemo(
     () => data?.RoutePath.find((r) => r.Route.id === selectedRoute)?.Route,
@@ -51,6 +52,15 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
 
   const [showConfig, setShowConfig] = useState(false);
 
+  const { isOfflineMode } = useOfflineMode();
+
+  const imageQuality = useMemo(() => {
+    if (isOfflineMode) return 100;
+    return data?.Wall.Sector.sectorKind === SectorKindSchema.enum.BigWall
+      ? 60
+      : 40;
+  }, [data, isOfflineMode]);
+
   if (data)
     return (
       <Screen>
@@ -60,11 +70,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
           strokeWidth={Number(data?.routeStrokeWidth)}
           hide={!showRoutes}
           onSelectedRoute={setSelectedRoute}
-          imageQuality={
-            data?.Wall.Sector.sectorKind === SectorKindSchema.enum.BigWall
-              ? 60
-              : 40
-          }
+          imageQuality={imageQuality}
         />
         <BackButton.Transparent
           onPress={() => navigation.pop()}

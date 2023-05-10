@@ -19,17 +19,8 @@ const byIdWithEvaluation = protectedZoneProcedure
     const findRoute = ctx.prisma.route.findUniqueOrThrow({
       where: { id: input.routeId },
       include: {
-        description: true,
-        RouteLength: true,
-        RouteGrade: true,
-        Wall: {
-          select: {
-            name: true,
-            id: true,
-            topos: { where: { main: true }, take: 1, include: { image: true } },
-            Sector: { select: { name: true, zoneId: true, id: true } },
-          },
-        },
+        ...includeInRoute,
+        RouteEvaluation: { where: { User: { email: ctx.user.email } } },
       },
     });
 
@@ -39,10 +30,20 @@ const byIdWithEvaluation = protectedZoneProcedure
       _count: { evaluation: true },
     });
 
-    const [route, evaluationAverage] = await ctx.prisma.$transaction([
-      findRoute,
-      getEvaluationAverage,
-    ]);
+    const getGradeEvaluationAverage = ctx.prisma.routeGradeEvaluation.aggregate(
+      {
+        where: { routeId: input.routeId },
+        _avg: { evaluation: true },
+        _count: { evaluation: true },
+      },
+    );
+
+    const [route, evaluationAverage, gradeEvaluationAverage] =
+      await ctx.prisma.$transaction([
+        findRoute,
+        getEvaluationAverage,
+        getGradeEvaluationAverage,
+      ]);
 
     return {
       ...route,
@@ -53,11 +54,34 @@ const byIdWithEvaluation = protectedZoneProcedure
         : null,
       evaluation: {
         average: evaluationAverage._avg.evaluation
-          ? Number(evaluationAverage._avg.evaluation)
+          ? Math.round(Number(evaluationAverage._avg.evaluation))
           : 0,
         count: evaluationAverage._count.evaluation,
+      },
+      userEvaluation: route.RouteEvaluation[0]?.evaluation
+        ? Number(route.RouteEvaluation[0]?.evaluation)
+        : 0,
+      gradeEvaluation: {
+        average: gradeEvaluationAverage._avg.evaluation
+          ? Number(gradeEvaluationAverage._avg.evaluation)
+          : null,
+        count: gradeEvaluationAverage._count.evaluation,
       },
     };
   });
 
 export default byIdWithEvaluation;
+
+export const includeInRoute = {
+  description: true,
+  RouteLength: true,
+  RouteGrade: true,
+  Wall: {
+    select: {
+      name: true,
+      id: true,
+      topos: { where: { main: true }, take: 1, include: { image: true } },
+      Sector: { select: { name: true, zoneId: true, id: true } },
+    },
+  },
+};

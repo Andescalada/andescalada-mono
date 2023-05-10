@@ -64,11 +64,12 @@ const ensureDirExists = async () => {
   }
 };
 
-export const deleteImage = async (uniqueId: string, cache = false) => {
+export const deleteImage = async (uniqueId: string) => {
   const fileUri = imageFileUri(uniqueId);
   const fileInfo = await FileSystem.getInfoAsync(fileUri);
   if (fileInfo.exists) {
     await FileSystem.deleteAsync(fileUri);
+    return uniqueId;
   }
 };
 

@@ -8,9 +8,11 @@ const useHideSplashScreen = () => {
   const { autoLoginCompleted, isAuth, accessToken } = useAppSelector(
     (state) => state.auth,
   );
+
   const { navigationReady } = useAppSelector((state) => state.localConfig);
 
   const [fontsLoaded] = useFonts(fonts);
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded && autoLoginCompleted && navigationReady) {
       await SplashScreen.hideAsync();
@@ -20,6 +22,15 @@ const useHideSplashScreen = () => {
   useEffect(() => {
     onLayoutRootView();
   }, [onLayoutRootView]);
+
+  if (process.env.OFFLINE_DEV === "true") {
+    return {
+      isAuth: true,
+      accessToken: "fake token 2",
+      fontsLoaded,
+    };
+  }
+
   return { fontsLoaded, isAuth, accessToken };
 };
 

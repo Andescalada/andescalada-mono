@@ -16,8 +16,35 @@ const createZoneTable = async (zoneId: string) => {
     );`;
 
   const res = await db.executeAsync(query);
-  // db.close();
+
   return res;
+};
+
+const getAsync = async <Return>(
+  db: QuickSQLiteConnection,
+  assetId: string,
+  zoneId: string,
+): Promise<{ data: Return; version: number } | undefined> => {
+  const query = `SELECT data, version FROM '${zoneId}' WHERE assetId = '${assetId}' LIMIT 1`;
+
+  let results;
+  try {
+    const { rows } = await db.executeAsync(query);
+
+    const result = rows?._array[0] as {
+      data: string;
+      version: number;
+    };
+
+    const data = parse<Return>(result.data);
+    const version = result.version;
+
+    results = { data, version };
+  } catch {
+    results = undefined;
+  }
+
+  return results;
 };
 
 const get = <Return>(
@@ -40,14 +67,14 @@ const get = <Return>(
     const version = result.version;
 
     results = { data, version };
-  } catch {
+  } catch (err) {
     results = undefined;
   }
-  // db.close();
+
   return results;
 };
 
-const set = async (
+const setAsync = async (
   db: QuickSQLiteConnection,
   assetId: string,
   zoneId: string,
@@ -59,8 +86,24 @@ const set = async (
   const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
 
   await db.executeAsync(query);
-  // db.close();
+
   return serializedData;
+};
+const set = (
+  db: QuickSQLiteConnection,
+  assetId: string,
+  zoneId: string,
+  data: unknown,
+  version: number,
+) => {
+  try {
+    const serializedData = stringify(data);
+    const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
+    db.execute(query);
+    return serializedData;
+  } catch {
+    return undefined;
+  }
 };
 
 const setOrCreate = async (
@@ -71,7 +114,7 @@ const setOrCreate = async (
   version: number,
 ) => {
   await createZoneTable(zoneId);
-  return await set(db, assetId, zoneId, data, version);
+  return await setAsync(db, assetId, zoneId, data, version);
 };
 
 const deleteAsset = async (
@@ -82,14 +125,14 @@ const deleteAsset = async (
   const query = `DELETE FROM ? WHERE assetId = ?`;
 
   const res = await db.executeAsync(query, [`${zoneId}`, `${assetId}`]);
-  // db.close();
+
   return res;
 };
 
 const deleteZone = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `DROP TABLE '${zoneId}';`;
   const res = await db.executeAsync(query);
-  // db.close();
+
   return res;
 };
 
@@ -103,7 +146,7 @@ const allSavedZones = (db: QuickSQLiteConnection) => {
       name NOT LIKE 'sqlite_%';`;
 
   const res = db.execute(query);
-  // db.close();
+
   return res.rows?._array as string[];
 };
 
@@ -111,13 +154,15 @@ const allAssetsOfZone = (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `SELECT assetId, version FROM '${zoneId}'`;
 
   const res = db.execute(query);
-  // db.close();
+
   return res.rows?._array as { assetId: string; version: number }[];
 };
 
 const offlineDb = {
   open,
+  getAsync,
   get,
+  setAsync,
   set,
   delete: deleteAsset,
   deleteZone,

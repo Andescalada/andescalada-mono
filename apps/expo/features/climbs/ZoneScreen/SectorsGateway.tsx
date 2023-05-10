@@ -13,18 +13,19 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
 import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
+import { onlineManager } from "@tanstack/react-query";
 import { skipAgreementsIntro } from "@templates/AgreementsIntro/AgreementsIntro";
 import emptyArray from "@utils/emptyArray";
 import { useAtom } from "jotai";
@@ -48,10 +49,10 @@ const SectorsGateway: FC<Props> = ({ children }) => {
       currentStatus,
     } = {},
     isLoading,
-    isError,
     isFetching,
+    isError,
     refetch,
-  } = trpc.zones.allSectors.useQuery({ zoneId });
+  } = useZonesAllSectors({ zoneId });
 
   const requestStatus = useMemo(() => {
     if (emptyArray(ZoneAccessRequest)) return undefined;
@@ -99,12 +100,8 @@ const SectorsGateway: FC<Props> = ({ children }) => {
     });
   }, [rootNavigation, skip, zoneId, zoneName]);
 
-  if (isLoading)
-    return (
-      <Screen justifyContent="center" alignItems="center">
-        <ActivityIndicator size={"large"} />
-      </Screen>
-    );
+  if (!onlineManager.isOnline()) return children;
+
   if (isError) {
     return (
       <Screen safeAreaDisabled padding="m">
@@ -121,6 +118,14 @@ const SectorsGateway: FC<Props> = ({ children }) => {
       </Screen>
     );
   }
+
+  if (isLoading)
+    return (
+      <Screen justifyContent="center" alignItems="center">
+        <ActivityIndicator size={"large"} />
+      </Screen>
+    );
+
   if (currentStatus !== StatusSchema.Enum.Published && !hasAccess) {
     return (
       <Screen safeAreaDisabled padding="m">

@@ -11,6 +11,7 @@ import {
 import SectorsGateway from "@features/climbs/ZoneScreen/SectorsGateway";
 import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
@@ -48,15 +49,14 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     }, [zoneId, isOfflineMode]),
   );
 
-  const { data, refetch, isFetching, isLoading, isPaused } =
-    trpc.zones.allSectors.useQuery(
-      { zoneId },
-      {
-        onSuccess() {
-          utils.user.zoneHistory.invalidate();
-        },
+  const { data, refetch, isFetching, isLoading, isPaused } = useZonesAllSectors(
+    { zoneId },
+    {
+      onSuccess() {
+        utils.user.zoneHistory.invalidate();
       },
-    );
+    },
+  );
 
   const editZone = trpc.zones.edit.useMutation();
   const methods = useZodForm({ schema: schema.pick({ name: true }) });

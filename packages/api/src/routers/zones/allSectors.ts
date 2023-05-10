@@ -7,56 +7,7 @@ import { TRPCError } from "@trpc/server";
 const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
   const res = await ctx.prisma.zone.findUnique({
     where: { id: input.zoneId },
-    select: {
-      name: true,
-      searchVisibility: true,
-      isDeleted: true,
-      ZoneAccessRequest: {
-        where: {
-          User: { email: ctx.user.email },
-          Zone: { id: input.zoneId },
-        },
-        orderBy: { createdAt: "desc" },
-        take: 1,
-        select: { status: true },
-      },
-      Location: true,
-      UserZoneAgreementHistory: {
-        where: {
-          User: { email: ctx.user.email },
-          Zone: { id: input.zoneId },
-        },
-        orderBy: { createdAt: "desc" },
-        take: 1,
-        select: { hasAgreed: true },
-      },
-      sectors: {
-        where: { isDeleted: SoftDelete.NotDeleted },
-        include: {
-          walls: {
-            where: { isDeleted: SoftDelete.NotDeleted },
-            select: { name: true, id: true },
-            orderBy: { position: "asc" },
-          },
-        },
-      },
-      description: { select: { originalText: true } },
-      infoAccess: true,
-      currentStatus: true,
-      DownloadedBy: { where: { email: ctx.user.email } },
-      FavoritedBy: { where: { email: ctx.user.email } },
-      RoleByZone: {
-        select: {
-          User: {
-            select: {
-              id: true,
-              profilePhoto: { select: { publicId: true } },
-            },
-          },
-          Role: true,
-        },
-      },
-    },
+    select: selectZoneAllSectors({ userEmail: ctx.user.email }),
   });
   if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
     throw new TRPCError(error.sectorNotFound(input.zoneId));
@@ -75,9 +26,61 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
   return {
     ...res,
     hasAccess: true,
-    isDownloaded: res.DownloadedBy.length > 0,
-    isFavorite: res.FavoritedBy.length > 0,
+    isDownloaded: res.DownloadedBy && res.DownloadedBy.length > 0,
+    isFavorite: res.FavoritedBy && res.FavoritedBy.length > 0,
   };
 });
 
 export default allSectors;
+
+export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) => ({
+  id: true,
+  version: true,
+  name: true,
+  searchVisibility: true,
+  isDeleted: true,
+  Location: true,
+  sectors: {
+    where: { isDeleted: SoftDelete.NotDeleted },
+    include: {
+      walls: {
+        where: { isDeleted: SoftDelete.NotDeleted },
+        select: { name: true, id: true },
+        orderBy: { position: "asc" as const },
+      },
+    },
+  },
+  description: { select: { originalText: true } },
+  infoAccess: true,
+  currentStatus: true,
+  RoleByZone: {
+    where: { User: { email: userEmail } },
+    select: {
+      User: {
+        select: {
+          id: true,
+          profilePhoto: { select: { publicId: true } },
+        },
+      },
+      Role: true,
+    },
+  },
+  DownloadedBy: { where: { email: userEmail } },
+  FavoritedBy: { where: { email: userEmail } },
+  ZoneAccessRequest: {
+    where: {
+      User: { email: userEmail },
+    },
+    orderBy: { createdAt: "desc" as const },
+    take: 1,
+    select: { status: true },
+  },
+  UserZoneAgreementHistory: {
+    where: {
+      User: { email: userEmail },
+    },
+    orderBy: { createdAt: "desc" as const },
+    take: 1,
+    select: { hasAgreed: true },
+  },
+});

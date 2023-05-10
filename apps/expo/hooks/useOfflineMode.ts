@@ -1,16 +1,25 @@
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { activateOffline, setIsOffline } from "@store/offline";
+import { isOfflineModeAtom } from "@atoms/index";
+import { onlineManager } from "@tanstack/react-query";
+import { useAtom } from "jotai";
 
 const useOfflineMode = () => {
-  const isOfflineMode = useAppSelector((state) => state.offline.isOffline);
-
-  const dispatch = useAppDispatch();
+  const [isOfflineMode, setIsOfflineModeAtom] = useAtom(isOfflineModeAtom);
 
   const setIsOfflineMode = () => {
-    dispatch(setIsOffline());
+    setIsOfflineModeAtom((isCurrentlyOfflineModeStatus) => {
+      if (isCurrentlyOfflineModeStatus) {
+        onlineManager.setOnline(undefined);
+        return false;
+      } else {
+        onlineManager.setOnline(false);
+        return true;
+      }
+    });
   };
+
   const activateOfflineMode = () => {
-    dispatch(activateOffline());
+    setIsOfflineModeAtom(true);
+    onlineManager.setOnline(false);
   };
 
   return { isOfflineMode, setIsOfflineMode, activateOfflineMode };

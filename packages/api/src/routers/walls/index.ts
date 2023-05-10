@@ -2,6 +2,7 @@ import global from "@andescalada/api/schemas/global";
 import wall from "@andescalada/api/schemas/wall";
 import routeList from "@andescalada/api/src/routers/walls/routeList";
 import error from "@andescalada/api/src/utils/errors";
+import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import {
@@ -38,58 +39,7 @@ export const wallsRouter = t.router({
   byId: protectedZoneProcedure.input(wall.id).query(async ({ ctx, input }) => {
     const wall = await ctx.prisma.wall.findUnique({
       where: { id: input.wallId },
-      include: {
-        Sector: {
-          select: {
-            zoneId: true,
-            sectorKind: true,
-            Zone: { select: { infoAccess: true } },
-          },
-        },
-        routes: {
-          orderBy: { position: "asc" },
-
-          where: {
-            isDeleted: { equals: SoftDelete.NotDeleted },
-            extendedRouteId: { equals: null },
-            Pitch: { is: null },
-          },
-          select: {
-            ...Route,
-            Pitch: {
-              include: { MultiPitch: { select: { name: true, id: true } } },
-            },
-            Extension: {
-              where: { isDeleted: SoftDelete.NotDeleted },
-              select: Route,
-            },
-          },
-        },
-        MultiPitch: {
-          where: { isDeleted: SoftDelete.NotDeleted },
-          select: {
-            id: true,
-            name: true,
-            position: true,
-            Author: { select: { email: true } },
-            wallId: true,
-            Pitches: {
-              where: { isDeleted: SoftDelete.NotDeleted },
-              select: { Route: { select: { RouteGrade: true, kind: true } } },
-            },
-          },
-        },
-        topos: {
-          where: { main: true, isDeleted: SoftDelete.NotDeleted },
-          take: 1,
-          select: {
-            id: true,
-            image: true,
-            name: true,
-            routeStrokeWidth: true,
-          },
-        },
-      },
+      include: includeInWallById,
     });
 
     if (!wall) {
@@ -105,61 +55,8 @@ export const wallsRouter = t.router({
       );
     }
 
-    const parsedMultiPitch = wall.MultiPitch.map((mp) => {
-      const reduce = mp.Pitches.reduce<{
-        maxGrade: number;
-        project: boolean;
-        maxAid?: number;
-        gradeRouteKind: RouteKind;
-        originalGradeSystem: GradeSystems;
-      }>(
-        (prev, current) => {
-          const currentGrade = Number(current.Route.RouteGrade?.grade ?? 0);
-          const aidValue =
-            current.Route.RouteGrade?.originalGradeSystem === GradeSystems.Aid
-              ? Number(current.Route.RouteGrade?.grade ?? 0)
-              : undefined;
-          return {
-            maxGrade: Math.max(prev.maxGrade, currentGrade),
-            gradeRouteKind:
-              prev.maxGrade > currentGrade
-                ? prev.gradeRouteKind
-                : current.Route.kind,
-            originalGradeSystem:
-              currentGrade > prev.maxGrade &&
-              current.Route.RouteGrade?.originalGradeSystem !== undefined
-                ? current.Route.RouteGrade?.originalGradeSystem
-                : prev.originalGradeSystem,
+    const parsedMultiPitch = parseMultiPitch(wall.MultiPitch);
 
-            project: prev.project || !!current.Route.RouteGrade?.project,
-            maxAid: [prev.maxAid, aidValue].every((v) => v === undefined)
-              ? undefined
-              : Math.max(Number(prev.maxAid ?? 0), Number(aidValue ?? 0)),
-          };
-        },
-        {
-          maxGrade: 0,
-          gradeRouteKind: "Sport",
-          project: false,
-          originalGradeSystem: GradeSystems.Yosemite,
-          maxAid: undefined,
-        },
-      );
-
-      return {
-        id: mp.id,
-        name: mp.name,
-        position: mp.position,
-        wallId: mp.wallId,
-        Author: mp.Author,
-        numberOfPitches: mp.Pitches.length,
-        gradeRouteKind: reduce.gradeRouteKind,
-        grade: reduce.maxGrade === 0 ? null : reduce.maxGrade,
-        project: false,
-        originalGradeSystem: reduce.originalGradeSystem,
-        maxAid: reduce.maxAid,
-      };
-    });
     const parsedWall = { ...wall, MultiPitch: parsedMultiPitch };
     return parsedWall;
   }),
@@ -302,3 +199,57 @@ export const wallsRouter = t.router({
       return mainTopo.topos[0].id;
     }),
 });
+
+const routesQuery = {
+  orderBy: { position: "asc" as const },
+  where: {
+    isDeleted: { equals: SoftDelete.NotDeleted },
+    extendedRouteId: { equals: null },
+    Pitch: { is: null },
+  },
+  select: {
+    ...Route,
+    Pitch: {
+      include: { MultiPitch: { select: { name: true, id: true } } },
+    },
+    Extension: {
+      where: { isDeleted: SoftDelete.NotDeleted },
+      select: Route,
+    },
+  },
+};
+
+export const includeInWallById = {
+  Sector: {
+    select: {
+      zoneId: true,
+      sectorKind: true,
+      Zone: { select: { infoAccess: true } },
+    },
+  },
+  routes: routesQuery,
+  MultiPitch: {
+    where: { isDeleted: SoftDelete.NotDeleted },
+    select: {
+      id: true,
+      name: true,
+      position: true,
+      Author: { select: { email: true } },
+      wallId: true,
+      Pitches: {
+        where: { isDeleted: SoftDelete.NotDeleted },
+        select: { Route: { select: { RouteGrade: true, kind: true } } },
+      },
+    },
+  },
+  topos: {
+    where: { main: true, isDeleted: SoftDelete.NotDeleted },
+    take: 1,
+    select: {
+      id: true,
+      image: true,
+      name: true,
+      routeStrokeWidth: true,
+    },
+  },
+};

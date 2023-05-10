@@ -19,8 +19,6 @@ const addOrEditEvaluation = protectedProcedure
       throw new TRPCError(error.notFound("User", ctx.user.email));
     }
 
-    console.log(user.RouteEvaluation.length);
-
     if (!user.RouteEvaluation.length) {
       return ctx.prisma.routeEvaluation.create({
         data: {

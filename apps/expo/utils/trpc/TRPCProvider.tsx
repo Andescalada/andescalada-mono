@@ -1,16 +1,20 @@
 import { transformer } from "@andescalada/api/src/transformer";
 import NetInfo from "@react-native-community/netinfo";
-import {
-  onlineManager,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { onlineManager, QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { httpBatchLink } from "@trpc/client";
 import Env from "@utils/env";
+import { createMMKVStoragePersister } from "@utils/mmkv/createMMKVPersister";
+import storage from "@utils/mmkv/storage";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
 import { addPlugin } from "react-query-native-devtools";
+import * as Sentry from "sentry-expo";
+
+export interface AccessToken {
+  exp: number;
+}
 
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
@@ -18,9 +22,7 @@ onlineManager.setEventListener((setOnline) => {
   });
 });
 
-export interface AccessToken {
-  exp: number;
-}
+const persister = createMMKVStoragePersister({ storage: storage });
 
 interface Props {
   accessToken: string;
@@ -41,7 +43,12 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [queryClient] = useState(() => {
     const client = new QueryClient({
       defaultOptions: {
+        mutations: {
+          cacheTime: Infinity,
+          retry: true,
+        },
         queries: {
+          networkMode: "offlineFirst",
           retry: false,
           staleTime: 1 * (60 * 1000), // 5 mins
           cacheTime: 5 * (60 * 1000), // 10 mins
@@ -70,7 +77,20 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister }}
+        onSuccess={() => {
+          queryClient.resumePausedMutations().then((mutations) => {
+            Sentry.Native.captureMessage(
+              "resumed paused mutations: " + mutations,
+            );
+            queryClient.invalidateQueries();
+          });
+        }}
+      >
+        {children}
+      </PersistQueryClientProvider>
     </trpc.Provider>
   );
 };

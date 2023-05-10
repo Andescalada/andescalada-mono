@@ -13,6 +13,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import useSectorsAllWalls from "@hooks/offlineQueries/useSectorsAllWalls";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
@@ -27,8 +28,10 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const { sectorId, zoneId } = route.params;
 
-  const { data, refetch, isFetching, isLoading } =
-    trpc.sectors.allWalls.useQuery({ sectorId });
+  const { data, refetch, isFetching, isLoading } = useSectorsAllWalls({
+    sectorId,
+    zoneId,
+  });
 
   const deleteSector = trpc.sectors.delete.useMutation({
     onMutate: () => {
@@ -99,7 +102,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     { destructiveButtonIndex: 2 },
   );
 
-  if (isLoading)
+  if (isLoading && !data)
     return (
       <Screen padding="m">
         <Header
