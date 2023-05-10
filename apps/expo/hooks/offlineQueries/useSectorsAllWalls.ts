@@ -30,7 +30,7 @@ const useSectorsAllWalls = (params: Params, options?: Options) => {
         }),
         params.zoneId,
       );
-      db.close();
+
       return saved?.data;
     },
     ...options,

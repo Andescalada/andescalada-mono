@@ -33,22 +33,7 @@ const useZonesAllSectors = (params: Params, options?: Options) => {
           data,
           data.version,
         );
-        db.close();
       }
-    },
-    initialData: () => {
-      const db = offlineDb.open();
-      const saved = offlineDb.get<Data>(
-        db,
-        stringify({
-          router: "zones",
-          procedure: "allSectors",
-          params,
-        }),
-        params.zoneId,
-      );
-      db.close();
-      return saved?.data;
     },
     ...options,
   });

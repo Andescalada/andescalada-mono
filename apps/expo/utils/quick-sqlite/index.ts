@@ -43,7 +43,7 @@ const getAsync = async <Return>(
   } catch {
     results = undefined;
   }
-  // db.close();
+
   return results;
 };
 
@@ -125,7 +125,7 @@ const deleteAsset = async (
   const query = `DELETE FROM ? WHERE assetId = ?`;
 
   const res = await db.executeAsync(query, [`${zoneId}`, `${assetId}`]);
-  // db.close();
+
   return res;
 };
 
@@ -146,7 +146,7 @@ const allSavedZones = (db: QuickSQLiteConnection) => {
       name NOT LIKE 'sqlite_%';`;
 
   const res = db.execute(query);
-  // db.close();
+
   return res.rows?._array as string[];
 };
 
@@ -154,7 +154,7 @@ const allAssetsOfZone = (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `SELECT assetId, version FROM '${zoneId}'`;
 
   const res = db.execute(query);
-  // db.close();
+
   return res.rows?._array as { assetId: string; version: number }[];
 };
 

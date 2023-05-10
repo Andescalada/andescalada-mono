@@ -30,22 +30,7 @@ const useToposById = (params: Params, options?: Options) => {
         }),
         params.zoneId,
       );
-      db.close();
 
-      return saved?.data;
-    },
-    placeholderData: () => {
-      const db = offlineDb.open();
-      const saved = offlineDb.get<Data>(
-        db,
-        stringify({
-          router: "walls",
-          procedure: "byId",
-          params,
-        }),
-        params.zoneId,
-      );
-      db.close();
       return saved?.data;
     },
   });
