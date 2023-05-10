@@ -5,6 +5,7 @@ import { inferProcedureOutput } from "@trpc/server";
 import fileSystem from "@utils/FileSystem";
 import { useAtom } from "jotai";
 import { useCallback } from "react";
+import * as Sentry from "sentry-expo";
 
 type ListToDownload = inferProcedureOutput<AppRouter["user"]["offlineAssets"]>;
 
@@ -13,6 +14,22 @@ export const imageVariantsSavedOffline = (publicId: string) => {
   const thumbnailImage = urlGen.blurImage({ publicId });
 
   return [thumbnailImage, mainImage];
+};
+
+const downloadImage = async (publicId: string | null) => {
+  if (!publicId) return;
+  const variantsToDownload = imageVariantsSavedOffline(publicId);
+  for (const variant of variantsToDownload) {
+    const { uniqueId, url } = variant || {};
+    if (!url || !uniqueId) {
+      Sentry.Native.captureMessage(
+        `Image couldn't be downloaded url:${url} uniqueId:${uniqueId} por publicId:${publicId}`,
+        "error",
+      );
+      continue;
+    }
+    await fileSystem.storeImage({ url, uniqueId }, "permanent");
+  }
 };
 
 export const useSaveImagesToFileSystem = () => {
@@ -27,20 +44,11 @@ export const useSaveImagesToFileSystem = () => {
     }) => {
       if (!imagesToDownload) return;
 
-      await imagesToDownload.reduce(async (prevAsset, asset) => {
-        const { publicId } = asset;
-        if (!publicId) return (await prevAsset) + 1;
+      const storeImages = imagesToDownload.map((asset) =>
+        downloadImage(asset.publicId),
+      );
 
-        const variantsToDownload = imageVariantsSavedOffline(publicId);
-
-        for (const variant of variantsToDownload) {
-          const { uniqueId, url } = variant || {};
-          if (!url || !uniqueId) continue;
-          await fileSystem.storeImage({ url, uniqueId }, "permanent");
-        }
-
-        return (await prevAsset) + 1;
-      }, Promise.resolve(0));
+      await Promise.allSettled(storeImages);
 
       setDownloadedImages((old) => ({
         ...old,
