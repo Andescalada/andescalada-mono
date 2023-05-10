@@ -1,14 +1,11 @@
-import { trpc } from "@andescalada/utils/trpc";
 import { isOfflineModeAtom } from "@atoms/index";
 import { onlineManager } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 
 const useOfflineMode = () => {
   const [isOfflineMode, setIsOfflineModeAtom] = useAtom(isOfflineModeAtom);
-  const utils = trpc.useContext();
 
   const setIsOfflineMode = () => {
-    utils.invalidate();
     setIsOfflineModeAtom((isCurrentlyOfflineModeStatus) => {
       if (isCurrentlyOfflineModeStatus) {
         onlineManager.setOnline(undefined);
