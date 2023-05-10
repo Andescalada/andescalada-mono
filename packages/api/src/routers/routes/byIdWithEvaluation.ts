@@ -20,7 +20,7 @@ const byIdWithEvaluation = protectedZoneProcedure
       where: { id: input.routeId },
       include: {
         ...includeInRoute,
-        RouteGradeEvaluation: { where: { User: { email: ctx.user.email } } },
+        RouteEvaluation: { where: { User: { email: ctx.user.email } } },
       },
     });
 
@@ -58,8 +58,8 @@ const byIdWithEvaluation = protectedZoneProcedure
           : 0,
         count: evaluationAverage._count.evaluation,
       },
-      userEvaluation: route.RouteGradeEvaluation[0]?.evaluation
-        ? Number(route.RouteGradeEvaluation[0]?.evaluation)
+      userEvaluation: route.RouteEvaluation[0]?.evaluation
+        ? Number(route.RouteEvaluation[0]?.evaluation)
         : 0,
       gradeEvaluation: {
         average: gradeEvaluationAverage._avg.evaluation
