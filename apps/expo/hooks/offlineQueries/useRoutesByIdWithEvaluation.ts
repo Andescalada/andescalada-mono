@@ -24,6 +24,7 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
   const downloadedZones = useAtom(downloadedZonesAtom)[0];
 
   const offlineStates = useQuery({
+    enabled: isOfflineMode,
     cacheTime: 0,
     staleTime: 0,
     queryKey: [
@@ -35,7 +36,6 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
       params,
     ] as const,
     queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
-    enabled: isOfflineMode,
   });
 
   const onlineResults = trpc.routes.byIdWithEvaluation.useQuery(params, {

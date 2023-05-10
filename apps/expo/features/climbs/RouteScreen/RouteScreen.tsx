@@ -164,7 +164,6 @@ const RouteContainer = ({
       <Box>
         <RouteEvaluation
           evaluationValue={evaluationValue}
-          routeId={routeId}
           evaluationAverage={route.evaluation.average}
           evaluationCount={route.evaluation.count}
         />
@@ -256,20 +255,40 @@ const RouteDescription = ({
 
 const RouteEvaluation = ({
   evaluationValue,
-  routeId,
   evaluationAverage,
   evaluationCount,
 }: {
   evaluationValue: number;
-  routeId: string;
   evaluationAverage: number;
   evaluationCount: number;
 }) => {
   const [evaluation, setEvaluation] = useState(evaluationValue);
   const theme = useAppTheme();
 
+  const { routeId, zoneId } = useRouteScreenParams();
+
   const utils = trpc.useContext();
   const addOrEditEvaluation = trpc.routes.addOrEditEvaluation.useMutation({
+    onMutate(variables) {
+      utils.routes.byIdWithEvaluation.cancel({
+        routeId,
+        zoneId,
+      });
+      const previousData = utils.routes.byIdWithEvaluation.getData({
+        routeId,
+        zoneId,
+      });
+      utils.routes.byIdWithEvaluation.setData({ routeId, zoneId }, (old) =>
+        old ? { ...old, userEvaluation: variables.evaluation } : old,
+      );
+      return { previousData };
+    },
+    onError: (error, variables, context) => {
+      utils.routes.byIdWithEvaluation.setData(
+        { routeId, zoneId },
+        context?.previousData,
+      );
+    },
     onSuccess: ({ routeId }) => {
       utils.routes.byIdWithEvaluation.invalidate({ routeId });
     },

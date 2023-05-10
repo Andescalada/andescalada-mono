@@ -92,7 +92,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     const evaluation = {
       average:
         route.RouteEvaluation.reduce(
-          (acc, curr) => acc + Number(curr.evaluation),
+          (acc, curr) => acc + Number(curr.evaluation || 0),
           0,
         ) / route.RouteEvaluation.length,
       count: route.RouteEvaluation.length,
@@ -101,7 +101,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     const gradeEvaluation = {
       average:
         route.RouteGradeEvaluation.reduce(
-          (acc, curr) => acc + Number(curr.evaluation),
+          (acc, curr) => acc + Number(curr.evaluation || 0),
           0,
         ) / route.RouteGradeEvaluation.length,
       count: route.RouteGradeEvaluation.length,
