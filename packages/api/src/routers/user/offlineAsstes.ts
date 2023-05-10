@@ -123,6 +123,8 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
 
     const data = {
       ...route,
+      RouteEvaluation: null,
+      RouteGradeEvaluation: null,
       mainTopo,
       description,
       length,
@@ -202,7 +204,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     const { router, params, procedure, version, zoneId } = asset;
     return { router, params, procedure, version, zoneId };
   });
-  console.log({ imagesToDownload });
+
   return { assets, imagesToDownload, assetList };
 });
 

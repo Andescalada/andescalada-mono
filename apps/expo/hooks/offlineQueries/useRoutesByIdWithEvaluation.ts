@@ -21,21 +21,6 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
 
   // 26fc77b5-8468-4767-a151-8edf45b25005
 
-  const [iV] = useState(async () => {
-    const db = offlineDb.open();
-    const saved = await offlineDb.getAsync<Data>(
-      db,
-      stringify({
-        router: "routes",
-        procedure: "byIdWithEvaluation",
-        params,
-      }),
-      params.zoneId,
-    );
-
-    return saved?.data;
-  });
-
   return trpc.routes.byIdWithEvaluation.useQuery(params, {
     ...options,
     enabled: !isOfflineMode,

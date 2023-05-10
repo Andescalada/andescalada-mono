@@ -30,7 +30,7 @@ const useDeleteAssetsFromDb = () => {
       const currentDownloadedZones = downloadedZones;
       setIsDownloadedZones((old) => {
         delete old[zoneId];
-        return old;
+        return { ...old };
       });
       try {
         const db = offlineDb.open();
@@ -42,6 +42,13 @@ const useDeleteAssetsFromDb = () => {
         );
         db.close();
         removeToDownloadedList.mutate({ zoneId });
+        notification.notify("success", {
+          params: {
+            title: "Zona borrada de descargas",
+            description: "La zona se ha borrado de descargas exitosamente",
+            hideCloseButton: true,
+          },
+        });
       } catch (err) {
         setIsDownloadedZones(currentDownloadedZones);
         notification.notify("error", {

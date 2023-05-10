@@ -86,7 +86,7 @@ const useSetAssetsToDb = () => {
     } catch (error) {
       setIsDownloadedZones((old) => {
         delete old[zoneId];
-        return old;
+        return { ...old };
       });
       notification.notify("error", {
         params: {
