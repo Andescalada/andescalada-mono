@@ -36,7 +36,7 @@ export const useSaveImagesToFileSystem = () => {
         for (const variant of variantsToDownload) {
           const { uniqueId, url } = variant || {};
           if (!url || !uniqueId) continue;
-          await fileSystem.storeImage({ url, uniqueId });
+          await fileSystem.storeImage({ url, uniqueId }, "permanent");
         }
 
         return (await prevAsset) + 1;

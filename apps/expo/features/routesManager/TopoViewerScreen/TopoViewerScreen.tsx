@@ -20,6 +20,7 @@ import {
 import useToposById from "@hooks/offlineQueries/useToposById";
 import { useAppSelector } from "@hooks/redux";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -51,6 +52,15 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
 
   const [showConfig, setShowConfig] = useState(false);
 
+  const { isOfflineMode } = useOfflineMode();
+
+  const imageQuality = useMemo(() => {
+    if (isOfflineMode) return 100;
+    return data?.Wall.Sector.sectorKind === SectorKindSchema.enum.BigWall
+      ? 60
+      : 40;
+  }, [data, isOfflineMode]);
+
   if (data)
     return (
       <Screen>
@@ -60,11 +70,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
           strokeWidth={Number(data?.routeStrokeWidth)}
           hide={!showRoutes}
           onSelectedRoute={setSelectedRoute}
-          imageQuality={
-            data?.Wall.Sector.sectorKind === SectorKindSchema.enum.BigWall
-              ? 60
-              : 40
-          }
+          imageQuality={imageQuality}
         />
         <BackButton.Transparent
           onPress={() => navigation.pop()}

@@ -107,10 +107,13 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       count: route.RouteGradeEvaluation.length,
     };
 
-    const userEvaluation =
-      route.RouteEvaluation.find(
-        (evaluation) => evaluation.User.email === ctx.user.email,
-      )?.evaluation.toNumber() || 0;
+    const userEvaluationDecimal = route.RouteEvaluation.find(
+      (evaluation) => evaluation.User.email === ctx.user.email,
+    )?.evaluation;
+
+    const userEvaluation = userEvaluationDecimal
+      ? Number(userEvaluationDecimal)
+      : 0;
 
     const mainTopo = route.Wall.topos[0];
     const description = route.description?.originalText;
@@ -199,7 +202,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     const { router, params, procedure, version, zoneId } = asset;
     return { router, params, procedure, version, zoneId };
   });
-
+  console.log({ imagesToDownload });
   return { assets, imagesToDownload, assetList };
 });
 
