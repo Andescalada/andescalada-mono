@@ -4,6 +4,7 @@ import { downloadedZonesAtom, isOfflineModeAtom } from "@atoms/index";
 import { useQuery } from "@tanstack/react-query";
 import { inferReactQueryProcedureOptions } from "@trpc/react-query";
 import { inferProcedureOutput, inferRouterInputs } from "@trpc/server";
+import constants from "@utils/constants";
 import getOfflineData from "@utils/getOfflineData";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
@@ -25,7 +26,7 @@ const useZonesAllSectors = (params: Params, options?: Options) => {
   const offlineStates = useQuery({
     enabled: isOfflineMode,
     queryKey: [
-      "offlineData",
+      constants.offlineData,
       stringify({
         ...path,
         params,

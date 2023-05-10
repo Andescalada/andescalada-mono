@@ -6,6 +6,7 @@ import {
 } from "@andescalada/utils/trpc";
 import { downloadedZonesAtom, isOfflineModeAtom } from "@atoms/index";
 import { useQuery } from "@tanstack/react-query";
+import constants from "@utils/constants";
 import getOfflineData from "@utils/getOfflineData";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
@@ -28,7 +29,7 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
     cacheTime: 0,
     staleTime: 0,
     queryKey: [
-      "offlineData",
+      constants.offlineData,
       stringify({
         ...path,
         params,
