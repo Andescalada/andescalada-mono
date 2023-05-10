@@ -4,10 +4,11 @@ import {
   type RouterOutputs,
   trpc,
 } from "@andescalada/utils/trpc";
-import { isOfflineModeAtom } from "@atoms/index";
+import { downloadedZonesAtom, isOfflineModeAtom } from "@atoms/index";
+import { useQuery } from "@tanstack/react-query";
+import getOfflineData from "@utils/getOfflineData";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
-import { useState } from "react";
 import { stringify } from "superjson";
 
 type Data = RouterOutputs["routes"]["byIdWithEvaluation"];
@@ -16,29 +17,46 @@ type Params = RouterInputs["routes"]["byIdWithEvaluation"];
 
 type Options = ReactQueryOptions["routes"]["byIdWithEvaluation"];
 
+const path = { router: "routes", procedure: "byIdWithEvaluation" };
+
 const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
   const isOfflineMode = useAtom(isOfflineModeAtom)[0];
+  const downloadedZones = useAtom(downloadedZonesAtom)[0];
 
-  // 26fc77b5-8468-4767-a151-8edf45b25005
+  const offlineStates = useQuery({
+    queryKey: [
+      "offlineData",
+      stringify({
+        ...path,
+        params,
+      }),
+      params,
+    ] as const,
+    queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
+    enabled: isOfflineMode,
+  });
 
-  return trpc.routes.byIdWithEvaluation.useQuery(params, {
+  const onlineResults = trpc.routes.byIdWithEvaluation.useQuery(params, {
     ...options,
     enabled: !isOfflineMode,
-    initialData: () => {
-      const db = offlineDb.open();
-      const saved = offlineDb.get<Data>(
-        db,
-        stringify({
-          router: "routes",
-          procedure: "byIdWithEvaluation",
-          params,
-        }),
-        params.zoneId,
-      );
-
-      return saved?.data;
+    onSuccess: (data) => {
+      if (!!downloadedZones[params.zoneId]) {
+        const db = offlineDb.open();
+        offlineDb.set(
+          db,
+          stringify({
+            ...path,
+            params,
+          }),
+          params.zoneId,
+          data,
+          data.version,
+        );
+      }
     },
   });
+
+  return isOfflineMode ? offlineStates : onlineResults;
 };
 
 export default useRoutesByIdWithEvaluation;

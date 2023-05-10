@@ -1,9 +1,11 @@
 import { isOfflineModeAtom } from "@atoms/index";
-import { onlineManager } from "@tanstack/react-query";
+import { onlineManager, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 
 const useOfflineMode = () => {
   const [isOfflineMode, setIsOfflineModeAtom] = useAtom(isOfflineModeAtom);
+
+  const queryClient = useQueryClient();
 
   const setIsOfflineMode = () => {
     setIsOfflineModeAtom((isCurrentlyOfflineModeStatus) => {
@@ -11,6 +13,9 @@ const useOfflineMode = () => {
         onlineManager.setOnline(undefined);
         return false;
       } else {
+        queryClient.invalidateQueries(["offlineData"], {
+          refetchType: "all",
+        });
         onlineManager.setOnline(false);
         return true;
       }
