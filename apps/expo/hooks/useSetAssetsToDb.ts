@@ -6,7 +6,6 @@ import offlineDb from "@utils/quick-sqlite";
 import { deviceName } from "expo-device";
 import { atom, useAtom } from "jotai";
 import { useState } from "react";
-import { stringify } from "superjson";
 
 export const progressAtom = atom(0);
 
@@ -48,21 +47,15 @@ const useSetAssetsToDb = () => {
       const db = offlineDb.open();
 
       const setToDB = data.assets.map((asset) => {
-        const { params, router, procedure, version, zoneId } = asset;
-        const queryKey = stringify({ router, procedure, params });
+        const { version, zoneId, assetId } = asset;
 
-        const downloadedAsset = data.assets.find(
-          (a) =>
-            a.procedure === procedure &&
-            a.router === router &&
-            a.params === params,
-        );
+        const downloadedAsset = data.assets.find((a) => a.assetId === assetId);
 
         if (!downloadedAsset) return;
 
         return offlineDb.setOrCreate(
           db,
-          queryKey,
+          assetId,
           zoneId,
           downloadedAsset.data,
           version,

@@ -137,6 +137,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       router: "routes" as const,
       procedure: "byIdWithEvaluation" as const,
       params: { routeId: route.id, zoneId: route.Wall.Sector.zoneId },
+      assetId: `routes.byIdWithEvaluation/${route.id}`,
       zoneId: route.Wall.Sector.zoneId,
       data,
       version: route.version,
@@ -151,6 +152,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       router: "topos" as const,
       procedure: "byId" as const,
       params: { topoId: topo.id, zoneId: topo.Wall.Sector.zoneId },
+      assetId: `topos.byId/${topo.id}`,
       zoneId: topo.Wall.Sector.zoneId,
       data: topo,
       version: topo.version,
@@ -163,6 +165,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       router: "walls" as const,
       procedure: "byId" as const,
       params: { wallId: wall.id, zoneId: wall.Sector.zoneId },
+      assetId: `walls.byId/${wall.id}`,
       zoneId: wall.Sector.zoneId,
       data: { ...wall, MultiPitch },
       version: wall.version,
@@ -173,6 +176,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     router: "sectors" as const,
     procedure: "allWalls" as const,
     params: { sectorId: sector.id, zoneId: sector.zoneId },
+    assetId: `sectors.allWalls/${sector.id}`,
     zoneId: sector.zoneId,
     data: sector,
     version: sector.version,
@@ -182,6 +186,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     router: "zones" as const,
     procedure: "allSectors" as const,
     params: { zoneId: zone.id },
+    assetId: `zones.allSectors/${zone.id}`,
     zoneId: zone.id,
     data: {
       ...zone,
@@ -201,8 +206,8 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
   ];
 
   const assetList = assets.map((asset) => {
-    const { router, params, procedure, version, zoneId } = asset;
-    return { router, params, procedure, version, zoneId };
+    const { router, params, procedure, version, zoneId, assetId } = asset;
+    return { router, params, procedure, version, zoneId, assetId };
   });
 
   return { assets, imagesToDownload, assetList };

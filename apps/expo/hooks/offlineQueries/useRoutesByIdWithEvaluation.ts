@@ -10,7 +10,6 @@ import constants from "@utils/constants";
 import getOfflineData from "@utils/getOfflineData";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
-import { stringify } from "superjson";
 
 type Data = RouterOutputs["routes"]["byIdWithEvaluation"];
 
@@ -24,18 +23,13 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
   const isOfflineMode = useAtom(isOfflineModeAtom)[0];
   const downloadedZones = useAtom(downloadedZonesAtom)[0];
 
+  const assetId = `${path.router}.${path.procedure}/${params.routeId}`;
+
   const offlineStates = useQuery({
     enabled: isOfflineMode,
     cacheTime: 0,
     staleTime: 0,
-    queryKey: [
-      constants.offlineData,
-      stringify({
-        ...path,
-        params,
-      }),
-      params,
-    ] as const,
+    queryKey: [constants.offlineData, assetId, params] as const,
     queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
   });
 
@@ -45,16 +39,7 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
     onSuccess: (data) => {
       if (!!downloadedZones[params.zoneId]) {
         const db = offlineDb.open();
-        offlineDb.set(
-          db,
-          stringify({
-            ...path,
-            params,
-          }),
-          params.zoneId,
-          data,
-          data.version,
-        );
+        offlineDb.set(db, assetId, params.zoneId, data, data.version);
       }
     },
   });
