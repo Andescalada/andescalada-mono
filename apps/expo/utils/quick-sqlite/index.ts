@@ -9,7 +9,7 @@ const open = () => openDb({ name: "offlineAssets.db", location: "default" });
 const createZoneTable = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `CREATE TABLE IF NOT EXISTS '${zoneId}'(
         assetId TEXT NOT NULL PRIMARY KEY,
-        data BLOB NOT NULL,
+        data TEXT NOT NULL,
         version INTEGER
     );`;
 
