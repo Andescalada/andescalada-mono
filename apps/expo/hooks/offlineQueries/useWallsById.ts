@@ -24,12 +24,13 @@ const useWallsById = (params: Params, options?: Options) => {
   const assetId = `${path.router}.${path.procedure}/${params.wallId}`;
 
   const offlineStates = useQuery({
+    enabled: isOfflineMode,
+    networkMode: "always",
     queryKey: [constants.offlineData, assetId, params] as const,
     queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
-    enabled: isOfflineMode,
   });
 
-  const onlineResults = trpc.walls.byId.useQuery(params, {
+  const onlineStates = trpc.walls.byId.useQuery(params, {
     ...options,
     enabled: !isOfflineMode,
     onSuccess: (data) => {
@@ -40,7 +41,7 @@ const useWallsById = (params: Params, options?: Options) => {
     },
   });
 
-  return isOfflineMode ? offlineStates : onlineResults;
+  return isOfflineMode ? offlineStates : onlineStates;
 };
 
 export default useWallsById;

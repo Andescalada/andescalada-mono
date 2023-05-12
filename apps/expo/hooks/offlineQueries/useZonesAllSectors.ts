@@ -25,12 +25,13 @@ const useZonesAllSectors = (params: Params, options?: Options) => {
   const assetId = `${path.router}.${path.procedure}/${params.zoneId}`;
 
   const offlineStates = useQuery({
+    networkMode: "always",
     enabled: isOfflineMode,
     queryKey: [constants.offlineData, assetId, params] as const,
     queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
   });
 
-  const onlineResults = trpc.zones.allSectors.useQuery(params, {
+  const onlineStates = trpc.zones.allSectors.useQuery(params, {
     enabled: !isOfflineMode,
     onSuccess: (data) => {
       if (!!downloadedZones[params.zoneId]) {
@@ -41,7 +42,7 @@ const useZonesAllSectors = (params: Params, options?: Options) => {
     ...options,
   });
 
-  return isOfflineMode ? offlineStates : onlineResults;
+  return isOfflineMode ? offlineStates : onlineStates;
 };
 
 export default useZonesAllSectors;

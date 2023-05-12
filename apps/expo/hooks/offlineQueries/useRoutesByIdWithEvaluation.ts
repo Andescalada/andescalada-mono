@@ -26,15 +26,13 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
   const assetId = `${path.router}.${path.procedure}/${params.routeId}`;
 
   const offlineStates = useQuery({
+    networkMode: "always",
     enabled: isOfflineMode,
-    cacheTime: 0,
-    staleTime: 0,
     queryKey: [constants.offlineData, assetId, params] as const,
     queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
   });
 
-  const onlineResults = trpc.routes.byIdWithEvaluation.useQuery(params, {
-    ...options,
+  const onlineStates = trpc.routes.byIdWithEvaluation.useQuery(params, {
     enabled: !isOfflineMode,
     onSuccess: (data) => {
       if (!!downloadedZones[params.zoneId]) {
@@ -42,9 +40,10 @@ const useRoutesByIdWithEvaluation = (params: Params, options?: Options) => {
         offlineDb.set(db, assetId, params.zoneId, data, data.version);
       }
     },
+    ...options,
   });
 
-  return isOfflineMode ? offlineStates : onlineResults;
+  return isOfflineMode ? offlineStates : onlineStates;
 };
 
 export default useRoutesByIdWithEvaluation;
