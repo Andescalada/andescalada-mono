@@ -3,7 +3,8 @@
     "source.fixAll.eslint": true
   },
   "eslint.validate": [
-    "javascript"
+    "javascript",
+    "typescript"
   ],
   "cSpell.words": [
     "cloudinary",

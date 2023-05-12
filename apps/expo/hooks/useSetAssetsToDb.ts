@@ -6,7 +6,6 @@ import offlineDb from "@utils/quick-sqlite";
 import { deviceName } from "expo-device";
 import { atom, useAtom } from "jotai";
 import { useState } from "react";
-import { stringify } from "superjson";
 
 export const progressAtom = atom(0);
 
@@ -47,34 +46,33 @@ const useSetAssetsToDb = () => {
 
       const db = offlineDb.open();
 
-      const setToDB = data.assets.map((asset) => {
-        const { params, router, procedure, version, zoneId } = asset;
-        const queryKey = stringify({ router, procedure, params });
+      await offlineDb.createZoneTable(db, zoneId);
 
-        const downloadedAsset = data.assets.find(
-          (a) =>
-            a.procedure === procedure &&
-            a.router === router &&
-            a.params === params,
-        );
+      for (const asset of data.assets) {
+        const { version, zoneId, assetId } = asset;
 
-        if (!downloadedAsset) return;
+        const downloadedAsset = data.assets.find((a) => a.assetId === assetId);
 
-        return offlineDb.setOrCreate(
+        if (!downloadedAsset) return Promise.resolve(undefined);
+
+        await offlineDb.setAsync(
           db,
-          queryKey,
+          assetId,
           zoneId,
           downloadedAsset.data,
           version,
         );
-      });
-      await Promise.allSettled(setToDB);
+      }
+
       setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
+
       db.close();
+
       await saveImagesToFileSystem({
         imagesToDownload: data.imagesToDownload,
         zoneId,
       });
+
       notification.notify("success", {
         params: {
           title: "Zona descargada con éxito",

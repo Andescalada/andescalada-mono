@@ -8,7 +8,6 @@ import constants from "@utils/constants";
 import getOfflineData from "@utils/getOfflineData";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
-import { stringify } from "superjson";
 
 type Data = inferProcedureOutput<AppRouter["walls"]["byId"]>;
 
@@ -22,40 +21,27 @@ const useWallsById = (params: Params, options?: Options) => {
   const isOfflineMode = useAtom(isOfflineModeAtom)[0];
   const downloadedZones = useAtom(downloadedZonesAtom)[0];
 
+  const assetId = `${path.router}.${path.procedure}/${params.wallId}`;
+
   const offlineStates = useQuery({
-    queryKey: [
-      constants.offlineData,
-      stringify({
-        ...path,
-        params,
-      }),
-      params,
-    ] as const,
-    queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
     enabled: isOfflineMode,
+    networkMode: "always",
+    queryKey: [constants.offlineData, assetId, params] as const,
+    queryFn: ({ queryKey }) => getOfflineData<Params, Data>(...queryKey),
   });
 
-  const onlineResults = trpc.walls.byId.useQuery(params, {
+  const onlineStates = trpc.walls.byId.useQuery(params, {
     ...options,
     enabled: !isOfflineMode,
     onSuccess: (data) => {
       if (!!downloadedZones[params.zoneId]) {
         const db = offlineDb.open();
-        offlineDb.set(
-          db,
-          stringify({
-            ...path,
-            params,
-          }),
-          params.zoneId,
-          data,
-          data.version,
-        );
+        offlineDb.set(db, assetId, params.zoneId, data, data.version);
       }
     },
   });
 
-  return isOfflineMode ? offlineStates : onlineResults;
+  return isOfflineMode ? offlineStates : onlineStates;
 };
 
 export default useWallsById;
