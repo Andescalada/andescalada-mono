@@ -1,16 +1,16 @@
 import { transformer } from "@andescalada/api/src/transformer";
 import NetInfo from "@react-native-community/netinfo";
-import { onlineManager, QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import {
+  onlineManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import Env from "@utils/env";
-import { createMMKVStoragePersister } from "@utils/mmkv/createMMKVPersister";
-import storage from "@utils/mmkv/storage";
 import { trpc } from "@utils/trpc";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
 import { addPlugin } from "react-query-native-devtools";
-import * as Sentry from "sentry-expo";
 
 export interface AccessToken {
   exp: number;
@@ -21,8 +21,6 @@ onlineManager.setEventListener((setOnline) => {
     setOnline(!!state.isConnected);
   });
 });
-
-const persister = createMMKVStoragePersister({ storage: storage });
 
 interface Props {
   accessToken: string;
@@ -48,7 +46,6 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
           retry: true,
         },
         queries: {
-          networkMode: "offlineFirst",
           retry: false,
           staleTime: 1 * (60 * 1000), // 5 mins
           cacheTime: 5 * (60 * 1000), // 10 mins
@@ -77,20 +74,7 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister }}
-        onSuccess={() => {
-          queryClient.resumePausedMutations().then((mutations) => {
-            Sentry.Native.captureMessage(
-              "resumed paused mutations: " + mutations,
-            );
-            queryClient.invalidateQueries();
-          });
-        }}
-      >
-        {children}
-      </PersistQueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </trpc.Provider>
   );
 };
