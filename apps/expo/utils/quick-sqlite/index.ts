@@ -7,9 +7,9 @@ import { parse, stringify } from "superjson";
 const open = () => openDb({ name: "offlineAssets.db", location: "default" });
 
 const createZoneTable = async (db: QuickSQLiteConnection, zoneId: string) => {
-  const query = `CREATE TABLE IF NOT EXISTS '${zoneId}'(
+  const query = `CREATE TABLE IF NOT EXISTS '${zoneId}' (
         assetId TEXT NOT NULL PRIMARY KEY,
-        data TEXT NOT NULL,
+        data JSON NOT NULL,
         version INTEGER
     );`;
 
@@ -79,14 +79,19 @@ const setAsync = async (
   data: unknown,
   version: number,
 ) => {
-  const serializedData = stringify(data);
+  try {
+    const serializedData = stringify(data);
 
-  const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
+    const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
 
-  await db.executeAsync(query);
+    await db.executeAsync(query);
 
-  return serializedData;
+    return serializedData;
+  } catch (err) {
+    throw new Error(`${(err as any).message} - ${assetId}`);
+  }
 };
+
 const set = (
   db: QuickSQLiteConnection,
   assetId: string,
@@ -137,12 +142,16 @@ const allSavedZones = (db: QuickSQLiteConnection) => {
   return res.rows?._array as string[];
 };
 
-const allAssetsOfZone = (db: QuickSQLiteConnection, zoneId: string) => {
-  const query = `SELECT assetId, version FROM '${zoneId}'`;
+const allAssetsOfZone = async (db: QuickSQLiteConnection, zoneId: string) => {
+  try {
+    const query = `SELECT assetId, version FROM '${zoneId}'`;
 
-  const res = db.execute(query);
+    const res = await db.executeAsync(query);
 
-  return res.rows?._array as { assetId: string; version: number }[];
+    return res.rows?._array as { assetId: string; version: number }[];
+  } catch (err) {
+    return [];
+  }
 };
 
 const offlineDb = {

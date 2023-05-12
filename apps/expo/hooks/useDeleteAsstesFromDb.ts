@@ -34,13 +34,16 @@ const useDeleteAssetsFromDb = () => {
       });
       try {
         const db = offlineDb.open();
+
         const deleteFromDb = offlineDb.deleteZone(db, zoneId);
         const deleteImages = deleteZoneSavedImages({ zoneId });
         await Promise.allSettled([deleteFromDb, deleteImages]);
+        db.close();
+
         setDownloadedAssetsList((old) =>
           old.filter((asset) => asset.zoneId !== zoneId),
         );
-        db.close();
+
         removeToDownloadedList.mutate({ zoneId });
         notification.notify("success", {
           params: {

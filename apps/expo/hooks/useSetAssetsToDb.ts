@@ -46,30 +46,33 @@ const useSetAssetsToDb = () => {
 
       const db = offlineDb.open();
 
-      const setToDB = data.assets.map((asset) => {
+      await offlineDb.createZoneTable(db, zoneId);
+
+      for (const asset of data.assets) {
         const { version, zoneId, assetId } = asset;
 
         const downloadedAsset = data.assets.find((a) => a.assetId === assetId);
 
-        if (!downloadedAsset) return;
+        if (!downloadedAsset) return Promise.resolve(undefined);
 
-        return offlineDb.setAsync(
+        await offlineDb.setAsync(
           db,
           assetId,
           zoneId,
           downloadedAsset.data,
           version,
         );
-      });
+      }
 
-      await offlineDb.createZoneTable(db, zoneId);
-      await Promise.allSettled(setToDB);
       setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
+
       db.close();
+
       await saveImagesToFileSystem({
         imagesToDownload: data.imagesToDownload,
         zoneId,
       });
+
       notification.notify("success", {
         params: {
           title: "Zona descargada con éxito",
