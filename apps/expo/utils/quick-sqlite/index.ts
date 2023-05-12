@@ -6,12 +6,10 @@ import { parse, stringify } from "superjson";
 
 const open = () => openDb({ name: "offlineAssets.db", location: "default" });
 
-const createZoneTable = async (zoneId: string) => {
-  const db = open();
-
+const createZoneTable = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `CREATE TABLE IF NOT EXISTS '${zoneId}'(
         assetId TEXT NOT NULL PRIMARY KEY,
-        data TEXT,
+        data JSON,
         version INTEGER
     );`;
 
@@ -106,17 +104,6 @@ const set = (
   }
 };
 
-const setOrCreate = async (
-  db: QuickSQLiteConnection,
-  assetId: string,
-  zoneId: string,
-  data: unknown,
-  version: number,
-) => {
-  await createZoneTable(zoneId);
-  return await setAsync(db, assetId, zoneId, data, version);
-};
-
 const deleteAsset = async (
   db: QuickSQLiteConnection,
   assetId: string,
@@ -166,9 +153,9 @@ const offlineDb = {
   set,
   delete: deleteAsset,
   deleteZone,
-  setOrCreate,
   allSavedZones,
   allAssetsOfZone,
+  createZoneTable,
 };
 
 export default offlineDb;

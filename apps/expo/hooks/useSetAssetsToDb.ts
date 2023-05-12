@@ -53,7 +53,7 @@ const useSetAssetsToDb = () => {
 
         if (!downloadedAsset) return;
 
-        return offlineDb.setOrCreate(
+        return offlineDb.setAsync(
           db,
           assetId,
           zoneId,
@@ -61,6 +61,8 @@ const useSetAssetsToDb = () => {
           version,
         );
       });
+
+      await offlineDb.createZoneTable(db, zoneId);
       await Promise.allSettled(setToDB);
       setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
       db.close();
