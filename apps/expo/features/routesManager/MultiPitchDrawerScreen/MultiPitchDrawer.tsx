@@ -28,7 +28,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { FC, useMemo, useState } from "react";
 
 interface Props {
-  topos: ParsedTopo;
+  topos: Exclude<ParsedTopo, null>;
   fileUrl: string;
   height: number;
   width: number;
