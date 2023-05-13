@@ -3,7 +3,8 @@ import { inferRouterOutputs } from "@trpc/server";
 
 type Topo = inferRouterOutputs<AppRouter>["topos"]["byId"];
 
-const parsedTopo = (topo: Topo, routeId: string) => {
+const parsedTopo = (topo: Topo | undefined, routeId: string) => {
+  if (!topo) return null;
   const otherRoutes = topo?.RoutePath.filter((r) => r.Route.id !== routeId);
 
   const selectedRoute = topo?.RoutePath?.find((r) => r.Route.id === routeId);
