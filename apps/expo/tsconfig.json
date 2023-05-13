@@ -14,5 +14,6 @@
       "@atoms/*": ["./atoms/*"]
     },
     "strict": true
-  }
+  },
+  "exclude": ["./dist"]
 }
