@@ -8,13 +8,16 @@
     "lint": "eslint . --ext .tsx,.ts,.js,.json"
   },
   "devDependencies": {
-    "react-native-maps": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-maps": "*"
   },
   "peerDependencies": {
-    "react-native-maps": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-maps": "*"
+  },
+  "dependencies": {
+    "@rnmapbox/maps": "rnmapbox/maps#main"
   }
 }
