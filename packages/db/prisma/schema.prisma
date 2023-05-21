@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex"]
 }
 
 generator zod {
