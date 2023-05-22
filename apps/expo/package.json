@@ -125,6 +125,7 @@
     "eslint-plugin-react": "^7.24.0",
     "react-native-flipper": "^0.190.0",
     "react-native-flipper-performance-plugin": "^0.3.1",
+    "react-native-logs": "^5.0.1",
     "react-native-mmkv-flipper-plugin": "^1.0.0",
     "react-query-native-devtools": "^4.0.0",
     "ts-node": "^10.9.1"

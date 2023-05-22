@@ -5,9 +5,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { httpBatchLink } from "@trpc/client";
+import { httpBatchLink, loggerLink } from "@trpc/client";
 import Env from "@utils/env";
 import { trpc } from "@utils/trpc";
+import logger from "@utils/trpc/logger";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
 import { addPlugin } from "react-query-native-devtools";
@@ -58,6 +59,9 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
+        loggerLink({
+          logger,
+        }),
         httpBatchLink({
           url: `${url}/api/trpc`,
 
