@@ -23,7 +23,6 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import Mapbox from "@rnmapbox/maps";
 import Env from "@utils/env";
 import { FC, useCallback, useRef, useState } from "react";
-import { Dimensions } from "react-native";
 
 Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 
