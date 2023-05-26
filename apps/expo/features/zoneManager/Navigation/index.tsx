@@ -65,10 +65,10 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneManagerRoutes.EditZoneLocation}
         component={EditZoneLocationScreen}
-        options={{
-          title: "Tus zonas",
-          ...backHeader,
-        }}
+        // options={{
+        //   title: "Tus zonas",
+        //   ...backHeader,
+        // }}
       />
     </Stack.Navigator>
   );

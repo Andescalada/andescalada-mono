@@ -1,3 +1,4 @@
+import Mapbox from "@andescalada/maps/mapbox";
 import {
   ActivityIndicator,
   BackButton,
@@ -20,7 +21,6 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import Mapbox from "@rnmapbox/maps";
 import Env from "@utils/env";
 import { FC, useCallback, useRef, useState } from "react";
 

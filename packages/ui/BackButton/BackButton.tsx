@@ -13,6 +13,7 @@ import Pressable from "../Pressable/Pressable";
 import { Theme } from "../Theme/theme";
 
 interface Props extends ComponentProps<typeof Pressable> {
+  containerProps?: ComponentProps<typeof Box>;
   iconProps?: Partial<ComponentProps<typeof Ionicons>>;
 }
 
@@ -57,9 +58,16 @@ const BackButton: FC<Props> & { Transparent: typeof Transparent } = ({
   );
 };
 
-const Transparent = ({ iconProps, ...props }: Props) => {
+const Transparent = ({ iconProps, containerProps, ...props }: Props) => {
   return (
-    <Box position="absolute" top={50} left={0} margin="l" marginLeft="s">
+    <Box
+      position="absolute"
+      top={50}
+      left={0}
+      margin="l"
+      marginLeft="s"
+      {...containerProps}
+    >
       <Pressable
         backgroundColor={"transparentButtonBackground"}
         borderRadius={100}

@@ -2670,9 +2670,10 @@
   resolved "https://registry.yarnpkg.com/@resvg/resvg-wasm/-/resvg-wasm-2.0.0-alpha.4.tgz#fc2f86186a9641df030d8f9f3f9d995899cd1ecb"
   integrity sha512-pWIG9a/x1ky8gXKRhPH1OPKpHFoMN1ISLbJ+O+gPXQHIAKhNd5I28RlWf7q576hAOQA9JZTlo3p/M2uyLzJmmw==
 
-"@rnmapbox/maps@^10.0.7-rc.0", "@rnmapbox/maps@rnmapbox/maps#main":
-  version "10.0.7-rc.0"
-  resolved "https://codeload.github.com/rnmapbox/maps/tar.gz/1543ce8ac0a8d02cee1adc264efb733104a9af63"
+"@rnmapbox/maps@^10.0.7-rc.1":
+  version "10.0.7-rc.1"
+  resolved "https://registry.yarnpkg.com/@rnmapbox/maps/-/maps-10.0.7-rc.1.tgz#f1ac1e79f079db410e48a80fe93271ffb4726f0e"
+  integrity sha512-bzQZT2u6a43ypE2sd8lNDg4VTkG7NMbDhHMA2GOjd5M3OlovtYAqRcjCAhqQpf+SMHACWhJ2PgVIU0naooeI1g==
   dependencies:
     "@turf/along" "6.5.0"
     "@turf/distance" "6.5.0"
