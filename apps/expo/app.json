@@ -93,6 +93,12 @@
     },
     "plugins": [
       [
+        "@morrowdigital/watermelondb-expo-plugin",
+        {
+          "databases": ["userAssets.db"]
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "La app accede a tus fotos para que subas topos y fotos de las rutas",
@@ -105,6 +111,9 @@
         {
           "ios": {
             "flipper": true
+          },
+          "android": {
+            "kotlinVersion": "1.6.10"
           }
         }
       ],
