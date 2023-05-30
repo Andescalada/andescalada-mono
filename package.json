@@ -29,7 +29,9 @@
     ],
     "nohoist": [
       "**/@shopify/react-native-skia/**",
-      "**/@shopify/react-native-skia"
+      "**/@shopify/react-native-skia",
+      "**/@nozbe/watermelondb/**",
+      "**/@nozbe/watermelondb"
     ]
   },
   "prisma": {
