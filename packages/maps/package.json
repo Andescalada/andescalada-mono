@@ -10,11 +10,11 @@
   "devDependencies": {
     "react-native-maps": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "0.71.6"
   },
   "peerDependencies": {
     "react-native-maps": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "0.71.6"
   }
 }

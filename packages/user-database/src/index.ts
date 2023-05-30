@@ -1,6 +1,5 @@
 import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
-import { Platform } from "react-native";
 
 import migrations from "./model/migrations";
 import schema from "./model/schema";
@@ -19,7 +18,7 @@ const adapter = new SQLiteAdapter({
 });
 
 // Then, make a Watermelon database from it!
-const database = new Database({
+export const database = new Database({
   adapter,
   modelClasses: [
     // Post, // ⬅️ You'll add Models to Watermelon here
