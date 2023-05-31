@@ -1,3 +1,4 @@
+import { database } from "@local-database/index";
 import NetInfo from "@react-native-community/netinfo";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { auth0Tokens, login, logout } from "@utils/auth0";
@@ -130,7 +131,7 @@ export const autoLoginAuth0 = createAsyncThunk(
         };
       }
       rejectWithValue(err);
-      clearAllLocalData();
+      await clearAllLocalData();
       return { isAuth: false };
     }
   },
@@ -207,8 +208,9 @@ export const { setLoadingAuth, setIsAuth, setAutoLoginCompleted } =
 
 export default authSlice;
 
-const clearAllLocalData = () => {
+const clearAllLocalData = async () => {
   storage.clearAll();
   const db = offlineDb.open();
   db.delete();
+  await database.unsafeResetDatabase();
 };
