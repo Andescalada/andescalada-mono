@@ -26,6 +26,7 @@ module.exports = function (api) {
             "@hooks": "./hooks",
             "@templates": "./templates",
             "@atoms": "./atoms",
+            "@local-database": "./local-database",
           },
         },
       ],

@@ -1,6 +1,7 @@
 import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
+import modelClasses from "./model";
 import migrations from "./model/migrations";
 import schema from "./model/schema";
 // import Post from './model/Post' // ⬅️ You'll import your Models here
@@ -20,7 +21,5 @@ const adapter = new SQLiteAdapter({
 // Then, make a Watermelon database from it!
 export const database = new Database({
   adapter,
-  modelClasses: [
-    // Post, // ⬅️ You'll add Models to Watermelon here
-  ],
+  modelClasses,
 });
