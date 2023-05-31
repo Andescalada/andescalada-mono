@@ -1,12 +1,12 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppDispatch } from "@hooks/redux";
-import useAddUserMutation from "@local-database/hooks/useAddUser";
+import useSetOrCreateUserMutation from "@local-database/hooks/useSetOrCreateUserMutation";
 import { autoLoginAuth0 } from "@store/auth";
 import { inferProcedureOutput } from "@trpc/server";
 import storage from "@utils/mmkv/storage";
 import { noNetwork } from "@utils/noNetworkCondition";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { parse, stringify } from "superjson";
 
 type OwnInfoOutput = inferProcedureOutput<AppRouter["user"]["ownInfo"]>;
@@ -20,7 +20,7 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
 
   const ownInfoOutput = storage.getString("ownInfo");
 
-  const addUser = useAddUserMutation();
+  const addUser = useSetOrCreateUserMutation();
 
   const parsedStoredOwnInfo = useMemo(
     () => (ownInfoOutput ? parse<OwnInfoOutput>(ownInfoOutput) : undefined),
@@ -32,17 +32,6 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
   const ownInfo = trpc.user.ownInfo.useQuery(undefined, {
     staleTime: 1000 * 60,
     initialData: withInitialData ? parsedStoredOwnInfo : undefined,
-    onSuccess: (data) => {
-      if (data)
-        addUser.mutate({
-          id: data.id,
-          email: data.email,
-          name: data.name,
-          username: data.username,
-        });
-
-      storage.set("ownInfo", stringify(data));
-    },
     onError(err) {
       if (noNetwork(err)) {
         utils.user.ownInfo.setData(undefined, parsedStoredOwnInfo);
@@ -54,6 +43,20 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
       }
     },
   });
+
+  useEffect(() => {
+    if (ownInfo.data) {
+      addUser.mutate({
+        id: ownInfo.data.id,
+        email: ownInfo.data.email,
+        name: ownInfo.data.name + " test!",
+        username: ownInfo.data.username,
+        ownUser: true,
+      });
+
+      storage.set("ownInfo", stringify(ownInfo.data));
+    }
+  }, [ownInfo.isSuccess]);
 
   return ownInfo;
 };

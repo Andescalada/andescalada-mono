@@ -11,7 +11,7 @@ import schema from "./model/schema";
 // First, create the adapter to the underlying database:
 const adapter = new SQLiteAdapter({
   schema,
-  migrations,
+  // migrations,
   dbName: "userAssets",
   jsi: true,
   // (optional, but you should implement this method)

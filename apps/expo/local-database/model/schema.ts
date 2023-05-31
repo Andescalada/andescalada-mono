@@ -21,6 +21,7 @@ export const schema = {
     name: { type: "string", name: "name" },
     username: { type: "string", name: "username" },
     email: { type: "string", isIndexed: true, name: "email" },
+    ownUser: { type: "boolean", name: "own_user" },
     backend_id: { type: "string", isIndexed: true, name: "backend_id" },
     created_at: { type: "number", name: "created_at" },
   },
@@ -64,6 +65,6 @@ const tables = Object.entries(schema).map(([name, columns]) => {
 });
 
 export default appSchema({
-  version: 1,
+  version: 2,
   tables,
 });
