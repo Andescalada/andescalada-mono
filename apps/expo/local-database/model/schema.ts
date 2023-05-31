@@ -19,6 +19,7 @@ export enum Tables {
 export const schema = {
   [Tables.USERS]: {
     name: { type: "string", name: "name" },
+    username: { type: "string", name: "username" },
     email: { type: "string", isIndexed: true, name: "email" },
     backend_id: { type: "string", isIndexed: true, name: "backend_id" },
     created_at: { type: "number", name: "created_at" },

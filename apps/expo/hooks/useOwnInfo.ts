@@ -1,6 +1,7 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppDispatch } from "@hooks/redux";
+import useAddUserMutation from "@local-database/hooks/useAddUser";
 import { autoLoginAuth0 } from "@store/auth";
 import { inferProcedureOutput } from "@trpc/server";
 import storage from "@utils/mmkv/storage";
@@ -19,6 +20,8 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
 
   const ownInfoOutput = storage.getString("ownInfo");
 
+  const addUser = useAddUserMutation();
+
   const parsedStoredOwnInfo = useMemo(
     () => (ownInfoOutput ? parse<OwnInfoOutput>(ownInfoOutput) : undefined),
     [ownInfoOutput],
@@ -30,6 +33,14 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
     staleTime: 1000 * 60,
     initialData: withInitialData ? parsedStoredOwnInfo : undefined,
     onSuccess: (data) => {
+      if (data)
+        addUser.mutate({
+          id: data.id,
+          email: data.email,
+          name: data.name,
+          username: data.username,
+        });
+
       storage.set("ownInfo", stringify(data));
     },
     onError(err) {
