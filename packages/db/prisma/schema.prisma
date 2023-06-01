@@ -606,14 +606,15 @@ model RoutePath {
 }
 
 model RouteEvaluation {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  evaluation Decimal  @db.Decimal(3, 2)
-  Route      Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  id         String     @id @default(uuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  evaluation Decimal    @db.Decimal(3, 2)
+  Route      Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
   routeId    String
-  User       User     @relation(fields: [userId], references: [id])
+  User       User       @relation(fields: [userId], references: [id])
   userId     String
+  isDeleted  SoftDelete @default(NotDeleted)
 
   @@unique([routeId, userId], name: "user_route_unique")
   @@index([routeId])
