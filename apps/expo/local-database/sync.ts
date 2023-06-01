@@ -1,4 +1,5 @@
 import { database } from "@local-database/index";
+import { Table } from "@local-database/model/schema";
 import { synchronize } from "@nozbe/watermelondb/sync";
 import client from "@utils/trpc/client";
 
@@ -9,7 +10,8 @@ const sync = async () => {
       const res = await client.sync.pull.query({
         migration,
         schemaVersion,
-        lastPulledAt: lastPulledAt ? new Date(lastPulledAt) : new Date(),
+        lastPulledAt: new Date(lastPulledAt ?? 0),
+        tables: Object.values(Table).filter((table) => table !== Table.USER),
       });
 
       return res;
@@ -20,7 +22,7 @@ const sync = async () => {
         lastPulledAt: new Date(lastPulledAt),
       });
     },
-    migrationsEnabledAtVersion: 3,
+    migrationsEnabledAtVersion: 1,
   });
 };
 

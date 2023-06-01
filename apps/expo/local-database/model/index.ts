@@ -45,22 +45,6 @@ export class User extends Model {
   preferredTradGrade!: typeof GradeSystemsSchema._type;
 }
 
-export class Route extends Model {
-  static table = Table.ROUTE;
-  static associations = {
-    [Table.ROUTE_COMMENT]: {
-      type: hasMany,
-      foreignKey: schema[Table.ROUTE_COMMENT].routeId.name,
-    },
-    [Table.ROUTE_EVALUATION]: {
-      type: hasMany,
-      foreignKey: schema[Table.ROUTE_EVALUATION].routeId.name,
-    },
-  };
-
-  @text(schema[Table.ROUTE].name.name) name!: string;
-}
-
 export class RouteComment extends Model {
   static table = Table.ROUTE_COMMENT;
   static associations = {
@@ -86,10 +70,6 @@ export class RouteComment extends Model {
 export class RouteEvaluation extends Model {
   static table = Table.ROUTE_EVALUATION;
   static associations = {
-    [Table.ROUTE]: {
-      type: belongsTo,
-      key: schema[Table.ROUTE_EVALUATION].routeId.name,
-    },
     [Table.USER]: {
       type: belongsTo,
       key: schema[Table.ROUTE_EVALUATION].userId.name,
@@ -105,8 +85,6 @@ export class RouteEvaluation extends Model {
   @readonly
   @date(schema[Table.ROUTE_EVALUATION].updatedAt.name)
   updatedAt!: Date;
-  @relation(Table.ROUTE, schema[Table.ROUTE_EVALUATION].routeId.name)
-  route!: Route;
 }
 
-export default [User, RouteComment, Route, RouteEvaluation];
+export default [User, RouteComment, RouteEvaluation];

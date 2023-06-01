@@ -12,7 +12,6 @@ type Schema = { [key in Table]: { [key: string]: ColumnOption } };
 export enum Table {
   USER = "User",
   ROUTE_COMMENT = "RouteComment",
-  ROUTE = "Route",
   ROUTE_EVALUATION = "RouteEvaluation",
 }
 
@@ -34,9 +33,6 @@ export const schema = {
     createdAt: { type: "number", name: "createdAt" },
     updatedAt: { type: "number", name: "updatedAt" },
   },
-  [Table.ROUTE]: {
-    name: { type: "string", name: "name" },
-  },
   [Table.ROUTE_EVALUATION]: {
     routeId: { type: "string", isIndexed: true, name: "routeId" },
     userId: { type: "string", isIndexed: true, name: "userId" },
@@ -54,6 +50,6 @@ const tables = Object.entries(schema).map(([name, columns]) => {
 });
 
 export default appSchema({
-  version: 3,
+  version: 1,
   tables,
 });
