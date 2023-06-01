@@ -49,13 +49,17 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
       addUser.mutate({
         id: ownInfo.data.id,
         email: ownInfo.data.email,
-        name: ownInfo.data.name + " test!",
+        name: ownInfo.data.name,
         username: ownInfo.data.username,
         ownUser: true,
+        preferredBoulderGrade: ownInfo.data.preferredBoulderGrade,
+        preferredSportGrade: ownInfo.data.preferredSportGrade,
+        preferredTradGrade: ownInfo.data.preferredTradGrade,
       });
 
       storage.set("ownInfo", stringify(ownInfo.data));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownInfo.isSuccess]);
 
   return ownInfo;
