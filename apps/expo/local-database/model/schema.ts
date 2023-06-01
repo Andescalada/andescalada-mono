@@ -22,16 +22,19 @@ export const schema = {
     username: { type: "string", name: "username" },
     email: { type: "string", isIndexed: true, name: "email" },
     ownUser: { type: "boolean", name: "own_user" },
-    backend_id: { type: "string", isIndexed: true, name: "backend_id" },
-    created_at: { type: "number", name: "created_at" },
+    backendId: { type: "string", isIndexed: true, name: "backend_id" },
+    createdAt: { type: "number", name: "created_at" },
+    preferredSportGrade: { type: "string", name: "preferred_sport_grade" },
+    preferredBoulderGrade: { type: "string", name: "preferred_boulder_grade" },
+    preferredTradGrade: { type: "string", name: "preferred_trad_grade" },
   },
   [Tables.ROUTE_COMMENTS]: {
     comment: { type: "string", name: "comment" },
-    route_id: { type: "string", isIndexed: true, name: "route_id" },
-    user_id: { type: "string", isIndexed: true, name: "user_id" },
-    created_at: { type: "number", name: "created_at" },
-    updated_at: { type: "number", name: "updated_at" },
-    backend_id: {
+    routeId: { type: "string", isIndexed: true, name: "route_id" },
+    userId: { type: "string", isIndexed: true, name: "user_id" },
+    createdAt: { type: "number", name: "created_at" },
+    updatedAt: { type: "number", name: "updated_at" },
+    backendId: {
       type: "string",
       isIndexed: true,
       isOptional: true,
@@ -40,14 +43,14 @@ export const schema = {
   },
   [Tables.ROUTES]: {
     name: { type: "string", name: "name" },
-    backend_id: { type: "string", isIndexed: true, name: "backend_id" },
+    backendId: { type: "string", isIndexed: true, name: "backend_id" },
   },
   [Tables.ROUTE_EVALUATIONS]: {
-    route_id: { type: "string", isIndexed: true, name: "route_id" },
-    user_id: { type: "string", isIndexed: true, name: "user_id" },
-    created_at: { type: "number", name: "created_at" },
-    updated_at: { type: "number", name: "updated_at" },
-    backend_id: {
+    routeId: { type: "string", isIndexed: true, name: "route_id" },
+    userId: { type: "string", isIndexed: true, name: "user_id" },
+    createdAt: { type: "number", name: "created_at" },
+    updatedAt: { type: "number", name: "updated_at" },
+    backendId: {
       type: "string",
       isIndexed: true,
       isOptional: true,
@@ -65,6 +68,6 @@ const tables = Object.entries(schema).map(([name, columns]) => {
 });
 
 export default appSchema({
-  version: 2,
+  version: 3,
   tables,
 });
