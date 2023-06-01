@@ -1,7 +1,7 @@
 import { GradeSystemsSchema } from "@andescalada/db/zod";
 import { database } from "@local-database/index";
 import { User } from "@local-database/model";
-import { Tables } from "@local-database/model/schema";
+import { Table } from "@local-database/model/schema";
 import { useMutation } from "@tanstack/react-query";
 
 const setOrCreateUser = async (input: {
@@ -17,7 +17,7 @@ const setOrCreateUser = async (input: {
   await database.write(async () => {
     try {
       const user = await database
-        .get<User>(Tables.USERS)
+        .get<User>(Table.USER)
         .find(input.id)
         .catch(() => null);
       if (user) {
@@ -25,19 +25,18 @@ const setOrCreateUser = async (input: {
           user.email = input.email;
           user.name = input.name;
           user.username = input.username;
-          user.backendId = input.id;
+
           user.ownUser = input.ownUser ?? false;
           user.preferredBoulderGrade = input.preferredBoulderGrade;
           user.preferredSportGrade = input.preferredSportGrade;
           user.preferredTradGrade = input.preferredTradGrade;
         });
       }
-      return await database.get<User>(Tables.USERS).create((user) => {
+      return await database.get<User>(Table.USER).create((user) => {
         user._raw.id = input.id;
         user.email = input.email;
         user.name = input.name;
         user.username = input.username;
-        user.backendId = input.id;
         user.ownUser = input.ownUser ?? false;
         user.preferredBoulderGrade = input.preferredBoulderGrade;
         user.preferredSportGrade = input.preferredSportGrade;

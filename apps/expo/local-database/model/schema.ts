@@ -7,56 +7,42 @@ type ColumnOption = {
   isIndexed?: boolean | undefined;
 };
 
-type Schema = { [key in Tables]: { [key: string]: ColumnOption } };
+type Schema = { [key in Table]: { [key: string]: ColumnOption } };
 
-export enum Tables {
-  USERS = "users",
-  ROUTE_COMMENTS = "route_comments",
-  ROUTES = "routes",
-  ROUTE_EVALUATIONS = "route_evaluations",
+export enum Table {
+  USER = "User",
+  ROUTE_COMMENT = "RouteComment",
+  ROUTE = "Route",
+  ROUTE_EVALUATION = "RouteEvaluation",
 }
 
 export const schema = {
-  [Tables.USERS]: {
+  [Table.USER]: {
     name: { type: "string", name: "name" },
     username: { type: "string", name: "username" },
     email: { type: "string", isIndexed: true, name: "email" },
-    ownUser: { type: "boolean", name: "own_user" },
-    backendId: { type: "string", isIndexed: true, name: "backend_id" },
-    createdAt: { type: "number", name: "created_at" },
-    preferredSportGrade: { type: "string", name: "preferred_sport_grade" },
-    preferredBoulderGrade: { type: "string", name: "preferred_boulder_grade" },
-    preferredTradGrade: { type: "string", name: "preferred_trad_grade" },
+    ownUser: { type: "boolean", name: "ownUser", isOptional: true },
+    createdAt: { type: "number", name: "createdAt" },
+    preferredSportGrade: { type: "string", name: "preferredSportGrade" },
+    preferredBoulderGrade: { type: "string", name: "preferredBoulderGrade" },
+    preferredTradGrade: { type: "string", name: "preferredTradGrade" },
   },
-  [Tables.ROUTE_COMMENTS]: {
+  [Table.ROUTE_COMMENT]: {
     comment: { type: "string", name: "comment" },
-    routeId: { type: "string", isIndexed: true, name: "route_id" },
-    userId: { type: "string", isIndexed: true, name: "user_id" },
-    createdAt: { type: "number", name: "created_at" },
-    updatedAt: { type: "number", name: "updated_at" },
-    backendId: {
-      type: "string",
-      isIndexed: true,
-      isOptional: true,
-      name: "backend_id",
-    },
+    routeId: { type: "string", isIndexed: true, name: "routeId" },
+    userId: { type: "string", isIndexed: true, name: "userId" },
+    createdAt: { type: "number", name: "createdAt" },
+    updatedAt: { type: "number", name: "updatedAt" },
   },
-  [Tables.ROUTES]: {
+  [Table.ROUTE]: {
     name: { type: "string", name: "name" },
-    backendId: { type: "string", isIndexed: true, name: "backend_id" },
   },
-  [Tables.ROUTE_EVALUATIONS]: {
-    routeId: { type: "string", isIndexed: true, name: "route_id" },
-    userId: { type: "string", isIndexed: true, name: "user_id" },
-    createdAt: { type: "number", name: "created_at" },
-    updatedAt: { type: "number", name: "updated_at" },
-    backendId: {
-      type: "string",
-      isIndexed: true,
-      isOptional: true,
-      name: "backend_id",
-    },
-    evaluation: { type: "number", isOptional: true, name: "evaluation" },
+  [Table.ROUTE_EVALUATION]: {
+    routeId: { type: "string", isIndexed: true, name: "routeId" },
+    userId: { type: "string", isIndexed: true, name: "userId" },
+    createdAt: { type: "number", name: "createdAt" },
+    updatedAt: { type: "number", name: "updatedAt" },
+    evaluation: { type: "number", name: "evaluation" },
   },
 } as const satisfies Schema;
 
