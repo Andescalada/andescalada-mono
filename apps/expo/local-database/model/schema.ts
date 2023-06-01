@@ -9,6 +9,14 @@ type ColumnOption = {
 
 type Schema = { [key in Table]: { [key: string]: ColumnOption } };
 
+/**
+ * @see
+ * This is a schema for the local user database.
+ * For that reason every table must have a `userId`, `createAt`, `updatedAt` and `isDeleted` columns in the server.
+ * Names of the tables and columns must match the names in the server.
+ *
+ */
+
 export enum Table {
   USER = "User",
   ROUTE_COMMENT = "RouteComment",

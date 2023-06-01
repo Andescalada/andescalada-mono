@@ -7,8 +7,8 @@ export const syncRouter = t.router({
     .input(
       z.object({
         lastPulledAt: z.date(),
-        schemaVersion: z.number(),
         tables: z.array(z.string()),
+        schemaVersion: z.number(),
         migration: z
           .object({
             from: z.number().int(),
@@ -26,7 +26,7 @@ export const syncRouter = t.router({
           prisma,
           user: { email },
         },
-        input: { lastPulledAt, migration, schemaVersion, tables },
+        input: { lastPulledAt, tables },
       }) => {
         const user = await prisma.user.findUniqueOrThrow({ where: { email } });
         const queries = tables.map(async (table) => {
