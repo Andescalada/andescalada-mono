@@ -212,5 +212,7 @@ const clearAllLocalData = async () => {
   storage.clearAll();
   const db = offlineDb.open();
   db.delete();
-  await database.unsafeResetDatabase();
+  await database.write(async () => {
+    await database.unsafeResetDatabase();
+  });
 };
