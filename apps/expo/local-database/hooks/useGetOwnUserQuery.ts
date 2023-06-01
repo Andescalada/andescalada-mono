@@ -11,7 +11,7 @@ const getOwnUser = async () => {
       .query(Q.where(schema[Tables.USERS].ownUser.name, true))
       .fetch();
 
-    return res[0];
+    return res[0] || null;
   });
   return res;
 };

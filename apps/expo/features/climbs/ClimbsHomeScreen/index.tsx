@@ -7,7 +7,7 @@ const ClimbsHomeScreen = () => {
   const { isOfflineMode } = useOfflineMode();
 
   const q = useGetOwnUserQuery();
-  console.log(q?.data?._raw);
+  console.log(q?.data?.preferredBoulderGrade);
 
   if (isOfflineMode) return <OfflineZonesScreen />;
   return <UserZonesScreen />;
