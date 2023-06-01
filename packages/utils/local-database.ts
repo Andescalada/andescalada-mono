@@ -1,0 +1,59 @@
+type ColumnType = "string" | "number" | "boolean";
+
+type ColumnOption = {
+  name: string;
+  type: ColumnType;
+  isOptional?: boolean | undefined;
+  isIndexed?: boolean | undefined;
+};
+
+type Schema = { [key in Table]: { [key: string]: ColumnOption } };
+
+/**
+ * @see
+ * This is a schema for the local user database.
+ * For that reason every table must have a `userId`, `createAt`, `updatedAt` and `isDeleted` columns in the server.
+ * Names of the tables and columns must match the names in the server.
+ *
+ */
+
+export enum Table {
+  USER = "User",
+  // ROUTE_COMMENT = "RouteComment",
+  ROUTE_EVALUATION = "RouteEvaluation",
+}
+
+export declare function uncapitalized<T extends string>(
+  val: T,
+): Uncapitalize<T>;
+
+export const uncapitalizedTable = Object.values(Table).map((t) =>
+  uncapitalized(t),
+);
+
+export const schema = {
+  [Table.USER]: {
+    name: { type: "string", name: "name" },
+    username: { type: "string", name: "username" },
+    email: { type: "string", isIndexed: true, name: "email" },
+    ownUser: { type: "boolean", name: "ownUser", isOptional: true },
+    createdAt: { type: "number", name: "createdAt" },
+    preferredSportGrade: { type: "string", name: "preferredSportGrade" },
+    preferredBoulderGrade: { type: "string", name: "preferredBoulderGrade" },
+    preferredTradGrade: { type: "string", name: "preferredTradGrade" },
+  },
+  // [Table.ROUTE_COMMENT]: {
+  //   comment: { type: "string", name: "comment" },
+  //   routeId: { type: "string", isIndexed: true, name: "routeId" },
+  //   userId: { type: "string", isIndexed: true, name: "userId" },
+  //   createdAt: { type: "number", name: "createdAt" },
+  //   updatedAt: { type: "number", name: "updatedAt" },
+  // },
+  [Table.ROUTE_EVALUATION]: {
+    routeId: { type: "string", isIndexed: true, name: "routeId" },
+    userId: { type: "string", isIndexed: true, name: "userId" },
+    createdAt: { type: "number", name: "createdAt" },
+    updatedAt: { type: "number", name: "updatedAt" },
+    evaluation: { type: "number", name: "evaluation" },
+  },
+} as const satisfies Schema;

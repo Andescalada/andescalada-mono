@@ -16,10 +16,10 @@ const belongsTo = "belongs_to" as const;
 export class User extends Model {
   static table = Table.USER;
   static associations = {
-    [Table.ROUTE_COMMENT]: {
-      type: hasMany,
-      foreignKey: schema[Table.ROUTE_COMMENT].userId.name,
-    },
+    // [Table.ROUTE_COMMENT]: {
+    //   type: hasMany,
+    //   foreignKey: schema[Table.ROUTE_COMMENT].userId.name,
+    // },
     [Table.ROUTE_EVALUATION]: {
       type: hasMany,
       foreignKey: schema[Table.ROUTE_EVALUATION].userId.name,
@@ -45,27 +45,27 @@ export class User extends Model {
   preferredTradGrade!: typeof GradeSystemsSchema._type;
 }
 
-export class RouteComment extends Model {
-  static table = Table.ROUTE_COMMENT;
-  static associations = {
-    [Table.USER]: {
-      type: belongsTo,
-      key: schema[Table.ROUTE_COMMENT].userId.name,
-    },
-  };
+// export class RouteComment extends Model {
+//   static table = Table.ROUTE_COMMENT;
+//   static associations = {
+//     [Table.USER]: {
+//       type: belongsTo,
+//       key: schema[Table.ROUTE_COMMENT].userId.name,
+//     },
+//   };
 
-  @text(schema[Table.ROUTE_COMMENT].comment.name) comment!: string;
-  @text(schema[Table.ROUTE_COMMENT].routeId.name) routeId!: string;
-  @text(schema[Table.ROUTE_COMMENT].userId.name) userId!: string;
-  @readonly
-  @date(schema[Table.ROUTE_COMMENT].createdAt.name)
-  createdAt!: Date;
-  @readonly
-  @date(schema[Table.ROUTE_COMMENT].updatedAt.name)
-  updatedAt!: Date;
-  @relation(Table.USER, schema[Table.ROUTE_COMMENT].userId.name)
-  user!: User;
-}
+//   @text(schema[Table.ROUTE_COMMENT].comment.name) comment!: string;
+//   @text(schema[Table.ROUTE_COMMENT].routeId.name) routeId!: string;
+//   @text(schema[Table.ROUTE_COMMENT].userId.name) userId!: string;
+//   @readonly
+//   @date(schema[Table.ROUTE_COMMENT].createdAt.name)
+//   createdAt!: Date;
+//   @readonly
+//   @date(schema[Table.ROUTE_COMMENT].updatedAt.name)
+//   updatedAt!: Date;
+//   @relation(Table.USER, schema[Table.ROUTE_COMMENT].userId.name)
+//   user!: User;
+// }
 
 export class RouteEvaluation extends Model {
   static table = Table.ROUTE_EVALUATION;
@@ -85,6 +85,8 @@ export class RouteEvaluation extends Model {
   @readonly
   @date(schema[Table.ROUTE_EVALUATION].updatedAt.name)
   updatedAt!: Date;
+  @relation(Table.USER, schema[Table.ROUTE_EVALUATION].userId.name)
+  user!: User;
 }
 
-export default [User, RouteComment, RouteEvaluation];
+export default [User, RouteEvaluation];
