@@ -27,8 +27,11 @@ import useRoutesByIdWithEvaluation from "@hooks/offlineQueries/useRoutesByIdWith
 import { useAppTheme } from "@hooks/useAppTheme";
 import useDebounce from "@hooks/useDebounce";
 import useGradeSystem from "@hooks/useGradeSystem";
+import { useGetOwnInfo } from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
+import useGetRouteEvaluationQuery from "@local-database/hooks/useGetRouteEvaluationQuery";
+import useSetOrCreateRouteEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteEvaluationMutation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { RouteGrade } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -254,7 +257,6 @@ const RouteDescription = ({
 };
 
 const RouteEvaluation = ({
-  evaluationValue,
   evaluationAverage,
   evaluationCount,
 }: {
@@ -262,10 +264,17 @@ const RouteEvaluation = ({
   evaluationAverage: number;
   evaluationCount: number;
 }) => {
-  const [evaluation, setEvaluation] = useState(evaluationValue);
-  const theme = useAppTheme();
-
   const { routeId, zoneId } = useRouteScreenParams();
+
+  const user = useGetOwnInfo();
+
+  const query = useGetRouteEvaluationQuery({ routeId });
+  const mutation = useSetOrCreateRouteEvaluationMutation();
+
+  const evaluation = query.data?.evaluation || 0;
+  // const setEvaluation = mutation.mutate;
+  const [_, setEvaluation] = useState(evaluation);
+  const theme = useAppTheme();
 
   const utils = trpc.useContext();
   const addOrEditEvaluation = trpc.routes.addOrEditEvaluation.useMutation({
@@ -298,10 +307,12 @@ const RouteEvaluation = ({
 
   const mutate = (evaluation: number, routeId: string) => {
     hasMutated.value = true;
-    addOrEditEvaluation.mutate({
-      routeId,
-      evaluation,
-    });
+
+    mutation.mutate({ evaluation, routeId, userId: user.id });
+    // addOrEditEvaluation.mutate({
+    //   routeId,
+    //   evaluation,
+    // });
   };
 
   const mutateDebounce = useDebounce(mutate, 1000);

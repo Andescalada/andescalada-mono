@@ -59,10 +59,17 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
 
       storage.set("ownInfo", stringify(ownInfo.data));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownInfo.isSuccess]);
 
   return ownInfo;
+};
+
+export const useGetOwnInfo = () => {
+  const utils = trpc.useContext();
+  const data = utils.user.ownInfo.getData();
+  if (!data) throw new Error("ownInfo is undefined");
+  return data;
 };
 
 export default useOwnInfo;

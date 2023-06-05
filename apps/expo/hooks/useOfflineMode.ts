@@ -1,4 +1,5 @@
 import { isOfflineModeAtom } from "@atoms/index";
+import sync from "@local-database/sync";
 import { onlineManager } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 
@@ -9,6 +10,7 @@ const useOfflineMode = () => {
     setIsOfflineModeAtom((isCurrentlyOfflineModeStatus) => {
       if (isCurrentlyOfflineModeStatus) {
         onlineManager.setOnline(undefined);
+        sync();
         return false;
       } else {
         onlineManager.setOnline(false);

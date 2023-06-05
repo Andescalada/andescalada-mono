@@ -4,6 +4,7 @@ import { synchronize } from "@nozbe/watermelondb/sync";
 import client from "@utils/trpc/client";
 
 const sync = async () => {
+  console.log("SYNCHING");
   await synchronize({
     database,
     pullChanges: ({ lastPulledAt }) =>
@@ -12,12 +13,13 @@ const sync = async () => {
         tables: Object.values(Table).filter((table) => table !== Table.USER),
       }),
     pushChanges: async ({ changes, lastPulledAt }) => {
+      console.info("IS PUSHING");
       await client.sync.push.mutate({
         changes,
         lastPulledAt: new Date(lastPulledAt),
       });
     },
-    migrationsEnabledAtVersion: 1,
+    // migrationsEnabledAtVersion: 1,
   });
 };
 

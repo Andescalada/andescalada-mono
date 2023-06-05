@@ -2,7 +2,7 @@ import { GradeSystemsSchema } from "@andescalada/db/zod";
 import { database } from "@local-database/index";
 import { User } from "@local-database/model";
 import { Table } from "@local-database/model/schema";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const setOrCreateUser = async (input: {
   id: string;
@@ -49,7 +49,12 @@ const setOrCreateUser = async (input: {
 };
 
 const useSetOrCreateUserMutation = () => {
-  return useMutation(setOrCreateUser);
+  const queryClient = useQueryClient();
+  return useMutation(setOrCreateUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["local-database"]);
+    },
+  });
 };
 
 export default useSetOrCreateUserMutation;
