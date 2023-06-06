@@ -127,26 +127,34 @@ const pushRouteEvaluation = ({
     },
   });
   if (created.length > 0) {
-    const cleanCreated = created.map((c) => {
-      delete c["_status"];
-      delete c["_changed"];
-    });
-    console.log("IS CREATING", created);
+    const cleanCreated = created.map<Prisma.RouteEvaluationCreateManyInput>(
+      (c) => {
+        return {
+          evaluation: c.evaluation,
+          routeId: c.routeId,
+          userId: c.userId,
+          createdAt: new Date(c.created_at),
+          updatedAt: new Date(c.updated_at),
+          id: c.id,
+        };
+      },
+    );
+    console.log("IS CREATING", cleanCreated);
     const create = prisma.routeEvaluation.createMany({
-      data: keysToCamel(
-        cleanCreated,
-      ) as Prisma.RouteEvaluationCreateManyInput[],
+      data: cleanCreated,
     });
     mutations.push(create);
   }
   if (updated.length > 0) {
     const updates = updated.map(({ id, ...rest }) => {
-      delete rest["_status"];
-      delete rest["_changed"];
-      console.log("IS UPDATING", rest);
+      const data: Prisma.RouteEvaluationUpdateInput = {
+        evaluation: rest.evaluation,
+        Route: { connect: { id: rest.routeId } },
+        User: { connect: { id: rest.userId } },
+      };
       return prisma.routeEvaluation.update({
         where: { id },
-        data: keysToCamel(rest) as Prisma.RouteEvaluationUpdateInput,
+        data,
       });
     });
     mutations.push(...updates);
@@ -159,39 +167,4 @@ const pushRouteEvaluation = ({
     mutations.push(deletes);
   }
   return mutations;
-};
-
-const toCamel = (s: any) => {
-  // @ts-expect-error not interested on fixing
-  return s.replace(/([-_][a-z])/gi, ($1) => {
-    return $1.toUpperCase().replace("-", "").replace("_", "");
-  });
-};
-
-const isArray = function (a: any) {
-  return Array.isArray(a);
-};
-
-const isObject = function (o: any) {
-  return o === Object(o) && !isArray(o) && typeof o !== "function";
-};
-
-const keysToCamel = function (o: any) {
-  if (isObject(o)) {
-    const n = {};
-
-    Object.keys(o).forEach((k) => {
-      // @ts-expect-error not able to infer key
-      n[toCamel(k)] = keysToCamel(o[k]);
-    });
-
-    return n;
-  } else if (isArray(o)) {
-    // @ts-expect-error not interested on fixing
-    return o.map((i) => {
-      return keysToCamel(i);
-    });
-  }
-
-  return o;
 };
