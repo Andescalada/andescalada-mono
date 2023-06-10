@@ -27,11 +27,13 @@ import useRoutesByIdWithEvaluation from "@hooks/offlineQueries/useRoutesByIdWith
 import { useAppTheme } from "@hooks/useAppTheme";
 import useDebounce from "@hooks/useDebounce";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useIsConnected from "@hooks/useIsConnected";
 import { useGetOwnInfo } from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useGetRouteEvaluationQuery from "@local-database/hooks/useGetRouteEvaluationQuery";
 import useSetOrCreateRouteEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteEvaluationMutation";
+import sync from "@local-database/sync";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { RouteGrade } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -71,6 +73,8 @@ const RouteScreen: FC<Props> = ({
     zoneId,
   });
 
+  const { data: localDbEvaluation } = useGetRouteEvaluationQuery({ routeId });
+
   if (isLoading || !data)
     return (
       <Screen padding="m">
@@ -92,7 +96,10 @@ const RouteScreen: FC<Props> = ({
         onGoBack={navigation.goBack}
         showOptions={false}
       />
-      <RouteContainer route={data} evaluationValue={data.userEvaluation} />
+      <RouteContainer
+        route={data}
+        evaluationValue={localDbEvaluation?.evaluation || 0}
+      />
     </Screen>
   );
 };
@@ -257,6 +264,7 @@ const RouteDescription = ({
 };
 
 const RouteEvaluation = ({
+  evaluationValue,
   evaluationAverage,
   evaluationCount,
 }: {
@@ -264,42 +272,18 @@ const RouteEvaluation = ({
   evaluationAverage: number;
   evaluationCount: number;
 }) => {
-  const { routeId, zoneId } = useRouteScreenParams();
+  const { routeId } = useRouteScreenParams();
 
   const user = useGetOwnInfo();
 
-  const query = useGetRouteEvaluationQuery({ routeId });
-  const mutation = useSetOrCreateRouteEvaluationMutation();
-
-  const evaluation = query.data?.evaluation || 0;
-  // const setEvaluation = mutation.mutate;
-  const [_, setEvaluation] = useState(evaluation);
+  const [evaluation, setEvaluation] = useState(evaluationValue);
   const theme = useAppTheme();
 
-  const utils = trpc.useContext();
-  const addOrEditEvaluation = trpc.routes.addOrEditEvaluation.useMutation({
-    onMutate(variables) {
-      utils.routes.byIdWithEvaluation.cancel({
-        routeId,
-        zoneId,
-      });
-      const previousData = utils.routes.byIdWithEvaluation.getData({
-        routeId,
-        zoneId,
-      });
-      utils.routes.byIdWithEvaluation.setData({ routeId, zoneId }, (old) =>
-        old ? { ...old, userEvaluation: variables.evaluation } : old,
-      );
-      return { previousData };
-    },
-    onError: (error, variables, context) => {
-      utils.routes.byIdWithEvaluation.setData(
-        { routeId, zoneId },
-        context?.previousData,
-      );
-    },
-    onSuccess: ({ routeId }) => {
-      utils.routes.byIdWithEvaluation.invalidate({ routeId });
+  const isConnected = useIsConnected();
+
+  const mutation = useSetOrCreateRouteEvaluationMutation({
+    onSuccess() {
+      if (isConnected) sync();
     },
   });
 
@@ -307,12 +291,7 @@ const RouteEvaluation = ({
 
   const mutate = (evaluation: number, routeId: string) => {
     hasMutated.value = true;
-
     mutation.mutate({ evaluation, routeId, userId: user.id });
-    // addOrEditEvaluation.mutate({
-    //   routeId,
-    //   evaluation,
-    // });
   };
 
   const mutateDebounce = useDebounce(mutate, 1000);

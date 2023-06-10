@@ -11,7 +11,7 @@ const setOrCreateRouteEvaluation = async (input: {
   routeId: string;
   userId: string;
 }) => {
-  await database.write(async () => {
+  const result = await database.write(async () => {
     try {
       const routeEvaluation = await database
         .get<RouteEvaluation>(Table.ROUTE_EVALUATION)
@@ -42,17 +42,24 @@ const setOrCreateRouteEvaluation = async (input: {
       console.error("ERROR IN SET OR CREATE ROUTE EVALUATION", error);
     }
   });
-  return true;
+  return result;
 };
 
-const useSetOrCreateRouteEvaluationMutation = () => {
+type Options = {
+  onSuccess?: (
+    result: Awaited<ReturnType<typeof setOrCreateRouteEvaluation>>,
+    params: Parameters<typeof setOrCreateRouteEvaluation>[number],
+  ) => void;
+};
+
+const useSetOrCreateRouteEvaluationMutation = (options?: Options) => {
   const queryClient = useQueryClient();
 
   const m = useMutation(setOrCreateRouteEvaluation, {
     networkMode: "always",
-
-    onSuccess: () => {
+    onSuccess: (data, params) => {
       queryClient.invalidateQueries([LOCAL_DATABASE]);
+      options?.onSuccess?.(data, params);
     },
   });
 

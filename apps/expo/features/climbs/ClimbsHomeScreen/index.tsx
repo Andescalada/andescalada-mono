@@ -1,12 +1,16 @@
 import OfflineZonesScreen from "@features/climbs/OfflineZonesScreen";
 import UserZonesScreen from "@features/climbs/UserZonesScreen";
+import useIsConnected from "@hooks/useIsConnected";
 import useOfflineMode from "@hooks/useOfflineMode";
-import useGetOwnUserQuery from "@local-database/hooks/useGetOwnUserQuery";
+import sync from "@local-database/sync";
+import { useEffect } from "react";
 
 const ClimbsHomeScreen = () => {
   const { isOfflineMode } = useOfflineMode();
-
-  const q = useGetOwnUserQuery();
+  const isConnected = useIsConnected();
+  useEffect(() => {
+    if (isConnected) sync();
+  }, [isConnected]);
 
   if (isOfflineMode) return <OfflineZonesScreen />;
   return <UserZonesScreen />;
