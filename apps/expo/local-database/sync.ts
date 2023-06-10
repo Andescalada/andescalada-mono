@@ -4,7 +4,6 @@ import { synchronize } from "@nozbe/watermelondb/sync";
 import client from "@utils/trpc/client";
 
 const sync = async () => {
-  console.log("SYNCHING");
   await synchronize({
     database,
     pullChanges: ({ lastPulledAt }) =>

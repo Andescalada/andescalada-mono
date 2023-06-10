@@ -84,8 +84,6 @@ export const syncRouter = t.router({
     .mutation(async ({ ctx, input: { changes } }) => {
       const mutations: Prisma.PrismaPromise<any>[] = [];
 
-      console.log("CHANGES", changes);
-
       Object.entries(changes).forEach(async ([t, changes]) => {
         const table = t as Table;
         if (table === Table.ROUTE_EVALUATION) {
@@ -96,18 +94,15 @@ export const syncRouter = t.router({
           mutations.push(...routeEvaluationMutations);
         }
       });
-      console.log(mutations);
 
       try {
-        const res = await ctx.prisma.$transaction(mutations);
-        console.log("RESULTS of PUSHING", res);
+        await ctx.prisma.$transaction(mutations);
       } catch (error) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Unable to save migration data",
           cause: error,
         });
-        console.log(error);
       }
 
       return true;
@@ -119,13 +114,7 @@ const pushRouteEvaluation = ({
   changes: { created, deleted, updated },
 }: PrismaMutationChangesParams) => {
   const mutations: Prisma.PrismaPromise<any>[] = [];
-  console.log({
-    counts: {
-      created: created.length,
-      deleted: deleted.length,
-      updated: updated.length,
-    },
-  });
+
   if (created.length > 0) {
     const cleanCreated = created.map<Prisma.RouteEvaluationCreateManyInput>(
       (c) => {
@@ -139,7 +128,6 @@ const pushRouteEvaluation = ({
         };
       },
     );
-    console.log("IS CREATING", cleanCreated);
     const create = prisma.routeEvaluation.createMany({
       data: cleanCreated,
     });
