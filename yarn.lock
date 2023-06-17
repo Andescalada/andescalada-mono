@@ -2933,19 +2933,13 @@
     xcode "3.0.1"
     yargs "^16.2.0"
 
-"@shopify/react-native-skia@0.1.185":
-  version "0.1.185"
-  resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.185.tgz#ded3478bf4a7d380f3c64bf6b3f8ebbf4e8ecd21"
-  integrity sha512-RD/huxWgRRjZCHaJcpDiOHQ17tUWO2d/XDv59irpwEfWJRi4UNpxOhPvKso9uwt+MlXJnExJbItNt8e7/m/5GQ==
+"@shopify/react-native-skia@0.1.195":
+  version "0.1.195"
+  resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.195.tgz#b911bccf651967356a9ac2203318be4b3b2fb709"
+  integrity sha512-uVehYdr2jInBnpZ70f28MzlAIPcjnrv9nK7pLitbLkQUkq4RGfO/SkUvpK52uQGIf1wK3fgJYhDfaJK4fOBE/g==
   dependencies:
-    "@types/pixelmatch" "^5.2.4"
-    "@types/pngjs" "^6.0.1"
-    "@types/ws" "^8.5.3"
     canvaskit-wasm "0.38.0"
-    pixelmatch "^5.3.0"
-    pngjs "^6.0.0"
     react-reconciler "^0.27.0"
-    ws "^8.11.0"
 
 "@shopify/restyle@*", "@shopify/restyle@^2.4.2":
   version "2.4.2"
@@ -3455,20 +3449,6 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
-"@types/pixelmatch@^5.2.4":
-  version "5.2.4"
-  resolved "https://registry.yarnpkg.com/@types/pixelmatch/-/pixelmatch-5.2.4.tgz#ca145cc5ede1388c71c68edf2d1f5190e5ddd0f6"
-  integrity sha512-HDaSHIAv9kwpMN7zlmwfTv6gax0PiporJOipcrGsVNF3Ba+kryOZc0Pio5pn6NhisgWr7TaajlPEKTbTAypIBQ==
-  dependencies:
-    "@types/node" "*"
-
-"@types/pngjs@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@types/pngjs/-/pngjs-6.0.1.tgz#c711ec3fbbf077fed274ecccaf85dd4673130072"
-  integrity sha512-J39njbdW1U/6YyVXvC9+1iflZghP8jgRf2ndYghdJb5xL49LYDB+1EuAxfbuJ2IBbWIL3AjHPQhgaTxT3YaYeg==
-  dependencies:
-    "@types/node" "*"
-
 "@types/prettier@^2.1.5":
   version "2.7.2"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.7.2.tgz#6c2324641cc4ba050a8c710b2b251b377581fbf0"
@@ -3554,13 +3534,6 @@
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz#b6725d5f4af24ace33b36fafd295136e75509f43"
   integrity sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==
-
-"@types/ws@^8.5.3":
-  version "8.5.4"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.4.tgz#bb10e36116d6e570dd943735f86c933c1587b8a5"
-  integrity sha512-zdQDHKUgcX/zBc4GrwsE/7dVdAD8JR4EuiAXiiUhhfyIJXXb2+PrGshFyeXWQPMmmZ2XxgaqclgpIC7eTXc1mg==
-  dependencies:
-    "@types/node" "*"
 
 "@types/yargs-parser@*":
   version "21.0.0"
@@ -10470,13 +10443,6 @@ pirates@^4.0.1, pirates@^4.0.4, pirates@^4.0.5:
   resolved "https://registry.yarnpkg.com/pirates/-/pirates-4.0.5.tgz#feec352ea5c3268fb23a37c702ab1699f35a5f3b"
   integrity sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==
 
-pixelmatch@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/pixelmatch/-/pixelmatch-5.3.0.tgz#5e5321a7abedfb7962d60dbf345deda87cb9560a"
-  integrity sha512-o8mkY4E/+LNUf6LzX96ht6k6CEDi65k9G2rjMtBe9Oo+VPKSvl+0GKHuH/AlG+GA5LPG/i5hrekkxUc3s2HU+Q==
-  dependencies:
-    pngjs "^6.0.0"
-
 pkg-dir@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-3.0.0.tgz#2749020f239ed990881b1f71210d51eb6523bea3"
@@ -10527,11 +10493,6 @@ pngjs@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-5.0.0.tgz#e79dd2b215767fd9c04561c01236df960bce7fbb"
   integrity sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==
-
-pngjs@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-6.0.0.tgz#ca9e5d2aa48db0228a52c419c3308e87720da821"
-  integrity sha512-TRzzuFRRmEoSW/p1KVAmiOgPco2Irlah+bGFCeNfJXxxYGwSw7YwAOAcd7X28K/m5bjBWKsC29KyoMfHbypayg==
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
@@ -13484,7 +13445,7 @@ write-file-atomic@^3.0.0:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-ws@8.13.0, ws@^8.11.0, ws@^8.12.1:
+ws@8.13.0, ws@^8.12.1:
   version "8.13.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
   integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==

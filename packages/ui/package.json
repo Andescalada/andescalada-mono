@@ -14,13 +14,13 @@
     "react-native-safe-area-context": "4.4.1"
   },
   "devDependencies": {
-    "@shopify/react-native-skia": "0.1.185"
+    "@shopify/react-native-skia": "0.1.195"
   },
   "peerDependencies": {
     "@andescalada/icons": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
-    "@shopify/react-native-skia": "0.1.185",
+    "@shopify/react-native-skia": "0.1.195",
     "expo": "*",
     "react": "*",
     "react-hook-form": "*",
