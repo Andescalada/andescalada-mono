@@ -11,7 +11,6 @@ import {
   RoutesManagerRouteProps,
 } from "@features/routesManager/Navigation/types";
 import { ParsedTopo } from "@features/routesManager/utils/parsedTopos";
-import { useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -35,7 +34,7 @@ const RouteDrawer: FC<Props> = ({ topos, fileUrl, height, width, scale }) => {
 
   const navigation = useNavigation();
 
-  const { showRoutes } = useAppSelector((state) => state.localConfig);
+  const [showRoutes, setShowRoutes] = useState(true);
 
   const [routeStrokeWidth, setRouteStrokeWidth] = useState(
     topos.routeStrokeWidth,
@@ -121,6 +120,8 @@ const RouteDrawer: FC<Props> = ({ topos, fileUrl, height, width, scale }) => {
         showConfig={showConfig}
         onUndo={onUndo}
         onReset={onReset}
+        showRoutes={showRoutes}
+        setShowRoutes={setShowRoutes}
       />
     </Screen>
   );

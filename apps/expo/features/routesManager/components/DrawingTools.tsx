@@ -1,6 +1,4 @@
 import { A, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { setShowRoutes } from "@store/localConfigs";
 import {
   ComponentProps,
   Dispatch,
@@ -15,6 +13,8 @@ interface Props {
   canSave: boolean;
   showConfig: boolean;
   setShowConfig: Dispatch<SetStateAction<boolean>>;
+  showRoutes: boolean;
+  setShowRoutes: Dispatch<SetStateAction<boolean>>;
   onFinishOrSave: () => void;
   isLoading: boolean;
   onUndo: () => void;
@@ -36,6 +36,8 @@ const DrawingTools = ({
   onDisconnect,
   onReset,
   setShowConfig,
+  showRoutes,
+  setShowRoutes,
   onUndo,
   onLabelMovement,
   isDisconnected = false,
@@ -44,9 +46,6 @@ const DrawingTools = ({
   labelCanMove = false,
   labelOnScreen = false,
 }: Props) => {
-  const dispatch = useAppDispatch();
-  const { showRoutes } = useAppSelector((state) => state.localConfig);
-
   const inset = useSafeAreaInsets();
 
   return (
@@ -129,7 +128,7 @@ const DrawingTools = ({
           active={!showRoutes}
           iconName={showRoutes ? "eye-off" : "eye"}
           onPress={() => {
-            dispatch(setShowRoutes());
+            setShowRoutes((prev) => !prev);
           }}
         />
         {isMultiPitch && (
