@@ -19,7 +19,6 @@ import {
   RoutesManagerRouteProps,
 } from "@features/routesManager/Navigation/types";
 import { ParsedTopo } from "@features/routesManager/utils/parsedTopos";
-import { useAppSelector } from "@hooks/redux";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useRouteDrawer from "@hooks/useRouteDrawer";
@@ -82,7 +81,7 @@ const MultiPitchDrawer: FC<Props> = ({
     return undefined;
   }, [previousPitch]);
 
-  const { showRoutes } = useAppSelector((state) => state.localConfig);
+  const [showRoutes, setShowRoutes] = useState(true);
 
   const [routeStrokeWidth, setRouteStrokeWidth] = useState(
     topos.routeStrokeWidth,
@@ -250,6 +249,8 @@ const MultiPitchDrawer: FC<Props> = ({
         onLabelMovement={handleLabelMovement}
         labelCanMove={!disableMovement}
         labelOnScreen={movement.current !== DEFAULT_POSITION}
+        showRoutes={showRoutes}
+        setShowRoutes={setShowRoutes}
       />
     </Screen>
   );

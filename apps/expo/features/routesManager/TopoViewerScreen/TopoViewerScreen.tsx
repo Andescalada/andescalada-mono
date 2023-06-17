@@ -18,7 +18,6 @@ import {
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import useToposById from "@hooks/offlineQueries/useToposById";
-import { useAppSelector } from "@hooks/redux";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -37,7 +36,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
 
   const rootNavigation = useRootNavigation();
 
-  const { showRoutes } = useAppSelector((state) => state.localConfig);
+  const [showRoutes, setShowRoutes] = useState(true);
 
   const { data } = useToposById({ topoId, zoneId });
 
@@ -102,7 +101,12 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
           </A.Box>
         )}
         {showConfig && (
-          <RoutePathConfig show={showConfig} setShow={setShowConfig} />
+          <RoutePathConfig
+            show={showConfig}
+            setShow={setShowConfig}
+            showRoutes={showRoutes}
+            setShowRoutes={setShowRoutes}
+          />
         )}
         {selectedRoute && route && (
           <A.Pressable
