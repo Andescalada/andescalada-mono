@@ -14,7 +14,8 @@
     "@shopify/react-native-skia": "0.1.195",
     "react-native-redash": "*",
     "@openspacelabs/react-native-zoomable-view": "*",
-    "react-native-reanimated": "2.14.4"
+    "react-native-reanimated": "2.14.4",
+    "expo-image": "~1.0.1"
   },
   "devDependencies": {
     "@shopify/restyle": "*",

@@ -8,6 +8,7 @@ const loadImage = async (source: string) => {
   return encodedImage;
 };
 
+// Possibly deprecated
 const useCacheImage = (imageUrl: string) => {
   const mounted = useRef(false);
   const [image, setImage] = useState<SkImage | null>(null);
@@ -23,6 +24,7 @@ const useCacheImage = (imageUrl: string) => {
     });
     return () => {
       imageRef.current?.dispose();
+
       mounted.current = false;
     };
   }, [imageUrl]);

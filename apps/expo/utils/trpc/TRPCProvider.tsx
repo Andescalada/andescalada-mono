@@ -28,6 +28,8 @@ interface Props {
   children: ReactNode;
 }
 
+console.log(Constants.manifest2?.extra?.expoClient?.ios?.jsEngine);
+
 const localHost =
   Constants.manifest2?.extra?.expoGo?.debuggerHost ||
   Constants.manifest?.debuggerHost;
