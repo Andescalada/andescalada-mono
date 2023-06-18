@@ -4,6 +4,7 @@ import {
   useValue,
   vec,
 } from "@shopify/react-native-skia";
+import { useEffect, useRef } from "react";
 
 import { scalePathArray } from "../utils";
 
@@ -30,6 +31,15 @@ const usePathToPoints = (path: string | undefined, scale = 1) => {
     if (points.current.length > 1)
       end.current = points.current[points.current.length - 1];
   }, [points]);
+
+  useEffect(
+    () => () => {
+      points.dispose();
+      start.dispose();
+      end.dispose();
+    },
+    [],
+  );
   return { points, start, end };
 };
 
