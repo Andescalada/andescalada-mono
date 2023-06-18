@@ -7,7 +7,7 @@ index 71c0db9..00f82cc 100644
  }
  
 -def USE_HERMES = rootProject.ext.hermesEnabled
-+def USE_HERMES = true
++def USE_HERMES = false
  
  repositories {
    mavenCentral()
