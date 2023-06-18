@@ -83,33 +83,34 @@ const SkiaRouteCanvas: FC<Props> = ({
     [],
   );
 
-  return (
-    <GestureHandler
-      height={height}
-      width={width}
-      disableGesture={disableGesture}
-      center={center}
-    >
-      <Image
-        cachePolicy="memory"
-        position="absolute"
+  if (imageUrl)
+    return (
+      <GestureHandler
         height={height}
         width={width}
-        transition={500}
-        source={imageUrl}
-      />
-      <Canvas
-        style={{
-          height,
-          width,
-        }}
-        onTouch={touchHandler}
-        ref={ref}
+        disableGesture={disableGesture}
+        center={center}
       >
-        {children}
-      </Canvas>
-    </GestureHandler>
-  );
+        <Image
+          cachePolicy="memory"
+          position="absolute"
+          height={height}
+          width={width}
+          transition={500}
+          source={imageUrl}
+        />
+        <Canvas
+          style={{
+            height,
+            width,
+          }}
+          onTouch={touchHandler}
+          ref={ref}
+        >
+          {children}
+        </Canvas>
+      </GestureHandler>
+    );
 
   return null;
 };
