@@ -26,11 +26,7 @@ const useTopoImage = ({ wallId, zoneId, imageQuality }: Args) => {
   });
 
   const isImageLoaded = useMemo(() => !!image, [image]);
-  const fitted = useFitContent(
-    { height, width },
-    "width",
-    Math.min(1024 * 2, width),
-  );
+  const fitted = useFitContent({ height, width }, "width");
 
   const { fileUrl } = useCachedImage(image);
   return { fileUrl, height, width, isImageLoaded, fitted };
