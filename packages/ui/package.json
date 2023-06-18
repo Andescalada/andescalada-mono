@@ -26,7 +26,6 @@
     "react": "*",
     "react-hook-form": "*",
     "react-native-reanimated": "2.14.4",
-    "zod": "*",
-    "expo-image": "~1.0.1"
+    "zod": "*"
   }
 }

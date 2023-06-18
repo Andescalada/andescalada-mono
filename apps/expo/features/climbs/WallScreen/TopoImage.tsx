@@ -1,4 +1,4 @@
-import { A, ActivityIndicator, Box, Text } from "@andescalada/ui";
+import { A, ActivityIndicator, Box, Image, Text } from "@andescalada/ui";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -11,7 +11,6 @@ import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
-import { Image as ExpoImage } from "expo-image";
 import { FC } from "react";
 import { useWindowDimensions } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
@@ -81,7 +80,7 @@ const TopoImage: FC = () => {
             </Box>
           ) : (
             <>
-              <ExpoImage
+              <Image
                 cachePolicy="none"
                 style={{
                   position: "absolute",

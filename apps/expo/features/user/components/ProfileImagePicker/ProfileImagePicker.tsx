@@ -3,7 +3,6 @@ import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { PickImage, SelectedImage } from "@hooks/usePickImage";
 import { useResponsiveProp } from "@shopify/restyle";
 import { FC } from "react";
-import { FadeIn } from "react-native-reanimated";
 
 interface Props {
   selectedImage: SelectedImage | undefined;
@@ -46,7 +45,7 @@ const ProfileImagePicker: FC<Props> = ({
           position={"absolute"}
           height={responsiveImageSize}
           width={responsiveImageSize}
-          entering={FadeIn}
+          transition={500}
           source={{
             uri: selectedImage?.localUri
               ? selectedImage?.localUri
