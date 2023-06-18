@@ -1,6 +1,6 @@
-import { SCREEN_HEIGHT } from "@andescalada/climbs-drawer/SkiaRouteCanvas/SkiaRouteCanvas";
 import { A, Box, Text } from "@andescalada/ui";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { useWindowDimensions } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface InstructionProps {
@@ -12,6 +12,8 @@ export const SHOWING_TIME = 3000;
 
 const Instructions = ({ children, delay = 0 }: InstructionProps) => {
   const [showInstruction, setShowInstructions] = useState(true);
+
+  const { height: screenHeight } = useWindowDimensions();
 
   const timeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -32,7 +34,7 @@ const Instructions = ({ children, delay = 0 }: InstructionProps) => {
     return (
       <A.Pressable
         position="absolute"
-        bottom={SCREEN_HEIGHT * 0.25}
+        bottom={screenHeight * 0.25}
         backgroundColor="overPhotoOverlay"
         right={16}
         left={16}
