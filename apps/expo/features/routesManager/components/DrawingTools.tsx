@@ -15,7 +15,7 @@ interface Props {
   setShowConfig: Dispatch<SetStateAction<boolean>>;
   showRoutes: boolean;
   setShowRoutes: Dispatch<SetStateAction<boolean>>;
-  onFinishOrSave: () => void;
+  onFinishOrSave: (params?: { addNewRoute: boolean }) => void;
   isLoading: boolean;
   onUndo: () => void;
   onReset: () => void;
@@ -26,6 +26,7 @@ interface Props {
   onLabelMovement?: () => void;
   labelCanMove?: boolean;
   labelOnScreen?: boolean;
+  showSaveAndAddButton?: boolean;
 }
 
 const DrawingTools = ({
@@ -45,6 +46,7 @@ const DrawingTools = ({
   canDisconnect = false,
   labelCanMove = false,
   labelOnScreen = false,
+  showSaveAndAddButton = false,
 }: Props) => {
   const inset = useSafeAreaInsets();
 
@@ -58,9 +60,7 @@ const DrawingTools = ({
           right={0}
           entering={FadeIn}
           exiting={FadeOut}
-          justifyContent="center"
-          alignItems="center"
-          height={50}
+          alignItems="flex-end"
         >
           <Button
             title={canSave ? "Guardar" : "Finalizar"}
@@ -68,8 +68,19 @@ const DrawingTools = ({
             titleVariant="p2R"
             titleProps={{ lineHeight: 20, textAlign: "center" }}
             isLoading={isLoading}
-            onPress={onFinishOrSave}
+            onPress={() => onFinishOrSave()}
           />
+          {canSave && showSaveAndAddButton && (
+            <Button
+              mt="s"
+              variant="successSmallOutline"
+              title="Guardar y seguir agregando"
+              titleVariant="p3R"
+              p="s"
+              titleProps={{ lineHeight: 20, textAlign: "center" }}
+              onPress={() => onFinishOrSave({ addNewRoute: true })}
+            />
+          )}
         </A.Box>
       )}
       {labelCanMove && (

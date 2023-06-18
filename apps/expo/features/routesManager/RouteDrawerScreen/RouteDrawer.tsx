@@ -40,6 +40,8 @@ const RouteDrawer: FC<Props> = ({ topos, fileUrl, height, width, scale }) => {
     topos.routeStrokeWidth,
   );
 
+  const isEdition = !!topos?.selectedRoute?.id;
+
   const {
     canSave,
     coords,
@@ -122,6 +124,7 @@ const RouteDrawer: FC<Props> = ({ topos, fileUrl, height, width, scale }) => {
         onReset={onReset}
         showRoutes={showRoutes}
         setShowRoutes={setShowRoutes}
+        showSaveAndAddButton={!isEdition}
       />
     </Screen>
   );
