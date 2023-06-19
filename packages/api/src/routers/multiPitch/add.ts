@@ -32,6 +32,12 @@ const add = protectedZoneProcedure
         where: { id: input.multiPitchId },
         data: { name: input.name, unknownName: input.unknownName },
       });
+
+      await ctx.prisma.wall.update({
+        where: { id: input.wallId },
+        data: { version: { increment: 1 } },
+      });
+
       const mainTopoId = await getMainTopo({ ctx, wallId: input.wallId });
 
       return { ...updatedMultiPitch, mainTopoId };
@@ -67,6 +73,11 @@ const add = protectedZoneProcedure
         unknownName: input.unknownName,
         position,
       },
+    });
+
+    await ctx.prisma.wall.update({
+      where: { id: input.wallId },
+      data: { version: { increment: 1 } },
     });
 
     const mainTopoId = await getMainTopo({ ctx, wallId: input.wallId });

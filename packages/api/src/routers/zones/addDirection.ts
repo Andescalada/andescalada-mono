@@ -41,7 +41,7 @@ const addDirection = protectedZoneProcedure
       );
     }
 
-    return ctx.prisma.zoneDirections.upsert({
+    const directions = await ctx.prisma.zoneDirections.upsert({
       where: {
         ZoneTransportationModeUnique: {
           transportationMode: input.transportationMode,
@@ -97,6 +97,13 @@ const addDirection = protectedZoneProcedure
         },
       },
     });
+
+    await ctx.prisma.zone.update({
+      where: { id: input.zoneId },
+      data: { version: { increment: 1 } },
+    });
+
+    return directions;
   });
 
 export default addDirection;

@@ -5,7 +5,6 @@ import create from "@andescalada/api/src/routers/zones/create";
 import deleteDirection from "@andescalada/api/src/routers/zones/deleteDirection";
 import directionsById from "@andescalada/api/src/routers/zones/directionsById";
 import edit from "@andescalada/api/src/routers/zones/edit";
-import editLocation from "@andescalada/api/src/routers/zones/editLocation";
 import find from "@andescalada/api/src/routers/zones/find";
 import location from "@andescalada/api/src/routers/zones/location";
 import publicById from "@andescalada/api/src/routers/zones/publicById";
@@ -19,7 +18,6 @@ import { t } from "../../createRouter";
 
 export const zonesRouter = t.router({
   location,
-  editLocation,
   find,
   all: all,
   recentlyAdded,

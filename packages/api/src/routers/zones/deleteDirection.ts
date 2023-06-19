@@ -9,6 +9,11 @@ const deleteDirection = protectedZoneProcedure
       where: { id: input.zoneDirectionId },
       data: { isDeleted: SoftDelete.DeletedPublic },
     });
+
+    await ctx.prisma.zone.update({
+      where: { id: zone.zoneId },
+      data: { version: { increment: 1 } },
+    });
     return zone;
   });
 
