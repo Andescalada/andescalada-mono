@@ -54,7 +54,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
           screen: ClimbsNavigationRoutes.Zone,
           params: { zoneId, zoneName },
         });
-        utils.zones.location.invalidate({ zoneId });
+        utils.zones.allSectors.invalidate({ zoneId });
         return;
       }
       navigation.navigate(ZoneManagerRoutes.ZoneOnboarding, {

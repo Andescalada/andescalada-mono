@@ -9,13 +9,13 @@ import {
   TextButton,
   useMapType,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
 import {
   ZoneLocationRoutes,
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -38,7 +38,7 @@ const ZoneMapScreen: FC<Props> = ({
   },
 }) => {
   const markerRef = useRef<MapMarker>(null);
-  const { data, isLoading } = trpc.zones.location.useQuery({ zoneId });
+  const { data, isLoading } = useZonesAllSectors({ zoneId });
 
   const rootNavigation = useRootNavigation();
 
