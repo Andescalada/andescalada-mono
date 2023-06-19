@@ -61,7 +61,7 @@ const AddDirectionsScreen: FC<Props> = ({
   const utils = trpc.useContext();
   const addDirection = trpc.zones.addDirection.useMutation({
     onSuccess: () => {
-      utils.zones.directionsById.invalidate({ zoneId });
+      utils.zones.allSectors.invalidate({ zoneId });
       navigation.goBack();
     },
     onError: (error) => {

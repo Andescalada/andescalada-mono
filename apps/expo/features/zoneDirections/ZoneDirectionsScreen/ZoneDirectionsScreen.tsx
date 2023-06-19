@@ -12,6 +12,7 @@ import {
   ZoneDirectionsRoutes,
   ZoneDirectionsScreenProps,
 } from "@features/zoneDirections/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
 import { FC, useState } from "react";
 import { Alert, FlatList } from "react-native";
@@ -26,13 +27,13 @@ const ZoneDirectionsScreen: FC<Props> = ({
 }) => {
   const { permission } = usePermissions({ zoneId });
   const utils = trpc.useContext();
-  const { data, isLoading } = trpc.zones.directionsById.useQuery({ zoneId });
+  const { data, isLoading } = useZonesAllSectors({ zoneId });
 
   const [deletedDirectionId, setDeletedDirectionId] = useState("");
 
   const deleteDirection = trpc.zones.deleteDirection.useMutation({
     onSuccess: () => {
-      utils.zones.directionsById.invalidate({ zoneId });
+      utils.zones.allSectors.invalidate({ zoneId });
     },
   });
 
