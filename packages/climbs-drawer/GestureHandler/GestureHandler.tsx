@@ -27,11 +27,15 @@ export const GestureHandler = ({
 }: GestureHandlerProps) => {
   const x = 0;
   const y = 0;
-  const { initialValue, scale: initialScale } = initial4({
-    height,
-    width,
-    skipTransformation: !center,
-  });
+  const { initialValue, scale: initialScale } = useMemo(
+    () =>
+      initial4({
+        height,
+        width,
+        skipTransformation: !center,
+      }),
+    [center, height, width],
+  );
 
   const origin = useSharedValue(vec3(0, 0, 0));
   const matrix = useSharedValue(initialValue);

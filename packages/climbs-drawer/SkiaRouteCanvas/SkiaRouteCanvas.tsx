@@ -1,15 +1,14 @@
+import { Image } from "@andescalada/ui";
 import {
   Canvas,
   SkiaDomView,
   SkiaMutableValue,
   useMultiTouchHandler,
 } from "@shopify/react-native-skia";
-import { FC, memo, ReactNode, useEffect, useRef } from "react";
+import { FC, ReactNode, useEffect, useRef } from "react";
 import { Dimensions, Platform } from "react-native";
 
 import { GestureHandler } from "../GestureHandler/GestureHandler";
-import Picture from "../SkiaPicture/SkiaPicture";
-import useCacheImage from "../useCacheImage/useCacheImage";
 
 export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
   Dimensions.get("window");
@@ -75,8 +74,6 @@ const SkiaRouteCanvas: FC<Props> = ({
     [disableGesture],
   );
 
-  const image = useCacheImage(imageUrl);
-
   const ref = useRef<SkiaDomView>(null);
 
   useEffect(
@@ -86,7 +83,7 @@ const SkiaRouteCanvas: FC<Props> = ({
     [],
   );
 
-  if (image)
+  if (imageUrl)
     return (
       <GestureHandler
         height={height}
@@ -94,6 +91,14 @@ const SkiaRouteCanvas: FC<Props> = ({
         disableGesture={disableGesture}
         center={center}
       >
+        <Image
+          cachePolicy="memory"
+          position="absolute"
+          height={height}
+          width={width}
+          transition={500}
+          source={imageUrl}
+        />
         <Canvas
           style={{
             height,
@@ -102,7 +107,6 @@ const SkiaRouteCanvas: FC<Props> = ({
           onTouch={touchHandler}
           ref={ref}
         >
-          <Picture height={height} width={width} image={image} />
           {children}
         </Canvas>
       </GestureHandler>
@@ -111,4 +115,4 @@ const SkiaRouteCanvas: FC<Props> = ({
   return null;
 };
 
-export default memo(SkiaRouteCanvas);
+export default SkiaRouteCanvas;

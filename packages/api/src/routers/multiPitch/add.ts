@@ -1,6 +1,7 @@
 import route from "@andescalada/api/schemas/route";
 import wall from "@andescalada/api/schemas/wall";
 import error from "@andescalada/api/src/utils/errors";
+import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@prisma/client";
@@ -27,10 +28,13 @@ const add = protectedZoneProcedure
         );
       }
 
-      return ctx.prisma.multiPitch.update({
+      const updatedMultiPitch = await ctx.prisma.multiPitch.update({
         where: { id: input.multiPitchId },
         data: { name: input.name, unknownName: input.unknownName },
       });
+      const mainTopoId = await getMainTopo({ ctx, wallId: input.wallId });
+
+      return { ...updatedMultiPitch, mainTopoId };
     }
 
     const routesPosition = await ctx.prisma.route.aggregate({
@@ -54,7 +58,7 @@ const add = protectedZoneProcedure
         multiPitchPosition._max.position || 0,
       ) + 1;
 
-    return ctx.prisma.multiPitch.create({
+    const newMultiPitch = await ctx.prisma.multiPitch.create({
       data: {
         Author: { connect: { email: ctx.user.email } },
         Wall: { connect: { id: input.wallId } },
@@ -64,6 +68,10 @@ const add = protectedZoneProcedure
         position,
       },
     });
+
+    const mainTopoId = await getMainTopo({ ctx, wallId: input.wallId });
+
+    return { ...newMultiPitch, mainTopoId };
   });
 
 export default add;

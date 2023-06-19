@@ -10,13 +10,13 @@ import {
   TextButton,
   useMapType,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
 import {
   ZoneLocationRoutes,
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import { useAppTheme } from "@hooks/useAppTheme";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -36,7 +36,7 @@ const ZoneMapScreen: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
-  const { data, isLoading } = trpc.zones.location.useQuery({ zoneId });
+  const { data, isLoading } = useZonesAllSectors({ zoneId });
 
   const theme = useAppTheme();
 

@@ -9,6 +9,7 @@ import {
 import parsedTopo from "@features/routesManager/utils/parsedTopos";
 import useToposById from "@hooks/offlineQueries/useToposById";
 import useTopoImage from "@hooks/useTopoImage";
+import constants from "@utils/constants";
 import { FC, useMemo } from "react";
 
 type Props =
@@ -55,7 +56,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
     wallId,
     zoneId,
-    imageQuality: 60,
+    imageQuality: constants.imageQuality,
   });
 
   if (topos && isImageLoaded && (!previousPitchId || !!previousPitchStart)) {

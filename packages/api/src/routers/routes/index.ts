@@ -11,6 +11,7 @@ import {
   editRouteLength,
 } from "@andescalada/api/src/routers/routes/routeLength";
 import upsertDescription from "@andescalada/api/src/routers/routes/upsertDescription";
+import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -119,7 +120,9 @@ export const routesRouter = t.router({
         data: { version: { increment: 1 } },
       });
 
-      return newRoute;
+      const mainTopoId = await getMainTopo({ ctx, wallId: input.wallId });
+
+      return { ...newRoute, mainTopoId };
     }),
   addExtension: protectedZoneProcedure
     .input(
@@ -143,7 +146,7 @@ export const routesRouter = t.router({
         });
       }
 
-      return ctx.prisma.route.create({
+      const newExtension = await ctx.prisma.route.create({
         data: {
           name: input.name,
           slug: slug(input.name),
@@ -158,6 +161,13 @@ export const routesRouter = t.router({
           Author: { connect: { email: ctx.user.email } },
         },
       });
+
+      const mainTopoId = await getMainTopo({
+        ctx,
+        wallId: extendedRoute.wallId,
+      });
+
+      return { ...newExtension, mainTopoId };
     }),
   updateOrCreatePath: protectedProcedure
     .input(
@@ -203,7 +213,7 @@ export const routesRouter = t.router({
   edit: protectedZoneProcedure
     .input(routeSchema.schema.omit({ wallId: true }).merge(routeSchema.routeId))
     .mutation(async ({ ctx, input }) => {
-      const route = await ctx.prisma.route.findUnique({
+      const route = await ctx.prisma.route.findUniqueOrThrow({
         where: { id: input.routeId },
         select: { Author: { select: { email: true } }, wallId: true },
       });
@@ -224,11 +234,11 @@ export const routesRouter = t.router({
       } = input;
 
       await ctx.prisma.wall.update({
-        where: { id: route?.wallId },
+        where: { id: route.wallId },
         data: { version: { increment: 1 } },
       });
 
-      return ctx.prisma.route.update({
+      const updatedRoute = await ctx.prisma.route.update({
         where: { id: input.routeId },
         data: {
           RouteGrade: {
@@ -260,6 +270,13 @@ export const routesRouter = t.router({
           },
         },
       });
+
+      const mainTopoId = await getMainTopo({
+        ctx,
+        wallId: route.wallId,
+      });
+
+      return { ...updatedRoute, mainTopoId };
     }),
   delete: protectedZoneProcedure
     .input(

@@ -1,6 +1,4 @@
 import { A, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { setShowRoutes } from "@store/localConfigs";
 import {
   ComponentProps,
   Dispatch,
@@ -15,7 +13,9 @@ interface Props {
   canSave: boolean;
   showConfig: boolean;
   setShowConfig: Dispatch<SetStateAction<boolean>>;
-  onFinishOrSave: () => void;
+  showRoutes: boolean;
+  setShowRoutes: Dispatch<SetStateAction<boolean>>;
+  onFinishOrSave: (params?: { addNewRoute: boolean }) => void;
   isLoading: boolean;
   onUndo: () => void;
   onReset: () => void;
@@ -26,6 +26,7 @@ interface Props {
   onLabelMovement?: () => void;
   labelCanMove?: boolean;
   labelOnScreen?: boolean;
+  showSaveAndAddButton?: boolean;
 }
 
 const DrawingTools = ({
@@ -36,6 +37,8 @@ const DrawingTools = ({
   onDisconnect,
   onReset,
   setShowConfig,
+  showRoutes,
+  setShowRoutes,
   onUndo,
   onLabelMovement,
   isDisconnected = false,
@@ -43,10 +46,8 @@ const DrawingTools = ({
   canDisconnect = false,
   labelCanMove = false,
   labelOnScreen = false,
+  showSaveAndAddButton = false,
 }: Props) => {
-  const dispatch = useAppDispatch();
-  const { showRoutes } = useAppSelector((state) => state.localConfig);
-
   const inset = useSafeAreaInsets();
 
   return (
@@ -59,9 +60,7 @@ const DrawingTools = ({
           right={0}
           entering={FadeIn}
           exiting={FadeOut}
-          justifyContent="center"
-          alignItems="center"
-          height={50}
+          alignItems="flex-end"
         >
           <Button
             title={canSave ? "Guardar" : "Finalizar"}
@@ -69,8 +68,19 @@ const DrawingTools = ({
             titleVariant="p2R"
             titleProps={{ lineHeight: 20, textAlign: "center" }}
             isLoading={isLoading}
-            onPress={onFinishOrSave}
+            onPress={() => onFinishOrSave()}
           />
+          {canSave && showSaveAndAddButton && (
+            <Button
+              mt="s"
+              variant="successSmallOutline"
+              title="Guardar y seguir agregando"
+              titleVariant="p3R"
+              p="s"
+              titleProps={{ lineHeight: 20, textAlign: "center" }}
+              onPress={() => onFinishOrSave({ addNewRoute: true })}
+            />
+          )}
         </A.Box>
       )}
       {labelCanMove && (
@@ -129,7 +139,7 @@ const DrawingTools = ({
           active={!showRoutes}
           iconName={showRoutes ? "eye-off" : "eye"}
           onPress={() => {
-            dispatch(setShowRoutes());
+            setShowRoutes((prev) => !prev);
           }}
         />
         {isMultiPitch && (
