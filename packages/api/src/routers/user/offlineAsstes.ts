@@ -36,6 +36,19 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     },
   });
 
+  const multiPitch = ctx.prisma.multiPitch.findMany({
+    where: {
+      isDeleted: SoftDelete.NotDeleted,
+      Wall: {
+        Sector: {
+          Zone: {
+            id: input.zoneId,
+          },
+        },
+      },
+    },
+  });
+
   const topos = ctx.prisma.topo.findMany({
     where: {
       isDeleted: SoftDelete.NotDeleted,
@@ -86,7 +99,15 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
     wallsResults,
     sectorsResults,
     zonesResults,
-  ] = await ctx.prisma.$transaction([routes, topos, walls, sectors, zones]);
+    multiPitchResults,
+  ] = await ctx.prisma.$transaction([
+    routes,
+    topos,
+    walls,
+    sectors,
+    zones,
+    multiPitch,
+  ]);
 
   const parsedRoutes = routesResults.map((route) => {
     const evaluation = {
@@ -141,6 +162,21 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
       zoneId: route.Wall.Sector.zoneId,
       data,
       version: route.version,
+    };
+  });
+
+  const parsedMultiPitch = multiPitchResults.map((multiPitch) => {
+    return {
+      router: "multiPitch" as const,
+      procedure: "byId" as const,
+      params: {
+        multiPitchId: multiPitch.id,
+        zoneId: input.zoneId,
+      },
+      assetId: `multiPitch.byId/${multiPitch.id}`,
+      zoneId: input.zoneId,
+      data: multiPitch,
+      version: multiPitch.version,
     };
   });
 
@@ -199,6 +235,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
 
   const assets = [
     ...parsedRoutes,
+    ...parsedMultiPitch,
     ...parsedTopos,
     ...parsedWalls,
     ...parsedSectors,

@@ -10,9 +10,9 @@ import {
   Text,
   TextButton,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import AgreementLevelBadge from "@features/climbs/ZoneAgreementsEditorScreen/AgreementLevelBadge";
 import { ZoneAgreementsRoutes } from "@features/zoneAgreementManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -35,13 +35,15 @@ const ZoneAgreementsScreen: FC<Props> = ({
   toggleDescriptions = false,
   ...props
 }) => {
-  const agreements = trpc.agreements.listByZone.useQuery({ zoneId });
+  const { data, isLoading } = useZonesAllSectors({ zoneId });
+
   const { permission } = usePermissions({ zoneId });
   const [openDescription, setOpenDescription] = useState(!toggleDescriptions);
   const rootNavigation = useRootNavigation();
+  if (!data) return null;
   return (
     <FlatList
-      data={agreements.data}
+      data={data.agreements}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
       ListEmptyComponent={() => (
@@ -51,7 +53,7 @@ const ZoneAgreementsScreen: FC<Props> = ({
           alignItems="center"
           marginTop="xxxl"
         >
-          {agreements.isLoading ? (
+          {isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
             <Box alignItems="center">

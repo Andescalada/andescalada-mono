@@ -8,7 +8,6 @@ import {
   Text,
   TextButton,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import RouteItem from "@features/climbs/components/RouteItem";
 import {
   ClimbsNavigationRoutes,
@@ -16,8 +15,10 @@ import {
 } from "@features/climbs/Navigation/types";
 import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useMultiPitchById from "@hooks/offlineQueries/useMultiPitchById";
 import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -31,12 +32,14 @@ const MultiPitchScreen: FC<Props> = ({
     params: { multiPitchName, wallId, zoneId, multiPitchId },
   },
 }) => {
+  const { isOfflineMode } = useOfflineMode();
+
   const { data: wallData, isLoading: isLoadingWall } = useWallsById({
     wallId,
     zoneId,
   });
 
-  const { data, isLoading } = trpc.multiPitch.byId.useQuery({
+  const { data, isLoading } = useMultiPitchById({
     multiPitchId,
     zoneId,
   });
@@ -112,7 +115,7 @@ const MultiPitchScreen: FC<Props> = ({
       <Header
         title={multiPitchName}
         onGoBack={navigation.goBack}
-        showOptions={permission.has("Create")}
+        showOptions={permission.has("Create") && !isOfflineMode}
         onOptions={() => {
           onOptions({
             id: multiPitchId,

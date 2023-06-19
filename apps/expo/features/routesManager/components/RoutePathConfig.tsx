@@ -1,18 +1,20 @@
 import { A, Box, Ionicons, Pressable } from "@andescalada/ui";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { setShowRoutes } from "@store/localConfigs";
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { SlideInRight, SlideOutRight } from "react-native-reanimated";
 
 interface Props {
   show: boolean;
   setShow: (show: boolean) => void;
+  showRoutes: boolean;
+  setShowRoutes: Dispatch<SetStateAction<boolean>>;
 }
 
-const RoutePathConfig: FC<Props> = ({ show, setShow }) => {
-  const dispatch = useAppDispatch();
-  const { showRoutes } = useAppSelector((state) => state.localConfig);
-
+const RoutePathConfig: FC<Props> = ({
+  show,
+  setShow,
+  setShowRoutes,
+  showRoutes,
+}) => {
   if (show) {
     return (
       <A.Box
@@ -33,7 +35,7 @@ const RoutePathConfig: FC<Props> = ({ show, setShow }) => {
           <Ionicons name="chevron-forward" size={30} color="grayscale.black" />
         </Pressable>
         <Box alignItems="center" justifyContent="center">
-          <Pressable onPress={() => dispatch(setShowRoutes())}>
+          <Pressable onPress={() => setShowRoutes((prev) => !prev)}>
             <Ionicons
               name={showRoutes ? "eye-off" : "eye"}
               size={30}

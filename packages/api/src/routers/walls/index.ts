@@ -2,15 +2,11 @@ import global from "@andescalada/api/schemas/global";
 import wall from "@andescalada/api/schemas/wall";
 import routeList from "@andescalada/api/src/routers/walls/routeList";
 import error from "@andescalada/api/src/utils/errors";
+import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
 import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import {
-  GradeSystems,
-  InfoAccess,
-  RouteKind,
-  SoftDelete,
-} from "@prisma/client";
+import { InfoAccess, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -183,20 +179,7 @@ export const wallsRouter = t.router({
           error.unauthorizedActionForZone(input.zoneId, "Read"),
         );
       }
-      const mainTopo = await ctx.prisma.wall.findUniqueOrThrow({
-        where: { id: input.wallId },
-        select: {
-          topos: {
-            where: { main: true, isDeleted: SoftDelete.NotDeleted },
-            select: { id: true },
-          },
-        },
-      });
-
-      if (!mainTopo || !mainTopo.topos.length || !mainTopo.topos[0].id) {
-        return null;
-      }
-      return mainTopo.topos[0].id;
+      return getMainTopo({ ctx, wallId: input.wallId });
     }),
 });
 

@@ -54,6 +54,7 @@ const darkBaseTheme = {
     textButtonInfo: pallete.semantic.info,
     textButtonError: pallete.semantic.error,
     textButtonTransparent: pallete.grayscale[600],
+    transparent: "transparent",
     ...lisItemVariantsColors,
     ...buttonVariantsColors,
     ...semanticButtonVariantsColors,

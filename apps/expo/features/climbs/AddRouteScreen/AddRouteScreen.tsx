@@ -64,14 +64,9 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
     return "Añadir ruta";
   }, [isExtension, id]);
 
-  const mainTopo = trpc.walls.mainTopo.useQuery({
-    zoneId,
-    wallId,
-  });
-
   const { mutate, isLoading } = trpc.routes.add.useMutation({
-    onSuccess: ({ id, position }) => {
-      if (mainTopo.data) {
+    onSuccess: ({ id, position, mainTopoId }) => {
+      if (mainTopoId) {
         if (isExtension) {
           rootNavigation.pop();
           rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
@@ -79,7 +74,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             params: {
               route: { id, position, extendedRouteId },
               wallId,
-              topoId: mainTopo.data,
+              topoId: mainTopoId,
               zoneId,
             },
           });
@@ -90,12 +85,12 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             params: {
               route: { id, position },
               wallId,
-              topoId: mainTopo.data,
+              topoId: mainTopoId,
               zoneId,
             },
           });
         }
-        utils.topos.byId.invalidate({ topoId: mainTopo.data, zoneId });
+        utils.topos.byId.invalidate({ topoId: mainTopoId, zoneId });
       } else {
         navigation.goBack();
       }
@@ -105,18 +100,18 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const { mutate: mutateExtension, isLoading: isExtensionLoading } =
     trpc.routes.addExtension.useMutation({
-      onSuccess: ({ id, position }) => {
-        if (mainTopo.data) {
+      onSuccess: ({ id, position, mainTopoId }) => {
+        if (mainTopoId) {
           rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
             screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
             params: {
               route: { id, position, extendedRouteId },
               wallId,
-              topoId: mainTopo.data,
+              topoId: mainTopoId,
               zoneId,
             },
           });
-          utils.topos.byId.invalidate({ topoId: mainTopo.data, zoneId });
+          utils.topos.byId.invalidate({ topoId: mainTopoId, zoneId });
         } else {
           navigation.goBack();
         }
@@ -126,9 +121,9 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const { mutate: mutateEdit, isLoading: isLoadingEdit } =
     trpc.routes.edit.useMutation({
-      onSuccess: ({ Wall }) => {
-        if (mainTopo.data) {
-          utils.topos.byId.invalidate({ topoId: mainTopo.data, zoneId });
+      onSuccess: ({ Wall, mainTopoId }) => {
+        if (mainTopoId) {
+          utils.topos.byId.invalidate({ topoId: mainTopoId, zoneId });
         }
         navigation.navigate(ClimbsNavigationRoutes.Wall, {
           zoneId,

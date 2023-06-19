@@ -1,35 +1,34 @@
-import { MapView } from "@andescalada/maps";
+import Mapbox from "@andescalada/maps/mapbox";
 import {
   ActivityIndicator,
   BackButton,
   Box,
+  Image,
   MapTypeToolbar,
   Screen,
   Text,
   TextButton,
   useMapType,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
 import {
   ZoneLocationRoutes,
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
+import { useAppTheme } from "@hooks/useAppTheme";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useRef } from "react";
-import { Dimensions, Platform } from "react-native";
-import { Callout, MapMarker, Marker } from "react-native-maps";
+import Env from "@utils/env";
+import { FC, useCallback, useRef, useState } from "react";
+
+Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 
 type Props = ZoneLocationScreenProps<ZoneLocationRoutes.ZoneMap>;
-const { width, height } = Dimensions.get("window");
-const ASPECT_RATIO = width / height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.05;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+const ARROW_SIZE = 10;
 
 const ZoneMapScreen: FC<Props> = ({
   navigation,
@@ -37,14 +36,24 @@ const ZoneMapScreen: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
-  const markerRef = useRef<MapMarker>(null);
-  const { data, isLoading } = trpc.zones.location.useQuery({ zoneId });
+  const { data, isLoading } = useZonesAllSectors({ zoneId });
+
+  const theme = useAppTheme();
 
   const rootNavigation = useRootNavigation();
 
   const mapTypeProps = useMapType();
 
   const { permission } = usePermissions({ zoneId });
+
+  const [isPointerSelected, setIsPointerSelected] = useState(true);
+
+  const pointAnnotation = useRef<Mapbox.PointAnnotation>(null);
+
+  const onPointSelected = useCallback(() => {
+    setIsPointerSelected((prev) => !prev);
+    pointAnnotation.current?.refresh();
+  }, []);
 
   if (isLoading)
     return (
@@ -77,30 +86,76 @@ const ZoneMapScreen: FC<Props> = ({
 
   return (
     <Screen safeAreaDisabled>
-      <MapView
-        initialRegion={{
-          latitude: Number(data.Location.latitude),
-          longitude: Number(data.Location.longitude),
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-        mapType={mapTypeProps.mapType}
+      <Mapbox.MapView
+        styleURL={
+          mapTypeProps.mapType === "satellite"
+            ? Mapbox.StyleURL.SatelliteStreet
+            : Mapbox.StyleURL.Street
+        }
+        style={{ flex: 1 }}
+        logoEnabled={false}
+        scaleBarPosition={{ bottom: 8, left: 10 }}
+        compassEnabled
+        attributionEnabled={false}
+        compassPosition={{ top: 110, right: 16 }}
       >
-        <Marker
-          ref={markerRef}
-          coordinate={{
-            latitude: Number(data?.Location?.latitude) || LATITUDE,
-            longitude: Number(data?.Location?.longitude) || LONGITUDE,
+        <Mapbox.Camera
+          zoomLevel={14}
+          animationMode="none"
+          defaultSettings={{
+            zoomLevel: 10,
+            centerCoordinate: [
+              Number(data?.Location?.longitude),
+              Number(data?.Location?.latitude),
+            ],
           }}
-          identifier={zoneId}
-          image={
-            Platform.OS === "ios" ? images.marker.file : images.markerLarge.file
-          }
-          onLayout={() => markerRef.current?.showCallout()}
+        />
+
+        <Mapbox.PointAnnotation
+          id="main-marker"
+          coordinate={[
+            Number(data?.Location?.longitude),
+            Number(data?.Location?.latitude),
+          ]}
+          onSelected={onPointSelected}
+          ref={pointAnnotation}
+          anchor={{ x: 0.5, y: 1 }}
         >
-          <CalloutContent title={data?.name} />
-        </Marker>
-      </MapView>
+          <Box justifyContent="center" alignItems="center">
+            <Box
+              bg="brand.primaryA"
+              p="s"
+              borderRadius={16}
+              mb="m"
+              opacity={isPointerSelected ? 1 : 0}
+            >
+              <Text>{data?.name}</Text>
+              <Box
+                position="absolute"
+                bottom={-ARROW_SIZE}
+                left={"50%"}
+                alignItems="center"
+                borderLeftWidth={ARROW_SIZE}
+                borderLeftColor="transparent"
+                borderStyle="solid"
+                borderRightWidth={ARROW_SIZE}
+                borderRightColor="transparent"
+                borderTopColor="brand.primaryA"
+                borderTopWidth={ARROW_SIZE}
+                style={{
+                  transform: [
+                    { translateX: -(ARROW_SIZE - theme.spacing.s / 2) / 2 },
+                  ],
+                }}
+              />
+            </Box>
+            <Image
+              source={images.marker.file}
+              onLoad={() => pointAnnotation.current?.refresh()}
+            />
+          </Box>
+        </Mapbox.PointAnnotation>
+      </Mapbox.MapView>
       <BackButton.Transparent
         onPress={navigation.goBack}
         iconProps={{ color: mapTypeProps.mapTypeIconsColor }}
@@ -111,25 +166,3 @@ const ZoneMapScreen: FC<Props> = ({
 };
 
 export default ZoneMapScreen;
-
-interface CalloutProps {
-  title?: string;
-}
-
-const CalloutContent = ({ title }: CalloutProps) => (
-  <Callout style={{ backgroundColor: "transparent" }} tooltip>
-    <Box
-      flexDirection="row"
-      justifyContent="center"
-      alignItems="center"
-      backgroundColor="brand.primaryA"
-      padding="s"
-      borderRadius={16}
-      marginBottom="s"
-    >
-      <Text ellipsizeMode="tail" numberOfLines={1}>
-        {title}
-      </Text>
-    </Box>
-  </Callout>
-);

@@ -9,6 +9,7 @@ import RouteExtensionDrawer from "@features/routesManager/RouteExtensionDrawerSc
 import parsedTopo from "@features/routesManager/utils/parsedTopos";
 import useToposById from "@hooks/offlineQueries/useToposById";
 import useTopoImage from "@hooks/useTopoImage";
+import constants from "@utils/constants";
 import { FC, useMemo } from "react";
 
 type Props =
@@ -48,6 +49,7 @@ const DrawRoute: FC<Props> = ({
   const { fileUrl, isImageLoaded, fitted } = useTopoImage({
     wallId,
     zoneId,
+    imageQuality: constants.imageQuality,
   });
 
   if (

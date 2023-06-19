@@ -10,6 +10,7 @@ export const buttonVariantsColors = {
   transparentSimplifiedButtonText: pallete.grayscale.black,
   successButtonBackground: pallete.semantic.success,
   successButtonText: pallete.grayscale.white,
+  successSmallOutlineButtonText: pallete.grayscale.white,
   errorButtonBackground: pallete.semantic.error,
   errorButtonText: pallete.grayscale.white,
   infoButtonBackground: pallete.semantic.info,
@@ -87,6 +88,13 @@ const buttonVariants = createBoxVariant({
   },
   infoSmallOutline: {
     borderColor: "infoButtonBackground",
+    borderWidth: 3,
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  successSmallOutline: {
+    borderColor: "successButtonBackground",
     borderWidth: 3,
     borderRadius: 100,
     justifyContent: "center",

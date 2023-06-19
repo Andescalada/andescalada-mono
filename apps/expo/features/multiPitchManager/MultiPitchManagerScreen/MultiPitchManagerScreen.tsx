@@ -15,6 +15,7 @@ import {
   MultiPitchManagerRoutes,
   MultiPitchManagerScreenProps,
 } from "@features/multiPitchManager/Navigation/types";
+import useOfflineMode from "@hooks/useOfflineMode";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
@@ -55,6 +56,8 @@ const MultiPitchManagerScreen: FC<Props> = ({
   );
 
   const { permission } = usePermissions({ zoneId });
+
+  const { isOfflineMode } = useOfflineMode();
 
   const utils = trpc.useContext();
   const notification = useNotifications();
@@ -125,7 +128,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
       <Header
         title={multiPitchName}
         onGoBack={navigation.goBack}
-        showOptions={permission.has("Update")}
+        showOptions={permission.has("Update") && !isOfflineMode}
         onOptions={onOptions}
         marginBottom="m"
       />

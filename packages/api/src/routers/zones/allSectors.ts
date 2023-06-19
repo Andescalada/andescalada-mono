@@ -83,4 +83,25 @@ export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) => ({
     take: 1,
     select: { hasAgreed: true },
   },
+  agreements: {
+    include: {
+      Agreement: {
+        include: {
+          title: { select: { originalText: true } },
+          description: { select: { originalText: true } },
+          ZoneAgreement: {
+            select: { comment: { select: { originalText: true } } },
+          },
+        },
+      },
+    },
+  },
+  ZoneDirections: {
+    where: { isDeleted: SoftDelete.NotDeleted },
+    orderBy: { createdAt: "desc" as const },
+    include: {
+      description: { select: { originalText: true } },
+      name: { select: { originalText: true } },
+    },
+  },
 });

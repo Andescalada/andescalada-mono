@@ -1,4 +1,4 @@
-import { MapView } from "@andescalada/maps";
+import Mapbox from "@andescalada/maps/mapbox";
 import {
   Box,
   Button,
@@ -17,18 +17,13 @@ import {
 import useLocation from "@hooks/useLocation";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useEffect, useRef, useState } from "react";
-import { Dimensions, Image } from "react-native";
-import MapRefType, { Details, Region } from "react-native-maps";
+import { FC, useState } from "react";
+import { Image } from "react-native";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.SelectZoneLocation>;
 
-const { width, height } = Dimensions.get("window");
-const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4555;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const SelectZoneLocationScreen: FC<Props> = ({
   navigation,
@@ -37,9 +32,11 @@ const SelectZoneLocationScreen: FC<Props> = ({
   },
 }) => {
   const { location } = useLocation();
-  const mapRef = useRef<MapRefType | null>();
 
-  const [region, setRegion] = useState<Region>();
+  const [region, setRegion] = useState<{
+    latitude: number;
+    longitude: number;
+  }>();
 
   const rootNavigation = useRootNavigation();
 
@@ -54,7 +51,7 @@ const SelectZoneLocationScreen: FC<Props> = ({
           screen: ClimbsNavigationRoutes.Zone,
           params: { zoneId, zoneName },
         });
-        utils.zones.location.invalidate({ zoneId });
+        utils.zones.allSectors.invalidate({ zoneId });
         return;
       }
       navigation.navigate(ZoneManagerRoutes.ZoneOnboarding, {
@@ -73,38 +70,44 @@ const SelectZoneLocationScreen: FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    if (location) {
-      mapRef.current?.animateToRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      });
-    }
-  }, [location]);
-
-  const onRegionChangeComplete = (region: Region, details: Details) => {
-    if (details.isGesture) {
-      setRegion(region);
-    }
-  };
-
   return (
-    <Screen safeAreaDisabled justifyContent={"center"} alignItems="center">
-      <MapView
-        mapType={mapTypeProps.mapType}
-        ref={(ref) => {
-          mapRef.current = ref as MapRefType | null;
+    <Screen safeAreaDisabled>
+      <Mapbox.MapView
+        styleURL={
+          mapTypeProps.mapType === "satellite"
+            ? Mapbox.StyleURL.SatelliteStreet
+            : Mapbox.StyleURL.Street
+        }
+        style={{ flex: 1 }}
+        logoEnabled={false}
+        scaleBarPosition={{ bottom: 8, left: 10 }}
+        compassEnabled
+        attributionEnabled={false}
+        compassPosition={{ top: 210, right: 16 }}
+        onCameraChanged={({
+          properties: { center },
+          gestures: { isGestureActive },
+        }) => {
+          if (!isGestureActive) return;
+          setRegion({ latitude: center[1], longitude: center[0] });
         }}
-        initialRegion={{
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-        onRegionChangeComplete={onRegionChangeComplete}
-      />
+      >
+        <Mapbox.Camera
+          zoomLevel={14}
+          animationMode="none"
+          centerCoordinate={[
+            location?.coords.longitude || LONGITUDE,
+            location?.coords.latitude || LATITUDE,
+          ]}
+          defaultSettings={{
+            zoomLevel: 10,
+            centerCoordinate: [
+              location?.coords.longitude || LONGITUDE,
+              location?.coords.latitude || LATITUDE,
+            ],
+          }}
+        />
+      </Mapbox.MapView>
       <Box
         position="absolute"
         bottom="50%"
