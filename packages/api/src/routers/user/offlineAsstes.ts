@@ -1,3 +1,4 @@
+import { includeInMultiPitch } from "@andescalada/api/src/routers/multiPitch/byId";
 import { includeInRoute } from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
 import { selectFromSectorAllWalls } from "@andescalada/api/src/routers/sectors";
 import { includeInTopo } from "@andescalada/api/src/routers/topos";
@@ -47,6 +48,7 @@ const offlineAssets = protectedZoneProcedure.query(async ({ ctx, input }) => {
         },
       },
     },
+    include: includeInMultiPitch,
   });
 
   const topos = ctx.prisma.topo.findMany({
