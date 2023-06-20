@@ -1,6 +1,8 @@
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
 import { useSaveImagesToFileSystem } from "@hooks/useSaveImagesToFileSystem";
+import { inferProcedureOutput } from "@trpc/server";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { deviceName } from "expo-device";
@@ -8,6 +10,8 @@ import { atom, useAtom } from "jotai";
 import { useState } from "react";
 
 export const progressAtom = atom(0);
+
+type Data = inferProcedureOutput<AppRouter["user"]["offlineAssets"]>;
 
 const useSetAssetsToDb = () => {
   const setDownloadedAssetsList = useAtom(downloadedAssetsListAtom)[1];
@@ -27,23 +31,49 @@ const useSetAssetsToDb = () => {
 
   const { saveImagesToFileSystem } = useSaveImagesToFileSystem();
 
-  const setAssetsToDb = async ({
+  const setZoneAssetsToDb = async ({
     zoneId,
     zoneName,
   }: {
     zoneId: string;
     zoneName: string;
   }) => {
-    const fetchAssets = utils.user.offlineAssets.fetch;
+    try {
+      const data = await utils.user.offlineAssets.fetch({ zoneId });
+      await saveAssetsToDb({ zoneId, data, zoneName });
+      notification.notify("success", {
+        params: {
+          title: "Zona descargada con éxito",
+          description: `Ahora ${zoneName} está disponible offline`,
+          hideCloseButton: true,
+        },
+      });
+    } catch (error) {
+      notification.notify("error", {
+        params: {
+          title: "Error",
+          description: `No se ha podido descargar ${zoneName}`,
+        },
+      });
+      throw error;
+    }
+  };
+
+  const saveAssetsToDb = async ({
+    zoneId,
+    zoneName,
+    data,
+  }: {
+    zoneId: string;
+    zoneName: string;
+    data: Data;
+  }) => {
     setIsDownloadedZones((old) => ({
       ...old,
       [zoneId]: { device: deviceName, downloadedAt: new Date(), zoneName },
     }));
     setIsLoading(true);
     try {
-      const data = await fetchAssets({ zoneId });
-      if (!data) return;
-
       const db = offlineDb.open();
 
       await offlineDb.createZoneTable(db, zoneId);
@@ -64,7 +94,10 @@ const useSetAssetsToDb = () => {
         );
       }
 
-      setDownloadedAssetsList((prev) => [...prev, ...data.assetList]);
+      setDownloadedAssetsList((prev) => ({
+        ...prev,
+        [zoneId]: { assets: data.assetList },
+      }));
 
       db.close();
 
@@ -73,29 +106,17 @@ const useSetAssetsToDb = () => {
         zoneId,
       });
 
-      notification.notify("success", {
-        params: {
-          title: "Zona descargada con éxito",
-          description: `Ahora ${zoneName} está disponible offline`,
-          hideCloseButton: true,
-        },
-      });
       addToDownloadedList.mutate({ zoneId });
     } catch (error) {
       setIsDownloadedZones((old) => {
         delete old[zoneId];
         return { ...old };
       });
-      notification.notify("error", {
-        params: {
-          title: "Error",
-          description: "No se pudo descargar los datos",
-        },
-      });
     }
     setIsLoading(false);
   };
-  return { setAssetsToDb, isLoading };
+
+  return { setZoneAssetsToDb, saveAssetsToDb, isLoading };
 };
 
 export default useSetAssetsToDb;

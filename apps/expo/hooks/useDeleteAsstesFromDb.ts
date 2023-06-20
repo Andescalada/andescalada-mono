@@ -40,9 +40,10 @@ const useDeleteAssetsFromDb = () => {
         await Promise.allSettled([deleteFromDb, deleteImages]);
         db.close();
 
-        setDownloadedAssetsList((old) =>
-          old.filter((asset) => asset.zoneId !== zoneId),
-        );
+        setDownloadedAssetsList((old) => {
+          delete old[zoneId];
+          return old;
+        });
 
         removeToDownloadedList.mutate({ zoneId });
         notification.notify("success", {

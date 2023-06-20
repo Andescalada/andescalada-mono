@@ -47,6 +47,11 @@ export const sectorsRouter = t.router({
           select: { Author: { select: { email: true } } },
         });
 
+        await ctx.prisma.zone.update({
+          where: { id: input.zoneId },
+          data: { version: { increment: 1 } },
+        });
+
         return ctx.prisma.sector.update({
           where: { id: input.sectorId },
           data: {

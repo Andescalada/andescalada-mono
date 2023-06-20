@@ -21,9 +21,11 @@ import { deserialize } from "superjson";
 import { z } from "zod";
 
 import { t } from "../../createRouter";
+import updateDownloadedAssets from "./updateDownloadedAssets";
 
 export const userRouter = t.router({
   offlineAssets: offlineAssets,
+  updateDownloadedAssets: updateDownloadedAssets,
   ownInfo: protectedProcedure.query(async ({ ctx }) =>
     ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },

@@ -17,7 +17,8 @@ export enum Storage {
   IS_OFFLINE_MODE = "IS_OFFLINE_MODE",
   DOWNLOADED_ZONES = "DOWNLOADED_ZONES",
 }
-function getItem<T>(key: string) {
+
+export function getItem<T>(key: string) {
   const value = storage.getString(key);
   return value ? (JSON.parse(value) as T) : null;
 }
