@@ -7,7 +7,7 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
-import { FC, useState } from "react";
+import { useState } from "react";
 interface Props {
   error?: Error;
   resetError?: () => void;

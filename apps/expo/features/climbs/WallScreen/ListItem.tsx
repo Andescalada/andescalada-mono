@@ -57,7 +57,6 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
     onRightAction: onRightAction,
     onLeftAction,
     onTouch,
-    index,
     allowEdit,
     containerProps,
     ...props
