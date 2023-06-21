@@ -26,7 +26,7 @@ const useSyncDownloadedZones = async () => {
     const zones = Object.entries(downloadedAssetsList).map(
       ([zoneId, data]) => ({
         zoneId,
-        assets: data.assets.map(({ assetId, zoneId, version }) => ({
+        assets: data?.assets?.map(({ assetId, zoneId, version }) => ({
           assetId,
           zoneId,
           version,

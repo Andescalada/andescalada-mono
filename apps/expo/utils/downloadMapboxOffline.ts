@@ -1,6 +1,7 @@
 import { Location } from "@prisma/client";
 import Mapbox from "@rnmapbox/maps";
 import { Dimensions } from "react-native";
+import Sentry from "sentry-expo";
 
 const downloadMapboxOffline = async ({
   location,
@@ -38,8 +39,10 @@ const downloadMapboxOffline = async ({
       minZoom: 10,
       maxZoom: 16,
     },
-    () => {
-      return;
+    (offlinePack, progress) => {
+      Sentry.Native.captureMessage(
+        `Downloading ${packName}, ${progress.percentage}`,
+      );
     },
     (_, error) => {
       throw new Error(error.message);
