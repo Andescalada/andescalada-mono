@@ -1,5 +1,5 @@
 name: Update Production
-on: 
+on:
   push:
     branches:
       - production
@@ -49,10 +49,11 @@ jobs:
         run: yarn install --immutable
 
       - name: Publish update
-        env: 
+        env:
           DISABLE_ERD: true
           SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
           GOOGLE_MAPS_API_KEY_ANDROID: ${{secrets.GOOGLE_MAPS_API_KEY_ANDROID}}
           GOOGLE_MAPS_API_KEY_IOS: ${{secrets.GOOGLE_MAPS_API_KEY_IOS}}
           CLOUDINARY_API_KEY: ${{secrets.CLOUDINARY_API_KEY}}
+          MAPBOX_ACCESS_TOKEN: ${{secrets.MAPBOX_ACCESS_TOKEN}}
         run: npx turbo update:production
