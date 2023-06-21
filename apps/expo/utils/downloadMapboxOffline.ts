@@ -1,7 +1,8 @@
+import geoViewport from "@mapbox/geo-viewport";
 import { Location } from "@prisma/client";
 import Mapbox from "@rnmapbox/maps";
 import { Dimensions } from "react-native";
-import Sentry from "sentry-expo";
+import { z } from "zod";
 
 const downloadMapboxOffline = async ({
   location,
@@ -11,37 +12,44 @@ const downloadMapboxOffline = async ({
   packName: string;
 }) => {
   const pack = await Mapbox.offlineManager.getPack(packName);
+
   if (pack) {
-    await Mapbox.offlineManager.invalidatePack(pack.name);
-    return;
+    if (pack) {
+      await Mapbox.offlineManager.invalidatePack(pack.name);
+      return;
+    }
   }
-  const aspectRatio = 9 / 16;
-  const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
-  const centerLat = Number(location.latitude);
-  const centerLong = Number(location.longitude);
 
-  const latDistance = (screenHeight / screenWidth) * 2 * 90;
-  const longDistance = (1 / aspectRatio) * latDistance;
+  const { width, height } = Dimensions.get("window");
+  console.log("center", [
+    Number(location.longitude),
+    Number(location.latitude),
+  ]);
+  const rawBounds = geoViewport.bounds(
+    [Number(location.longitude), Number(location.latitude)],
+    11,
+    [width, height],
+    512,
+  );
 
-  const neLng = centerLong - longDistance / 2;
-  const neLat = centerLat + latDistance / 2;
-  const swLng = centerLat - latDistance / 2;
-  const swLat = centerLong + longDistance / 2;
+  const bounds = z.array(z.number()).parse(rawBounds);
+
+  console.log(bounds);
 
   await Mapbox.offlineManager.createPack(
     {
       name: packName,
-      styleURL: Mapbox.StyleURL.Satellite,
+      styleURL: Mapbox.StyleURL.SatelliteStreet,
       bounds: [
-        [neLng, neLat],
-        [swLng, swLat],
+        [bounds[0], bounds[1]],
+        [bounds[2], bounds[3]],
       ],
       minZoom: 13,
       maxZoom: 15,
     },
     (offlinePack, progress) => {
-      Sentry.Native.captureMessage(
-        `Downloading ${packName}, ${progress.percentage}`,
+      console.info(
+        `Downloaded ${offlinePack.name} --> ${progress.percentage}%`,
       );
     },
     (_, error) => {
