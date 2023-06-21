@@ -26,8 +26,8 @@
     "build:preview-simulator": "APP_VARIANT=preview CI=1 eas build --profile preview-simulator",
     "build:dev": "APP_VARIANT=development eas build --profile development --platform all",
     "build:dev-simulator": "APP_VARIANT=development eas build --profile development-simulator",
-    "update:preview": "yarn load-env && APP_VARIANT=preview eas update --branch preview  --platform all --auto",
-    "update:production": "yarn load-env && APP_VARIANT=production eas update --branch production  --platform all --auto"
+    "update:preview": "APP_VARIANT=preview npx node scripts/eas-update.mjs npx eas-cli@latest update -p all --branch preview --auto",
+    "update:production": "APP_VARIANT=production npx node scripts/eas-update.mjs npx eas-cli@latest update -p all  --branch production --auto"
   },
   "dependencies": {
     "@andescalada/api": "*",
@@ -126,6 +126,7 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "babel-preset-expo": "^9.2.0",
+    "eas-cli": "^3.14.0",
     "eslint-plugin-react": "^7.24.0",
     "react-native-flipper": "^0.190.0",
     "react-native-flipper-performance-plugin": "^0.3.1",
