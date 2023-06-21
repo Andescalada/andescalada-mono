@@ -37,7 +37,9 @@ const useSyncDownloadedZones = async () => {
     const data = await mutateAsync({ zones });
 
     if (!data || !isConnected) return;
+
     for (const zone of data) {
+      if (zone.data.assets.length === 0) continue;
       await saveAssetsToDb(zone);
     }
   };

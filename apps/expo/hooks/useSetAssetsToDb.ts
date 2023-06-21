@@ -111,6 +111,7 @@ const useSetAssetsToDb = () => {
         await downloadMapboxOffline({
           packName: zoneId,
           location: data.location,
+          notification,
         });
       }
 

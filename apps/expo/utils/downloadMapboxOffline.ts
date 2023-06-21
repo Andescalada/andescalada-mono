@@ -2,29 +2,26 @@ import geoViewport from "@mapbox/geo-viewport";
 import { Location } from "@prisma/client";
 import Mapbox from "@rnmapbox/maps";
 import { Dimensions } from "react-native";
+import type { DefaultVariants } from "react-native-notificated/lib/typescript/defaultConfig/types";
+import type { Emmiter } from "react-native-notificated/lib/typescript/types";
 import { z } from "zod";
 
 const downloadMapboxOffline = async ({
   location,
   packName,
+  notification,
 }: {
   location: Location;
   packName: string;
+  notification: Emmiter<DefaultVariants>;
 }) => {
   const pack = await Mapbox.offlineManager.getPack(packName);
+  console.log(await pack?.status());
 
-  if (pack) {
-    if (pack) {
-      await Mapbox.offlineManager.invalidatePack(pack.name);
-      return;
-    }
-  }
+  if (pack) return;
 
   const { width, height } = Dimensions.get("window");
-  console.log("center", [
-    Number(location.longitude),
-    Number(location.latitude),
-  ]);
+
   const rawBounds = geoViewport.bounds(
     [Number(location.longitude), Number(location.latitude)],
     11,
@@ -33,8 +30,6 @@ const downloadMapboxOffline = async ({
   );
 
   const bounds = z.array(z.number()).parse(rawBounds);
-
-  console.log(bounds);
 
   await Mapbox.offlineManager.createPack(
     {
@@ -48,11 +43,21 @@ const downloadMapboxOffline = async ({
       maxZoom: 15,
     },
     (offlinePack, progress) => {
-      console.info(
-        `Downloaded ${offlinePack.name} --> ${progress.percentage}%`,
-      );
+      if (progress.percentage === 100) {
+        notification.notify("success", {
+          params: {
+            title: "Mapa descargado con éxito",
+          },
+        });
+      }
     },
     (_, error) => {
+      notification.notify("error", {
+        params: {
+          title: "No se pudo descargar el mapa",
+          description: `${error.message}`,
+        },
+      });
       throw new Error(error.message);
     },
   );
