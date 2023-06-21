@@ -28,9 +28,64 @@ const run = async () => {
 
   const [command, ..._args] = process.argv.slice(2);
 
-  console.log(command);
-
   const args = [..._args];
+
+  const versionCommand = "npx";
+
+  const versionArgs = ["eas-cli@latest", "build:version:get", "-p", "all"];
+
+  const getRemoteVersions = async () => {
+    try {
+      const getRemoteVersionsCmd = spawnAsync(versionCommand, versionArgs, {
+        stdio: ["inherit", "pipe", "pipe"],
+        env: process.env,
+        cwd: process.cwd(),
+      });
+      const {
+        child: { stdout, stderr },
+      } = getRemoteVersionsCmd;
+
+      if (!(stdout && stderr)) {
+        throw new Error("Failed to spawn eas-cli");
+      }
+      let output = [];
+      console.log();
+      console.log(
+        chalk.green("[eas-update-sentry] Running the follwing command:"),
+      );
+      console.log(versionCommand, versionArgs.join(" "));
+      console.log();
+
+      stdout.on("data", (data) => {
+        const stringData = data.toString("utf8");
+        console.log(chalk.green("[eas-update-sentry]"), stringData);
+        output = [
+          ...output,
+          stringData
+            .split("\n")
+            .map((s) => s.trim())
+            .at(0),
+        ];
+      });
+      await getRemoteVersionsCmd;
+
+      const versions = output.reduce((acc, curr) => {
+        const values = curr.split(" - ");
+        if (values[0] === "Android versionCode") {
+          acc.android = values[1];
+        }
+        if (values[0] === "iOS buildNumber") {
+          acc.ios = values[1];
+        }
+        return acc;
+      }, {});
+
+      return versions;
+    } catch (err) {
+      throw new Error("Failed to fetch remote versions");
+      process.exit();
+    }
+  };
 
   try {
     const updateProcess = spawnAsync(command, args, {
@@ -61,7 +116,6 @@ const run = async () => {
     });
 
     await updateProcess;
-    console.log(output);
 
     const findUpdateId = (output, platform) => {
       return output
@@ -155,7 +209,7 @@ const run = async () => {
       await result;
     };
 
-    const uploadIosSourceMap = async () => {
+    const uploadIosSourceMap = async (buildNumber) => {
       if (iosUpdateId && iosBundle && iosMap) {
         console.log();
         console.log(
@@ -169,12 +223,11 @@ const run = async () => {
         );
         const iOSConfig = {
           bundleIdentifier: config.exp.ios?.bundleIdentifier,
-          buildNumber: config.exp.ios?.buildNumber,
         };
         if (Object.values(iOSConfig).every(Boolean)) {
           await uploadSourceMap({
             updateId: iosUpdateId,
-            buildNumber: iOSConfig.buildNumber,
+            buildNumber,
             bundleIdentifier: iOSConfig.bundleIdentifier,
             platform: "ios",
           });
@@ -202,7 +255,7 @@ const run = async () => {
       }
     };
 
-    const uploadAndroidSourceMap = async () => {
+    const uploadAndroidSourceMap = async (buildNumber) => {
       if (androidUpdateId && androidBundle && androidMap) {
         console.log();
         console.log(
@@ -215,12 +268,11 @@ const run = async () => {
         );
         const androidConfig = {
           package: config.exp.android?.package,
-          versionCode: config.exp.android?.versionCode,
         };
         if (Object.values(androidConfig).every(Boolean)) {
           await uploadSourceMap({
             updateId: androidUpdateId,
-            buildNumber: androidConfig.versionCode,
+            buildNumber,
             bundleIdentifier: androidConfig.package,
             platform: "android",
           });
@@ -248,7 +300,12 @@ const run = async () => {
       }
     };
 
-    await Promise.all([uploadIosSourceMap(), uploadAndroidSourceMap()]);
+    const buildNumber = await getRemoteVersions();
+
+    await Promise.all([
+      uploadIosSourceMap(buildNumber.ios),
+      uploadAndroidSourceMap(buildNumber.android),
+    ]);
   } catch (error) {
     process.exit();
   }

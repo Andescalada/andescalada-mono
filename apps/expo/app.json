@@ -21,7 +21,6 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "39",
       "jsEngine": "jsc",
       "supportsTablet": true,
       "bundleIdentifier": "com.andescalada.app",
@@ -46,7 +45,6 @@
       }
     },
     "android": {
-      "versionCode": 29,
       "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
