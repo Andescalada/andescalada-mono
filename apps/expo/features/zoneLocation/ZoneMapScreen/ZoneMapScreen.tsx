@@ -18,6 +18,7 @@ import {
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -39,6 +40,8 @@ const ZoneMapScreen: FC<Props> = ({
   const { data, isLoading } = useZonesAllSectors({ zoneId });
 
   const theme = useAppTheme();
+
+  const { isOfflineMode } = useOfflineMode();
 
   const rootNavigation = useRootNavigation();
 
@@ -103,7 +106,7 @@ const ZoneMapScreen: FC<Props> = ({
           zoomLevel={14}
           animationMode="none"
           defaultSettings={{
-            zoomLevel: 10,
+            zoomLevel: 13,
             centerCoordinate: [
               Number(data?.Location?.longitude),
               Number(data?.Location?.latitude),
@@ -160,7 +163,7 @@ const ZoneMapScreen: FC<Props> = ({
         onPress={navigation.goBack}
         iconProps={{ color: mapTypeProps.mapTypeIconsColor }}
       />
-      <MapTypeToolbar {...mapTypeProps} />
+      {!isOfflineMode && <MapTypeToolbar {...mapTypeProps} />}
     </Screen>
   );
 };

@@ -15,7 +15,7 @@ const downloadMapboxOffline = async ({
     await Mapbox.offlineManager.invalidatePack(pack.name);
     return;
   }
-  const aspectRatio = 16 / 9;
+  const aspectRatio = 9 / 16;
   const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
   const centerLat = Number(location.latitude);
   const centerLong = Number(location.longitude);
@@ -36,8 +36,8 @@ const downloadMapboxOffline = async ({
         [neLng, neLat],
         [swLng, swLat],
       ],
-      minZoom: 10,
-      maxZoom: 16,
+      minZoom: 13,
+      maxZoom: 15,
     },
     (offlinePack, progress) => {
       Sentry.Native.captureMessage(
