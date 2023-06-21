@@ -1,16 +1,8 @@
-import Mapbox from "@andescalada/maps/mapbox";
-import {
-  BackButton,
-  Box,
-  Button,
-  MapTypeToolbar,
-  Screen,
-  Text,
-  useMapType,
-} from "@andescalada/ui";
+import { BackButton, Box, Button, Text, useMapType } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
+import MapLocationSelector from "@features/zoneManager/components/SelectLocation";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
@@ -65,39 +57,15 @@ const EditZoneLocationScreen: FC<Props> = ({
   };
 
   return (
-    <Screen safeAreaDisabled>
-      <Mapbox.MapView
-        styleURL={
-          mapTypeProps.mapType === "satellite"
-            ? Mapbox.StyleURL.SatelliteStreet
-            : Mapbox.StyleURL.Street
-        }
-        style={{ flex: 1 }}
-        logoEnabled={false}
-        scaleBarPosition={{ bottom: 8, left: 10 }}
-        compassEnabled
-        attributionEnabled={false}
-        compassPosition={{ top: 210, right: 16 }}
-        onCameraChanged={({
-          properties: { center },
-          gestures: { isGestureActive },
-        }) => {
-          if (!isGestureActive) return;
-          setRegion({ latitude: center[1], longitude: center[0] });
-        }}
-      >
-        <Mapbox.Camera
-          zoomLevel={14}
-          animationMode="none"
-          defaultSettings={{
-            zoomLevel: 10,
-            centerCoordinate: [
-              Number(longitude) || location?.coords.longitude || LONGITUDE,
-              Number(latitude) || location?.coords.latitude || LATITUDE,
-            ],
-          }}
-        />
-      </Mapbox.MapView>
+    <MapLocationSelector
+      defaultValues={{
+        latitude: Number(latitude) || location?.coords.latitude || LATITUDE,
+        longitude: Number(longitude) || location?.coords.longitude || LONGITUDE,
+      }}
+      onChange={(coordinates) => {
+        setRegion(coordinates);
+      }}
+    >
       <Box
         position="absolute"
         bottom="50%"
@@ -163,8 +131,7 @@ const EditZoneLocationScreen: FC<Props> = ({
           isLoading={editZone.isLoading}
         />
       </Box>
-      <MapTypeToolbar {...mapTypeProps} top={150} />
-    </Screen>
+    </MapLocationSelector>
   );
 };
 
