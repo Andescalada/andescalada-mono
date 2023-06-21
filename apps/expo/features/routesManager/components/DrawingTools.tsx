@@ -73,6 +73,7 @@ const DrawingTools = ({
           {canSave && showSaveAndAddButton && (
             <Button
               mt="s"
+              bg="grayscale.white"
               variant="successSmallOutline"
               title="Guardar y seguir agregando"
               titleVariant="p3R"

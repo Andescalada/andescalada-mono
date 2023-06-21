@@ -10,7 +10,7 @@ export const buttonVariantsColors = {
   transparentSimplifiedButtonText: pallete.grayscale.black,
   successButtonBackground: pallete.semantic.success,
   successButtonText: pallete.grayscale.white,
-  successSmallOutlineButtonText: pallete.grayscale.white,
+  successSmallOutlineButtonText: pallete.grayscale.black,
   errorButtonBackground: pallete.semantic.error,
   errorButtonText: pallete.grayscale.white,
   infoButtonBackground: pallete.semantic.info,
