@@ -2,12 +2,15 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
 import { useSaveImagesToFileSystem } from "@hooks/useSaveImagesToFileSystem";
+import Mapbox from "@rnmapbox/maps";
 import { inferProcedureOutput } from "@trpc/server";
+import downloadMapboxOffline from "@utils/downloadMapboxOffline";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { deviceName } from "expo-device";
 import { atom, useAtom } from "jotai";
 import { useState } from "react";
+import { Dimensions } from "react-native";
 
 export const progressAtom = atom(0);
 
@@ -105,6 +108,13 @@ const useSetAssetsToDb = () => {
         imagesToDownload: data.imagesToDownload,
         zoneId,
       });
+
+      if (data.location) {
+        await downloadMapboxOffline({
+          packName: zoneId,
+          location: data.location,
+        });
+      }
 
       addToDownloadedList.mutate({ zoneId });
     } catch (error) {

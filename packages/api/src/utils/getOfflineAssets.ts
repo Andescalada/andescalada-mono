@@ -312,6 +312,8 @@ const getOfflineAssets = async ({
       return item.version > existingAsset.version;
     });
 
+  const location = parsedZone.length ? parsedZone[0].data.Location : null;
+
   const assets = [
     ...parsedRoutes,
     ...parsedMultiPitch,
@@ -326,7 +328,7 @@ const getOfflineAssets = async ({
     return { router, params, procedure, version, zoneId, assetId };
   });
 
-  return { assets, imagesToDownload, assetList };
+  return { assets, imagesToDownload, assetList, location };
 };
 
 export default getOfflineAssets;

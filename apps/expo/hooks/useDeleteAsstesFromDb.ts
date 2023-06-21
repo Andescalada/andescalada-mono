@@ -2,6 +2,7 @@ import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
 import useDeleteZoneSavedImages from "@hooks/useDeleteZoneSavedImages";
 import type { Zone } from "@prisma/client";
+import Mapbox from "@rnmapbox/maps";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";
@@ -37,7 +38,8 @@ const useDeleteAssetsFromDb = () => {
 
         const deleteFromDb = offlineDb.deleteZone(db, zoneId);
         const deleteImages = deleteZoneSavedImages({ zoneId });
-        await Promise.allSettled([deleteFromDb, deleteImages]);
+        const deleteMap = Mapbox.offlineManager.deletePack(zoneId);
+        await Promise.allSettled([deleteFromDb, deleteImages, deleteMap]);
         db.close();
 
         setDownloadedAssetsList((old) => {
