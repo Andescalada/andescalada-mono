@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   BackButton,
   Box,
-  Image,
   MapTypeToolbar,
   Screen,
   Text,
@@ -24,6 +23,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import Env from "@utils/env";
 import { FC, useCallback, useRef, useState } from "react";
+import { Image } from "react-native";
 
 Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 

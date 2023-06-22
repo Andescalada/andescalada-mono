@@ -1,5 +1,5 @@
 import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
-import { Location, Zone } from "@prisma/client";
+import { Location, Sector, Zone } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -12,6 +12,7 @@ export enum ZoneManagerRoutes {
   ZonesByRole = "ZonesByRole",
   HowToPublish = "HowToPublish",
   EditZoneLocation = "EditZoneLocation",
+  AddOrEditSectorLocation = "AddOrEditSectorLocation",
 }
 
 export type ZoneManagerNavigationParamList = {
@@ -40,6 +41,13 @@ export type ZoneManagerNavigationParamList = {
   [ZoneManagerRoutes.EditZoneLocation]: {
     zoneId: Zone["id"];
     zoneName: Zone["name"];
+    latitude?: Location["latitude"];
+    longitude?: Location["longitude"];
+  };
+  [ZoneManagerRoutes.AddOrEditSectorLocation]: {
+    zoneId: Zone["id"];
+    sectorId: Sector["id"];
+    sectorName: Sector["name"];
     latitude?: Location["latitude"];
     longitude?: Location["longitude"];
   };

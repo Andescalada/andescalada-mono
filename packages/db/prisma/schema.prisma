@@ -398,9 +398,12 @@ model Sector {
   isDeleted  SoftDelete @default(NotDeleted)
   version    Int        @default(0)
   sectorKind SectorKind @default(Wall)
+  Location   Location?  @relation(fields: [locationId], references: [id])
+  locationId String?
 
   @@index([zoneId])
   @@index([authorId])
+  @@index([locationId])
 }
 
 enum SectorKind {
@@ -745,6 +748,7 @@ model Location {
   note      String?    @db.LongText
   radius    Decimal?
   Zone      Zone[]
+  Sector    Sector[]
 }
 
 model NotificationReceiver {

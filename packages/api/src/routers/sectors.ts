@@ -107,9 +107,22 @@ export const sectorsRouter = t.router({
       const sector = await ctx.prisma.sector.update({
         where: { id: input.sectorId },
         data: {
-          name: input.name,
-          slug: slug(input.name),
+          ...(input.name && { name: input.name, slug: slug(input.name) }),
           version: { increment: 1 },
+          ...(input.coordinates && {
+            Location: {
+              upsert: {
+                create: {
+                  latitude: input.coordinates.latitude,
+                  longitude: input.coordinates.longitude,
+                },
+                update: {
+                  latitude: input.coordinates.latitude,
+                  longitude: input.coordinates.longitude,
+                },
+              },
+            },
+          }),
           coAuthors:
             author?.Author.email === ctx.user.email
               ? undefined
@@ -175,6 +188,7 @@ export const selectFromSectorAllWalls = {
   zoneId: true,
   name: true,
   Zone: { select: { name: true } },
+  Location: true,
   walls: {
     where: { isDeleted: SoftDelete.NotDeleted },
     select: { id: true, name: true },
