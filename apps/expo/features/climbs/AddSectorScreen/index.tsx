@@ -51,12 +51,18 @@ const AddSectorScreen: FC<Props> = ({
     onSuccess: (data, params) => {
       if (sectorId) utils.sectors.allWalls.invalidate({ sectorId });
       utils.zones.allSectors.invalidate({ zoneId });
+      const zoneCoordinates = data.Zone.Location;
+      utils.zones.location.prefetch({ zoneId });
       rootNavigation.replace(RootNavigationRoutes.ZoneManager, {
         screen: ZoneManagerRoutes.AddOrEditSectorLocation,
         params: {
           sectorId: data.id,
           sectorName: data.name,
           zoneId: params.zoneId,
+          ...(zoneCoordinates && {
+            latitude: zoneCoordinates.latitude,
+            longitude: zoneCoordinates.longitude,
+          }),
         },
       });
     },

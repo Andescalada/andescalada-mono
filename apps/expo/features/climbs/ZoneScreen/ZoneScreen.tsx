@@ -126,7 +126,11 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           title={route.params.zoneName}
           editingTitle={headerMethods.editing}
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
-          onGoBack={() => navigation.navigate(ClimbsNavigationRoutes.Home)}
+          onGoBack={() => {
+            navigation.reset({
+              routes: [{ name: ClimbsNavigationRoutes.Home }],
+            });
+          }}
         />
       </FormProvider>
       <Box flex={1}>

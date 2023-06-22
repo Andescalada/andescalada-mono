@@ -38,7 +38,11 @@ const Navigator = () => {
         initialRouteName={ClimbsNavigationRoutes.Home}
       >
         <Stack.Screen
-          options={{ header: () => <UserHeader />, headerShown: true }}
+          options={{
+            header: () => <UserHeader />,
+            headerShown: true,
+            animationTypeForReplace: "pop",
+          }}
           name={ClimbsNavigationRoutes.Home}
           component={ClimbsHomeScreen}
         />
@@ -49,6 +53,9 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.Zone}
           component={ZoneScreen}
+          options={{
+            animationTypeForReplace: "pop",
+          }}
         />
         <Stack.Screen
           name={ClimbsNavigationRoutes.AddSector}

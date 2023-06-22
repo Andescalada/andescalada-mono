@@ -168,12 +168,17 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     <Screen padding="m">
       <Header
         title={route.params.sectorName}
-        onGoBack={() =>
-          navigation.navigate(ClimbsNavigationRoutes.Zone, {
+        onGoBack={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+            return;
+          }
+
+          navigation.replace(ClimbsNavigationRoutes.Zone, {
             zoneId,
             zoneName: data?.Zone.name,
-          })
-        }
+          });
+        }}
         onOptions={onOptions}
         marginBottom="m"
       />

@@ -63,6 +63,13 @@ export const sectorsRouter = t.router({
                 ? { connect: { email: ctx.user.email } }
                 : undefined,
           },
+          include: {
+            Zone: {
+              select: {
+                Location: { select: { latitude: true, longitude: true } },
+              },
+            },
+          },
         });
       }
 
@@ -86,6 +93,13 @@ export const sectorsRouter = t.router({
           position: biggestPosition + 1,
           sectorKind: input.sectorKind,
           Author: { connect: { email: ctx.user.email } },
+        },
+        include: {
+          Zone: {
+            select: {
+              Location: { select: { latitude: true, longitude: true } },
+            },
+          },
         },
       });
 

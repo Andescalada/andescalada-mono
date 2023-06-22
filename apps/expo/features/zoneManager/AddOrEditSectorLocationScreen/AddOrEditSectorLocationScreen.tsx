@@ -30,6 +30,7 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
   route: {
     params: { zoneId, sectorId, sectorName, latitude, longitude },
   },
+  navigation,
 }) => {
   const { location } = useLocation();
 
@@ -54,7 +55,8 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
     onSuccess: () => {
       utils.zones.allSectors.invalidate({ zoneId });
       utils.zones.location.invalidate({ zoneId });
-      rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+
+      rootNavigation.replace(RootNavigationRoutes.Climbs, {
         screen: ClimbsNavigationRoutes.Sector,
         params: { zoneId, sectorId, sectorName },
       });
@@ -180,16 +182,18 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
         flex={1}
         flexDirection="row"
       >
-        <BackButton.Transparent
-          containerProps={{
-            position: "relative",
-            margin: "none",
-            marginLeft: "none",
-            top: 0,
-            marginRight: "s",
-          }}
-          onPress={rootNavigation.goBack}
-        />
+        {navigation.canGoBack() && (
+          <BackButton.Transparent
+            containerProps={{
+              position: "relative",
+              margin: "none",
+              marginLeft: "none",
+              top: 0,
+              marginRight: "s",
+            }}
+            onPress={rootNavigation.goBack}
+          />
+        )}
         <Box
           flex={1}
           justifyContent="center"
