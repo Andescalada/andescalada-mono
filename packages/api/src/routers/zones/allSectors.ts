@@ -1,6 +1,6 @@
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { SoftDelete } from "@prisma/client";
+import { Prisma, SoftDelete } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 // Procedure being downloaded
@@ -33,75 +33,83 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
 
 export default allSectors;
 
-export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) => ({
-  id: true,
-  version: true,
-  name: true,
-  searchVisibility: true,
-  isDeleted: true,
-  Location: true,
-  sectors: {
-    where: { isDeleted: SoftDelete.NotDeleted },
-    include: {
-      walls: {
-        where: { isDeleted: SoftDelete.NotDeleted },
-        select: { name: true, id: true },
-        orderBy: { position: "asc" as const },
-      },
-    },
-  },
-  description: { select: { originalText: true } },
-  infoAccess: true,
-  currentStatus: true,
-  RoleByZone: {
-    where: { User: { email: userEmail } },
-    select: {
-      User: {
-        select: {
-          id: true,
-          profilePhoto: { select: { publicId: true } },
+export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) =>
+  ({
+    _count: true,
+    id: true,
+    version: true,
+    name: true,
+    searchVisibility: true,
+    isDeleted: true,
+    Location: true,
+    sectors: {
+      where: { isDeleted: SoftDelete.NotDeleted },
+      include: {
+        _count: true,
+        Location: { select: { latitude: true, longitude: true } },
+        walls: {
+          where: { isDeleted: SoftDelete.NotDeleted },
+          select: {
+            name: true,
+            id: true,
+            _count: true,
+          },
+          orderBy: { position: "asc" as const },
         },
       },
-      Role: true,
     },
-  },
-  DownloadedBy: { where: { email: userEmail } },
-  FavoritedBy: { where: { email: userEmail } },
-  ZoneAccessRequest: {
-    where: {
-      User: { email: userEmail },
+    description: { select: { originalText: true } },
+    infoAccess: true,
+    currentStatus: true,
+    RoleByZone: {
+      where: { User: { email: userEmail } },
+      select: {
+        User: {
+          select: {
+            id: true,
+            profilePhoto: { select: { publicId: true } },
+          },
+        },
+        Role: true,
+      },
     },
-    orderBy: { createdAt: "desc" as const },
-    take: 1,
-    select: { status: true },
-  },
-  UserZoneAgreementHistory: {
-    where: {
-      User: { email: userEmail },
+    DownloadedBy: { where: { email: userEmail } },
+    FavoritedBy: { where: { email: userEmail } },
+    ZoneAccessRequest: {
+      where: {
+        User: { email: userEmail },
+      },
+      orderBy: { createdAt: "desc" as const },
+      take: 1,
+      select: { status: true },
     },
-    orderBy: { createdAt: "desc" as const },
-    take: 1,
-    select: { hasAgreed: true },
-  },
-  agreements: {
-    include: {
-      Agreement: {
-        include: {
-          title: { select: { originalText: true } },
-          description: { select: { originalText: true } },
-          ZoneAgreement: {
-            select: { comment: { select: { originalText: true } } },
+    UserZoneAgreementHistory: {
+      where: {
+        User: { email: userEmail },
+      },
+      orderBy: { createdAt: "desc" as const },
+      take: 1,
+      select: { hasAgreed: true },
+    },
+    agreements: {
+      include: {
+        Agreement: {
+          include: {
+            title: { select: { originalText: true } },
+            description: { select: { originalText: true } },
+            ZoneAgreement: {
+              select: { comment: { select: { originalText: true } } },
+            },
           },
         },
       },
     },
-  },
-  ZoneDirections: {
-    where: { isDeleted: SoftDelete.NotDeleted },
-    orderBy: { createdAt: "desc" as const },
-    include: {
-      description: { select: { originalText: true } },
-      name: { select: { originalText: true } },
+    ZoneDirections: {
+      where: { isDeleted: SoftDelete.NotDeleted },
+      orderBy: { createdAt: "desc" as const },
+      include: {
+        description: { select: { originalText: true } },
+        name: { select: { originalText: true } },
+      },
     },
-  },
-});
+  } satisfies Prisma.ZoneSelect);
