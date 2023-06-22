@@ -17,7 +17,7 @@ import usersByRole from "@andescalada/api/src/routers/zones/usersByRole";
 import { t } from "../../createRouter";
 
 export const zonesRouter = t.router({
-  location,
+  location: location,
   find,
   all: all,
   recentlyAdded,

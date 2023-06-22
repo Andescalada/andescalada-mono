@@ -1,13 +1,19 @@
 import Mapbox from "@andescalada/maps/mapbox";
-import { Box, MapTypeToolbar, Screen, useMapType } from "@andescalada/ui";
-import { images } from "@assets/images";
+import { MapTypeToolbar, Screen, useMapType } from "@andescalada/ui";
+import Pin from "@features/zoneManager/components/Pin";
 import { ComponentProps, FC, ReactNode } from "react";
-import { Image } from "react-native";
 
 type Props = {
   children: ReactNode;
   onChange: (coordinates: { latitude: number; longitude: number }) => void;
   defaultValues?: { latitude: number; longitude: number };
+  zonePin?: { name: string; latitude: number; longitude: number };
+  sectorsPin?: {
+    id: string;
+    name: string;
+    latitude: number;
+    longitude: number;
+  }[];
 } & ComponentProps<typeof Mapbox.MapView>;
 
 const LATITUDE = 37.78825;
@@ -16,6 +22,8 @@ const LONGITUDE = -122.4555;
 const MapLocationSelector: FC<Props> = ({
   children,
   onChange,
+  zonePin,
+  sectorsPin,
   defaultValues: { latitude, longitude } = {
     latitude: LATITUDE,
     longitude: LONGITUDE,
@@ -55,23 +63,27 @@ const MapLocationSelector: FC<Props> = ({
             centerCoordinate: [longitude, latitude],
           }}
         />
+        {zonePin && (
+          <Pin
+            id="zonePin"
+            calloutText={zonePin.name}
+            latitude={Number(zonePin.latitude)}
+            longitude={Number(zonePin.longitude)}
+            startsOpen
+          />
+        )}
+        {sectorsPin?.map((sector) => (
+          <Pin
+            key={sector.id}
+            id={sector.id}
+            calloutText={sector.name}
+            latitude={sector.latitude}
+            longitude={sector.longitude}
+            variant="orange"
+            startsOpen
+          />
+        ))}
       </Mapbox.MapView>
-      <Box
-        position="absolute"
-        bottom="50%"
-        left="50%"
-        height={images.marker.height}
-        width={images.marker.width}
-      >
-        <Image
-          source={images.marker.file}
-          style={{
-            height: images.marker.height,
-            width: images.marker.width,
-            marginLeft: -images.marker.width / 2,
-          }}
-        />
-      </Box>
       {children}
       <MapTypeToolbar {...mapTypeProps} top={150} />
     </Screen>

@@ -1,3 +1,4 @@
+import { isDefined } from "@andescalada/api/src/utils/filterGuards";
 import { BackButton, Box, Button, Text, useMapType } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
@@ -7,10 +8,11 @@ import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
 } from "@features/zoneManager/Navigation/types";
+import { useAppTheme } from "@hooks/useAppTheme";
 import useLocation from "@hooks/useLocation";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Image } from "react-native";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.AddOrEditSectorLocation>;
@@ -20,6 +22,10 @@ const SANTIAGO_LAT_LONG = {
   longitude: -70.6506,
 };
 
+const ARROW_SIZE = 10;
+
+const CALLOUT_HEIGHT = 32;
+
 const AddOrEditSectorLocationScreen: FC<Props> = ({
   route: {
     params: { zoneId, sectorId, sectorName, latitude, longitude },
@@ -27,7 +33,7 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
 }) => {
   const { location } = useLocation();
 
-  const { data: zoneData } = trpc.zones.allSectors.useQuery({ zoneId });
+  const { data: zoneData } = trpc.zones.location.useQuery({ zoneId });
 
   const zoneLocation = zoneData?.Location;
 
@@ -37,6 +43,8 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
   }>();
 
   const rootNavigation = useRootNavigation();
+
+  const theme = useAppTheme();
 
   const mapTypeProps = useMapType();
 
@@ -73,8 +81,28 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
     ? Number(zoneLocation?.longitude)
     : undefined;
 
+  const otherSectorsPin = useMemo(
+    () =>
+      zoneData?.sectors
+        .filter((sector) => sector.id !== sectorId)
+        .map((sector) =>
+          sector.Location
+            ? {
+                longitude: Number(sector.Location?.longitude),
+                latitude: Number(sector.Location?.latitude),
+
+                id: sector.id,
+                name: sector.name,
+              }
+            : undefined,
+        )
+        .filter(isDefined),
+    [zoneData?.sectors, sectorId],
+  );
+
   return (
     <MapLocationSelector
+      sectorsPin={otherSectorsPin}
       defaultValues={{
         latitude:
           sectorLatitude ??
@@ -95,17 +123,53 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
         position="absolute"
         bottom="50%"
         left="50%"
-        height={images.marker.height}
+        height={images.marker.height + CALLOUT_HEIGHT + ARROW_SIZE}
         width={images.marker.width}
+        justifyContent="center"
+        alignItems="center"
       >
-        <Image
-          source={images.marker.file}
-          style={{
-            height: images.marker.height,
-            width: images.marker.width,
-            marginLeft: -images.marker.width / 2,
-          }}
-        />
+        <Box justifyContent="center" alignItems="center">
+          <Box
+            bg={"brand.primaryA"}
+            height={CALLOUT_HEIGHT}
+            width={100}
+            borderRadius={16}
+            mb="m"
+            opacity={1}
+            justifyContent="center"
+            style={{ marginLeft: -images.marker.width }}
+          >
+            <Text ellipsizeMode="tail" numberOfLines={2} textAlign="center">
+              {sectorName}
+            </Text>
+            <Box
+              position="absolute"
+              bottom={-ARROW_SIZE}
+              left={"50%"}
+              alignItems="center"
+              borderLeftWidth={ARROW_SIZE}
+              borderLeftColor="transparent"
+              borderStyle="solid"
+              borderRightWidth={ARROW_SIZE}
+              borderRightColor="transparent"
+              borderTopColor={"brand.primaryA"}
+              borderTopWidth={ARROW_SIZE}
+              style={{
+                transform: [
+                  { translateX: -(ARROW_SIZE - theme.spacing.s / 2) / 2 },
+                ],
+              }}
+            />
+          </Box>
+          <Image
+            source={images.marker.file}
+            style={{
+              height: images.marker.height,
+              width: images.marker.width,
+              marginLeft: -images.marker.width / 2,
+            }}
+          />
+        </Box>
       </Box>
       <Box
         position="absolute"

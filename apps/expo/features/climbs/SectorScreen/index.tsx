@@ -15,19 +15,28 @@ import {
 } from "@features/climbs/Navigation/types";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useSectorsAllWalls from "@hooks/offlineQueries/useSectorsAllWalls";
+import useIsConnected from "@hooks/useIsConnected";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Alert, FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const utils = trpc.useContext();
+
+  const isConnected = useIsConnected();
+
+  useEffect(() => {
+    if (isConnected) {
+      utils.zones.location.prefetch({ zoneId: route.params.zoneId });
+    }
+  }, [isConnected, route.params.zoneId, utils.zones.location]);
 
   const { sectorId, zoneId } = route.params;
 
