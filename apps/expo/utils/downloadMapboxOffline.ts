@@ -16,7 +16,6 @@ const downloadMapboxOffline = async ({
   notification: Emmiter<DefaultVariants>;
 }) => {
   const pack = await Mapbox.offlineManager.getPack(packName);
-  console.log(await pack?.status());
 
   if (pack) return;
 

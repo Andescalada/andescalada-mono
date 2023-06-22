@@ -63,17 +63,6 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
     }
   };
 
-  console.log({
-    latitude:
-      Number(latitude) ??
-      Number(zoneLocation?.latitude) ??
-      location?.coords.latitude,
-    longitude:
-      Number(longitude) ??
-      Number(zoneLocation?.longitude) ??
-      location?.coords.longitude,
-  });
-
   const sectorLatitude = latitude ? Number(latitude) : undefined;
   const sectorLongitude = longitude ? Number(longitude) : undefined;
 
