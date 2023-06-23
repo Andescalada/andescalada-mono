@@ -11,6 +11,6 @@ const tables = Object.entries(schema).map(([name, columns]) => {
 export { schema, Table };
 
 export default appSchema({
-  version: 1,
+  version: 2,
   tables,
 });

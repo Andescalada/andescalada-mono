@@ -1,29 +1,16 @@
 import { t } from "@andescalada/api/src/createRouter";
-import {
-  ProtectedContext,
-  protectedProcedure,
-} from "@andescalada/api/src/utils/protectedProcedure";
+import { pushRouteEvaluation } from "@andescalada/api/src/routers/sync/pushRouteEvaluation";
+import { pushRouteGradeEvaluation } from "@andescalada/api/src/routers/sync/pushRouteGradeEvaluation";
+import { TableChanges } from "@andescalada/api/src/routers/sync/types";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { Table } from "@andescalada/utils/local-database";
-import { Prisma, SoftDelete } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
-const TableChanges = z.object({
-  created: z.array(z.record(z.any())),
-  updated: z.array(z.record(z.any())),
-  deleted: z.array(z.string()),
-});
-
-type TableChanges = z.infer<typeof TableChanges>;
 
 const Changes = z.record(z.nativeEnum(Table), TableChanges);
 
 type Changes = z.infer<typeof Changes>;
-
-type PrismaMutationChangesParams = {
-  ctx: ProtectedContext;
-  changes: TableChanges;
-};
 
 export const syncRouter = t.router({
   pull: protectedProcedure
@@ -93,6 +80,13 @@ export const syncRouter = t.router({
           });
           mutations.push(...routeEvaluationMutations);
         }
+        if (table === Table.ROUTE_GRADE_EVALUATION) {
+          const routeEvaluationMutations = pushRouteGradeEvaluation({
+            ctx,
+            changes,
+          });
+          mutations.push(...routeEvaluationMutations);
+        }
       });
 
       try {
@@ -108,51 +102,3 @@ export const syncRouter = t.router({
       return true;
     }),
 });
-
-const pushRouteEvaluation = ({
-  ctx: { prisma },
-  changes: { created, deleted, updated },
-}: PrismaMutationChangesParams) => {
-  const mutations: Prisma.PrismaPromise<any>[] = [];
-
-  if (created.length > 0) {
-    const cleanCreated = created.map<Prisma.RouteEvaluationCreateManyInput>(
-      (c) => {
-        return {
-          evaluation: c.evaluation,
-          routeId: c.routeId,
-          userId: c.userId,
-          createdAt: new Date(c.created_at),
-          updatedAt: new Date(c.updated_at),
-          id: c.id,
-        };
-      },
-    );
-    const create = prisma.routeEvaluation.createMany({
-      data: cleanCreated,
-    });
-    mutations.push(create);
-  }
-  if (updated.length > 0) {
-    const updates = updated.map(({ id, ...rest }) => {
-      const data: Prisma.RouteEvaluationUpdateInput = {
-        evaluation: rest.evaluation,
-        Route: { connect: { id: rest.routeId } },
-        User: { connect: { id: rest.userId } },
-      };
-      return prisma.routeEvaluation.update({
-        where: { id },
-        data,
-      });
-    });
-    mutations.push(...updates);
-  }
-  if (deleted.length > 0) {
-    const deletes = prisma.routeEvaluation.updateMany({
-      where: { id: { in: deleted } },
-      data: { isDeleted: SoftDelete.DeletedDev },
-    });
-    mutations.push(deletes);
-  }
-  return mutations;
-};

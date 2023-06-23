@@ -27,6 +27,10 @@ export class User extends Model {
       type: hasMany,
       foreignKey: schema[Table.ROUTE_EVALUATION].userId.name,
     },
+    [Table.ROUTE_GRADE_EVALUATION]: {
+      type: hasMany,
+      foreignKey: schema[Table.ROUTE_GRADE_EVALUATION].userId.name,
+    },
   };
 
   @text(schema[Table.USER].name.name) name!: string;
@@ -49,6 +53,12 @@ export class User extends Model {
 
   @relation(Table.ROUTE_EVALUATION, schema[Table.ROUTE_EVALUATION].userId.name)
   routeEvaluations!: RouteEvaluation[];
+
+  @relation(
+    Table.ROUTE_GRADE_EVALUATION,
+    schema[Table.ROUTE_GRADE_EVALUATION].userId.name,
+  )
+  routeGradeEvaluations!: RouteGradeEvaluation[];
 }
 
 // export class RouteComment extends Model {
@@ -72,6 +82,32 @@ export class User extends Model {
 //   @relation(Table.USER, schema[Table.ROUTE_COMMENT].userId.name)
 //   user!: User;
 // }
+
+export class RouteGradeEvaluation extends Model {
+  static table = Table.ROUTE_GRADE_EVALUATION;
+  static associations = {
+    [Table.USER]: {
+      type: belongsTo,
+      key: schema[Table.ROUTE_GRADE_EVALUATION].userId.name,
+    },
+  };
+
+  @text(columns[Table.ROUTE_GRADE_EVALUATION].routeId) routeId!: string;
+  @text(columns[Table.ROUTE_GRADE_EVALUATION].userId) userId!: string;
+  @field(columns[Table.ROUTE_GRADE_EVALUATION].evaluation) evaluation!: number;
+  @field(columns[Table.ROUTE_GRADE_EVALUATION].originalGradeSystem)
+  originalGradeSystem!: string;
+  @field(columns[Table.ROUTE_GRADE_EVALUATION].originalGrade)
+  originalGrade!: string;
+  @readonly
+  @date(columns[Table.ROUTE_GRADE_EVALUATION].createdAt)
+  createdAt!: Date;
+  @readonly
+  @date(columns[Table.ROUTE_GRADE_EVALUATION].updatedAt)
+  updatedAt!: Date;
+  @relation(Table.USER, columns[Table.ROUTE_GRADE_EVALUATION].userId)
+  user!: User;
+}
 
 export class RouteEvaluation extends Model {
   static table = Table.ROUTE_EVALUATION;
@@ -154,4 +190,4 @@ export class RouteEvaluation extends Model {
   }
 }
 
-export default [User, RouteEvaluation];
+export default [User, RouteEvaluation, RouteGradeEvaluation];

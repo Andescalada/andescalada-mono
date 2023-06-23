@@ -635,6 +635,7 @@ model RouteGradeEvaluation {
   routeId             String
   User                User         @relation(fields: [userId], references: [id])
   userId              String
+  isDeleted           SoftDelete   @default(NotDeleted)
 
   @@unique([routeId, userId], name: "user_route_grade_unique")
   @@index([routeId])

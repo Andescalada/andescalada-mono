@@ -17,7 +17,7 @@ const sync = async () => {
         lastPulledAt: new Date(lastPulledAt),
       });
     },
-    // migrationsEnabledAtVersion: 1,
+    migrationsEnabledAtVersion: 1,
   });
 };
 
