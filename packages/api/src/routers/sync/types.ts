@@ -1,4 +1,5 @@
 import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
+import { User } from "@andescalada/db";
 import { z } from "zod";
 
 export const TableChanges = z.object({
@@ -12,4 +13,5 @@ export type TableChanges = z.infer<typeof TableChanges>;
 export type PrismaMutationChangesParams = {
   ctx: ProtectedContext;
   changes: TableChanges;
+  user: User;
 };

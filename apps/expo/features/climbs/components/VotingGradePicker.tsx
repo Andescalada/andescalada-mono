@@ -22,29 +22,30 @@ const VotingGradePicker: FC<Props> = ({
   const [items, setItems] = useState([{ label: "", value: "" }]);
 
   useEffect(() => {
-    setItems(() => {
-      if (!routeGrade)
-        return allGrades.map((grade) => ({
-          label: gradeSystem(grade, routeKind),
-          value: String(grade),
-        }));
+    if (!routeGrade) {
+      const gradesToShow = allGrades.map((grade) => ({
+        label: gradeSystem(grade, routeKind),
+        value: String(grade),
+      }));
+      setItems(gradesToShow);
+      return;
+    }
 
-      const currentGradeIndex = allGrades.findIndex(
-        (grade) => grade === routeGrade,
-      );
+    const currentGradeIndex = allGrades.findIndex(
+      (grade) => grade === routeGrade,
+    );
 
-      const upperBound = Math.min(currentGradeIndex + 2, allGrades.length - 1);
-      const lowerBound = Math.max(currentGradeIndex - 2, 0);
+    const upperBound = Math.min(currentGradeIndex + 2, allGrades.length - 1);
+    const lowerBound = Math.max(currentGradeIndex - 2, 0);
 
-      const gradesToShow = allGrades
-        .slice(lowerBound, upperBound + 1)
-        .map((grade) => ({
-          label: gradeSystem(grade, routeKind),
-          value: String(grade),
-        }));
+    const gradesToShow = allGrades
+      .slice(lowerBound, upperBound + 1)
+      .map((grade) => ({
+        label: gradeSystem(grade, routeKind),
+        value: String(grade),
+      }));
 
-      return gradesToShow;
-    });
+    setItems(gradesToShow);
   }, [allGrades, gradeSystem, routeGrade, routeKind, value]);
 
   return (

@@ -4,6 +4,7 @@ import { Prisma, SoftDelete } from "@andescalada/db";
 export const pushRouteEvaluation = ({
   ctx: { prisma },
   changes: { created, deleted, updated },
+  user,
 }: PrismaMutationChangesParams) => {
   const mutations: Prisma.PrismaPromise<any>[] = [];
 
@@ -13,7 +14,7 @@ export const pushRouteEvaluation = ({
         return {
           evaluation: c.evaluation,
           routeId: c.routeId,
-          userId: c.userId,
+          userId: user.id,
           createdAt: new Date(c.created_at),
           updatedAt: new Date(c.updated_at),
           id: c.id,
@@ -30,7 +31,7 @@ export const pushRouteEvaluation = ({
       const data: Prisma.RouteEvaluationUpdateInput = {
         evaluation: rest.evaluation,
         Route: { connect: { id: rest.routeId } },
-        User: { connect: { id: rest.userId } },
+        User: { connect: { id: user.id } },
       };
       return prisma.routeEvaluation.update({
         where: { id },

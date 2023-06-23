@@ -25,7 +25,7 @@ const setOrCreateRouteEvaluation = async (input: {
       if (routeEvaluation) {
         return await routeEvaluation.update((routeEvaluation) => {
           if (input.id) routeEvaluation._raw.id = input.id;
-          routeEvaluation.evaluation = input.evaluation;
+          routeEvaluation.evaluation = input.evaluation.toString();
           routeEvaluation.routeId = input.routeId;
           routeEvaluation.userId = input.userId;
         });
@@ -34,7 +34,7 @@ const setOrCreateRouteEvaluation = async (input: {
         .get<RouteEvaluation>(Table.ROUTE_EVALUATION)
         .create((routeEvaluation) => {
           if (input.id) routeEvaluation._raw.id = input.id;
-          routeEvaluation.evaluation = input.evaluation;
+          routeEvaluation.evaluation = input.evaluation.toString();
           routeEvaluation.routeId = input.routeId;
           routeEvaluation.userId = input.userId;
         });

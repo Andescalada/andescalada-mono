@@ -1,10 +1,11 @@
 import { PrismaMutationChangesParams } from "@andescalada/api/src/routers/sync/types";
-import { GradeSystemsSchema } from "@andescalada/db/zod";
 import { Prisma, SoftDelete } from "@andescalada/db";
+import { GradeSystemsSchema } from "@andescalada/db/zod";
 
 export const pushRouteGradeEvaluation = ({
   ctx: { prisma },
   changes: { created, deleted, updated },
+  user,
 }: PrismaMutationChangesParams) => {
   const mutations: Prisma.PrismaPromise<any>[] = [];
 
@@ -18,7 +19,7 @@ export const pushRouteGradeEvaluation = ({
           ),
           originalGrade: c.originalGrade,
           routeId: c.routeId,
-          userId: c.userId,
+          userId: user.id,
           createdAt: new Date(c.created_at),
           updatedAt: new Date(c.updated_at),
           id: c.id,
@@ -38,7 +39,7 @@ export const pushRouteGradeEvaluation = ({
         ),
         originalGrade: rest.originalGrade,
         Route: { connect: { id: rest.routeId } },
-        User: { connect: { id: rest.userId } },
+        User: { connect: { id: user.id } },
       };
       return prisma.routeGradeEvaluation.update({
         where: { id },
