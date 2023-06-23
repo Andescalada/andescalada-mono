@@ -489,6 +489,8 @@ const RouteGradeEvaluation = ({
       routeId,
     });
 
+  const localEvaluation = localRouteGradeEvaluation?.evaluation;
+
   const [modalVisible, setModalVisible] = useState(false);
 
   if (
@@ -542,6 +544,36 @@ const RouteGradeEvaluation = ({
         >
           {gradeLabel({ grade: evaluation, project: false }, routeKind)}
         </Text>
+        {localEvaluation && (
+          <>
+            <Text
+              fontSize={25}
+              lineHeight={25}
+              textAlignVertical="bottom"
+              textAlign="justify"
+              color="grayscale.500"
+              style={{ paddingBottom: 5 }}
+            >
+              /
+            </Text>
+            <Box style={{ paddingBottom: 7 }}>
+              <Ionicons name="person-circle" size={25} color="grayscale.500" />
+            </Box>
+            <Text
+              fontSize={25}
+              lineHeight={25}
+              textAlignVertical="bottom"
+              textAlign="justify"
+              color="grayscale.500"
+              style={{ paddingBottom: 5 }}
+            >
+              {gradeLabel(
+                { grade: localEvaluation, project: false },
+                routeKind,
+              )}
+            </Text>
+          </>
+        )}
       </Pressable>
     </>
   );
