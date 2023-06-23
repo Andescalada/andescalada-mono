@@ -1,5 +1,9 @@
 # Andescalada Monorepo
 
+[![Update Preview](https://github.com/Andescalada/andescalada-mono/actions/workflows/update-preview.yml/badge.svg?branch=main&event=deployment_status)](https://github.com/Andescalada/andescalada-mono/actions/workflows/update-preview.yml)
+
+[![Update Production](https://github.com/Andescalada/andescalada-mono/actions/workflows/update-production.yml/badge.svg?branch=production&event=deployment_status)](https://github.com/Andescalada/andescalada-mono/actions/workflows/update-production.yml)
+
 ## I want to contribute
 
 If you really want to contribute write me an email with the subject "I want to contribute" and I give you access to our services and env variables.
