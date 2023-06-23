@@ -1,6 +1,7 @@
 import { t } from "@andescalada/api/src/createRouter";
 import { pushRouteEvaluation } from "@andescalada/api/src/routers/sync/pushRouteEvaluation";
 import { pushRouteGradeEvaluation } from "@andescalada/api/src/routers/sync/pushRouteGradeEvaluation";
+import { pushUser } from "@andescalada/api/src/routers/sync/pushUser";
 import { TableChanges } from "@andescalada/api/src/routers/sync/types";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { Prisma } from "@andescalada/db";
@@ -96,6 +97,13 @@ export const syncRouter = t.router({
             user,
           });
           mutations.push(...routeGradeEvaluationMutations);
+        }
+        if (table === Table.USER) {
+          const userMutations = pushUser({
+            ctx,
+            changes,
+          });
+          mutations.push(...userMutations);
         }
       });
 
