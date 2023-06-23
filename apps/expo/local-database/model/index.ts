@@ -111,7 +111,7 @@ export class RouteEvaluation extends Model {
 
   @text(schema[Table.ROUTE_EVALUATION].routeId.name) routeId!: string;
   @text(schema[Table.ROUTE_EVALUATION].userId.name) userId!: string;
-  @field(schema[Table.ROUTE_EVALUATION].evaluation.name) evaluation!: number;
+  @field(schema[Table.ROUTE_EVALUATION].evaluation.name) evaluation!: string;
   @readonly
   @date(schema[Table.ROUTE_EVALUATION].createdAt.name)
   createdAt!: Date;

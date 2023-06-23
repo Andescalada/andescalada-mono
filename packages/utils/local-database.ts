@@ -48,7 +48,7 @@ export const schema = {
     userId: { type: "string", isIndexed: true, name: "userId" },
     createdAt: { type: "number", name: "created_at" },
     updatedAt: { type: "number", name: "updated_at" },
-    evaluation: { type: "number", name: "evaluation" },
+    evaluation: { type: "string", name: "evaluation" },
   },
   [Table.ROUTE_GRADE_EVALUATION]: {
     routeId: { type: "string", isIndexed: true, name: "routeId" },

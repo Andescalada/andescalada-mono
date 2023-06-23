@@ -100,7 +100,11 @@ const RouteScreen: FC<Props> = ({
       />
       <RouteContainer
         route={data}
-        evaluationValue={localDbEvaluation?.evaluation || 0}
+        evaluationValue={
+          localDbEvaluation?.evaluation
+            ? Number(localDbEvaluation?.evaluation)
+            : 0
+        }
       />
     </Screen>
   );
