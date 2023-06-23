@@ -1,16 +1,21 @@
+import { RouteKindSchema } from "@andescalada/db/zod";
 import useGradeSystem from "@hooks/useGradeSystem";
 import { FC, useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 
-import { RouteKindSchema } from "../../../../../packages/db/zod/enums/RouteKind";
-
 interface Props {
   routeKind: typeof RouteKindSchema._type;
+  routeGrade: number | null;
   value: number;
   onChange?: (v: { value: number; label: string }) => void;
 }
 
-const VotingGradePicker: FC<Props> = ({ routeKind, value, onChange }) => {
+const VotingGradePicker: FC<Props> = ({
+  routeKind,
+  value,
+  onChange,
+  routeGrade,
+}) => {
   const { allGrades, gradeSystem } = useGradeSystem(routeKind);
   const [open, setOpen] = useState(false);
   const [stringValue, setValue] = useState(String(value));
@@ -18,7 +23,15 @@ const VotingGradePicker: FC<Props> = ({ routeKind, value, onChange }) => {
 
   useEffect(() => {
     setItems(() => {
-      const currentGradeIndex = allGrades.findIndex((grade) => grade === value);
+      if (!routeGrade)
+        return allGrades.map((grade) => ({
+          label: gradeSystem(grade, routeKind),
+          value: String(grade),
+        }));
+
+      const currentGradeIndex = allGrades.findIndex(
+        (grade) => grade === routeGrade,
+      );
 
       const upperBound = Math.min(currentGradeIndex + 2, allGrades.length - 1);
       const lowerBound = Math.max(currentGradeIndex - 2, 0);
@@ -32,7 +45,7 @@ const VotingGradePicker: FC<Props> = ({ routeKind, value, onChange }) => {
 
       return gradesToShow;
     });
-  }, [allGrades, gradeSystem, routeKind, value]);
+  }, [allGrades, gradeSystem, routeGrade, routeKind, value]);
 
   return (
     <DropDownPicker

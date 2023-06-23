@@ -31,6 +31,8 @@ const setOrCreateRouteGradeEvaluation = (input: {
           routeGradeEvaluation.evaluation = input.evaluation;
           routeGradeEvaluation.routeId = input.routeId;
           routeGradeEvaluation.userId = input.userId;
+          routeGradeEvaluation.originalGradeSystem = input.originalGradeSystem;
+          routeGradeEvaluation.originalGrade = input.originalGrade;
         });
       }
       return database

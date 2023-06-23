@@ -429,6 +429,7 @@ const RouteGradeVoteModal = ({
         ¿Qué grado te pareció esta ruta?
       </Text>
       <VotingGradePicker
+        routeGrade={routeGrade?.grade || null}
         value={gradeVotedValue.value}
         onChange={(v) => {
           setGradeVotedValue({

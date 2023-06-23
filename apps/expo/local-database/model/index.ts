@@ -1,16 +1,13 @@
 import { GradeSystemsSchema } from "@andescalada/db/zod";
 import { columns } from "@andescalada/utils/local-database";
 import { schema, Table } from "@local-database/model/schema";
-import { Model, Q } from "@nozbe/watermelondb";
+import { Model } from "@nozbe/watermelondb";
 import {
   date,
   field,
-  json,
-  lazy,
   readonly,
   relation,
   text,
-  writer,
 } from "@nozbe/watermelondb/decorators";
 
 const hasMany = "has_many" as const;
@@ -38,17 +35,11 @@ export class User extends Model {
   @field(schema[Table.USER].ownUser.name) ownUser!: boolean;
   @readonly @date(schema[Table.USER].createdAt.name) createdAt!: Date;
   @text(schema[Table.USER].email.name) email!: string;
-  @json(schema[Table.USER].preferredSportGrade.name, (rawReaction) =>
-    GradeSystemsSchema.parse(rawReaction),
-  )
+  @text(schema[Table.USER].preferredSportGrade.name)
   preferredSportGrade!: typeof GradeSystemsSchema._type;
-  @json(schema[Table.USER].preferredBoulderGrade.name, (rawReaction) =>
-    GradeSystemsSchema.parse(rawReaction),
-  )
+  @text(schema[Table.USER].preferredBoulderGrade.name)
   preferredBoulderGrade!: typeof GradeSystemsSchema._type;
-  @json(schema[Table.USER].preferredTradGrade.name, (rawReaction) =>
-    GradeSystemsSchema.parse(rawReaction),
-  )
+  @text(schema[Table.USER].preferredTradGrade.name)
   preferredTradGrade!: typeof GradeSystemsSchema._type;
 
   @relation(Table.ROUTE_EVALUATION, schema[Table.ROUTE_EVALUATION].userId.name)
@@ -95,10 +86,7 @@ export class RouteGradeEvaluation extends Model {
   @text(columns[Table.ROUTE_GRADE_EVALUATION].routeId) routeId!: string;
   @text(columns[Table.ROUTE_GRADE_EVALUATION].userId) userId!: string;
   @field(columns[Table.ROUTE_GRADE_EVALUATION].evaluation) evaluation!: number;
-  @json(
-    columns[Table.ROUTE_GRADE_EVALUATION].originalGradeSystem,
-    (rawReaction) => GradeSystemsSchema.parse(rawReaction),
-  )
+  @text(columns[Table.ROUTE_GRADE_EVALUATION].originalGradeSystem)
   originalGradeSystem!: typeof GradeSystemsSchema._type;
   @field(columns[Table.ROUTE_GRADE_EVALUATION].originalGrade)
   originalGrade!: string;
@@ -132,65 +120,6 @@ export class RouteEvaluation extends Model {
   updatedAt!: Date;
   @relation(Table.USER, schema[Table.ROUTE_EVALUATION].userId.name)
   user!: User;
-
-  @lazy async getEvaluation({ routeId }: { routeId: string }) {
-    const routeEvaluations = await this.collections
-      .get<RouteEvaluation>(Table.ROUTE_EVALUATION)
-      .query(
-        Q.and(
-          Q.where("routeId", routeId),
-          Q.on("user", Q.where(columns.User.ownUser, true)),
-        ),
-      );
-
-    return routeEvaluations.length ? routeEvaluations[0] : null;
-  }
-
-  @writer async setEvaluation({
-    evaluation,
-    routeId,
-    id,
-  }: {
-    evaluation: number;
-    routeId: string;
-    id?: string;
-  }) {
-    const users = await this.collections
-      .get<User>(Table.USER)
-      .query(Q.where("ownUser", true));
-
-    const userId = users.length ? users[0].id : null;
-
-    if (!userId) throw new Error("User not found");
-
-    const routeEvaluations = await this.collections
-      .get<RouteEvaluation>(Table.ROUTE_EVALUATION)
-      .query(
-        Q.where(columns.RouteEvaluation.userId, userId),
-        Q.where(columns.RouteEvaluation.routeId, routeId),
-        Q.take(1),
-      );
-
-    const routeEvaluation = routeEvaluations.length
-      ? routeEvaluations[0]
-      : null;
-
-    if (routeEvaluation) {
-      return await routeEvaluation.update((routeEvaluation) => {
-        if (id) routeEvaluation._raw.id = id;
-        routeEvaluation.evaluation = evaluation;
-        routeEvaluation.routeId = routeId;
-      });
-    }
-    return await this.collections
-      .get<RouteEvaluation>(Table.ROUTE_EVALUATION)
-      .create((routeEvaluation) => {
-        if (id) routeEvaluation._raw.id = id;
-        routeEvaluation.userId = userId;
-        routeEvaluation.evaluation = evaluation;
-        routeEvaluation.routeId = routeId;
-      });
-  }
 }
 
 export default [User, RouteEvaluation, RouteGradeEvaluation];
