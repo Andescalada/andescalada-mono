@@ -1,4 +1,5 @@
 import { PrismaMutationChangesParams } from "@andescalada/api/src/routers/sync/types";
+import { GradeSystemsSchema } from "@andescalada/db/zod";
 import { Prisma, SoftDelete } from "@prisma/client";
 
 export const pushRouteGradeEvaluation = ({
@@ -12,7 +13,9 @@ export const pushRouteGradeEvaluation = ({
       created.map<Prisma.RouteGradeEvaluationCreateManyInput>((c) => {
         return {
           evaluation: c.evaluation,
-          originalGradeSystem: c.originalGradeSystem,
+          originalGradeSystem: GradeSystemsSchema.parse(
+            JSON.parse(c.originalGradeSystem),
+          ),
           originalGrade: c.originalGrade,
           routeId: c.routeId,
           userId: c.userId,
@@ -21,7 +24,7 @@ export const pushRouteGradeEvaluation = ({
           id: c.id,
         };
       });
-    const create = prisma.routeEvaluation.createMany({
+    const create = prisma.routeGradeEvaluation.createMany({
       data: cleanCreated,
     });
     mutations.push(create);
@@ -30,7 +33,9 @@ export const pushRouteGradeEvaluation = ({
     const updates = updated.map(({ id, ...rest }) => {
       const data: Prisma.RouteGradeEvaluationUpdateInput = {
         evaluation: rest.evaluation,
-        originalGradeSystem: rest.originalGradeSystem,
+        originalGradeSystem: GradeSystemsSchema.parse(
+          JSON.parse(rest.originalGradeSystem),
+        ),
         originalGrade: rest.originalGrade,
         Route: { connect: { id: rest.routeId } },
         User: { connect: { id: rest.userId } },

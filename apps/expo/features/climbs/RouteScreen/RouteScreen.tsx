@@ -28,17 +28,19 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import useDebounce from "@hooks/useDebounce";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useIsConnected from "@hooks/useIsConnected";
-import { useGetOwnInfo } from "@hooks/useOwnInfo";
+import useOwnInfo, { useGetOwnInfo } from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useGetRouteEvaluationQuery from "@local-database/hooks/useGetRouteEvaluationQuery";
+import useGetRouteGradeEvaluationQuery from "@local-database/hooks/useGetRouteGradeEvaluationQuery";
 import useSetOrCreateRouteEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteEvaluationMutation";
+import useSetOrCreateRouteGradeEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteGradeEvaluationMutation";
 import sync from "@local-database/sync";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { RouteGrade } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
-import React, { FC, useRef, useState } from "react";
+import React, { ComponentProps, FC, useRef, useState } from "react";
 import type { TextInput as TextInputRef } from "react-native";
 import {
   useAnimatedStyle,
@@ -362,33 +364,127 @@ const RouteEvaluation = ({
   );
 };
 
+interface RouteGradeVoteModalProps
+  extends Omit<ComponentProps<typeof Modal>, "children"> {
+  routeKind: typeof RouteKindSchema._type;
+  routeGrade: RouteGrade | null;
+  defaultValue: { grade: number; originalGrade: string } | null;
+}
+
+const RouteGradeVoteModal = ({
+  routeKind,
+  routeGrade,
+  defaultValue,
+  ...props
+}: RouteGradeVoteModalProps) => {
+  const { routeId, zoneId } = useRouteScreenParams();
+  const { getSystem } = useGradeSystem();
+  const { data: user } = useOwnInfo();
+  const [gradeVotedValue, setGradeVotedValue] = useState(() => {
+    if (defaultValue)
+      return {
+        value: defaultValue.grade,
+        originalGrade: defaultValue.originalGrade,
+      };
+    if (routeGrade?.grade && routeGrade?.originalGrade)
+      return {
+        value: routeGrade.grade,
+        originalGrade: routeGrade.originalGrade,
+      };
+
+    return { value: 0, originalGrade: "" };
+  });
+
+  const isConnected = useIsConnected();
+
+  const utils = trpc.useContext();
+
+  const { mutate } = useSetOrCreateRouteGradeEvaluationMutation({
+    async onSuccess() {
+      if (isConnected) {
+        await sync();
+        utils.routes.byIdWithEvaluation.invalidate({ routeId, zoneId });
+      }
+    },
+  });
+
+  return (
+    <Modal
+      minHeight={300}
+      width={300}
+      padding="m"
+      justifyContent="space-around"
+      alignItems="center"
+      {...props}
+    >
+      <Box>
+        <Text variant="h4" textAlign="center">
+          Graduación comunitaria
+        </Text>
+        <Text variant="p3R" textAlign="center">
+          Es el promedio de todas las votaciones
+        </Text>
+      </Box>
+      <Text variant="p3R" textAlign="center">
+        ¿Qué grado te pareció esta ruta?
+      </Text>
+      <VotingGradePicker
+        value={gradeVotedValue.value}
+        onChange={(v) => {
+          setGradeVotedValue({
+            originalGrade: v.label,
+            value: v.value,
+          });
+        }}
+        routeKind={routeKind}
+      />
+      <Text variant="error">
+        Solo se puede elegir 2 grados más arriba o más abajo del grado oficial
+      </Text>
+
+      <Button
+        variant="infoSmall"
+        px="s"
+        titleVariant="p2R"
+        title="Guardar"
+        onPress={() => {
+          const originalGradeSystem = getSystem(routeKind);
+          if (!originalGradeSystem || !user) return;
+          mutate({
+            userId: user.id,
+            routeId,
+            evaluation: gradeVotedValue.value,
+            originalGrade: gradeVotedValue.originalGrade,
+            originalGradeSystem,
+          });
+          props.onDismiss();
+        }}
+      />
+    </Modal>
+  );
+};
+
+interface RouteGradeEvaluationProps {
+  evaluation: number | null;
+  routeKind: typeof RouteKindSchema._type;
+  routeGrade: RouteGrade | null;
+}
+
 const RouteGradeEvaluation = ({
   evaluation,
   routeKind,
   routeGrade,
-}: {
-  evaluation: number | null;
-  routeKind: typeof RouteKindSchema._type;
-  routeGrade: RouteGrade | null;
-}) => {
+}: RouteGradeEvaluationProps) => {
   const { routeId } = useRouteScreenParams();
 
-  const { gradeLabel, getSystem } = useGradeSystem();
+  const { gradeLabel } = useGradeSystem();
 
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const utils = trpc.useContext();
-  const addOrEditGradeEvaluation =
-    trpc.routes.addOrEditGradeEvaluation.useMutation({
-      onSuccess: ({ routeId }) => {
-        utils.routes.byIdWithEvaluation.invalidate({ routeId });
-      },
+  const { data: localRouteGradeEvaluation, isLoading } =
+    useGetRouteGradeEvaluationQuery({
+      routeId,
     });
 
-  const [gradeVotedValue, setGradeVotedValue] = useState({
-    value: typeof routeGrade?.grade !== "number" ? 0 : routeGrade?.grade,
-    label: routeGrade?.originalGrade || "",
-  });
+  const [modalVisible, setModalVisible] = useState(false);
 
   if (
     !routeGrade?.grade ||
@@ -400,57 +496,24 @@ const RouteGradeEvaluation = ({
 
   return (
     <>
-      <Modal
-        visible={modalVisible}
-        minHeight={300}
-        width={300}
-        padding="m"
-        justifyContent="space-around"
-        alignItems="center"
-        onDismiss={() => {
-          setModalVisible(false);
-        }}
-      >
-        <Box>
-          <Text variant="h4" textAlign="center">
-            Graduación comunitaria
-          </Text>
-          <Text variant="p3R" textAlign="center">
-            Es el promedio de todas las votaciones
-          </Text>
-        </Box>
-        <Text variant="p3R" textAlign="center">
-          ¿Qué grado te pareció esta ruta?
-        </Text>
-        <VotingGradePicker
-          value={gradeVotedValue.value}
-          onChange={(v) => {
-            setGradeVotedValue(v);
-          }}
+      {!isLoading && (
+        <RouteGradeVoteModal
+          routeGrade={routeGrade}
+          visible={modalVisible}
+          defaultValue={
+            localRouteGradeEvaluation
+              ? {
+                  grade: localRouteGradeEvaluation.evaluation,
+                  originalGrade: localRouteGradeEvaluation.originalGrade,
+                }
+              : null
+          }
           routeKind={routeKind}
-        />
-        <Text variant="error">
-          Solo se puede elegir 2 grados más arriba o más abajo del grado oficial
-        </Text>
-
-        <Button
-          variant="infoSmall"
-          px="s"
-          titleVariant="p2R"
-          title="Guardar"
-          onPress={() => {
-            const originalGradeSystem = getSystem(routeKind);
-            if (!originalGradeSystem) return;
-            addOrEditGradeEvaluation.mutate({
-              routeId,
-              evaluation: gradeVotedValue.value,
-              originalGrade: gradeVotedValue.label,
-              originalGradeSystem,
-            });
+          onDismiss={() => {
             setModalVisible(false);
           }}
         />
-      </Modal>
+      )}
       <Pressable
         alignItems="flex-end"
         justifyContent="flex-end"

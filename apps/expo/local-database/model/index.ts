@@ -95,8 +95,11 @@ export class RouteGradeEvaluation extends Model {
   @text(columns[Table.ROUTE_GRADE_EVALUATION].routeId) routeId!: string;
   @text(columns[Table.ROUTE_GRADE_EVALUATION].userId) userId!: string;
   @field(columns[Table.ROUTE_GRADE_EVALUATION].evaluation) evaluation!: number;
-  @field(columns[Table.ROUTE_GRADE_EVALUATION].originalGradeSystem)
-  originalGradeSystem!: string;
+  @json(
+    columns[Table.ROUTE_GRADE_EVALUATION].originalGradeSystem,
+    (rawReaction) => GradeSystemsSchema.parse(rawReaction),
+  )
+  originalGradeSystem!: typeof GradeSystemsSchema._type;
   @field(columns[Table.ROUTE_GRADE_EVALUATION].originalGrade)
   originalGrade!: string;
   @readonly

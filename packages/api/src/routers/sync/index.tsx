@@ -81,11 +81,11 @@ export const syncRouter = t.router({
           mutations.push(...routeEvaluationMutations);
         }
         if (table === Table.ROUTE_GRADE_EVALUATION) {
-          const routeEvaluationMutations = pushRouteGradeEvaluation({
+          const routeGradeEvaluationMutations = pushRouteGradeEvaluation({
             ctx,
             changes,
           });
-          mutations.push(...routeEvaluationMutations);
+          mutations.push(...routeGradeEvaluationMutations);
         }
       });
 
