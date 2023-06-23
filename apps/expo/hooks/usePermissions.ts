@@ -1,7 +1,7 @@
 import type { Permissions } from "@andescalada/api/src/types/permissions";
+import type { Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppSelector } from "@hooks/redux";
-import type { Zone } from "@prisma/client";
 import storage, { Storage } from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
 

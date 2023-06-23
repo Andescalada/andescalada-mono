@@ -3,7 +3,7 @@ import sector from "@andescalada/api/schemas/sector";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

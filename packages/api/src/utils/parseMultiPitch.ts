@@ -1,4 +1,4 @@
-import { GradeSystems, RouteGrade, RouteKind } from "@prisma/client";
+import { GradeSystems, RouteGrade, RouteKind } from "@andescalada/db";
 
 const parseMultiPitch = (
   multiPitch: {

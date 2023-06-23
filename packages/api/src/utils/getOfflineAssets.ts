@@ -6,7 +6,7 @@ import { includeInWallById } from "@andescalada/api/src/routers/walls";
 import { selectZoneAllSectors } from "@andescalada/api/src/routers/zones/allSectors";
 import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
 import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 
 interface ImageToDownload {

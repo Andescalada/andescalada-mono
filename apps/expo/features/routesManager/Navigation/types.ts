@@ -1,4 +1,4 @@
-import type { MultiPitch, Route, Topo, Wall, Zone } from "@prisma/client";
+import type { MultiPitch, Route, Topo, Wall, Zone } from "@andescalada/db";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 

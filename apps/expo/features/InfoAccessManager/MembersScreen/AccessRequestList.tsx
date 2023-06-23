@@ -1,3 +1,4 @@
+import { Zone } from "@andescalada/db";
 import { RequestStatusSchema, StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
@@ -16,7 +17,6 @@ import {
 import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
-import { Zone } from "@prisma/client";
 import { useNavigation } from "@react-navigation/native";
 import { FC, useCallback } from "react";
 import { Alert, FlatList } from "react-native";

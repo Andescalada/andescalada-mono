@@ -1,3 +1,4 @@
+import { Zone } from "@andescalada/db";
 import {
   AgreementLevelSchema,
   ClassicAgreementSchema,
@@ -18,7 +19,6 @@ import {
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import AgreementLevelButtonGroup from "@features/zoneAgreementManager/components/AgreementLevelButtonGroup";
-import { Zone } from "@prisma/client";
 import {
   ComponentProps,
   FC,

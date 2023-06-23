@@ -1,5 +1,5 @@
 import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
-import { Location, Sector, Zone } from "@prisma/client";
+import { Location, Sector, Zone } from "@andescalada/db";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 

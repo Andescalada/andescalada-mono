@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "author": "elevyg",
   "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
     "dev": " pscale connect andescalada develop --port 3309"
   },

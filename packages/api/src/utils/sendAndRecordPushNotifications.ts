@@ -1,6 +1,6 @@
 import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import sendPushNotification from "@andescalada/api/src/utils/sendPushNotification";
-import { Entity, EntityTypeId } from "@prisma/client";
+import { Entity, EntityTypeId } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const sendAndRecordPushNotification = async (

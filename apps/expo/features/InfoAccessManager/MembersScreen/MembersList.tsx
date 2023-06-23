@@ -1,3 +1,4 @@
+import type { Zone } from "@andescalada/db";
 import { RoleNamesSchema } from "@andescalada/db/zod";
 import { ActivityIndicator, Box, Button, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -5,7 +6,6 @@ import UserItem from "@features/InfoAccessManager/MembersScreen/UserItem";
 import usePauseAccess from "@hooks/usePauseAccess";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
-import type { Zone } from "@prisma/client";
 import { FC, useMemo } from "react";
 import { Alert, FlatList } from "react-native";
 

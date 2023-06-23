@@ -1,8 +1,8 @@
+import type { Wall, Zone } from "@andescalada/db";
 import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
-import type { Wall, Zone } from "@prisma/client";
 import { useMemo } from "react";
 
 interface Args {

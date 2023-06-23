@@ -2,7 +2,7 @@ import agreements from "@andescalada/api/schemas/agreements";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

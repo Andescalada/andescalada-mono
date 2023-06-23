@@ -1,4 +1,4 @@
-import { Zone } from "@prisma/client";
+import { Zone } from "@andescalada/db";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 

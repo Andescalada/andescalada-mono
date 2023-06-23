@@ -15,7 +15,7 @@ import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRec
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import roleNameAssets from "@andescalada/common-assets/roleNameAssets";
 import { RoleNamesSchema } from "@andescalada/db/zod";
-import { Actions, Entity, Image, RoleNames, SoftDelete } from "@prisma/client";
+import { Actions, Entity, Image, RoleNames, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { deserialize } from "superjson";
 import { z } from "zod";

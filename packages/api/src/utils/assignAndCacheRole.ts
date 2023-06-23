@@ -1,7 +1,7 @@
 import { Context } from "@andescalada/api/src/createContext";
 import error from "@andescalada/api/src/utils/errors";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { RoleNames } from "@prisma/client";
+import { RoleNames } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const assignAndCacheRole = async (

@@ -1,6 +1,6 @@
 import { SearchType } from "@andescalada/api/schemas/search";
 import { isDefined } from "@andescalada/api/src/utils/filterGuards";
-import { SearchVisibility, SoftDelete, Status } from "@prisma/client";
+import { SearchVisibility, SoftDelete, Status } from "@andescalada/db";
 import { z } from "zod";
 
 import { t } from "../createRouter";

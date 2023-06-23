@@ -1,5 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
+import { RouteGrade } from "@andescalada/db";
 import {
   A,
   ActivityIndicator,
@@ -37,7 +38,6 @@ import useSetOrCreateRouteEvaluationMutation from "@local-database/hooks/useSetO
 import useSetOrCreateRouteGradeEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteGradeEvaluationMutation";
 import sync from "@local-database/sync";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { RouteGrade } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import React, { ComponentProps, FC, useRef, useState } from "react";

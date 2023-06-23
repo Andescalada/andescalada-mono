@@ -1,7 +1,7 @@
+import type { Zone } from "@andescalada/db";
 import { downloadedZonesAtom } from "@atoms/index";
 import useDeleteAssetsFromDb from "@hooks/useDeleteAsstesFromDb";
 import useSetAssetsToDb from "@hooks/useSetAssetsToDb";
-import type { Zone } from "@prisma/client";
 import { useAtom } from "jotai";
 import { useMemo } from "react";
 import { Alert } from "react-native";

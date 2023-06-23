@@ -1,6 +1,6 @@
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { InfoAccess, SoftDelete } from "@prisma/client";
+import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const location = protectedZoneProcedure.query(async ({ ctx, input }) => {

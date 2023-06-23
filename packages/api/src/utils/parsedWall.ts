@@ -7,7 +7,7 @@ import {
   SoftDelete,
   Wall,
   Zone,
-} from "@prisma/client";
+} from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const Route = {

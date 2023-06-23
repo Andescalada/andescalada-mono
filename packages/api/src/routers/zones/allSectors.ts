@@ -1,6 +1,6 @@
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { Prisma, SoftDelete } from "@prisma/client";
+import { Prisma, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 // Procedure being downloaded

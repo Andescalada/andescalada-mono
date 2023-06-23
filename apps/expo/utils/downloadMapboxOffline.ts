@@ -1,5 +1,5 @@
 import geoViewport from "@mapbox/geo-viewport";
-import { Location } from "@prisma/client";
+import { Location } from "@andescalada/db";
 import Mapbox from "@rnmapbox/maps";
 import { Dimensions } from "react-native";
 import type { DefaultVariants } from "react-native-notificated/lib/typescript/defaultConfig/types";

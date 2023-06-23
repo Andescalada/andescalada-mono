@@ -1,5 +1,5 @@
 import { rolesObject } from "@andescalada/api/src/utils/rolesObject";
-import { Role, RoleByZone, RoleNames } from "@prisma/client";
+import { Role, RoleByZone, RoleNames } from "@andescalada/db";
 
 export type User = {
   profilePhoto: {

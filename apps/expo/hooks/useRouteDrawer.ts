@@ -3,12 +3,12 @@ import {
   DEFAULT_POSITION,
   pointToVector,
 } from "@andescalada/climbs-drawer/utils";
+import type { Route, RoutePath, Topo, Wall, Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import type { Route, RoutePath, Topo, Wall, Zone } from "@prisma/client";
 import { SkPoint, useValue } from "@shopify/react-native-skia";
 import { useRef, useState } from "react";
 

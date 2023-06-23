@@ -1,6 +1,6 @@
 import { gradeUnits } from "@andescalada/common-assets/climbingGrades";
 import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
-import { RouteGrade } from "@prisma/client";
+import { RouteGrade } from "@andescalada/db";
 
 const gradeLabel = (
   grade: RouteGrade | null,

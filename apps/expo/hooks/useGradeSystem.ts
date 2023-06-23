@@ -2,9 +2,9 @@ import {
   gradeUnits,
   gradeUnitsByRouteKind,
 } from "@andescalada/common-assets/climbingGrades";
+import { RouteGrade } from "@andescalada/db";
 import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import useOwnInfo from "@hooks/useOwnInfo";
-import { RouteGrade } from "@prisma/client";
 import { useCallback, useEffect, useState } from "react";
 
 const addOneWrap = (n: number, value: number) => (value + 1) % (n + 1);

@@ -16,7 +16,7 @@ import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedur
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import updatePositionsOnDelete from "@andescalada/api/src/utils/updatePositionsOnDelete";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

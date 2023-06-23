@@ -1,7 +1,7 @@
 import zone from "@andescalada/api/schemas/zone";
 import { Context } from "@andescalada/api/src/createContext";
 import error from "@andescalada/api/src/utils/errors";
-import { Status } from "@prisma/client";
+import { Status } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const updateZoneStatus = async (

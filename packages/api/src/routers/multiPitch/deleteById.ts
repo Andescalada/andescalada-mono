@@ -2,7 +2,7 @@ import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import updatePositionsOnDelete from "@andescalada/api/src/utils/updatePositionsOnDelete";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const deleteById = protectedZoneProcedure

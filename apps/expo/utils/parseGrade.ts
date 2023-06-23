@@ -1,4 +1,4 @@
-import type { RouteGrade } from "@prisma/client";
+import type { RouteGrade } from "@andescalada/db";
 
 const parseGrade = (gradeObject: RouteGrade | null) => {
   if (!gradeObject) return null;

@@ -4,7 +4,7 @@ import { pushRouteGradeEvaluation } from "@andescalada/api/src/routers/sync/push
 import { TableChanges } from "@andescalada/api/src/routers/sync/types";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { Table } from "@andescalada/utils/local-database";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

@@ -6,7 +6,7 @@ import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
 import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { InfoAccess, SoftDelete } from "@prisma/client";
+import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

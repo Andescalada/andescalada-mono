@@ -1,4 +1,4 @@
-import type { PermissionActions } from "@prisma/client";
+import type { PermissionActions } from "@andescalada/db";
 import type { Redis } from "@upstash/redis";
 import { serialize } from "superjson";
 

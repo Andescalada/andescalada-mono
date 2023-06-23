@@ -1,7 +1,7 @@
+import type { Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
 import useDeleteZoneSavedImages from "@hooks/useDeleteZoneSavedImages";
-import type { Zone } from "@prisma/client";
 import Mapbox from "@rnmapbox/maps";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";

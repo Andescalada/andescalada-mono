@@ -1,5 +1,5 @@
 import { t } from "@andescalada/api/src/createRouter";
-import { InfoAccess, SoftDelete, Status } from "@prisma/client";
+import { InfoAccess, SoftDelete, Status } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
