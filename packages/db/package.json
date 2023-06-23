@@ -6,8 +6,13 @@
   "scripts": {
     "dev": " pscale connect andescalada develop --port 3309"
   },
+  "dependencies": {
+    "@prisma/client": "4.16.1"
+  },
   "peerDependencies": {
     "zod": "*"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prisma": "^4.16.1"
+  }
 }
