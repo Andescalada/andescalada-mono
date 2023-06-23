@@ -20,7 +20,7 @@ import * as Updates from "expo-updates";
 import { ComponentProps, FC } from "react";
 import { Alert } from "react-native";
 
-type Props = UserNavigationScreenProps<UserNavigationRoutes.OwnUserConfig>;
+type Props = UserNavigationScreenProps<UserNavigationRoutes.Settings>;
 
 const ListItemConfig = ({
   title,
@@ -54,7 +54,7 @@ const ListItemConfig = ({
   );
 };
 
-const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
+const SettingsScreen: FC<Props> = ({ navigation }) => {
   const globalPermissions = useGlobalPermissions();
   const permanentDelete = trpc.user.permanentDelete.useMutation();
   const deactivate = trpc.user.deactivate.useMutation();
@@ -163,4 +163,4 @@ const OwnUserConfigScreen: FC<Props> = ({ navigation }) => {
   );
 };
 
-export default OwnUserConfigScreen;
+export default SettingsScreen;
