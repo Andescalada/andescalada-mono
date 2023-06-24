@@ -9,13 +9,11 @@
   },
   "devDependencies": {
     "react": "*",
-    "react-native": "*",
-    "react-native-maps": "*"
+    "react-native": "*"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*",
-    "react-native-maps": "*"
+    "react-native": "*"
   },
   "dependencies": {
     "@rnmapbox/maps": "^10.0.7-rc.1"
