@@ -14,7 +14,7 @@
     "@andescalada/db": "1.0.0",
     "@auth0/nextjs-auth0": "^1.9.1",
     "@next/font": "13.1.6",
-    "@sentry/nextjs": "^7.37.1",
+    "@sentry/nextjs": "^7.56.0",
     "@svgr/webpack": "^6.5.1",
     "@tanstack/react-query-devtools": "^4.11.0",
     "@vercel/analytics": "^0.1.8",

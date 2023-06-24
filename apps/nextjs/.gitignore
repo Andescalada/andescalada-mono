@@ -40,3 +40,6 @@ prisma/_sqlite/migrations
 
 # Sentry
 .sentryclirc
+
+# Sentry Auth Token
+.sentryclirc
