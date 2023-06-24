@@ -210,6 +210,7 @@ const AddMultiPitchScreen: FC<Props> = ({
         <Box>
           <Button
             variant="primary"
+            minHeight={50}
             title={text.buttonTitle}
             onPress={onSubmit}
             isLoading={isLoading}

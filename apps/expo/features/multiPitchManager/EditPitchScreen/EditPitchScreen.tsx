@@ -147,6 +147,7 @@ const EditPitchScreen: FC<Props> = ({
         )}
         <Button
           variant="primary"
+          minHeight={50}
           title={"Editar"}
           onPress={onSubmit}
           isLoading={editPitch.isLoading}

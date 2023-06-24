@@ -357,6 +357,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           onPress={onSubmit}
           isLoading={isLoading || isLoadingEdit || isExtensionLoading}
           marginVertical="s"
+          minHeight={50}
         />
         <SemanticButton
           variant="error"

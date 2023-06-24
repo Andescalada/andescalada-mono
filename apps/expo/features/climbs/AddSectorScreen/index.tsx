@@ -168,6 +168,7 @@ const AddSectorScreen: FC<Props> = ({
         )}
         <Button
           variant="primary"
+          minHeight={50}
           title={text.button}
           onPress={onSubmit}
           isLoading={isLoading}
