@@ -21,7 +21,11 @@ const assignAndCacheRole = async (
   const roleExist = await ctx.prisma.roleByZone.findMany({
     where: {
       User: {
-        OR: { username: input.username, email: input.email, id: input.userId },
+        OR: [
+          { username: input.username },
+          { email: input.email },
+          { id: input.userId },
+        ],
       },
       Zone: { id: input.zoneId },
       Role: { name: input.role },

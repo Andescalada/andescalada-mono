@@ -14,7 +14,7 @@ export { default as EditableTitle } from "./EditableTitle/EditableTitle";
 export { default as Header } from "./Header/Header";
 export { default as Icon } from "./Icon/Icon";
 export { default as Image } from "./Image/Image";
-export { default as Ionicons } from "./Ionicons/Ionicons";
+export { default as Ionicons, IoniconsNames } from "./Ionicons/Ionicons";
 export { default as KeyboardAvoidingBox } from "./KeyboardAvoidingBox/KeyboardAvoidingBox";
 export { default as KeyboardDismiss } from "./KeyboardDismiss/KeyboardDismiss";
 export { default as ListItem } from "./ListItem/ListItem";
