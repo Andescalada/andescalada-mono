@@ -73,7 +73,6 @@ const ButtonItem: FC<ButtonItemProps> = ({
         onChange(localValue);
       }}
       padding="m"
-      margin="s"
       backgroundColor={
         isSelected ? selectedBackgroundColor : backgroundColorHandler()
       }

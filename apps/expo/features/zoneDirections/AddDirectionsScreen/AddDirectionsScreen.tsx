@@ -100,6 +100,7 @@ const AddDirectionsScreen: FC<Props> = ({
                   <Box flexDirection="row" alignItems="stretch" flexWrap="wrap">
                     {TransportationModeSchema.options.map((mode) => (
                       <ButtonGroup.Item
+                        margin="s"
                         key={mode}
                         label={transportationModeAssets[mode].label}
                         value={mode}

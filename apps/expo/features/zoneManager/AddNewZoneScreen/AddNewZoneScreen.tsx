@@ -70,7 +70,7 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
                 value={access.field.value}
                 allowUndefined
               >
-                <Box flexDirection="row">
+                <Box flexDirection="row" gap="s" marginVertical="m">
                   {InfoAccessSchema.options.map((access) => (
                     <ButtonGroup.Item
                       key={access}
@@ -128,6 +128,7 @@ const AddNewZoneScreen: FC<Props> = ({ navigation }) => {
                 <Box flexDirection="row">
                   {SearchVisibilitySchema.options.map((access) => (
                     <ButtonGroup.Item
+                      margin="s"
                       key={access}
                       label={searchVisibilityAssets[access].label}
                       value={access}

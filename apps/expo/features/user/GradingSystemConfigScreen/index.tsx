@@ -104,10 +104,12 @@ const GradingOptions = ({
           allowUndefined={false}
         >
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.Yosemite}
             label="Yosemite"
           />
@@ -121,10 +123,12 @@ const GradingOptions = ({
           allowUndefined={false}
         >
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.Hueco}
             label="Hueco"
           />
@@ -138,10 +142,12 @@ const GradingOptions = ({
           allowUndefined={false}
         >
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.Yosemite}
             label="Yosemite"
           />

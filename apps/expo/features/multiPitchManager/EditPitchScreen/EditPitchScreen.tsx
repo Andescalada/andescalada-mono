@@ -123,6 +123,7 @@ const EditPitchScreen: FC<Props> = ({
               .filter((o) => o !== RouteKindSchema.enum.Boulder)
               .map((kind) => (
                 <ButtonGroup.Item
+                  margin="s"
                   key={kind}
                   value={kind}
                   label={routeKindLabel(kind).long}

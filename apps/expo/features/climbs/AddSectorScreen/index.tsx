@@ -139,6 +139,7 @@ const AddSectorScreen: FC<Props> = ({
           <Box flexDirection="row" flexWrap="wrap">
             {SectorKindSchema.options.map((kind) => (
               <ButtonGroup.Item
+                margin="s"
                 key={kind}
                 value={kind}
                 label={sectorKindAssets[kind].label}

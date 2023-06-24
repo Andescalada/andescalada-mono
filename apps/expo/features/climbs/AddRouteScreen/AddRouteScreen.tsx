@@ -329,6 +329,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           <Box flexWrap="wrap" flexDirection="row">
             {RouteKindSchema.options.map((kind) => (
               <ButtonGroup.Item
+                margin="s"
                 key={kind}
                 value={kind}
                 label={routeKindLabel(kind).long}
