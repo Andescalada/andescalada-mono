@@ -16,6 +16,6 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@rnmapbox/maps": "^10.0.7-rc.1"
+    "@rnmapbox/maps": "^10.0.9-rc.0"
   }
 }

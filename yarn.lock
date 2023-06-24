@@ -3231,6 +3231,19 @@
     "@types/geojson" "^7946.0.7"
     debounce "^1.2.0"
 
+"@rnmapbox/maps@^10.0.9-rc.0":
+  version "10.0.9-rc.0"
+  resolved "https://registry.yarnpkg.com/@rnmapbox/maps/-/maps-10.0.9-rc.0.tgz#5ebb72383cb6cf7208eba6a1763cbf405ff43f26"
+  integrity sha512-JjQvEz6OLCotnHf/loui7HFfE+uO+5ixKSl6A8pviBYoLgswuaKdJRwHxAfvCRe0aDUkXnyNJtdO4YU/SFZImA==
+  dependencies:
+    "@turf/along" "6.5.0"
+    "@turf/distance" "6.5.0"
+    "@turf/helpers" "6.5.0"
+    "@turf/length" "6.5.0"
+    "@turf/nearest-point-on-line" "6.5.0"
+    "@types/geojson" "^7946.0.7"
+    debounce "^1.2.0"
+
 "@rollup/plugin-commonjs@24.0.0":
   version "24.0.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-24.0.0.tgz#fb7cf4a6029f07ec42b25daa535c75b05a43f75c"
@@ -12430,13 +12443,6 @@ react-native-logs@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-5.0.1.tgz#53665919587b499e22f514e50cb6a834cedba1ce"
   integrity sha512-30aQugeLFfcBEKd6U4I75SKc5q5fb9Qrwv0Vnsy3jwpC716xON9SxRbBEnxoPSDJjzK527r4zi+qYqzig6lPlQ==
-
-react-native-maps@*:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.4.0.tgz#e24133311c032447c35e55152841c4e0e9ddf2a5"
-  integrity sha512-asP6oVx9uF4E9U22j40q0AcSJ4v3hPBPCg1kPdlbckGXGj+z8dwwdPkQi3hUpl94odlR//v60Sw6PAEYv8zSxw==
-  dependencies:
-    "@types/geojson" "^7946.0.8"
 
 react-native-maps@1.3.2:
   version "1.3.2"
