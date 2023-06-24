@@ -98,6 +98,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
                 params: {
                   sectorId,
                   zoneId,
+                  isEdit: true,
                   sectorName: data.name,
                   ...(data.Location && {
                     latitude: data.Location.latitude,

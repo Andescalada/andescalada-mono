@@ -1,5 +1,5 @@
-import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
 import { Location, Sector, Zone } from "@andescalada/db";
+import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -50,6 +50,7 @@ export type ZoneManagerNavigationParamList = {
     sectorName: Sector["name"];
     latitude?: Location["latitude"];
     longitude?: Location["longitude"];
+    isEdit?: boolean;
   };
 };
 

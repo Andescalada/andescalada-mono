@@ -28,7 +28,7 @@ const CALLOUT_HEIGHT = 32;
 
 const AddOrEditSectorLocationScreen: FC<Props> = ({
   route: {
-    params: { zoneId, sectorId, sectorName, latitude, longitude },
+    params: { zoneId, sectorId, sectorName, latitude, longitude, isEdit },
   },
   navigation,
 }) => {
@@ -55,6 +55,11 @@ const AddOrEditSectorLocationScreen: FC<Props> = ({
     onSuccess: () => {
       utils.zones.allSectors.invalidate({ zoneId });
       utils.zones.location.invalidate({ zoneId });
+
+      if (isEdit) {
+        navigation.goBack();
+        return;
+      }
 
       rootNavigation.replace(RootNavigationRoutes.Climbs, {
         screen: ClimbsNavigationRoutes.Sector,
