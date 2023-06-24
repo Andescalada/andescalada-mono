@@ -23,6 +23,7 @@ const AgreementLevelButtonGroup = ({ level, setLevel, ...props }: Props) => {
       >
         <Box flexWrap="wrap" flexDirection="row">
           <ButtonGroup.Item
+            margin="s"
             value={AgreementLevelSchema.enum.Critical}
             label="Crítico"
             selectedBackgroundColor={"semantic.error"}
@@ -31,6 +32,7 @@ const AgreementLevelButtonGroup = ({ level, setLevel, ...props }: Props) => {
             }
           />
           <ButtonGroup.Item
+            margin="s"
             value={AgreementLevelSchema.enum.Important}
             label="Importante"
             selectedBackgroundColor={"semantic.warning"}
@@ -43,6 +45,7 @@ const AgreementLevelButtonGroup = ({ level, setLevel, ...props }: Props) => {
             selectedTextColor="grayscale.black"
           />
           <ButtonGroup.Item
+            margin="s"
             value={AgreementLevelSchema.enum.Recommended}
             label="Recomendado"
             selectedBackgroundColor={"semantic.info"}
@@ -51,6 +54,7 @@ const AgreementLevelButtonGroup = ({ level, setLevel, ...props }: Props) => {
             }
           />
           <ButtonGroup.Item
+            margin="s"
             value={AgreementLevelSchema.enum.NotAplicable}
             label="No aplica"
             selectedBackgroundColor={"grayscale.800"}

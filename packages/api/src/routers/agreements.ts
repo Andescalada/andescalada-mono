@@ -2,7 +2,7 @@ import agreements from "@andescalada/api/schemas/agreements";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -22,8 +22,13 @@ export const agreementsRouter = t.router({
     .input(
       agreements.data.merge(agreements.classic).merge(agreements.agreementId),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.zoneAgreement.create({
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("EditZoneAgreements")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "EditZoneAgreements"),
+        );
+      }
+      const agreement = await ctx.prisma.zoneAgreement.create({
         data: {
           Author: { connect: { email: ctx.user.email } },
           Zone: { connect: { id: input.zoneId } },
@@ -40,8 +45,15 @@ export const agreementsRouter = t.router({
               }
             : undefined,
         },
-      }),
-    ),
+      });
+
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
+      });
+
+      return agreement;
+    }),
   listByZone: protectedZoneProcedure.query(async ({ ctx, input }) =>
     ctx.prisma.zoneAgreement.findMany({
       where: { zoneId: input.zoneId, isDeleted: SoftDelete.NotDeleted },
@@ -90,16 +102,23 @@ export const agreementsRouter = t.router({
   }),
   restoreAgreement: protectedZoneProcedure
     .input(agreements.zoneAgreementId)
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       if (!ctx.permissions.has("EditZoneAgreements")) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "EditZoneAgreements"),
         );
       }
-      return ctx.prisma.zoneAgreement.update({
+      const agreement = await ctx.prisma.zoneAgreement.update({
         where: { id: input.zoneAgreementId },
         data: { isDeleted: SoftDelete.NotDeleted },
       });
+
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
+      });
+
+      return agreement;
     }),
   byId: protectedProcedure
     .input(agreements.zoneAgreementId)
@@ -118,13 +137,13 @@ export const agreementsRouter = t.router({
         z.object({ privateDelete: z.boolean().optional() }),
       ),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       if (!ctx.permissions.has("EditZoneAgreements")) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "EditZoneAgreements"),
         );
       }
-      return ctx.prisma.zoneAgreement.update({
+      const agreement = await ctx.prisma.zoneAgreement.update({
         where: { id: input.zoneAgreementId },
         data: {
           isDeleted: input.privateDelete
@@ -132,6 +151,13 @@ export const agreementsRouter = t.router({
             : SoftDelete.DeletedPublic,
         },
       });
+
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
+      });
+
+      return agreement;
     }),
   edit: protectedZoneProcedure
     .input(agreements.zoneAgreementId.merge(agreements.data))
@@ -160,6 +186,11 @@ export const agreementsRouter = t.router({
                   connect: { email: ctx.user.email },
                 },
         },
+      });
+
+      await ctx.prisma.zone.update({
+        where: { id: input.zoneId },
+        data: { version: { increment: 1 } },
       });
 
       return agreement;

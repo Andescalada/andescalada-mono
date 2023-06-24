@@ -2,6 +2,7 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { urlGen } from "@andescalada/utils/cloudinary";
 import { downloadedImagesAtom } from "@atoms/index";
 import { inferProcedureOutput } from "@trpc/server";
+import constants from "@utils/constants";
 import fileSystem from "@utils/FileSystem";
 import { useAtom } from "jotai";
 import { useCallback } from "react";
@@ -10,7 +11,10 @@ import * as Sentry from "sentry-expo";
 type ListToDownload = inferProcedureOutput<AppRouter["user"]["offlineAssets"]>;
 
 export const imageVariantsSavedOffline = (publicId: string) => {
-  const mainImage = urlGen.optimizedImage({ publicId });
+  const mainImage = urlGen.optimizedImage({
+    publicId,
+    quality: constants.imageQuality,
+  });
   const thumbnailImage = urlGen.blurImage({ publicId });
 
   return [thumbnailImage, mainImage];

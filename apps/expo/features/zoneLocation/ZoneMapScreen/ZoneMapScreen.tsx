@@ -1,5 +1,7 @@
-import { MapView } from "@andescalada/maps";
+import { isDefined } from "@andescalada/api/src/utils/filterGuards";
+import Mapbox from "@andescalada/maps/mapbox";
 import {
+  A,
   ActivityIndicator,
   BackButton,
   Box,
@@ -9,27 +11,24 @@ import {
   TextButton,
   useMapType,
 } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
-import { images } from "@assets/images";
+import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import {
   ZoneLocationRoutes,
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
+import Pin, { OnPinSelected } from "@features/zoneManager/components/Pin";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
+import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useRef } from "react";
-import { Dimensions, Platform } from "react-native";
-import { Callout, MapMarker, Marker } from "react-native-maps";
+import Env from "@utils/env";
+import { FC, useMemo, useState } from "react";
+
+Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 
 type Props = ZoneLocationScreenProps<ZoneLocationRoutes.ZoneMap>;
-const { width, height } = Dimensions.get("window");
-const ASPECT_RATIO = width / height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.05;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const ZoneMapScreen: FC<Props> = ({
   navigation,
@@ -37,14 +36,62 @@ const ZoneMapScreen: FC<Props> = ({
     params: { zoneId, zoneName },
   },
 }) => {
-  const markerRef = useRef<MapMarker>(null);
-  const { data, isLoading } = trpc.zones.location.useQuery({ zoneId });
+  const { data, isLoading } = useZonesAllSectors({ zoneId });
+
+  const { isOfflineMode } = useOfflineMode();
 
   const rootNavigation = useRootNavigation();
 
   const mapTypeProps = useMapType();
 
   const { permission } = usePermissions({ zoneId });
+
+  const [selectedPin, setSelectedPin] = useState<
+    | {
+        id: string;
+        latitude: number;
+        longitude: number;
+        name: string;
+        count: {
+          wall: number;
+          routes: number;
+        };
+      }
+    | undefined
+  >(undefined);
+
+  const [expandZoneCallout, setExpandZoneCallout] = useState(true);
+
+  const onPinSelected: OnPinSelected = ({ id }) => {
+    const selectedSector = sectors?.find((sector) => sector.id === id);
+    setSelectedPin((prev) => {
+      if (prev?.id === id) return undefined;
+      return selectedSector;
+    });
+  };
+
+  const sectors = useMemo(
+    () =>
+      data?.sectors
+        ?.map((sector) => {
+          if (!sector?.Location) return undefined;
+          const wall = sector?._count.walls;
+
+          const routes = sector.walls.reduce(
+            (acc, wall) => acc + wall._count.routes,
+            0,
+          );
+          return {
+            id: sector.id,
+            latitude: Number(sector.Location.latitude),
+            longitude: Number(sector.Location.longitude),
+            name: sector.name,
+            count: { wall, routes },
+          };
+        })
+        .filter(isDefined),
+    [data?.sectors],
+  );
 
   if (isLoading)
     return (
@@ -75,61 +122,105 @@ const ZoneMapScreen: FC<Props> = ({
       </Screen>
     );
 
-  return (
-    <Screen safeAreaDisabled>
-      <MapView
-        initialRegion={{
-          latitude: Number(data.Location.latitude),
-          longitude: Number(data.Location.longitude),
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-        mapType={mapTypeProps.mapType}
-      >
-        <Marker
-          ref={markerRef}
-          coordinate={{
-            latitude: Number(data?.Location?.latitude) || LATITUDE,
-            longitude: Number(data?.Location?.longitude) || LONGITUDE,
-          }}
-          identifier={zoneId}
-          image={
-            Platform.OS === "ios" ? images.marker.file : images.markerLarge.file
+  if (sectors)
+    return (
+      <Screen safeAreaDisabled>
+        <Mapbox.MapView
+          styleURL={
+            mapTypeProps.mapType === "satellite"
+              ? Mapbox.StyleURL.SatelliteStreet
+              : Mapbox.StyleURL.Street
           }
-          onLayout={() => markerRef.current?.showCallout()}
+          style={{ flex: 1 }}
+          logoEnabled={false}
+          scaleBarPosition={{ bottom: 8, left: 10 }}
+          compassEnabled
+          attributionEnabled={false}
+          compassPosition={{ top: 110, right: 16 }}
         >
-          <CalloutContent title={data?.name} />
-        </Marker>
-      </MapView>
-      <BackButton.Transparent
-        onPress={navigation.goBack}
-        iconProps={{ color: mapTypeProps.mapTypeIconsColor }}
-      />
-      <MapTypeToolbar {...mapTypeProps} />
-    </Screen>
-  );
+          <Mapbox.Camera
+            zoomLevel={14}
+            animationMode="none"
+            defaultSettings={{
+              zoomLevel: 13,
+              centerCoordinate: [
+                Number(data?.Location?.longitude),
+                Number(data?.Location?.latitude),
+              ],
+            }}
+          />
+
+          <Pin
+            id="zonePin"
+            calloutText={data.name}
+            latitude={Number(data.Location.latitude)}
+            longitude={Number(data.Location.longitude)}
+            isSelected={expandZoneCallout}
+            onPinSelected={() => {
+              setExpandZoneCallout((prev) => !prev);
+            }}
+          />
+          {sectors?.map((sector) => (
+            <Pin
+              key={sector.id}
+              id={sector.id}
+              isSelected={selectedPin?.id === sector.id}
+              calloutText={sector.name}
+              latitude={sector.latitude}
+              longitude={sector.longitude}
+              variant="orange"
+              onPinSelected={onPinSelected}
+            />
+          ))}
+        </Mapbox.MapView>
+        <BackButton.Transparent
+          onPress={navigation.goBack}
+          iconProps={{ color: mapTypeProps.mapTypeIconsColor }}
+        />
+        {!isOfflineMode && <MapTypeToolbar {...mapTypeProps} />}
+        {selectedPin && (
+          <A.Pressable
+            position="absolute"
+            backgroundColor={"grayscale.transparent.50.black"}
+            borderWidth={3}
+            borderColor="listItemBackground"
+            bottom="5%"
+            marginHorizontal="m"
+            padding="s"
+            borderRadius={5}
+            left={0}
+            right={0}
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+            flex={1}
+            onPress={() => {
+              rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+                screen: ClimbsNavigationRoutes.Sector,
+                params: {
+                  sectorId: selectedPin.id,
+                  sectorName: selectedPin.name,
+                  zoneId,
+                },
+              });
+            }}
+          >
+            <Box>
+              <Text variant="h3">{selectedPin.name}</Text>
+              <Text variant="p2R" color="grayscale.200">
+                {`${selectedPin.count.wall} ${
+                  selectedPin.count.wall !== 1 ? "paredes" : "pared"
+                } • ${selectedPin.count.routes} ${
+                  selectedPin.count.routes !== 1 ? "rutas" : "ruta"
+                }`}
+              </Text>
+            </Box>
+          </A.Pressable>
+        )}
+      </Screen>
+    );
+
+  return null;
 };
 
 export default ZoneMapScreen;
-
-interface CalloutProps {
-  title?: string;
-}
-
-const CalloutContent = ({ title }: CalloutProps) => (
-  <Callout style={{ backgroundColor: "transparent" }} tooltip>
-    <Box
-      flexDirection="row"
-      justifyContent="center"
-      alignItems="center"
-      backgroundColor="brand.primaryA"
-      padding="s"
-      borderRadius={16}
-      marginBottom="s"
-    >
-      <Text ellipsizeMode="tail" numberOfLines={1}>
-        {title}
-      </Text>
-    </Box>
-  </Callout>
-);

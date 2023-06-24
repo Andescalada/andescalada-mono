@@ -1,15 +1,8 @@
-import { MapView } from "@andescalada/maps";
-import {
-  Box,
-  Button,
-  MapTypeToolbar,
-  Screen,
-  Text,
-  useMapType,
-} from "@andescalada/ui";
+import { BackButton, Box, Button, Text, useMapType } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
+import MapLocationSelector from "@features/zoneManager/components/SelectLocation";
 import {
   ZoneManagerRoutes,
   ZoneManagerScreenProps,
@@ -17,18 +10,13 @@ import {
 import useLocation from "@hooks/useLocation";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC, useEffect, useRef, useState } from "react";
-import { Dimensions, Image } from "react-native";
-import MapRefType, { Details, Region } from "react-native-maps";
+import { FC, useState } from "react";
+import { Image } from "react-native";
 
 type Props = ZoneManagerScreenProps<ZoneManagerRoutes.EditZoneLocation>;
 
-const { width, height } = Dimensions.get("window");
-const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4555;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const EditZoneLocationScreen: FC<Props> = ({
   route: {
@@ -36,9 +24,11 @@ const EditZoneLocationScreen: FC<Props> = ({
   },
 }) => {
   const { location } = useLocation();
-  const mapRef = useRef<MapRefType | null>();
 
-  const [region, setRegion] = useState<Region>();
+  const [region, setRegion] = useState<{
+    latitude: number;
+    longitude: number;
+  }>();
 
   const rootNavigation = useRootNavigation();
 
@@ -66,38 +56,16 @@ const EditZoneLocationScreen: FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    if ((!latitude || !longitude) && location) {
-      mapRef.current?.animateToRegion({
-        latitude: Number(latitude) || location.coords.latitude,
-        longitude: Number(longitude) || location.coords.longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      });
-    }
-  }, [latitude, location, longitude]);
-
-  const onRegionChangeComplete = (region: Region, details: Details) => {
-    if (details.isGesture) {
-      setRegion(region);
-    }
-  };
-
   return (
-    <Screen safeAreaDisabled justifyContent={"center"} alignItems="center">
-      <MapView
-        mapType={mapTypeProps.mapType}
-        ref={(ref) => {
-          mapRef.current = ref as MapRefType | null;
-        }}
-        initialRegion={{
-          latitude: Number(latitude) || LATITUDE,
-          longitude: Number(longitude) || LONGITUDE,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-        onRegionChangeComplete={onRegionChangeComplete}
-      />
+    <MapLocationSelector
+      defaultValues={{
+        latitude: Number(latitude) || location?.coords.latitude || LATITUDE,
+        longitude: Number(longitude) || location?.coords.longitude || LONGITUDE,
+      }}
+      onChange={(coordinates) => {
+        setRegion(coordinates);
+      }}
+    >
       <Box
         position="absolute"
         bottom="50%"
@@ -120,15 +88,32 @@ const EditZoneLocationScreen: FC<Props> = ({
         left={0}
         right={0}
         margin="m"
-        justifyContent="center"
-        alignItems="center"
-        height={100}
-        borderRadius={10}
-        backgroundColor="transparentButtonBackground"
+        flex={1}
+        flexDirection="row"
       >
-        <Text variant="p1R" color={mapTypeProps.mapTypeIconsColor}>
-          Selecciona la ubicación de la zona de escalada
-        </Text>
+        <BackButton.Transparent
+          containerProps={{
+            position: "relative",
+            margin: "none",
+            marginLeft: "none",
+            top: 0,
+            marginRight: "s",
+          }}
+          onPress={rootNavigation.goBack}
+        />
+        <Box
+          flex={1}
+          justifyContent="center"
+          alignItems="center"
+          height={100}
+          padding="s"
+          borderRadius={10}
+          backgroundColor="transparentButtonBackground"
+        >
+          <Text variant="p1R" color={mapTypeProps.mapTypeIconsColor}>
+            Modifica la ubicación de la zona de escalada
+          </Text>
+        </Box>
       </Box>
 
       <Box
@@ -146,8 +131,7 @@ const EditZoneLocationScreen: FC<Props> = ({
           isLoading={editZone.isLoading}
         />
       </Box>
-      <MapTypeToolbar {...mapTypeProps} top={150} />
-    </Screen>
+    </MapLocationSelector>
   );
 };
 

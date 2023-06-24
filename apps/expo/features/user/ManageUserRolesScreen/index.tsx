@@ -1,3 +1,4 @@
+import type { RoleByZone, Zone } from "@andescalada/db";
 import { RoleNamesSchema } from "@andescalada/db/zod";
 import {
   Box,
@@ -17,7 +18,6 @@ import {
 } from "@features/user/Navigation/types";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useAppTheme } from "@hooks/useAppTheme";
-import type { RoleByZone, Zone } from "@prisma/client";
 import { Picker } from "@react-native-picker/picker";
 import { FC, useMemo, useRef, useState } from "react";
 import { Keyboard, Platform } from "react-native";

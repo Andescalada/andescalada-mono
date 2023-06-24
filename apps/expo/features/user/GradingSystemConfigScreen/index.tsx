@@ -1,13 +1,22 @@
 import user from "@andescalada/api/schemas/user";
 import { GradeSystemsSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { Box, Button, ButtonGroup, Screen, Text } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
+import {
+  ActivityIndicator,
+  Box,
+  Button,
+  ButtonGroup,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
-import useOwnInfo from "@hooks/useOwnInfo";
+import useIsConnected from "@hooks/useIsConnected";
+import useGetGradeSystemsQuery from "@local-database/hooks/useGetGradeSystemsQuery";
+import useSetUserGradingSystemMutation from "@local-database/hooks/useSetUserGradingSystemMutation";
+import sync from "@local-database/sync";
 import { ComponentProps, FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 
@@ -20,44 +29,40 @@ const GradingBox = (props: ComponentProps<typeof Box>) => (
 type Props = UserNavigationScreenProps<UserNavigationRoutes.GradingSystem>;
 
 const GradingSystemConfigScreen: FC<Props> = () => {
-  const {
-    control,
-    handleSubmit,
-    formState,
-    reset: resetForm,
-  } = useZodForm({
+  const { data } = useGetGradeSystemsQuery();
+
+  if (!data) {
+    return (
+      <Screen safeAreaDisabled justifyContent="center" alignItems="center">
+        <ActivityIndicator />
+      </Screen>
+    );
+  }
+
+  return <GradingOptions data={data} />;
+};
+
+const GradingOptions = ({
+  data,
+}: {
+  data: {
+    preferredSportGrade: typeof GradeSystemsSchema._type;
+    preferredTradGrade: typeof GradeSystemsSchema._type;
+    preferredBoulderGrade: typeof GradeSystemsSchema._type;
+  };
+}) => {
+  const { control, handleSubmit, formState } = useZodForm({
     schema: user.gradeSystem,
   });
+  const isConnected = useIsConnected();
 
-  const utils = trpc.useContext();
-
-  const {
-    mutate,
-    isSuccess,
-    isLoading,
-    reset: resetMutation,
-  } = trpc.user.editGradingSystem.useMutation({
-    onSettled: (data) => {
-      if (data) {
-        const {
-          preferredBoulderGrade,
-          preferredSportGrade,
-          preferredTradGrade,
-        } = data;
-        setTimeout(() => {
-          resetForm({
-            preferredBoulderGrade,
-            preferredSportGrade,
-            preferredTradGrade,
-          }),
-            resetMutation();
-        }, 1500);
-        utils.user.ownInfo.invalidate();
+  const { mutate, isSuccess, isLoading } = useSetUserGradingSystemMutation({
+    onSuccess() {
+      if (isConnected) {
+        sync();
       }
     },
   });
-
-  const { data } = useOwnInfo();
 
   const sport = useController({
     control,
@@ -99,10 +104,12 @@ const GradingSystemConfigScreen: FC<Props> = () => {
           allowUndefined={false}
         >
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.Yosemite}
             label="Yosemite"
           />
@@ -116,10 +123,12 @@ const GradingSystemConfigScreen: FC<Props> = () => {
           allowUndefined={false}
         >
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.Hueco}
             label="Hueco"
           />
@@ -133,10 +142,12 @@ const GradingSystemConfigScreen: FC<Props> = () => {
           allowUndefined={false}
         >
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
           <ButtonGroup.Item
+            margin="s"
             value={GradeSystemsSchema.Enum.Yosemite}
             label="Yosemite"
           />

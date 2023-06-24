@@ -1,4 +1,5 @@
 import roleNameAssets from "@andescalada/common-assets/roleNameAssets";
+import { Zone } from "@andescalada/db";
 import { RoleNamesSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,
@@ -20,7 +21,6 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRemoveZoneRole from "@hooks/useRemoveZoneRole";
-import { Zone } from "@prisma/client";
 import { useNavigation } from "@react-navigation/native";
 import { FC, useState } from "react";
 import { Alert, FlatList } from "react-native";

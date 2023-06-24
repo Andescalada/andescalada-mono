@@ -160,6 +160,7 @@ const RoutesList: FC = () => {
         contentContainerStyle={{
           justifyContent: "center",
           alignItems: "center",
+          marginTop: 100,
         }}
       >
         <Text variant="h3">Sin rutas</Text>

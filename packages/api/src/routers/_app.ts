@@ -5,6 +5,7 @@ import { notificationsRouter } from "@andescalada/api/src/routers/notifications"
 import { routesRouter } from "@andescalada/api/src/routers/routes";
 import { searchRouter } from "@andescalada/api/src/routers/search";
 import { sectorsRouter } from "@andescalada/api/src/routers/sectors";
+import { syncRouter } from "@andescalada/api/src/routers/sync";
 import { systemRouter } from "@andescalada/api/src/routers/system";
 import { toposRouter } from "@andescalada/api/src/routers/topos";
 import { userRouter } from "@andescalada/api/src/routers/user";
@@ -30,6 +31,7 @@ export const appRouter = t.router({
   images: imagesRouter,
   multiPitch: multiPitchRouter,
   system: systemRouter,
+  sync: syncRouter,
 });
 
 export type AppRouter = typeof appRouter;

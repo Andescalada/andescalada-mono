@@ -1,11 +1,12 @@
 import { StatusSchema } from "@andescalada/db/zod";
-import { Colors } from "@andescalada/ui";
+import { Colors, IoniconsNames } from "@andescalada/ui";
 
 const zoneStatus = (
   status: typeof StatusSchema._type,
 ): {
   label: string;
   color: Colors;
+  icon: IoniconsNames;
   backgroundColor: Colors;
   about?: string;
   nextStepTitle?: string;
@@ -15,6 +16,7 @@ const zoneStatus = (
       return {
         label: "No publicada",
         color: "grayscale.black",
+        icon: "alert-outline",
         backgroundColor: "semantic.warning",
         nextStepTitle: "Solicitar revisión",
         about:
@@ -24,6 +26,7 @@ const zoneStatus = (
       return {
         label: "Publicada",
         color: "grayscale.white",
+        icon: "checkmark-done-outline",
         backgroundColor: "semantic.info",
         nextStepTitle: "Pausar publicación",
         about:
@@ -33,6 +36,7 @@ const zoneStatus = (
       return {
         label: "Aprobada",
         color: "grayscale.white",
+        icon: "checkmark-outline",
         backgroundColor: "semantic.success",
         nextStepTitle: "Publicar",
         about:
@@ -42,6 +46,7 @@ const zoneStatus = (
       return {
         label: "Rechazada",
         color: "grayscale.white",
+        icon: "close-outline",
         backgroundColor: "semantic.error",
         nextStepTitle: "Solicitar revisión",
         about:
@@ -51,6 +56,7 @@ const zoneStatus = (
       return {
         label: "Pausada",
         color: "grayscale.white",
+        icon: "pause-outline",
         backgroundColor: "grayscale.600",
         nextStepTitle: "Publicar",
         about:
@@ -60,6 +66,7 @@ const zoneStatus = (
       return {
         label: "En revisión",
         color: "grayscale.white",
+        icon: "file-tray-full-outline",
         backgroundColor: "brand.primaryA",
         nextStepTitle: "Re solicitar revisión",
         about:

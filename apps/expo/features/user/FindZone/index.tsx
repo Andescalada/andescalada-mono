@@ -1,4 +1,5 @@
 import zone from "@andescalada/api/schemas/zone";
+import { Zone } from "@andescalada/db";
 import {
   ActivityIndicator,
   Box,
@@ -11,7 +12,6 @@ import { pallete } from "@andescalada/ui/Theme/pallete";
 import { trpc } from "@andescalada/utils/trpc";
 import BottomSheet from "@gorhom/bottom-sheet";
 import useDebounce from "@hooks/useDebounce";
-import { Zone } from "@prisma/client";
 import {
   forwardRef,
   ForwardRefRenderFunction,

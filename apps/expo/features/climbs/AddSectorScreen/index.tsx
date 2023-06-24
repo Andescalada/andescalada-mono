@@ -18,6 +18,9 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import conditionalVars from "@utils/conditionalVars";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { FC, useMemo } from "react";
@@ -41,14 +44,26 @@ const AddSectorScreen: FC<Props> = ({
   }, [sectorId]);
 
   const utils = trpc.useContext();
+
+  const rootNavigation = useRootNavigation();
+
   const { mutate, isLoading } = trpc.sectors.add.useMutation({
     onSuccess: (data, params) => {
       if (sectorId) utils.sectors.allWalls.invalidate({ sectorId });
       utils.zones.allSectors.invalidate({ zoneId });
-      navigation.replace(ClimbsNavigationRoutes.Sector, {
-        sectorId: data.id,
-        sectorName: data.name,
-        zoneId: params.zoneId,
+      const zoneCoordinates = data.Zone.Location;
+      utils.zones.location.prefetch({ zoneId });
+      rootNavigation.replace(RootNavigationRoutes.ZoneManager, {
+        screen: ZoneManagerRoutes.AddOrEditSectorLocation,
+        params: {
+          sectorId: data.id,
+          sectorName: data.name,
+          zoneId: params.zoneId,
+          ...(zoneCoordinates && {
+            latitude: zoneCoordinates.latitude,
+            longitude: zoneCoordinates.longitude,
+          }),
+        },
       });
     },
   });
@@ -124,6 +139,7 @@ const AddSectorScreen: FC<Props> = ({
           <Box flexDirection="row" flexWrap="wrap">
             {SectorKindSchema.options.map((kind) => (
               <ButtonGroup.Item
+                margin="s"
                 key={kind}
                 value={kind}
                 label={sectorKindAssets[kind].label}
@@ -153,6 +169,7 @@ const AddSectorScreen: FC<Props> = ({
         )}
         <Button
           variant="primary"
+          minHeight={50}
           title={text.button}
           onPress={onSubmit}
           isLoading={isLoading}

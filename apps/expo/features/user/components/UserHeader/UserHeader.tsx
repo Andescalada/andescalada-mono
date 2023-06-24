@@ -67,7 +67,7 @@ const UserHeader = () => {
       Configuración: {
         action: () =>
           rootNavigation.navigate(RootNavigationRoutes.User, {
-            screen: UserNavigationRoutes.OwnUserConfig,
+            screen: UserNavigationRoutes.Settings,
           }),
       },
       "Administrador de zonas": {

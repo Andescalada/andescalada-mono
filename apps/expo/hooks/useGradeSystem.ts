@@ -2,9 +2,9 @@ import {
   gradeUnits,
   gradeUnitsByRouteKind,
 } from "@andescalada/common-assets/climbingGrades";
+import { RouteGrade } from "@andescalada/db";
 import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
-import useOwnInfo from "@hooks/useOwnInfo";
-import { RouteGrade } from "@prisma/client";
+import useGetGradeSystemsQuery from "@local-database/hooks/useGetGradeSystemsQuery";
 import { useCallback, useEffect, useState } from "react";
 
 const addOneWrap = (n: number, value: number) => (value + 1) % (n + 1);
@@ -26,7 +26,7 @@ const gradeSystemSelector = (
 };
 
 const useGradeSystem = (kind?: typeof RouteKindSchema._type) => {
-  const { data } = useOwnInfo();
+  const { data } = useGetGradeSystemsQuery();
 
   const [plus, setPlus] = useState(0);
 

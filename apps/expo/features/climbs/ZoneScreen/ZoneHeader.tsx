@@ -62,41 +62,41 @@ const ZoneHeader = () => {
   );
   const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
 
+  const showPublicationStatus =
+    permission?.has("Update") ||
+    globalPermissions.includes(GlobalPermissions.REVIEW_ZONE);
+
   if (!data) return <Box />;
 
   return (
     <A.Box entering={FadeIn} exiting={FadeOut}>
-      {(permission?.has("Update") ||
-        globalPermissions.includes(GlobalPermissions.REVIEW_ZONE)) && (
-        <Pressable
-          marginBottom="s"
-          padding="s"
-          backgroundColor={zoneStatus(data.currentStatus).backgroundColor}
-          borderRadius={16}
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-          onPress={() =>
-            rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
-              screen: ZoneManagerRoutes.EditZoneStatus,
-              params: { zoneId, zoneName },
-            })
-          }
-        >
-          <Text color={zoneStatus(data.currentStatus).color}>
-            {zoneStatus(data.currentStatus).label}
-          </Text>
-          <Ionicons
-            name="information"
-            size={20}
-            color={zoneStatus(data.currentStatus).color}
-          />
-        </Pressable>
-      )}
       <ZoneDescription description={data.description?.originalText} />
       {data.hasAccess && (
         <Box>
           <Box flexDirection="row" marginBottom="l">
+            {showPublicationStatus && (
+              <Pressable
+                width={60}
+                height={60}
+                justifyContent="center"
+                alignItems="center"
+                borderRadius={30}
+                marginRight="xs"
+                backgroundColor={zoneStatus(data.currentStatus).backgroundColor}
+                onPress={() =>
+                  rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+                    screen: ZoneManagerRoutes.EditZoneStatus,
+                    params: { zoneId, zoneName },
+                  })
+                }
+              >
+                <Ionicons
+                  name={zoneStatus(data.currentStatus).icon}
+                  size={30}
+                  color={zoneStatus(data.currentStatus).color}
+                />
+              </Pressable>
+            )}
             <StoryButton
               title="Acuerdos"
               iconName="shake-hands"

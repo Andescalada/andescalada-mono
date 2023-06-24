@@ -2,8 +2,8 @@ import CreateZoneScreen from "@features/user/CreateZoneScreen";
 import GradingSystemConfigScreen from "@features/user/GradingSystemConfigScreen";
 import ManageUserRolesScreen from "@features/user/ManageUserRolesScreen";
 import NotificationsScreen from "@features/user/NotificationsScreen";
-import OwnUserConfigScreen from "@features/user/OwnUserConfigScreen";
 import PersonalInfoConfigScreen from "@features/user/PersonalInfoConfigScreen";
+import SettingsScreen from "@features/user/SettingsScreen";
 import ZoneReviewManagerScreen from "@features/user/ZoneReviewManagerScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import backHeader from "@utils/navigationBackHeader";
@@ -20,8 +20,8 @@ const Navigator = () => {
       }}
     >
       <Stack.Screen
-        name={UserNavigationRoutes.OwnUserConfig}
-        component={OwnUserConfigScreen}
+        name={UserNavigationRoutes.Settings}
+        component={SettingsScreen}
         options={{ title: "Configuración" }}
       />
       <Stack.Screen

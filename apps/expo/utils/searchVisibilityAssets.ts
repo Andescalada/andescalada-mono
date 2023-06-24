@@ -2,12 +2,12 @@ import { SearchVisibilitySchema } from "@andescalada/db/zod";
 
 const searchVisibilityAssets = {
   [SearchVisibilitySchema.enum.Listed]: {
-    label: "Listada",
+    label: "Visible",
     description:
       "Recomendada: La zona aparecerá en las búsquedas y listas públicas.",
   },
   [SearchVisibilitySchema.enum.Unlisted]: {
-    label: "Sin listar",
+    label: "Oculta",
     description:
       "No recomendada: La zona no aparecerá en las búsquedas y listas públicas, solo podrá ser compartida por enlace.",
   },

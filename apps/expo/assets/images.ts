@@ -9,6 +9,11 @@ export const images = {
     height: 60,
     width: 30,
   },
+  markerOrange: {
+    file: require("./custom_marker_orange.png"),
+    height: 60,
+    width: 30,
+  },
   markerLarge: {
     file: require("./custom_marker_purple_orange_large.png"),
     height: 121,

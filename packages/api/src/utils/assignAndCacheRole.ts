@@ -1,7 +1,7 @@
 import { Context } from "@andescalada/api/src/createContext";
 import error from "@andescalada/api/src/utils/errors";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
-import { RoleNames } from "@prisma/client";
+import { RoleNames } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const assignAndCacheRole = async (
@@ -21,7 +21,11 @@ const assignAndCacheRole = async (
   const roleExist = await ctx.prisma.roleByZone.findMany({
     where: {
       User: {
-        OR: { username: input.username, email: input.email, id: input.userId },
+        OR: [
+          { username: input.username },
+          { email: input.email },
+          { id: input.userId },
+        ],
       },
       Zone: { id: input.zoneId },
       Role: { name: input.role },

@@ -1,7 +1,7 @@
+import type { Zone } from "@andescalada/db";
 import { downloadedZonesAtom } from "@atoms/index";
 import useDeleteAssetsFromDb from "@hooks/useDeleteAsstesFromDb";
 import useSetAssetsToDb from "@hooks/useSetAssetsToDb";
-import type { Zone } from "@prisma/client";
 import { useAtom } from "jotai";
 import { useMemo } from "react";
 import { Alert } from "react-native";
@@ -9,7 +9,7 @@ import { Alert } from "react-native";
 const useDownloadedButton = (zoneId: Zone["id"], zoneName: Zone["name"]) => {
   const [downloadedZones] = useAtom(downloadedZonesAtom);
 
-  const { setAssetsToDb, isLoading: isDownloading } = useSetAssetsToDb();
+  const { setZoneAssetsToDb, isLoading: isDownloading } = useSetAssetsToDb();
 
   const isDownloaded = useMemo(
     () => !!downloadedZones[zoneId],
@@ -24,7 +24,7 @@ const useDownloadedButton = (zoneId: Zone["id"], zoneName: Zone["name"]) => {
       return;
     }
     if (!isDownloaded) {
-      await setAssetsToDb({ zoneId, zoneName });
+      await setZoneAssetsToDb({ zoneId, zoneName });
     } else {
       Alert.alert("Borrar de descargas", "¿Estás seguro?", [
         {

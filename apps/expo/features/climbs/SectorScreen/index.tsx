@@ -13,18 +13,30 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useSectorsAllWalls from "@hooks/offlineQueries/useSectorsAllWalls";
+import useIsConnected from "@hooks/useIsConnected";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Alert, FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Sector>;
 
 const SectorScreen: FC<Props> = ({ route, navigation }) => {
   const utils = trpc.useContext();
+
+  const isConnected = useIsConnected();
+
+  useEffect(() => {
+    if (isConnected) {
+      utils.zones.location.prefetch({ zoneId: route.params.zoneId });
+    }
+  }, [isConnected, route.params.zoneId, utils.zones.location]);
 
   const { sectorId, zoneId } = route.params;
 
@@ -50,6 +62,8 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
 
   const { permission } = usePermissions({ zoneId });
 
+  const rootNavigation = useRootNavigation();
+
   const onOptions = useOptionsSheet(
     {
       [data ? sectorKindAssets[data.sectorKind].add : "Agregar"]: {
@@ -72,6 +86,25 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
                 zoneId,
                 sectorKind: data.sectorKind,
                 name: data.name,
+              })
+            : null,
+      },
+      "Editar ubicación": {
+        hide: !permission.has("Update"),
+        action: () =>
+          data
+            ? rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+                screen: ZoneManagerRoutes.AddOrEditSectorLocation,
+                params: {
+                  sectorId,
+                  zoneId,
+                  isEdit: true,
+                  sectorName: data.name,
+                  ...(data.Location && {
+                    latitude: data.Location.latitude,
+                    longitude: data.Location.longitude,
+                  }),
+                },
               })
             : null,
       },
@@ -99,7 +132,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         },
       },
     },
-    { destructiveButtonIndex: 2 },
+    { destructiveButtonIndex: 3 },
   );
 
   if (isLoading && !data)
@@ -136,12 +169,17 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
     <Screen padding="m">
       <Header
         title={route.params.sectorName}
-        onGoBack={() =>
-          navigation.navigate(ClimbsNavigationRoutes.Zone, {
+        onGoBack={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+            return;
+          }
+
+          navigation.replace(ClimbsNavigationRoutes.Zone, {
             zoneId,
             zoneName: data?.Zone.name,
-          })
-        }
+          });
+        }}
         onOptions={onOptions}
         marginBottom="m"
       />

@@ -1,4 +1,4 @@
-import { Entity, EntityTypeId } from "@prisma/client";
+import { Entity, EntityTypeId } from "@andescalada/db";
 
 type supportedLanguages = "en" | "es";
 

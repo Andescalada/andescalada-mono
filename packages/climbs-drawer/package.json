@@ -11,7 +11,7 @@
   },
   "peerDependencies": {
     "@shopify/restyle": "*",
-    "@shopify/react-native-skia": "0.1.185",
+    "@shopify/react-native-skia": "0.1.195",
     "react-native-redash": "*",
     "@openspacelabs/react-native-zoomable-view": "*",
     "react-native-reanimated": "2.14.4"
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@shopify/restyle": "*",
     "react-native-redash": "*",
-    "@shopify/react-native-skia": "0.1.185",
+    "@shopify/react-native-skia": "0.1.195",
     "@types/react-native": "*"
   }
 }

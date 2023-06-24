@@ -29,7 +29,9 @@
     ],
     "nohoist": [
       "**/@shopify/react-native-skia/**",
-      "**/@shopify/react-native-skia"
+      "**/@shopify/react-native-skia",
+      "**/@nozbe/watermelondb/**",
+      "**/@nozbe/watermelondb"
     ]
   },
   "prisma": {
@@ -37,8 +39,8 @@
     "seed": "ts-node packages/db/prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.13.0",
     "@tanstack/react-query": "^4.3.9",
+    "@prisma/client": "^4.16.1",
     "@trpc/client": "10.23.1",
     "@trpc/next": "10.23.1",
     "@trpc/react-query": "10.23.1",
@@ -66,7 +68,6 @@
     "eslint-plugin-react-hooks": "^4 || ^3 || ^2.3.0 || ^1.7.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
     "prettier": "^2.4.0",
-    "prisma": "^4.13.0",
     "prisma-enum-generator": "^1.0.3",
     "prisma-erd-generator": "^1.2.4",
     "superjson": "^1.10.0",

@@ -6,7 +6,7 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
-import { InfoAccess, RequestStatus, RoleNames } from "@prisma/client";
+import { InfoAccess, RequestStatus, RoleNames } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

@@ -1,5 +1,5 @@
 import { t } from "@andescalada/api/src/createRouter";
-import { InfoAccess, SoftDelete } from "@prisma/client";
+import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 
 const publicById = t.procedure

@@ -1,4 +1,5 @@
 import AddNewZoneScreen from "@features/zoneManager/AddNewZoneScreen";
+import AddOrEditSectorLocationScreen from "@features/zoneManager/AddOrEditSectorLocationScreen";
 import EditZoneLocationScreen from "@features/zoneManager/EditZoneLocationScreen";
 import EditZoneScreen from "@features/zoneManager/EditZoneScreen";
 import EditZoneStatusScreen from "@features/zoneManager/EditZoneStatusScreen";
@@ -65,10 +66,10 @@ const Navigator = () => {
       <Stack.Screen
         name={ZoneManagerRoutes.EditZoneLocation}
         component={EditZoneLocationScreen}
-        options={{
-          title: "Tus zonas",
-          ...backHeader,
-        }}
+      />
+      <Stack.Screen
+        name={ZoneManagerRoutes.AddOrEditSectorLocation}
+        component={AddOrEditSectorLocationScreen}
       />
     </Stack.Navigator>
   );

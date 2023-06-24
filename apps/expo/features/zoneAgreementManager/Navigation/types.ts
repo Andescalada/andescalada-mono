@@ -1,5 +1,5 @@
+import type { Zone, ZoneAgreement } from "@andescalada/db";
 import { ClassicAgreementSchema } from "@andescalada/db/zod";
-import type { Zone, ZoneAgreement } from "@prisma/client";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 

@@ -1,5 +1,5 @@
 import { t } from "@andescalada/api/src/createRouter";
-import { InfoAccess, SoftDelete, Status } from "@prisma/client";
+import { InfoAccess, SoftDelete, Status } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -34,10 +34,10 @@ const publicWallById = t.procedure
             image: true,
             RoutePath: {
               where: {
-                OR: {
-                  isDeleted: SoftDelete.NotDeleted,
-                  Route: { isDeleted: SoftDelete.NotDeleted },
-                },
+                OR: [
+                  { isDeleted: SoftDelete.NotDeleted },
+                  { Route: { isDeleted: SoftDelete.NotDeleted } },
+                ],
               },
               include: {
                 Route: {

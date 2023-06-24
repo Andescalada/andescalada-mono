@@ -121,10 +121,12 @@ const GradingSystemConfigScreen: FC<Props> = () => {
                 allowUndefined={false}
               >
                 <ButtonGroup.Item
+                  margin="s"
                   value={GradeSystemsSchema.Enum.French}
                   label="Francesa"
                 />
                 <ButtonGroup.Item
+                  margin="s"
                   value={GradeSystemsSchema.Enum.Yosemite}
                   label="Yosemite"
                 />
@@ -138,10 +140,12 @@ const GradingSystemConfigScreen: FC<Props> = () => {
                 allowUndefined={false}
               >
                 <ButtonGroup.Item
+                  margin="s"
                   value={GradeSystemsSchema.Enum.French}
                   label="Francesa"
                 />
                 <ButtonGroup.Item
+                  margin="s"
                   value={GradeSystemsSchema.Enum.Hueco}
                   label="Hueco"
                 />
@@ -155,10 +159,12 @@ const GradingSystemConfigScreen: FC<Props> = () => {
                 allowUndefined={false}
               >
                 <ButtonGroup.Item
+                  margin="s"
                   value={GradeSystemsSchema.Enum.French}
                   label="Francesa"
                 />
                 <ButtonGroup.Item
+                  margin="s"
                   value={GradeSystemsSchema.Enum.Yosemite}
                   label="Yosemite"
                 />

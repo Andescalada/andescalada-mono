@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.6.1",
+    "version": "1.7.0",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
@@ -21,6 +21,7 @@
       "**/*"
     ],
     "ios": {
+      "jsEngine": "jsc",
       "supportsTablet": true,
       "bundleIdentifier": "com.andescalada.app",
       "associatedDomains": ["applinks:andescalada.org", "applinks:www.andescalada.org"],
@@ -93,6 +94,12 @@
     },
     "plugins": [
       [
+        "@morrowdigital/watermelondb-expo-plugin",
+        {
+          "databases": ["userAssets.db"]
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "La app accede a tus fotos para que subas topos y fotos de las rutas",
@@ -105,6 +112,9 @@
         {
           "ios": {
             "flipper": true
+          },
+          "android": {
+            "kotlinVersion": "1.6.10"
           }
         }
       ],

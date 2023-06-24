@@ -4,6 +4,8 @@ import { ComponentProps, FC } from "react";
 
 import { Colors, Theme } from "../Theme/Theme";
 
+export type IoniconsNames = ComponentProps<typeof ExpoIonicons>["name"];
+
 interface Props extends Omit<ComponentProps<typeof ExpoIonicons>, "color"> {
   color?: Colors;
 }

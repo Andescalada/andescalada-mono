@@ -106,25 +106,20 @@ const AddMultiPitchScreen: FC<Props> = ({
 
   const rootNavigation = useRootNavigation();
 
-  const mainTopo = trpc.walls.mainTopo.useQuery({
-    zoneId,
-    wallId,
-  });
-
   const utils = trpc.useContext();
 
   const { mutate, isLoading } = trpc.multiPitch.add.useMutation({
-    onSuccess: ({ id, name }) => {
+    onSuccess: ({ id, name, mainTopoId }) => {
       utils.walls.invalidate();
       utils.multiPitch.invalidate();
-      if (!mainTopo.data) return;
+      if (!mainTopoId) return;
       rootNavigation.replace(RootNavigationRoutes.MultiPitchManager, {
         screen: MultiPitchManagerRoutes.MultiPitchManager,
         params: {
           multiPitchId: id,
           multiPitchName: name,
           zoneId,
-          topoId: mainTopo.data,
+          topoId: mainTopoId,
           wallId,
         },
       });
@@ -215,6 +210,7 @@ const AddMultiPitchScreen: FC<Props> = ({
         <Box>
           <Button
             variant="primary"
+            minHeight={50}
             title={text.buttonTitle}
             onPress={onSubmit}
             isLoading={isLoading}

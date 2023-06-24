@@ -1,6 +1,8 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
       "react": [ "../../node_modules/@types/react" ],
@@ -11,7 +13,8 @@
       "@store/*": ["./store/*"],
       "@hooks/*": ["./hooks/*"],
       "@templates/*": ["./templates/*"],
-      "@atoms/*": ["./atoms/*"]
+      "@atoms/*": ["./atoms/*"],
+      "@local-database/*": ["./local-database/*"],
     },
     "strict": true
   },

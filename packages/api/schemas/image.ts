@@ -1,4 +1,4 @@
-// import { StorageService } from "@prisma/client";
+// import { StorageService } from "@andescalada/db";
 import { z } from "zod";
 
 export enum StorageService {

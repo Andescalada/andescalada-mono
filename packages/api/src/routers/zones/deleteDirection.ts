@@ -1,5 +1,5 @@
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 
 const deleteDirection = protectedZoneProcedure
@@ -8,6 +8,11 @@ const deleteDirection = protectedZoneProcedure
     const zone = await ctx.prisma.zoneDirections.update({
       where: { id: input.zoneDirectionId },
       data: { isDeleted: SoftDelete.DeletedPublic },
+    });
+
+    await ctx.prisma.zone.update({
+      where: { id: zone.zoneId },
+      data: { version: { increment: 1 } },
     });
     return zone;
   });

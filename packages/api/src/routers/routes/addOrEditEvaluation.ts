@@ -5,7 +5,12 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 const addOrEditEvaluation = protectedProcedure
-  .input(route.routeId.extend({ evaluation: z.number().min(0).max(5) }))
+  .input(
+    route.routeId.extend({
+      evaluation: z.number().min(0).max(5),
+      id: z.string().uuid().optional(),
+    }),
+  )
   .mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({
       where: { email: ctx.user.email },
@@ -22,6 +27,7 @@ const addOrEditEvaluation = protectedProcedure
     if (!user.RouteEvaluation.length) {
       return ctx.prisma.routeEvaluation.create({
         data: {
+          ...(input.id && { id: input.id }),
           routeId: input.routeId,
           userId: user.id,
           evaluation: input.evaluation,

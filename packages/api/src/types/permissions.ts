@@ -1,4 +1,4 @@
-import { PermissionActions } from "@prisma/client";
+import { PermissionActions } from "@andescalada/db";
 import { SuperJSONResult } from "superjson/src/types";
 
 export type Access = SuperJSONResult;

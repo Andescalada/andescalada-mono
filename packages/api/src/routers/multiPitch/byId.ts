@@ -1,7 +1,7 @@
 import multiPitch from "@andescalada/api/schemas/multiPitch";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { InfoAccess, SoftDelete } from "@prisma/client";
+import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const byId = protectedZoneProcedure
@@ -22,15 +22,7 @@ const byId = protectedZoneProcedure
 
     const multiPitch = await ctx.prisma.multiPitch.findUnique({
       where: { id: input.multiPitchId },
-      include: {
-        Pitches: {
-          where: { isDeleted: SoftDelete.NotDeleted },
-          orderBy: { number: "asc" },
-          include: {
-            Route: { include: { RouteGrade: true } },
-          },
-        },
-      },
+      include: includeInMultiPitch,
     });
 
     if (!multiPitch)
@@ -40,3 +32,13 @@ const byId = protectedZoneProcedure
   });
 
 export default byId;
+
+export const includeInMultiPitch = {
+  Pitches: {
+    where: { isDeleted: SoftDelete.NotDeleted },
+    orderBy: { number: "asc" as const },
+    include: {
+      Route: { include: { RouteGrade: true } },
+    },
+  },
+};

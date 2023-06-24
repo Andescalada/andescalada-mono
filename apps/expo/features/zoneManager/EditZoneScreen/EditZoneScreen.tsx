@@ -83,6 +83,7 @@ const EditZoneScreen: FC<Props> = ({ navigation, route: { params } }) => {
                 <Box flexDirection="row">
                   {InfoAccessSchema.options.map((access) => (
                     <ButtonGroup.Item
+                      margin="s"
                       key={access}
                       label={infoAccessAssets[access].label}
                       value={access}
@@ -138,6 +139,7 @@ const EditZoneScreen: FC<Props> = ({ navigation, route: { params } }) => {
                 <Box flexDirection="row">
                   {SearchVisibilitySchema.options.map((access) => (
                     <ButtonGroup.Item
+                      margin="s"
                       key={access}
                       label={searchVisibilityAssets[access].label}
                       value={access}

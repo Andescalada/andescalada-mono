@@ -9,7 +9,7 @@ import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRec
 import updateZoneStatus from "@andescalada/api/src/utils/updateZoneStatus";
 import Auth0Roles from "@andescalada/common-assets/Auth0Roles";
 import { StatusSchema } from "@andescalada/db/zod";
-import { Status } from "@prisma/client";
+import { Status } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

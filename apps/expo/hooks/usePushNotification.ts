@@ -45,7 +45,7 @@ const usePushNotification = () => {
 
   useEffect(() => {
     if (lastNotificationResponse) {
-      console.log(
+      console.info(
         lastNotificationResponse.notification.request.content.title,
         "lastNotification",
       );

@@ -3,12 +3,12 @@ import {
   DEFAULT_POSITION,
   pointToVector,
 } from "@andescalada/climbs-drawer/utils";
+import type { Route, RoutePath, Topo, Wall, Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import type { Route, RoutePath, Topo, Wall, Zone } from "@prisma/client";
 import { SkPoint, useValue } from "@shopify/react-native-skia";
 import { useRef, useState } from "react";
 
@@ -55,30 +55,7 @@ const useRouteDrawer = ({
     setDisableMovement((prev) => !prev);
   };
 
-  const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation({
-    onSuccess: () => {
-      utils.topos.byId.invalidate({ topoId, zoneId });
-      utils.walls.byId.invalidate({ wallId, zoneId });
-      setTimeout(() => {
-        if (data) {
-          if (navigateOnSuccess) {
-            navigateOnSuccess();
-          } else {
-            rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-              screen: ClimbsNavigationRoutes.Wall,
-              params: {
-                wallId,
-                wallName: data.name,
-                sectorId: data.sectorId,
-                zoneId: data.Sector.zoneId,
-                sectorKind: data.Sector.sectorKind,
-              },
-            });
-          }
-        }
-      }, 500);
-    },
-  });
+  const { mutate, isLoading } = trpc.routes.updateOrCreatePath.useMutation();
 
   const utils = trpc.useContext();
 
@@ -104,7 +81,9 @@ const useRouteDrawer = ({
 
   const rootNavigation = useRootNavigation();
 
-  const onFinishOrSave = () => {
+  const onFinishOrSave = (
+    { addNewRoute }: { addNewRoute: boolean } = { addNewRoute: false },
+  ) => {
     if (!canSave) {
       routeRef?.current?.finishRoute();
       if (withLabel && movement.current === DEFAULT_POSITION) {
@@ -138,20 +117,55 @@ const useRouteDrawer = ({
         movement.current !== DEFAULT_POSITION
           ? `${movement.current.x / scale},${movement.current.y / scale}`
           : undefined;
-
-      mutate({
-        path: route.path,
-        routeId: route.id,
-        topoId,
-        routePathId,
-        pitchLabelPoint,
-        hideStart,
-      });
       modifyStrokeWidth.mutate({
         zoneId,
         topoId,
         routeStrokeWidth,
       });
+      mutate(
+        {
+          path: route.path,
+          routeId: route.id,
+          topoId,
+          routePathId,
+          pitchLabelPoint,
+          hideStart,
+        },
+        {
+          onSuccess: () => {
+            utils.topos.byId.invalidate({ topoId, zoneId });
+            utils.walls.byId.invalidate({ wallId, zoneId });
+            setTimeout(() => {
+              if (data) {
+                if (navigateOnSuccess) {
+                  navigateOnSuccess();
+                } else {
+                  if (addNewRoute) {
+                    rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+                      screen: ClimbsNavigationRoutes.AddRoute,
+                      params: {
+                        wallId,
+                        zoneId,
+                      },
+                    });
+                    return;
+                  }
+                  rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+                    screen: ClimbsNavigationRoutes.Wall,
+                    params: {
+                      wallId,
+                      wallName: data.name,
+                      sectorId: data.sectorId,
+                      zoneId: data.Sector.zoneId,
+                      sectorKind: data.Sector.sectorKind,
+                    },
+                  });
+                }
+              }
+            }, 500);
+          },
+        },
+      );
     }
   };
 

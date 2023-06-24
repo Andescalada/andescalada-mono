@@ -1,38 +1,52 @@
+import { RouteKindSchema } from "@andescalada/db/zod";
 import useGradeSystem from "@hooks/useGradeSystem";
 import { FC, useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 
-import { RouteKindSchema } from "../../../../../packages/db/zod/enums/RouteKind";
-
 interface Props {
   routeKind: typeof RouteKindSchema._type;
+  routeGrade: number | null;
   value: number;
   onChange?: (v: { value: number; label: string }) => void;
 }
 
-const VotingGradePicker: FC<Props> = ({ routeKind, value, onChange }) => {
+const VotingGradePicker: FC<Props> = ({
+  routeKind,
+  value,
+  onChange,
+  routeGrade,
+}) => {
   const { allGrades, gradeSystem } = useGradeSystem(routeKind);
   const [open, setOpen] = useState(false);
   const [stringValue, setValue] = useState(String(value));
   const [items, setItems] = useState([{ label: "", value: "" }]);
 
   useEffect(() => {
-    setItems(() => {
-      const currentGradeIndex = allGrades.findIndex((grade) => grade === value);
+    if (!routeGrade) {
+      const gradesToShow = allGrades.map((grade) => ({
+        label: gradeSystem(grade, routeKind),
+        value: String(grade),
+      }));
+      setItems(gradesToShow);
+      return;
+    }
 
-      const upperBound = Math.min(currentGradeIndex + 2, allGrades.length - 1);
-      const lowerBound = Math.max(currentGradeIndex - 2, 0);
+    const currentGradeIndex = allGrades.findIndex(
+      (grade) => grade === routeGrade,
+    );
 
-      const gradesToShow = allGrades
-        .slice(lowerBound, upperBound + 1)
-        .map((grade) => ({
-          label: gradeSystem(grade, routeKind),
-          value: String(grade),
-        }));
+    const upperBound = Math.min(currentGradeIndex + 2, allGrades.length - 1);
+    const lowerBound = Math.max(currentGradeIndex - 2, 0);
 
-      return gradesToShow;
-    });
-  }, [allGrades, gradeSystem, routeKind, value]);
+    const gradesToShow = allGrades
+      .slice(lowerBound, upperBound + 1)
+      .map((grade) => ({
+        label: gradeSystem(grade, routeKind),
+        value: String(grade),
+      }));
+
+    setItems(gradesToShow);
+  }, [allGrades, gradeSystem, routeGrade, routeKind, value]);
 
   return (
     <DropDownPicker

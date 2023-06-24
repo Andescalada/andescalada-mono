@@ -16,6 +16,9 @@ const Env = {
   CLOUDINARY_API_KEY: (__DEV__
     ? process.env.CLOUDINARY_API_KEY
     : Constants?.expoConfig?.extra?.CLOUDINARY_API_KEY) as string,
+  MAPBOX_ACCESS_TOKEN: (__DEV__
+    ? process.env.MAPBOX_ACCESS_TOKEN_DEV
+    : Constants?.expoConfig?.extra?.MAPBOX_ACCESS_TOKEN) as string,
 };
 
 export default Env;

@@ -1,4 +1,4 @@
-import { RoleNames } from "@prisma/client";
+import { RoleNames } from "@andescalada/db";
 
 type Z<T> = {
   [key in RoleNames]: T[];

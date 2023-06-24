@@ -1,7 +1,7 @@
 import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const addDirection = protectedZoneProcedure
@@ -41,7 +41,7 @@ const addDirection = protectedZoneProcedure
       );
     }
 
-    return ctx.prisma.zoneDirections.upsert({
+    const directions = await ctx.prisma.zoneDirections.upsert({
       where: {
         ZoneTransportationModeUnique: {
           transportationMode: input.transportationMode,
@@ -97,6 +97,13 @@ const addDirection = protectedZoneProcedure
         },
       },
     });
+
+    await ctx.prisma.zone.update({
+      where: { id: input.zoneId },
+      data: { version: { increment: 1 } },
+    });
+
+    return directions;
   });
 
 export default addDirection;

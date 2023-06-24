@@ -34,6 +34,7 @@ const TopoImage: FC = () => {
   });
 
   const { uri, isLoading } = useCachedImage(image);
+
   const { width: screenWidth } = useWindowDimensions();
 
   const rootNavigation = useRootNavigation();
@@ -80,10 +81,13 @@ const TopoImage: FC = () => {
           ) : (
             <>
               <Image
-                position="absolute"
+                cachePolicy="none"
+                style={{
+                  position: "absolute",
+                  height: 200,
+                  width: screenWidth,
+                }}
                 source={uri}
-                height={200}
-                width={screenWidth}
               />
               <Box
                 py="s"

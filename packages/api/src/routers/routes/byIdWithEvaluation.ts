@@ -1,7 +1,7 @@
 import route from "@andescalada/api/schemas/route";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { InfoAccess } from "@prisma/client";
+import { InfoAccess } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const byIdWithEvaluation = protectedZoneProcedure

@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex"]
 }
 
 generator zod {
@@ -398,9 +398,12 @@ model Sector {
   isDeleted  SoftDelete @default(NotDeleted)
   version    Int        @default(0)
   sectorKind SectorKind @default(Wall)
+  Location   Location?  @relation(fields: [locationId], references: [id])
+  locationId String?
 
   @@index([zoneId])
   @@index([authorId])
+  @@index([locationId])
 }
 
 enum SectorKind {
@@ -606,14 +609,15 @@ model RoutePath {
 }
 
 model RouteEvaluation {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  evaluation Decimal  @db.Decimal(3, 2)
-  Route      Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  id         String     @id @default(uuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  evaluation Decimal    @db.Decimal(3, 2)
+  Route      Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
   routeId    String
-  User       User     @relation(fields: [userId], references: [id])
+  User       User       @relation(fields: [userId], references: [id])
   userId     String
+  isDeleted  SoftDelete @default(NotDeleted)
 
   @@unique([routeId, userId], name: "user_route_unique")
   @@index([routeId])
@@ -631,6 +635,7 @@ model RouteGradeEvaluation {
   routeId             String
   User                User         @relation(fields: [userId], references: [id])
   userId              String
+  isDeleted           SoftDelete   @default(NotDeleted)
 
   @@unique([routeId, userId], name: "user_route_grade_unique")
   @@index([routeId])
@@ -744,6 +749,7 @@ model Location {
   note      String?    @db.LongText
   radius    Decimal?
   Zone      Zone[]
+  Sector    Sector[]
 }
 
 model NotificationReceiver {

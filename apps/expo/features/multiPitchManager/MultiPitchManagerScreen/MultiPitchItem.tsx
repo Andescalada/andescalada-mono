@@ -1,4 +1,5 @@
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
+import { Pitch, Route, RouteGrade, Topo, Wall } from "@andescalada/db";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import { A, Box, ListItem, SubItem, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -12,7 +13,6 @@ import useAnimatedHeight from "@hooks/useAnimatedHeight";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { Pitch, Route, RouteGrade, Topo, Wall } from "@prisma/client";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Conditional from "@utils/conditionalVars";
 import parseGrade from "@utils/parseGrade";

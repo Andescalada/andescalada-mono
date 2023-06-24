@@ -1,6 +1,6 @@
+import type { Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
 import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
-import type { Zone } from "@prisma/client";
 import { Alert } from "react-native";
 
 const useFavoritedButton = (zoneId: Zone["id"]) => {

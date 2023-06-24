@@ -1,0 +1,13 @@
+diff --git a/node_modules/@morrowdigital/watermelondb-expo-plugin/build/withWatermelon.js b/node_modules/@morrowdigital/watermelondb-expo-plugin/build/withWatermelon.js
+index 4b6fbdc..6d0a7f2 100644
+--- a/node_modules/@morrowdigital/watermelondb-expo-plugin/build/withWatermelon.js
++++ b/node_modules/@morrowdigital/watermelondb-expo-plugin/build/withWatermelon.js
+@@ -96,7 +96,7 @@ const withCocoaPods = (config) => {
+                 const slicedContent = contents.split(patchKey);
+                 slicedContent[0] += `\n
+   pod 'WatermelonDB', :path => '../node_modules/@nozbe/watermelondb'
+-  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi', :modular_headers => true
++  pod 'React-jsi', :path => '../../../node_modules/react-native/ReactCommon/jsi', :modular_headers => true
+   pod 'simdjson', path: '../node_modules/@nozbe/simdjson', :modular_headers => true\n\n  `;
+                 await fs.writeFile(filePath, slicedContent.join(patchKey));
+             }

@@ -3,7 +3,7 @@ import sector from "@andescalada/api/schemas/sector";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -47,6 +47,11 @@ export const sectorsRouter = t.router({
           select: { Author: { select: { email: true } } },
         });
 
+        await ctx.prisma.zone.update({
+          where: { id: input.zoneId },
+          data: { version: { increment: 1 } },
+        });
+
         return ctx.prisma.sector.update({
           where: { id: input.sectorId },
           data: {
@@ -57,6 +62,13 @@ export const sectorsRouter = t.router({
               currentSectorAuthor.Author.email !== ctx.user.email
                 ? { connect: { email: ctx.user.email } }
                 : undefined,
+          },
+          include: {
+            Zone: {
+              select: {
+                Location: { select: { latitude: true, longitude: true } },
+              },
+            },
           },
         });
       }
@@ -82,6 +94,13 @@ export const sectorsRouter = t.router({
           sectorKind: input.sectorKind,
           Author: { connect: { email: ctx.user.email } },
         },
+        include: {
+          Zone: {
+            select: {
+              Location: { select: { latitude: true, longitude: true } },
+            },
+          },
+        },
       });
 
       return newSector;
@@ -102,9 +121,22 @@ export const sectorsRouter = t.router({
       const sector = await ctx.prisma.sector.update({
         where: { id: input.sectorId },
         data: {
-          name: input.name,
-          slug: slug(input.name),
+          ...(input.name && { name: input.name, slug: slug(input.name) }),
           version: { increment: 1 },
+          ...(input.coordinates && {
+            Location: {
+              upsert: {
+                create: {
+                  latitude: input.coordinates.latitude,
+                  longitude: input.coordinates.longitude,
+                },
+                update: {
+                  latitude: input.coordinates.latitude,
+                  longitude: input.coordinates.longitude,
+                },
+              },
+            },
+          }),
           coAuthors:
             author?.Author.email === ctx.user.email
               ? undefined
@@ -170,6 +202,7 @@ export const selectFromSectorAllWalls = {
   zoneId: true,
   name: true,
   Zone: { select: { name: true } },
+  Location: true,
   walls: {
     where: { isDeleted: SoftDelete.NotDeleted },
     select: { id: true, name: true },

@@ -1,5 +1,5 @@
 import { rolesObject } from "@andescalada/api/src/utils/rolesObject";
-import { InfoAccess, RoleNames } from "@prisma/client";
+import { InfoAccess, RoleNames } from "@andescalada/db";
 
 type Zone = {
   id: string;
