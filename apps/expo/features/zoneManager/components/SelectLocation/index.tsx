@@ -69,7 +69,7 @@ const MapLocationSelector: FC<Props> = ({
             calloutText={zonePin.name}
             latitude={Number(zonePin.latitude)}
             longitude={Number(zonePin.longitude)}
-            startsOpen
+            isSelected
           />
         )}
         {sectorsPin?.map((sector) => (
@@ -80,7 +80,7 @@ const MapLocationSelector: FC<Props> = ({
             latitude={sector.latitude}
             longitude={sector.longitude}
             variant="orange"
-            startsOpen
+            isSelected
           />
         ))}
       </Mapbox.MapView>
