@@ -60,11 +60,12 @@ const ZoneMapScreen: FC<Props> = ({
     | undefined
   >(undefined);
 
-  const onPinSelected: OnPinSelected = ({ id, isSelected }) => {
+  const [expandZoneCallout, setExpandZoneCallout] = useState(true);
+
+  const onPinSelected: OnPinSelected = ({ id }) => {
     const selectedSector = sectors?.find((sector) => sector.id === id);
     setSelectedPin((prev) => {
       if (prev?.id === id) return undefined;
-      if (!isSelected) return prev;
       return selectedSector;
     });
   };
@@ -148,18 +149,22 @@ const ZoneMapScreen: FC<Props> = ({
               ],
             }}
           />
+
           <Pin
             id="zonePin"
             calloutText={data.name}
             latitude={Number(data.Location.latitude)}
             longitude={Number(data.Location.longitude)}
-            startsOpen
-            onPinSelected={onPinSelected}
+            isSelected={expandZoneCallout}
+            onPinSelected={() => {
+              setExpandZoneCallout((prev) => !prev);
+            }}
           />
           {sectors?.map((sector) => (
             <Pin
               key={sector.id}
               id={sector.id}
+              isSelected={selectedPin?.id === sector.id}
               calloutText={sector.name}
               latitude={sector.latitude}
               longitude={sector.longitude}
