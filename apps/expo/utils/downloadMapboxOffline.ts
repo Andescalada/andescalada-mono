@@ -1,10 +1,13 @@
-import geoViewport from "@mapbox/geo-viewport";
 import { Location } from "@andescalada/db";
+import geoViewport from "@mapbox/geo-viewport";
 import Mapbox from "@rnmapbox/maps";
+import Env from "@utils/env";
 import { Dimensions } from "react-native";
 import type { DefaultVariants } from "react-native-notificated/lib/typescript/defaultConfig/types";
 import type { Emmiter } from "react-native-notificated/lib/typescript/types";
 import { z } from "zod";
+
+Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 
 const downloadMapboxOffline = async ({
   location,
@@ -42,7 +45,7 @@ const downloadMapboxOffline = async ({
       maxZoom: 15,
     },
     (offlinePack, progress) => {
-      if (progress.percentage === 100) {
+      if (progress.percentage === 100 && __DEV__) {
         notification.notify("success", {
           params: {
             title: "Mapa descargado con éxito",
