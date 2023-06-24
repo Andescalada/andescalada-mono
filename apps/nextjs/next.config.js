@@ -69,8 +69,18 @@ const config = {
   },
 };
 
-const sentryWebpackPluginOptions = {
-  silent: true,
-};
-
-module.exports = withSentryConfig(config, sentryWebpackPluginOptions);
+module.exports = withSentryConfig(
+  config,
+  {
+    silent: true,
+    org: "andescalada",
+    project: "andescalada-nextjs",
+  },
+  {
+    widenClientFileUpload: true,
+    transpileClientSDK: true,
+    tunnelRoute: "/monitoring",
+    hideSourceMaps: true,
+    disableLogger: true,
+  },
+);
