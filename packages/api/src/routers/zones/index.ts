@@ -7,6 +7,7 @@ import directionsById from "@andescalada/api/src/routers/zones/directionsById";
 import edit from "@andescalada/api/src/routers/zones/edit";
 import find from "@andescalada/api/src/routers/zones/find";
 import location from "@andescalada/api/src/routers/zones/location";
+import { membersList } from "@andescalada/api/src/routers/zones/membersList";
 import publicById from "@andescalada/api/src/routers/zones/publicById";
 import publicWallById from "@andescalada/api/src/routers/zones/publicWallById";
 import recentlyAdded from "@andescalada/api/src/routers/zones/recentlyAdded";
@@ -27,7 +28,8 @@ export const zonesRouter = t.router({
   allSectors: allSectors,
   create,
   statusById,
-  usersByRole,
+  usersByRole: usersByRole,
+  membersList: membersList,
   directionsById,
   addDirection,
   deleteDirection,

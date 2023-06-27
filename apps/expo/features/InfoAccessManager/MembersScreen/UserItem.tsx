@@ -1,7 +1,7 @@
 import { Box, Pressable, Text } from "@andescalada/ui";
 import useOwnInfo from "@hooks/useOwnInfo";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 
 export type User = {
   profilePhoto: {
@@ -12,7 +12,7 @@ export type User = {
   username: string;
 };
 
-interface Props {
+interface Props extends ComponentProps<typeof Pressable> {
   item: User;
   children?: ReactNode;
 }
@@ -20,6 +20,7 @@ interface Props {
 const UserItem = ({
   item: { username, name, profilePhoto, id },
   children,
+  ...props
 }: Props) => {
   const user = useOwnInfo();
 
@@ -29,6 +30,7 @@ const UserItem = ({
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
+      {...props}
     >
       <Box flexDirection="row" alignItems="center">
         <UserProfileImage
