@@ -140,5 +140,8 @@ const parseToLocalDb = (items: Record<string, any>[], table: Table) =>
         item.evaluation = String(item.evaluation);
       }
     }
+    if (table === Table.USER) {
+      item.ownUser = true;
+    }
     return item;
   });
