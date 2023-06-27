@@ -40,6 +40,7 @@ import sync from "@local-database/sync";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
+import { isAndroid } from "@utils/platform";
 import React, { ComponentProps, FC, useRef, useState } from "react";
 import type { TextInput as TextInputRef } from "react-native";
 import {
@@ -345,7 +346,7 @@ const RouteEvaluation = ({
             fontFamily="Rubik-600"
             color="background"
             fontSize={20}
-            lineHeight={0}
+            lineHeight={isAndroid ? 25 : 0}
             textAlign="center"
           >
             {evaluation}
