@@ -56,7 +56,7 @@ const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
             </Text>
           </Box>
         )}
-        <Box>
+        <Box flex={1}>
           <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
             {title}
           </Text>
