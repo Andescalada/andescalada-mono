@@ -48,6 +48,7 @@ const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
             <Text
               variant="p2B"
               paddingHorizontal="xs"
+              fontSize={14}
               textAlign="center"
               ellipsizeMode="tail"
               numberOfLines={1}
