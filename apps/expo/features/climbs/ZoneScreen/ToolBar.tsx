@@ -46,30 +46,34 @@ const ToolBar = ({
       marginTop="s"
     >
       <Pressable onPress={onDownloadPress} disabled={isDownloading}>
-        {!isDownloading ? (
-          <Ionicons
-            name={
-              isDownloaded ? "arrow-down-circle" : "arrow-down-circle-outline"
-            }
-            size={30}
-            color={"zoneOptionsIcons"}
-          />
-        ) : (
-          <Box
-            width={26}
-            height={26}
-            justifyContent="center"
-            borderWidth={2}
-            borderRadius={14}
-            borderColor="zoneOptionsIcons"
-          >
+        <Box
+          width={26}
+          height={26}
+          justifyContent="center"
+          alignItems="center"
+          borderWidth={1.8}
+          borderRadius={14}
+          borderColor="zoneOptionsIcons"
+          backgroundColor={isDownloaded ? "zoneOptionsIcons" : "background"}
+        >
+          {!isDownloading ? (
+            <Ionicons
+              name={"arrow-down-outline"}
+              size={18}
+              style={{
+                transform: [{ translateX: 0.5 }],
+              }}
+              color={isDownloaded ? "background" : "zoneOptionsIcons"}
+              allowFontScaling
+            />
+          ) : (
             <ActivityIndicator
               color="zoneOptionsIcons"
               size="small"
               style={{ transform: [{ scale: 0.6 }] }}
             />
-          </Box>
-        )}
+          )}
+        </Box>
       </Pressable>
       <Pressable marginHorizontal="s" onPress={onFavoritePress}>
         <Ionicons
