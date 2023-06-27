@@ -1,3 +1,4 @@
+import { isDefined } from "@andescalada/api/src/utils/filterGuards";
 import getOfflineAssets, {
   AssetsToUpdate,
 } from "@andescalada/api/src/utils/getOfflineAssets";
@@ -27,9 +28,16 @@ const updateDownloadedAssets = protectedProcedure
       return { zoneId, data, zoneName: zone.name };
     });
 
-    const assets = await Promise.all(assetsToReturn);
+    const assets = await Promise.allSettled(assetsToReturn);
 
-    return assets;
+    const assetsToUpdate = assets
+      .map((a) => {
+        if (a.status === "fulfilled") return a.value;
+        return undefined;
+      })
+      .filter(isDefined);
+
+    return assetsToUpdate;
   });
 
 export default updateDownloadedAssets;
