@@ -38,8 +38,6 @@ const MembersList: FC<Props> = ({ zoneId }) => {
     [selectedUserId, data],
   );
 
-  console.log(selectedUser);
-
   const pauseAccess = usePauseAccess({
     invalidation: {
       roles: ["Member", "Reader"],

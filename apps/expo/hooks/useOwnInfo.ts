@@ -34,7 +34,6 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
     staleTime: 1000 * 60,
     initialData: withInitialData ? parsedStoredOwnInfo : undefined,
     onError(err) {
-      console.log(err);
       if (noNetwork(err)) {
         utils.user.ownInfo.setData(undefined, parsedStoredOwnInfo);
         return;
