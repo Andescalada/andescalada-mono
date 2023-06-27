@@ -162,6 +162,8 @@ const ZoneHeader = () => {
                 </Text>
               </Box>
 
+              {members.length === 0 && <Box marginLeft="s" />}
+
               <Box flexDirection="row" marginLeft="s">
                 {members.map((role, index) => (
                   <UserProfileImage
@@ -176,7 +178,7 @@ const ZoneHeader = () => {
                     zIndex={-10 * index + 10}
                   />
                 ))}
-                <Pressable
+                <Box
                   height={32}
                   width={32}
                   style={{ marginLeft: -10, zIndex: -100 }}
@@ -186,7 +188,7 @@ const ZoneHeader = () => {
                   backgroundColor="transparentButtonBackground"
                 >
                   <Ionicons name="ellipsis-horizontal-sharp" size={20} />
-                </Pressable>
+                </Box>
               </Box>
             </Pressable>
             <Pressable
