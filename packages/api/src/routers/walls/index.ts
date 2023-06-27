@@ -174,7 +174,14 @@ export const wallsRouter = t.router({
   mainTopo: protectedZoneProcedure
     .input(wall.id)
     .query(async ({ ctx, input }) => {
-      if (!ctx.permissions.has("Read")) {
+      const zone = await ctx.prisma.zone.findUniqueOrThrow({
+        where: { id: input.zoneId },
+        select: { infoAccess: true },
+      });
+      if (
+        zone.infoAccess !== InfoAccess.Public &&
+        !ctx.permissions.has("Read")
+      ) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "Read"),
         );
