@@ -33,7 +33,9 @@ export const syncRouter = t.router({
         const queries = tables.map(async (table) => {
           const updated = await prisma
             .$queryRawUnsafe<Record<string, any>[]>(
-              `SELECT * FROM ${table} WHERE updatedAt > ? AND isDeleted = ? AND createdAt < ? AND userId = ?`,
+              `SELECT * FROM ${table} WHERE updatedAt > ? AND isDeleted = ? AND createdAt < ? AND ${
+                table === Table.USER ? "id" : "userId"
+              } = ?`,
               lastPulledAt,
               "NotDeleted",
               lastPulledAt,
@@ -42,15 +44,20 @@ export const syncRouter = t.router({
             .then((items) => parseToLocalDb(items, table));
           const created = await prisma
             .$queryRawUnsafe<Record<string, any>[]>(
-              `SELECT * FROM ${table} WHERE createdAt > ? AND isDeleted = ? AND userId = ?`,
+              `SELECT * FROM ${table} WHERE createdAt > ? AND isDeleted = ? AND ${
+                table === Table.USER ? "id" : "userId"
+              } = ?`,
               lastPulledAt,
               "NotDeleted",
               user.id,
             )
             .then((items) => parseToLocalDb(items, table));
+
           const deleted = await prisma
             .$queryRawUnsafe<{ id: string }[]>(
-              `SELECT id FROM ${table} WHERE updatedAt > ? AND isDeleted != ? AND userId = ?`,
+              `SELECT id FROM ${table} WHERE updatedAt > ? AND isDeleted != ? AND ${
+                table === Table.USER ? "id" : "userId"
+              } = ?`,
               lastPulledAt,
               "NotDeleted",
               user.id,
