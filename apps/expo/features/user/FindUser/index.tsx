@@ -8,20 +8,30 @@ import {
   Text,
   TextInput,
 } from "@andescalada/ui";
+import { TextInputRef } from "@andescalada/ui/TextInput/TextInput";
 import { pallete } from "@andescalada/ui/Theme/pallete";
 import { trpc } from "@andescalada/utils/trpc";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { useBottomSheetInternal } from "@gorhom/bottom-sheet";
 import useDebounce from "@hooks/useDebounce";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
 import {
+  ComponentProps,
   forwardRef,
   ForwardRefRenderFunction,
+  useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import {
+  FlatList,
+  Keyboard,
+  NativeSyntheticEvent,
+  StyleSheet,
+  TextInputFocusEventData,
+} from "react-native";
 
 type FindOutput = inferProcedureOutput<AppRouter["user"]["find"]>[0];
 
@@ -79,6 +89,8 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
     setIsLoading(isLoadingSearch);
   }, [isLoadingSearch]);
 
+  const textRef = useRef<TextInputRef>(null);
+
   return (
     <BottomSheet
       ref={ref}
@@ -86,13 +98,22 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
       snapPoints={snapPoints}
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
+      onChange={(index) => {
+        if (index === 0) {
+          Keyboard.dismiss();
+        }
+        if (index === 1) {
+          textRef?.current?.focus();
+        }
+      }}
     >
       <KeyboardDismiss padding={"m"}>
         <Text variant="h3" marginBottom="s">
           Buscar usuario
         </Text>
         <Box>
-          <TextInput
+          <BottomSheetTextInput
+            ref={textRef}
             onChangeText={onChange}
             containerProps={{ height: 40 }}
             autoCapitalize="none"
@@ -171,4 +192,39 @@ const styles = StyleSheet.create({
   handleIndicator: {
     backgroundColor: pallete.grayscale["100"],
   },
+});
+
+// eslint-disable-next-line react/display-name
+const BottomSheetTextInput = forwardRef<
+  TextInputRef,
+  ComponentProps<typeof TextInput>
+>((props, ref) => {
+  const { shouldHandleKeyboardEvents } = useBottomSheetInternal();
+
+  const handleOnFocus = useCallback(
+    (args: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      shouldHandleKeyboardEvents.value = true;
+      if (props.onFocus) {
+        props.onFocus(args);
+      }
+    },
+    [props, shouldHandleKeyboardEvents],
+  );
+  const handleOnBlur = useCallback(
+    (args: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      shouldHandleKeyboardEvents.value = false;
+      if (props.onBlur) {
+        props.onBlur(args);
+      }
+    },
+    [props, shouldHandleKeyboardEvents],
+  );
+  return (
+    <TextInput
+      ref={ref}
+      {...props}
+      onFocus={handleOnFocus}
+      onBlur={handleOnBlur}
+    />
+  );
 });
