@@ -97,6 +97,16 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           break;
         }
         case UpsertAction.VariantAdded: {
+          rootNavigation.pop();
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.RouteVariantDrawer,
+            params: {
+              route: { id, position, variantRouteId: variantRouteId! },
+              wallId,
+              topoId: mainTopoId,
+              zoneId,
+            },
+          });
           break;
         }
         case UpsertAction.ExtensionAdded: {
