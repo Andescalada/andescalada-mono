@@ -1,4 +1,3 @@
-import { pathToArray } from "@andescalada/climbs-drawer/utils";
 import {
   ActivityIndicator,
   Button,
@@ -27,22 +26,15 @@ const DrawRoute: FC<Props> = ({
   },
   navigation,
 }) => {
-  const extendedRoute = trpc.routes.byId.useQuery(routeParams.variantRouteId);
+  const parentRoute = trpc.routes.byId.useQuery(routeParams.variantRouteId);
 
-  const extendedRouteStart = useMemo(() => {
-    if (!extendedRoute) return undefined;
-
-    const prevPath = extendedRoute?.data?.Wall.topos
-      .find((t) => t.id === topoId)
-      ?.RoutePath.at(0)?.path;
-
-    if (prevPath) {
-      const arrayPath = pathToArray(prevPath).pop();
-      if (!arrayPath) return undefined;
-      return `${arrayPath[0]},${arrayPath[1]}`;
-    }
-    return undefined;
-  }, [extendedRoute, topoId]);
+  const prevPath = useMemo(
+    () =>
+      parentRoute?.data?.Wall.topos
+        .find((t) => t.id === topoId)
+        ?.RoutePath.at(0)?.path,
+    [parentRoute, topoId],
+  );
 
   const { data } = useToposById({ topoId, zoneId }, {});
 
@@ -57,7 +49,7 @@ const DrawRoute: FC<Props> = ({
     imageQuality: constants.imageQuality,
   });
 
-  if (topos && isImageLoaded && !!extendedRouteStart) {
+  if (topos && isImageLoaded && !!prevPath) {
     return (
       <RouteVariantDrawer
         topos={topos}
@@ -69,7 +61,7 @@ const DrawRoute: FC<Props> = ({
     );
   }
 
-  if (!extendedRoute.isLoading && !extendedRouteStart) {
+  if (!parentRoute.isLoading && !prevPath) {
     return (
       <Screen justifyContent="center" alignItems="center" gap="l" padding="l">
         <Ionicons

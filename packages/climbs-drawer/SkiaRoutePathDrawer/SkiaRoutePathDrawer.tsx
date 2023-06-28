@@ -48,6 +48,9 @@ interface Ref {
   pointsToString: () => string;
   getLabelPosition: GetLabelPosition;
   softReset: (path: string) => void;
+  setStart: (path: string) => void;
+  blockStart: () => void;
+  hasStarted: boolean;
 }
 
 const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
@@ -131,6 +134,26 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     },
     [drawEnd, drawStart, points, scale, start],
   );
+  const setStart = useCallback(
+    (pathToReset: string) => {
+      if (hasStart) return;
+      const path = pathToVector(pathToReset, scale);
+
+      points.current = path;
+      start.current = path[0];
+      setHasStart(true);
+      setHasEnd(false);
+      drawStart.current = true;
+      drawEnd.current = false;
+    },
+    [drawEnd, drawStart, points, scale, start, hasStart],
+  );
+
+  const blockStart = useCallback(() => {
+    if (points.current.length > 0 && !drawStart.current) {
+      reset();
+    }
+  }, [drawStart, points, reset]);
 
   const getLabelPosition = useCallback(
     ({ toString }: { toString: boolean }) => {
@@ -164,6 +187,9 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     pointsToString,
     softReset,
     getLabelPosition,
+    setStart,
+    blockStart,
+    hasStarted: drawStart.current,
   }));
 
   return (

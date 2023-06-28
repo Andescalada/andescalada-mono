@@ -203,11 +203,6 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
       return;
     }
     if (!!variantRouteId) {
-      console.log("ADDING VARIANT", {
-        variantRouteId,
-        wallId,
-        ...data,
-      });
       mutate({
         variantRouteId,
         wallId,

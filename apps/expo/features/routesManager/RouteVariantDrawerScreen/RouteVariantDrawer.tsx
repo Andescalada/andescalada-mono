@@ -3,7 +3,7 @@ import {
   SkiaRoutePath,
   SkiaRoutePathDrawer,
 } from "@andescalada/climbs-drawer";
-import { pathToArray } from "@andescalada/climbs-drawer/utils";
+import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
 import { BackButton, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import DrawingTools from "@features/routesManager/components/DrawingTools";
@@ -17,7 +17,9 @@ import { ParsedTopo } from "@features/routesManager/utils/parsedTopos";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useRouteDrawer from "@hooks/useRouteDrawer";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { FC, useMemo, useState } from "react";
+import { useComputedValue, useValueEffect } from "@shopify/react-native-skia";
+import selectRouteByPoint from "@utils/selectRouteByPoint";
+import { FC, useState } from "react";
 
 interface Props {
   topos: Exclude<ParsedTopo, null>;
@@ -39,27 +41,10 @@ const RouteVariantDrawer: FC<Props> = ({
     params: { wallId, route: routeParams, topoId, zoneId },
   } =
     useRoute<
-      RoutesManagerRouteProps<RoutesManagerNavigationRoutes.RouteExtensionDrawer>
+      RoutesManagerRouteProps<RoutesManagerNavigationRoutes.RouteVariantDrawer>
     >();
 
-  const extendedRoute =
-    !!routeParams.extendedRouteId &&
-    trpc.routes.byId.useQuery(routeParams.extendedRouteId);
-
-  const extendedRouteStart = useMemo(() => {
-    if (!extendedRoute) return undefined;
-
-    const prevPath = extendedRoute?.data?.Wall.topos.find(
-      (t) => t.id === topoId,
-    )?.RoutePath[0].path;
-
-    if (prevPath) {
-      const arrayPath = pathToArray(prevPath).pop();
-      if (!arrayPath) return undefined;
-      return `${arrayPath[0]},${arrayPath[1]}`;
-    }
-    return undefined;
-  }, [extendedRoute, topoId]);
+  const extendedRoute = trpc.routes.byId.useQuery(routeParams.variantRouteId);
 
   const [showRoutes, setShowRoutes] = useState(true);
 
@@ -87,14 +72,36 @@ const RouteVariantDrawer: FC<Props> = ({
     hideStart: true,
   });
 
+  const vectorRoutes = useComputedValue(() => {
+    return topos?.otherRoutes?.map((path) => ({
+      ...path,
+      pitchLabelPoint: path.pitchLabelPoint,
+      routeId: path.routeId,
+      pathToVector: pathToVector(path.path, scale),
+      start: pathToVector(path.path, scale)[0],
+      end: pathToVector(path.path, scale).pop(),
+    }));
+  }, [topos]);
+
+  useValueEffect(coords, (point) => {
+    if (routeRef.current?.hasStarted) return;
+
+    const selectedRoute = selectRouteByPoint(vectorRoutes, point);
+
+    if (selectedRoute === routeParams.variantRouteId) {
+      routeRef?.current?.setStart(`${point.x / scale},${point.y / scale}`);
+    } else {
+      routeRef?.current?.blockStart();
+    }
+  });
+
   const onUndo = () => {
     routeRef?.current?.undo(true);
     setCanSave(false);
   };
 
   const onReset = () => {
-    if (!extendedRouteStart) return;
-    routeRef?.current?.softReset(extendedRouteStart);
+    routeRef?.current?.reset();
     setCanSave(false);
   };
 
@@ -106,18 +113,6 @@ const RouteVariantDrawer: FC<Props> = ({
         height={height}
         width={width}
       >
-        <SkiaRoutePathDrawer
-          coords={coords}
-          ref={routeRef}
-          path={topos?.selectedRoute?.path || extendedRouteStart}
-          label={routeParams?.position.toString()}
-          color={theme.colors.drawingRoutePath}
-          defaultStart={false}
-          defaultEnd={!!topos?.selectedRoute?.path}
-          scale={scale}
-          strokeWidth={routeStrokeWidth}
-          hideStart
-        />
         {showRoutes &&
           topos?.otherRoutes?.map((route) => (
             <SkiaRoutePath
@@ -126,13 +121,27 @@ const RouteVariantDrawer: FC<Props> = ({
               path={route.path}
               scale={scale}
               color={
-                route.routeId === routeParams.extendedRouteId
-                  ? theme.colors.drawingRoutePath
+                route.routeId === routeParams.variantRouteId
+                  ? theme.colors["contrast.bright.blue"]
                   : theme.colors.routePath
               }
               strokeWidth={routeStrokeWidth}
             />
           ))}
+        <SkiaRoutePathDrawer
+          coords={coords}
+          ref={routeRef}
+          path={topos?.selectedRoute?.path}
+          label={`${
+            extendedRoute.data?.position
+          }.${routeParams?.position.toString()}`}
+          color={theme.colors.drawingRoutePath}
+          defaultStart={false}
+          defaultEnd={!!topos?.selectedRoute?.path}
+          scale={scale}
+          strokeWidth={routeStrokeWidth}
+          hideStart
+        />
       </SkiaRouteCanvas>
       <BackButton.Transparent onPress={navigation.goBack} />
       <Instructions>

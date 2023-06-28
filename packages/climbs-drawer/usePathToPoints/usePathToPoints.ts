@@ -4,7 +4,7 @@ import {
   useValue,
   vec,
 } from "@shopify/react-native-skia";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { scalePathArray } from "../utils";
 
