@@ -69,7 +69,7 @@ const RouteVariantDrawer: FC<Props> = ({
     routePathId: topos?.selectedRoute?.id,
     routeStrokeWidth,
     zoneId,
-    hideStart: true,
+    hideStart: false,
   });
 
   const vectorRoutes = useComputedValue(() => {
@@ -101,6 +101,7 @@ const RouteVariantDrawer: FC<Props> = ({
   };
 
   const onReset = () => {
+    routeRef?.current?.blockStart();
     routeRef?.current?.reset();
     setCanSave(false);
   };
@@ -126,6 +127,7 @@ const RouteVariantDrawer: FC<Props> = ({
                   : theme.colors.routePath
               }
               strokeWidth={routeStrokeWidth}
+              withSimpleStartPoint={!!route.Route.variantRouteId}
             />
           ))}
         <SkiaRoutePathDrawer
@@ -136,11 +138,11 @@ const RouteVariantDrawer: FC<Props> = ({
             extendedRoute.data?.position
           }.${routeParams?.position.toString()}`}
           color={theme.colors.drawingRoutePath}
-          defaultStart={false}
+          defaultStart={!!topos?.selectedRoute?.path}
           defaultEnd={!!topos?.selectedRoute?.path}
           scale={scale}
           strokeWidth={routeStrokeWidth}
-          hideStart
+          withSimpleStartPoint
         />
       </SkiaRouteCanvas>
       <BackButton.Transparent onPress={navigation.goBack} />

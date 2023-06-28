@@ -25,7 +25,7 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.RouteOptions>;
 
 const EditOptions: FC<Props> = ({
   route: {
-    params: { routeId, wallId, zoneId },
+    params: { routeId, wallId, zoneId, isChildrenRoute },
   },
   navigation,
 }) => {
@@ -49,17 +49,29 @@ const EditOptions: FC<Props> = ({
           zoneId,
         },
       });
-    } else {
+      return;
+    }
+    if (!!variantRouteId) {
       rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-        screen: RoutesManagerNavigationRoutes.RouteDrawer,
+        screen: RoutesManagerNavigationRoutes.RouteVariantDrawer,
         params: {
-          route: { id, position },
+          route: { id, position, variantRouteId },
           wallId,
           topoId: Wall.topos[0].id,
           zoneId,
         },
       });
+      return;
     }
+    rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+      screen: RoutesManagerNavigationRoutes.RouteDrawer,
+      params: {
+        route: { id, position },
+        wallId,
+        topoId: Wall.topos[0].id,
+        zoneId,
+      },
+    });
   };
 
   const utils = trpc.useContext();
@@ -95,6 +107,7 @@ const EditOptions: FC<Props> = ({
     position,
     Wall,
     extendedRouteId,
+    variantRouteId,
   } = route.data;
 
   return (
@@ -127,7 +140,7 @@ const EditOptions: FC<Props> = ({
         </ListItemOption>
       )}
       <ListItemOption
-        visible={permission.has("Create")}
+        visible={permission.has("Create") && !isChildrenRoute}
         onPress={() =>
           navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
             wallId,
@@ -139,7 +152,7 @@ const EditOptions: FC<Props> = ({
         Agregar extensión
       </ListItemOption>
       <ListItemOption
-        visible={permission.has("Create")}
+        visible={permission.has("Create") && !isChildrenRoute}
         onPress={() =>
           navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
             wallId,
@@ -154,7 +167,8 @@ const EditOptions: FC<Props> = ({
         visible={
           permission.has("Create") &&
           featureFlags.multiPitch &&
-          !route.data.Pitch
+          !route.data.Pitch &&
+          !isChildrenRoute
         }
         onPress={() =>
           Alert.alert(

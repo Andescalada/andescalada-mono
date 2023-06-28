@@ -195,6 +195,7 @@ const routesQuery = {
   where: {
     isDeleted: { equals: SoftDelete.NotDeleted },
     extendedRouteId: { equals: null },
+    variantRouteId: { equals: null },
     Pitch: { is: null },
   },
   select: {
@@ -203,6 +204,10 @@ const routesQuery = {
       include: { MultiPitch: { select: { name: true, id: true } } },
     },
     Extension: {
+      where: { isDeleted: SoftDelete.NotDeleted },
+      select: Route,
+    },
+    Variant: {
       where: { isDeleted: SoftDelete.NotDeleted },
       select: Route,
     },

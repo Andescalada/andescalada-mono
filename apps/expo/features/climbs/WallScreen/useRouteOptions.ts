@@ -176,13 +176,15 @@ const useRouteOptions = ({
   const onRouteOptions = ({
     routeId,
     zoneId,
+    isChildrenRoute = false,
   }: {
     routeId: string;
     zoneId: string;
+    isChildrenRoute?: boolean;
   }) => {
     rootNavigation.navigate(RootNavigationRoutes.Climbs, {
       screen: ClimbsNavigationRoutes.RouteOptions,
-      params: { routeId, zoneId, wallId },
+      params: { routeId, zoneId, wallId, isChildrenRoute },
     });
   };
 

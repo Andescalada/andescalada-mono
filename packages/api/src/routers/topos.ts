@@ -123,6 +123,7 @@ export const includeInTopo = {
           id: true,
           position: true,
           extendedRouteId: true,
+          variantRouteId: true,
           kind: true,
           name: true,
           RouteGrade: true,

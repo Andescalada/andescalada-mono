@@ -29,6 +29,7 @@ const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       index={index}
       flexDirection="row"
       alignItems="center"
+      backgroundColor="background"
       justifyContent="space-between"
       onRightAction={onDelete}
       onLeftAction={onOptions}

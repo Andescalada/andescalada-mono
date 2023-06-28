@@ -85,6 +85,7 @@ export type ClimbsNavigationNavigationParamList = {
     routeId: Route["id"];
     wallId: Wall["id"];
     zoneId: Zone["id"];
+    isChildrenRoute?: boolean;
   };
   [ClimbsNavigationRoutes.AdminZoneOptions]: {
     zoneId: Zone["id"];
