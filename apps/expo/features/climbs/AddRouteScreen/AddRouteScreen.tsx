@@ -104,7 +104,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
             screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
             params: {
-              route: { id, position, extendedRouteId },
+              route: { id, position, extendedRouteId: extendedRouteId! },
               wallId,
               topoId: mainTopoId,
               zoneId,

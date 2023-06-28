@@ -23,7 +23,7 @@ export type RoutesManagerNavigationParamList = {
     route: {
       id: Route["id"];
       position: Route["position"];
-      extendedRouteId?: Route["extendedRouteId"];
+      extendedRouteId: string;
     };
     zoneId: Zone["id"];
     wallId: Wall["id"];

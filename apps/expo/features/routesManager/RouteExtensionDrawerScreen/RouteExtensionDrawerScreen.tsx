@@ -1,5 +1,11 @@
 import { pathToArray } from "@andescalada/climbs-drawer/utils";
-import { ActivityIndicator, Screen } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  Button,
+  Ionicons,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   RoutesManagerNavigationRoutes,
@@ -19,17 +25,16 @@ const DrawRoute: FC<Props> = ({
   route: {
     params: { wallId, route: routeParams, topoId, zoneId },
   },
+  navigation,
 }) => {
-  const extendedRoute =
-    !!routeParams.extendedRouteId &&
-    trpc.routes.byId.useQuery(routeParams.extendedRouteId);
+  const extendedRoute = trpc.routes.byId.useQuery(routeParams.extendedRouteId);
 
   const extendedRouteStart = useMemo(() => {
     if (!extendedRoute) return undefined;
 
-    const prevPath = extendedRoute?.data?.Wall.topos.find(
-      (t) => t.id === topoId,
-    )?.RoutePath[0].path;
+    const prevPath = extendedRoute?.data?.Wall.topos
+      .find((t) => t.id === topoId)
+      ?.RoutePath.at(0)?.path;
 
     if (prevPath) {
       const arrayPath = pathToArray(prevPath).pop();
@@ -52,11 +57,7 @@ const DrawRoute: FC<Props> = ({
     imageQuality: constants.imageQuality,
   });
 
-  if (
-    topos &&
-    isImageLoaded &&
-    (!routeParams.extendedRouteId || !!extendedRouteStart)
-  ) {
+  if (topos && isImageLoaded && !!extendedRouteStart) {
     return (
       <RouteExtensionDrawer
         topos={topos}
@@ -65,6 +66,24 @@ const DrawRoute: FC<Props> = ({
         width={fitted.width}
         scale={fitted.scale}
       />
+    );
+  }
+
+  if (!extendedRoute.isLoading && !extendedRouteStart) {
+    return (
+      <Screen justifyContent="center" alignItems="center" gap="l" padding="l">
+        <Ionicons
+          name="close-circle-outline"
+          color="semantic.error"
+          size={60}
+        />
+        <Text variant="p1R">No encontramos la ruta que quieres extender</Text>
+        <Text>
+          Primero debes dibujar la ruta original para luego agregar una
+          extensión.
+        </Text>
+        <Button title="Volver" variant="info" onPress={navigation.goBack} />
+      </Screen>
     );
   }
 
