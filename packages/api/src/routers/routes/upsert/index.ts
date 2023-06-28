@@ -17,7 +17,7 @@ const upsert = protectedZoneProcedure
       return upsertVariant({ ctx, input: variantInputs.data });
     }
 
-    return upsertRoute({ ctx, input });
+    return upsertRoute({ ctx, input, zoneId: input.zoneId });
   });
 
 export default upsert;

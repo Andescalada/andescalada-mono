@@ -1,5 +1,6 @@
 import routeSchema from "@andescalada/api/schemas/route";
 import { UpsertAction } from "@andescalada/api/src/types/upsertRoute";
+import error from "@andescalada/api/src/utils/errors";
 import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
 import { ProtectedZoneContext } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
@@ -10,23 +11,22 @@ import { z } from "zod";
 const upsertRoute = async ({
   ctx,
   input,
+  zoneId,
 }: {
   ctx: ProtectedZoneContext;
   input: z.infer<typeof routeSchema.upsertRoute>;
+  zoneId: string;
 }) => {
-  let routeId;
-  if ("routeId " in input) routeId = input.routeId;
-
-  const route = await ctx.prisma.route.findUnique({
-    where: { id: routeId },
-    select: { Author: { select: { email: true } }, wallId: true },
-  });
-  if (route) {
+  if (input.routeId) {
+    const route = await ctx.prisma.route.findUniqueOrThrow({
+      where: { id: input.routeId },
+      select: { Author: { select: { email: true } }, wallId: true },
+    });
     if (
       !ctx.permissions.has("Update") &&
       route?.Author.email !== ctx.user.email
     ) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      throw new TRPCError(error.unauthorizedActionForZone(zoneId, "Update"));
     }
 
     const {
@@ -44,7 +44,7 @@ const upsertRoute = async ({
     });
 
     const updatedRoute = await ctx.prisma.route.update({
-      where: { id: routeId },
+      where: { id: input.routeId },
       data: {
         RouteGrade: {
           update: {
@@ -87,7 +87,7 @@ const upsertRoute = async ({
   }
 
   if (!ctx.permissions.has("Create")) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+    throw new TRPCError(error.unauthorizedActionForZone(zoneId, "Create"));
   }
   const {
     grade,
