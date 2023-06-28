@@ -77,12 +77,15 @@ export type ClimbsNavigationNavigationParamList = {
     grade?: ParseGrade;
     id?: Route["id"];
     unknownName?: Route["unknownName"];
-    extendedRouteId?: Route["id"];
-  };
+  } & (
+    | { extendedRouteId?: Route["id"]; variantRouteId?: never }
+    | { variantRouteId?: Route["id"]; extendedRouteId?: never }
+  );
   [ClimbsNavigationRoutes.RouteOptions]: {
     routeId: Route["id"];
     wallId: Wall["id"];
     zoneId: Zone["id"];
+    isChildrenRoute?: boolean;
   };
   [ClimbsNavigationRoutes.AdminZoneOptions]: {
     zoneId: Zone["id"];

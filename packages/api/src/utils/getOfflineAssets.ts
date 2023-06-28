@@ -142,7 +142,7 @@ const getOfflineAssets = async ({
           route.RouteEvaluation.reduce(
             (acc, curr) => acc + Number(curr.evaluation || 0),
             0,
-          ) / route.RouteEvaluation.length,
+          ) / (route.RouteEvaluation.length || 1),
         count: route.RouteEvaluation.length,
       };
 
@@ -151,7 +151,7 @@ const getOfflineAssets = async ({
           route.RouteGradeEvaluation.reduce(
             (acc, curr) => acc + Number(curr.evaluation || 0),
             0,
-          ) / route.RouteGradeEvaluation.length,
+          ) / (route.RouteGradeEvaluation.length || 1),
         count: route.RouteGradeEvaluation.length,
       };
 

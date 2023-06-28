@@ -9,13 +9,12 @@ const sync = async () => {
     pullChanges: async ({ lastPulledAt }) => {
       const res = await client.sync.pull.query({
         lastPulledAt: new Date(lastPulledAt ?? 0),
-        tables: Object.values(Table).filter((table) => table !== Table.USER),
+        tables: Object.values(Table),
       });
-      console.log("PULL", JSON.stringify(res, null, 2));
+
       return res;
     },
     pushChanges: async ({ changes, lastPulledAt }) => {
-      console.log("PUSH", JSON.stringify(changes, null, 2));
       await client.sync.push.mutate({
         changes,
         lastPulledAt: new Date(lastPulledAt),

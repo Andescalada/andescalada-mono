@@ -35,6 +35,7 @@ interface Props {
   scale?: number;
   strokeWidth?: number;
   hideStart?: boolean;
+  withSimpleStartPoint?: boolean;
 }
 type GetLabelPosition = ({
   toString,
@@ -48,6 +49,9 @@ interface Ref {
   pointsToString: () => string;
   getLabelPosition: GetLabelPosition;
   softReset: (path: string) => void;
+  setStart: (path: string) => void;
+  blockStart: () => void;
+  hasStarted: boolean;
 }
 
 const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
@@ -61,6 +65,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     scale = 1,
     strokeWidth: strokeWidthProp = 1,
     hideStart = false,
+    withSimpleStartPoint = false,
   },
   ref,
 ) => {
@@ -70,13 +75,17 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
 
   const drawStart = useValue<boolean>(!!withStart);
   const drawEnd = useValue<boolean>(!!withEnd);
+  const isStartBlocked = useValue<boolean>(false);
 
   useValueEffect(coords, () => {
+    if (isStartBlocked.current) return;
     if (drawEnd.current) return;
+
     points.current = [
       ...points.current,
       vec(coords.current.x, coords.current.y),
     ];
+
     if (points.current.length > 0 && !drawStart.current && !hideStart) {
       setHasStart(true);
       drawStart.current = true;
@@ -131,6 +140,25 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     },
     [drawEnd, drawStart, points, scale, start],
   );
+  const setStart = useCallback(
+    (pathToReset: string) => {
+      if (hasStart) return;
+      const path = pathToVector(pathToReset, scale);
+
+      points.current = path;
+      start.current = path[0];
+      setHasStart(true);
+      setHasEnd(false);
+      drawStart.current = true;
+      drawEnd.current = false;
+      isStartBlocked.current = false;
+    },
+    [hasStart, scale, points, start, drawStart, drawEnd, isStartBlocked],
+  );
+
+  const blockStart = useCallback(() => {
+    isStartBlocked.current = true;
+  }, [isStartBlocked]);
 
   const getLabelPosition = useCallback(
     ({ toString }: { toString: boolean }) => {
@@ -164,6 +192,9 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
     pointsToString,
     softReset,
     getLabelPosition,
+    setStart,
+    blockStart,
+    hasStarted: !!hasStart,
   }));
 
   return (
@@ -183,6 +214,7 @@ const SkiaRoutePathDrawer: ForwardRefRenderFunction<Ref, Props> = (
       )}
       {hasStart && (
         <StartPointer
+          simpleStart={withSimpleStartPoint}
           c={start}
           label={label}
           color={color}

@@ -3,10 +3,11 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum RoutesManagerNavigationRoutes {
-  RouteDrawer = "RouteDrawer",
-  TopoViewer = "TopoViewer",
-  RouteExtensionDrawer = "RouteExtension",
-  MultiPitchDrawer = "MultiPitchDrawer",
+  RouteDrawer = "RoutesManagerRouteDrawer",
+  TopoViewer = "RoutesManagerTopoViewer",
+  RouteExtensionDrawer = "RoutesManagerRouteExtension",
+  RouteVariantDrawer = "RoutesManagerRouteVariant",
+  MultiPitchDrawer = "RoutesManagerMultiPitchDrawer",
 }
 
 export type RoutesManagerNavigationParamList = {
@@ -23,7 +24,17 @@ export type RoutesManagerNavigationParamList = {
     route: {
       id: Route["id"];
       position: Route["position"];
-      extendedRouteId?: Route["extendedRouteId"];
+      extendedRouteId: string;
+    };
+    zoneId: Zone["id"];
+    wallId: Wall["id"];
+    topoId: Topo["id"];
+  };
+  [RoutesManagerNavigationRoutes.RouteVariantDrawer]: {
+    route: {
+      id: Route["id"];
+      position: Route["position"];
+      variantRouteId: string;
     };
     zoneId: Zone["id"];
     wallId: Wall["id"];

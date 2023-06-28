@@ -16,6 +16,7 @@ interface Props {
   color?: string;
   scale?: number;
   backgroundColor?: string;
+  simpleStart?: boolean;
 }
 
 const StartPointer: FC<Props> = ({
@@ -24,6 +25,7 @@ const StartPointer: FC<Props> = ({
   color = "red",
   scale = 1,
   backgroundColor = "white",
+  simpleStart,
 }) => {
   const fontSize = 120 * scale;
   const r = 100 * scale;
@@ -38,6 +40,9 @@ const StartPointer: FC<Props> = ({
     return null;
   }
   const textWidth = font.getTextWidth(label);
+  if (simpleStart) {
+    return <SimpleStartPointer color={color} c={c} scale={scale} />;
+  }
   return (
     <Group transform={transform}>
       <Circle cx={0} cy={0} r={r} color={backgroundColor} />
@@ -50,6 +55,25 @@ const StartPointer: FC<Props> = ({
         style={"stroke"}
         strokeWidth={strokeWidth}
       />
+    </Group>
+  );
+};
+
+const SimpleStartPointer: FC<Omit<Props, "label">> = ({
+  color = "red",
+  scale = 1,
+  c,
+}) => {
+  const r = 50 * scale;
+  const strokeWidth = r / 5;
+
+  const transform = useComputedValue(
+    () => [{ translateX: c.current.x }, { translateY: c.current.y }],
+    [c],
+  );
+  return (
+    <Group transform={transform}>
+      <Circle cx={0} cy={0} r={r} color={color} strokeWidth={strokeWidth} />
     </Group>
   );
 };

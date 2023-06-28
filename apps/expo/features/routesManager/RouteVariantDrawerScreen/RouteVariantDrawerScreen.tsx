@@ -1,4 +1,3 @@
-import { pathToArray } from "@andescalada/climbs-drawer/utils";
 import {
   ActivityIndicator,
   Button,
@@ -11,7 +10,7 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
-import RouteExtensionDrawer from "@features/routesManager/RouteExtensionDrawerScreen/RouteExtensionDrawer";
+import RouteVariantDrawer from "@features/routesManager/RouteVariantDrawerScreen/RouteVariantDrawer";
 import parsedTopo from "@features/routesManager/utils/parsedTopos";
 import useToposById from "@hooks/offlineQueries/useToposById";
 import useTopoImage from "@hooks/useTopoImage";
@@ -19,7 +18,7 @@ import constants from "@utils/constants";
 import { FC, useMemo } from "react";
 
 type Props =
-  RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteExtensionDrawer>;
+  RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteVariantDrawer>;
 
 const DrawRoute: FC<Props> = ({
   route: {
@@ -27,22 +26,15 @@ const DrawRoute: FC<Props> = ({
   },
   navigation,
 }) => {
-  const extendedRoute = trpc.routes.byId.useQuery(routeParams.extendedRouteId);
+  const parentRoute = trpc.routes.byId.useQuery(routeParams.variantRouteId);
 
-  const extendedRouteStart = useMemo(() => {
-    if (!extendedRoute) return undefined;
-
-    const prevPath = extendedRoute?.data?.Wall.topos
-      .find((t) => t.id === topoId)
-      ?.RoutePath.at(0)?.path;
-
-    if (prevPath) {
-      const arrayPath = pathToArray(prevPath).pop();
-      if (!arrayPath) return undefined;
-      return `${arrayPath[0]},${arrayPath[1]}`;
-    }
-    return undefined;
-  }, [extendedRoute, topoId]);
+  const prevPath = useMemo(
+    () =>
+      parentRoute?.data?.Wall.topos
+        .find((t) => t.id === topoId)
+        ?.RoutePath.at(0)?.path,
+    [parentRoute, topoId],
+  );
 
   const { data } = useToposById({ topoId, zoneId }, {});
 
@@ -57,9 +49,9 @@ const DrawRoute: FC<Props> = ({
     imageQuality: constants.imageQuality,
   });
 
-  if (topos && isImageLoaded && !!extendedRouteStart) {
+  if (topos && isImageLoaded && !!prevPath) {
     return (
-      <RouteExtensionDrawer
+      <RouteVariantDrawer
         topos={topos}
         fileUrl={fileUrl}
         height={fitted.height}
@@ -69,7 +61,7 @@ const DrawRoute: FC<Props> = ({
     );
   }
 
-  if (!extendedRoute.isLoading && !extendedRouteStart) {
+  if (!parentRoute.isLoading && !prevPath) {
     return (
       <Screen justifyContent="center" alignItems="center" gap="l" padding="l">
         <Ionicons
@@ -77,10 +69,12 @@ const DrawRoute: FC<Props> = ({
           color="semantic.error"
           size={60}
         />
-        <Text variant="p1R">No encontramos la ruta que quieres extender</Text>
+        <Text variant="p1R">
+          No encontramos la ruta que quieres agregar una variante
+        </Text>
         <Text>
           Primero debes dibujar la ruta original para luego agregar una
-          extensión.
+          variante.
         </Text>
         <Button title="Volver" variant="info" onPress={navigation.goBack} />
       </Screen>

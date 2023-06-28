@@ -29,6 +29,7 @@ const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       index={index}
       flexDirection="row"
       alignItems="center"
+      backgroundColor="background"
       justifyContent="space-between"
       onRightAction={onDelete}
       onLeftAction={onOptions}
@@ -48,6 +49,7 @@ const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
             <Text
               variant="p2B"
               paddingHorizontal="xs"
+              fontSize={14}
               textAlign="center"
               ellipsizeMode="tail"
               numberOfLines={1}
@@ -56,7 +58,7 @@ const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
             </Text>
           </Box>
         )}
-        <Box>
+        <Box flex={1}>
           <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
             {title}
           </Text>

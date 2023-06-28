@@ -1,4 +1,5 @@
 import route from "@andescalada/api/schemas/route";
+import { UpsertAction } from "@andescalada/api/src/types/upsertRoute";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
@@ -41,7 +42,8 @@ const schema = routeSchema
   );
 
 const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
-  const { wallId, extendedRouteId, zoneId, id, ...rest } = route.params;
+  const { wallId, id, zoneId, extendedRouteId, variantRouteId, ...rest } =
+    route.params;
 
   const utils = trpc.useContext();
 
@@ -49,36 +51,29 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
 
   const isExtension = useMemo(() => !!extendedRouteId, [extendedRouteId]);
 
-  const inputLabel = useMemo(
-    () => (isExtension ? "Nombre de la extensión" : "Nombre de la ruta"),
-    [isExtension],
-  );
+  const isVariant = useMemo(() => !!variantRouteId, [variantRouteId]);
+
+  const inputLabel = useMemo(() => {
+    if (isExtension) return "Nombre de la extensión";
+    if (isVariant) return "Nombre de la variante";
+    return "Nombre de la ruta";
+  }, [isExtension, isVariant]);
 
   const title = useMemo(() => {
-    if (isExtension) {
-      return "Añadir extensión";
-    }
-    if (id) {
-      return "Editar ruta";
-    }
+    if (isExtension) return "Añadir extensión";
+    if (isVariant) return "Añadir variante";
+    if (id) return "Editar ruta";
     return "Añadir ruta";
-  }, [isExtension, id]);
+  }, [isExtension, isVariant, id]);
 
-  const { mutate, isLoading } = trpc.routes.add.useMutation({
-    onSuccess: ({ id, position, mainTopoId }) => {
-      if (mainTopoId) {
-        if (isExtension) {
-          rootNavigation.pop();
-          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-            screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
-            params: {
-              route: { id, position, extendedRouteId },
-              wallId,
-              topoId: mainTopoId,
-              zoneId,
-            },
-          });
-        } else {
+  const { mutate, isLoading } = trpc.routes.upsert.useMutation({
+    onSuccess: ({ id, position, mainTopoId, action, Wall }) => {
+      if (!mainTopoId) {
+        navigation.goBack();
+        return;
+      }
+      switch (action) {
+        case UpsertAction.RouteAdded: {
           rootNavigation.pop();
           rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
             screen: RoutesManagerNavigationRoutes.RouteDrawer,
@@ -89,52 +84,52 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
               zoneId,
             },
           });
+          break;
         }
-        utils.topos.byId.invalidate({ topoId: mainTopoId, zoneId });
-      } else {
-        navigation.goBack();
-      }
-      utils.walls.byId.invalidate({ wallId, zoneId });
-    },
-  });
-
-  const { mutate: mutateExtension, isLoading: isExtensionLoading } =
-    trpc.routes.addExtension.useMutation({
-      onSuccess: ({ id, position, mainTopoId }) => {
-        if (mainTopoId) {
+        case UpsertAction.RouteEdited: {
+          navigation.navigate(ClimbsNavigationRoutes.Wall, {
+            zoneId,
+            wallId,
+            sectorId: Wall.Sector.id,
+            sectorKind: Wall.Sector.sectorKind,
+            wallName: Wall.name,
+          });
+          break;
+        }
+        case UpsertAction.VariantAdded: {
+          rootNavigation.pop();
           rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-            screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
+            screen: RoutesManagerNavigationRoutes.RouteVariantDrawer,
             params: {
-              route: { id, position, extendedRouteId },
+              route: { id, position, variantRouteId: variantRouteId! },
               wallId,
               topoId: mainTopoId,
               zoneId,
             },
           });
-          utils.topos.byId.invalidate({ topoId: mainTopoId, zoneId });
-        } else {
+          break;
+        }
+        case UpsertAction.ExtensionAdded: {
+          rootNavigation.pop();
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
+            params: {
+              route: { id, position, extendedRouteId: extendedRouteId! },
+              wallId,
+              topoId: mainTopoId,
+              zoneId,
+            },
+          });
+          break;
+        }
+        default:
           navigation.goBack();
-        }
-        utils.walls.byId.invalidate({ wallId, zoneId });
-      },
-    });
-
-  const { mutate: mutateEdit, isLoading: isLoadingEdit } =
-    trpc.routes.edit.useMutation({
-      onSuccess: ({ Wall, mainTopoId }) => {
-        if (mainTopoId) {
-          utils.topos.byId.invalidate({ topoId: mainTopoId, zoneId });
-        }
-        navigation.navigate(ClimbsNavigationRoutes.Wall, {
-          zoneId,
-          wallId,
-          sectorId: Wall.Sector.id,
-          sectorKind: Wall.Sector.sectorKind,
-          wallName: Wall.name,
-        });
-        utils.walls.byId.invalidate({ wallId, zoneId });
-      },
-    });
+          break;
+      }
+      utils.walls.byId.invalidate({ wallId, zoneId });
+      utils.topos.byId.invalidate({ topoId: mainTopoId, zoneId });
+    },
+  });
 
   const {
     handleSubmit,
@@ -199,16 +194,25 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           : "",
     };
 
-    if (id) {
-      mutateEdit({
-        routeId: id,
+    if (!!extendedRouteId) {
+      mutate({
+        extendedRouteId,
+        wallId,
         ...data,
       });
       return;
     }
-    if (!!extendedRouteId) {
-      mutateExtension({
-        extendedRouteId,
+    if (!!variantRouteId) {
+      mutate({
+        variantRouteId,
+        wallId,
+        ...data,
+      });
+      return;
+    }
+    if (!!id) {
+      mutate({
+        routeId: id,
         ...data,
       });
       return;
@@ -356,7 +360,7 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
           variant="primary"
           title={rest.name ? "Editar" : "Agregar"}
           onPress={onSubmit}
-          isLoading={isLoading || isLoadingEdit || isExtensionLoading}
+          isLoading={isLoading}
           marginVertical="s"
           minHeight={50}
         />

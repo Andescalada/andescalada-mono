@@ -3,13 +3,14 @@ import { downloadedZonesAtom } from "@atoms/index";
 import useDeleteAssetsFromDb from "@hooks/useDeleteAsstesFromDb";
 import useSetAssetsToDb from "@hooks/useSetAssetsToDb";
 import { useAtom } from "jotai";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Alert } from "react-native";
 
 const useDownloadedButton = (zoneId: Zone["id"], zoneName: Zone["name"]) => {
   const [downloadedZones] = useAtom(downloadedZonesAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { setZoneAssetsToDb, isLoading: isDownloading } = useSetAssetsToDb();
+  const { setZoneAssetsToDb } = useSetAssetsToDb();
 
   const isDownloaded = useMemo(
     () => !!downloadedZones[zoneId],
@@ -20,11 +21,18 @@ const useDownloadedButton = (zoneId: Zone["id"], zoneName: Zone["name"]) => {
     useDeleteAssetsFromDb();
 
   const onDownloadPress = async () => {
-    if (isDownloading || isDeleteLoading) {
+    if (isDeleteLoading || isLoading) {
       return;
     }
     if (!isDownloaded) {
-      await setZoneAssetsToDb({ zoneId, zoneName });
+      setIsLoading(true);
+      try {
+        await setZoneAssetsToDb({ zoneId, zoneName });
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        throw err;
+      }
     } else {
       Alert.alert("Borrar de descargas", "¿Estás seguro?", [
         {
@@ -43,7 +51,7 @@ const useDownloadedButton = (zoneId: Zone["id"], zoneName: Zone["name"]) => {
   return {
     onDownloadPress,
     isDownloaded,
-    isDownloading: isDeleteLoading || isDownloading,
+    isDownloading: isDeleteLoading || isLoading,
   };
 };
 

@@ -8,7 +8,7 @@ import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { deviceName } from "expo-device";
 import { atom, useAtom } from "jotai";
-import { useState } from "react";
+import { useCallback } from "react";
 
 export const progressAtom = atom(0);
 
@@ -17,8 +17,6 @@ type Data = inferProcedureOutput<AppRouter["user"]["offlineAssets"]>;
 const useSetAssetsToDb = () => {
   const setDownloadedAssetsList = useAtom(downloadedAssetsListAtom)[1];
   const setIsDownloadedZones = useAtom(downloadedZonesAtom)[1];
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const utils = trpc.useContext();
 
@@ -32,100 +30,107 @@ const useSetAssetsToDb = () => {
 
   const { saveImagesToFileSystem } = useSaveImagesToFileSystem();
 
-  const setZoneAssetsToDb = async ({
-    zoneId,
-    zoneName,
-  }: {
-    zoneId: string;
-    zoneName: string;
-  }) => {
-    try {
-      const data = await utils.user.offlineAssets.fetch({ zoneId });
-      await saveAssetsToDb({ zoneId, data, zoneName });
-      notification.notify("success", {
-        params: {
-          title: "Zona descargada con éxito",
-          description: `Ahora ${zoneName} está disponible offline`,
-          hideCloseButton: true,
-        },
-      });
-    } catch (error) {
-      notification.notify("error", {
-        params: {
-          title: "Error",
-          description: `No se ha podido descargar ${zoneName}`,
-        },
-      });
-      throw error;
-    }
-  };
-
-  const saveAssetsToDb = async ({
-    zoneId,
-    zoneName,
-    data,
-  }: {
-    zoneId: string;
-    zoneName: string;
-    data: Data;
-  }) => {
-    setIsDownloadedZones((old) => ({
-      ...old,
-      [zoneId]: { device: deviceName, downloadedAt: new Date(), zoneName },
-    }));
-    setIsLoading(true);
-    try {
-      const db = offlineDb.open();
-
-      await offlineDb.createZoneTable(db, zoneId);
-
-      for (const asset of data.assets) {
-        const { version, zoneId, assetId } = asset;
-
-        const downloadedAsset = data.assets.find((a) => a.assetId === assetId);
-
-        if (!downloadedAsset) return Promise.resolve(undefined);
-
-        await offlineDb.setAsync(
-          db,
-          assetId,
-          zoneId,
-          downloadedAsset.data,
-          version,
-        );
-      }
-
-      setDownloadedAssetsList((prev) => ({
-        ...prev,
-        [zoneId]: { assets: data.assetList },
+  const saveAssetsToDb = useCallback(
+    async ({
+      zoneId,
+      zoneName,
+      data,
+    }: {
+      zoneId: string;
+      zoneName: string;
+      data: Data;
+    }) => {
+      setIsDownloadedZones((old) => ({
+        ...old,
+        [zoneId]: { device: deviceName, downloadedAt: new Date(), zoneName },
       }));
+      try {
+        const db = offlineDb.open();
 
-      db.close();
+        await offlineDb.createZoneTable(db, zoneId);
 
-      await saveImagesToFileSystem({
-        imagesToDownload: data.imagesToDownload,
-        zoneId,
-      });
+        for (const asset of data.assets) {
+          const { version, zoneId, assetId } = asset;
 
-      if (data.location) {
-        await downloadMapboxOffline({
-          packName: zoneId,
-          location: data.location,
-          notification,
+          const downloadedAsset = data.assets.find(
+            (a) => a.assetId === assetId,
+          );
+
+          if (!downloadedAsset) return Promise.resolve(undefined);
+
+          await offlineDb.setAsync(
+            db,
+            assetId,
+            zoneId,
+            downloadedAsset.data,
+            version,
+          );
+        }
+
+        setDownloadedAssetsList((prev) => ({
+          ...prev,
+          [zoneId]: { assets: data.assetList },
+        }));
+
+        db.close();
+
+        await saveImagesToFileSystem({
+          imagesToDownload: data.imagesToDownload,
+          zoneId,
         });
+
+        if (data.location) {
+          await downloadMapboxOffline({
+            packName: zoneId,
+            location: data.location,
+            notification,
+          });
+        }
+
+        addToDownloadedList.mutate({ zoneId });
+      } catch (error) {
+        setIsDownloadedZones((old) => {
+          delete old[zoneId];
+          return { ...old };
+        });
+        throw error;
       }
+    },
+    [
+      addToDownloadedList,
+      notification,
+      saveImagesToFileSystem,
+      setDownloadedAssetsList,
+      setIsDownloadedZones,
+    ],
+  );
 
-      addToDownloadedList.mutate({ zoneId });
-    } catch (error) {
-      setIsDownloadedZones((old) => {
-        delete old[zoneId];
-        return { ...old };
-      });
-    }
-    setIsLoading(false);
-  };
+  const setZoneAssetsToDb = useCallback(
+    async ({ zoneId, zoneName }: { zoneId: string; zoneName: string }) => {
+      try {
+        const data = await utils.user.offlineAssets.fetch({ zoneId });
+        await saveAssetsToDb({ zoneId, data, zoneName });
+        notification.notify("success", {
+          params: {
+            title: "Zona descargada con éxito",
+            description: `Ahora ${zoneName} está disponible offline`,
+            hideCloseButton: true,
+          },
+        });
+      } catch (error) {
+        notification.notify("error", {
+          params: {
+            title: "Error",
+            description: `No se ha podido descargar ${zoneName}`,
+          },
+        });
+        throw error;
+      }
+    },
+    [notification, saveAssetsToDb, utils.user.offlineAssets],
+  );
 
-  return { setZoneAssetsToDb, saveAssetsToDb, isLoading };
+  return { setZoneAssetsToDb, saveAssetsToDb };
 };
 
 export default useSetAssetsToDb;

@@ -104,6 +104,7 @@ const TopoViewer: FC<Props> = ({
               scale={fitted.scale}
               selectedRoute={selectedRoute}
               strokeWidth={strokeWidth}
+              withSimpleStartPoint={!!path.Route.variantRouteId}
             />
           ))}
       </ThemeProvider>
@@ -120,6 +121,7 @@ interface ColoredRouteProps {
   strokeWidth: number;
   pitchLabelPoint?: string;
   pitchLabelTitle?: string;
+  withSimpleStartPoint?: boolean;
 }
 
 const ColoredRoute = ({
@@ -129,6 +131,7 @@ const ColoredRoute = ({
   strokeWidth,
   pitchLabelPoint,
   pitchLabelTitle,
+  withSimpleStartPoint = false,
 }: ColoredRouteProps) => {
   const theme = useAppTheme();
 
@@ -142,6 +145,7 @@ const ColoredRoute = ({
 
   return (
     <SkiaRoutePath
+      withSimpleStartPoint={withSimpleStartPoint}
       label={path.Route.position.toString()}
       path={path.path}
       key={path.id}

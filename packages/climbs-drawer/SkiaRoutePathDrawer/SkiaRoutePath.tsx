@@ -21,6 +21,7 @@ interface Props {
   scale?: number;
   strokeWidth?: number;
   routeFromTheGround?: boolean;
+  withSimpleStartPoint?: boolean;
 }
 
 const SkiaRoutePath: FC<Props> = ({
@@ -32,6 +33,7 @@ const SkiaRoutePath: FC<Props> = ({
   scale = 1,
   strokeWidth: strokeWidthProp = 1,
   routeFromTheGround = true,
+  withSimpleStartPoint = false,
 }) => {
   const { points, start, end } = usePathToPoints(path, scale);
   const pitchLabelPoint = useValue<SkPoint>(
@@ -65,16 +67,15 @@ const SkiaRoutePath: FC<Props> = ({
         />
       )}
       <EndPointer c={end} color={color} scale={scale * strokeWidthProp} />
-      {
-        <StartComponent
-          color={color}
-          label={label}
-          routeFromTheGround={routeFromTheGround}
-          scale={scale}
-          start={start}
-          strokeWidthProp={strokeWidthProp}
-        />
-      }
+      <StartComponent
+        simpleStart={withSimpleStartPoint}
+        color={color}
+        label={label}
+        routeFromTheGround={routeFromTheGround}
+        scale={scale}
+        start={start}
+        strokeWidthProp={strokeWidthProp}
+      />
     </Group>
   );
 };
@@ -88,6 +89,7 @@ interface StartComponentProps {
   scale: number;
   start: SkiaMutableValue<SkPoint>;
   strokeWidthProp: number;
+  simpleStart?: boolean;
 }
 
 const StartComponent = ({
@@ -97,9 +99,11 @@ const StartComponent = ({
   scale,
   start,
   strokeWidthProp,
+  simpleStart,
 }: StartComponentProps) =>
   routeFromTheGround ? (
     <StartPointer
+      simpleStart={simpleStart}
       c={start}
       label={label}
       scale={scale * strokeWidthProp}

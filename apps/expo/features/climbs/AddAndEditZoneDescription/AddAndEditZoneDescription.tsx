@@ -15,7 +15,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
-import { FC, RefObject, useRef } from "react";
+import { FC, RefObject, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 
 type Props =
@@ -53,13 +53,27 @@ const AddAndEditZoneDescription: FC<Props> = ({
     return tooShort || tooLong;
   };
 
+  const [isFocus, setIsFocus] = useState(false);
+
   return (
     <Screen safeAreaDisabled padding="m">
       <KeyboardAvoidingBox behavior="height">
         <KeyboardDismiss>
-          <Text variant="h4" marginBottom="s">
-            Agrega una descripción
-          </Text>
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            marginBottom="s"
+            alignItems="flex-end"
+          >
+            <>
+              <Text variant="h4">Agrega una descripción</Text>
+              {isFocus && (
+                <Box bg="semantic.info" borderRadius={16} paddingHorizontal="s">
+                  <Text variant="p3R">Ok</Text>
+                </Box>
+              )}
+            </>
+          </Box>
           <TextInput
             multiline
             placeholder={`Escribe una descripción de la zona, mínimo ${descriptionLength.min} caracteres.`}
@@ -68,6 +82,8 @@ const AddAndEditZoneDescription: FC<Props> = ({
             containerProps={{ flex: 1, padding: "s" }}
             value={description.field.value}
             onChangeText={description.field.onChange}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
           />
           <Box marginTop="s" flexDirection="row">
             <Box>

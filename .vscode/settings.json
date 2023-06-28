@@ -18,6 +18,7 @@
     "mmkv",
     "MMKV",
     "reduxjs",
+    "upsert",
     "UPSTASH"
   ],
   "workbench.colorTheme": "Dracula Soft",

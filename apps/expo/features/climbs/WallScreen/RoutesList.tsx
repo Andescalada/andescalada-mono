@@ -32,7 +32,7 @@ type Wall = inferProcedureOutput<AppRouter["walls"]["byId"]>;
 type NavigationRoute =
   ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>["route"];
 
-type ParsedExtension = Wall["routes"][0]["Extension"][0] & {
+type ParsedChildrenRoute = Wall["routes"][0]["Extension"][0] & {
   kindStringify: string;
   gradeStringify: string;
   routeRef: RefObject<ListItemRef>;
@@ -78,7 +78,7 @@ const RoutesList: FC = () => {
         multiPitch.gradeRouteKind,
       ),
       isMultiPitch: true,
-      Extension: [] as ParsedExtension[],
+      ChildrenRoutes: [] as ParsedChildrenRoute[],
     }));
     const routesWithRef = wall?.routes.map((route) => ({
       ...route,
@@ -92,19 +92,22 @@ const RoutesList: FC = () => {
         route.kind,
       ),
       routeRef: createRef<ListItemRef>(),
-      Extension: route.Extension.map((extension) => ({
-        ...extension,
-        kindStringify: routeKindLabel(extension.kind).long,
-        gradeStringify: gradeLabel(
-          {
-            grade: extension.RouteGrade?.grade ?? null,
-            project: !!extension.RouteGrade?.project,
-          },
-          extension.kind,
-        ),
-        routeRef: createRef<ListItemRef>(),
-      })),
+      ChildrenRoutes: [...route.Extension, ...route.Variant].map(
+        (childrenRoute) => ({
+          ...childrenRoute,
+          kindStringify: routeKindLabel(childrenRoute.kind).long,
+          gradeStringify: gradeLabel(
+            {
+              grade: childrenRoute.RouteGrade?.grade ?? null,
+              project: !!childrenRoute.RouteGrade?.project,
+            },
+            childrenRoute.kind,
+          ),
+          routeRef: createRef<ListItemRef>(),
+        }),
+      ),
     }));
+
     return {
       ...wall,
       routes: [...routesWithRef, ...multiPitch].sort(
@@ -123,8 +126,8 @@ const RoutesList: FC = () => {
   const reset = useCallback(() => {
     data?.routes.forEach((route) => {
       route.routeRef?.current?.reset();
-      route.Extension.forEach((extension) => {
-        extension.routeRef?.current?.reset();
+      route.ChildrenRoutes.forEach((childrenRoute) => {
+        childrenRoute.routeRef?.current?.reset();
       });
     });
   }, [data?.routes]);
@@ -192,7 +195,7 @@ const RoutesList: FC = () => {
       backgroundColor="background"
     >
       {data?.routes.map((item, index) => {
-        const maxIndex = item.Extension.length - 1;
+        const maxIndex = item.ChildrenRoutes.length - 1;
         return (
           <A.Box
             key={item.id}
@@ -256,35 +259,39 @@ const RoutesList: FC = () => {
                 onRouteOptions({ routeId: item.id, zoneId });
               }}
             />
-            {item.Extension.map((extension, extensionIndex) => (
+            {item.ChildrenRoutes.map((childrenRoute, childrenRouteIndex) => (
               <RouteItem
-                title={extension.name}
-                kind={extension.kindStringify}
-                grade={extension.gradeStringify}
+                title={childrenRoute.name}
+                kind={childrenRoute.kindStringify}
+                grade={childrenRoute.gradeStringify}
                 onPress={() => {
                   onPress({
-                    routeId: extension.id,
+                    routeId: childrenRoute.id,
                     zoneId,
-                    routeName: extension.name,
+                    routeName: childrenRoute.name,
                   });
                 }}
                 allowEdit={
                   (permission?.has("Update") ||
-                    extension.Author.email === user?.email) &&
+                    childrenRoute.Author.email === user?.email) &&
                   !isOfflineMode
                 }
                 onDelete={() => {
                   onDeleteTry({
-                    id: extension.id,
+                    id: childrenRoute.id,
                     zoneId,
                     isExtension: true,
                   });
                 }}
                 onOptions={() => {
-                  onRouteOptions({ routeId: extension.id, zoneId });
+                  onRouteOptions({
+                    routeId: childrenRoute.id,
+                    zoneId,
+                    isChildrenRoute: true,
+                  });
                 }}
-                key={extension.id}
-                index={index + extensionIndex}
+                key={childrenRoute.id}
+                index={index + childrenRouteIndex}
                 variant="plain"
                 containerProps={{
                   width: "90%",
@@ -295,9 +302,11 @@ const RoutesList: FC = () => {
                 borderColor="grayscale.900"
                 borderTopEndRadius={0}
                 borderTopLeftRadius={0}
-                borderBottomLeftRadius={extensionIndex === maxIndex ? 5 : 0}
-                borderBottomRightRadius={extensionIndex === maxIndex ? 5 : 0}
-                borderBottomWidth={extensionIndex === maxIndex ? 3 : 1}
+                borderBottomLeftRadius={childrenRouteIndex === maxIndex ? 5 : 0}
+                borderBottomRightRadius={
+                  childrenRouteIndex === maxIndex ? 5 : 0
+                }
+                borderBottomWidth={childrenRouteIndex === maxIndex ? 3 : 1}
               />
             ))}
           </A.Box>

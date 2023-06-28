@@ -1,13 +1,13 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { useAppDispatch } from "@hooks/redux";
-import useSetOrCreateUserMutation from "@local-database/hooks/useSetOrCreateUserMutation";
 import { autoLoginAuth0 } from "@store/auth";
 import { inferProcedureOutput } from "@trpc/server";
 import storage from "@utils/mmkv/storage";
 import { noNetwork } from "@utils/noNetworkCondition";
+import { atom, useAtom } from "jotai";
 import { useEffect, useMemo } from "react";
-import { parse, stringify } from "superjson";
+import { parse } from "superjson";
 
 type OwnInfoOutput = inferProcedureOutput<AppRouter["user"]["ownInfo"]>;
 
@@ -15,12 +15,13 @@ interface Args {
   withInitialData?: boolean;
 }
 
+const firstRenderAtom = atom(true);
+
 const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
   const dispatch = useAppDispatch();
+  const [firstRender, setFirstRender] = useAtom(firstRenderAtom);
 
   const ownInfoOutput = storage.getString("ownInfo");
-
-  const addUser = useSetOrCreateUserMutation();
 
   const parsedStoredOwnInfo = useMemo(
     () => (ownInfoOutput ? parse<OwnInfoOutput>(ownInfoOutput) : undefined),
@@ -45,22 +46,11 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
   });
 
   useEffect(() => {
-    if (ownInfo.data) {
-      addUser.mutate({
-        id: ownInfo.data.id,
-        email: ownInfo.data.email,
-        name: ownInfo.data.name,
-        username: ownInfo.data.username,
-        ownUser: true,
-        preferredBoulderGrade: ownInfo.data.preferredBoulderGrade,
-        preferredSportGrade: ownInfo.data.preferredSportGrade,
-        preferredTradGrade: ownInfo.data.preferredTradGrade,
-      });
-
-      storage.set("ownInfo", stringify(ownInfo.data));
+    if (ownInfo.data && firstRender) {
+      setFirstRender(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ownInfo.isSuccess]);
+  }, []);
 
   return ownInfo;
 };

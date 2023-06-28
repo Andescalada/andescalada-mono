@@ -3,6 +3,7 @@ import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 
 const schema = z.object({
+  routeId: z.never().optional(),
   wallId: z.string(),
   name: z
     .string({ required_error: "Requerido" })
@@ -26,6 +27,22 @@ const extensionParams = z.object({
   extendedRouteId: z.string(),
 });
 
+const variantParams = z.object({
+  variantRouteId: z.string(),
+});
+
+const editRoute = schema.partial().merge(routeId);
+
+const addExtension = schema.merge(extensionParams);
+
+const addVariant = schema.merge(variantParams);
+
+const upsertRoute = schema
+  .passthrough()
+  .or(editRoute)
+  .or(addExtension)
+  .or(addVariant);
+
 export const descriptionLength = { max: 280, min: 20 };
 
 const description = z.object({
@@ -37,4 +54,13 @@ const description = z.object({
     }),
 });
 
-export default { schema, routeId, extensionParams, description };
+export default {
+  schema,
+  routeId,
+  extensionParams,
+  description,
+  variantParams,
+  addExtension,
+  addVariant,
+  upsertRoute,
+};
