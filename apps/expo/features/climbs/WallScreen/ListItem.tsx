@@ -1,6 +1,5 @@
 import { A, Text } from "@andescalada/ui";
 import Conditional from "@utils/conditionalVars";
-import * as ScreenOrientation from "expo-screen-orientation";
 import {
   ComponentProps,
   forwardRef,
@@ -8,7 +7,6 @@ import {
   ReactNode,
   RefObject,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
 } from "react";
@@ -19,7 +17,6 @@ import {
 } from "react-native-gesture-handler";
 import {
   FadeOutLeft,
-  measure,
   runOnJS,
   SharedValue,
   useAnimatedRef,
@@ -31,7 +28,6 @@ import {
   WithSpringConfig,
 } from "react-native-reanimated";
 import { between } from "react-native-redash";
-import * as Sentry from "sentry-expo";
 
 interface Props extends Omit<ComponentProps<typeof A.ListItem>, "key"> {
   children: ReactNode;
@@ -235,21 +231,6 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
       zIndex: opacityLeft.value > 0 ? 100 : 1,
     };
   });
-
-  useEffect(() => {
-    const subscription = ScreenOrientation.addOrientationChangeListener((e) => {
-      const dimensions = measure(animatedRef);
-      Sentry.Native.captureMessage(
-        `Orientation changed to ${e.orientationInfo.orientation}, width: ${dimensions?.width}`,
-      );
-      if (!dimensions) return;
-      width.value = dimensions.width;
-    });
-    return () => {
-      subscription.remove();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animatedRef]);
 
   return (
     <GestureDetector gesture={pan}>
