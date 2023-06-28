@@ -10,6 +10,7 @@ import {
   addRouteLength,
   editRouteLength,
 } from "@andescalada/api/src/routers/routes/routeLength";
+import upsert from "@andescalada/api/src/routers/routes/upsert";
 import upsertDescription from "@andescalada/api/src/routers/routes/upsertDescription";
 import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
@@ -63,112 +64,7 @@ export const routesRouter = t.router({
       }
       return route;
     }),
-  add: protectedZoneProcedure
-    .input(routeSchema.schema)
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.permissions.has("Create")) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-      const maxRoutePosition = await ctx.prisma.route.aggregate({
-        where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
-        _max: { position: true },
-      });
-      const maxMultiPitchPosition = await ctx.prisma.multiPitch.aggregate({
-        where: { wallId: input.wallId, isDeleted: SoftDelete.NotDeleted },
-        _max: { position: true },
-      });
-
-      const biggestPosition =
-        Math.max(
-          Number(maxRoutePosition._max.position),
-          Number(maxMultiPitchPosition._max.position),
-        ) ?? 0;
-
-      const {
-        grade,
-        kind,
-        name,
-        originalGradeSystem,
-        unknownName,
-        originalGrade,
-      } = input;
-
-      const newRoute = await ctx.prisma.route.create({
-        data: {
-          name,
-          slug: slug(name),
-          Wall: { connect: { id: input.wallId } },
-          kind,
-          unknownName,
-          position: biggestPosition + 1,
-          RouteGrade: {
-            create: {
-              grade: grade.grade,
-              project: grade.project,
-              ...(originalGradeSystem && {
-                originalGradeSystem,
-              }),
-              ...(originalGrade && { originalGrade }),
-            },
-          },
-          Author: { connect: { email: ctx.user.email } },
-        },
-      });
-
-      await ctx.prisma.wall.update({
-        where: { id: input.wallId },
-        data: { version: { increment: 1 } },
-      });
-
-      const mainTopoId = await getMainTopo({ ctx, wallId: input.wallId });
-
-      return { ...newRoute, mainTopoId };
-    }),
-  addExtension: protectedZoneProcedure
-    .input(
-      routeSchema.schema
-        .omit({ wallId: true })
-        .merge(routeSchema.extensionParams),
-    )
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.permissions.has("Create")) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
-      const extendedRoute = await ctx.prisma.route.findUnique({
-        where: { id: input.extendedRouteId },
-      });
-
-      if (!extendedRoute) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `No route with id '${input.extendedRouteId}'`,
-        });
-      }
-
-      const newExtension = await ctx.prisma.route.create({
-        data: {
-          name: input.name,
-          slug: slug(input.name),
-          Wall: { connect: { id: extendedRoute.wallId } },
-          kind: input.kind,
-          unknownName: input.unknownName,
-          position: extendedRoute.position,
-          RouteGrade: {
-            create: { grade: input.grade.grade, project: input.grade.project },
-          },
-          ExtendedRoute: { connect: { id: input.extendedRouteId } },
-          Author: { connect: { email: ctx.user.email } },
-        },
-      });
-
-      const mainTopoId = await getMainTopo({
-        ctx,
-        wallId: extendedRoute.wallId,
-      });
-
-      return { ...newExtension, mainTopoId };
-    }),
+  upsert: upsert,
   updateOrCreatePath: protectedProcedure
     .input(
       z.object({

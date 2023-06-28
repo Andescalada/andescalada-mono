@@ -139,6 +139,18 @@ const EditOptions: FC<Props> = ({
         Agregar extensión
       </ListItemOption>
       <ListItemOption
+        visible={permission.has("Create")}
+        onPress={() =>
+          navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+            wallId,
+            zoneId,
+            variantRouteId: id,
+          })
+        }
+      >
+        Agregar variante
+      </ListItemOption>
+      <ListItemOption
         visible={
           permission.has("Create") &&
           featureFlags.multiPitch &&
