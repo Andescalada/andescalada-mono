@@ -1,14 +1,7 @@
 import user from "@andescalada/api/schemas/user";
 import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Screen,
-  ScrollView,
-  Text,
-} from "@andescalada/ui";
+import { Box, Button, ButtonGroup, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   OnboardingRoutes,
