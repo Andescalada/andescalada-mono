@@ -34,7 +34,7 @@ const publicWallById = t.procedure
             image: true,
             RoutePath: {
               where: {
-                OR: [
+                AND: [
                   { isDeleted: SoftDelete.NotDeleted },
                   { Route: { isDeleted: SoftDelete.NotDeleted } },
                 ],

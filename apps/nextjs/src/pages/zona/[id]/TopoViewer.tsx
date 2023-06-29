@@ -1,6 +1,6 @@
 import { pathToArray } from "@andescalada/climbs-drawer/utils";
-import { urlGen } from "@andescalada/utils/cloudinary";
 import type { Image as ImageType, RoutePath, Topo } from "@andescalada/db";
+import { urlGen } from "@andescalada/utils/cloudinary";
 import Image from "next/image";
 
 type Item = Topo & {
