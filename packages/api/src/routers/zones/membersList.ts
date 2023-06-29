@@ -43,12 +43,21 @@ export const membersList = protectedZoneProcedure
       );
     }
 
-    const parsedData = zone.RoleByZone.map((r) => ({
-      ...r.User,
-      assignedBy: r.AssignedBy,
-      assignedAt: r.createdAt,
-      role: r.Role.name,
-    }));
+    const uniqueUsers = new Set(
+      zone.RoleByZone.sort(
+        (a, b) => -a.createdAt.getTime() + b.createdAt.getTime(),
+      ).map((r) => r.User.id),
+    );
+
+    const parsedData = Array.from(uniqueUsers).map((userId) => {
+      const r = zone.RoleByZone.find((u) => u.User.id === userId);
+      if (!r) throw new Error("User not found");
+      return {
+        ...r.User,
+        assignedBy: r.AssignedBy,
+        assignedAt: r.createdAt,
+      };
+    });
 
     return parsedData;
   });
