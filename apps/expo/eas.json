@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 2.1.0",
+    "version": ">= 3.14.0",
     "requireCommit": false,
     "appVersionSource": "remote"
   },
@@ -51,6 +51,13 @@
       "env": {
         "APP_VARIANT": "production",
         "FLIPPER_DISABLE": "1"
+      }
+    },
+    "production-simulator": {
+      "autoIncrement": false,
+      "extends": "production",
+      "ios": {
+        "simulator": true
       }
     }
   },

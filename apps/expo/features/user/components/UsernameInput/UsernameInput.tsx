@@ -54,7 +54,7 @@ const UsernameInput: FC<Props> = ({ onLoading, defaultValue, ...props }) => {
     };
   }, [isLoadingUsernameValidation, isTouched, isUsernameValid]);
 
-  const debounceUserNameCheck = useDebounce(userNameCheck, 500);
+  const debounceUserNameCheck = useDebounce(userNameCheck, 2000);
 
   const onChangeHandler = async (text: string) => {
     onChangeUsername(text);

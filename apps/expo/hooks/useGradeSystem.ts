@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 
 const addOneWrap = (n: number, value: number) => (value + 1) % (n + 1);
 
-const gradeSystemSelector = (
+export const gradeSystemSelector = (
   kind: typeof RouteKindSchema._type,
   preferredSystem: typeof GradeSystemsSchema._type,
   plus: number,
