@@ -99,6 +99,7 @@ enum Actions {
 
 enum GradeSystems {
   French
+  Font
   Yosemite
   Hueco
   Ice
