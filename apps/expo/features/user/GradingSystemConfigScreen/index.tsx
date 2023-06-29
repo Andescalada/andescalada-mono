@@ -1,5 +1,5 @@
 import user from "@andescalada/api/schemas/user";
-import { GradeSystemsSchema } from "@andescalada/db/zod";
+import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   ActivityIndicator,
@@ -13,6 +13,7 @@ import {
   UserNavigationRoutes,
   UserNavigationScreenProps,
 } from "@features/user/Navigation/types";
+import { gradeSystemSelector } from "@hooks/useGradeSystem";
 import useIsConnected from "@hooks/useIsConnected";
 import useGetGradeSystemsQuery from "@local-database/hooks/useGetGradeSystemsQuery";
 import useSetUserGradingSystemMutation from "@local-database/hooks/useSetUserGradingSystemMutation";
@@ -94,8 +95,42 @@ const GradingOptions = ({
     return { variant: "info" as const, title: "Guardar" };
   }, [formState.isDirty, isSuccess]);
 
+  const sportGradeExample = useMemo(
+    () =>
+      gradeSystemSelector(
+        RouteKindSchema.Enum.Sport,
+        sport.field.value,
+        0,
+      )?.[11],
+
+    [sport.field.value],
+  );
+  const boulderGradeExample = useMemo(
+    () =>
+      gradeSystemSelector(
+        RouteKindSchema.Enum.Boulder,
+        boulder.field.value,
+        0,
+      )?.[10],
+    [boulder.field.value],
+  );
+  const tradGradeExample = useMemo(
+    () =>
+      gradeSystemSelector(
+        RouteKindSchema.Enum.Sport,
+        trad.field.value,
+        0,
+      )?.[11],
+    [trad.field.value],
+  );
+
   return (
-    <Screen safeAreaDisabled alignItems="center" justifyContent="space-evenly">
+    <Screen
+      safeAreaDisabled
+      alignItems="center"
+      justifyContent="space-evenly"
+      padding="m"
+    >
       <Text variant="h2">Grado Deportiva</Text>
       <GradingBox>
         <ButtonGroup
@@ -108,6 +143,9 @@ const GradingOptions = ({
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
+          <Box flex={1} alignItems="center">
+            <Text variant="p1R">{sportGradeExample || " "}</Text>
+          </Box>
           <ButtonGroup.Item
             margin="s"
             value={GradeSystemsSchema.Enum.Yosemite}
@@ -124,9 +162,12 @@ const GradingOptions = ({
         >
           <ButtonGroup.Item
             margin="s"
-            value={GradeSystemsSchema.Enum.French}
-            label="Francesa"
+            value={GradeSystemsSchema.Enum.Font}
+            label="Fontainebleau"
           />
+          <Box flex={1} alignItems="center">
+            <Text variant="p1R">{boulderGradeExample || " "}</Text>
+          </Box>
           <ButtonGroup.Item
             margin="s"
             value={GradeSystemsSchema.Enum.Hueco}
@@ -146,6 +187,9 @@ const GradingOptions = ({
             value={GradeSystemsSchema.Enum.French}
             label="Francesa"
           />
+          <Box flex={1} alignItems="center">
+            <Text variant="p1R">{tradGradeExample || " "}</Text>
+          </Box>
           <ButtonGroup.Item
             margin="s"
             value={GradeSystemsSchema.Enum.Yosemite}
