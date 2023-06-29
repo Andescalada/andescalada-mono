@@ -52,6 +52,13 @@
         "APP_VARIANT": "production",
         "FLIPPER_DISABLE": "1"
       }
+    },
+    "production-simulator": {
+      "autoIncrement": false,
+      "extends": "production",
+      "ios": {
+        "simulator": true
+      }
     }
   },
   "submit": {
