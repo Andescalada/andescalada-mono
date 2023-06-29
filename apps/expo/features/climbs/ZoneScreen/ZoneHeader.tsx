@@ -63,7 +63,7 @@ const ZoneHeader = () => {
   const { isFavorite, onFavoritePress } = useFavoritedButton(zoneId);
 
   const showPublicationStatus =
-    permission?.has("Update") ||
+    permission?.has("PublishZone") ||
     globalPermissions.includes(GlobalPermissions.REVIEW_ZONE);
 
   if (!data) return <Box />;
