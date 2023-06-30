@@ -18,7 +18,10 @@ interface VerificatonCodeSuccess {
   token_type: "Bearer";
 }
 
-const login = async (email: string) => {
+const login = async (
+  input: string,
+  kind: "email" | "phoneNumber" = "email",
+) => {
   const res = await fetch(`https://${domain}/passwordless/start`, {
     method: "POST",
     headers: {
@@ -26,8 +29,9 @@ const login = async (email: string) => {
     },
     body: JSON.stringify({
       client_id: clientId,
-      connection: "email",
-      email: email,
+      connection: kind === "email" ? "email" : "sms",
+      ...(kind === "phoneNumber" && { phone_number: input }),
+      ...(kind === "email" && { email: input }),
       send: "code",
     }),
   });
@@ -35,7 +39,11 @@ const login = async (email: string) => {
   return res.json() as unknown as LoginResponse;
 };
 
-const verifyCode = async (email: string, code: string) => {
+const verifyCode = async (
+  input: string,
+  code: string,
+  kind: "email" | "phoneNumber" = "email",
+) => {
   const res = await fetch(`https://${domain}/oauth/token`, {
     method: "POST",
     headers: {
@@ -44,11 +52,11 @@ const verifyCode = async (email: string, code: string) => {
     body: JSON.stringify({
       grant_type: "http://auth0.com/oauth/grant-type/passwordless/otp",
       client_id: clientId,
-      username: email,
+      username: input,
       otp: code,
-      realm: "email",
+      realm: kind === "email" ? "email" : "sms",
       audience: audience,
-      scope: "openid name profile offline_access",
+      scope: "openid name phone profile offline_access",
     }),
   });
 
