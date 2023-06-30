@@ -8,6 +8,6 @@ export const systemRouter = t.router({
       if (input === "Android") {
         return 30;
       }
-      return 39; // iOS
+      return 40; // iOS
     }),
 });
