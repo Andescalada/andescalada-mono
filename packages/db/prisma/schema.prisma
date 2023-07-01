@@ -31,7 +31,7 @@ model User {
   profilePhoto               Image?                    @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId             String?
   firstLogin                 Boolean                   @default(true)
-  auth0id                    String?
+  auth0id                    String?                   @unique
   authorZone                 Zone[]                    @relation("AuthorZone")
   coAuthorZone               Zone[]                    @relation("CoAuthorZone")
   authorSector               Sector[]                  @relation("AuthorSector")
@@ -73,6 +73,7 @@ model User {
   @@index([email])
   @@index([profilePhotoId])
   @@index([phoneNumber])
+  @@index([auth0id])
   @@fulltext([username])
 }
 
