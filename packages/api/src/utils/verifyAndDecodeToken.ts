@@ -37,7 +37,10 @@ const verifyAndDecodeToken = async (req: NextApiRequest) => {
       return {
         verified: true,
         user: {
-          connectionStrategy: data.connection_strategy as "email" | "sms",
+          connectionStrategy: data.connection_strategy as
+            | "email"
+            | "sms"
+            | "auth0",
           phoneNumber: data.phone_number as string | undefined,
           email: (data.user_email as string) ?? undefined,
           auth0Id: data.sub,

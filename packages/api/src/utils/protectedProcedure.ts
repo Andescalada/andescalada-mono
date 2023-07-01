@@ -35,9 +35,9 @@ export const isAuth = t.middleware(async ({ ctx, next }) => {
 
   user = await ctx.prisma.user.findUnique({
     where: {
-      ...(verifiedUser.connectionStrategy === "email"
-        ? { email: verifiedUser.email }
-        : { phoneNumber: verifiedUser.phoneNumber }),
+      ...(verifiedUser.connectionStrategy === "sms"
+        ? { phoneNumber: verifiedUser.phoneNumber }
+        : { email: verifiedUser.email }),
     },
     select: SelectUser,
   });
