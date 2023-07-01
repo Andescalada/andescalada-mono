@@ -3,9 +3,8 @@ import { Prisma, SoftDelete } from "@andescalada/db";
 import { GradeSystemsSchema } from "@andescalada/db/zod";
 
 export const pushRouteGradeEvaluation = ({
-  ctx: { prisma },
+  ctx: { prisma, user },
   changes: { created, deleted, updated },
-  user,
 }: PrismaMutationChangesParams) => {
   const mutations: Prisma.PrismaPromise<any>[] = [];
 

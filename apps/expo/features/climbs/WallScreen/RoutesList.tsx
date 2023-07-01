@@ -210,8 +210,7 @@ const RoutesList: FC = () => {
               kind={item.kindStringify}
               ref={item.routeRef}
               allowEdit={
-                (permission?.has("Update") ||
-                  item.Author.email === user?.email) &&
+                (permission?.has("Update") || item.Author.id === user?.id) &&
                 !isOfflineMode
               }
               onPress={() => {
@@ -273,7 +272,7 @@ const RoutesList: FC = () => {
                 }}
                 allowEdit={
                   (permission?.has("Update") ||
-                    childrenRoute.Author.email === user?.email) &&
+                    childrenRoute.Author.id === user?.id) &&
                   !isOfflineMode
                 }
                 onDelete={() => {
