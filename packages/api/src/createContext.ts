@@ -1,4 +1,4 @@
-import { PrismaClient, SoftDelete } from "@andescalada/db";
+import { PrismaClient } from "@andescalada/db";
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { Redis } from "@upstash/redis";
