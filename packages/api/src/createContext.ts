@@ -20,6 +20,11 @@ export const access = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
 });
 
+export const session = new Redis({
+  url: process.env.UPSTASH_REDIS_SESSIONS_URL || "",
+  token: process.env.UPSTASH_REDIS_SESSION_TOKEN || "",
+});
+
 acceptLanguage.languages(["es-Cl", "es-EN"]);
 /**
  * Creates context for an incoming request
@@ -35,6 +40,7 @@ export const createContext = async ({
       res,
       prisma,
       access,
+      session,
     };
   }
   const { user, verified } = await verifyAndDecodeToken(req);
@@ -54,6 +60,7 @@ export const createContext = async ({
     access,
     verified,
     language,
+    session,
   };
 };
 
