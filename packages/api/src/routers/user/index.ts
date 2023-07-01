@@ -332,7 +332,7 @@ export const userRouter = t.router({
       where: {
         history_unique: {
           action: Actions.Visited,
-          email: ctx.user.email, //  TODO: DATA MIGRATION
+          userId: ctx.user.id,
           zoneId: input.zoneId,
         },
       },
@@ -351,14 +351,14 @@ export const userRouter = t.router({
 
   removeAllRecentZones: protectedProcedure.mutation(({ ctx }) =>
     ctx.prisma.history.updateMany({
-      where: { email: ctx.user.email }, // TODO: CHANGE TO USER_ID AFTER DATA MIGRATION
+      where: { userId: ctx.user.id },
       data: { isDeleted: SoftDelete.DeletedPublic },
     }),
   ),
 
   removeRecentZone: protectedZoneProcedure.mutation(({ ctx, input }) => {
     return ctx.prisma.history.updateMany({
-      where: { AND: { zoneId: input.zoneId, email: ctx.user.email } }, // TODO: CHANGE TO USER_ID AFTER DATA MIGRATION
+      where: { AND: { zoneId: input.zoneId, userId: ctx.user.id } },
       data: { isDeleted: SoftDelete.DeletedPublic },
     });
   }),
