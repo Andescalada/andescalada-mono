@@ -34,7 +34,6 @@ export class User extends Model {
   @text(schema[Table.USER].username.name) username!: string;
   @field(schema[Table.USER].ownUser.name) ownUser!: boolean;
   @readonly @date(schema[Table.USER].createdAt.name) createdAt!: Date;
-  @text(schema[Table.USER].email.name) email!: string;
   @text(schema[Table.USER].preferredSportGrade.name)
   preferredSportGrade!: typeof GradeSystemsSchema._type;
   @text(schema[Table.USER].preferredBoulderGrade.name)

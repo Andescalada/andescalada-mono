@@ -10,7 +10,7 @@ import schema from "./model/schema";
 
 const adapter = new SQLiteAdapter({
   schema,
-  migrations,
+  // migrations,
   dbName: "userAssets",
   jsi: true,
   onSetUpError: (error) => {
