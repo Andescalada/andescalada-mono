@@ -273,7 +273,6 @@ export const userRouter = t.router({
           name: true,
           username: true,
           profilePhoto: { select: { publicId: true } },
-          email: true, // TODO REMOVE THIS
           RoleByZone: {
             select: {
               Role: { select: { name: true } },
