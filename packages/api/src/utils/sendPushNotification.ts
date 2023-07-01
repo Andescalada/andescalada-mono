@@ -1,10 +1,10 @@
-import { Context } from "@andescalada/api/src/createContext";
 import { isDefined, notNull } from "@andescalada/api/src/utils/filterGuards";
+import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
 import Expo, { ExpoPushMessage } from "expo-server-sdk";
 
 const sendPushNotification = async (
-  ctx: Context,
+  ctx: ProtectedContext,
   { body, data }: { body: string; data?: object },
   usersEmail: string[],
 ) => {
