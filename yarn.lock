@@ -11369,6 +11369,11 @@ prisma-erd-generator@^1.2.4:
     "@mermaid-js/mermaid-cli" "^10.0.2"
     dotenv "^16.0.3"
 
+prisma-repl@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/prisma-repl/-/prisma-repl-1.4.0.tgz#aa0ce8f14b686691286c8a407a3f592d3c724d5e"
+  integrity sha512-jlvD9Y0T0+h0FlWGqZ1F5mPk91gTWgkOwkLWj2WRdExngxMUX4XJJE46h6in+WIF6tIF7YI7WHtjeOubRTx5+g==
+
 prisma@^4.16.1:
   version "4.16.1"
   resolved "https://registry.yarnpkg.com/prisma/-/prisma-4.16.1.tgz#c6d723a4326138a72489098a6c39a698a670fbbf"
