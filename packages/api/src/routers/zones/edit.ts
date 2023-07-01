@@ -24,7 +24,7 @@ const edit = protectedZoneProcedure
 
     const selectedZone = await ctx.prisma.zone.findUniqueOrThrow({
       where: { id: input.zoneId },
-      select: { Author: { select: { email: true } } },
+      select: { Author: { select: { id: true } } },
     });
 
     const zone = await ctx.prisma.zone.update({
@@ -40,8 +40,8 @@ const edit = protectedZoneProcedure
         infoAccess: input.infoAccess,
         version: { increment: 1 },
         coAuthors:
-          selectedZone.Author?.email === ctx.user.email
-            ? { connect: { email: ctx.user.email } }
+          selectedZone.Author?.id === ctx.user.id
+            ? { connect: { id: ctx.user.id } }
             : undefined,
       },
     });

@@ -10,7 +10,6 @@ const assignAndCacheRole = async (
     zoneId: string;
     role: RoleNames;
     username?: string;
-    email?: string;
     userId?: string;
   },
 ) => {
@@ -21,11 +20,7 @@ const assignAndCacheRole = async (
   const roleExist = await ctx.prisma.roleByZone.findMany({
     where: {
       User: {
-        OR: [
-          { username: input.username },
-          { email: input.email },
-          { id: input.userId },
-        ],
+        OR: [{ username: input.username }, { id: input.userId }],
       },
       Zone: { id: input.zoneId },
       Role: { name: input.role },
@@ -43,21 +38,19 @@ const assignAndCacheRole = async (
     data: {
       User: {
         connect: {
-          email: input.email,
           username: input.username,
           id: input.userId,
         },
       },
       Role: { connect: { name: input.role } },
       Zone: { connect: { id: input.zoneId } },
-      AssignedBy: { connect: { email: ctx.user.email } },
+      AssignedBy: { connect: { id: ctx.user.id } },
     },
     select: {
       Zone: { select: { name: true } },
       User: {
         select: {
           id: true,
-          email: true,
           RoleByZone: {
             select: {
               id: true,
@@ -89,7 +82,7 @@ const assignAndCacheRole = async (
 
   await updateRedisPermissions(
     ctx.access,
-    roles.User.email,
+    roles.User.id,
     input.zoneId,
     permissionSet,
   );

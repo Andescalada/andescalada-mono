@@ -20,7 +20,7 @@ const byIdWithEvaluation = protectedZoneProcedure
       where: { id: input.routeId },
       include: {
         ...includeInRoute,
-        RouteEvaluation: { where: { User: { email: ctx.user.email } } },
+        RouteEvaluation: { where: { User: { id: ctx.user.id } } },
       },
     });
 

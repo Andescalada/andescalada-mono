@@ -12,7 +12,7 @@ const sendAndRecordPushNotification = async (
     message,
     receivers,
   }: {
-    receivers: { email: string; id: string }[];
+    receivers: { id: string }[];
     entityId: string;
     entityTypeId: EntityTypeId;
     Entity: Entity;
@@ -33,7 +33,7 @@ const sendAndRecordPushNotification = async (
         entityTypeId,
         messageSent: message,
         NotificationSender: {
-          create: { Sender: { connect: { email: ctx.user.email } } },
+          create: { Sender: { connect: { id: ctx.user.id } } },
         },
         NotificationReceiver: {
           createMany: {
@@ -46,7 +46,7 @@ const sendAndRecordPushNotification = async (
     await sendPushNotification(
       ctx,
       { body: message },
-      receivers.map((r) => r.email),
+      receivers.map((r) => r.id),
     );
   } catch (err) {}
 };

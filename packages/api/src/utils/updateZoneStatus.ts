@@ -36,7 +36,7 @@ const updateZoneStatus = async (
       statusHistory: {
         create: {
           status: input.status,
-          modifiedBy: { connect: { email: ctx.user.email } },
+          modifiedBy: { connect: { id: ctx.user.id } },
           message: {
             create: {
               originalText: input.message,

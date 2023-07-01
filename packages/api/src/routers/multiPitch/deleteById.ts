@@ -11,12 +11,12 @@ const deleteById = protectedZoneProcedure
     const itemToDelete = await ctx.prisma.multiPitch.findUnique({
       where: { id: input.multiPitchId },
       select: {
-        Author: { select: { email: true } },
+        Author: { select: { id: true } },
       },
     });
     if (
       !ctx.permissions.has("Delete") &&
-      itemToDelete?.Author.email !== ctx.user.email
+      itemToDelete?.Author.id !== ctx.user.id
     ) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Delete"),

@@ -25,9 +25,9 @@ export const zoneAccessRouter = t.router({
       const accessRequest = await ctx.prisma.zoneAccessRequest.create({
         data: {
           status: RequestStatus.Pending,
-          User: { connect: { email: ctx.user.email } },
+          User: { connect: { id: ctx.user.id } },
           Zone: { connect: { id: input.zoneId } },
-          modifiedBy: { connect: { email: ctx.user.email } },
+          modifiedBy: { connect: { id: ctx.user.id } },
           message: input.message
             ? {
                 create: {
@@ -47,7 +47,7 @@ export const zoneAccessRouter = t.router({
         data: {
           agreementsRecord: input.agreementRecord,
           hasAgreed: true,
-          User: { connect: { email: ctx.user.email } },
+          User: { connect: { id: ctx.user.id } },
           Zone: { connect: { id: input.zoneId } },
         },
       });
@@ -60,10 +60,9 @@ export const zoneAccessRouter = t.router({
               permissions: { some: { action: { equals: "GrantAccess" } } },
             },
           },
-          select: { User: { select: { email: true, id: true } } },
+          select: { User: { select: { id: true } } },
         })
       ).map((n) => ({
-        email: n.User.email,
         id: n.User.id,
       }));
 
@@ -98,7 +97,6 @@ export const zoneAccessRouter = t.router({
           User: {
             select: {
               username: true,
-              email: true,
               name: true,
               id: true,
               profilePhoto: { select: { publicId: true } },
@@ -132,7 +130,7 @@ export const zoneAccessRouter = t.router({
           status: RequestStatus.Accepted,
           User: { connect: { id: input.userId } },
           Zone: { connect: { id: input.zoneId } },
-          modifiedBy: { connect: { email: ctx.user.email } },
+          modifiedBy: { connect: { id: ctx.user.id } },
           message: input.message
             ? {
                 create: {
@@ -143,7 +141,7 @@ export const zoneAccessRouter = t.router({
             : undefined,
         },
         select: {
-          User: { select: { username: true, id: true, email: true } },
+          User: { select: { username: true, id: true } },
           Zone: { select: { name: true, infoAccess: true } },
           modifiedBy: { select: { username: true } },
         },
@@ -158,9 +156,7 @@ export const zoneAccessRouter = t.router({
         userId: input.userId,
       });
 
-      const receivers = [
-        { email: accessRequest.User.email, id: accessRequest.User.id },
-      ];
+      const receivers = [{ id: accessRequest.User.id }];
       const { entity, id, template } = pushNotification.ApproveZoneAccess;
 
       await sendAndRecordPushNotification(ctx, {
@@ -189,7 +185,7 @@ export const zoneAccessRouter = t.router({
         data: {
           agreementsRecord: input.agreementRecord,
           hasAgreed: input.hasAgreed,
-          User: { connect: { email: ctx.user.email } },
+          User: { connect: { id: ctx.user.id } },
           Zone: { connect: { id: input.zoneId } },
         },
       }),
@@ -198,7 +194,7 @@ export const zoneAccessRouter = t.router({
     .input(zone.id)
     .query(({ ctx, input }) =>
       ctx.prisma.zoneAccessRequest.findFirst({
-        where: { Zone: { id: input.zoneId }, User: { email: ctx.user.email } },
+        where: { Zone: { id: input.zoneId }, User: { id: ctx.user.id } },
         orderBy: { createdAt: "desc" },
         select: { status: true },
       }),
@@ -242,7 +238,7 @@ export const zoneAccessRouter = t.router({
           status: RequestStatus.Paused,
           User: { connect: { id: deletedRole.userId } },
           Zone: { connect: { id: input.zoneId } },
-          modifiedBy: { connect: { email: ctx.user.email } },
+          modifiedBy: { connect: { id: ctx.user.id } },
           message: input.message
             ? {
                 create: {
@@ -253,7 +249,7 @@ export const zoneAccessRouter = t.router({
             : undefined,
         },
         select: {
-          User: { select: { username: true, id: true, email: true } },
+          User: { select: { username: true, id: true } },
           Zone: { select: { name: true, infoAccess: true } },
           modifiedBy: { select: { username: true } },
         },

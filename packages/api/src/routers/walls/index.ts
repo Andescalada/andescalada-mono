@@ -21,7 +21,7 @@ const Route = {
   isDeleted: true,
   unknownName: true,
   wallId: true,
-  Author: { select: { email: true } },
+  Author: { select: { id: true } },
 };
 
 export const wallsRouter = t.router({
@@ -74,7 +74,7 @@ export const wallsRouter = t.router({
           slug: slug(input.name),
           Sector: { connect: { id: input.sectorId } },
           position: biggestPosition + 1,
-          Author: { connect: { email: ctx.user.email } },
+          Author: { connect: { id: ctx.user.id } },
         },
       });
 
@@ -112,11 +112,11 @@ export const wallsRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const wallToUpdate = await ctx.prisma.wall.findUnique({
         where: { id: input.wallId },
-        select: { Author: { select: { email: true } } },
+        select: { Author: { select: { id: true } } },
       });
       if (
         !ctx.permissions.has("Update") &&
-        wallToUpdate?.Author.email !== ctx.user.email
+        wallToUpdate?.Author.id !== ctx.user.id
       ) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -146,12 +146,9 @@ export const wallsRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.wall.findUnique({
         where: { id: input.wallId },
-        select: { Author: { select: { email: true } } },
+        select: { Author: { select: { id: true } } },
       });
-      if (
-        !ctx.permissions.has("Update") &&
-        route?.Author.email !== ctx.user.email
-      ) {
+      if (!ctx.permissions.has("Update") && route?.Author.id !== ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -229,7 +226,7 @@ export const includeInWallById = {
       id: true,
       name: true,
       position: true,
-      Author: { select: { email: true } },
+      Author: { select: { id: true } },
       wallId: true,
       Pitches: {
         where: { isDeleted: SoftDelete.NotDeleted },

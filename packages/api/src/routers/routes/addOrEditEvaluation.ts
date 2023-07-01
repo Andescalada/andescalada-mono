@@ -13,7 +13,7 @@ const addOrEditEvaluation = protectedProcedure
   )
   .mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({
-      where: { email: ctx.user.email },
+      where: { id: ctx.user.id },
       select: {
         id: true,
         RouteEvaluation: { where: { routeId: input.routeId } },
@@ -21,7 +21,7 @@ const addOrEditEvaluation = protectedProcedure
     });
 
     if (!user) {
-      throw new TRPCError(error.notFound("User", ctx.user.email));
+      throw new TRPCError(error.notFound("User", ctx.user.id));
     }
 
     if (!user.RouteEvaluation.length) {

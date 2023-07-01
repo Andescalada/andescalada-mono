@@ -35,7 +35,7 @@ export const toposRouter = t.router({
         image: {
           create: input.image,
         },
-        Author: { connect: { email: ctx.user.email } },
+        Author: { connect: { id: ctx.user.id } },
       },
     }),
   ),
@@ -62,7 +62,7 @@ export const toposRouter = t.router({
 
       if (
         !ctx.permissions.has("Delete") &&
-        currentTopo.Author.email !== ctx.user.email
+        currentTopo.Author.id !== ctx.user.id
       ) {
         throw new TRPCError(
           error.unauthorizedActionForZone(input.zoneId, "Delete"),
@@ -75,9 +75,9 @@ export const toposRouter = t.router({
           isDeleted: SoftDelete.DeletedPublic,
           main: false,
           coAuthors:
-            currentTopo.Author.email === ctx.user.email
+            currentTopo.Author.id === ctx.user.id
               ? undefined
-              : { connect: { email: ctx.user.email } },
+              : { connect: { id: ctx.user.id } },
         },
       });
     }),

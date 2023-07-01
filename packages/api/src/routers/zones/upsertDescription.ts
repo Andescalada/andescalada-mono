@@ -8,7 +8,7 @@ const upsertDescription = protectedZoneProcedure
   .mutation(async ({ ctx, input }) => {
     const zone = await ctx.prisma.zone.findUnique({
       where: { id: input.zoneId },
-      select: { description: true, Author: { select: { email: true } } },
+      select: { description: true, Author: { select: { id: true } } },
     });
 
     if (!ctx.permissions.has("Create")) {
@@ -19,7 +19,7 @@ const upsertDescription = protectedZoneProcedure
 
     if (
       !!zone?.description &&
-      zone.Author.email !== ctx.user?.email &&
+      zone.Author.id !== ctx.user?.id &&
       !ctx.permissions.has("Update")
     ) {
       throw new TRPCError(

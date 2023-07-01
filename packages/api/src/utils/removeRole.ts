@@ -28,7 +28,7 @@ const removeRole = async (
   const user = await ctx.prisma.user.findUnique({
     where: { id: userId },
     select: {
-      email: true,
+      id: true,
       RoleByZone: {
         where: { zoneId },
         select: {
@@ -48,7 +48,7 @@ const removeRole = async (
 
     const permissionSet = new Set(newPermissions);
 
-    await updateRedisPermissions(ctx.access, user.email, zoneId, permissionSet);
+    await updateRedisPermissions(ctx.access, user.id, zoneId, permissionSet);
   }
 
   return { userId, zoneId };

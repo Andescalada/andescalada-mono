@@ -12,7 +12,7 @@ const deletePitch = protectedZoneProcedure
       select: {
         multiPitchId: true,
         MultiPitch: {
-          select: { wallId: true, Author: { select: { email: true } } },
+          select: { wallId: true, Author: { select: { id: true } } },
         },
       },
     });
@@ -22,7 +22,7 @@ const deletePitch = protectedZoneProcedure
 
     if (
       !ctx.permissions.has("Delete") &&
-      ctx.user.email !== pitch?.MultiPitch?.Author?.email
+      ctx.user.id !== pitch?.MultiPitch?.Author?.id
     ) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Delete"),
@@ -54,10 +54,10 @@ const deletePitch = protectedZoneProcedure
       data: {
         version: { increment: 1 },
         coAuthors:
-          pitch?.MultiPitch.Author.email === ctx.user.email
+          pitch?.MultiPitch.Author.id === ctx.user.id
             ? undefined
             : {
-                connect: { email: ctx.user.email },
+                connect: { id: ctx.user.id },
               },
       },
     });

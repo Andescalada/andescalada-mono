@@ -40,7 +40,7 @@ const upsertExtension = async ({
         create: { grade: input.grade.grade, project: input.grade.project },
       },
       ExtendedRoute: { connect: { id: input.extendedRouteId } },
-      Author: { connect: { email: ctx.user.email } },
+      Author: { connect: { id: ctx.user.id } },
     },
     include: {
       Wall: {

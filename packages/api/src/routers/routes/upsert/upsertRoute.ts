@@ -20,12 +20,9 @@ const upsertRoute = async ({
   if (input.routeId) {
     const route = await ctx.prisma.route.findUniqueOrThrow({
       where: { id: input.routeId },
-      select: { Author: { select: { email: true } }, wallId: true },
+      select: { Author: { select: { id: true } }, wallId: true },
     });
-    if (
-      !ctx.permissions.has("Update") &&
-      route?.Author.email !== ctx.user.email
-    ) {
+    if (!ctx.permissions.has("Update") && route?.Author.id !== ctx.user.id) {
       throw new TRPCError(error.unauthorizedActionForZone(zoneId, "Update"));
     }
 
@@ -58,10 +55,10 @@ const upsertRoute = async ({
         unknownName,
         version: { increment: 1 },
         coAuthors:
-          route?.Author.email === ctx.user.email
+          route?.Author.id === ctx.user.id
             ? undefined
             : {
-                connect: { email: ctx.user.email },
+                connect: { id: ctx.user.id },
               },
       },
       include: {
@@ -132,7 +129,7 @@ const upsertRoute = async ({
           ...(originalGrade && { originalGrade }),
         },
       },
-      Author: { connect: { email: ctx.user.email } },
+      Author: { connect: { id: ctx.user.id } },
     },
     include: {
       Wall: {

@@ -9,17 +9,17 @@ const create = protectedProcedure
     const roleByZone = await ctx.prisma.roleByZone.create({
       data: {
         Role: { connect: { name: "Admin" } },
-        User: { connect: { email: ctx.user.email } },
+        User: { connect: { id: ctx.user.id } },
         Zone: {
           create: {
             name: input.name,
             slug: slug(input.name),
             searchVisibility: input.searchVisibility,
             infoAccess: input.infoAccess,
-            Author: { connect: { email: ctx.user.email } },
+            Author: { connect: { id: ctx.user.id } },
             statusHistory: {
               create: {
-                modifiedBy: { connect: { email: ctx.user.email } },
+                modifiedBy: { connect: { id: ctx.user.id } },
                 status: "Unpublished",
                 message: {
                   create: {
@@ -31,20 +31,20 @@ const create = protectedProcedure
             },
           },
         },
-        AssignedBy: { connect: { email: ctx.user.email } },
+        AssignedBy: { connect: { id: ctx.user.id } },
       },
       select: {
         Role: { select: { permissions: { select: { action: true } } } },
-        User: { select: { email: true } },
+        User: { select: { id: true } },
         zoneId: true,
       },
     });
 
-    const email = roleByZone.User.email;
+    const userId = roleByZone.User.id;
     const zoneId = roleByZone.zoneId;
     const permissions = roleByZone.Role.permissions.flatMap((p) => p.action);
     const permissionSet = new Set(permissions);
-    await updateRedisPermissions(ctx.access, email, zoneId, permissionSet);
+    await updateRedisPermissions(ctx.access, userId, zoneId, permissionSet);
 
     return roleByZone;
   });

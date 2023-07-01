@@ -57,7 +57,7 @@ const getOfflineAssets = async ({
       ...includeInRoute,
       RouteGradeEvaluation: { select: { evaluation: true } },
       RouteEvaluation: { select: { evaluation: true, User: true } },
-      Author: { select: { email: true } },
+      Author: { select: { id: true } },
     },
   });
 
@@ -116,7 +116,7 @@ const getOfflineAssets = async ({
       id: input.zoneId,
       isDeleted: SoftDelete.NotDeleted,
     },
-    select: selectZoneAllSectors({ userEmail: ctx.user.email }),
+    select: selectZoneAllSectors({ userId: ctx.user.id }),
   });
 
   const [
@@ -156,7 +156,7 @@ const getOfflineAssets = async ({
       };
 
       const userEvaluationDecimal = route.RouteEvaluation.find(
-        (evaluation) => evaluation.User.email === ctx.user.email,
+        (evaluation) => evaluation.User.id === ctx.user.id,
       )?.evaluation;
 
       const userEvaluation = userEvaluationDecimal

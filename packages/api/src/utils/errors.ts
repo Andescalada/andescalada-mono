@@ -47,11 +47,9 @@ const error = satisfies<Record<string, Value>>()({
     code: "UNAUTHORIZED",
     message: `You don't have permission to ${action}`,
   }),
-  userNotFound: (email?: string) => ({
+  userNotFound: (id?: string) => ({
     code: "NOT_FOUND",
-    message: email
-      ? `No user found with email '${email}'`
-      : "No user found in context",
+    message: id ? `No user found with id '${id}'` : "No user found in context",
   }),
   notValidStatusFlow: (
     zoneId: string,

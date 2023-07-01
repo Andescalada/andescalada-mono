@@ -6,10 +6,10 @@ import Expo, { ExpoPushMessage } from "expo-server-sdk";
 const sendPushNotification = async (
   ctx: ProtectedContext,
   { body, data }: { body: string; data?: object },
-  usersEmail: string[],
+  users: string[],
 ) => {
-  const tokensPromise = usersEmail.map((email) =>
-    ctx.access.hgetall<Record<string, string>>(`notificationTokens:${email}`),
+  const tokensPromise = users.map((id) =>
+    ctx.access.hgetall<Record<string, string>>(`notificationTokens:${id}`),
   );
 
   const tokens = await Promise.allSettled(tokensPromise).then((t) =>

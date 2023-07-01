@@ -22,14 +22,7 @@ export const syncRouter = t.router({
       }),
     )
     .query(
-      async ({
-        ctx: {
-          prisma,
-          user: { email },
-        },
-        input: { lastPulledAt, tables },
-      }) => {
-        const user = await prisma.user.findUniqueOrThrow({ where: { email } });
+      async ({ ctx: { prisma, user }, input: { lastPulledAt, tables } }) => {
         const queries = tables.map(async (table) => {
           const updated = await prisma
             .$queryRawUnsafe<Record<string, any>[]>(
@@ -83,17 +76,12 @@ export const syncRouter = t.router({
     .mutation(async ({ ctx, input: { changes } }) => {
       const mutations: Prisma.PrismaPromise<any>[] = [];
 
-      const user = await ctx.prisma.user.findUniqueOrThrow({
-        where: { email: ctx.user.email },
-      });
-
       Object.entries(changes).forEach(async ([t, changes]) => {
         const table = t as Table;
         if (table === Table.ROUTE_EVALUATION) {
           const routeEvaluationMutations = pushRouteEvaluation({
             ctx,
             changes,
-            user,
           });
           mutations.push(...routeEvaluationMutations);
         }
@@ -101,7 +89,6 @@ export const syncRouter = t.router({
           const routeGradeEvaluationMutations = pushRouteGradeEvaluation({
             ctx,
             changes,
-            user,
           });
           mutations.push(...routeGradeEvaluationMutations);
         }

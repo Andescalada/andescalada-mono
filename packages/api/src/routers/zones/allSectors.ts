@@ -7,7 +7,7 @@ import { TRPCError } from "@trpc/server";
 const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
   const res = await ctx.prisma.zone.findUnique({
     where: { id: input.zoneId },
-    select: selectZoneAllSectors({ userEmail: ctx.user.email }),
+    select: selectZoneAllSectors({ userId: ctx.user.id }),
   });
   if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
     throw new TRPCError(error.sectorNotFound(input.zoneId));
@@ -33,7 +33,7 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
 
 export default allSectors;
 
-export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) =>
+export const selectZoneAllSectors = ({ userId }: { userId: string }) =>
   ({
     _count: true,
     id: true,
@@ -62,7 +62,7 @@ export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) =>
     infoAccess: true,
     currentStatus: true,
     RoleByZone: {
-      where: { User: { email: userEmail } },
+      where: { User: { id: userId } },
       select: {
         User: {
           select: {
@@ -73,11 +73,11 @@ export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) =>
         Role: true,
       },
     },
-    DownloadedBy: { where: { email: userEmail } },
-    FavoritedBy: { where: { email: userEmail } },
+    DownloadedBy: { where: { id: userId } },
+    FavoritedBy: { where: { id: userId } },
     ZoneAccessRequest: {
       where: {
-        User: { email: userEmail },
+        User: { id: userId },
       },
       orderBy: { createdAt: "desc" as const },
       take: 1,
@@ -85,7 +85,7 @@ export const selectZoneAllSectors = ({ userEmail }: { userEmail: string }) =>
     },
     UserZoneAgreementHistory: {
       where: {
-        User: { email: userEmail },
+        User: { id: userId },
       },
       orderBy: { createdAt: "desc" as const },
       take: 1,

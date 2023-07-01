@@ -8,7 +8,7 @@ const getAndParsePermissions = async (
   const permissions: Permissions = new Set();
 
   const roles = await ctx.prisma.roleByZone.findMany({
-    where: { User: { email: ctx.user.email }, Zone: { id: zoneId } },
+    where: { User: { id: ctx.user.id }, Zone: { id: zoneId } },
     select: {
       Role: {
         select: { permissions: { select: { action: true } } },
