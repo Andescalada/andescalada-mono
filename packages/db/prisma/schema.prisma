@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex", "extendedWhereUnique"]
 }
 
 generator zod {
@@ -26,6 +26,8 @@ model User {
   name                       String                    @default("")
   username                   String                    @unique @default(cuid())
   email                      String                    @unique
+  PhoneNumber                PhoneNumber?              @relation(fields: [phoneNumber], references: [fullNumber])
+  phoneNumber                String?                   @unique
   profilePhoto               Image?                    @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId             String?
   firstLogin                 Boolean                   @default(true)
@@ -70,7 +72,22 @@ model User {
 
   @@index([email])
   @@index([profilePhotoId])
+  @@index([phoneNumber])
   @@fulltext([username])
+}
+
+model PhoneNumber {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  fullNumber  String     @unique
+  country     String
+  countryCode String
+  number      String
+  User        User[]
+  isDeleted   SoftDelete @default(NotDeleted)
+
+  @@index([fullNumber])
 }
 
 model History {
