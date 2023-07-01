@@ -46,37 +46,6 @@ export const createContext = async ({
       FALLBACK_LANGUAGE,
   };
 
-  if (user?.email && user?.auth0Id) {
-    const userExist = await prisma.user.findUnique({
-      where: { email: user?.email },
-    });
-    if (!userExist) {
-      await prisma.user.create({
-        data: {
-          email: user.email,
-          auth0id: user.auth0Id,
-        },
-      });
-    } else {
-      if (!userExist.auth0id) {
-        await prisma.user.update({
-          where: { email: user.email },
-          data: {
-            auth0id: user.auth0Id,
-          },
-        });
-        if (userExist.isDeleted === SoftDelete.DeletedPublic) {
-          await prisma.user.update({
-            where: { email: user.email },
-            data: {
-              isDeleted: SoftDelete.NotDeleted,
-            },
-          });
-        }
-      }
-    }
-  }
-
   return {
     req,
     res,
