@@ -12,6 +12,7 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
+import session from "@andescalada/api/src/utils/session";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import roleNameAssets from "@andescalada/common-assets/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@andescalada/db";
@@ -108,16 +109,25 @@ export const userRouter = t.router({
 
     return res;
   }),
-  edit: protectedProcedure.input(user.schema).mutation(({ ctx, input }) =>
-    ctx.prisma.user.update({
-      where: { id: ctx.user.id },
-      data: {
-        name: input.name,
-        username: input.username,
-        profilePhoto: input.image ? { create: input.image } : undefined,
-      },
+  edit: protectedProcedure
+    .input(user.schema)
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: { id: ctx.user.id },
+        data: {
+          name: input.name,
+          username: input.username,
+          profilePhoto: input.image ? { create: input.image } : undefined,
+        },
+      });
+
+      await session.set({
+        ctx,
+        user: { ...ctx.user, name: user.name, username: user.username },
+      });
+
+      return user;
     }),
-  ),
   firstTimeLogin: protectedProcedure
     .input(z.boolean())
     .mutation(({ ctx, input }) =>

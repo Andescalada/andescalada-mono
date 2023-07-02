@@ -5,7 +5,8 @@ const verifyAndDecodeToken = async (req: NextApiRequest) => {
   if (process.env.OFFLINE_DEV === "true") {
     return {
       verified: true,
-      user: {
+      verifiedUser: {
+        connectionStrategy: "email",
         email: "elevy@andescalada.org",
         auth0Id: "",
         permissions: [] as string[],
@@ -36,13 +37,13 @@ const verifyAndDecodeToken = async (req: NextApiRequest) => {
 
       return {
         verified: true,
-        user: {
+        verifiedUser: {
           connectionStrategy: data.connection_strategy as
             | "email"
             | "sms"
             | "auth0",
           phoneNumber: data.phone_number as string | undefined,
-          email: (data.user_email as string) ?? undefined,
+          email: data.user_email as string | undefined,
           auth0Id: data.sub,
           permissions: data.permissions as string[],
         },
@@ -51,12 +52,12 @@ const verifyAndDecodeToken = async (req: NextApiRequest) => {
   } catch (err) {
     return {
       verified: false,
-      user: undefined,
+      verifiedUser: undefined,
     };
   }
   return {
     verified: undefined,
-    user: undefined,
+    verifiedUser: undefined,
   };
 };
 

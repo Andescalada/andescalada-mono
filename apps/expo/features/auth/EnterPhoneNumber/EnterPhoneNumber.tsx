@@ -56,8 +56,7 @@ const EnterPhoneNumber: FC<Props> = ({ navigation }) => {
 
     const fullNumber = `+${countryCode}${data.phoneNumber}`;
 
-    await passwordless.login(`+${countryCode}${data.phoneNumber}`, "sms");
-
+    passwordless.login(fullNumber, "sms");
     createUser({
       identifier: "phoneNumber",
       fullNumber,
@@ -83,12 +82,9 @@ const EnterPhoneNumber: FC<Props> = ({ navigation }) => {
         padding="m"
         paddingTop="xxxl"
       >
-        <Box flex={0.25} justifyContent="space-between">
-          <Box>
+        <Box justifyContent="space-between">
+          <Box marginBottom="m">
             <Text variant="h1">Ingresa tu número de teléfono</Text>
-            <Text variant="p2R" marginTop="xs">
-              para recibir un código de verificación
-            </Text>
           </Box>
           <Box>
             <PhoneInput
@@ -106,12 +102,17 @@ const EnterPhoneNumber: FC<Props> = ({ navigation }) => {
             )}
           </Box>
         </Box>
+        <Pressable
+          alignSelf="center"
+          marginTop="xl"
+          padding="s"
+          onPress={() => navigation.navigate(AuthNavigationRoutes.EnterEmail)}
+        >
+          <Text textDecorationLine="underline">
+            ¿Entrabas con correo electrónico?
+          </Text>
+        </Pressable>
       </KeyboardDismiss>
-      <Pressable alignSelf="center" marginBottom="xxl" padding="s">
-        <Text textDecorationLine="underline">
-          ¿Entrabas con correo electrónico?
-        </Text>
-      </Pressable>
     </Screen>
   );
 };

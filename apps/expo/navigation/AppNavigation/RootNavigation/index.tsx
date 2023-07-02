@@ -1,4 +1,4 @@
-import { ActivityIndicator, LoadingScreen, Screen } from "@andescalada/ui";
+import { ActivityIndicator, Screen } from "@andescalada/ui";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import ErrorStackNavigation from "@features/error/Navigation";
@@ -56,13 +56,7 @@ const Navigator = () => {
       screenOptions={{ headerShown: false }}
       initialRouteName={RootNavigationRoutes.Climbs}
     >
-      {isLoading ? (
-        <Stack.Screen
-          name={RootNavigationRoutes.Loading}
-          component={LoadingScreen}
-          options={{ presentation: "modal" }}
-        />
-      ) : data?.firstLogin ? (
+      {data?.firstLogin ? (
         <Stack.Screen
           name={RootNavigationRoutes.Onboarding}
           component={OnboardingStackNavigation}

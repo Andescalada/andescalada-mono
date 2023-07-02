@@ -8,7 +8,10 @@ const Stack = createStackNavigator<OnboardingNavigationParamList>();
 
 const Navigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={OnboardingRoutes.UsernameAndImage}
+    >
       <Stack.Screen
         name={OnboardingRoutes.UsernameAndImage}
         component={UsernameAndImage}

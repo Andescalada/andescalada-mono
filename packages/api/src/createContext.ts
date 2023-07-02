@@ -26,10 +26,7 @@ export const session = new Redis({
 });
 
 acceptLanguage.languages(["es-Cl", "es-EN"]);
-/**
- * Creates context for an incoming request
- * @link https://trpc.io/docs/context
- */
+
 export const createContext = async ({
   req,
   res,
@@ -43,7 +40,7 @@ export const createContext = async ({
       session,
     };
   }
-  const { user, verified } = await verifyAndDecodeToken(req);
+  const { verifiedUser, verified } = await verifyAndDecodeToken(req);
 
   const language = {
     language: acceptLanguage.get(req.headers["accept-language"]),
@@ -56,7 +53,7 @@ export const createContext = async ({
     req,
     res,
     prisma,
-    user,
+    verifiedUser,
     access,
     verified,
     language,

@@ -11,11 +11,14 @@ import {
   AuthNavigationScreenProps,
 } from "@features/auth/Navigation/types";
 import passwordless from "@utils/auth0/passwordless";
+import client from "@utils/trpc/client";
 import { FC } from "react";
 import { useController } from "react-hook-form";
 import { z } from "zod";
 
 type Props = AuthNavigationScreenProps<AuthNavigationRoutes.EnterEmail>;
+
+const createUser = client.public.createUser.mutate;
 
 const schema = z.object({
   email: z
@@ -38,7 +41,8 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
   });
 
   const onNext = form.handleSubmit(async (data) => {
-    await passwordless.login(data.email);
+    passwordless.login(data.email);
+    createUser({ identifier: "email", email: data.email });
 
     navigation.navigate(AuthNavigationRoutes.EnterCode, {
       connectionStrategy: "email",
