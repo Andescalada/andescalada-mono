@@ -20,7 +20,7 @@ interface VerificatonCodeSuccess {
 
 const login = async (
   input: string,
-  kind: "email" | "phoneNumber" = "email",
+  connectionStrategy: "email" | "sms" = "email",
 ) => {
   const res = await fetch(`https://${domain}/passwordless/start`, {
     method: "POST",
@@ -29,9 +29,9 @@ const login = async (
     },
     body: JSON.stringify({
       client_id: clientId,
-      connection: kind === "email" ? "email" : "sms",
-      ...(kind === "phoneNumber" && { phone_number: input }),
-      ...(kind === "email" && { email: input }),
+      connection: connectionStrategy === "email" ? "email" : "sms",
+      ...(connectionStrategy === "sms" && { phone_number: input }),
+      ...(connectionStrategy === "email" && { email: input }),
       send: "code",
     }),
   });
@@ -42,7 +42,7 @@ const login = async (
 const verifyCode = async (
   input: string,
   code: string,
-  kind: "email" | "phoneNumber" = "email",
+  connectionStrategy: "email" | "sms" = "email",
 ) => {
   const res = await fetch(`https://${domain}/oauth/token`, {
     method: "POST",
@@ -54,7 +54,7 @@ const verifyCode = async (
       client_id: clientId,
       username: input,
       otp: code,
-      realm: kind === "email" ? "email" : "sms",
+      realm: connectionStrategy === "email" ? "email" : "sms",
       audience: audience,
       scope: "openid name phone profile offline_access",
     }),

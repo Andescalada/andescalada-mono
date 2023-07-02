@@ -17,7 +17,8 @@ import {
 } from "@shopify/react-native-skia";
 import { useTheme } from "@shopify/restyle";
 import React, { FC } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, useWindowDimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import pathLogo from "../assets/andescaladaPathLogo";
 import pathTitle from "../assets/andescaladaPathLTitleUppercase";
@@ -36,13 +37,14 @@ const ORIGINAL_TITLE_HEIGHT = pathTitle.height;
 const TITLE_WIDTH = 261 * SCALE;
 const TITLE_HEIGHT = 261 * pathTitle.aspectRatio * SCALE;
 
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
-
 interface Props {
   withLogo?: boolean;
 }
 
 const AnimatedBackground: FC<Props> = ({ withLogo = false }) => {
+  const { top } = useSafeAreaInsets();
+  const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = useWindowDimensions();
+  const HEIGHT = SCREEN_HEIGHT + top;
   const theme = useTheme<Theme>();
   const loop = useLoop({ duration: DURATION, easing: Easing.cubic });
   const blur = useTiming(
@@ -57,10 +59,7 @@ const AnimatedBackground: FC<Props> = ({ withLogo = false }) => {
   );
   const end = useComputedValue(
     () =>
-      sub(
-        vec(SCREEN_HEIGHT, 0),
-        vec(0, mix(loop.current, 0, 2 * SCREEN_HEIGHT * Math.PI)),
-      ),
+      sub(vec(HEIGHT, 0), vec(0, mix(loop.current, 0, 2 * HEIGHT * Math.PI))),
     [loop],
   );
   return (
@@ -73,7 +72,7 @@ const AnimatedBackground: FC<Props> = ({ withLogo = false }) => {
         right: 0,
       }}
     >
-      <Rect x={0} y={0} width={SCREEN_WIDTH} height={SCREEN_HEIGHT}>
+      <Rect x={0} y={0} width={SCREEN_WIDTH} height={HEIGHT}>
         <LinearGradient
           start={start}
           end={end}
@@ -86,7 +85,7 @@ const AnimatedBackground: FC<Props> = ({ withLogo = false }) => {
             src={rect(0, 0, ORIGINAL_LOGO_WIDTH, ORIGINAL_LOGO_HEIGHT)}
             dst={rect(
               SCREEN_WIDTH / 2 - LOGO_WIDTH / 2,
-              SCREEN_HEIGHT / 2 - LOGO_HEIGHT,
+              HEIGHT / 2 - LOGO_HEIGHT,
               LOGO_WIDTH,
               LOGO_HEIGHT,
             )}
@@ -104,7 +103,7 @@ const AnimatedBackground: FC<Props> = ({ withLogo = false }) => {
             )}
             dst={rect(
               SCREEN_WIDTH / 2,
-              SCREEN_HEIGHT / 2 - TITLE_HEIGHT / 2 + 12.68,
+              HEIGHT / 2 - TITLE_HEIGHT / 2 + 12.68,
               TITLE_WIDTH,
               TITLE_HEIGHT,
             )}

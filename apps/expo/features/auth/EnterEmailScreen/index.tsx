@@ -40,7 +40,10 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
   const onNext = form.handleSubmit(async (data) => {
     await passwordless.login(data.email);
 
-    navigation.navigate(AuthNavigationRoutes.EnterCode, { email: data.email });
+    navigation.navigate(AuthNavigationRoutes.EnterCode, {
+      connectionStrategy: "email",
+      email: data.email,
+    });
   });
 
   return (

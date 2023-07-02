@@ -14,6 +14,7 @@ import { zoneAccessRouter } from "@andescalada/api/src/routers/zoneAccess";
 import { zoneReviewRouter } from "@andescalada/api/src/routers/zoneReview";
 
 import { t } from "../createRouter";
+import { publicRouter } from "./public/index";
 import { zonesRouter } from "./zones";
 
 export const appRouter = t.router({
@@ -32,6 +33,7 @@ export const appRouter = t.router({
   multiPitch: multiPitchRouter,
   system: systemRouter,
   sync: syncRouter,
+  public: publicRouter,
 });
 
 export type AppRouter = typeof appRouter;

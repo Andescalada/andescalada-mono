@@ -11,8 +11,6 @@ const SelectUser = {
   id: true,
   name: true,
   username: true,
-  email: true,
-  phoneNumber: true,
   auth0id: true,
   isDeleted: true,
 };
@@ -35,6 +33,8 @@ export const isAuth = t.middleware(async ({ ctx, next }) => {
   }
 
   const user = await getUser({ ctx });
+
+  console.log(JSON.stringify(user, null, 2));
 
   const richUser = { ...user, permissions: ctx.user.permissions };
 
@@ -112,11 +112,12 @@ const getUserFromDb = async ({ ctx }: { ctx: Context }) => {
     });
   }
 
-  const user = await ctx.prisma.user.findUnique({
+  const user = await ctx.prisma.user.findFirst({
     where: {
-      ...(verifiedUser.connectionStrategy === "sms"
-        ? { phoneNumber: verifiedUser.phoneNumber }
-        : { email: verifiedUser.email }),
+      OR: [
+        { email: verifiedUser.email },
+        { PhoneNumber: { fullNumber: verifiedUser.phoneNumber } },
+      ],
     },
     select: SelectUser,
   });

@@ -125,7 +125,7 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
                 Correo
               </Text>
               <TextInput
-                value={data?.email}
+                value={data?.email || ""}
                 onPressIn={() => Alert.alert("No es posible editar el correo")}
                 color="grayscale.500"
                 editable={false}
