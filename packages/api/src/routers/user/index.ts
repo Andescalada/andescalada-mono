@@ -31,7 +31,8 @@ export const userRouter = t.router({
     ctx.prisma.user.findUnique({
       where: { id: ctx.user.id },
       select: {
-        email: true, // TODO: remove  from here
+        email: true,
+        PhoneNumber: { select: { fullNumber: true } },
         firstLogin: true,
         id: true,
         profilePhoto: true,
