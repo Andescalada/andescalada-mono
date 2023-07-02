@@ -24,13 +24,15 @@ import { isAndroid } from "../../../utils/platform";
 
 const createUser = client.public.createUser.mutate;
 
+const addPhoneNumber = client.user.addPhoneNumber.mutate;
+
 type Props = AuthNavigationScreenProps<AuthNavigationRoutes.EnterPhoneNumber>;
 
 const schema = z.object({
   phoneNumber: z.string({ required_error: "Requerido" }),
 });
 
-const EnterPhoneNumber: FC<Props> = ({ navigation }) => {
+const EnterPhoneNumber: FC<Props> = ({ navigation, route: { params } }) => {
   const form = useZodForm({
     schema,
     criteriaMode: "firstError",
@@ -57,18 +59,28 @@ const EnterPhoneNumber: FC<Props> = ({ navigation }) => {
     const fullNumber = `+${countryCode}${data.phoneNumber}`;
 
     passwordless.login(fullNumber, "sms");
-    createUser({
-      identifier: "phoneNumber",
-      fullNumber,
-      countryCode,
-      country,
-      phoneNumber: data.phoneNumber,
-    });
-
-    navigation.navigate(AuthNavigationRoutes.EnterCode, {
+    if (params?.userId) {
+      addPhoneNumber({
+        userId: params.userId,
+        fullNumber,
+        countryCode,
+        country,
+        phoneNumber: data.phoneNumber,
+      });
+    } else {
+      createUser({
+        identifier: "phoneNumber",
+        fullNumber,
+        countryCode,
+        country,
+        phoneNumber: data.phoneNumber,
+      });
+    }
+    navigation.push(AuthNavigationRoutes.EnterCode, {
       connectionStrategy: "sms",
       phoneNumber: fullNumber,
     });
+    form.reset();
   });
 
   const windowHeight = useWindowDimensions().height;

@@ -37,6 +37,10 @@ const getUser = async ({ ctx }: { ctx: Context }) => {
 
   user = await session.get({ ctx });
 
+  if (user?.auth0id !== ctx.verifiedUser?.auth0Id) {
+    user = null;
+  }
+
   if (!user) {
     user = await getUserFromDb({ ctx });
     await session.set({
@@ -71,33 +75,31 @@ export const SelectUser = {
 };
 
 const getUserFromDb = async ({ ctx }: { ctx: Context }) => {
-  const { verifiedUser, verified } = ctx;
-  if (verified === false) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
+  const { verifiedUser } = ctx;
 
-  if (!verifiedUser) {
+  if (!verifiedUser)
     throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Unable to fetch verified user",
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Unable to fetch user",
     });
-  }
 
   const whereCondition =
-    verifiedUser?.connectionStrategy === "sms"
+    verifiedUser.connectionStrategy === "sms"
       ? {
           PhoneNumber: {
-            fullNumber: verifiedUser?.phoneNumber,
+            fullNumber: verifiedUser.phoneNumber,
           },
         }
       : {
-          email: verifiedUser?.email,
+          email: verifiedUser.email,
         };
 
   let user = await ctx.prisma.user.findFirst({
     where: whereCondition,
     select: SelectUser,
   });
+
+  console.log("USER", user);
 
   if (!user) {
     throw new TRPCError({

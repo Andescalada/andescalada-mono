@@ -14,6 +14,8 @@ import {
 import { useAppDispatch } from "@hooks/redux";
 import { loginAuth0 } from "@store/auth";
 import passwordless from "@utils/auth0/passwordless";
+import storage, { Storage } from "@utils/mmkv/storage";
+import client from "@utils/trpc/client";
 import { FC, useMemo, useState } from "react";
 import { Alert } from "react-native";
 import {
@@ -58,6 +60,17 @@ const EnterCodeScreen: FC<Props> = ({ route: { params }, navigation }) => {
           value,
           params.connectionStrategy,
         );
+      if (params.connectionStrategy === "email") {
+        storage.set(Storage.ACCESS_TOKEN, access_token);
+        const user = await client.user.ownInfo.query();
+        if (!user) {
+          throw new Error("User not found for migration to phone number");
+        }
+        navigation.push(AuthNavigationRoutes.EnterPhoneNumber, {
+          userId: user.id,
+        });
+        return;
+      }
       dispatch(
         loginAuth0({
           accessToken: access_token,

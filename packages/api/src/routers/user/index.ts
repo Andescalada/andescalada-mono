@@ -110,6 +110,34 @@ export const userRouter = t.router({
 
     return res;
   }),
+  addPhoneNumber: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+        fullNumber: z.string(),
+        phoneNumber: z.string().optional(),
+        country: z.string().optional(),
+        countryCode: z.string().optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.phoneNumber.upsert({
+        where: { fullNumber: input.fullNumber },
+        update: {
+          country: input.country,
+          countryCode: input.countryCode,
+          number: input.phoneNumber,
+          fullNumber: input.fullNumber,
+        },
+        create: {
+          country: input.country,
+          fullNumber: input.fullNumber,
+          countryCode: input.countryCode,
+          number: input.phoneNumber,
+          User: { connect: { id: input.userId } },
+        },
+      });
+    }),
   edit: protectedProcedure
     .input(user.schema)
     .mutation(async ({ ctx, input }) => {

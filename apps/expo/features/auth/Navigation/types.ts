@@ -11,7 +11,7 @@ export enum AuthNavigationRoutes {
 export type AuthNavigationNavigationParamList = {
   [AuthNavigationRoutes.Login]: undefined;
   [AuthNavigationRoutes.EnterEmail]: undefined;
-  [AuthNavigationRoutes.EnterPhoneNumber]: undefined;
+  [AuthNavigationRoutes.EnterPhoneNumber]: { userId: string } | undefined;
   [AuthNavigationRoutes.EnterCode]:
     | {
         connectionStrategy: "email";
