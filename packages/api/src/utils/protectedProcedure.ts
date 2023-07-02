@@ -99,8 +99,6 @@ const getUserFromDb = async ({ ctx }: { ctx: Context }) => {
     select: SelectUser,
   });
 
-  console.log("USER", user);
-
   if (!user) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
