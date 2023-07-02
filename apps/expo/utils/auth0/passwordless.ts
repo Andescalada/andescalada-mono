@@ -9,7 +9,7 @@ interface LoginResponse {
   email: string;
   email_verified: boolean;
 }
-interface VerificatonCodeSuccess {
+interface VerificationCodeSuccess {
   access_token: string;
   expires_in: number;
   id_token: string;
@@ -36,7 +36,15 @@ const login = async (
     }),
   });
 
-  return res.json() as unknown as LoginResponse;
+  const result = await res.json();
+
+  if (res.status !== 200) {
+    throw new Error(errorDescription(result.error_description), {
+      cause: result.error,
+    });
+  }
+
+  return result as unknown as LoginResponse;
 };
 
 const verifyCode = async (
@@ -68,7 +76,7 @@ const verifyCode = async (
     });
   }
 
-  return result as unknown as VerificatonCodeSuccess;
+  return result as unknown as VerificationCodeSuccess;
 };
 
 export default { login, verifyCode };
@@ -83,6 +91,8 @@ const errorDescription = (description: string) => {
       return "Tu cuenta ha sido bloqueada después de múltiples intentos de inicio de sesión consecutivos. Te hemos enviado un correo electrónico con instrucciones sobre cómo desbloquearla.";
     case "The verification code has expired. Please try to login again.":
       return "El código de verificación ha expirado. Por favor, intenta iniciar sesión nuevamente.";
+    case "Public signup is disabled":
+      return "El inicio de sesión con email está deshabilitado. Por favor, intenta iniciar sesión con tu número de teléfono.";
     default:
       return description;
   }

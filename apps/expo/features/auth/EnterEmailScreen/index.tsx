@@ -1,6 +1,7 @@
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   AnimatedBackground,
+  BackButton,
   Box,
   Screen,
   Text,
@@ -14,6 +15,7 @@ import passwordless from "@utils/auth0/passwordless";
 import client from "@utils/trpc/client";
 import { FC } from "react";
 import { useController } from "react-hook-form";
+import { useNotifications } from "react-native-notificated";
 import { z } from "zod";
 
 type Props = AuthNavigationScreenProps<AuthNavigationRoutes.EnterEmail>;
@@ -40,14 +42,26 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
     control: form.control,
   });
 
-  const onNext = form.handleSubmit(async (data) => {
-    passwordless.login(data.email);
-    createUser({ identifier: "email", email: data.email });
+  const { notify } = useNotifications();
 
-    navigation.navigate(AuthNavigationRoutes.EnterCode, {
-      connectionStrategy: "email",
-      email: data.email,
-    });
+  const onNext = form.handleSubmit(async (data) => {
+    try {
+      await passwordless.login(data.email);
+      createUser({ identifier: "email", email: data.email });
+
+      navigation.navigate(AuthNavigationRoutes.EnterCode, {
+        connectionStrategy: "email",
+        email: data.email,
+      });
+    } catch (error) {
+      notify("error", {
+        params: {
+          hideCloseButton: true,
+          title: "Error",
+          description: (error as { message: string }).message,
+        },
+      });
+    }
   });
 
   return (
@@ -58,6 +72,10 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
       paddingTop="xxxl"
     >
       <AnimatedBackground />
+      <BackButton.Transparent
+        onPress={navigation.goBack}
+        iconProps={{ color: "grayscale.white" }}
+      />
       <Box flex={0.25} justifyContent="space-between">
         <Box>
           <Text variant="h1">Ingresa tu correo electrónico</Text>
