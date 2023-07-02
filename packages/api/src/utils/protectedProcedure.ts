@@ -13,6 +13,8 @@ const SelectUser = {
   username: true,
   auth0id: true,
   isDeleted: true,
+  phoneVerified: true,
+  emailVerified: true,
 };
 
 type User = Prisma.UserGetPayload<{
@@ -33,8 +35,6 @@ export const isAuth = t.middleware(async ({ ctx, next }) => {
   }
 
   const user = await getUser({ ctx });
-
-  console.log(JSON.stringify(user, null, 2));
 
   const richUser = { ...user, permissions: ctx.user.permissions };
 
@@ -112,18 +112,24 @@ const getUserFromDb = async ({ ctx }: { ctx: Context }) => {
     });
   }
 
-  const user = await ctx.prisma.user.findFirst({
-    where: {
-      OR: [
-        { email: verifiedUser.email },
-        { PhoneNumber: { fullNumber: verifiedUser.phoneNumber } },
-      ],
-    },
+  const whereCondition =
+    verifiedUser?.connectionStrategy === "sms"
+      ? {
+          PhoneNumber: {
+            fullNumber: verifiedUser?.phoneNumber,
+          },
+        }
+      : {
+          email: verifiedUser?.email,
+        };
+
+  let user = await ctx.prisma.user.findFirst({
+    where: whereCondition,
     select: SelectUser,
   });
 
   if (!user) {
-    return ctx.prisma.user.create({
+    user = await ctx.prisma.user.create({
       data: {
         email: verifiedUser.email,
         auth0id: verifiedUser.auth0Id,
@@ -131,21 +137,34 @@ const getUserFromDb = async ({ ctx }: { ctx: Context }) => {
       select: SelectUser,
     });
   } else {
-    if (!user.auth0id || user.auth0id !== verifiedUser.auth0Id) {
-      return ctx.prisma.user.update({
-        where: { email: verifiedUser.email },
-        data: {
-          auth0id: verifiedUser.auth0Id,
-        },
-        select: SelectUser,
-      });
+    const auth0IdIsEmail =
+      !!verifiedUser.auth0Id &&
+      !!user.auth0id &&
+      user.auth0id.split("|")[0] === "email" &&
+      verifiedUser.auth0Id.split("|")[0] === "sms";
+
+    let updatedData = {};
+
+    if (!user.auth0id || auth0IdIsEmail) {
+      updatedData = { ...updatedData, auth0id: verifiedUser.auth0Id };
     }
+
+    if (verifiedUser.connectionStrategy === "sms" && !user.phoneVerified) {
+      updatedData = { ...updatedData, phoneVerified: true };
+    }
+
+    if (verifiedUser.connectionStrategy === "email" && !user.emailVerified) {
+      updatedData = { ...updatedData, emailVerified: true };
+    }
+
     if (user.isDeleted === SoftDelete.DeletedPublic) {
-      return ctx.prisma.user.update({
-        where: { email: verifiedUser.email },
-        data: {
-          isDeleted: SoftDelete.NotDeleted,
-        },
+      updatedData = { ...updatedData, isDeleted: SoftDelete.NotDeleted };
+    }
+
+    if (Object.keys(updatedData).length > 0) {
+      user = await ctx.prisma.user.update({
+        where: { id: user.id },
+        data: updatedData,
         select: SelectUser,
       });
     }

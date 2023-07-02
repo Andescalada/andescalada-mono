@@ -5,9 +5,8 @@ import { autoLoginAuth0 } from "@store/auth";
 import { inferProcedureOutput } from "@trpc/server";
 import storage from "@utils/mmkv/storage";
 import { noNetwork } from "@utils/noNetworkCondition";
-import { atom, useAtom } from "jotai";
 import { useEffect, useMemo } from "react";
-import { parse } from "superjson";
+import { parse, stringify } from "superjson";
 
 type OwnInfoOutput = inferProcedureOutput<AppRouter["user"]["ownInfo"]>;
 
@@ -15,11 +14,8 @@ interface Args {
   withInitialData?: boolean;
 }
 
-const firstRenderAtom = atom(true);
-
 const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
   const dispatch = useAppDispatch();
-  const [firstRender, setFirstRender] = useAtom(firstRenderAtom);
 
   const ownInfoOutput = storage.getString("ownInfo");
 
@@ -46,11 +42,10 @@ const useOwnInfo = ({ withInitialData = true }: Args | undefined = {}) => {
   });
 
   useEffect(() => {
-    if (ownInfo.data && firstRender) {
-      setFirstRender(false);
+    if (ownInfo.data) {
+      storage.set("ownInfo", stringify(ownInfo.data));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ownInfo.data]);
 
   return ownInfo;
 };

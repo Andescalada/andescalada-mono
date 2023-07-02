@@ -35,7 +35,7 @@ export const createUser = t.procedure
     if (input.identifier === "phoneNumber") {
       const existingPhoneNumber = await ctx.prisma.phoneNumber.findUnique({
         where: {
-          fullNumber: `+${input.country}${input.phoneNumber}`,
+          fullNumber: input.fullNumber,
         },
         select: { id: true },
       });
