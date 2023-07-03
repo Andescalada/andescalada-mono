@@ -32,7 +32,8 @@
     "build:dev-simulator": "APP_VARIANT=development npx eas-cli@latest build --profile development-simulator",
     "build:dev-simulator-local:ios": "npx node scripts/load-local-envs.mjs yarn build:dev-simulator --platform ios --local --non-interactive",
     "build:dev-local:ios": "npx node scripts/load-local-envs.mjs yarn build:dev --platform ios --local --non-interactive",
-    "build:dev-simulator-local:android": "npx node scripts/load-local-envs.mjs yarn build:dev-simulator --platform ios --local --non-interactive",
+    "build:dev-simulator-local:android": "npx node scripts/load-local-envs.mjs yarn build:dev-simulator --platform android --local --non-interactive",
+    "build:dev-local:android": "npx node scripts/load-local-envs.mjs yarn build:dev --platform android --local --non-interactive",
     "update:preview": "APP_VARIANT=preview npx node scripts/eas-update.mjs npx eas-cli@latest update -p all --branch preview --auto",
     "update:production": "APP_VARIANT=production npx node scripts/eas-update.mjs npx eas-cli@latest update -p all  --branch production --auto"
   },
@@ -64,6 +65,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "@rnmapbox/maps": "^10.0.7-rc.1",
     "@sentry/react-native": "4.13.0",
+    "@shopify/flash-list": "1.4.0",
     "@shopify/react-native-skia": "0.1.195",
     "@shopify/restyle": "^2.4.2",
     "@tanstack/query-async-storage-persister": "^4.29.5",
