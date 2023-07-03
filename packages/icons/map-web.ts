@@ -17,6 +17,8 @@ export const Icons = {
   "cool-dinosaur": require( "./components-web/cool-dinosaur").default,
   "dancing-dinosaur-color": require( "./components-web/dancing-dinosaur-color").default,
   "dancing-dinosaur": require( "./components-web/dancing-dinosaur").default,
+  "danger-color": require( "./components-web/danger-color").default,
+  "danger": require( "./components-web/danger").default,
   "destination-color": require( "./components-web/destination-color").default,
   "destination": require( "./components-web/destination").default,
   "dog-color": require( "./components-web/dog-color").default,
