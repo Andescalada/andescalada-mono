@@ -1,5 +1,6 @@
 import { A, Text } from "@andescalada/ui";
 import Conditional from "@utils/conditionalVars";
+import * as ScreenOrientation from "expo-screen-orientation";
 import {
   ComponentProps,
   forwardRef,
@@ -7,6 +8,7 @@ import {
   ReactNode,
   RefObject,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
 } from "react";
@@ -16,9 +18,10 @@ import {
   GestureType,
 } from "react-native-gesture-handler";
 import {
-  FadeOutLeft,
+  measure,
   runOnJS,
   SharedValue,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -232,6 +235,28 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
     };
   });
 
+  const rotation = useSharedValue<ScreenOrientation.Orientation>(0);
+
+  useEffect(() => {
+    const subscription = ScreenOrientation.addOrientationChangeListener((e) => {
+      rotation.value = e.orientationInfo.orientation;
+    });
+    return () => {
+      subscription.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [animatedRef]);
+
+  useAnimatedReaction(
+    () => rotation.value,
+    () => {
+      const dimensions = measure(animatedRef);
+      if (!dimensions) return;
+      width.value = dimensions.width;
+    },
+    [rotation.value],
+  );
+
   return (
     <GestureDetector gesture={pan}>
       <A.Box collapsable={Conditional.disableForAndroid} {...containerProps}>
@@ -245,7 +270,6 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           right={0}
           bottom={0}
           left={0}
-          layout={FadeOutLeft}
           onPress={() => {
             onRightAction && onRightAction();
           }}
@@ -264,7 +288,6 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
           right={0}
           bottom={0}
           left={0}
-          layout={FadeOutLeft}
           onPress={() => {
             onLeftAction && onLeftAction();
             reset();
@@ -276,7 +299,6 @@ const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
         </A.Pressable>
 
         <A.ListItem
-          layout={FadeOutLeft}
           ref={animatedRef}
           style={[props.style, style]}
           collapsable={false}
