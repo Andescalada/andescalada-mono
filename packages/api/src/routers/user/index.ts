@@ -322,6 +322,11 @@ export const userRouter = t.router({
         },
       });
     }),
+  acceptTermsAndConditions: protectedProcedure.mutation(({ ctx }) => {
+    return ctx.prisma.acceptTermsAndConditions.create({
+      data: { user: { connect: { id: ctx.user.id } } },
+    });
+  }),
   deactivate: protectedProcedure.mutation(({ ctx }) => {
     return ctx.prisma.user.update({
       where: { id: ctx.user.id },
