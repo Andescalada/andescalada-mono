@@ -51,7 +51,7 @@ const AddMultiPitchScreen: FC<Props> = ({
     return {
       isEditing: false,
       title: "Agregar multi largo",
-      buttonTitle: "Editar",
+      buttonTitle: "Agregar",
     };
   }, [multiPitchName, defaultUnknownName]);
   const {
