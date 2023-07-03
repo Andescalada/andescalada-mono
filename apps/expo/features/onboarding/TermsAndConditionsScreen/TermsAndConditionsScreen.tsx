@@ -82,6 +82,7 @@ const TermsAndConditionsScreen: FC<Props> = ({ navigation }) => {
               return;
             }
             acceptTermsAndConditions.mutate();
+            navigation.navigate(OnboardingRoutes.Permissions);
           }}
           variant={acceptTerms ? "info" : "transparent"}
         />

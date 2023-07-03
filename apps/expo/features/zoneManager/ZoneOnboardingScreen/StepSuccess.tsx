@@ -1,5 +1,5 @@
 import { Box, Icon, Screen, Text } from "@andescalada/ui";
-import NextButton from "@features/zoneManager/components/NextButton";
+import NextButton from "@features/components/NextButton";
 import { ComponentProps, FC } from "react";
 import { useWindowDimensions } from "react-native";
 

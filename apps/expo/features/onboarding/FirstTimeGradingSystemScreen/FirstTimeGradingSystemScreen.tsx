@@ -19,7 +19,7 @@ const GradingBox = (props: ComponentProps<typeof Box>) => (
 
 type Props = OnboardingScreenProps<OnboardingRoutes.FirstTimeGradingSystem>;
 
-const GradingSystemConfigScreen: FC<Props> = () => {
+const GradingSystemConfigScreen: FC<Props> = ({ navigation }) => {
   const {
     control,
     handleSubmit,
@@ -57,8 +57,6 @@ const GradingSystemConfigScreen: FC<Props> = () => {
     },
   });
 
-  const firstTimeLogin = trpc.user.firstTimeLogin.useMutation();
-
   const sport = useController({
     control,
     name: "preferredSportGrade",
@@ -73,9 +71,8 @@ const GradingSystemConfigScreen: FC<Props> = () => {
   });
 
   const onSave = handleSubmit(async (data) => {
-    await mutateAsync(data);
-    await firstTimeLogin.mutateAsync(false);
-    utils.user.ownInfo.invalidate();
+    mutateAsync(data);
+    navigation.navigate(OnboardingRoutes.TermsAndConditions);
   });
 
   const saveButton = useMemo(() => {
