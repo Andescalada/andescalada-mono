@@ -65,7 +65,6 @@ export const columns = {
   [Table.USER]: {
     name: schema[Table.USER].name.name,
     username: schema[Table.USER].username.name,
-    email: schema[Table.USER].email.name,
     ownUser: schema[Table.USER].ownUser.name,
     createdAt: schema[Table.USER].createdAt.name,
     preferredSportGrade: schema[Table.USER].preferredSportGrade.name,
@@ -97,21 +96,3 @@ export const columns = {
     originalGrade: schema[Table.ROUTE_GRADE_EVALUATION].originalGrade.name,
   },
 } as const satisfies Column;
-
-export const migrationRecord = {
-  [2]: {
-    createTable: [
-      {
-        [Table.ROUTE_GRADE_EVALUATION]: {
-          routeId: { type: "string", isIndexed: true, name: "routeId" },
-          userId: { type: "string", isIndexed: true, name: "userId" },
-          createdAt: { type: "number", name: "created_at" },
-          updatedAt: { type: "number", name: "updated_at" },
-          evaluation: { type: "number", name: "evaluation" },
-          originalGradeSystem: { type: "string", name: "originalGradeSystem" },
-          originalGrade: { type: "string", name: "originalGrade" },
-        },
-      },
-    ],
-  },
-} as const;

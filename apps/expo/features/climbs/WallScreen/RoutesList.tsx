@@ -1,6 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
-import { A, ScrollView, Text, TextButton } from "@andescalada/ui";
+import { A, Box, ScrollView, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import RouteItem from "@features/climbs/components/RouteItem";
 import {
@@ -17,6 +17,7 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
 import {
   createRef,
@@ -184,135 +185,146 @@ const RoutesList: FC = () => {
     );
 
   return (
-    <ScrollView.Gesture
+    <Box
       flex={1}
-      onScrollBeginDrag={reset}
-      refreshControl={refresh}
       paddingHorizontal="m"
       paddingTop="m"
       borderTopLeftRadius={10}
       borderTopRightRadius={10}
       backgroundColor="background"
     >
-      {data?.routes.map((item, index) => {
-        const maxIndex = item.ChildrenRoutes.length - 1;
-        return (
-          <A.Box
-            key={item.id}
-            marginBottom={index === routesCount - 1 ? "xl" : "none"}
-            flex={1}
-            marginVertical="s"
-          >
-            <RouteItem
-              title={item.name}
-              grade={item.gradeStringify}
-              position={item.position}
-              kind={item.kindStringify}
-              ref={item.routeRef}
-              allowEdit={
-                (permission?.has("Update") ||
-                  item.Author.email === user?.email) &&
-                !isOfflineMode
-              }
-              onPress={() => {
-                if (item.isMultiPitch) {
-                  navigation.navigate(ClimbsNavigationRoutes.MultiPitch, {
-                    multiPitchId: item.id,
-                    multiPitchName: item.name,
-                    wallId,
-                    zoneId,
-                  });
-                  return;
-                }
-                onPress({ routeId: item.id, zoneId, routeName: item.name });
-              }}
-              onTouch={() => {
-                setTouchRouteId((prev) => {
-                  if (prev !== item.id) {
-                    reset();
-                  }
-                  return item.id;
-                });
-                if (item.isMultiPitch) {
-                  utils.multiPitch.byId.prefetch({
-                    multiPitchId: item.id,
-                    zoneId,
-                  });
-                  return;
-                }
-                utils.routes.byId.prefetch(item.id);
-              }}
-              index={index}
-              onDelete={() => {
-                onDeleteTry({
-                  id: item.id,
-                  zoneId,
-                  isMultiPitch: item.isMultiPitch,
-                });
-              }}
-              onOptions={() => {
-                item.routeRef.current?.reset();
-                if (item.isMultiPitch) {
-                  onMultiPitchOptions({ id: item.id, zoneId, name: item.name });
-                  return;
-                }
-                onRouteOptions({ routeId: item.id, zoneId });
-              }}
-            />
-            {item.ChildrenRoutes.map((childrenRoute, childrenRouteIndex) => (
+      <FlashList
+        refreshControl={refresh}
+        onScrollBeginDrag={reset}
+        showsVerticalScrollIndicator={false}
+        estimatedItemSize={100}
+        data={data?.routes}
+        renderItem={({ item, index }) => {
+          const maxIndex = item.ChildrenRoutes.length - 1;
+          return (
+            <A.Box
+              key={item.id}
+              marginBottom={index === routesCount - 1 ? "xl" : "none"}
+              flex={1}
+              marginVertical="s"
+            >
               <RouteItem
-                title={childrenRoute.name}
-                kind={childrenRoute.kindStringify}
-                grade={childrenRoute.gradeStringify}
-                onPress={() => {
-                  onPress({
-                    routeId: childrenRoute.id,
-                    zoneId,
-                    routeName: childrenRoute.name,
-                  });
-                }}
+                title={item.name}
+                grade={item.gradeStringify}
+                position={item.position}
+                kind={item.kindStringify}
+                ref={item.routeRef}
                 allowEdit={
-                  (permission?.has("Update") ||
-                    childrenRoute.Author.email === user?.email) &&
+                  (permission?.has("Update") || item.Author.id === user?.id) &&
                   !isOfflineMode
                 }
+                onPress={() => {
+                  if (item.isMultiPitch) {
+                    navigation.navigate(ClimbsNavigationRoutes.MultiPitch, {
+                      multiPitchId: item.id,
+                      multiPitchName: item.name,
+                      wallId,
+                      zoneId,
+                    });
+                    return;
+                  }
+                  onPress({ routeId: item.id, zoneId, routeName: item.name });
+                }}
+                onTouch={() => {
+                  setTouchRouteId((prev) => {
+                    if (prev !== item.id) {
+                      reset();
+                    }
+                    return item.id;
+                  });
+                  if (item.isMultiPitch) {
+                    utils.multiPitch.byId.prefetch({
+                      multiPitchId: item.id,
+                      zoneId,
+                    });
+                    return;
+                  }
+                  utils.routes.byId.prefetch(item.id);
+                }}
+                index={index}
                 onDelete={() => {
                   onDeleteTry({
-                    id: childrenRoute.id,
+                    id: item.id,
                     zoneId,
-                    isExtension: true,
+                    isMultiPitch: item.isMultiPitch,
                   });
                 }}
                 onOptions={() => {
-                  onRouteOptions({
-                    routeId: childrenRoute.id,
-                    zoneId,
-                    isChildrenRoute: true,
-                  });
+                  item.routeRef.current?.reset();
+                  if (item.isMultiPitch) {
+                    onMultiPitchOptions({
+                      id: item.id,
+                      zoneId,
+                      name: item.name,
+                    });
+                    return;
+                  }
+                  onRouteOptions({ routeId: item.id, zoneId });
                 }}
-                key={childrenRoute.id}
-                index={index + childrenRouteIndex}
-                variant="plain"
-                containerProps={{
-                  width: "90%",
-                  alignSelf: "center",
-                }}
-                borderLeftWidth={3}
-                borderRightWidth={3}
-                borderColor="grayscale.900"
-                borderTopEndRadius={0}
-                borderTopLeftRadius={0}
-                borderBottomLeftRadius={childrenRouteIndex === maxIndex ? 5 : 0}
-                borderBottomRightRadius={
-                  childrenRouteIndex === maxIndex ? 5 : 0
-                }
-                borderBottomWidth={childrenRouteIndex === maxIndex ? 3 : 1}
               />
-            ))}
-          </A.Box>
-        );
-      })}
-    </ScrollView.Gesture>
+
+              {item.ChildrenRoutes.map((childrenRoute, childrenRouteIndex) => (
+                <RouteItem
+                  title={childrenRoute.name}
+                  kind={childrenRoute.kindStringify}
+                  grade={childrenRoute.gradeStringify}
+                  onPress={() => {
+                    onPress({
+                      routeId: childrenRoute.id,
+                      zoneId,
+                      routeName: childrenRoute.name,
+                    });
+                  }}
+                  allowEdit={
+                    (permission?.has("Update") ||
+                      childrenRoute.Author.id === user?.id) &&
+                    !isOfflineMode
+                  }
+                  onDelete={() => {
+                    onDeleteTry({
+                      id: childrenRoute.id,
+                      zoneId,
+                      isExtension: true,
+                    });
+                  }}
+                  onOptions={() => {
+                    onRouteOptions({
+                      routeId: childrenRoute.id,
+                      zoneId,
+                      isChildrenRoute: true,
+                    });
+                  }}
+                  key={childrenRoute.id}
+                  index={index + childrenRouteIndex}
+                  variant="plain"
+                  containerProps={{
+                    width: "90%",
+                    alignSelf: "center",
+                  }}
+                  borderLeftWidth={3}
+                  borderRightWidth={3}
+                  borderColor="grayscale.900"
+                  borderTopEndRadius={0}
+                  borderTopLeftRadius={0}
+                  borderBottomLeftRadius={
+                    childrenRouteIndex === maxIndex ? 5 : 0
+                  }
+                  borderBottomRightRadius={
+                    childrenRouteIndex === maxIndex ? 5 : 0
+                  }
+                  borderBottomWidth={childrenRouteIndex === maxIndex ? 3 : 1}
+                />
+              ))}
+            </A.Box>
+          );
+        }}
+      />
+    </Box>
   );
 };
 

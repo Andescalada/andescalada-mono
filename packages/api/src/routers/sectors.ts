@@ -44,7 +44,7 @@ export const sectorsRouter = t.router({
 
         const currentSectorAuthor = await ctx.prisma.sector.findUniqueOrThrow({
           where: { id: input.sectorId },
-          select: { Author: { select: { email: true } } },
+          select: { Author: { select: { id: true } } },
         });
 
         await ctx.prisma.zone.update({
@@ -59,8 +59,8 @@ export const sectorsRouter = t.router({
             sectorKind: input.sectorKind,
             version: { increment: 1 },
             coAuthors:
-              currentSectorAuthor.Author.email !== ctx.user.email
-                ? { connect: { email: ctx.user.email } }
+              currentSectorAuthor.Author.id !== ctx.user.id
+                ? { connect: { id: ctx.user.id } }
                 : undefined,
           },
           include: {
@@ -92,7 +92,7 @@ export const sectorsRouter = t.router({
           Zone: { connect: { id: input.zoneId } },
           position: biggestPosition + 1,
           sectorKind: input.sectorKind,
-          Author: { connect: { email: ctx.user.email } },
+          Author: { connect: { id: ctx.user.id } },
         },
         include: {
           Zone: {
@@ -110,12 +110,9 @@ export const sectorsRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const author = await ctx.prisma.sector.findUnique({
         where: { id: input.sectorId },
-        select: { Author: { select: { email: true } } },
+        select: { Author: { select: { id: true } } },
       });
-      if (
-        !ctx.permissions.has("Update") &&
-        author?.Author.email !== ctx.user.email
-      ) {
+      if (!ctx.permissions.has("Update") && author?.Author.id !== ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const sector = await ctx.prisma.sector.update({
@@ -138,10 +135,10 @@ export const sectorsRouter = t.router({
             },
           }),
           coAuthors:
-            author?.Author.email === ctx.user.email
+            author?.Author.id === ctx.user.id
               ? undefined
               : {
-                  connect: { email: ctx.user.email },
+                  connect: { id: ctx.user.id },
                 },
         },
       });
@@ -171,12 +168,9 @@ export const sectorsRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const sector = await ctx.prisma.sector.findUnique({
         where: { id: input.sectorId },
-        select: { Author: { select: { email: true } } },
+        select: { Author: { select: { id: true } } },
       });
-      if (
-        !ctx.permissions.has("Delete") &&
-        sector?.Author.email !== ctx.user.email
-      ) {
+      if (!ctx.permissions.has("Delete") && sector?.Author.id !== ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 

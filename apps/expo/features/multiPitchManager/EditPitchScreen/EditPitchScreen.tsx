@@ -3,12 +3,11 @@ import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
+  AddOrCancelButtons,
   Box,
-  Button,
   ButtonGroup,
   Screen,
   ScrollView,
-  SemanticButton,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -146,19 +145,11 @@ const EditPitchScreen: FC<Props> = ({
             />
           </Box>
         )}
-        <Button
-          variant="primary"
-          minHeight={50}
-          title={"Editar"}
-          onPress={onSubmit}
+        <AddOrCancelButtons
+          onAdd={onSubmit}
+          onCancel={onCancel}
           isLoading={editPitch.isLoading}
-          marginVertical="s"
-        />
-        <SemanticButton
-          variant="error"
-          title="Cancelar"
-          onPress={onCancel}
-          marginBottom="l"
+          addLabel="Editar"
         />
       </ScrollView>
     </Screen>

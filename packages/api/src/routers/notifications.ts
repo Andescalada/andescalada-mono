@@ -8,23 +8,23 @@ export const notificationsRouter = t.router({
   registerUserToken: protectedProcedure
     .input(z.object({ token: z.string(), deviceName: z.string() }))
     .mutation(({ ctx, input }) =>
-      ctx.access.hset(`notificationTokens:${ctx.user.email}`, {
+      ctx.access.hset(`notificationTokens:${ctx.user.id}`, {
         [input.deviceName]: input.token,
       }),
     ),
   unregisterUserToken: protectedProcedure
     .input(z.object({ deviceName: z.string() }))
     .mutation(({ ctx, input }) =>
-      ctx.access.hdel(`notificationTokens:${ctx.user.email}`, input.deviceName),
+      ctx.access.hdel(`notificationTokens:${ctx.user.id}`, input.deviceName),
     ),
   sendTestNotification: protectedProcedure.mutation(async ({ ctx }) => {
     const tokens = await ctx.access.hgetall<Record<string, string>>(
-      `notificationTokens:${ctx.user.email}`,
+      `notificationTokens:${ctx.user.id}`,
     );
     if (!tokens)
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: `No tokens found for ${ctx.user.email}`,
+        message: `No tokens found for ${ctx.user.id}`,
       });
     const tokensArray = Object.values(tokens);
     const expo = new Expo();

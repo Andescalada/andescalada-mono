@@ -30,7 +30,7 @@ export const agreementsRouter = t.router({
       }
       const agreement = await ctx.prisma.zoneAgreement.create({
         data: {
-          Author: { connect: { email: ctx.user.email } },
+          Author: { connect: { id: ctx.user.id } },
           Zone: { connect: { id: input.zoneId } },
           Agreement: { connect: { id: input.agreementId } },
           level: input.level,
@@ -169,7 +169,7 @@ export const agreementsRouter = t.router({
       }
       const author = await ctx.prisma.zoneAgreement.findUnique({
         where: { id: input.zoneAgreementId },
-        select: { Author: { select: { email: true } } },
+        select: { Author: { select: { id: true } } },
       });
 
       const agreement = await ctx.prisma.zoneAgreement.update({
@@ -180,10 +180,10 @@ export const agreementsRouter = t.router({
             ? { update: { originalText: input.comment } }
             : undefined,
           coAuthors:
-            author?.Author.email === ctx.user.email
+            author?.Author.id === ctx.user.id
               ? undefined
               : {
-                  connect: { email: ctx.user.email },
+                  connect: { id: ctx.user.id },
                 },
         },
       });

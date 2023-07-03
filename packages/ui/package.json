@@ -9,10 +9,11 @@
     "@expo/vector-icons": "^13.0.0",
     "@shopify/restyle": "^2.4.2",
     "deepmerge": "^4.2.2",
+    "expo-image": "~1.0.1",
     "react-native": "0.71.6",
     "react-native-gesture-handler": "~2.9.0",
-    "react-native-safe-area-context": "4.4.1",
-    "expo-image": "~1.0.1"
+    "react-native-phone-number-input": "^2.1.0",
+    "react-native-safe-area-context": "4.4.1"
   },
   "devDependencies": {
     "@shopify/react-native-skia": "0.1.195"

@@ -20,7 +20,7 @@ export const protectedZoneProcedure = protectedProcedure
   .use(async ({ ctx, next, input }) => {
     let permissions: Permissions = new Set();
     try {
-      const res = await ctx.access.hget<Access>(ctx.user.email, input.zoneId);
+      const res = await ctx.access.hget<Access>(ctx.user.id, input.zoneId);
       if (res) {
         permissions = deserialize<Permissions>(res);
       } else {

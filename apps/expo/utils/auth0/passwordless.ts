@@ -9,7 +9,7 @@ interface LoginResponse {
   email: string;
   email_verified: boolean;
 }
-interface VerificatonCodeSuccess {
+interface VerificationCodeSuccess {
   access_token: string;
   expires_in: number;
   id_token: string;
@@ -18,7 +18,10 @@ interface VerificatonCodeSuccess {
   token_type: "Bearer";
 }
 
-const login = async (email: string) => {
+const login = async (
+  input: string,
+  connectionStrategy: "email" | "sms" = "email",
+) => {
   const res = await fetch(`https://${domain}/passwordless/start`, {
     method: "POST",
     headers: {
@@ -26,29 +29,10 @@ const login = async (email: string) => {
     },
     body: JSON.stringify({
       client_id: clientId,
-      connection: "email",
-      email: email,
+      connection: connectionStrategy === "email" ? "email" : "sms",
+      ...(connectionStrategy === "sms" && { phone_number: input }),
+      ...(connectionStrategy === "email" && { email: input }),
       send: "code",
-    }),
-  });
-
-  return res.json() as unknown as LoginResponse;
-};
-
-const verifyCode = async (email: string, code: string) => {
-  const res = await fetch(`https://${domain}/oauth/token`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      grant_type: "http://auth0.com/oauth/grant-type/passwordless/otp",
-      client_id: clientId,
-      username: email,
-      otp: code,
-      realm: "email",
-      audience: audience,
-      scope: "openid name profile offline_access",
     }),
   });
 
@@ -60,7 +44,39 @@ const verifyCode = async (email: string, code: string) => {
     });
   }
 
-  return result as unknown as VerificatonCodeSuccess;
+  return result as unknown as LoginResponse;
+};
+
+const verifyCode = async (
+  input: string,
+  code: string,
+  connectionStrategy: "email" | "sms" = "email",
+) => {
+  const res = await fetch(`https://${domain}/oauth/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      grant_type: "http://auth0.com/oauth/grant-type/passwordless/otp",
+      client_id: clientId,
+      username: input,
+      otp: code,
+      realm: connectionStrategy === "email" ? "email" : "sms",
+      audience: audience,
+      scope: "openid name phone profile offline_access",
+    }),
+  });
+
+  const result = await res.json();
+
+  if (res.status !== 200) {
+    throw new Error(errorDescription(result.error_description), {
+      cause: result.error,
+    });
+  }
+
+  return result as unknown as VerificationCodeSuccess;
 };
 
 export default { login, verifyCode };
@@ -75,6 +91,8 @@ const errorDescription = (description: string) => {
       return "Tu cuenta ha sido bloqueada después de múltiples intentos de inicio de sesión consecutivos. Te hemos enviado un correo electrónico con instrucciones sobre cómo desbloquearla.";
     case "The verification code has expired. Please try to login again.":
       return "El código de verificación ha expirado. Por favor, intenta iniciar sesión nuevamente.";
+    case "Public signup is disabled":
+      return "El inicio de sesión con email está deshabilitado. Por favor, intenta iniciar sesión con tu número de teléfono.";
     default:
       return description;
   }

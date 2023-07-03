@@ -7,7 +7,7 @@ const evaluationById = protectedProcedure
     const res = await ctx.prisma.routeEvaluation.findFirst({
       where: {
         routeId: input.routeId,
-        User: { email: ctx.user.email },
+        User: { id: ctx.user.id },
       },
     });
 

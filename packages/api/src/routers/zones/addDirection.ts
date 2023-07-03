@@ -17,8 +17,8 @@ const addDirection = protectedZoneProcedure
       select: {
         isDeleted: true,
         id: true,
-        Author: { select: { email: true } },
-        coAuthors: { select: { email: true } },
+        Author: { select: { id: true } },
+        coAuthors: { select: { id: true } },
         descriptionId: true,
         nameId: true,
       },
@@ -33,8 +33,8 @@ const addDirection = protectedZoneProcedure
     if (
       existingDirections &&
       !ctx.permissions.has("Update") &&
-      existingDirections.Author.email !== ctx.user.email &&
-      !existingDirections.coAuthors.some((c) => c.email === ctx.user.email)
+      existingDirections.Author.id !== ctx.user.id &&
+      !existingDirections.coAuthors.some((c) => c.id === ctx.user.id)
     ) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Update"),
@@ -69,16 +69,16 @@ const addDirection = protectedZoneProcedure
         },
         transportationMode: input.transportationMode,
         coAuthors:
-          existingDirections?.Author.email === ctx.user.email
+          existingDirections?.Author.id === ctx.user.id
             ? undefined
             : {
-                connect: { email: ctx.user.email },
+                connect: { id: ctx.user.id },
               },
       },
       create: {
         Zone: { connect: { id: input.zoneId } },
         Author: {
-          connect: { email: ctx.user.email },
+          connect: { id: ctx.user.id },
         },
         name: input.name
           ? {

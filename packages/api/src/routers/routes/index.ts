@@ -79,11 +79,11 @@ export const routesRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const routePath = await ctx.prisma.routePath.upsert({
         where: { id: input.routePathId || "" },
-        include: { Author: { select: { email: true } } },
+        include: { Author: { select: { id: true } } },
         create: {
           Topo: { connect: { id: input.topoId } },
           Route: { connect: { id: input.routeId } },
-          Author: { connect: { email: ctx.user.email } },
+          Author: { connect: { id: ctx.user.id } },
           path: input.path,
           pitchLabelPoint: input.pitchLabelPoint,
         },
@@ -93,10 +93,10 @@ export const routesRouter = t.router({
         },
       });
 
-      if (routePath.Author.email !== ctx.user.email) {
+      if (routePath.Author.id !== ctx.user.id) {
         await ctx.prisma.routePath.update({
           where: { id: routePath.id },
-          data: { coAuthors: { connect: { email: ctx.user.email } } },
+          data: { coAuthors: { connect: { id: ctx.user.id } } },
         });
       }
 
@@ -111,12 +111,9 @@ export const routesRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.route.findUniqueOrThrow({
         where: { id: input.routeId },
-        select: { Author: { select: { email: true } }, wallId: true },
+        select: { Author: { select: { id: true } }, wallId: true },
       });
-      if (
-        !ctx.permissions.has("Update") &&
-        route?.Author.email !== ctx.user.email
-      ) {
+      if (!ctx.permissions.has("Update") && route?.Author.id !== ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -151,10 +148,10 @@ export const routesRouter = t.router({
 
           version: { increment: 1 },
           coAuthors:
-            route?.Author.email === ctx.user.email
+            route?.Author.id === ctx.user.id
               ? undefined
               : {
-                  connect: { email: ctx.user.email },
+                  connect: { id: ctx.user.id },
                 },
         },
         include: {
@@ -183,12 +180,9 @@ export const routesRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const route = await ctx.prisma.route.findUnique({
         where: { id: input.routeId },
-        select: { Author: { select: { email: true } }, wallId: true },
+        select: { Author: { select: { id: true } }, wallId: true },
       });
-      if (
-        !ctx.permissions.has("Update") &&
-        route?.Author.email !== ctx.user.email
-      ) {
+      if (!ctx.permissions.has("Update") && route?.Author.id !== ctx.user.id) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 

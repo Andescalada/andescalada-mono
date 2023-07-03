@@ -38,7 +38,6 @@ type FindOutput = inferProcedureOutput<AppRouter["user"]["find"]>[0];
 export interface UserOutput {
   id: FindOutput["id"];
   username: FindOutput["username"];
-  email: FindOutput["email"];
   roles: FindOutput["RoleByZone"];
 }
 
@@ -143,7 +142,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                 ) : null
               }
               renderItem={({
-                item: { username, RoleByZone, email, name, profilePhoto, id },
+                item: { username, RoleByZone, name, profilePhoto, id },
               }) => {
                 return (
                   <Pressable
@@ -154,7 +153,7 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
                     justifyContent={"space-between"}
                     alignItems="center"
                     onPress={() => {
-                      onSetUser({ username, email, roles: RoleByZone, id });
+                      onSetUser({ username, roles: RoleByZone, id });
 
                       // @ts-expect-error ref is correctly typed
                       ref?.current?.close();

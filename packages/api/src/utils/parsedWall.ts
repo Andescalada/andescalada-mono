@@ -19,7 +19,7 @@ const Route = {
   isDeleted: true,
   unknownName: true,
   wallId: true,
-  Author: { select: { email: true } },
+  Author: { select: { id: true } },
 };
 
 const parsedWall = async ({
@@ -66,7 +66,7 @@ const parsedWall = async ({
           id: true,
           name: true,
           position: true,
-          Author: { select: { email: true } },
+          Author: { select: { id: true } },
           wallId: true,
           Pitches: {
             where: { isDeleted: SoftDelete.NotDeleted },

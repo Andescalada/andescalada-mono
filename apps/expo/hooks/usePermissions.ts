@@ -1,7 +1,7 @@
 import type { Permissions } from "@andescalada/api/src/types/permissions";
 import type { Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
-import { useAppSelector } from "@hooks/redux";
+import useOwnInfo from "@hooks/useOwnInfo";
 import storage, { Storage } from "@utils/mmkv/storage";
 import { parse, stringify } from "superjson";
 
@@ -10,19 +10,21 @@ interface Args {
 }
 
 const usePermissions = ({ zoneId }: Args) => {
-  const { email } = useAppSelector((state) => state.auth);
+  const { data: userData } = useOwnInfo();
 
-  if (!email) throw new Error("No email found");
-  const storagePermissions = getPermissionFromStorage(email, zoneId);
+  if (!userData) throw new Error("No own info");
+
+  const storagePermissions = getPermissionFromStorage(userData.id, zoneId);
 
   const permissions = trpc.user.zonePermissions.useQuery(
     { zoneId },
     {
       staleTime: 1000 * 60 * 2,
+      cacheTime: 1000 * 60 * 2,
       initialData: storagePermissions,
       onSuccess: (data) => {
         storage.set(
-          `${Storage.PERMISSIONS}.${email}.${zoneId}`,
+          `${Storage.PERMISSIONS}.${userData.id}.${zoneId}`,
           stringify(data),
         );
       },
@@ -38,9 +40,9 @@ const usePermissions = ({ zoneId }: Args) => {
 
 export default usePermissions;
 
-const getPermissionFromStorage = (email: string, zoneId: string) => {
+const getPermissionFromStorage = (userId: string, zoneId: string) => {
   try {
-    const s = storage.getString(`${Storage.PERMISSIONS}.${email}.${zoneId}`);
+    const s = storage.getString(`${Storage.PERMISSIONS}.${userId}.${zoneId}`);
     if (!s) return undefined;
     return parse<Permissions>(s);
   } catch (error) {

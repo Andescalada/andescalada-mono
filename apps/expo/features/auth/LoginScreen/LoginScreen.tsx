@@ -30,7 +30,9 @@ const LoginScreen = ({ navigation }: Props) => {
       >
         <Button
           title="Comencemos"
-          onPress={() => navigation.navigate(AuthNavigationRoutes.EnterEmail)}
+          onPress={() =>
+            navigation.navigate(AuthNavigationRoutes.EnterPhoneNumber)
+          }
           onLongPress={loginWithPasswordHandler}
           variant="transparent"
           paddingHorizontal="l"

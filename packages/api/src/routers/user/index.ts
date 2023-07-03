@@ -12,6 +12,7 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import removeRole from "@andescalada/api/src/utils/removeRole";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
+import session from "@andescalada/api/src/utils/session";
 import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import roleNameAssets from "@andescalada/common-assets/roleNameAssets";
 import { Actions, Entity, Image, RoleNames, SoftDelete } from "@andescalada/db";
@@ -28,9 +29,10 @@ export const userRouter = t.router({
   updateDownloadedAssets: updateDownloadedAssets,
   ownInfo: protectedProcedure.query(async ({ ctx }) =>
     ctx.prisma.user.findUnique({
-      where: { email: ctx.user.email },
+      where: { id: ctx.user.id },
       select: {
         email: true,
+        PhoneNumber: { select: { fullNumber: true } },
         firstLogin: true,
         id: true,
         profilePhoto: true,
@@ -56,7 +58,7 @@ export const userRouter = t.router({
     )
     .query(async ({ ctx, input }) => {
       const notifications = await ctx.prisma.user.findUnique({
-        where: { email: ctx.user.email },
+        where: { id: ctx.user.id },
         select: {
           NotificationReceived: {
             include: {
@@ -102,27 +104,64 @@ export const userRouter = t.router({
     }),
   setManyNotificationsToRead: protectedProcedure.mutation(async ({ ctx }) => {
     const res = await ctx.prisma.notificationReceiver.updateMany({
-      where: { Receiver: { email: ctx.user.email }, isRead: false },
+      where: { Receiver: { id: ctx.user.id }, isRead: false },
       data: { isRead: true },
     });
 
     return res;
   }),
-  edit: protectedProcedure.input(user.schema).mutation(({ ctx, input }) =>
-    ctx.prisma.user.update({
-      where: { email: ctx.user.email },
-      data: {
-        name: input.name,
-        username: input.username,
-        profilePhoto: input.image ? { create: input.image } : undefined,
-      },
+  addPhoneNumber: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+        fullNumber: z.string(),
+        phoneNumber: z.string().optional(),
+        country: z.string().optional(),
+        countryCode: z.string().optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.phoneNumber.upsert({
+        where: { fullNumber: input.fullNumber },
+        update: {
+          country: input.country,
+          countryCode: input.countryCode,
+          number: input.phoneNumber,
+          fullNumber: input.fullNumber,
+        },
+        create: {
+          country: input.country,
+          fullNumber: input.fullNumber,
+          countryCode: input.countryCode,
+          number: input.phoneNumber,
+          User: { connect: { id: input.userId } },
+        },
+      });
     }),
-  ),
+  edit: protectedProcedure
+    .input(user.schema)
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: { id: ctx.user.id },
+        data: {
+          name: input.name,
+          username: input.username,
+          profilePhoto: input.image ? { create: input.image } : undefined,
+        },
+      });
+
+      await session.set({
+        ctx,
+        user: { ...ctx.user, name: user.name, username: user.username },
+      });
+
+      return user;
+    }),
   firstTimeLogin: protectedProcedure
     .input(z.boolean())
     .mutation(({ ctx, input }) =>
       ctx.prisma.user.update({
-        where: { email: ctx.user.email },
+        where: { id: ctx.user.id },
         data: { firstLogin: input },
       }),
     ),
@@ -130,7 +169,7 @@ export const userRouter = t.router({
     .input(user.gradeSystem)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.user.update({
-        where: { email: ctx.user.email },
+        where: { id: ctx.user.id },
         data: {
           preferredTradGrade: input.preferredTradGrade,
           preferredSportGrade: input.preferredSportGrade,
@@ -140,7 +179,7 @@ export const userRouter = t.router({
     }),
   zoneHistory: protectedProcedure.query(async ({ ctx }) => {
     const rawHistory = await ctx.prisma.user.findUnique({
-      where: { email: ctx.user.email },
+      where: { id: ctx.user.id },
       select: {
         History: {
           where: {
@@ -161,7 +200,7 @@ export const userRouter = t.router({
     .query(async ({ ctx, input }) => {
       let permissions: Permissions = new Set();
       try {
-        const res = await ctx.access.hget<Access>(ctx.user.email, input.zoneId);
+        const res = await ctx.access.hget<Access>(ctx.user.id, input.zoneId);
         if (res) {
           permissions = deserialize<Permissions>(res);
           return permissions;
@@ -173,7 +212,7 @@ export const userRouter = t.router({
 
         const updatedPermissions = await updateRedisPermissions(
           ctx.access,
-          ctx.user.email,
+          ctx.user.id,
           input.zoneId,
           permissionSet,
         );
@@ -184,7 +223,7 @@ export const userRouter = t.router({
   zonesByRole: protectedProcedure.query(({ ctx }) =>
     ctx.prisma.user
       .findUnique({
-        where: { email: ctx.user.email },
+        where: { id: ctx.user.id },
         select: {
           RoleByZone: {
             select: {
@@ -221,14 +260,7 @@ export const userRouter = t.router({
 
       const { entity, id, template } = pushNotification.AssignNewZoneRole;
 
-      const receivers = [{ email: User.email, id: User.id }];
-
-      const onwInfo = await ctx.prisma.user.findUnique({
-        where: { email: ctx.user.email },
-        select: { username: true },
-      });
-
-      if (!onwInfo) throw new TRPCError(error.userNotFound(ctx.user.email));
+      const receivers = [{ id: User.id }];
 
       await sendAndRecordPushNotification(ctx, {
         Entity: entity,
@@ -236,7 +268,7 @@ export const userRouter = t.router({
         entityTypeId: id,
         message: template.es({
           zoneName: Zone.name,
-          sender: onwInfo?.username,
+          sender: ctx.user.username,
           role: roleNameAssets[input.role].label,
         }),
         receivers,
@@ -272,7 +304,7 @@ export const userRouter = t.router({
       return ctx.prisma.user.findMany({
         where: {
           username: { contains: input.search },
-          ...(input.filterMe && { NOT: { email: ctx.user.email } }),
+          ...(input.filterMe && { NOT: { id: ctx.user.id } }),
           isDeleted: SoftDelete.NotDeleted,
         },
         select: {
@@ -280,7 +312,6 @@ export const userRouter = t.router({
           name: true,
           username: true,
           profilePhoto: { select: { publicId: true } },
-          email: true,
           RoleByZone: {
             select: {
               Role: { select: { name: true } },
@@ -291,15 +322,20 @@ export const userRouter = t.router({
         },
       });
     }),
+  acceptTermsAndConditions: protectedProcedure.mutation(({ ctx }) => {
+    return ctx.prisma.acceptTermsAndConditions.create({
+      data: { user: { connect: { id: ctx.user.id } } },
+    });
+  }),
   deactivate: protectedProcedure.mutation(({ ctx }) => {
     return ctx.prisma.user.update({
-      where: { email: ctx.user.email },
+      where: { id: ctx.user.id },
       data: { isDeleted: SoftDelete.DeletedPublic },
     });
   }),
   permanentDelete: protectedProcedure.mutation(({ ctx }) => {
     return ctx.prisma.user.delete({
-      where: { email: ctx.user.email },
+      where: { id: ctx.user.id },
     });
   }),
   addToDownloadedZones: protectedZoneProcedure.mutation(
@@ -318,7 +354,7 @@ export const userRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       return ctx.prisma.user.update({
-        where: { email: ctx.user.email },
+        where: { id: ctx.user.id },
         data: { DownloadedZones: { connect: { id: input.zoneId } } },
       });
     },
@@ -339,12 +375,12 @@ export const userRouter = t.router({
       where: {
         history_unique: {
           action: Actions.Visited,
-          email: ctx.user.email,
+          userId: ctx.user.id,
           zoneId: input.zoneId,
         },
       },
       create: {
-        user: { connect: { email: ctx.user.email } },
+        user: { connect: { id: ctx.user.id } },
         action: Actions.Visited,
         zone: { connect: { id: input.zoneId } },
         counter: 1,
@@ -355,15 +391,17 @@ export const userRouter = t.router({
       },
     });
   }),
+
   removeAllRecentZones: protectedProcedure.mutation(({ ctx }) =>
     ctx.prisma.history.updateMany({
-      where: { email: ctx.user.email },
+      where: { userId: ctx.user.id },
       data: { isDeleted: SoftDelete.DeletedPublic },
     }),
   ),
+
   removeRecentZone: protectedZoneProcedure.mutation(({ ctx, input }) => {
     return ctx.prisma.history.updateMany({
-      where: { AND: { zoneId: input.zoneId, email: ctx.user.email } },
+      where: { AND: { zoneId: input.zoneId, userId: ctx.user.id } },
       data: { isDeleted: SoftDelete.DeletedPublic },
     });
   }),
@@ -383,28 +421,28 @@ export const userRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       return ctx.prisma.user.update({
-        where: { email: ctx.user.email },
+        where: { id: ctx.user.id },
         data: { FavoriteZones: { connect: { id: input.zoneId } } },
       });
     },
   ),
   removeToDownloadedZones: protectedZoneProcedure.mutation(({ ctx, input }) =>
     ctx.prisma.user.update({
-      where: { email: ctx.user.email },
+      where: { id: ctx.user.id },
       data: { DownloadedZones: { disconnect: { id: input.zoneId } } },
     }),
   ),
   removeToFavoriteZones: protectedZoneProcedure.mutation(
     async ({ ctx, input }) => {
       return ctx.prisma.user.update({
-        where: { email: ctx.user.email },
+        where: { id: ctx.user.id },
         data: { FavoriteZones: { disconnect: { id: input.zoneId } } },
       });
     },
   ),
   getDownloadedAssets: protectedProcedure.query(async ({ ctx }) => {
     const list = await ctx.prisma.user.findUnique({
-      where: { email: ctx.user.email },
+      where: { id: ctx.user.id },
       select: {
         DownloadedZones: {
           select: {
@@ -508,33 +546,23 @@ export const userRouter = t.router({
       const roles = await assignAndCacheRole(ctx, {
         role: RoleNames.Reviewer,
         zoneId: input.zoneId,
-        email: ctx.user.email,
+        userId: ctx.user.id,
       });
 
       const admins = await ctx.prisma.roleByZone
         .findMany({
           where: { Role: { name: "Admin" }, zoneId: input.zoneId },
           select: {
-            User: { select: { email: true, id: true } },
+            User: { select: { id: true } },
             Zone: { select: { name: true } },
           },
         })
         .then((r) =>
           r.map((r) => ({
             id: r.User.id,
-            email: r.User.email,
             zoneName: r.Zone.name,
           })),
         );
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: ctx.user.email },
-        select: { username: true },
-      });
-
-      if (!user) {
-        throw new TRPCError(error.userNotFound(ctx.user.email));
-      }
 
       const { entity, id, template } = pushNotification.ZoneReviewAssigned;
 
@@ -544,7 +572,7 @@ export const userRouter = t.router({
         entityTypeId: id,
         message: template.es({
           zoneName: admins[0].zoneName,
-          user: user.username,
+          user: ctx.user.username,
         }),
         receivers: admins,
       });

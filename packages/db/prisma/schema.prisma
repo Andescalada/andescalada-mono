@@ -1,6 +1,13 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex", "extendedWhereUnique"]
+}
+
+generator fabbrica {
+  provider    = "prisma-fabbrica"
+  output      = "../factories"
+  tsconfig    = "../tsconfig.json"
+  noTranspile = true
 }
 
 generator zod {
@@ -20,74 +27,104 @@ datasource db {
 }
 
 model User {
-  id                         String                    @id @default(uuid())
-  createdAt                  DateTime                  @default(now())
-  updatedAt                  DateTime                  @updatedAt
-  name                       String                    @default("")
-  username                   String                    @unique @default(cuid())
-  email                      String                    @unique
-  profilePhoto               Image?                    @relation(fields: [profilePhotoId], references: [id])
+  id                         String                     @id @default(uuid())
+  createdAt                  DateTime                   @default(now())
+  updatedAt                  DateTime                   @updatedAt
+  name                       String                     @default("")
+  username                   String                     @unique @default(cuid())
+  email                      String?                    @unique
+  phoneVerified              Boolean                    @default(false)
+  emailVerified              Boolean                    @default(false)
+  PhoneNumber                PhoneNumber?
+  profilePhoto               Image?                     @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId             String?
-  firstLogin                 Boolean                   @default(true)
-  auth0id                    String?
-  authorZone                 Zone[]                    @relation("AuthorZone")
-  coAuthorZone               Zone[]                    @relation("CoAuthorZone")
-  authorSector               Sector[]                  @relation("AuthorSector")
-  coAuthorSector             Sector[]                  @relation("CoAuthorSector")
-  authorWall                 Wall[]                    @relation("AuthorWall")
-  coAuthorWall               Wall[]                    @relation("CoAuthorWall")
-  authorRoute                Route[]                   @relation("AuthorRoute")
-  coAuthorRoute              Route[]                   @relation("CoAuthorRoute")
-  authorTopo                 Topo[]                    @relation("AuthorTopo")
-  coAuthorTopo               Topo[]                    @relation("CoAuthorTopo")
-  authorRoutePath            RoutePath[]               @relation("AuthorRoutePath")
-  coAuthorRoutePath          RoutePath[]               @relation("CoAuthorRoutePath")
-  authorMultiPitch           MultiPitch[]              @relation("AuthorMultiPitch")
-  coAuthorMultiPitch         MultiPitch[]              @relation("CoAuthorMultiPitch")
+  firstLogin                 Boolean                    @default(true)
+  auth0id                    String?                    @unique
+  authorZone                 Zone[]                     @relation("AuthorZone")
+  coAuthorZone               Zone[]                     @relation("CoAuthorZone")
+  authorSector               Sector[]                   @relation("AuthorSector")
+  coAuthorSector             Sector[]                   @relation("CoAuthorSector")
+  authorWall                 Wall[]                     @relation("AuthorWall")
+  coAuthorWall               Wall[]                     @relation("CoAuthorWall")
+  authorRoute                Route[]                    @relation("AuthorRoute")
+  coAuthorRoute              Route[]                    @relation("CoAuthorRoute")
+  authorTopo                 Topo[]                     @relation("AuthorTopo")
+  coAuthorTopo               Topo[]                     @relation("CoAuthorTopo")
+  authorRoutePath            RoutePath[]                @relation("AuthorRoutePath")
+  coAuthorRoutePath          RoutePath[]                @relation("CoAuthorRoutePath")
+  authorMultiPitch           MultiPitch[]               @relation("AuthorMultiPitch")
+  coAuthorMultiPitch         MultiPitch[]               @relation("CoAuthorMultiPitch")
   RoleByZone                 RoleByZone[]
-  preferredSportGrade        GradeSystems              @default(French)
-  preferredTradGrade         GradeSystems              @default(Yosemite)
-  preferredBoulderGrade      GradeSystems              @default(Hueco)
-  AssignedRoles              RoleByZone[]              @relation("AssignedBy")
-  isDeleted                  SoftDelete                @default(NotDeleted)
-  FavoriteZones              Zone[]                    @relation("FavoriteZones")
-  DownloadedZones            Zone[]                    @relation("DownloadedZones")
+  preferredSportGrade        GradeSystems               @default(French)
+  preferredTradGrade         GradeSystems               @default(Yosemite)
+  preferredBoulderGrade      GradeSystems               @default(Hueco)
+  AssignedRoles              RoleByZone[]               @relation("AssignedBy")
+  isDeleted                  SoftDelete                 @default(NotDeleted)
+  FavoriteZones              Zone[]                     @relation("FavoriteZones")
+  DownloadedZones            Zone[]                     @relation("DownloadedZones")
   History                    History[]
-  AuthorAgreements           Agreement[]               @relation("AuthorAgreements")
-  coAuthorAgreements         Agreement[]               @relation("CoAuthorAgreements")
-  AuthorZoneListAgreements   ZoneAgreement[]           @relation("AuthorZoneAgreements")
-  coAuthorZoneListAgreements ZoneAgreement[]           @relation("CoAuthorZoneAgreements")
+  AuthorAgreements           Agreement[]                @relation("AuthorAgreements")
+  coAuthorAgreements         Agreement[]                @relation("CoAuthorAgreements")
+  AuthorZoneListAgreements   ZoneAgreement[]            @relation("AuthorZoneAgreements")
+  coAuthorZoneListAgreements ZoneAgreement[]            @relation("CoAuthorZoneAgreements")
   ZoneStatusModifications    ZoneStatus[]
-  NotificationSent           NotificationSender[]      @relation("Sender")
-  NotificationReceived       NotificationReceiver[]    @relation("Receiver")
+  NotificationSent           NotificationSender[]       @relation("Sender")
+  NotificationReceived       NotificationReceiver[]     @relation("Receiver")
   ZoneAccessRequestHistory   ZoneAccessRequest[]
-  ZoneAccessRequestReviewed  ZoneAccessRequest[]       @relation("ZoneAccessRequestModifiedBy")
+  ZoneAccessRequestReviewed  ZoneAccessRequest[]        @relation("ZoneAccessRequestModifiedBy")
   UserZoneAgreementHistory   UserZoneAgreementRecord[]
-  authorZoneDirections       ZoneDirections[]          @relation("AuthorZoneDirections")
-  coAuthorZoneDirections     ZoneDirections[]          @relation("CoAuthorZoneDirections")
+  authorZoneDirections       ZoneDirections[]           @relation("AuthorZoneDirections")
+  coAuthorZoneDirections     ZoneDirections[]           @relation("CoAuthorZoneDirections")
   RouteEvaluation            RouteEvaluation[]
   RouteGradeEvaluation       RouteGradeEvaluation[]
+  AccepTermsAndConditions    AcceptTermsAndConditions[]
 
   @@index([email])
   @@index([profilePhotoId])
+  @@index([auth0id])
   @@fulltext([username])
+}
+
+model PhoneNumber {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  fullNumber  String     @unique
+  country     String?
+  countryCode String?
+  number      String?
+  User        User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String     @unique
+  isDeleted   SoftDelete @default(NotDeleted)
+
+  @@index([fullNumber])
+  @@index([userId])
 }
 
 model History {
   id        String     @id @default(uuid())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  user      User       @relation(fields: [email], references: [email], onDelete: Cascade, onUpdate: Cascade)
-  email     String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
   zone      Zone?      @relation(fields: [zoneId], references: [id])
   zoneId    String?
   action    Actions
   counter   Int        @default(0)
   isDeleted SoftDelete @default(NotDeleted)
 
-  @@unique([email, zoneId, action], name: "history_unique")
-  @@index([email])
+  @@unique([userId, zoneId, action], name: "history_unique")
+  @@index([userId])
   @@index([zoneId])
+}
+
+model AcceptTermsAndConditions {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
+
+  @@index([userId])
 }
 
 enum Actions {
@@ -111,7 +148,7 @@ model RoleByZone {
   id           String     @id @default(uuid())
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-  User         User       @relation(fields: [userId], references: [id])
+  User         User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId       String
   Zone         Zone       @relation(fields: [zoneId], references: [id])
   zoneId       String
@@ -136,7 +173,7 @@ model UserZoneAgreementRecord {
   updatedAt        DateTime @updatedAt
   Zone             Zone     @relation(fields: [zoneId], references: [id])
   zoneId           String
-  User             User     @relation(fields: [userId], references: [id])
+  User             User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId           String
   hasAgreed        Boolean
   agreementsRecord String   @db.LongText
@@ -205,7 +242,7 @@ model ZoneAccessRequest {
   createdAt    DateTime      @default(now())
   Zone         Zone          @relation(fields: [zoneId], references: [id])
   zoneId       String
-  User         User          @relation(fields: [userId], references: [id])
+  User         User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId       String
   status       RequestStatus
   modifiedBy   User          @relation("ZoneAccessRequestModifiedBy", fields: [modifiedById], references: [id])
@@ -616,7 +653,7 @@ model RouteEvaluation {
   evaluation Decimal    @db.Decimal(3, 2)
   Route      Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
   routeId    String
-  User       User       @relation(fields: [userId], references: [id])
+  User       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
   isDeleted  SoftDelete @default(NotDeleted)
 
@@ -634,7 +671,7 @@ model RouteGradeEvaluation {
   originalGrade       String
   Route               Route        @relation(fields: [routeId], references: [id], onDelete: Cascade)
   routeId             String
-  User                User         @relation(fields: [userId], references: [id])
+  User                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId              String
   isDeleted           SoftDelete   @default(NotDeleted)
 
@@ -757,7 +794,7 @@ model NotificationReceiver {
   id                   String             @id @default(uuid())
   Object               NotificationObject @relation(fields: [notificationObjectId], references: [id])
   notificationObjectId String
-  Receiver             User               @relation("Receiver", fields: [receiverId], references: [id])
+  Receiver             User               @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId           String
   isRead               Boolean            @default(false)
 
@@ -782,7 +819,7 @@ model NotificationSender {
   id                   String             @id @default(uuid())
   Object               NotificationObject @relation(fields: [notificationObjectId], references: [id])
   notificationObjectId String
-  Sender               User               @relation("Sender", fields: [senderId], references: [id])
+  Sender               User               @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
   senderId             String
 
   @@index([notificationObjectId])

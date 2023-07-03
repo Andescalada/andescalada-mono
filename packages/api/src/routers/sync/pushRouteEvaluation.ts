@@ -2,9 +2,8 @@ import { PrismaMutationChangesParams } from "@andescalada/api/src/routers/sync/t
 import { Prisma, SoftDelete } from "@andescalada/db";
 
 export const pushRouteEvaluation = ({
-  ctx: { prisma },
+  ctx: { prisma, user },
   changes: { created, deleted, updated },
-  user,
 }: PrismaMutationChangesParams) => {
   const mutations: Prisma.PrismaPromise<any>[] = [];
 

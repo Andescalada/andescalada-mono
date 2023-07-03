@@ -3,7 +3,7 @@ import { GradeSystems, RouteGrade, RouteKind } from "@andescalada/db";
 const parseMultiPitch = (
   multiPitch: {
     Author: {
-      email: string;
+      id: string;
     };
     id: string;
     name: string;

@@ -4,11 +4,15 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum OnboardingRoutes {
   UsernameAndImage = "OnboardingUsernameAndImage",
   FirstTimeGradingSystem = "OnboardingFirstTimeGradingSystem",
+  TermsAndConditions = "OnboardingTermsAndConditions",
+  Permissions = "OnboardingPermissions",
 }
 
 export type OnboardingNavigationParamList = {
   [OnboardingRoutes.UsernameAndImage]: undefined;
   [OnboardingRoutes.FirstTimeGradingSystem]: undefined;
+  [OnboardingRoutes.TermsAndConditions]: undefined;
+  [OnboardingRoutes.Permissions]: undefined;
 };
 
 export type OnboardingRouteProps<T extends OnboardingRoutes> = RouteProp<

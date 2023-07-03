@@ -1,7 +1,12 @@
 /* eslint-disable react/display-name */
 import { Box, Text } from "@andescalada/ui";
 import ListItem, { ListItemRef } from "@features/climbs/WallScreen/ListItem";
-import { ComponentProps, forwardRef, ForwardRefRenderFunction } from "react";
+import {
+  ComponentProps,
+  forwardRef,
+  ForwardRefRenderFunction,
+  memo,
+} from "react";
 
 type CustomListItemProps = Omit<
   ComponentProps<typeof ListItem>,
@@ -74,4 +79,4 @@ const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
   );
 };
 
-export default forwardRef(RouteItem);
+export default memo(forwardRef(RouteItem));

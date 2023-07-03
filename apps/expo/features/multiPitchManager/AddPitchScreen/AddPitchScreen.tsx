@@ -3,12 +3,11 @@ import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
+  AddOrCancelButtons,
   Box,
-  Button,
   ButtonGroup,
   Screen,
   ScrollView,
-  SemanticButton,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
@@ -180,18 +179,10 @@ const AddPitchScreen: FC<Props> = ({
             />
           </Box>
         )}
-        <Button
-          variant="primary"
-          title={"Agregar"}
-          onPress={onSubmit}
+        <AddOrCancelButtons
+          onAdd={onSubmit}
+          onCancel={onCancel}
           isLoading={addPitch.isLoading}
-          marginVertical="s"
-        />
-        <SemanticButton
-          variant="error"
-          title="Cancelar"
-          onPress={onCancel}
-          marginBottom="l"
         />
       </ScrollView>
     </Screen>

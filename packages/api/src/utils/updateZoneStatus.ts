@@ -1,11 +1,11 @@
 import zone from "@andescalada/api/schemas/zone";
-import { Context } from "@andescalada/api/src/createContext";
 import error from "@andescalada/api/src/utils/errors";
+import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import { Status } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const updateZoneStatus = async (
-  ctx: Context,
+  ctx: ProtectedContext,
   input: typeof zone.status._type,
   { allowedPreviousSteps }: { allowedPreviousSteps: Status[] },
 ) => {
@@ -36,7 +36,7 @@ const updateZoneStatus = async (
       statusHistory: {
         create: {
           status: input.status,
-          modifiedBy: { connect: { email: ctx.user.email } },
+          modifiedBy: { connect: { id: ctx.user.id } },
           message: {
             create: {
               originalText: input.message,

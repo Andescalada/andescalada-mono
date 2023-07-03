@@ -59,20 +59,21 @@ export default async function main() {
     where: { Role: { name: RoleNames.Admin } },
     select: {
       zoneId: true,
-      User: { select: { email: true } },
+      User: { select: { id: true } },
       Role: { select: { permissions: { select: { action: true } } } },
     },
   });
 
   for (const user of usersToUpdate) {
-    const email = user.User.email;
+    const id = user.User.id;
+
     const zoneId = user.zoneId;
     const permissions = user.Role.permissions.flatMap((p) => p.action);
-    console.log(email, zoneId, permissions);
+    console.log(id, zoneId, permissions);
 
     const permissionSet = new Set(permissions);
 
-    const updateRedis = await access.hset(email, {
+    const updateRedis = await access.hset(id, {
       [zoneId]: serialize(permissionSet),
     });
     console.log(updateRedis > 0 ? "Redis Updated" : "Redis Not updated");

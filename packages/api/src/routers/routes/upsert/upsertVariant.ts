@@ -40,7 +40,7 @@ const upsertVariant = async ({
         create: { grade: input.grade.grade, project: input.grade.project },
       },
       VariantRoute: { connect: { id: input.variantRouteId } },
-      Author: { connect: { email: ctx.user.email } },
+      Author: { connect: { id: ctx.user.id } },
     },
     include: {
       Wall: {

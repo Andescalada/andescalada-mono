@@ -17,7 +17,7 @@ const convertRoute = protectedZoneProcedure
       where: { id: input.routeId },
       select: {
         name: true,
-        Author: { select: { email: true } },
+        Author: { select: { id: true } },
         wallId: true,
         position: true,
       },
@@ -43,10 +43,10 @@ const convertRoute = protectedZoneProcedure
         name: firstPitch.name,
         slug: slug(firstPitch.name),
         position: firstPitch.position,
-        Author: { connect: { email: firstPitch.Author.email } },
+        Author: { connect: { id: firstPitch.Author.id } },
         coAuthors:
-          firstPitch.Author.email !== ctx.user.email
-            ? { connect: { email: ctx.user.email } }
+          firstPitch.Author.id !== ctx.user.id
+            ? { connect: { id: ctx.user.id } }
             : undefined,
         Wall: { connect: { id: firstPitch.wallId } },
         Pitches: {

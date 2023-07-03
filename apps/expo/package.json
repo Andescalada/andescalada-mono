@@ -21,7 +21,7 @@
     "prod": "npx expo start --dev-client --no-dev",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json",
     "build:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1   npx eas-cli@latest build --profile production --non-interactive --platform all --auto-submit --no-wait",
-    "build:production-simulator": "EAS_BUILD_AUTOCOMMIT=1 CI=1 npx node scripts/load-local-production-envs.mjs npx eas-cli@latest build --profile production-simulator --non-interactive --local",    
+    "build:production-simulator": "EAS_BUILD_AUTOCOMMIT=1 CI=1 npx node scripts/load-local-production-envs.mjs npx eas-cli@latest build --profile production-simulator --non-interactive --local",
     "build-local:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1  npx eas-cli@latest build --profile production --non-interactive",
     "build:preview": "APP_VARIANT=preview CI=1  npx eas-cli@latest build --profile preview",
     "build:preview-local:ios": "npx node scripts/load-local-envs.mjs yarn build:preview --platform ios --local --non-interactive",
@@ -32,10 +32,10 @@
     "build:dev-simulator": "APP_VARIANT=development npx eas-cli@latest build --profile development-simulator",
     "build:dev-simulator-local:ios": "npx node scripts/load-local-envs.mjs yarn build:dev-simulator --platform ios --local --non-interactive",
     "build:dev-local:ios": "npx node scripts/load-local-envs.mjs yarn build:dev --platform ios --local --non-interactive",
-    "build:dev-simulator-local:android": "npx node scripts/load-local-envs.mjs yarn build:dev-simulator --platform ios --local --non-interactive",
+    "build:dev-simulator-local:android": "npx node scripts/load-local-envs.mjs yarn build:dev-simulator --platform android --local --non-interactive",
+    "build:dev-local:android": "npx node scripts/load-local-envs.mjs yarn build:dev --platform android --local --non-interactive",
     "update:preview": "APP_VARIANT=preview npx node scripts/eas-update.mjs npx eas-cli@latest update -p all --branch preview --auto",
     "update:production": "APP_VARIANT=production npx node scripts/eas-update.mjs npx eas-cli@latest update -p all  --branch production --auto"
-
   },
   "dependencies": {
     "@andescalada/api": "*",
@@ -65,6 +65,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "@rnmapbox/maps": "^10.0.7-rc.1",
     "@sentry/react-native": "4.13.0",
+    "@shopify/flash-list": "1.4.0",
     "@shopify/react-native-skia": "0.1.195",
     "@shopify/restyle": "^2.4.2",
     "@tanstack/query-async-storage-persister": "^4.29.5",

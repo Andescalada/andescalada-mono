@@ -61,7 +61,7 @@ const getAuth0UsersByRole = async (role: Auth0Roles) => {
     },
   ).then((response) => response.json() as Promise<Auth0User[]>);
 
-  const users = usersWithRole.map((user) => user.email);
+  const users = usersWithRole.map((user) => user.user_id);
   const uniqueUsers = new Set(users);
 
   return Array.from(uniqueUsers);

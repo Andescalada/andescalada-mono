@@ -34,13 +34,10 @@ const editRouteLength = protectedZoneProcedure
   .mutation(async ({ ctx, input }) => {
     const route = await ctx.prisma.route.findUniqueOrThrow({
       where: { id: input.routeId },
-      select: { Author: { select: { email: true } } },
+      select: { Author: { select: { id: true } } },
     });
 
-    if (
-      !ctx.permissions.has("Update") &&
-      ctx.user.email !== route.Author.email
-    ) {
+    if (!ctx.permissions.has("Update") && ctx.user.id !== route.Author.id) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Update"),
       );

@@ -120,18 +120,38 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
                 defaultValue={data?.profilePhoto?.publicId || undefined}
               />
             </Box>
-            <Box>
-              <Text variant="p1R" marginBottom="s">
-                Correo
-              </Text>
-              <TextInput
-                value={data?.email}
-                onPressIn={() => Alert.alert("No es posible editar el correo")}
-                color="grayscale.500"
-                editable={false}
-                containerProps={{ height: 40, paddingLeft: "s" }}
-              />
-            </Box>
+            {data?.email && (
+              <Box>
+                <Text variant="p1R" marginBottom="s">
+                  Correo
+                </Text>
+                <TextInput
+                  value={data?.email}
+                  onPressIn={() =>
+                    Alert.alert("No es posible editar el correo")
+                  }
+                  color="grayscale.500"
+                  editable={false}
+                  containerProps={{ height: 40, paddingLeft: "s" }}
+                />
+              </Box>
+            )}
+            {data?.PhoneNumber?.fullNumber && (
+              <Box>
+                <Text variant="p1R" marginBottom="s">
+                  Número de teléfono
+                </Text>
+                <TextInput
+                  value={data?.PhoneNumber?.fullNumber}
+                  onPressIn={() =>
+                    Alert.alert("No es posible editar el número de teléfono")
+                  }
+                  color="grayscale.500"
+                  editable={false}
+                  containerProps={{ height: 40, paddingLeft: "s" }}
+                />
+              </Box>
+            )}
             <FormProvider {...form}>
               <Box marginTop={"m"}>
                 <Text variant="p1R" marginBottom="s">

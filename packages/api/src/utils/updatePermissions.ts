@@ -4,11 +4,11 @@ import { serialize } from "superjson";
 
 const updateRedisPermissions = async (
   access: Redis,
-  userEmail: string,
+  userId: string,
   zoneId: string,
   updatedPermissions: Set<PermissionActions>,
 ) => {
-  await access.hset(userEmail, {
+  await access.hset(userId, {
     [zoneId]: serialize(updatedPermissions),
   });
 

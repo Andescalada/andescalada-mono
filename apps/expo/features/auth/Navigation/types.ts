@@ -5,12 +5,22 @@ export enum AuthNavigationRoutes {
   Login = "Login",
   EnterEmail = "EnterEmail",
   EnterCode = "EnterCode",
+  EnterPhoneNumber = "EnterPhoneNumber",
 }
 
 export type AuthNavigationNavigationParamList = {
   [AuthNavigationRoutes.Login]: undefined;
   [AuthNavigationRoutes.EnterEmail]: undefined;
-  [AuthNavigationRoutes.EnterCode]: { email: string };
+  [AuthNavigationRoutes.EnterPhoneNumber]: { userId: string } | undefined;
+  [AuthNavigationRoutes.EnterCode]:
+    | {
+        connectionStrategy: "email";
+        email: string;
+      }
+    | {
+        connectionStrategy: "sms";
+        phoneNumber: string;
+      };
 };
 
 export type AuthNavigationRouteProps<T extends AuthNavigationRoutes> =

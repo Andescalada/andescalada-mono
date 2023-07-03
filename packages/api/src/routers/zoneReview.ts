@@ -8,8 +8,8 @@ import pushNotification from "@andescalada/api/src/utils/pushNotification";
 import sendAndRecordPushNotification from "@andescalada/api/src/utils/sendAndRecordPushNotifications";
 import updateZoneStatus from "@andescalada/api/src/utils/updateZoneStatus";
 import Auth0Roles from "@andescalada/common-assets/Auth0Roles";
-import { StatusSchema } from "@andescalada/db/zod";
 import { Status } from "@andescalada/db";
+import { StatusSchema } from "@andescalada/db/zod";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -45,23 +45,14 @@ export const zoneReviewRouter = t.router({
       );
 
       const reviewersPromise = globalReviewers.map(
-        async (email) =>
+        async (auth0id) =>
           await ctx.prisma.user.findUnique({
-            where: { email },
-            select: { id: true, email: true },
+            where: { auth0id },
+            select: { id: true },
           }),
       );
 
       const reviewers = (await Promise.all(reviewersPromise)).filter(notNull);
-
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: ctx.user.email },
-        select: { username: true },
-      });
-
-      if (!user) {
-        throw new TRPCError(error.userNotFound(ctx.user.email));
-      }
 
       const { entity, id, template } = pushNotification.RequestZoneReview;
 
@@ -69,7 +60,7 @@ export const zoneReviewRouter = t.router({
         Entity: entity,
         entityId: input.zoneId,
         entityTypeId: id,
-        message: template.es({ zoneName: zone.name, user: user.username }),
+        message: template.es({ zoneName: zone.name, user: ctx.user.username }),
         receivers: reviewers,
       });
 
@@ -128,14 +119,13 @@ export const zoneReviewRouter = t.router({
         .findMany({
           where: { Role: { name: "Admin" }, zoneId: input.zoneId },
           select: {
-            User: { select: { email: true, id: true } },
+            User: { select: { id: true } },
             Zone: { select: { name: true } },
           },
         })
         .then((r) =>
           r.map((r) => ({
             id: r.User.id,
-            email: r.User.email,
           })),
         );
 
@@ -173,14 +163,13 @@ export const zoneReviewRouter = t.router({
         .findMany({
           where: { Role: { name: "Admin" }, zoneId: input.zoneId },
           select: {
-            User: { select: { email: true, id: true } },
+            User: { select: { id: true } },
             Zone: { select: { name: true } },
           },
         })
         .then((r) =>
           r.map((r) => ({
             id: r.User.id,
-            email: r.User.email,
           })),
         );
 
@@ -218,32 +207,27 @@ export const zoneReviewRouter = t.router({
         .findMany({
           where: { Role: { name: "Admin" }, zoneId: input.zoneId },
           select: {
-            User: { select: { email: true, id: true } },
+            User: { select: { id: true } },
             Zone: { select: { name: true } },
           },
         })
         .then((r) =>
           r.map((r) => ({
             id: r.User.id,
-            email: r.User.email,
           })),
         );
 
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: ctx.user.email },
-        select: { username: true },
+      const { entity, id, template } = pushNotification.PublishZoneByAdmin;
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({
+          zoneName: zone.name,
+          user: ctx.user.username,
+        }),
+        receivers: admins,
       });
-
-      if (user) {
-        const { entity, id, template } = pushNotification.PublishZoneByAdmin;
-        await sendAndRecordPushNotification(ctx, {
-          Entity: entity,
-          entityId: input.zoneId,
-          entityTypeId: id,
-          message: template.es({ zoneName: zone.name, user: user.username }),
-          receivers: admins,
-        });
-      }
 
       return zone;
     }),
@@ -269,32 +253,24 @@ export const zoneReviewRouter = t.router({
         .findMany({
           where: { Role: { name: "Admin" }, zoneId: input.zoneId },
           select: {
-            User: { select: { email: true, id: true } },
+            User: { select: { id: true } },
             Zone: { select: { name: true } },
           },
         })
         .then((r) =>
           r.map((r) => ({
             id: r.User.id,
-            email: r.User.email,
           })),
         );
 
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: ctx.user.email },
-        select: { username: true },
+      const { entity, id, template } = pushNotification.PausePublicationByAdmin;
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name, user: ctx.user.username }),
+        receivers: admins,
       });
-      if (user) {
-        const { entity, id, template } =
-          pushNotification.PausePublicationByAdmin;
-        await sendAndRecordPushNotification(ctx, {
-          Entity: entity,
-          entityId: input.zoneId,
-          entityTypeId: id,
-          message: template.es({ zoneName: zone.name, user: user.username }),
-          receivers: admins,
-        });
-      }
 
       return zone;
     }),
@@ -320,33 +296,24 @@ export const zoneReviewRouter = t.router({
         .findMany({
           where: { Role: { name: "Admin" }, zoneId: input.zoneId },
           select: {
-            User: { select: { email: true, id: true } },
+            User: { select: { id: true } },
             Zone: { select: { name: true } },
           },
         })
         .then((r) =>
           r.map((r) => ({
             id: r.User.id,
-            email: r.User.email,
           })),
         );
 
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: ctx.user.email },
-        select: { username: true },
+      const { entity, id, template } = pushNotification.UnpublishZoneByReviewer;
+      await sendAndRecordPushNotification(ctx, {
+        Entity: entity,
+        entityId: input.zoneId,
+        entityTypeId: id,
+        message: template.es({ zoneName: zone.name, user: ctx.user.username }),
+        receivers: admins,
       });
-
-      if (user) {
-        const { entity, id, template } =
-          pushNotification.UnpublishZoneByReviewer;
-        await sendAndRecordPushNotification(ctx, {
-          Entity: entity,
-          entityId: input.zoneId,
-          entityTypeId: id,
-          message: template.es({ zoneName: zone.name, user: user.username }),
-          receivers: admins,
-        });
-      }
 
       return zone;
     }),

@@ -1,5 +1,6 @@
 import EnterCodeScreen from "@features/auth/EnterCodeScreen";
 import EnterEmailScreen from "@features/auth/EnterEmailScreen";
+import EnterPhoneNumber from "@features/auth/EnterPhoneNumber";
 import LoginScreen from "@features/auth/LoginScreen/";
 import {
   AuthNavigationNavigationParamList,
@@ -13,6 +14,10 @@ const Navigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={AuthNavigationRoutes.Login} component={LoginScreen} />
+      <Stack.Screen
+        name={AuthNavigationRoutes.EnterPhoneNumber}
+        component={EnterPhoneNumber}
+      />
       <Stack.Screen
         name={AuthNavigationRoutes.EnterEmail}
         component={EnterEmailScreen}

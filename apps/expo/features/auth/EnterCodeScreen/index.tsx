@@ -14,6 +14,8 @@ import {
 import { useAppDispatch } from "@hooks/redux";
 import { loginAuth0 } from "@store/auth";
 import passwordless from "@utils/auth0/passwordless";
+import storage, { Storage } from "@utils/mmkv/storage";
+import client from "@utils/trpc/client";
 import { FC, useMemo, useState } from "react";
 import { Alert } from "react-native";
 import {
@@ -28,12 +30,7 @@ const TIMEOUT = 3 * 60;
 
 type Props = AuthNavigationScreenProps<AuthNavigationRoutes.EnterCode>;
 
-const EnterCodeScreen: FC<Props> = ({
-  route: {
-    params: { email },
-  },
-  navigation,
-}) => {
+const EnterCodeScreen: FC<Props> = ({ route: { params }, navigation }) => {
   const [value, setValue] = useState("");
   const ref = useBlurOnFulfill({ value, cellCount: 4 });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -43,11 +40,37 @@ const EnterCodeScreen: FC<Props> = ({
 
   const dispatch = useAppDispatch();
 
+  const userInput = useMemo(() => {
+    let input = "";
+    if (params.connectionStrategy === "sms") {
+      input = params.phoneNumber;
+    }
+    if (params.connectionStrategy === "email") {
+      input = params.email;
+    }
+    return input;
+  }, [params]);
+
   const onSubmit = async (value: string) => {
     if (value.length < 4) return;
     try {
       const { access_token, id_token, refresh_token } =
-        await passwordless.verifyCode(email, value);
+        await passwordless.verifyCode(
+          userInput,
+          value,
+          params.connectionStrategy,
+        );
+      if (params.connectionStrategy === "email") {
+        storage.set(Storage.ACCESS_TOKEN, access_token);
+        const user = await client.user.ownInfo.query();
+        if (!user) {
+          throw new Error("User not found for migration to phone number");
+        }
+        navigation.push(AuthNavigationRoutes.EnterPhoneNumber, {
+          userId: user.id,
+        });
+        return;
+      }
       dispatch(
         loginAuth0({
           accessToken: access_token,
@@ -125,7 +148,11 @@ const EnterCodeScreen: FC<Props> = ({
               {seconds <= TIMEOUT ? (
                 <Text>{timer}</Text>
               ) : (
-                <Pressable onPress={() => passwordless.login(email)}>
+                <Pressable
+                  onPress={() =>
+                    passwordless.login(userInput, params.connectionStrategy)
+                  }
+                >
                   <Text textDecorationLine={"underline"}>Reenviar código</Text>
                 </Pressable>
               )}

@@ -22,10 +22,8 @@ const setOrCreateUser = async (input: {
         .catch(() => null);
       if (user) {
         return await user.update((user) => {
-          user.email = input.email;
           user.name = input.name;
           user.username = input.username;
-
           user.ownUser = input.ownUser ?? false;
           user.preferredBoulderGrade = input.preferredBoulderGrade;
           user.preferredSportGrade = input.preferredSportGrade;
@@ -34,7 +32,6 @@ const setOrCreateUser = async (input: {
       }
       return await database.get<User>(Table.USER).create((user) => {
         user._raw.id = input.id;
-        user.email = input.email;
         user.name = input.name;
         user.username = input.username;
         user.ownUser = input.ownUser ?? false;

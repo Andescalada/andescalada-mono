@@ -74,7 +74,7 @@ const addPitch = protectedZoneProcedure
             slug: slug(multiPitch.name),
             position: multiPitch.position,
             Wall: { connect: { id: multiPitch.wallId } },
-            Author: { connect: { email: ctx.user.email } },
+            Author: { connect: { id: ctx.user.id } },
             kind,
             RouteGrade: {
               create: {

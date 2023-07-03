@@ -66,7 +66,7 @@ const add = protectedZoneProcedure
 
     const newMultiPitch = await ctx.prisma.multiPitch.create({
       data: {
-        Author: { connect: { email: ctx.user.email } },
+        Author: { connect: { id: ctx.user.id } },
         Wall: { connect: { id: input.wallId } },
         name: input.name,
         slug: slug(input.name),
