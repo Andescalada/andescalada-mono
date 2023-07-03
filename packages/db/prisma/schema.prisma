@@ -3,6 +3,13 @@ generator client {
   previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex", "extendedWhereUnique"]
 }
 
+generator fabbrica {
+  provider    = "prisma-fabbrica"
+  output      = "../factories"
+  tsconfig    = "../tsconfig.json"
+  noTranspile = true
+}
+
 generator zod {
   provider = "prisma-zod-generator"
   output   = "../zod"
