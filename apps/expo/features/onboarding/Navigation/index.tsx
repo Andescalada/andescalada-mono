@@ -12,7 +12,7 @@ const Navigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={OnboardingRoutes.Permissions}
+      initialRouteName={OnboardingRoutes.UsernameAndImage}
     >
       <Stack.Screen
         name={OnboardingRoutes.UsernameAndImage}
