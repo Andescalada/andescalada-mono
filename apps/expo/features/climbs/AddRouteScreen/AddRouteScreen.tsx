@@ -5,13 +5,12 @@ import { RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   A,
+  AddOrCancelButtons,
   Box,
-  Button,
   ButtonGroup,
   Ionicons,
   Screen,
   ScrollView,
-  SemanticButton,
   Text,
   TextButton,
   TextInput,
@@ -356,19 +355,11 @@ const AddRouteScreen: FC<Props> = ({ route, navigation }) => {
             />
           </Box>
         )}
-        <Button
-          variant="primary"
-          title={rest.name ? "Editar" : "Agregar"}
-          onPress={onSubmit}
+        <AddOrCancelButtons
+          onAdd={onSubmit}
+          onCancel={onCancel}
           isLoading={isLoading}
-          marginVertical="s"
-          minHeight={50}
-        />
-        <SemanticButton
-          variant="error"
-          title="Cancelar"
-          onPress={onCancel}
-          marginBottom="l"
+          addLabel={rest.name ? "Editar" : "Agregar"}
         />
       </ScrollView>
     </Screen>

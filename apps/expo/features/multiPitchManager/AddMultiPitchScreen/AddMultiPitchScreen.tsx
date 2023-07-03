@@ -2,12 +2,11 @@ import route from "@andescalada/api/schemas/route";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   A,
+  AddOrCancelButtons,
   Box,
-  Button,
   Ionicons,
   Screen,
   ScrollView,
-  SemanticButton,
   Text,
   TextButton,
   TextInput,
@@ -208,19 +207,11 @@ const AddMultiPitchScreen: FC<Props> = ({
           </Text>
         </Box>
         <Box>
-          <Button
-            variant="primary"
-            minHeight={50}
-            title={text.buttonTitle}
-            onPress={onSubmit}
+          <AddOrCancelButtons
+            onAdd={onSubmit}
+            onCancel={onCancel}
+            addLabel={text.buttonTitle}
             isLoading={isLoading}
-            marginVertical="s"
-          />
-          <SemanticButton
-            variant="error"
-            title="Cancelar"
-            onPress={onCancel}
-            marginBottom="l"
           />
         </Box>
       </ScrollView>

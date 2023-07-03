@@ -1,12 +1,11 @@
 import { SectorKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
+  AddOrCancelButtons,
   Box,
-  Button,
   Ionicons,
   Modal,
   Screen,
-  SemanticButton,
   Text,
   TextInput,
 } from "@andescalada/ui";
@@ -100,19 +99,20 @@ const AddWallScreen: FC<Props> = ({ route, navigation }) => {
           {sectorKindAssets[sectorKind].nameOf}
         </Text>
 
-        <TextInput onChangeText={onChange} containerProps={{ height: 40 }} />
+        <TextInput
+          placeholder="Ej: Principal"
+          onChangeText={onChange}
+          containerProps={{ height: 40 }}
+        />
         <Text marginTop={"xs"} color="semantic.error">
           {error?.message}
         </Text>
       </Box>
-      <Button
-        variant="primary"
-        title="Agregar"
-        onPress={onSubmit}
+      <AddOrCancelButtons
+        onAdd={onSubmit}
+        onCancel={onCancel}
         isLoading={isLoading}
-        marginVertical="s"
       />
-      <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
       <Modal
         visible={openModal}
         onDismiss={() => setOpenModal(false)}

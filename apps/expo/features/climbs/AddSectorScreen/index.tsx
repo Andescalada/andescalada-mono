@@ -3,13 +3,12 @@ import { SectorKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   A,
+  AddOrCancelButtons,
   Box,
-  Button,
   ButtonGroup,
   Ionicons,
   KeyboardDismiss,
   Screen,
-  SemanticButton,
   Text,
   TextInput,
 } from "@andescalada/ui";
@@ -167,15 +166,12 @@ const AddSectorScreen: FC<Props> = ({
             </Box>
           </A.Box>
         )}
-        <Button
-          variant="primary"
-          minHeight={50}
-          title={text.button}
-          onPress={onSubmit}
+        <AddOrCancelButtons
+          onAdd={onSubmit}
+          onCancel={onCancel}
           isLoading={isLoading}
-          marginTop="m"
+          addLabel={text.button}
         />
-        <SemanticButton variant="error" title="Cancelar" onPress={onCancel} />
       </KeyboardDismiss>
     </Screen>
   );
