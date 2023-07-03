@@ -27,56 +27,57 @@ datasource db {
 }
 
 model User {
-  id                         String                    @id @default(uuid())
-  createdAt                  DateTime                  @default(now())
-  updatedAt                  DateTime                  @updatedAt
-  name                       String                    @default("")
-  username                   String                    @unique @default(cuid())
-  email                      String?                   @unique
-  phoneVerified              Boolean                   @default(false)
-  emailVerified              Boolean                   @default(false)
+  id                         String                     @id @default(uuid())
+  createdAt                  DateTime                   @default(now())
+  updatedAt                  DateTime                   @updatedAt
+  name                       String                     @default("")
+  username                   String                     @unique @default(cuid())
+  email                      String?                    @unique
+  phoneVerified              Boolean                    @default(false)
+  emailVerified              Boolean                    @default(false)
   PhoneNumber                PhoneNumber?
-  profilePhoto               Image?                    @relation(fields: [profilePhotoId], references: [id])
+  profilePhoto               Image?                     @relation(fields: [profilePhotoId], references: [id])
   profilePhotoId             String?
-  firstLogin                 Boolean                   @default(true)
-  auth0id                    String?                   @unique
-  authorZone                 Zone[]                    @relation("AuthorZone")
-  coAuthorZone               Zone[]                    @relation("CoAuthorZone")
-  authorSector               Sector[]                  @relation("AuthorSector")
-  coAuthorSector             Sector[]                  @relation("CoAuthorSector")
-  authorWall                 Wall[]                    @relation("AuthorWall")
-  coAuthorWall               Wall[]                    @relation("CoAuthorWall")
-  authorRoute                Route[]                   @relation("AuthorRoute")
-  coAuthorRoute              Route[]                   @relation("CoAuthorRoute")
-  authorTopo                 Topo[]                    @relation("AuthorTopo")
-  coAuthorTopo               Topo[]                    @relation("CoAuthorTopo")
-  authorRoutePath            RoutePath[]               @relation("AuthorRoutePath")
-  coAuthorRoutePath          RoutePath[]               @relation("CoAuthorRoutePath")
-  authorMultiPitch           MultiPitch[]              @relation("AuthorMultiPitch")
-  coAuthorMultiPitch         MultiPitch[]              @relation("CoAuthorMultiPitch")
+  firstLogin                 Boolean                    @default(true)
+  auth0id                    String?                    @unique
+  authorZone                 Zone[]                     @relation("AuthorZone")
+  coAuthorZone               Zone[]                     @relation("CoAuthorZone")
+  authorSector               Sector[]                   @relation("AuthorSector")
+  coAuthorSector             Sector[]                   @relation("CoAuthorSector")
+  authorWall                 Wall[]                     @relation("AuthorWall")
+  coAuthorWall               Wall[]                     @relation("CoAuthorWall")
+  authorRoute                Route[]                    @relation("AuthorRoute")
+  coAuthorRoute              Route[]                    @relation("CoAuthorRoute")
+  authorTopo                 Topo[]                     @relation("AuthorTopo")
+  coAuthorTopo               Topo[]                     @relation("CoAuthorTopo")
+  authorRoutePath            RoutePath[]                @relation("AuthorRoutePath")
+  coAuthorRoutePath          RoutePath[]                @relation("CoAuthorRoutePath")
+  authorMultiPitch           MultiPitch[]               @relation("AuthorMultiPitch")
+  coAuthorMultiPitch         MultiPitch[]               @relation("CoAuthorMultiPitch")
   RoleByZone                 RoleByZone[]
-  preferredSportGrade        GradeSystems              @default(French)
-  preferredTradGrade         GradeSystems              @default(Yosemite)
-  preferredBoulderGrade      GradeSystems              @default(Hueco)
-  AssignedRoles              RoleByZone[]              @relation("AssignedBy")
-  isDeleted                  SoftDelete                @default(NotDeleted)
-  FavoriteZones              Zone[]                    @relation("FavoriteZones")
-  DownloadedZones            Zone[]                    @relation("DownloadedZones")
+  preferredSportGrade        GradeSystems               @default(French)
+  preferredTradGrade         GradeSystems               @default(Yosemite)
+  preferredBoulderGrade      GradeSystems               @default(Hueco)
+  AssignedRoles              RoleByZone[]               @relation("AssignedBy")
+  isDeleted                  SoftDelete                 @default(NotDeleted)
+  FavoriteZones              Zone[]                     @relation("FavoriteZones")
+  DownloadedZones            Zone[]                     @relation("DownloadedZones")
   History                    History[]
-  AuthorAgreements           Agreement[]               @relation("AuthorAgreements")
-  coAuthorAgreements         Agreement[]               @relation("CoAuthorAgreements")
-  AuthorZoneListAgreements   ZoneAgreement[]           @relation("AuthorZoneAgreements")
-  coAuthorZoneListAgreements ZoneAgreement[]           @relation("CoAuthorZoneAgreements")
+  AuthorAgreements           Agreement[]                @relation("AuthorAgreements")
+  coAuthorAgreements         Agreement[]                @relation("CoAuthorAgreements")
+  AuthorZoneListAgreements   ZoneAgreement[]            @relation("AuthorZoneAgreements")
+  coAuthorZoneListAgreements ZoneAgreement[]            @relation("CoAuthorZoneAgreements")
   ZoneStatusModifications    ZoneStatus[]
-  NotificationSent           NotificationSender[]      @relation("Sender")
-  NotificationReceived       NotificationReceiver[]    @relation("Receiver")
+  NotificationSent           NotificationSender[]       @relation("Sender")
+  NotificationReceived       NotificationReceiver[]     @relation("Receiver")
   ZoneAccessRequestHistory   ZoneAccessRequest[]
-  ZoneAccessRequestReviewed  ZoneAccessRequest[]       @relation("ZoneAccessRequestModifiedBy")
+  ZoneAccessRequestReviewed  ZoneAccessRequest[]        @relation("ZoneAccessRequestModifiedBy")
   UserZoneAgreementHistory   UserZoneAgreementRecord[]
-  authorZoneDirections       ZoneDirections[]          @relation("AuthorZoneDirections")
-  coAuthorZoneDirections     ZoneDirections[]          @relation("CoAuthorZoneDirections")
+  authorZoneDirections       ZoneDirections[]           @relation("AuthorZoneDirections")
+  coAuthorZoneDirections     ZoneDirections[]           @relation("CoAuthorZoneDirections")
   RouteEvaluation            RouteEvaluation[]
   RouteGradeEvaluation       RouteGradeEvaluation[]
+  AccepTermsAndConditions    AcceptTermsAndConditions[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -115,6 +116,15 @@ model History {
   @@unique([userId, zoneId, action], name: "history_unique")
   @@index([userId])
   @@index([zoneId])
+}
+
+model AcceptTermsAndConditions {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
+
+  @@index([userId])
 }
 
 enum Actions {
