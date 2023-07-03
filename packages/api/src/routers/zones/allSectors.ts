@@ -1,6 +1,6 @@
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { Prisma, SoftDelete } from "@andescalada/db";
+import { Prisma, RoleNames, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 // Procedure being downloaded
@@ -62,7 +62,8 @@ export const selectZoneAllSectors = ({ userId }: { userId: string }) =>
     infoAccess: true,
     currentStatus: true,
     RoleByZone: {
-      where: { User: { id: userId } },
+      where: { Role: { isNot: { name: RoleNames.Reviewer } } },
+      distinct: ["userId"],
       select: {
         User: {
           select: {
