@@ -18,6 +18,8 @@ export const Icons = {
   "cool-dinosaur": require(base + "cool-dinosaur").default,
   "dancing-dinosaur-color": require(base + "dancing-dinosaur-color").default,
   "dancing-dinosaur": require(base + "dancing-dinosaur").default,
+  "danger-color": require(base + "danger-color").default,
+  "danger": require(base + "danger").default,
   "destination-color": require(base + "destination-color").default,
   "destination": require(base + "destination").default,
   "dog-color": require(base + "dog-color").default,

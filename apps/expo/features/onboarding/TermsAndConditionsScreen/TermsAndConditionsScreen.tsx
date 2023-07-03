@@ -1,4 +1,4 @@
-import { Screen, Text } from "@andescalada/ui";
+import { Icon, Screen, Text } from "@andescalada/ui";
 import {
   OnboardingRoutes,
   OnboardingScreenProps,
@@ -11,6 +11,7 @@ const TermsAndConditionsScreen: FC<Props> = (props) => {
   return (
     <Screen>
       <Text>Terminos y condiciones</Text>
+      <Icon name="danger-color" size={100} />
     </Screen>
   );
 };
