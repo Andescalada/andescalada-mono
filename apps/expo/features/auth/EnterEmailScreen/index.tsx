@@ -76,11 +76,18 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
         onPress={navigation.goBack}
         iconProps={{ color: "grayscale.white" }}
       />
-      <Box flex={0.25} justifyContent="space-between">
-        <Box>
-          <Text variant="h1">Ingresa tu correo electrónico</Text>
-          <Text variant="p2R" marginTop="xs">
-            para recibir un código de verificación
+      <Box justifyContent="space-between" gap="l">
+        <Box gap="s">
+          <Text variant="h2" fontFamily="Rubik-300">
+            Vincula tu{" "}
+            <Text variant="h2" fontFamily="Rubik-600">
+              {" "}
+              correo electrónico{" "}
+            </Text>{" "}
+            con tu número de teléfono
+          </Text>
+          <Text variant="p2R">
+            Ingresa tu correo electrónico par recibir un código de verificación
           </Text>
         </Box>
         <Box>

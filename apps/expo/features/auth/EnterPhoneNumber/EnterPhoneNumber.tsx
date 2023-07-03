@@ -120,8 +120,8 @@ const EnterPhoneNumber: FC<Props> = ({ navigation, route: { params } }) => {
           padding="s"
           onPress={() => navigation.navigate(AuthNavigationRoutes.EnterEmail)}
         >
-          <Text textDecorationLine="underline">
-            ¿Entrabas con correo electrónico?
+          <Text textDecorationLine="underline" variant="p3R">
+            Tengo una cuenta con mi correo electrónico
           </Text>
         </Pressable>
       </KeyboardDismiss>
