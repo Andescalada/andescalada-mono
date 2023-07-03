@@ -2,6 +2,7 @@ client
 enums
 zod
 modelEnums
+factories
 
 ERD.pdf
 

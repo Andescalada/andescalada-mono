@@ -15,6 +15,7 @@
     "zod": "*"
   },
   "devDependencies": {
+    "@quramy/prisma-fabbrica": "^1.1.0",
     "prisma": "^4.16.1"
   }
 }
