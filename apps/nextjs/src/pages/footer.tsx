@@ -10,9 +10,15 @@ import {
 const Footer = () => {
   return (
     <footer className="bg-brand-primaryA flex p-4 md:p-10 flex-col text-white">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center sm:justify-between flex-col justify-center sm:flex-row gap-10 mt-4 sm:mt-0 sm:gap-0">
         <WhiteLogo className="h-20 md:h-32 flex-3 mr-5" />
-        <div className="flex  justify-end flex-col items-center self-end">
+        <div className="flex  justify-end flex-col items-center sm:self-end">
+          <Link
+            className="text-brand-secondaryA"
+            href="./terminos-y-condiciones"
+          >
+            Términos y condiciones
+          </Link>
           <Link
             className="text-brand-secondaryA"
             href="./politica-de-privacidad"
@@ -72,7 +78,6 @@ const Footer = () => {
         </div>
       </div>
       <div className="bg-white h-[2px] w-full rounded-sm mt-10" />
-      <p className="text-xs">v1.3-f</p>
     </footer>
   );
 };

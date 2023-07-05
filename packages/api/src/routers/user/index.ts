@@ -306,6 +306,7 @@ export const userRouter = t.router({
           username: { contains: input.search },
           ...(input.filterMe && { NOT: { id: ctx.user.id } }),
           isDeleted: SoftDelete.NotDeleted,
+          OR: [{ emailVerified: true }, { phoneVerified: true }],
         },
         select: {
           id: true,
