@@ -9,6 +9,7 @@ const cld = new Cloudinary({
   },
   url: {
     secure: true, // force https, set to false to force http
+    analytics: false,
   },
 });
 
@@ -26,6 +27,11 @@ const getImage = ({
     .resize(Resize.scale().width(width).height(height));
 
   return imageObject(image, publicId);
+};
+
+const getVideo = ({ publicId }: { publicId: string }) => {
+  const video = cld.video(publicId).quality(50).format("mp4");
+  return imageObject(video, publicId);
 };
 
 const optimizedImage = ({
@@ -106,4 +112,5 @@ export const urlGen = {
   lowQuality,
   getThumbnail,
   getProfileImage,
+  getVideo,
 } as const;

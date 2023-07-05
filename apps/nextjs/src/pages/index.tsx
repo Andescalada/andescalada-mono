@@ -3,6 +3,7 @@ import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import { createServerSideHelpers } from "@trpc/react-query/server";
+import MobileVideoFrame from "components/MobileVideoFrame";
 import StoreBadges from "components/StoreBadges";
 import Head from "next/head";
 import Link from "next/link";
@@ -122,6 +123,32 @@ export default function IndexPage() {
         <div className="mt-10  flex flex-col justify-center items-center transition-opacity delay-200 mb-20">
           <p className="font-extralight">Descarga nuestra App Movil</p>
           <StoreBadges />
+        </div>
+      </div>
+      <div className="flex min-h-[500px] md:min-h-[700px] bg-grayscale-black p-5 items-center justify-center flex-col md:flex-row ">
+        <div className="m-4 flex-1">
+          <h2 className="text-white text-center ">
+            Dibuja las rutas desde tu teléfono
+          </h2>
+          <p className="text-gray-400 font-thin text-center">
+            Elige una foto de la pared y dibuja las rutas con tu dedo.
+          </p>
+        </div>
+        <div className="flex-1">
+          <MobileVideoFrame publicId="andescalada.org/draw-simple-route" />
+        </div>
+      </div>
+      <div className="flex min-h-[500px] md:min-h-[700px] bg-brand-primaryA p-5 items-center justify-center flex-col md:flex-row-reverse ">
+        <div className="m-4 flex-1">
+          <h2 className="text-white text-center ">
+            Tú decides la privacidad de la guía de escalada
+          </h2>
+          <p className="text-gray-400 font-thin text-center">
+            Puedes elegir entre pública, comunitaria o privada.
+          </p>
+        </div>
+        <div className="flex-1 md:flex md:justify-end">
+          <MobileVideoFrame publicId="andescalada.org/zone-privacy-options_msgaua" />
         </div>
       </div>
       <Why />
