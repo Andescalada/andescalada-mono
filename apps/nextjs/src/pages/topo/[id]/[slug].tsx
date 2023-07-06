@@ -157,7 +157,13 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                   </p>
                 </div>
               </div>
-              <p>{gradeLabel(route.RouteGrade, route.kind)}</p>
+              <p>
+                {gradeLabel(
+                  route.RouteGrade,
+                  route.kind,
+                  route.RouteGrade?.originalGradeSystem,
+                )}
+              </p>
             </div>
           ))}
         </div>
