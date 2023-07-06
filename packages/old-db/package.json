@@ -1,0 +1,11 @@
+{
+  "name": "@andescalada/old-database",
+  "version": "1.0.0",
+  "description": "Old Postgress database",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "prisma": "^4.16.2"
+  }
+}
