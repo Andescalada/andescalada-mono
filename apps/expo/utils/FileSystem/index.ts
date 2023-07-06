@@ -1,4 +1,4 @@
-import { decodeBase64, encodeBase64 } from "@utils/base64";
+import { encodeBase64 } from "@utils/base64";
 import * as FileSystem from "expo-file-system";
 import * as Sentry from "sentry-expo";
 
@@ -11,12 +11,6 @@ const cacheImageFileUri = (uniqueId: string) =>
   cachedImageDir + `${encodeBase64(uniqueId)}`;
 const imageFileUri = (uniqueId: string) =>
   documentImageDir + `${encodeBase64(uniqueId)}`;
-
-const decodeFileUri = (fileUrl: string) => {
-  const splitUrl = fileUrl.split(IMAGE_DIR);
-  const uniqueId = decodeBase64(splitUrl[1]);
-  return splitUrl[0] + IMAGE_DIR + uniqueId;
-};
 
 const storeImage = async (
   {
@@ -39,7 +33,7 @@ const storeImage = async (
   }
 
   if (fileInfo.exists) {
-    return decodeFileUri(fileUri);
+    return fileUri;
   }
 
   const cacheFileUri = cacheImageFileUri(uniqueId);
@@ -49,13 +43,12 @@ const storeImage = async (
     await FileSystem.downloadAsync(url, cacheFileUri);
   }
 
-  return decodeFileUri(cacheFileUri);
+  return cacheFileUri;
 };
 
 const safeGetInfo = async (fileUri: string) => {
   try {
     const res = await FileSystem.getInfoAsync(fileUri);
-    console.log("res image", res);
     return res;
   } catch (err) {
     Sentry.Native.captureException(err);
