@@ -5,7 +5,7 @@ import {
   TOOLBAR_HEIGHT,
 } from "@features/climbs/EditRoutePositionScreen/config";
 import { useAppTheme } from "@hooks/useAppTheme";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -214,6 +214,7 @@ const MovableListItem = ({
         >
           <Text
             variant="p2B"
+            fontSize={14}
             paddingHorizontal="xs"
             textAlign="center"
             ellipsizeMode="tail"
@@ -223,7 +224,7 @@ const MovableListItem = ({
           </Text>
         </Box>
 
-        <Box>
+        <Box flex={1}>
           <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
             {title}
           </Text>
@@ -292,4 +293,4 @@ function setAutoScroll(
   }
 }
 
-export default MovableListItem;
+export default memo(MovableListItem);
