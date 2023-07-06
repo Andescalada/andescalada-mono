@@ -133,7 +133,7 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-grayscale-black text-white min-w-full p-5 flex justify-between flex-col flex-1">
+      <div className="bg-grayscale-black text-white min-w-full p-5 flex justify-between flex-col flex-1 min-h-[600px]">
         <div className="flex">
           <h1>{data?.name}</h1>
 
@@ -189,11 +189,16 @@ const ZonePage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
           )}
           {data?.sectors?.length === 0 && (
-            <div className="flex-1 md:flex-2 md:px-8">
-              <h3 className="my-4">{iA.requestTitle}</h3>
-              <p className="mb-6">{iA.requestDescription}</p>
+            <div className="flex-1 flex flex-col md:flex-2 md:px-8">
+              <div className="flex-1 flex gap-4 items-center justify-center">
+                <Icon name="danger-color" size={100} />
+                <div>
+                  <h3 className="my-4">{iA.requestTitle}</h3>
+                  <p className="mb-6">{iA.requestDescription}</p>
+                </div>
+              </div>
               <div className="flex flex-col justify-center items-center bg-grayscale-600 p-4 rounded-md">
-                <p className="text-sm">
+                <p className="text-lg">
                   Descarga la app para solicitar acceso.
                 </p>
                 <StoreBadges />
