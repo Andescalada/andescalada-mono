@@ -114,7 +114,9 @@ const MultiPitchRouteItem = ({
           </Text>
         </Box>
         <Box alignItems="center" justifyContent="center">
-          <Text variant="p2R">{gradeLabel(routeGrade, routeKind)}</Text>
+          <Text variant="p2R">
+            {gradeLabel(routeGrade, routeKind, routeGrade?.originalGradeSystem)}
+          </Text>
         </Box>
       </ListItem>
       <A.Box style={style} overflow="hidden">

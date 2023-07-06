@@ -56,6 +56,7 @@ const useRouteList = ({
                 project: !!route.RouteGrade?.project,
               },
               route.kind,
+              route.RouteGrade?.originalGradeSystem,
             ),
             Extension: route.Extension.map((extension) => ({
               ...extension,
@@ -66,6 +67,7 @@ const useRouteList = ({
                   project: !!extension.RouteGrade?.project,
                 },
                 extension.kind,
+                extension.RouteGrade?.originalGradeSystem,
               ),
             })),
           }));

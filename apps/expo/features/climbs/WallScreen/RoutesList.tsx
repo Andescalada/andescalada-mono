@@ -91,6 +91,7 @@ const RoutesList: FC = () => {
           project: !!route.RouteGrade?.project,
         },
         route.kind,
+        route.RouteGrade?.originalGradeSystem,
       ),
       routeRef: createRef<ListItemRef>(),
       ChildrenRoutes: [...route.Extension, ...route.Variant].map(
@@ -103,6 +104,7 @@ const RoutesList: FC = () => {
               project: !!childrenRoute.RouteGrade?.project,
             },
             childrenRoute.kind,
+            childrenRoute.RouteGrade?.originalGradeSystem,
           ),
           routeRef: createRef<ListItemRef>(),
         }),

@@ -134,7 +134,11 @@ const RouteContainer = ({
                 justifyContent="flex-end"
               >
                 <Text fontSize={40} lineHeight={40} textAlign="justify">
-                  {gradeLabel(route.RouteGrade, route.kind)}
+                  {gradeLabel(
+                    route.RouteGrade,
+                    route.kind,
+                    route.RouteGrade?.originalGradeSystem,
+                  )}
                 </Text>
               </Pressable>
               <RouteGradeEvaluation
