@@ -1,11 +1,14 @@
+import { slug } from "@andescalada/api/src/utils/slug";
 import { PrismaClient } from "@andescalada/db";
 import { oldDb } from "@andescalada/old-db";
+
+import { migrateLegacyZone } from "./migrate-legacy-zone";
 
 const oldDbClient = new oldDb.PrismaClient();
 const db = new PrismaClient();
 
 const selectedZonesForContest = [
-  "Las Chilcas",
+  // "Las Chilcas",
   "Las Palestras",
   "Chacabuco",
   "Lo Curro",
@@ -13,15 +16,32 @@ const selectedZonesForContest = [
 ];
 
 const main = async () => {
-  const zones = await oldDbClient.zones.findMany({
+  const author = await db.user.findUniqueOrThrow({
     where: {
-      name: {
-        in: selectedZonesForContest,
-      },
+      email: "elevy@andescalada.org",
     },
-    select: { name: true, _count: true },
   });
-  console.log(zones);
+
+  const newZones = selectedZonesForContest.map((zone) => {
+    return db.zone.create({
+      data: {
+        name: zone,
+        slug: slug(zone),
+        Author: { connect: { id: author.id } },
+      },
+      select: { id: true, name: true },
+    });
+  });
+
+  const newZonesResult = await Promise.all(newZones);
+
+  for (const zone of newZonesResult) {
+    migrateLegacyZone({
+      authorId: author.id,
+      zoneId: zone.id,
+      legacyZoneName: zone.name,
+    });
+  }
 };
 
 main()
