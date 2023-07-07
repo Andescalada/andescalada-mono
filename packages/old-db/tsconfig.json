@@ -4,5 +4,6 @@
     "strict": true,
     "baseUrl": "."
   },
+  "exclude": ["client"],
   "include": ["index.ts"]
 }
