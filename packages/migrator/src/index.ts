@@ -21,7 +21,9 @@ const main = async () => {
 
   if (!lasChilcas) throw new Error("Zone not found");
 
+  console.log(chalk.blue(`Deleting old data`));
   await newDbClient.sector.deleteMany({ where: { zoneId: lasChilcas.id } });
+  console.log(chalk.green(`Old data deleted! 👍🏻`));
 
   if (!author) throw new Error("Author not found");
 
@@ -35,7 +37,7 @@ const main = async () => {
           walls: {
             select: {
               name: true,
-              routes: { select: { name: true, grade: true } },
+              routes: { select: { id: true, name: true, grade: true } },
             },
           },
         },
@@ -169,7 +171,11 @@ const createRoutes = async ({
       name: string | null;
       walls: {
         name: string | null;
-        routes: { name: string | null; grade: string | null }[];
+        routes: {
+          name: string | null;
+          grade: string | null;
+          id: bigint | null;
+        }[];
       }[];
     }[];
   };
@@ -191,7 +197,7 @@ const createRoutes = async ({
       });
       if (!wallId) throw new Error(`Wall ${wall.name} not found`);
       for (const route of wall.routes) {
-        const index = wall.routes.findIndex((d) => d.name === route.name);
+        const index = wall.routes.findIndex((d) => d.id === route.id);
         if (!route.name) throw new Error(`Route ${route.name} not found`);
         console.log(
           chalk.yellow(
