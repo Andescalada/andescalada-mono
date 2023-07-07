@@ -19,7 +19,7 @@ const PhotoContestSection = () => {
     }, 1000);
     setTimeout(() => {
       opacity.value = 1;
-    }, 1200);
+    }, 2000);
     setHasRunOnce(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
