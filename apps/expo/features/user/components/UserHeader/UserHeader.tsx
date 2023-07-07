@@ -135,7 +135,11 @@ const UserHeader = () => {
         style={styles.header}
       >
         <Ionicons
-          name={isOfflineMode ? "md-airplane-sharp" : "md-airplane-outline"}
+          name={
+            isOfflineMode
+              ? "md-arrow-down-circle-sharp"
+              : "md-arrow-down-circle-outline"
+          }
           color="grayscale.600"
           size={30}
           style={{ paddingRight: 8 }}
