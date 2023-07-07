@@ -1,6 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["jsonProtocol", "fullTextSearch", "fullTextIndex", "extendedWhereUnique"]
+  output          = "./client"
 }
 
 generator fabbrica {

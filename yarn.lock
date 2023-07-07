@@ -1311,7 +1311,7 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
-"@elevyg/prisma-zod-enums-generator@0.0.14":
+"@elevyg/prisma-zod-enums-generator@^0.0.14":
   version "0.0.14"
   resolved "https://registry.yarnpkg.com/@elevyg/prisma-zod-enums-generator/-/prisma-zod-enums-generator-0.0.14.tgz#e475a3da554734fd25a12d892c2616843e487d5c"
   integrity sha512-SnlC9H27sAi5JKiP0ZlI+5qB0Qc/pEEmUlpC3DaPD/HYRKHLozoOXnNMKpz0vLf+Co4tPaN6i1JAIOB9KmZqiA==
@@ -2089,19 +2089,10 @@
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.2.0.tgz#55d4896be906bfff859e22a1d72267329a0fff90"
   integrity sha512-ZTOuuwGuMOJN+HEmG/68bSEw15HHaMWmQ5gdTsWdWsjDe56K1kGvLOK6bOSC8gWgIvEO0w6un/2Gvv1q5hJSkQ==
 
-"@mermaid-js/mermaid-cli@^10.0.2":
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-10.0.2.tgz#7f71c4a0b1177a96ecb459da51cb663523624232"
-  integrity sha512-dz5ye9wWJjL3jtWtL6pYeKwo74CeCbn8SpvxKEH4Wuc0esDvSpxC+J/Wlsbd6BKvMzLN2J+5voy03kto0J7mOg==
-  dependencies:
-    chalk "^5.0.1"
-    commander "^10.0.0"
-    puppeteer "^19.0.0"
-
-"@mermaid-js/mermaid-cli@^9.2.2":
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-9.4.0.tgz#9be4a3a7a4d111f9db8650a785bbfeeb7ded70c9"
-  integrity sha512-/Nqs8Xtasw5wvop1PPiqmSx5SUxq/yARH+0EhEHAx8MVdbZXtUnzuK+Yv6NgpD2/Fb84/N3jF08zmIiJSyT5Lg==
+"@mermaid-js/mermaid-cli@^10.1.0", "@mermaid-js/mermaid-cli@^10.2.4":
+  version "10.2.4"
+  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-10.2.4.tgz#2e2bd1e0c811e907885356b6379abdf83ae6a495"
+  integrity sha512-5y2wPpLE8AJiCODVXmcccTAbSvkCQ1EtJJahQoGsbcyTTVMrr7C7sW8VUELHI4JjlekU5+czAyDH2+PJI0ZBkQ==
   dependencies:
     chalk "^5.0.1"
     commander "^10.0.0"
@@ -11616,12 +11607,12 @@ prisma-enum-generator@^1.0.3:
     prettier "^2.3.2"
     rimraf "^3.0.2"
 
-prisma-erd-generator@^1.2.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/prisma-erd-generator/-/prisma-erd-generator-1.5.4.tgz#c2f013e7ec6aa464286e54e3ce6256338e42609d"
-  integrity sha512-SyBR8S3W4UOnv4jtLpRsxWvkSFOJD/N5t2A5cvEZO2teza/Yu0hDA7Hz07jJM1hp5JBjzf6VMk2dvAkuzPxQ0Q==
+prisma-erd-generator@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/prisma-erd-generator/-/prisma-erd-generator-1.6.2.tgz#36fcb7692a46dac09f9aed91a46d7a625e335533"
+  integrity sha512-oX5nqBiyjKrR8+hJF0kBR9F8fKHFGmRshQRr5LUjVszykyWiBnTBxnrKvZoSRKp9v74VGN6VhpLuihfwckgFeg==
   dependencies:
-    "@mermaid-js/mermaid-cli" "^10.0.2"
+    "@mermaid-js/mermaid-cli" "^10.1.0"
     dotenv "^16.0.3"
 
 prisma-repl@^1.4.0:
