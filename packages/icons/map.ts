@@ -32,6 +32,8 @@ export const Icons = {
   "map-pin": require(base + "map-pin").default,
   "megaphone-color": require(base + "megaphone-color").default,
   "megaphone": require(base + "megaphone").default,
+  "message-color": require(base + "message-color").default,
+  "message": require(base + "message").default,
   "no-camping-color": require(base + "no-camping-color").default,
   "no-camping": require(base + "no-camping").default,
   "no-dog-color": require(base + "no-dog-color").default,

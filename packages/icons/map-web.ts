@@ -31,6 +31,8 @@ export const Icons = {
   "map-pin": require( "./components-web/map-pin").default,
   "megaphone-color": require( "./components-web/megaphone-color").default,
   "megaphone": require( "./components-web/megaphone").default,
+  "message-color": require( "./components-web/message-color").default,
+  "message": require( "./components-web/message").default,
   "no-camping-color": require( "./components-web/no-camping-color").default,
   "no-camping": require( "./components-web/no-camping").default,
   "no-dog-color": require( "./components-web/no-dog-color").default,
