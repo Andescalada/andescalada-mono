@@ -2,6 +2,7 @@
 // @ts-check
 
 const { withSentryConfig } = require("@sentry/nextjs");
+const { PrismaPlugin } = require("@prisma/nextjs-monorepo-workaround-plugin");
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -16,7 +17,10 @@ const config = {
     "@andescalada/icons",
     "@andescalada/common-assets",
   ],
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()];
+    }
     config.module.rules.push({
       test: /\.svg$/i,
       type: "asset",
