@@ -1311,7 +1311,7 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
-"@elevyg/prisma-zod-enums-generator@0.0.14":
+"@elevyg/prisma-zod-enums-generator@^0.0.14":
   version "0.0.14"
   resolved "https://registry.yarnpkg.com/@elevyg/prisma-zod-enums-generator/-/prisma-zod-enums-generator-0.0.14.tgz#e475a3da554734fd25a12d892c2616843e487d5c"
   integrity sha512-SnlC9H27sAi5JKiP0ZlI+5qB0Qc/pEEmUlpC3DaPD/HYRKHLozoOXnNMKpz0vLf+Co4tPaN6i1JAIOB9KmZqiA==
@@ -2089,19 +2089,10 @@
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.2.0.tgz#55d4896be906bfff859e22a1d72267329a0fff90"
   integrity sha512-ZTOuuwGuMOJN+HEmG/68bSEw15HHaMWmQ5gdTsWdWsjDe56K1kGvLOK6bOSC8gWgIvEO0w6un/2Gvv1q5hJSkQ==
 
-"@mermaid-js/mermaid-cli@^10.0.2":
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-10.0.2.tgz#7f71c4a0b1177a96ecb459da51cb663523624232"
-  integrity sha512-dz5ye9wWJjL3jtWtL6pYeKwo74CeCbn8SpvxKEH4Wuc0esDvSpxC+J/Wlsbd6BKvMzLN2J+5voy03kto0J7mOg==
-  dependencies:
-    chalk "^5.0.1"
-    commander "^10.0.0"
-    puppeteer "^19.0.0"
-
-"@mermaid-js/mermaid-cli@^9.2.2":
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-9.4.0.tgz#9be4a3a7a4d111f9db8650a785bbfeeb7ded70c9"
-  integrity sha512-/Nqs8Xtasw5wvop1PPiqmSx5SUxq/yARH+0EhEHAx8MVdbZXtUnzuK+Yv6NgpD2/Fb84/N3jF08zmIiJSyT5Lg==
+"@mermaid-js/mermaid-cli@^10.1.0", "@mermaid-js/mermaid-cli@^10.2.4":
+  version "10.2.4"
+  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-10.2.4.tgz#2e2bd1e0c811e907885356b6379abdf83ae6a495"
+  integrity sha512-5y2wPpLE8AJiCODVXmcccTAbSvkCQ1EtJJahQoGsbcyTTVMrr7C7sW8VUELHI4JjlekU5+czAyDH2+PJI0ZBkQ==
   dependencies:
     chalk "^5.0.1"
     commander "^10.0.0"
@@ -2378,12 +2369,12 @@
   dependencies:
     "@prisma/engines-version" "2.28.0-17.89facabd0366f63911d089156a7a70125bfbcd27"
 
-"@prisma/client@4.16.1", "@prisma/client@^4.16.1":
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-4.16.1.tgz#030bf59ee51f223bae2a8e7c49827528756cf03a"
-  integrity sha512-CoDHu7Bt+NuDo40ijoeHP79EHtECsPBTy3yte5Yo3op8TqXt/kV0OT5OrsWewKvQGKFMHhYQ+ePed3zzjYdGAw==
+"@prisma/client@4.16.2":
+  version "4.16.2"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-4.16.2.tgz#3bb9ebd49b35c8236b3d468d0215192267016e2b"
+  integrity sha512-qCoEyxv1ZrQ4bKy39GnylE8Zq31IRmm8bNhNbZx7bF2cU5aiCCnSa93J2imF88MBjn7J9eUQneNxUQVJdl/rPQ==
   dependencies:
-    "@prisma/engines-version" "4.16.0-66.b20ead4d3ab9e78ac112966e242ded703f4a052c"
+    "@prisma/engines-version" "4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81"
 
 "@prisma/client@^4.3.1":
   version "4.12.0"
@@ -2450,20 +2441,15 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-4.12.0-67.659ef412370fa3b41cd7bf6e94587c1dfb7f67e7.tgz#51a1cc5c886564b542acde64a873645d0dee2566"
   integrity sha512-JIHNj5jlXb9mcaJwakM0vpgRYJIAurxTUqM0iX0tfEQA5XLZ9ONkIckkhuAKdAzocZ+80GYg7QSsfpjg7OxbOA==
 
-"@prisma/engines-version@4.16.0-66.b20ead4d3ab9e78ac112966e242ded703f4a052c":
-  version "4.16.0-66.b20ead4d3ab9e78ac112966e242ded703f4a052c"
-  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-4.16.0-66.b20ead4d3ab9e78ac112966e242ded703f4a052c.tgz#54fd17f9a9080e13e2f75613fd35afb7875e3715"
-  integrity sha512-tMWAF/qF00fbUH1HB4Yjmz6bjh7fzkb7Y3NRoUfMlHu6V+O45MGvqwYxqwBjn1BIUXkl3r04W351D4qdJjrgvA==
+"@prisma/engines-version@4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81":
+  version "4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81.tgz#d3b5dcf95b6d220e258cbf6ae19b06d30a7e9f14"
+  integrity sha512-q617EUWfRIDTriWADZ4YiWRZXCa/WuhNgLTVd+HqWLffjMSPzyM5uOWoauX91wvQClSKZU4pzI4JJLQ9Kl62Qg==
 
 "@prisma/engines@4.12.0":
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-4.12.0.tgz#68d99078b70b2d9c339d0e8cbf2e99f00b72aa8c"
   integrity sha512-0alKtnxhNB5hYU+ymESBlGI4b9XrGGSdv7Ud+8TE/fBNOEhIud0XQsAR+TrvUZgS4na5czubiMsODw0TUrgkIA==
-
-"@prisma/engines@4.16.1":
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-4.16.1.tgz#ee487620dc5135fd175ac7494b1c60c9f12c1e4b"
-  integrity sha512-gpZG0kGGxfemgvK/LghHdBIz+crHkZjzszja94xp4oytpsXrgt/Ice82MvPsWMleVIniKuARrowtsIsim0PFJQ==
 
 "@prisma/engines@4.16.2":
   version "4.16.2"
@@ -11604,12 +11590,12 @@ prisma-enum-generator@^1.0.3:
     prettier "^2.3.2"
     rimraf "^3.0.2"
 
-prisma-erd-generator@^1.2.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/prisma-erd-generator/-/prisma-erd-generator-1.5.4.tgz#c2f013e7ec6aa464286e54e3ce6256338e42609d"
-  integrity sha512-SyBR8S3W4UOnv4jtLpRsxWvkSFOJD/N5t2A5cvEZO2teza/Yu0hDA7Hz07jJM1hp5JBjzf6VMk2dvAkuzPxQ0Q==
+prisma-erd-generator@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/prisma-erd-generator/-/prisma-erd-generator-1.6.2.tgz#36fcb7692a46dac09f9aed91a46d7a625e335533"
+  integrity sha512-oX5nqBiyjKrR8+hJF0kBR9F8fKHFGmRshQRr5LUjVszykyWiBnTBxnrKvZoSRKp9v74VGN6VhpLuihfwckgFeg==
   dependencies:
-    "@mermaid-js/mermaid-cli" "^10.0.2"
+    "@mermaid-js/mermaid-cli" "^10.1.0"
     dotenv "^16.0.3"
 
 prisma-repl@^1.4.0:
@@ -11617,12 +11603,12 @@ prisma-repl@^1.4.0:
   resolved "https://registry.yarnpkg.com/prisma-repl/-/prisma-repl-1.4.0.tgz#aa0ce8f14b686691286c8a407a3f592d3c724d5e"
   integrity sha512-jlvD9Y0T0+h0FlWGqZ1F5mPk91gTWgkOwkLWj2WRdExngxMUX4XJJE46h6in+WIF6tIF7YI7WHtjeOubRTx5+g==
 
-prisma@^4.16.1:
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/prisma/-/prisma-4.16.1.tgz#c6d723a4326138a72489098a6c39a698a670fbbf"
-  integrity sha512-C2Xm7yxHxjFjjscBEW4tmoraPHH/Vyu/A0XABdbaFtoiOZARsxvOM7rwc2iZ0qVxbh0bGBGBWZUSXO/52/nHBQ==
+prisma@^4.16.2:
+  version "4.16.2"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-4.16.2.tgz#469e0a0991c6ae5bcde289401726bb012253339e"
+  integrity sha512-SYCsBvDf0/7XSJyf2cHTLjLeTLVXYfqp7pG5eEVafFLeT0u/hLFz/9W196nDRGUOo1JfPatAEb+uEnTQImQC1g==
   dependencies:
-    "@prisma/engines" "4.16.1"
+    "@prisma/engines" "4.16.2"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"

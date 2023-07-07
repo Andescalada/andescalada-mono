@@ -161,7 +161,11 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
               </Pressable>
               <Box>
                 <Text variant="p2B">
-                  {gradeLabel(route.RouteGrade, route.kind)}
+                  {gradeLabel(
+                    route.RouteGrade,
+                    route.kind,
+                    route.RouteGrade?.originalGradeSystem,
+                  )}
                 </Text>
               </Box>
             </>

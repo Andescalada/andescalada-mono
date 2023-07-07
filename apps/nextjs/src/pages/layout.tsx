@@ -9,11 +9,11 @@ const rubik = Rubik({
 });
 
 const RootLayout: FC<{ children: ReactNode }> = ({ children }) => (
-  <>
+  <div className="min-h-screen flex flex-col">
     <Navbar />
-    <main className={`${rubik.variable}`}>{children}</main>
+    <main className={`${rubik.variable} flex flex-col flex-1`}>{children}</main>
     <Footer />
-  </>
+  </div>
 );
 
 export default RootLayout;

@@ -478,7 +478,7 @@ model Topo {
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   slug             String
-  Wall             Wall        @relation(fields: [wallId], references: [id])
+  Wall             Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade)
   wallId           String
   position         Int         @default(0)
   main             Boolean     @default(false)
@@ -613,7 +613,7 @@ model RouteGrade {
   grade               Int?
   project             Boolean      @default(false)
   slashGrade          Boolean      @default(false)
-  route               Route        @relation(fields: [routeId], references: [id])
+  route               Route        @relation(fields: [routeId], references: [id], onDelete: Cascade)
   routeId             String       @unique
   isDeleted           SoftDelete   @default(NotDeleted)
   version             Int          @default(0)

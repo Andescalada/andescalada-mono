@@ -126,14 +126,7 @@ const getOfflineAssets = async ({
     sectorsResults,
     zonesResults,
     multiPitchResults,
-  ] = await ctx.prisma.$transaction([
-    routes,
-    topos,
-    walls,
-    sectors,
-    zones,
-    multiPitch,
-  ]);
+  ] = await Promise.all([routes, topos, walls, sectors, zones, multiPitch]);
 
   const parsedRoutes = routesResults
     .map((route) => {

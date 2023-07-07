@@ -1,10 +1,11 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "client"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_POSTGRES")
 }
 
 model action_text_rich_texts {
@@ -27,11 +28,9 @@ model active_storage_attachments {
   blob_id              BigInt
   created_at           DateTime             @db.Timestamp(6)
   active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c3b3935057")
-  zones                zones[]
 
   @@unique([record_type, record_id, name, blob_id], map: "index_active_storage_attachments_uniqueness")
   @@index([blob_id], map: "index_active_storage_attachments_on_blob_id")
-  @@index([name, record_id, record_type], name: "relation_index")
 }
 
 model active_storage_blobs {
@@ -233,9 +232,9 @@ model initiatives {
   created_at              DateTime                  @db.Timestamp(6)
   updated_at              DateTime                  @db.Timestamp(6)
   active                  Boolean?                  @default(false)
-  coalitions              coalitions                @relation(fields: [coalition_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_0e3749c93b")
   initiative_participants initiative_participants[]
   initiative_sponsors     initiative_sponsors[]
+  coalitions              coalitions                @relation(fields: [coalition_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_0e3749c93b")
 
   @@index([coalition_id], map: "index_initiatives_on_coalition_id")
 }
@@ -395,7 +394,6 @@ model routes {
   status_description   String?
   created_at           DateTime               @db.Timestamp(6)
   updated_at           DateTime               @db.Timestamp(6)
-  walls                walls                  @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_2070c35097")
   climbed_routes       climbed_routes[]
   collaborated_routes  collaborated_routes[]
   descent_alternatives descent_alternatives[]
@@ -404,6 +402,7 @@ model routes {
   recommended_descents recommended_descents[]
   route_climbing_types route_climbing_types[]
   route_reviews        route_reviews[]
+  walls                walls                  @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_2070c35097")
   saved_routes         saved_routes[]
 
   @@index([left_route_id], map: "index_routes_on_left_route_id")
@@ -465,6 +464,7 @@ model sectors {
   @@index([zone_id], map: "index_sectors_on_zone_id")
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model spatial_ref_sys {
   srid      Int     @id
   auth_name String? @db.VarChar(256)
@@ -489,8 +489,8 @@ model sun_exposures {
   wall_id              BigInt
   created_at           DateTime               @db.Timestamp(6)
   updated_at           DateTime               @db.Timestamp(6)
-  walls                walls                  @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_ec20665e80")
   season_sun_exposures season_sun_exposures[]
+  walls                walls                  @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_ec20665e80")
 
   @@index([wall_id], map: "index_sun_exposures_on_wall_id")
 }
@@ -559,8 +559,8 @@ model users {
   @@unique([uid, provider], map: "index_users_on_uid_and_provider")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model users_roles {
-  id      BigInt  @id @default(autoincrement())
   user_id BigInt?
   role_id BigInt?
 
@@ -581,11 +581,11 @@ model walls {
   created_at          DateTime              @db.Timestamp(6)
   updated_at          DateTime              @db.Timestamp(6)
   sector_id           BigInt?
-  sectors             sectors?              @relation(fields: [sector_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_67fb9acabc")
-  zones               zones                 @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_7398561f75")
   recommended_seasons recommended_seasons[]
   routes              routes[]
   sun_exposures       sun_exposures[]
+  sectors             sectors?              @relation(fields: [sector_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_67fb9acabc")
+  zones               zones                 @relation(fields: [zone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_7398561f75")
 
   @@index([sector_id], map: "index_walls_on_sector_id")
   @@index([zone_id], map: "index_walls_on_zone_id")
@@ -631,35 +631,33 @@ model zone_owners {
 }
 
 model zones {
-  id                           BigInt                      @id @default(autoincrement())
-  camping_zone                 Int?                        @default(2)
-  bathroom_available           Int?                        @default(2)
-  fire_allowed                 Int?                        @default(2)
-  published                    Boolean?                    @default(false)
-  multipitch                   Boolean?                    @default(false)
-  latitude                     Decimal?                    @db.Decimal
-  longitude                    Decimal?                    @db.Decimal
-  altitude                     Float?
-  routes_count                 Int?                        @default(0)
-  price                        Int?                        @default(0)
-  region_id                    BigInt
-  name                         String?                     @db.VarChar
-  location                     String?                     @db.VarChar
-  lonlat                       String?                     @db.VarChar
-  description                  String?
-  created_at                   DateTime                    @db.Timestamp(6)
-  updated_at                   DateTime                    @db.Timestamp(6)
-  suitable_for_children        Int?                        @default(2)
-  regions                      regions                     @relation(fields: [region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_612e015e24")
-  downloaded_zones             downloaded_zones[]
-  recent_zones                 recent_zones[]
-  sectors                      sectors[]
-  walls                        walls[]
-  zone_climbing_types          zone_climbing_types[]
-  zone_coalitions              zone_coalitions[]
-  zone_owners                  zone_owners[]
-  active_storage_attachments   active_storage_attachments? @relation(fields: [active_storage_attachmentsId], references: [id])
-  active_storage_attachmentsId BigInt?
+  id                    BigInt                @id @default(autoincrement())
+  camping_zone          Int?                  @default(2)
+  bathroom_available    Int?                  @default(2)
+  fire_allowed          Int?                  @default(2)
+  published             Boolean?              @default(false)
+  multipitch            Boolean?              @default(false)
+  latitude              Decimal?              @db.Decimal
+  longitude             Decimal?              @db.Decimal
+  altitude              Float?
+  routes_count          Int?                  @default(0)
+  price                 Int?                  @default(0)
+  region_id             BigInt
+  name                  String?               @db.VarChar
+  location              String?               @db.VarChar
+  lonlat                String?               @db.VarChar
+  description           String?
+  created_at            DateTime              @db.Timestamp(6)
+  updated_at            DateTime              @db.Timestamp(6)
+  suitable_for_children Int?                  @default(2)
+  downloaded_zones      downloaded_zones[]
+  recent_zones          recent_zones[]
+  sectors               sectors[]
+  walls                 walls[]
+  zone_climbing_types   zone_climbing_types[]
+  zone_coalitions       zone_coalitions[]
+  zone_owners           zone_owners[]
+  regions               regions               @relation(fields: [region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_612e015e24")
 
   @@index([region_id], map: "index_zones_on_region_id")
 }

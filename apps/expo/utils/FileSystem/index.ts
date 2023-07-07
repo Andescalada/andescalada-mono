@@ -1,10 +1,16 @@
+import { encodeBase64 } from "@utils/base64";
 import * as FileSystem from "expo-file-system";
 import * as Sentry from "sentry-expo";
 
-const cachedImageDir = FileSystem.cacheDirectory + "imageDir/";
-const documentImageDir = FileSystem.documentDirectory + "imageDir/";
-const cacheImageFileUri = (uniqueId: string) => cachedImageDir + `${uniqueId}`;
-const imageFileUri = (uniqueId: string) => documentImageDir + `${uniqueId}`;
+const IMAGE_DIR = "imageDir/";
+
+const cachedImageDir = FileSystem.cacheDirectory + IMAGE_DIR;
+const documentImageDir = FileSystem.documentDirectory + IMAGE_DIR;
+
+const cacheImageFileUri = (uniqueId: string) =>
+  cachedImageDir + `${encodeBase64(uniqueId)}`;
+const imageFileUri = (uniqueId: string) =>
+  documentImageDir + `${encodeBase64(uniqueId)}`;
 
 const storeImage = async (
   {

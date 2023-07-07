@@ -1,29 +1,38 @@
 import { gradeUnits } from "@andescalada/common-assets/climbingGrades";
-import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import { RouteGrade } from "@andescalada/db";
+import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 
 const gradeLabel = (
   grade: RouteGrade | null,
   kind: typeof RouteKindSchema._type,
+  originalGradeSystem?: typeof GradeSystemsSchema._type,
 ) => {
   if (!grade) return "?";
   const n = grade.grade;
   const project = grade.project;
   if (project) return "Proyecto";
-  return typeof n === "number" ? gradeSystem(n, kind) : "?";
+  return typeof n === "number"
+    ? gradeSystem(n, kind, originalGradeSystem)
+    : "?";
 };
 
 export default gradeLabel;
 
-const gradeSystem = (grade: number, kind: typeof RouteKindSchema._type) => {
+const gradeSystem = (
+  grade: number,
+  kind: typeof RouteKindSchema._type,
+  originalGradeSystem?: typeof GradeSystemsSchema._type,
+) => {
+  if (originalGradeSystem) return gradeUnits[originalGradeSystem][grade];
   const system = getGradeSystem(kind);
   return system[grade];
 };
 
 const getGradeSystem = (kind: keyof typeof RouteKindSchema.Enum) => {
   switch (kind) {
-    case RouteKindSchema.Enum.Boulder:
+    case RouteKindSchema.Enum.Boulder: {
       return gradeUnits[GradeSystemsSchema.enum.Hueco];
+    }
     case RouteKindSchema.Enum.Sport:
       return gradeUnits[GradeSystemsSchema.enum.French];
     case RouteKindSchema.Enum.Trad:

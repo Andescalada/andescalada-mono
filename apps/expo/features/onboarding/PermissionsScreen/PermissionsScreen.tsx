@@ -5,6 +5,7 @@ import {
   OnboardingScreenProps,
 } from "@features/onboarding/Navigation/types";
 import StepLocation from "@features/onboarding/PermissionsScreen/StepLocation";
+import StepNotifications from "@features/onboarding/PermissionsScreen/StepNotifications";
 import StepShareErrors from "@features/onboarding/PermissionsScreen/StepShareErrors";
 import StepSuccess from "@features/onboarding/PermissionsScreen/StepSuccess";
 import { isIOS } from "@utils/platform";
@@ -15,19 +16,25 @@ type Props = OnboardingScreenProps<OnboardingRoutes.Permissions>;
 
 const data = [
   {
-    id: "1",
+    id: "location",
     showOnIOS: true,
     showOnAndroid: true,
     screen: (onPress: () => void) => <StepLocation onNext={onPress} />,
   },
   {
-    id: "2",
+    id: "shareErrors",
     showOnIOS: true,
     showOnAndroid: false,
     screen: (onPress: () => void) => <StepShareErrors onNext={onPress} />,
   },
   {
-    id: "3",
+    id: "notifications",
+    showOnIOS: true,
+    showOnAndroid: true,
+    screen: (onPress: () => void) => <StepNotifications onNext={onPress} />,
+  },
+  {
+    id: "success",
     showOnIOS: true,
     showOnAndroid: true,
     screen: (onPress: () => void) => <StepSuccess onNext={onPress} />,
@@ -56,6 +63,7 @@ const PermissionsScreen: FC<Props> = ({}) => {
         ref={ref}
         data={filteredDataByOS}
         initialNumToRender={1}
+        scrollEnabled={false}
         horizontal
         snapToInterval={screenWidth}
         showsHorizontalScrollIndicator={false}

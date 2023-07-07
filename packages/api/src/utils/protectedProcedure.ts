@@ -1,7 +1,7 @@
 import { Context } from "@andescalada/api/src/createContext";
 import { InferContext } from "@andescalada/api/src/utils/inferContext";
 import session, { SessionUser } from "@andescalada/api/src/utils/session";
-import { SoftDelete } from "@prisma/client";
+import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 import { t } from "../createRouter";
