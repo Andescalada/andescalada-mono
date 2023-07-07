@@ -1,9 +1,5 @@
 import { slug } from "@andescalada/api/src/utils/slug";
-import {
-  gradeConversion,
-  gradeUnits,
-  gradeUnitsByRouteKind,
-} from "@andescalada/common-assets/climbingGrades";
+import { gradeUnits } from "@andescalada/common-assets/climbingGrades";
 import { Prisma, PrismaClient } from "@andescalada/db";
 import { oldDb } from "@andescalada/old-db";
 import chalk from "chalk";
@@ -27,32 +23,45 @@ const main = async () => {
 
   await newDbClient.sector.deleteMany({ where: { zoneId: lasChilcas.id } });
 
-  // if (!author) throw new Error("Author not found");
+  if (!author) throw new Error("Author not found");
 
-  // const zones = await oldDbClient.zones.findFirst({
-  //   where: { name: "Las Chilcas" },
-  //   select: {
-  //     name: true,
-  //     sectors: {
-  //       select: {
-  //         name: true,
-  //         walls: {
-  //           select: {
-  //             name: true,
-  //             routes: { select: { name: true, grade: true } },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // });
+  const zones = await oldDbClient.zones.findFirst({
+    where: { name: "Las Chilcas" },
+    select: {
+      name: true,
+      sectors: {
+        select: {
+          name: true,
+          walls: {
+            select: {
+              name: true,
+              routes: { select: { name: true, grade: true } },
+            },
+          },
+        },
+      },
+    },
+  });
 
-  // if (zones)
-  //   await createSectors({
-  //     data: zones,
-  //     zoneId: lasChilcas.id,
-  //     authorId: author.id,
-  //   });
+  if (zones) {
+    await createSectors({
+      data: zones,
+      zoneId: lasChilcas.id,
+      authorId: author.id,
+    });
+    await createWalls({
+      data: zones,
+      zoneId: lasChilcas.id,
+      authorId: author.id,
+    });
+    await createRoutes({
+      data: zones,
+      zoneId: lasChilcas.id,
+      authorId: author.id,
+    });
+  }
+
+  console.log(chalk.green(`Success! 🎉`));
 };
 
 const transformGrade = (grade: string | null) => {
@@ -93,7 +102,7 @@ const createSectors = async ({
   const mutations: Prisma.PrismaPromise<any>[] = [];
   data?.sectors.forEach(async (sector) => {
     if (sector.name) {
-      console.log(chalk.green(`Creating sector ${sector.name}`));
+      console.log(chalk.yellow(`Creating sector ${sector.name}`));
       mutations.push(
         newDbClient.sector.create({
           data: {
@@ -132,7 +141,7 @@ const createWalls = async ({
     for (const wall of sector.walls) {
       if (!wall.name) throw new Error(`Wall ${wall.name} not found`);
       console.log(
-        chalk.green(`Creating wall ${wall.name} for sector ${sector.name}`),
+        chalk.yellow(`Creating wall ${wall.name} for sector ${sector.name}`),
       );
       mutations.push(
         newDbClient.wall.create({
@@ -182,14 +191,20 @@ const createRoutes = async ({
       });
       if (!wallId) throw new Error(`Wall ${wall.name} not found`);
       for (const route of wall.routes) {
+        const index = wall.routes.findIndex((d) => d.name === route.name);
         if (!route.name) throw new Error(`Route ${route.name} not found`);
         console.log(
-          chalk.green(`Creating wall ${wall.name} for sector ${sector.name}`),
+          chalk.yellow(
+            `Creating route ${
+              route.name === "Unknown" ? "Ruta sin nombre" : route.name
+            } for wall ${wall.name}`,
+          ),
         );
         mutations.push(
           newDbClient.route.create({
             data: {
-              name: route.name,
+              name: route.name === "Unknown" ? "Ruta sin nombre" : route.name,
+              position: index + 1,
               slug: slug(route.name),
               Author: { connect: { id: authorId } },
               Wall: { connect: { id: wallId.id } },
