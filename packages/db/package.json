@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10.2.4",
-    "@prisma/client": "4.16.1"
+    "@prisma/client": "4.16.2"
   },
   "peerDependencies": {
     "zod": "*"
@@ -18,7 +18,7 @@
   "devDependencies": {
     "@elevyg/prisma-zod-enums-generator": "^0.0.14",
     "@quramy/prisma-fabbrica": "^1.1.0",
-    "prisma": "^4.16.1",
+    "prisma": "^4.16.2",
     "prisma-enum-generator": "^1.0.3",
     "prisma-erd-generator": "^1.6.2"
   }
