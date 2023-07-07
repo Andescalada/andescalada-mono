@@ -48,6 +48,8 @@ const EnterPhoneNumber: FC<Props> = ({ navigation, route: { params } }) => {
 
   const phoneInputRef = useRef<PhoneInputRef>(null);
 
+  const SHOW_I_HAVE_AN_EMAIL_ACCOUNT = false;
+
   const onNext = form.handleSubmit(async (data) => {
     const countryCode = phoneInputRef.current?.getCallingCode();
     const country = phoneInputRef.current?.getCountryCode();
@@ -114,16 +116,18 @@ const EnterPhoneNumber: FC<Props> = ({ navigation, route: { params } }) => {
             )}
           </Box>
         </Box>
-        <Pressable
-          alignSelf="center"
-          marginTop="xl"
-          padding="s"
-          onPress={() => navigation.navigate(AuthNavigationRoutes.EnterEmail)}
-        >
-          <Text textDecorationLine="underline" variant="p3R">
-            Tengo una cuenta con mi correo electrónico
-          </Text>
-        </Pressable>
+        {SHOW_I_HAVE_AN_EMAIL_ACCOUNT && (
+          <Pressable
+            alignSelf="center"
+            marginTop="xl"
+            padding="s"
+            onPress={() => navigation.navigate(AuthNavigationRoutes.EnterEmail)}
+          >
+            <Text textDecorationLine="underline" variant="p3R">
+              Tengo una cuenta con mi correo electrónico
+            </Text>
+          </Pressable>
+        )}
       </KeyboardDismiss>
     </Screen>
   );
