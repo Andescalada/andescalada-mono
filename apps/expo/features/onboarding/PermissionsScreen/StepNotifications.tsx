@@ -45,7 +45,7 @@ const StepNotifications: FC<Props> = ({ onNext }) => {
 
       <NextButton
         onPress={async () => {
-          await Notifications.getPermissionsAsync();
+          await Notifications.requestPermissionsAsync();
           onNext();
         }}
         alignSelf="center"
