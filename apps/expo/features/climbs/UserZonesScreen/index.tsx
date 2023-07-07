@@ -16,6 +16,7 @@ import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
+import PhotoContestSection from "@features/climbs/UserZonesScreen/PhotoContestSection";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useIsConnected from "@hooks/useIsConnected";
@@ -119,8 +120,9 @@ const UserZonesScreen = () => {
       </Screen>
     );
   return (
-    <Screen padding="m" paddingBottom="none" safeAreaDisabled>
-      <Box flexDirection="row" width="100%">
+    <Screen paddingBottom="none" safeAreaDisabled>
+      <PhotoContestSection />
+      <Box flexDirection="row" width="100%" padding="m">
         <Pressable
           borderRadius={4}
           flex={2}
@@ -130,7 +132,7 @@ const UserZonesScreen = () => {
             navigation.navigate(ClimbsNavigationRoutes.SearchClimbs);
           }}
           alignItems="center"
-          marginBottom="m"
+          // marginBottom="m"
           paddingLeft="s"
           flexDirection="row"
           overflow="hidden"
@@ -153,7 +155,13 @@ const UserZonesScreen = () => {
           }}
         />
       </Box>
-      <ScrollView refreshControl={refresh} showsVerticalScrollIndicator={false}>
+
+      <ScrollView
+        paddingTop="s"
+        paddingHorizontal="m"
+        refreshControl={refresh}
+        showsVerticalScrollIndicator={false}
+      >
         <Box>
           <Box flexDirection="row" alignItems="center">
             <Text variant="h2" marginRight="s">
