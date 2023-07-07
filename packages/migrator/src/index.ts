@@ -4,8 +4,24 @@ import { oldDb } from "@andescalada/old-db";
 const oldDbClient = new oldDb.PrismaClient();
 const db = new PrismaClient();
 
+const selectedZonesForContest = [
+  "Las Chilcas",
+  "Las Palestras",
+  "Chacabuco",
+  "Lo Curro",
+  "Petorca",
+];
+
 const main = async () => {
-  return;
+  const zones = await oldDbClient.zones.findMany({
+    where: {
+      name: {
+        in: selectedZonesForContest,
+      },
+    },
+    select: { name: true, _count: true },
+  });
+  console.log(zones);
 };
 
 main()
