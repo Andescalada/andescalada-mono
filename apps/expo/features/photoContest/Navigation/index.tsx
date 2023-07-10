@@ -1,3 +1,4 @@
+import ZoneScreen from "@features/photoContest/ZoneScreen";
 import ZonesListScreen from "@features/photoContest/ZonesListScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -12,6 +13,7 @@ const Navigator = () => {
         component={ZonesListScreen}
         name={PhotoContestRoutes.ZonesList}
       />
+      <Stack.Screen component={ZoneScreen} name={PhotoContestRoutes.Zone} />
     </Stack.Navigator>
   );
 };

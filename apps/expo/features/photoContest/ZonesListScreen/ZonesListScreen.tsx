@@ -1,11 +1,4 @@
-import {
-  BackButton,
-  Box,
-  Header,
-  ListItem,
-  Screen,
-  Text,
-} from "@andescalada/ui";
+import { Box, Header, ListItem, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   PhotoContestRoutes,
@@ -16,12 +9,14 @@ import { FlatList } from "react-native";
 
 type Props = PhotoContestScreenProps<PhotoContestRoutes.ZonesList>;
 
-const ZoneListScreen: FC<Props> = () => {
-  const { data } = trpc.photoContest.getCurrentContest.useQuery();
+const ZoneListScreen: FC<Props> = ({ navigation }) => {
+  const { data, isLoading } = trpc.photoContest.getCurrentContest.useQuery();
 
   const daysLeft = data
     ? (data?.ending?.getTime() - data?.starting?.getTime()) / (1000 * 3600 * 24)
     : 0;
+
+  if (isLoading) return null;
 
   return (
     <Screen padding="m">
@@ -45,7 +40,16 @@ const ZoneListScreen: FC<Props> = () => {
         <FlatList
           data={data?.Zones}
           renderItem={({ item }) => (
-            <ListItem variant="fill" marginVertical="s">
+            <ListItem
+              variant="fill"
+              marginVertical="s"
+              onPress={() => {
+                navigation.navigate(PhotoContestRoutes.Zone, {
+                  zoneId: item.id,
+                  zoneName: item.name,
+                });
+              }}
+            >
               <Text variant="p2R">{item.name}</Text>
             </ListItem>
           )}

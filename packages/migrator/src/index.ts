@@ -16,32 +16,27 @@ const selectedZonesForContest = [
 ];
 
 const main = async () => {
-  const author = await db.user.findUniqueOrThrow({
-    where: {
-      email: "elevy@andescalada.org",
+  const starting = new Date();
+  const chilcas = await db.zone.findFirst({
+    where: { name: "Cuesta Las Chilcas" },
+  });
+  const chacabuco = await db.zone.findFirst({ where: { name: "Chacabuco" } });
+
+  if (!chilcas) throw new Error("Zone Las Chilcas not found");
+  if (!chacabuco) throw new Error("Zone Chacabuco not found");
+
+  const ending = new Date();
+  ending.setDate(starting.getDate() + 14);
+
+  const zones = await db.photoContest.create({
+    data: {
+      starting,
+      ending,
+      Zones: { connect: [{ id: chilcas.id }, { id: chacabuco.id }] },
     },
   });
 
-  const newZones = selectedZonesForContest.map((zone) => {
-    return db.zone.create({
-      data: {
-        name: zone,
-        slug: slug(zone),
-        Author: { connect: { id: author.id } },
-      },
-      select: { id: true, name: true },
-    });
-  });
-
-  const newZonesResult = await Promise.all(newZones);
-
-  for (const zone of newZonesResult) {
-    migrateLegacyZone({
-      authorId: author.id,
-      zoneId: zone.id,
-      legacyZoneName: zone.name,
-    });
-  }
+  console.log("Zones created", zones);
 };
 
 main()
