@@ -4,11 +4,17 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export enum PhotoContestRoutes {
   ZonesList = "PhotoContestZonesList",
   Zone = "PhotoContestZone",
+  UploadTopo = "PhotoContestUploadTopo",
 }
 
 export type PhotoContestNavigationParamList = {
   [PhotoContestRoutes.ZonesList]: undefined;
   [PhotoContestRoutes.Zone]: { zoneId: string; zoneName: string };
+  [PhotoContestRoutes.UploadTopo]: {
+    wallId: string;
+    wallName: string;
+    zoneId: string;
+  };
 };
 
 export type PhotoContestRouteProps<T extends PhotoContestRoutes> = RouteProp<

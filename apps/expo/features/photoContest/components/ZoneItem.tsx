@@ -1,7 +1,12 @@
 import { SectorKindSchema } from "@andescalada/db/zod";
 import { A, Box, ListItem, SubItem, Text } from "@andescalada/ui";
 import { toggleWalls } from "@features/climbs/ZoneScreen/ToolBar";
+import {
+  PhotoContestNavigationProps,
+  PhotoContestRoutes,
+} from "@features/photoContest/Navigation/types";
 import useAnimatedHeight from "@hooks/useAnimatedHeight";
+import { useNavigation } from "@react-navigation/native";
 import Conditional from "@utils/conditionalVars";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
 import { useAtom } from "jotai";
@@ -23,6 +28,9 @@ interface Props {
 const ZoneItem: FC<Props> = ({ item }) => {
   const [defaultOpen] = useAtom(toggleWalls);
   const wallCount = useMemo(() => item.walls.length, [item.walls.length]);
+
+  const navigation =
+    useNavigation<PhotoContestNavigationProps<PhotoContestRoutes.UploadTopo>>();
 
   const { onOpen, style } = useAnimatedHeight({
     defaultOpen,
@@ -55,12 +63,10 @@ const ZoneItem: FC<Props> = ({ item }) => {
                 height={SUBITEM_HEIGHT}
                 maxIndex={wallCount - 1}
                 onPress={() =>
-                  console.log({
+                  navigation.navigate(PhotoContestRoutes.UploadTopo, {
                     wallId: wall.id,
                     wallName: wall.name,
-                    sectorId: item.id,
                     zoneId: item.zoneId,
-                    sectorKind: item.sectorKind,
                   })
                 }
               >
