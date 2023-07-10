@@ -2,21 +2,22 @@ import {
   ActivityIndicator,
   Box,
   Button,
+  ButtonGroup,
   Ionicons,
-  ListItem,
   Pressable,
   Screen,
   ScrollView,
   Text,
 } from "@andescalada/ui";
-import { SQUARED_LIST_ITEM_SIZE } from "@andescalada/ui/Theme/listItemVariants";
 import { trpc } from "@andescalada/utils/trpc";
-import { Octicons } from "@expo/vector-icons";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
 import PhotoContestSection from "@features/climbs/UserZonesScreen/PhotoContestSection";
+import { ZoneCarouselModes } from "@features/climbs/UserZonesScreen/types";
+import UserZoneCarouselSwitch from "@features/climbs/UserZonesScreen/UserZoneCarouselSwitch";
+import ZoneCarouselSelector from "@features/climbs/UserZonesScreen/ZoneCarouselSelector";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useIsConnected from "@hooks/useIsConnected";
@@ -29,7 +30,11 @@ import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation } from "@react-navigation/native";
 import emptyArray from "@utils/emptyArray";
-import { FlatList } from "react-native";
+import { atom, useAtom } from "jotai";
+
+const selectedZoneCarouselAtom = atom<ZoneCarouselModes>(
+  ZoneCarouselModes.favorites,
+);
 
 const UserZonesScreen = () => {
   const navigation =
@@ -65,19 +70,7 @@ const UserZonesScreen = () => {
     },
   });
 
-  const removeRecentZone = trpc.user.removeRecentZone.useMutation({
-    onMutate: async ({ zoneId }) => {
-      await utils.user.zoneHistory.cancel();
-      const previousData = utils.user.zoneHistory.getData();
-      utils.user.zoneHistory.setData(undefined, (old) =>
-        old ? old.filter((z) => z.id !== zoneId) : undefined,
-      );
-      return { previousData };
-    },
-    onError: (_, __, context) => {
-      utils.user.zoneHistory.setData(undefined, context?.previousData);
-    },
-  });
+  const [zoneMode, setZoneMode] = useAtom(selectedZoneCarouselAtom);
 
   useSentryWithPermission();
 
@@ -132,7 +125,6 @@ const UserZonesScreen = () => {
             navigation.navigate(ClimbsNavigationRoutes.SearchClimbs);
           }}
           alignItems="center"
-          // marginBottom="m"
           paddingLeft="s"
           flexDirection="row"
           overflow="hidden"
@@ -163,197 +155,55 @@ const UserZonesScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <Box>
-          <Box flexDirection="row" alignItems="center">
-            <Text variant="h2" marginRight="s">
-              Zonas favoritas
-            </Text>
-            <Octicons name="heart" size={24} color={theme.colors.text} />
-          </Box>
-          {emptyArray(data?.FavoriteZones) && (
-            <Box
-              marginTop={"s"}
-              height={SQUARED_LIST_ITEM_SIZE}
-              justifyContent="center"
-            >
-              <Text>No tienes favoritas aún</Text>
-            </Box>
-          )}
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={data?.FavoriteZones}
-            renderItem={({ item, index }) => (
-              <ListItem
-                key={item.id}
-                marginVertical="s"
-                onPress={() =>
-                  navigation.navigate(ClimbsNavigationRoutes.Zone, {
-                    zoneId: item.id,
-                    zoneName: item.name,
-                  })
-                }
-                variant="squaredPrimaryA"
-                justifyContent="flex-end"
-                marginRight="xs"
-                marginLeft={index === 0 ? "none" : "xs"}
-              >
-                <Text variant="p3B" numberOfLines={3} ellipsizeMode="tail">
-                  {item.name}
-                </Text>
-              </ListItem>
-            )}
-          />
-        </Box>
-        <Box>
+          <Text variant="p1R">Zonas de escalada</Text>
           <Box
+            marginTop="s"
             flexDirection="row"
             alignItems="center"
-            marginTop="m"
             justifyContent="space-between"
           >
-            <Box flexDirection="row" alignItems="center">
-              <Text variant="h2" marginRight="s">
-                Tus zonas
-              </Text>
-              <Octicons name="person" size={24} color={theme.colors.text} />
-            </Box>
-            <Button
-              variant="transparentSimplified"
-              title={emptyArray(data?.RoleByZone) ? "Agregar zona" : "Ver más"}
-              titleVariant="p3R"
-              paddingHorizontal="s"
-              height={30}
-              onPress={() => {
-                rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
-                  screen: ZoneManagerRoutes.ZonesByRole,
-                });
-              }}
-            />
-          </Box>
-
-          {emptyArray(data?.RoleByZone) && (
-            <Box
-              marginTop={"s"}
-              height={SQUARED_LIST_ITEM_SIZE}
-              justifyContent="center"
+            <ButtonGroup
+              value={zoneMode}
+              allowUndefined={false}
+              onChange={(v) => setZoneMode(v as ZoneCarouselModes)}
             >
-              <Text>No tienes ninguna zona</Text>
-            </Box>
-          )}
-          {!emptyArray(data?.RoleByZone) && (
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={data?.RoleByZone}
-              renderItem={({ item: { Zone: item }, index }) => (
-                <ListItem
-                  key={item.id}
-                  marginVertical="s"
-                  onPress={() =>
-                    navigation.navigate(ClimbsNavigationRoutes.Zone, {
-                      zoneId: item.id,
-                      zoneName: item.name,
-                    })
-                  }
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  variant="squaredPrimaryB"
-                  marginRight="xs"
-                  marginLeft={index === 0 ? "none" : "xs"}
-                >
-                  <Text variant="p3B" numberOfLines={3} ellipsizeMode="tail">
-                    {item.name}
-                  </Text>
-                </ListItem>
+              <Box flexDirection="row" gap="s">
+                <ZoneCarouselSelector mode={ZoneCarouselModes.favorites} />
+                <ZoneCarouselSelector mode={ZoneCarouselModes.recent} />
+                <ZoneCarouselSelector mode={ZoneCarouselModes.owner} />
+              </Box>
+            </ButtonGroup>
+            {zoneMode === ZoneCarouselModes.recent &&
+              !emptyArray(recentZones.data) && (
+                <Button
+                  variant="transparentSimplified"
+                  title="Borrar todo"
+                  titleVariant="p3R"
+                  paddingHorizontal="s"
+                  height={30}
+                  onPress={() => {
+                    removeAllRecentZones.mutate();
+                  }}
+                />
               )}
-            />
-          )}
-        </Box>
-        <Box>
-          <Box
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            marginTop="m"
-          >
-            <Box flexDirection="row" alignItems="center">
-              <Text variant="h2" marginRight="s">
-                Zonas recientes
-              </Text>
-              <Octicons name="history" size={24} color={theme.colors.text} />
-            </Box>
-            {!emptyArray(recentZones.data) && (
+            {zoneMode === ZoneCarouselModes.owner && (
               <Button
                 variant="transparentSimplified"
-                title="Borrar todo"
+                title={
+                  emptyArray(data?.RoleByZone) ? "Agregar zona" : "Ver más"
+                }
                 titleVariant="p3R"
                 paddingHorizontal="s"
                 height={30}
                 onPress={() => {
-                  removeAllRecentZones.mutate();
+                  rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
+                    screen: ZoneManagerRoutes.ZonesByRole,
+                  });
                 }}
               />
             )}
           </Box>
-
-          {emptyArray(recentZones?.data) && !recentZones.isLoading && (
-            <Box
-              marginTop={"s"}
-              height={SQUARED_LIST_ITEM_SIZE}
-              justifyContent="center"
-            >
-              <Text>No hay zonas recientes</Text>
-            </Box>
-          )}
-          {recentZones.isLoading && (
-            <Box
-              marginTop={"xl"}
-              justifyContent="center"
-              alignItems="center"
-              height={SQUARED_LIST_ITEM_SIZE}
-            >
-              <ActivityIndicator size="large" />
-            </Box>
-          )}
-
-          {!emptyArray(recentZones?.data) && (
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={recentZones.data}
-              renderItem={({ item, index }) => (
-                <ListItem
-                  key={item.id}
-                  marginVertical={"s"}
-                  onPress={() =>
-                    navigation.navigate(ClimbsNavigationRoutes.Zone, {
-                      zoneId: item.id,
-                      zoneName: item.name,
-                    })
-                  }
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  variant="squared"
-                  marginRight="xs"
-                  marginLeft={index === 0 ? "none" : "xs"}
-                >
-                  <Box position="absolute" top={0} right={0} margin="xs">
-                    <Ionicons
-                      color="grayscale.white"
-                      name="close"
-                      size={20}
-                      onPress={() => {
-                        removeRecentZone.mutate({ zoneId: item.id });
-                      }}
-                    />
-                  </Box>
-                  <Text variant="p3B" numberOfLines={3} ellipsizeMode="tail">
-                    {item.name}
-                  </Text>
-                </ListItem>
-              )}
-            />
-          )}
+          <UserZoneCarouselSwitch mode={zoneMode} />
         </Box>
       </ScrollView>
     </Screen>

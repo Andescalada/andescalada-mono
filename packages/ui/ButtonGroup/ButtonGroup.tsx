@@ -3,6 +3,7 @@ import {
   createContext,
   FC,
   ReactNode,
+  useCallback,
   useContext,
 } from "react";
 
@@ -11,7 +12,7 @@ import Text from "../Text/Text";
 
 interface ButtonItemProps
   extends Omit<ComponentProps<typeof Pressable>, "backgroundColor"> {
-  label: string;
+  label: string | ReactNode;
   value: string | number | undefined;
   backgroundColor?:
     | ComponentProps<typeof Pressable>["backgroundColor"]
@@ -56,12 +57,28 @@ const ButtonItem: FC<ButtonItemProps> = ({
     return backgroundColor;
   };
 
-  const textColorHandler = () => {
+  const textColorHandler = useCallback(() => {
     if (typeof textColor === "function") {
       return textColor({ isSelected, hasSelection: value !== undefined });
     }
     return textColor;
-  };
+  }, [isSelected, textColor, value]);
+
+  const content = useCallback(
+    () =>
+      typeof label === "string" ? (
+        <Text
+          variant={isSelected ? "p2B" : "p2R"}
+          color={isSelected ? selectedTextColor : textColorHandler()}
+          {...textProps}
+        >
+          {label}
+        </Text>
+      ) : (
+        label
+      ),
+    [isSelected, label, selectedTextColor, textColorHandler, textProps],
+  );
 
   return (
     <Pressable
@@ -79,13 +96,7 @@ const ButtonItem: FC<ButtonItemProps> = ({
       borderRadius={100}
       {...props}
     >
-      <Text
-        variant={isSelected ? "p2B" : "p2R"}
-        color={isSelected ? selectedTextColor : textColorHandler()}
-        {...textProps}
-      >
-        {label}
-      </Text>
+      {content()}
     </Pressable>
   );
 };
