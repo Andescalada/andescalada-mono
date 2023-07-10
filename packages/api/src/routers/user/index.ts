@@ -491,7 +491,7 @@ export const userRouter = t.router({
             };
           });
           const topos = w.topos.flatMap((t) => {
-            imagesToDownload.push({ ...t.image, zoneId });
+            imagesToDownload.push(t.image);
 
             return {
               router: "topos" as const,
