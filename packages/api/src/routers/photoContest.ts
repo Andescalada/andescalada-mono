@@ -21,6 +21,8 @@ export const photoContestRouter = t.router({
           select: {
             id: true,
             name: true,
+            sectorKind: true,
+            zoneId: true,
             walls: {
               where: { isDeleted: SoftDelete.NotDeleted },
               select: { name: true, id: true },

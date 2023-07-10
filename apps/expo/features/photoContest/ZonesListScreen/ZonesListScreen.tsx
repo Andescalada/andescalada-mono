@@ -20,7 +20,11 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
 
   return (
     <Screen padding="m">
-      <Header title="Concurso fotográfico" showOptions={false} />
+      <Header
+        title="Concurso fotográfico"
+        showOptions={false}
+        onGoBack={navigation.goBack}
+      />
       <Box flexDirection="row" alignItems="flex-end" gap="xs">
         <Text variant="p1R">Quedan</Text>
         <Box
