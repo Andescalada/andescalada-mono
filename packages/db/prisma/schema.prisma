@@ -78,6 +78,7 @@ model User {
   RouteEvaluation            RouteEvaluation[]
   RouteGradeEvaluation       RouteGradeEvaluation[]
   AccepTermsAndConditions    AcceptTermsAndConditions[]
+  UserPhotoContestTopo       UserPhotoContestTopo[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -478,25 +479,26 @@ model Wall {
 }
 
 model Topo {
-  id               String      @id @default(uuid())
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  slug             String
-  Wall             Wall        @relation(fields: [wallId], references: [id], onDelete: Cascade)
-  wallId           String
-  position         Int         @default(0)
-  main             Boolean     @default(false)
-  name             String?
-  RoutePath        RoutePath[]
-  canvas           String?     @db.LongText
-  image            Image       @relation(fields: [imageId], references: [id])
-  imageId          String
-  Author           User        @relation("AuthorTopo", fields: [authorId], references: [id])
-  authorId         String
-  coAuthors        User[]      @relation("CoAuthorTopo")
-  isDeleted        SoftDelete  @default(NotDeleted)
-  version          Int         @default(0)
-  routeStrokeWidth Decimal     @default(1) @db.Decimal(4, 2)
+  id                   String                 @id @default(uuid())
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  slug                 String
+  Wall                 Wall                   @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  wallId               String
+  position             Int                    @default(0)
+  main                 Boolean                @default(false)
+  name                 String?
+  RoutePath            RoutePath[]
+  canvas               String?                @db.LongText
+  image                Image                  @relation(fields: [imageId], references: [id])
+  imageId              String
+  Author               User                   @relation("AuthorTopo", fields: [authorId], references: [id])
+  authorId             String
+  coAuthors            User[]                 @relation("CoAuthorTopo")
+  isDeleted            SoftDelete             @default(NotDeleted)
+  version              Int                    @default(0)
+  routeStrokeWidth     Decimal                @default(1) @db.Decimal(4, 2)
+  UserPhotoContestTopo UserPhotoContestTopo[]
 
   @@index([wallId])
   @@index([imageId])
@@ -843,4 +845,19 @@ enum EntityTypeId {
 
 enum Entity {
   Zone
+}
+
+model UserPhotoContestTopo {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Topo        Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topoId      String
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String
+  isSubmitted Boolean  @default(false)
+
+  @@unique([topoId, userId], name: "user_photo_contest_topo_unique")
+  @@index([topoId])
+  @@index([userId])
 }
