@@ -47,13 +47,15 @@ const UserZoneCarouselSwitch = ({ mode }: { mode: ZoneCarouselModes }) => {
   switch (mode) {
     case "favorites": {
       if (emptyArray(data?.FavoriteZones)) {
-        <Box
-          marginTop={"s"}
-          height={SQUARED_LIST_ITEM_SIZE}
-          justifyContent="center"
-        >
-          <Text>No tienes favoritas aún</Text>
-        </Box>;
+        return (
+          <Box
+            marginTop={"s"}
+            height={SQUARED_LIST_ITEM_SIZE}
+            justifyContent="center"
+          >
+            <Text>No tienes favoritas aún</Text>
+          </Box>
+        );
       }
       return (
         <FlatList
