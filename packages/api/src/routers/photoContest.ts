@@ -1,3 +1,4 @@
+import wall from "@andescalada/api/schemas/wall";
 import zone from "@andescalada/api/schemas/zone";
 import { t } from "@andescalada/api/src/createRouter";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
@@ -32,4 +33,40 @@ export const photoContestRouter = t.router({
       },
     });
   }),
+  userParticipatingByWall: protectedProcedure
+    .input(wall.id)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.userPhotoContestTopo.findMany({
+        where: { Topo: { wallId: input.wallId }, isSubmitted: true },
+        select: {
+          updatedAt: true,
+          User: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              profilePhoto: true,
+            },
+          },
+        },
+      });
+    }),
+  submittedToposByUser: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.userPhotoContestTopo.findMany({
+      where: { isSubmitted: true, userId: ctx.user.id },
+      select: {
+        updatedAt: true,
+        Topo: {
+          select: {
+            Wall: {
+              select: {
+                Sector: { select: { Zone: { select: { name: true } } } },
+              },
+            },
+          },
+        },
+      },
+    });
+  }),
+  // submitTopo: protectedProcedure.input(),
 });

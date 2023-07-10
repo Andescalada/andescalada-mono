@@ -8,22 +8,29 @@ import {
   Screen,
   Text,
 } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
+import UserItem from "@features/photoContest/components/UserItem";
 import {
   PhotoContestRoutes,
   PhotoContestScreenProps,
 } from "@features/photoContest/Navigation/types";
 import usePickImage from "@hooks/usePickImage";
 import { FC } from "react";
+import { FlatList } from "react-native";
 
 type Props = PhotoContestScreenProps<PhotoContestRoutes.UploadTopo>;
 
 const UploadTopoScreen: FC<Props> = ({
   route: {
-    params: { wallName },
+    params: { wallName, wallId },
   },
   navigation,
 }) => {
   const { pickImage, selectedImage } = usePickImage({ allowsEditing: false });
+
+  const { data } = trpc.photoContest.userParticipatingByWall.useQuery({
+    wallId,
+  });
 
   return (
     <Screen padding="m">
@@ -32,15 +39,15 @@ const UploadTopoScreen: FC<Props> = ({
         showOptions={false}
         onGoBack={navigation.goBack}
       />
-      <Box flex={1} marginTop="m">
+      <Box marginVertical="m">
         <Pressable
           height={250}
           borderColor={selectedImage ? "transparent" : "semantic.info"}
           borderWidth={2}
           borderRadius={10}
-          borderStyle={"dashed"}
+          borderStyle="dashed"
           justifyContent="center"
-          alignItems={"center"}
+          alignItems="center"
           overflow="hidden"
           onPress={() => pickImage(selectedImage)}
         >
@@ -57,6 +64,18 @@ const UploadTopoScreen: FC<Props> = ({
             />
           )}
         </Pressable>
+      </Box>
+      <Box flex={1}>
+        <Text variant="p1R">Usuarios que ya subieron fotos</Text>
+        <FlatList
+          data={data}
+          ListEmptyComponent={() => (
+            <Box marginTop="l">
+              <Text variant="p3R">No hay usuarios que hayan subido fotos</Text>
+            </Box>
+          )}
+          renderItem={({ item }) => <UserItem item={item.User} />}
+        />
       </Box>
       <Button variant="info" title="Enviar" marginBottom="l" />
     </Screen>
