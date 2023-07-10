@@ -6,6 +6,7 @@ import ImageManagerNavigation from "@features/imageManager/Navigation";
 import InfoAccessManagerStackNavigation from "@features/InfoAccessManager/Navigation";
 import MultiPitchManagerStackNavigation from "@features/multiPitchManager/Navigation";
 import OnboardingStackNavigation from "@features/onboarding/Navigation";
+import PhotoContestStackNavigation from "@features/photoContest/Navigation";
 import RouteManagerStackNavigation from "@features/routesManager/Navigation";
 import UserStackNavigation from "@features/user/Navigation";
 import ZoneAgreementsNavigation from "@features/zoneAgreementManager/Navigation";
@@ -106,6 +107,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.MultiPitchManager}
             component={MultiPitchManagerStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.PhotoContest}
+            component={PhotoContestStackNavigation}
           />
         </Stack.Group>
       )}

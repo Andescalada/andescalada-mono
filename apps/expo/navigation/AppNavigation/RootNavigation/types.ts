@@ -4,6 +4,7 @@ import { ImageManagerNavigationParamList } from "@features/imageManager/Navigati
 import { InfoAccessManagerNavigationParamList } from "@features/InfoAccessManager/Navigation/types";
 import { MultiPitchManagerNavigationParamList } from "@features/multiPitchManager/Navigation/types";
 import { OnboardingNavigationParamList } from "@features/onboarding/Navigation/types";
+import { PhotoContestNavigationParamList } from "@features/photoContest/Navigation/types";
 import { RoutesManagerNavigationParamList } from "@features/routesManager/Navigation/types";
 import { UserNavigationParamList } from "@features/user/Navigation/types";
 import { ZoneAgreementsNavigationParamList } from "@features/zoneAgreementManager/Navigation/types";
@@ -27,6 +28,7 @@ export enum RootNavigationRoutes {
   Error = "RootError",
   InfoAccessManager = "RootInfoAccessManager",
   MultiPitchManager = "RootMultiPitchManager",
+  PhotoContest = "RootPhotoContest",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -43,6 +45,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.Error]: NavigatorScreenParams<ErrorNavigationParamList>;
   [RootNavigationRoutes.InfoAccessManager]: NavigatorScreenParams<InfoAccessManagerNavigationParamList>;
   [RootNavigationRoutes.MultiPitchManager]: NavigatorScreenParams<MultiPitchManagerNavigationParamList>;
+  [RootNavigationRoutes.PhotoContest]: NavigatorScreenParams<PhotoContestNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =

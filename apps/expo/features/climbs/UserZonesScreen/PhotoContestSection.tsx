@@ -1,4 +1,7 @@
 import { A, Box, Text } from "@andescalada/ui";
+import { PhotoContestRoutes } from "@features/photoContest/Navigation/types";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
 import {
@@ -35,6 +38,9 @@ const PhotoContestSection = () => {
       duration: 1000,
     }),
   }));
+
+  const rootNavigation = useRootNavigation();
+
   return (
     <A.Box
       bg="brand.secondaryA"
@@ -42,7 +48,14 @@ const PhotoContestSection = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <A.Pressable style={pressableStyle}>
+      <A.Pressable
+        style={pressableStyle}
+        onPress={() =>
+          rootNavigation.navigate(RootNavigationRoutes.PhotoContest, {
+            screen: PhotoContestRoutes.ZonesList,
+          })
+        }
+      >
         <Box
           position="absolute"
           top={3}
