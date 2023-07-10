@@ -7,7 +7,7 @@ import { useAtom } from "jotai";
 type FeaturedZones = inferProcedureOutput<AppRouter["zones"]["featured"]>;
 
 const atomFeaturedZones = atomWithMMKV<FeaturedZones | undefined>(
-  Storage.RECENT_ZONES,
+  Storage.FEATURED_ZONES,
   undefined,
 );
 
