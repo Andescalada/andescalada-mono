@@ -296,6 +296,7 @@ model Zone {
   Author                   User                      @relation("AuthorZone", fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   authorId                 String
   coAuthors                User[]                    @relation("CoAuthorZone")
+  PhotoContest             PhotoContest[]
 
   @@index([locationId])
   @@index([descriptionId])
@@ -860,4 +861,13 @@ model UserPhotoContestTopo {
   @@unique([topoId, userId], name: "user_photo_contest_topo_unique")
   @@index([topoId])
   @@index([userId])
+}
+
+model PhotoContest {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  starting  DateTime
+  ending    DateTime
+  Zones     Zone[]
 }

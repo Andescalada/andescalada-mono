@@ -2,6 +2,7 @@ import { agreementsRouter } from "@andescalada/api/src/routers/agreements";
 import { imagesRouter } from "@andescalada/api/src/routers/images";
 import { multiPitchRouter } from "@andescalada/api/src/routers/multiPitch";
 import { notificationsRouter } from "@andescalada/api/src/routers/notifications";
+import { photoContestRouter } from "@andescalada/api/src/routers/photoContest";
 import { routesRouter } from "@andescalada/api/src/routers/routes";
 import { searchRouter } from "@andescalada/api/src/routers/search";
 import { sectorsRouter } from "@andescalada/api/src/routers/sectors";
@@ -34,6 +35,7 @@ export const appRouter = t.router({
   system: systemRouter,
   sync: syncRouter,
   public: publicRouter,
+  photoContest: photoContestRouter,
 });
 
 export type AppRouter = typeof appRouter;
