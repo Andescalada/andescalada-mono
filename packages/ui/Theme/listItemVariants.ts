@@ -57,6 +57,13 @@ const listItemVariants = createBoxVariant({
     borderColor: "brand.primaryB",
     backgroundColor: "brand.primaryB",
   },
+  squaredFilled: {
+    height: SQUARED_LIST_ITEM_SIZE,
+    width: SQUARED_LIST_ITEM_SIZE,
+    borderRadius: 16,
+    borderColor: "transparent",
+    backgroundColor: "listItemBackground",
+  },
 });
 
 export default listItemVariants;
