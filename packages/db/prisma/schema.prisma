@@ -272,6 +272,9 @@ model Zone {
   createdAt                DateTime                  @default(now())
   updatedAt                DateTime                  @updatedAt
   infoAccess               InfoAccess                @default(Public)
+  featured                 Boolean                   @default(false)
+  coverPhoto               Image?                    @relation(name: "ZoneCoverPhoto", fields: [coverPhotoId], references: [id])
+  coverPhotoId             String?
   sectors                  Sector[]
   photos                   Image[]
   RoleByZone               RoleByZone[]
@@ -296,6 +299,7 @@ model Zone {
   @@index([locationId])
   @@index([descriptionId])
   @@index([authorId])
+  @@index([coverPhotoId])
 }
 
 model ZoneStatus {
@@ -695,11 +699,9 @@ model Image {
   format         String?
   Topo           Topo[]
   User           User[]
-  Zone           Zone?          @relation(fields: [zoneId], references: [id])
-  zoneId         String?
+  Zone           Zone[]
   isDeleted      SoftDelete     @default(NotDeleted)
-
-  @@index([zoneId])
+  ZoneCoverPhoto Zone[]         @relation(name: "ZoneCoverPhoto")
 }
 
 enum InfoAccess {
