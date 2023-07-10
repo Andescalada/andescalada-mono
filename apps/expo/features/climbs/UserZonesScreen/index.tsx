@@ -31,6 +31,7 @@ import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation } from "@react-navigation/native";
 import emptyArray from "@utils/emptyArray";
+import featureFlags from "@utils/featureFlags";
 import { atom, useAtom } from "jotai";
 import { FlatList } from "react-native";
 
@@ -123,7 +124,7 @@ const UserZonesScreen = () => {
     );
   return (
     <Screen paddingBottom="none" safeAreaDisabled>
-      {false && <PhotoContestSection />}
+      {featureFlags.photoContest && <PhotoContestSection />}
       <Box flexDirection="row" width="100%" padding="m" paddingBottom="none">
         <Pressable
           borderRadius={4}
