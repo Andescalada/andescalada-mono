@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Image,
   Ionicons,
   Pressable,
   Screen,
@@ -19,7 +20,7 @@ import { ZoneCarouselModes } from "@features/climbs/UserZonesScreen/types";
 import UserZoneCarouselSwitch from "@features/climbs/UserZonesScreen/UserZoneCarouselSwitch";
 import ZoneCarouselSelector from "@features/climbs/UserZonesScreen/ZoneCarouselSelector";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
-import { useAppTheme } from "@hooks/useAppTheme";
+import useFeaturedZones from "@hooks/useFeaturedZones";
 import useIsConnected from "@hooks/useIsConnected";
 import useOfflineMode from "@hooks/useOfflineMode";
 import useOwnInfo from "@hooks/useOwnInfo";
@@ -31,10 +32,19 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { useNavigation } from "@react-navigation/native";
 import emptyArray from "@utils/emptyArray";
 import { atom, useAtom } from "jotai";
+import { FlatList } from "react-native";
 
 const selectedZoneCarouselAtom = atom<ZoneCarouselModes>(
   ZoneCarouselModes.favorites,
 );
+
+const coverPhoto = (zoneName: string) => {
+  if (zoneName === "Pared Burgos")
+    return "https://res.cloudinary.com/fundacion-andescalada/image/upload/v1689000239/andescalada.org/cover-pared-burgos_ipxuim.jpg";
+  if (zoneName === "Muralla china")
+    return "https://res.cloudinary.com/fundacion-andescalada/image/upload/v1689000238/andescalada.org/cover-muralla-china_gkgzma.jpg";
+  return "";
+};
 
 const UserZonesScreen = () => {
   const navigation =
@@ -48,13 +58,12 @@ const UserZonesScreen = () => {
 
   const rootNavigation = useRootNavigation();
 
-  const theme = useAppTheme();
-
   const utils = trpc.useContext();
 
   const { activateOfflineMode } = useOfflineMode();
 
   const recentZones = useRecentZones();
+  const featuredZones = useFeaturedZones();
 
   const removeAllRecentZones = trpc.user.removeAllRecentZones.useMutation({
     onMutate: async () => {
@@ -114,8 +123,8 @@ const UserZonesScreen = () => {
     );
   return (
     <Screen paddingBottom="none" safeAreaDisabled>
-      <PhotoContestSection />
-      <Box flexDirection="row" width="100%" padding="m">
+      {false && <PhotoContestSection />}
+      <Box flexDirection="row" width="100%" padding="m" paddingBottom="none">
         <Pressable
           borderRadius={4}
           flex={2}
@@ -147,13 +156,47 @@ const UserZonesScreen = () => {
           }}
         />
       </Box>
-
       <ScrollView
         paddingTop="s"
         paddingHorizontal="m"
         refreshControl={refresh}
         showsVerticalScrollIndicator={false}
       >
+        <Box marginBottom="s">
+          <Text variant="p1R" marginBottom="s">
+            Zonas destacadas
+          </Text>
+          <FlatList
+            horizontal
+            data={featuredZones.data}
+            renderItem={({ item }) => (
+              <Pressable
+                onPress={() =>
+                  rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+                    screen: ClimbsNavigationRoutes.Zone,
+                    params: { zoneId: item.id, zoneName: item.name },
+                  })
+                }
+                width={120}
+                height={150}
+                bg="grayscale.800"
+                marginHorizontal="xs"
+                borderRadius={16}
+                overflow="hidden"
+              >
+                <Image
+                  cachePolicy="memory"
+                  source={coverPhoto(item.name)}
+                  width={120}
+                  height={100}
+                />
+                <Box flex={1} justifyContent="center" margin="s">
+                  <Text variant="p3B">{item.name}</Text>
+                </Box>
+              </Pressable>
+            )}
+          />
+        </Box>
         <Box>
           <Text variant="p1R">Zonas de escalada</Text>
           <Box
@@ -169,8 +212,8 @@ const UserZonesScreen = () => {
             >
               <Box flexDirection="row" gap="s">
                 <ZoneCarouselSelector mode={ZoneCarouselModes.favorites} />
-                <ZoneCarouselSelector mode={ZoneCarouselModes.recent} />
                 <ZoneCarouselSelector mode={ZoneCarouselModes.owner} />
+                <ZoneCarouselSelector mode={ZoneCarouselModes.recent} />
               </Box>
             </ButtonGroup>
             {zoneMode === ZoneCarouselModes.recent &&
