@@ -9,7 +9,13 @@ export interface SelectedImage {
   asset: ImagePicker.ImagePickerAsset;
 }
 
-type Args = ImagePicker.ImagePickerOptions;
+type Args = ImagePicker.ImagePickerOptions & {
+  onSuccess?: (selectedImage: {
+    localUri: string;
+    base64Img: string;
+    asset: ImagePicker.ImagePickerAsset;
+  }) => void;
+};
 
 export type PickImage = ReturnType<typeof usePickImage>["pickImage"];
 
@@ -35,6 +41,13 @@ const usePickImage = (args?: Args) => {
       }
 
       const base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
+
+      if (args?.onSuccess)
+        args.onSuccess({
+          localUri: result.assets[0].uri,
+          base64Img,
+          asset: result.assets[0],
+        });
 
       setSelectedImage({
         localUri: result.assets[0].uri,
@@ -63,6 +76,13 @@ const usePickImage = (args?: Args) => {
         const base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
         if (result.assets) {
+          if (args?.onSuccess)
+            args.onSuccess({
+              localUri: result.assets[0].uri,
+              base64Img,
+              asset: result.assets[0],
+            });
+
           setSelectedImage({
             localUri: result.assets[0]?.uri,
             base64Img,
