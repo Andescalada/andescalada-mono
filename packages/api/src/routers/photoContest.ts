@@ -27,9 +27,34 @@ export const photoContestRouter = t.router({
             name: true,
             sectorKind: true,
             zoneId: true,
+            _count: {
+              select: {
+                walls: {
+                  where: {
+                    topos: {
+                      some: {
+                        UserPhotoContestTopo: { some: { isSubmitted: true } },
+                      },
+                    },
+                  },
+                },
+              },
+            },
             walls: {
               where: { isDeleted: SoftDelete.NotDeleted },
-              select: { name: true, id: true },
+              select: {
+                name: true,
+                id: true,
+                _count: {
+                  select: {
+                    topos: {
+                      where: {
+                        UserPhotoContestTopo: { some: { isSubmitted: true } },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },

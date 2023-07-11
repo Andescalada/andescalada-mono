@@ -1,5 +1,5 @@
 import { SectorKindSchema } from "@andescalada/db/zod";
-import { A, Box, ListItem, SubItem, Text } from "@andescalada/ui";
+import { A, Box, Ionicons, ListItem, SubItem, Text } from "@andescalada/ui";
 import { toggleWalls } from "@features/climbs/ZoneScreen/ToolBar";
 import {
   PhotoContestNavigationProps,
@@ -17,11 +17,12 @@ const SUBITEM_HEIGHT = 50;
 
 interface Props {
   item: {
-    walls: { id: string; name: string }[];
+    walls: { id: string; name: string; _count: { topos: number } }[];
     name: string;
     id: string;
     zoneId: string;
     sectorKind: typeof SectorKindSchema._type;
+    _count: { walls: number };
   };
 }
 
@@ -51,6 +52,23 @@ const ZoneItem: FC<Props> = ({ item }) => {
       >
         <Box justifyContent="center" flex={1} padding="m">
           <Text variant="p1R">{item.name}</Text>
+        </Box>
+        <Box
+          flexDirection="row"
+          bg={item._count.walls > 0 ? "semantic.info" : "grayscale.700"}
+          alignItems="center"
+          justifyContent="center"
+          gap="xs"
+          width={45}
+          height={40}
+          borderRadius={8}
+          alignSelf="center"
+          marginRight="s"
+        >
+          <Text fontSize={14} lineHeight={20}>
+            {item._count.walls}
+          </Text>
+          <Ionicons name="people-circle-outline" size={20} />
         </Box>
       </ListItem>
       <A.Box style={style} overflow="hidden">

@@ -34,7 +34,11 @@ const UploadTopoScreen: FC<Props> = ({
 
   const utils = trpc.useContext();
 
-  const uploadImageSubmission = trpc.photoContest.uploadImageTopo.useMutation();
+  const uploadImageSubmission = trpc.photoContest.uploadImageTopo.useMutation({
+    onSuccess: () => {
+      utils.photoContest.invalidate();
+    },
+  });
   const submitTopo = trpc.photoContest.submitTopo.useMutation({
     onSuccess: () => {
       utils.photoContest.invalidate();
