@@ -81,4 +81,18 @@ export const deleteImage = async (uniqueId: string) => {
   }
 };
 
-export default { storeImage, deleteImage };
+const storeImageFromBase64 = async ({
+  name,
+  imageBase64,
+}: {
+  name: string;
+  imageBase64: string;
+}) => {
+  const cacheFileUri = cacheImageFileUri(name);
+  await FileSystem.writeAsStringAsync(cacheFileUri, imageBase64, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  return cacheFileUri;
+};
+
+export default { storeImage, deleteImage, storeImageFromBase64 };

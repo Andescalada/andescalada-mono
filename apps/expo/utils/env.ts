@@ -19,6 +19,7 @@ const Env = {
   MAPBOX_ACCESS_TOKEN: (__DEV__
     ? process.env.MAPBOX_ACCESS_TOKEN_DEV
     : Constants?.expoConfig?.extra?.MAPBOX_ACCESS_TOKEN) as string,
+  FACEBOOK_DEV_APP_ID: "298064316084448",
 };
 
 export default Env;

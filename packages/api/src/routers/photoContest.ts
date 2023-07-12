@@ -179,6 +179,16 @@ export const photoContestRouter = t.router({
           Topo: { wallId: input.wallId },
           userId: ctx.user.id,
         },
+        include: {
+          Topo: { select: { image: true, Wall: { select: { name: true } } } },
+        },
+      });
+    }),
+  getUserTopoSubmissionById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.userPhotoContestTopo.findFirst({
+        where: { id: input.id },
         include: { Topo: { select: { image: true } } },
       });
     }),

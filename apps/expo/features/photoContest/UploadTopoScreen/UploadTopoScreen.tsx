@@ -146,7 +146,7 @@ const UploadTopoScreen: FC<Props> = ({
               return;
             }
             navigation.navigate(PhotoContestRoutes.Share, {
-              photoContestTopoId: submission.data?.id,
+              wallId,
               zoneId,
             });
           }}

@@ -24,7 +24,7 @@ export type PhotoContestNavigationParamList = {
     zoneId: string;
   };
   [PhotoContestRoutes.Share]: {
-    photoContestTopoId: string;
+    wallId: string;
     zoneId: string;
   };
 };

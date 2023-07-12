@@ -32,7 +32,9 @@
         "LSApplicationQueriesSchemes": [
           "uber",
           "comgooglemaps",
-          "waze"
+          "waze",
+          "instagram",
+          "instagram-stories"
         ],
         "UIBackgroundModes": [
           "location",
