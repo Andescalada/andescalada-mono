@@ -24,7 +24,7 @@ type Props = PhotoContestScreenProps<PhotoContestRoutes.UploadTopo>;
 
 const UploadTopoScreen: FC<Props> = ({
   route: {
-    params: { wallName, wallId },
+    params: { wallName, wallId, zoneId },
   },
   navigation,
 }) => {
@@ -114,6 +114,30 @@ const UploadTopoScreen: FC<Props> = ({
             <Image source={{ uri: imageToDisplay }} height={250} width="100%" />
           )}
         </Pressable>
+      </Box>
+      <Box flexDirection="row" gap="s" height={30} marginVertical="s">
+        <Button
+          variant="transparentSimplified"
+          title="Rutas"
+          titleVariant="p2R"
+          flex={1}
+          onPress={() =>
+            navigation.navigate(PhotoContestRoutes.RouteList, {
+              wallId,
+              wallName,
+              zoneId,
+            })
+          }
+        />
+        <Button
+          variant="transparentSimplified"
+          title="Compartir"
+          icon="share-outline"
+          flex={1}
+          iconProps={{ size: 18 }}
+          gap="xs"
+          titleVariant="p2R"
+        />
       </Box>
       <Box flex={1}>
         <Text variant="p1R">Usuarios participando</Text>
