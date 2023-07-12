@@ -1,12 +1,13 @@
 import {
   Box,
   Header,
-  ListItem,
+  Ionicons,
   Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import UserItem from "@features/photoContest/components/UserItem";
 import {
   PhotoContestRoutes,
   PhotoContestScreenProps,
@@ -15,10 +16,8 @@ import { useAppTheme } from "@hooks/useAppTheme";
 import {
   Box as SkiaBox,
   Canvas,
-  Circle,
   LinearGradient,
   rect,
-  rrect,
   vec,
 } from "@shopify/react-native-skia";
 import { FC } from "react";
@@ -28,6 +27,8 @@ type Props = PhotoContestScreenProps<PhotoContestRoutes.ZonesList>;
 const SIZE = 100;
 const today = new Date();
 const ZoneListScreen: FC<Props> = ({ navigation }) => {
+  const users = trpc.photoContest.usersParticipating.useQuery();
+
   const { data, isLoading } = trpc.photoContest.getCurrentContest.useQuery();
   const theme = useAppTheme();
 
@@ -58,12 +59,14 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
         </Box>
         <Text variant="p1R">días</Text>
       </Box>
-
-      <Box flex={1}>
-        <Text variant="h1">Zonas</Text>
+      <Box gap="m" marginBottom="m">
+        <Box borderBottomColor="brand.secondaryA" borderBottomWidth={2}>
+          <Text variant="h3">Zonas</Text>
+        </Box>
         <FlatList
           data={data?.Zones}
           horizontal
+          scrollEnabled={false}
           renderItem={({ item }) => (
             <Pressable
               height={100}
@@ -100,6 +103,43 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
           )}
         />
       </Box>
+      <FlatList
+        data={users.data}
+        ListHeaderComponent={() => (
+          <Box
+            marginVertical="s"
+            borderBottomColor="brand.secondaryA"
+            borderBottomWidth={2}
+          >
+            <Text variant="h3">Usuarios participando</Text>
+          </Box>
+        )}
+        ListEmptyComponent={() => (
+          <Box marginTop="l">
+            <Text variant="p3R">
+              No hay usuarios participando por esta pared todavía
+            </Text>
+          </Box>
+        )}
+        renderItem={({ item }) => (
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            flex={1}
+            borderBottomColor="grayscale.400"
+            borderBottomWidth={1}
+          >
+            <UserItem item={item} />
+            <Box flexDirection="row" alignItems="center" gap="s">
+              <Text lineHeight={20} fontSize={19}>
+                {item.submissionsCount}
+              </Text>
+              <Ionicons name="images-outline" size={20} />
+            </Box>
+          </Box>
+        )}
+      />
     </Screen>
   );
 };

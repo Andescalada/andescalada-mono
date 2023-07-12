@@ -191,4 +191,40 @@ export const photoContestRouter = t.router({
       });
       return isSubmitted;
     }),
+  usersParticipating: protectedProcedure.query(async ({ ctx }) => {
+    const users = await ctx.prisma.userPhotoContestTopo.groupBy({
+      by: ["userId"],
+      where: { isSubmitted: true },
+      _count: { isSubmitted: true },
+      _max: { updatedAt: true },
+    });
+
+    if (!users.length) return [];
+
+    const userInfo = await ctx.prisma.user.findMany({
+      where: {
+        id: { in: users.map((user) => user.userId) },
+      },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        profilePhoto: true,
+      },
+    });
+
+    const usersWithInfo = userInfo
+      .map((user) => {
+        const submissions = users.find((u) => u.userId === user.id);
+        if (!submissions) throw new Error("Submissions not found");
+        return {
+          ...user,
+          submissionsCount: submissions?._count.isSubmitted,
+          latestSubmission: submissions?._max.updatedAt,
+        };
+      })
+      .sort((a, b) => b.submissionsCount - a.submissionsCount);
+
+    return usersWithInfo;
+  }),
 });
