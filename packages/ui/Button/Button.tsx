@@ -7,6 +7,8 @@ import {
 import { ComponentProps, FC } from "react";
 
 import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
+import Box from "../Box/Box";
+import Ionicons, { IoniconsNames } from "../Ionicons/Ionicons";
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
 import { Colors, Theme } from "../Theme/theme";
@@ -19,6 +21,9 @@ interface Props extends RestyleProps {
   title: string;
   titleVariant?: ComponentProps<typeof Text>["variant"];
   titleProps?: Omit<ComponentProps<typeof Text>, "variant">;
+  icon?: IoniconsNames;
+  iconProps?: Omit<ComponentProps<typeof Ionicons>, "name">;
+  iconContainerProps?: ComponentProps<typeof Box>;
 }
 
 const buttonVariant = createVariant<Theme, "buttonVariants">({
@@ -34,11 +39,14 @@ const Button: FC<Props> = ({
   titleVariant = "button",
   titleProps,
   variant,
+  icon,
+  iconProps,
+  iconContainerProps,
   ...rest
 }) => {
   const props = useRestyle(restyleFunction, { variant, ...rest });
   return (
-    <Pressable {...props}>
+    <Pressable {...props} flexDirection="row">
       {isLoading ? (
         <ActivityIndicator color={`${variant}ButtonText` as Colors} />
       ) : (
@@ -49,6 +57,15 @@ const Button: FC<Props> = ({
         >
           {title}
         </Text>
+      )}
+      {icon && (
+        <Box {...iconContainerProps}>
+          <Ionicons
+            name={icon}
+            color={`${variant}ButtonText` as Colors}
+            {...iconProps}
+          />
+        </Box>
       )}
     </Pressable>
   );
