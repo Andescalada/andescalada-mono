@@ -58,6 +58,10 @@ const parsedWall = async ({
             where: { isDeleted: SoftDelete.NotDeleted },
             select: Route,
           },
+          Variant: {
+            where: { isDeleted: SoftDelete.NotDeleted },
+            select: Route,
+          },
         },
       },
       MultiPitch: {

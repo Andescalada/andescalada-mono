@@ -7,24 +7,30 @@ import { useCallback } from "react";
 
 type Wall = inferProcedureOutput<AppRouter["walls"]["routeList"]>;
 
-type ParsedExtension = Wall["routes"][0]["Extension"][0] & {
+type ParsedChildrenRoute = Wall["routes"][0]["Extension"][0] & {
   kindStringify: string;
   gradeStringify: string;
 };
 
-const useRouteList = ({
-  wallId,
-  zoneId,
-}: {
-  wallId: string;
-  zoneId: string;
-}) => {
+const useRouteList = (
+  {
+    wallId,
+    zoneId,
+  }: {
+    wallId: string;
+    zoneId: string;
+  },
+  { staleTime, cacheTime }: { staleTime?: number; cacheTime?: number } = {
+    staleTime: 0,
+    cacheTime: 0,
+  },
+) => {
   const { gradeLabel } = useGradeSystem();
   const wallQuery = trpc.walls.routeList.useQuery(
     { wallId, zoneId },
     {
-      staleTime: 0,
-      cacheTime: 0,
+      staleTime,
+      cacheTime,
       select: useCallback(
         (wall: Wall) => {
           const multiPitch = wall.MultiPitch.map((multiPitch) => ({
@@ -44,9 +50,9 @@ const useRouteList = ({
               multiPitch.gradeRouteKind,
             ),
             isMultiPitch: true,
-            Extension: [] as ParsedExtension[],
+            ChildrenRoutes: [] as ParsedChildrenRoute[],
           }));
-          const routesWithRef = wall.routes.map((route) => ({
+          const routesWithChildren = wall.routes.map((route) => ({
             ...route,
             isMultiPitch: false,
             kindStringify: routeKindLabel(route.kind).long,
@@ -58,22 +64,24 @@ const useRouteList = ({
               route.kind,
               route.RouteGrade?.originalGradeSystem,
             ),
-            Extension: route.Extension.map((extension) => ({
-              ...extension,
-              kindStringify: routeKindLabel(extension.kind).long,
-              gradeStringify: gradeLabel(
-                {
-                  grade: extension.RouteGrade?.grade ?? null,
-                  project: !!extension.RouteGrade?.project,
-                },
-                extension.kind,
-                extension.RouteGrade?.originalGradeSystem,
-              ),
-            })),
+            ChildrenRoutes: [...route.Extension, ...route.Variant].map(
+              (childrenRoute) => ({
+                ...childrenRoute,
+                kindStringify: routeKindLabel(childrenRoute.kind).long,
+                gradeStringify: gradeLabel(
+                  {
+                    grade: childrenRoute.RouteGrade?.grade ?? null,
+                    project: !!childrenRoute.RouteGrade?.project,
+                  },
+                  childrenRoute.kind,
+                  childrenRoute.RouteGrade?.originalGradeSystem,
+                ),
+              }),
+            ),
           }));
           return {
             ...wall,
-            routes: [...routesWithRef, ...multiPitch].sort(
+            routes: [...routesWithChildren, ...multiPitch].sort(
               (a, b) => a.position - b.position,
             ),
           };
