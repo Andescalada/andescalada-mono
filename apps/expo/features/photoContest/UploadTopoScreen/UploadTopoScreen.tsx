@@ -17,6 +17,7 @@ import {
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import usePickImage from "@hooks/usePickImage";
+import { set } from "immer/dist/internal";
 import { FC, useEffect, useState } from "react";
 import { Alert, FlatList } from "react-native";
 
@@ -34,6 +35,8 @@ const UploadTopoScreen: FC<Props> = ({
 
   const utils = trpc.useContext();
 
+  const [loadingUpload, setLoadingUpload] = useState(false);
+
   const uploadImageSubmission = trpc.photoContest.uploadImageTopo.useMutation({
     onSuccess: () => {
       utils.photoContest.invalidate();
@@ -49,13 +52,19 @@ const UploadTopoScreen: FC<Props> = ({
     allowsEditing: false,
     onSuccess: async (imageToUpload) => {
       setImageToDisplay(imageToUpload.localUri);
-      const image = await uploadImage(imageToUpload.base64Img);
-      uploadImageSubmission.mutate({
-        image,
-        wallId,
-        userPhotoContestTopoId: submission.data?.id,
-        wallName,
-      });
+      setLoadingUpload(true);
+      try {
+        const image = await uploadImage(imageToUpload.base64Img);
+        await uploadImageSubmission.mutateAsync({
+          image,
+          wallId,
+          userPhotoContestTopoId: submission.data?.id,
+          wallName,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      setLoadingUpload(false);
     },
   });
 
@@ -125,7 +134,8 @@ const UploadTopoScreen: FC<Props> = ({
         variant={submission.data?.isSubmitted ? "transparent" : "info"}
         title={submission.data?.isSubmitted ? "Enviada" : "Enviar"}
         marginBottom="l"
-        isLoading={submitTopo.isLoading}
+        disabled={submitTopo.isLoading || loadingUpload}
+        isLoading={submitTopo.isLoading || loadingUpload}
         onPress={() => {
           if (!submission.data?.id) {
             Alert.alert(
