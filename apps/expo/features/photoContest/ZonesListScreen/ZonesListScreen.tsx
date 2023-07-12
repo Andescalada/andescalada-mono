@@ -1,19 +1,38 @@
-import { Box, Header, ListItem, Screen, Text } from "@andescalada/ui";
+import {
+  Box,
+  Header,
+  ListItem,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   PhotoContestRoutes,
   PhotoContestScreenProps,
 } from "@features/photoContest/Navigation/types";
+import { useAppTheme } from "@hooks/useAppTheme";
+import {
+  Box as SkiaBox,
+  Canvas,
+  Circle,
+  LinearGradient,
+  rect,
+  rrect,
+  vec,
+} from "@shopify/react-native-skia";
 import { FC } from "react";
 import { FlatList } from "react-native";
 
 type Props = PhotoContestScreenProps<PhotoContestRoutes.ZonesList>;
-
+const SIZE = 100;
+const today = new Date();
 const ZoneListScreen: FC<Props> = ({ navigation }) => {
   const { data, isLoading } = trpc.photoContest.getCurrentContest.useQuery();
+  const theme = useAppTheme();
 
   const daysLeft = data
-    ? (data?.ending?.getTime() - data?.starting?.getTime()) / (1000 * 3600 * 24)
+    ? (data?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24)
     : 0;
 
   if (isLoading) return null;
@@ -41,12 +60,19 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
       </Box>
 
       <Box flex={1}>
+        <Text variant="h1">Zonas</Text>
         <FlatList
           data={data?.Zones}
+          horizontal
           renderItem={({ item }) => (
-            <ListItem
-              variant="fill"
-              marginVertical="s"
+            <Pressable
+              height={100}
+              width={100}
+              justifyContent="center"
+              padding="s"
+              borderRadius={16}
+              overflow="hidden"
+              marginRight="s"
               onPress={() => {
                 navigation.navigate(PhotoContestRoutes.Zone, {
                   zoneId: item.id,
@@ -54,8 +80,23 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
                 });
               }}
             >
-              <Text variant="p2R">{item.name}</Text>
-            </ListItem>
+              <Box position="absolute" top={0} bottom={0} left={0} right={0}>
+                <Canvas
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <SkiaBox box={rect(0, 0, 100, 100)}>
+                    <LinearGradient
+                      start={vec(0, 0)}
+                      end={vec(SIZE, SIZE)}
+                      colors={[theme.colors.gradientB, theme.colors.gradientA]}
+                    />
+                  </SkiaBox>
+                </Canvas>
+              </Box>
+              <Text variant="p3B">{item.name}</Text>
+            </Pressable>
           )}
         />
       </Box>
