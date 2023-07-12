@@ -17,7 +17,6 @@ import {
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import usePickImage from "@hooks/usePickImage";
-import { set } from "immer/dist/internal";
 import { FC, useEffect, useState } from "react";
 import { Alert, FlatList } from "react-native";
 
@@ -62,7 +61,7 @@ const UploadTopoScreen: FC<Props> = ({
           wallName,
         });
       } catch (error) {
-        console.log(error);
+        Alert.alert("No pudimos subir la foto", "Inténtalo de nuevo");
       }
       setLoadingUpload(false);
     },
