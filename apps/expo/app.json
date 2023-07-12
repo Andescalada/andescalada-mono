@@ -34,7 +34,8 @@
           "comgooglemaps",
           "waze",
           "instagram",
-          "instagram-stories"
+          "instagram-stories",
+          "whatsapp"
         ],
         "UIBackgroundModes": [
           "location",
