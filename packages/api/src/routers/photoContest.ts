@@ -16,8 +16,8 @@ export const photoContestRouter = t.router({
       include: { Zones: { select: { name: true, id: true } } },
     });
   }),
-  getZone: protectedProcedure.input(zone.id).query(({ ctx, input }) => {
-    return ctx.prisma.zone.findUnique({
+  getZone: protectedProcedure.input(zone.id).query(async ({ ctx, input }) => {
+    const zones = await ctx.prisma.zone.findUniqueOrThrow({
       where: { id: input.zoneId },
       select: {
         sectors: {
@@ -45,6 +45,16 @@ export const photoContestRouter = t.router({
               select: {
                 name: true,
                 id: true,
+                topos: {
+                  where: {
+                    UserPhotoContestTopo: {
+                      every: { userId: ctx.user.id, isSubmitted: true },
+                    },
+                  },
+                  select: {
+                    _count: { select: { UserPhotoContestTopo: true } },
+                  },
+                },
                 _count: {
                   select: {
                     topos: {
@@ -60,6 +70,36 @@ export const photoContestRouter = t.router({
         },
       },
     });
+
+    const sectorsWithCompletion = zones.sectors.map((sector) => {
+      const numberWalls = sector.walls.length;
+
+      const numberOfToposSubmitted = sector.walls.reduce(
+        (acc, wall) => acc + wall._count.topos,
+        0,
+      );
+
+      const numberOfSubmittedToposByUser = sector.walls.reduce(
+        (acc, wall) =>
+          acc + (wall.topos.at(0)?._count?.UserPhotoContestTopo || 0),
+        0,
+      );
+      const completion = (numberOfSubmittedToposByUser / numberWalls) * 100;
+      const walls = sector.walls.map((wall) => {
+        const hasSubmitted = !!wall.topos.at(0);
+        return { ...wall, hasSubmitted };
+      });
+      return {
+        ...sector,
+        walls,
+        completion,
+        numberOfToposSubmitted,
+      };
+    });
+    return {
+      ...zones,
+      sectors: sectorsWithCompletion,
+    };
   }),
   userParticipatingByWall: protectedProcedure
     .input(wall.id)

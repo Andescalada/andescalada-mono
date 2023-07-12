@@ -17,16 +17,23 @@ const SUBITEM_HEIGHT = 50;
 
 interface Props {
   item: {
-    walls: { id: string; name: string; _count: { topos: number } }[];
+    walls: {
+      id: string;
+      name: string;
+      _count: { topos: number };
+      hasSubmitted: boolean;
+    }[];
+    completion: number;
     name: string;
     id: string;
     zoneId: string;
     sectorKind: typeof SectorKindSchema._type;
     _count: { walls: number };
+    numberOfToposSubmitted: number;
   };
 }
 
-const ZoneItem: FC<Props> = ({ item }) => {
+const SectorItem: FC<Props> = ({ item }) => {
   const [defaultOpen] = useAtom(toggleWalls);
   const wallCount = useMemo(() => item.walls.length, [item.walls.length]);
 
@@ -54,21 +61,44 @@ const ZoneItem: FC<Props> = ({ item }) => {
           <Text variant="p1R">{item.name}</Text>
         </Box>
         <Box
-          flexDirection="row"
-          bg={item._count.walls > 0 ? "semantic.info" : "grayscale.700"}
-          alignItems="center"
-          justifyContent="center"
-          gap="xs"
-          width={45}
-          height={40}
-          borderRadius={8}
           alignSelf="center"
-          marginRight="s"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems={"center"}
         >
-          <Text fontSize={14} lineHeight={20}>
-            {item._count.walls}
-          </Text>
-          <Ionicons name="people-circle-outline" size={20} />
+          {item.completion === 100 ? (
+            <Box marginRight={"s"}>
+              <Ionicons
+                name="checkmark-circle"
+                color="semantic.success"
+                size={20}
+              />
+            </Box>
+          ) : (
+            <Box visible={item.completion > 0} marginRight={"s"}>
+              <Ionicons
+                name="checkmark-circle"
+                color="grayscale.500"
+                size={20}
+              />
+            </Box>
+          )}
+          <Box
+            flexDirection="row"
+            bg={item._count.walls > 0 ? "semantic.info" : "grayscale.700"}
+            alignItems="center"
+            justifyContent="center"
+            gap="xs"
+            width={45}
+            height={40}
+            borderRadius={8}
+            marginRight="s"
+          >
+            <Text fontSize={14} lineHeight={20}>
+              {item.numberOfToposSubmitted}
+            </Text>
+            <Ionicons name="people-circle-outline" size={20} />
+          </Box>
         </Box>
       </ListItem>
       <A.Box style={style} overflow="hidden">
@@ -88,7 +118,27 @@ const ZoneItem: FC<Props> = ({ item }) => {
                   })
                 }
               >
-                <Text variant="p2R">{wall.name}</Text>
+                <Box
+                  flex={1}
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Text variant="p2R">{wall.name}</Text>
+                  <Box flexDirection="row" gap="s">
+                    {wall.hasSubmitted && (
+                      <Ionicons
+                        name="checkmark-outline"
+                        color="semantic.success"
+                        size={20}
+                      />
+                    )}
+                    <Box flexDirection="row" alignItems="center" gap="xs">
+                      <Text lineHeight={20}>{wall._count.topos}</Text>
+                      <Ionicons name="people-circle-outline" size={20} />
+                    </Box>
+                  </Box>
+                </Box>
               </SubItem>
             ))
           ) : (
@@ -104,7 +154,7 @@ const ZoneItem: FC<Props> = ({ item }) => {
   );
 };
 
-export default memo(ZoneItem);
+export default memo(SectorItem);
 
 const s = StyleSheet.create({
   noPadding: { padding: 0 },

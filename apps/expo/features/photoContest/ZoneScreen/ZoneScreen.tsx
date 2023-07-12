@@ -1,6 +1,6 @@
 import { Box, Header, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import ZoneItem from "@features/photoContest/components/ZoneItem";
+import SectorItem from "@features/photoContest/components/SectorItem";
 import {
   PhotoContestRoutes,
   PhotoContestScreenProps,
@@ -30,7 +30,7 @@ const ZoneScreen: FC<Props> = ({
       <Box flex={1} marginTop="s">
         <FlatList
           data={data?.sectors}
-          renderItem={({ item }) => <ZoneItem item={item} />}
+          renderItem={({ item }) => <SectorItem item={item} />}
         />
       </Box>
     </Screen>
