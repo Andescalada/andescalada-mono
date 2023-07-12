@@ -1,4 +1,5 @@
 import RouteListScreen from "@features/photoContest/RouteListScreen";
+import ShareScreen from "@features/photoContest/ShareScreen";
 import UploadTopoScreen from "@features/photoContest/UploadTopoScreen";
 import ZoneScreen from "@features/photoContest/ZoneScreen";
 import ZonesListScreen from "@features/photoContest/ZonesListScreen";
@@ -24,6 +25,7 @@ const Navigator = () => {
         component={RouteListScreen}
         name={PhotoContestRoutes.RouteList}
       />
+      <Stack.Screen component={ShareScreen} name={PhotoContestRoutes.Share} />
     </Stack.Navigator>
   );
 };

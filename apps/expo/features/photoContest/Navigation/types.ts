@@ -6,11 +6,13 @@ export enum PhotoContestRoutes {
   Zone = "PhotoContestZone",
   UploadTopo = "PhotoContestUploadTopo",
   RouteList = "PhotoContestRouteList",
+  Share = "PhotoContestShare",
 }
 
 export type PhotoContestNavigationParamList = {
   [PhotoContestRoutes.ZonesList]: undefined;
   [PhotoContestRoutes.Zone]: { zoneId: string; zoneName: string };
+
   [PhotoContestRoutes.UploadTopo]: {
     wallId: string;
     wallName: string;
@@ -19,6 +21,10 @@ export type PhotoContestNavigationParamList = {
   [PhotoContestRoutes.RouteList]: {
     wallId: string;
     wallName: string;
+    zoneId: string;
+  };
+  [PhotoContestRoutes.Share]: {
+    photoContestTopoId: string;
     zoneId: string;
   };
 };

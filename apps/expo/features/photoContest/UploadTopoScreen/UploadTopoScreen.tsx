@@ -137,6 +137,19 @@ const UploadTopoScreen: FC<Props> = ({
           iconProps={{ size: 18 }}
           gap="xs"
           titleVariant="p2R"
+          onPress={() => {
+            if (!submission.data?.id) {
+              Alert.alert(
+                "No se ha subido ninguna foto",
+                "Sube una foto primero",
+              );
+              return;
+            }
+            navigation.navigate(PhotoContestRoutes.Share, {
+              photoContestTopoId: submission.data?.id,
+              zoneId,
+            });
+          }}
         />
       </Box>
       <Box flex={1}>
