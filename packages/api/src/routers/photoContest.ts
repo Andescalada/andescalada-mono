@@ -7,8 +7,6 @@ import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 
-import { User } from "../utils/parseUsersToRole";
-
 export const photoContestRouter = t.router({
   getCurrentContest: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.photoContest.findFirst({
