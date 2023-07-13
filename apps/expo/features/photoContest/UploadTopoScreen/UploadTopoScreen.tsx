@@ -17,7 +17,7 @@ import {
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import usePickImage from "@hooks/usePickImage";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Alert, FlatList } from "react-native";
 
 type Props = PhotoContestScreenProps<PhotoContestRoutes.UploadTopo>;
@@ -37,16 +37,20 @@ const UploadTopoScreen: FC<Props> = ({
   const [loadingUpload, setLoadingUpload] = useState(false);
 
   const uploadImageSubmission = trpc.photoContest.uploadImageTopo.useMutation({
-    onSuccess: () => {
-      utils.photoContest.invalidate();
+    onSuccess: async () => {
+      await utils.photoContest.invalidate();
+      setLoadingUpload(false);
     },
   });
+
   const submitTopo = trpc.photoContest.submitTopo.useMutation({
     onSuccess: () => {
       utils.photoContest.invalidate();
     },
   });
+
   const { uploadImage } = useCloudinaryImage();
+
   const { pickImage, selectedImage } = usePickImage({
     allowsEditing: false,
     onSuccess: async (imageToUpload) => {
@@ -63,7 +67,6 @@ const UploadTopoScreen: FC<Props> = ({
       } catch (error) {
         Alert.alert("No pudimos subir la foto", "Inténtalo de nuevo");
       }
-      setLoadingUpload(false);
     },
   });
 
@@ -83,6 +86,24 @@ const UploadTopoScreen: FC<Props> = ({
       setImageToDisplay(imageInServer.url);
     }
   }, [imageInServer, selectedImage]);
+
+  const submitButtonOptions = useMemo(() => {
+    if (!submission.data?.Topo.image) {
+      return {
+        title: "Enviar",
+        variant: "transparent" as const,
+      };
+    }
+    if (submission.data?.isSubmitted)
+      return {
+        title: "Reenviar",
+        variant: "info" as const,
+      };
+    return {
+      title: "Enviar",
+      variant: "success" as const,
+    };
+  }, [submission.data?.Topo.image, submission.data?.isSubmitted]);
 
   if (submission.data === undefined) return null;
 
@@ -167,8 +188,7 @@ const UploadTopoScreen: FC<Props> = ({
         />
       </Box>
       <Button
-        variant={submission.data?.isSubmitted ? "transparent" : "info"}
-        title={submission.data?.isSubmitted ? "Enviada" : "Enviar"}
+        {...submitButtonOptions}
         marginBottom="l"
         disabled={submitTopo.isLoading || loadingUpload}
         isLoading={submitTopo.isLoading || loadingUpload}
