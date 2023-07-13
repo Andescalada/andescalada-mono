@@ -1,3 +1,4 @@
+import OnboardingScreen from "@features/photoContest/OnboardingScreen/OnboardingScreen";
 import RouteListScreen from "@features/photoContest/RouteListScreen";
 import ShareScreen from "@features/photoContest/ShareScreen";
 import UploadTopoScreen from "@features/photoContest/UploadTopoScreen";
@@ -26,6 +27,10 @@ const Navigator = () => {
         name={PhotoContestRoutes.RouteList}
       />
       <Stack.Screen component={ShareScreen} name={PhotoContestRoutes.Share} />
+      <Stack.Screen
+        component={OnboardingScreen}
+        name={PhotoContestRoutes.Onboarding}
+      />
     </Stack.Navigator>
   );
 };

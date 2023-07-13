@@ -7,10 +7,12 @@ export enum PhotoContestRoutes {
   UploadTopo = "PhotoContestUploadTopo",
   RouteList = "PhotoContestRouteList",
   Share = "PhotoContestShare",
+  Onboarding = "PhotoContestOnboarding",
 }
 
 export type PhotoContestNavigationParamList = {
   [PhotoContestRoutes.ZonesList]: undefined;
+  [PhotoContestRoutes.Onboarding]: undefined;
   [PhotoContestRoutes.Zone]: { zoneId: string; zoneName: string };
 
   [PhotoContestRoutes.UploadTopo]: {
