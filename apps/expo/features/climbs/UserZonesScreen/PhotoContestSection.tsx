@@ -1,4 +1,5 @@
 import { A, Box, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import { showPhotoContestOnboardingAtom } from "@atoms/index";
 import { PhotoContestRoutes } from "@features/photoContest/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -14,6 +15,7 @@ import {
 const hasRunOnceAtom = atom(false);
 
 const PhotoContestSection = () => {
+  const utils = trpc.useContext();
   const [hasRunOnce, setHasRunOnce] = useAtom(hasRunOnceAtom);
   const [showPhotoContestOnboarding] = useAtom(showPhotoContestOnboardingAtom);
   const height = useSharedValue(hasRunOnce ? 70 : 0);
@@ -52,13 +54,14 @@ const PhotoContestSection = () => {
     >
       <A.Pressable
         style={pressableStyle}
-        onPress={() =>
+        onPress={() => {
+          utils.photoContest.getCurrentContest.prefetch();
           rootNavigation.navigate(RootNavigationRoutes.PhotoContest, {
             screen: showPhotoContestOnboarding
               ? PhotoContestRoutes.Onboarding
               : PhotoContestRoutes.ZonesList,
-          })
-        }
+          });
+        }}
       >
         <Box
           position="absolute"

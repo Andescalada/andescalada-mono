@@ -3,14 +3,51 @@ import {
   PhotoContestRoutes,
   PhotoContestScreenProps,
 } from "@features/photoContest/Navigation/types";
+import StepGeneralDetails from "@features/photoContest/OnboardingScreen/StepGeneralDetails";
+import StepSelectWall from "@features/photoContest/OnboardingScreen/StepSelectWall";
+import StepSharePhoto from "@features/photoContest/OnboardingScreen/StepSharePhoto";
+import StepUploadWall from "@features/photoContest/OnboardingScreen/StepUploadWall";
 import StepWelcome from "@features/photoContest/OnboardingScreen/StepWelcome";
+import StepWhoWins from "@features/photoContest/OnboardingScreen/StepWhoWins";
 import { FC, useRef } from "react";
 import { FlatList, useWindowDimensions } from "react-native";
 
 const data = [
   {
     id: "welcome",
-    screen: (onPress: () => void) => <StepWelcome onNext={onPress} />,
+    screen: (onPress: () => void, index: number) => (
+      <StepWelcome onNext={onPress} index={index} />
+    ),
+  },
+  {
+    id: "general-details",
+    screen: (onPress: () => void, index: number) => (
+      <StepGeneralDetails onNext={onPress} index={index} />
+    ),
+  },
+  {
+    id: "select-wall",
+    screen: (onPress: () => void, index: number) => (
+      <StepSelectWall onNext={onPress} index={index} />
+    ),
+  },
+  {
+    id: "upload-wall",
+    screen: (onPress: () => void, index: number) => (
+      <StepUploadWall onNext={onPress} index={index} />
+    ),
+  },
+  {
+    id: "share-wall",
+    screen: (onPress: () => void, index: number) => (
+      <StepSharePhoto onNext={onPress} index={index} />
+    ),
+  },
+  {
+    id: "who-wins",
+    screen: (onPress: () => void, index: number) => (
+      <StepWhoWins onNext={onPress} index={index} />
+    ),
   },
 ];
 
@@ -28,7 +65,7 @@ const OnboardingScreen: FC<Props> = (props) => {
         ref={ref}
         data={data}
         initialNumToRender={1}
-        scrollEnabled={false}
+        scrollEnabled={true}
         horizontal
         snapToInterval={screenWidth}
         showsHorizontalScrollIndicator={false}
@@ -39,6 +76,7 @@ const OnboardingScreen: FC<Props> = (props) => {
                   return;
                 }
               : () => moveToNextStep(index),
+            index,
           )
         }
       />
