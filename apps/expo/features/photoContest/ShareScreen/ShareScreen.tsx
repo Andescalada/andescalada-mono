@@ -53,7 +53,7 @@ const ShareScreen: FC<Props> = ({
     publicId: submission.data?.User.profilePhoto?.publicId || "",
   });
 
-  const { screenWidth } = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
   const skiaImage = useImage(imageInServer?.url);
   const skiaLogo = useImage(logoInServer?.url);
   const skiaUserImage = useImage(userImage?.url);
