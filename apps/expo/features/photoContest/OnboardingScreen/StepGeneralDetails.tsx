@@ -1,5 +1,6 @@
 import { Box, Icon, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import Calendar from "@features/photoContest/components/Calendar";
 import { ComponentProps, FC } from "react";
 import { useWindowDimensions } from "react-native";
 
@@ -16,14 +17,15 @@ const GrayText = (props: ComponentProps<typeof Text>) => (
   <Text color="grayscale.800" {...props} />
 );
 
-const CALENDAR_SIZE = 100;
-
 const StepGeneralDetails: FC<Props> = () => {
   const { width: screenWidth } = useWindowDimensions();
   const { data } = trpc.photoContest.getCurrentContest.useQuery();
   const today = new Date();
   const daysLeft = data
-    ? (data?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24)
+    ? Math.max(
+        (data?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24),
+        0,
+      )
     : 0;
   if (!data) return null;
   return (
@@ -51,33 +53,7 @@ const StepGeneralDetails: FC<Props> = () => {
         </GrayText>
       </GrayText>
       <Box flexDirection="row" alignItems="center" marginTop="xxl">
-        <Box
-          width={CALENDAR_SIZE}
-          height={CALENDAR_SIZE + 20}
-          bg="contrast.opaque.red"
-          borderRadius={8}
-          overflow="hidden"
-          justifyContent="space-between"
-        >
-          <Box justifyContent="center" alignItems="center" height={20}>
-            <Text>Duración</Text>
-          </Box>
-          <Box
-            height={CALENDAR_SIZE}
-            width="100%"
-            bg="grayscale.white"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <GrayText
-              fontSize={CALENDAR_SIZE - 40}
-              lineHeight={CALENDAR_SIZE - 40}
-            >
-              {daysLeft.toFixed(0)}
-            </GrayText>
-            <GrayText verticalAlign="top">días</GrayText>
-          </Box>
-        </Box>
+        <Calendar days={daysLeft.toFixed(0)} />
         <Box flex={1} padding="m">
           <GrayText variant="p1R">{`El concurso dura ${daysLeft.toFixed(
             0,

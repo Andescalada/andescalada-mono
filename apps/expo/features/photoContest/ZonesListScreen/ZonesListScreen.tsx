@@ -7,6 +7,7 @@ import {
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import Calendar from "@features/photoContest/components/Calendar";
 import UserItem from "@features/photoContest/components/UserItem";
 import {
   PhotoContestRoutes,
@@ -26,6 +27,7 @@ import { FlatList } from "react-native";
 type Props = PhotoContestScreenProps<PhotoContestRoutes.ZonesList>;
 const SIZE = 100;
 const today = new Date();
+
 const ZoneListScreen: FC<Props> = ({ navigation }) => {
   const users = trpc.photoContest.usersParticipating.useQuery();
 
@@ -33,7 +35,10 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
   const theme = useAppTheme();
 
   const daysLeft = data
-    ? (data?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24)
+    ? Math.max(
+        (data?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24),
+        0,
+      )
     : 0;
 
   if (isLoading) return null;
@@ -45,19 +50,22 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
         showOptions={false}
         onGoBack={navigation.goBack}
       />
-      <Box flexDirection="row" alignItems="flex-end" gap="xs">
-        <Text variant="p1R">Quedan</Text>
-        <Box
-          bg="contrast.bright.red"
-          height={30}
-          width={30}
-          borderRadius={4}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text variant="p1R">{daysLeft.toFixed(0)}</Text>
+      <Box flexDirection="row" alignItems="flex-end" gap="s">
+        <Box flex={1} padding="s" height="100%">
+          <Text variant="p2R">
+            Empieza eligiendo la zona que quieres documentar.
+          </Text>
+          <Text
+            variant="p2R"
+            marginTop="m"
+            color="semantic.info"
+            textDecorationLine="underline"
+            onPress={() => navigation.navigate(PhotoContestRoutes.Onboarding)}
+          >
+            Más info
+          </Text>
         </Box>
-        <Text variant="p1R">días</Text>
+        <Calendar title="Quedan" days={daysLeft.toFixed(0)} size={80} />
       </Box>
       <Box gap="m" marginBottom="m">
         <Box borderBottomColor="brand.secondaryA" borderBottomWidth={2}>
