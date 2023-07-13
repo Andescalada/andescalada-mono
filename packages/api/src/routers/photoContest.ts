@@ -180,7 +180,20 @@ export const photoContestRouter = t.router({
           userId: ctx.user.id,
         },
         include: {
-          Topo: { select: { image: true, Wall: { select: { name: true } } } },
+          User: { select: { username: true, profilePhoto: true } },
+          Topo: {
+            select: {
+              image: true,
+              Wall: {
+                select: {
+                  name: true,
+                  Sector: {
+                    select: { name: true, Zone: { select: { name: true } } },
+                  },
+                },
+              },
+            },
+          },
         },
       });
     }),
