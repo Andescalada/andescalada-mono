@@ -66,19 +66,11 @@ const SectorItem: FC<Props> = ({ item }) => {
           justifyContent="center"
           alignItems={"center"}
         >
-          {item.completion === 100 ? (
+          {item.completion > 0 && (
             <Box marginRight={"s"}>
               <Ionicons
                 name="checkmark-circle"
                 color="semantic.success"
-                size={20}
-              />
-            </Box>
-          ) : (
-            <Box visible={item.completion > 0} marginRight={"s"}>
-              <Ionicons
-                name="checkmark-circle"
-                color="grayscale.500"
                 size={20}
               />
             </Box>
