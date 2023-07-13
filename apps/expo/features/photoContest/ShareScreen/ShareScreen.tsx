@@ -33,6 +33,8 @@ const ShareScreen: FC<Props> = ({
   },
   navigation,
 }) => {
+  const userHasShared = trpc.photoContest.userHasShared.useMutation();
+
   const submission = trpc.photoContest.getUserTopoSubmission.useQuery({
     wallId,
   });
@@ -272,6 +274,7 @@ const ShareScreen: FC<Props> = ({
                   type: "image/png",
                 });
               }
+              userHasShared.mutate({ submissionId: submission.data?.id });
             }}
           />
         </Box>

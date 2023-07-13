@@ -250,4 +250,11 @@ export const photoContestRouter = t.router({
 
     return usersWithInfo;
   }),
+  userHasShared: protectedProcedure
+    .input(z.object({ submissionId: z.string() }))
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.userSharedPhotoContestTopo.create({
+        data: { UserPhotoContestTopo: { connect: { id: input.submissionId } } },
+      }),
+    ),
 });

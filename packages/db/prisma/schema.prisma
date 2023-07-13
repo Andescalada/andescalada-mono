@@ -849,14 +849,15 @@ enum Entity {
 }
 
 model UserPhotoContestTopo {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Topo        Topo     @relation(fields: [topoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  topoId      String
-  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId      String
-  isSubmitted Boolean  @default(false)
+  id                         String                       @id @default(uuid())
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  Topo                       Topo                         @relation(fields: [topoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topoId                     String
+  User                       User                         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId                     String
+  isSubmitted                Boolean                      @default(false)
+  UserSharedPhotoContestTopo UserSharedPhotoContestTopo[]
 
   @@unique([topoId, userId], name: "user_photo_contest_topo_unique")
   @@index([topoId])
@@ -870,4 +871,13 @@ model PhotoContest {
   starting  DateTime
   ending    DateTime
   Zones     Zone[]
+}
+
+model UserSharedPhotoContestTopo {
+  id                     String               @id @default(uuid())
+  createdAt              DateTime             @default(now())
+  UserPhotoContestTopo   UserPhotoContestTopo @relation(fields: [userPhotoContestTopoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userPhotoContestTopoId String
+
+  @@index([userPhotoContestTopoId])
 }
