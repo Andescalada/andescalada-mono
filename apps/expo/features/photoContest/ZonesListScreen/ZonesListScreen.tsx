@@ -60,7 +60,7 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
             marginTop="m"
             color="semantic.info"
             textDecorationLine="underline"
-            onPress={() => navigation.navigate(PhotoContestRoutes.Onboarding)}
+            onPress={() => navigation.replace(PhotoContestRoutes.Onboarding)}
           >
             Más info
           </Text>
