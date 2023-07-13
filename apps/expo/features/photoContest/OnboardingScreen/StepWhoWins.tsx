@@ -1,35 +1,64 @@
-import { Box, Image, Screen, Text } from "@andescalada/ui";
+import { Box, Button, Screen, Text } from "@andescalada/ui";
+import { showPhotoContestOnboardingAtom } from "@atoms/index";
+import {
+  PhotoContestNavigationProps,
+  PhotoContestRoutes,
+} from "@features/photoContest/Navigation/types";
+import { useNavigation } from "@react-navigation/native";
+import { useAtom } from "jotai";
 import { FC } from "react";
-import { useWindowDimensions } from "react-native";
+import { Linking, useWindowDimensions } from "react-native";
 
 interface Props {
   onNext: () => void;
   index: number;
 }
 
-const StepWhoWins: FC<Props> = (props) => {
+const StepWhoWins: FC<Props> = () => {
+  const navigation =
+    useNavigation<PhotoContestNavigationProps<PhotoContestRoutes.Onboarding>>();
+  const setShowContestOnboarding = useAtom(showPhotoContestOnboardingAtom)[1];
   const { width: screenWidth } = useWindowDimensions();
   return (
     <Screen width={screenWidth}>
-      <Box
-        flex={1}
-        justifyContent="space-evenly"
-        alignItems="flex-start"
-        padding="l"
-      >
+      <Box flex={1} gap="l" alignItems="flex-start" padding="l">
         <Text variant="h1" numberOfLines={3}>
           ¿Quienes ganan?
         </Text>
         <Text variant="p1R" numberOfLines={3}>
-          🏆 Las 3 personas a quienes elegimos más paredes
+          Vamos a elegir una foto por cada pared según los criterios que
+          mencionamos,
         </Text>
+        <Text variant="p1R" numberOfLines={3}>
+          🥇 El usuario con más fotos seleccionadas gana el primer lugar
+        </Text>
+        <Text variant="p1R" numberOfLines={3}>
+          🥈🥉 También premiaremos al segundo y tercer lugar.
+        </Text>
+
         <Text variant="p1R" numberOfLines={5}>
-          🎲 Sorteo entre las personas que compartan una foto en su historia en
-          Instagram etiquetando a @andescalada
+          🎲 Compartiendo la foto de la pared en Instagram y etiquetando a
+          @andescalada, también estarás participando en el gran sorteo.
         </Text>
-        <Text>
-          Puedes revisar más detalles de las bases en el siguiente enlace:
-          [AGREGAR ENLANCE]
+        <Button
+          title="Continuar"
+          variant="info"
+          alignSelf="center"
+          marginTop="l"
+          onPress={() => {
+            setShowContestOnboarding(false);
+            navigation.replace(PhotoContestRoutes.ZonesList);
+          }}
+        />
+        <Text
+          textDecorationLine="underline"
+          onPress={() => {
+            Linking.openURL(
+              "https://www.andescalada.org/bases-1-concurso-documentacion",
+            );
+          }}
+        >
+          Puedes revisar más detalles de las bases aquí
         </Text>
       </Box>
     </Screen>

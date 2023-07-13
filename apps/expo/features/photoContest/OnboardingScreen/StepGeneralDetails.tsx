@@ -1,7 +1,6 @@
-import { Box, Screen, Text } from "@andescalada/ui";
+import { Box, Icon, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import PageIndicator from "@features/photoContest/OnboardingScreen/PageIndicator";
-import { FC } from "react";
+import { ComponentProps, FC } from "react";
 import { useWindowDimensions } from "react-native";
 
 interface Props {
@@ -9,11 +8,17 @@ interface Props {
   index: number;
 }
 
-function getDayName(date = new Date(), locale = "es-CL") {
+const getDayName = (date = new Date(), locale = "es-CL") => {
   return date.toLocaleDateString(locale, { weekday: "long" });
-}
+};
 
-const StepGeneralDetails: FC<Props> = ({ index }) => {
+const GrayText = (props: ComponentProps<typeof Text>) => (
+  <Text color="grayscale.800" {...props} />
+);
+
+const CALENDAR_SIZE = 100;
+
+const StepGeneralDetails: FC<Props> = () => {
   const { width: screenWidth } = useWindowDimensions();
   const { data } = trpc.photoContest.getCurrentContest.useQuery();
   const today = new Date();
@@ -22,24 +27,64 @@ const StepGeneralDetails: FC<Props> = ({ index }) => {
     : 0;
   if (!data) return null;
   return (
-    <Screen width={screenWidth}>
+    <Screen
+      width={screenWidth}
+      padding="m"
+      bg="brand.secondaryB"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Box
-        flex={1}
-        justifyContent="space-evenly"
-        alignItems="flex-start"
-        padding="l"
+        height={160}
+        width={160}
+        borderRadius={160 / 2}
+        justifyContent="center"
+        alignItems="center"
+        backgroundColor="grayscale.500"
       >
-        <Text variant="p1R" numberOfLines={3}>
-          Estamos buscando fotos de las zonas
-        </Text>
-        <Text variant="p1R" numberOfLines={3}>
-          La Cuesta las Chilcas y Cachacabuco
-        </Text>
-        <Text>{`El concurso dura ${daysLeft.toFixed(
-          0,
-        )} días, es decir, termina el ${getDayName(
-          data.ending,
-        )} ${data.ending?.toLocaleDateString("es-CL")}`}</Text>
+        <Icon name="photo-gallery-color" size={150} />
+      </Box>
+      <GrayText variant="p1R" numberOfLines={3}>
+        Queremos conseguir las mejores fotos para{" "}
+        <GrayText variant="p1B" numberOfLines={3}>
+          La Cuesta las Chilcas y Cachacabuco.
+        </GrayText>
+      </GrayText>
+      <Box flexDirection="row" alignItems="center" marginTop="xxl">
+        <Box
+          width={CALENDAR_SIZE}
+          height={CALENDAR_SIZE + 20}
+          bg="contrast.opaque.red"
+          borderRadius={8}
+          overflow="hidden"
+          justifyContent="space-between"
+        >
+          <Box justifyContent="center" alignItems="center" height={20}>
+            <Text>Duración</Text>
+          </Box>
+          <Box
+            height={CALENDAR_SIZE}
+            width="100%"
+            bg="grayscale.white"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <GrayText
+              fontSize={CALENDAR_SIZE - 40}
+              lineHeight={CALENDAR_SIZE - 40}
+            >
+              {daysLeft.toFixed(0)}
+            </GrayText>
+            <GrayText verticalAlign="top">días</GrayText>
+          </Box>
+        </Box>
+        <Box flex={1} padding="m">
+          <GrayText variant="p1R">{`El concurso dura ${daysLeft.toFixed(
+            0,
+          )} días, es decir, termina el ${getDayName(
+            data.ending,
+          )} ${data.ending?.toLocaleDateString("es-CL")}`}</GrayText>
+        </Box>
       </Box>
     </Screen>
   );
