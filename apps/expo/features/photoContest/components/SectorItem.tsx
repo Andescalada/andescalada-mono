@@ -20,10 +20,12 @@ interface Props {
     walls: {
       id: string;
       name: string;
+      notUploadedImage: boolean;
       _count: { topos: number };
       hasSubmitted: boolean;
     }[];
     completion: number;
+    notUploadedImage: boolean;
     name: string;
     id: string;
     zoneId: string;
@@ -75,6 +77,15 @@ const SectorItem: FC<Props> = ({ item }) => {
               />
             </Box>
           )}
+          {item.notUploadedImage && (
+            <Box marginRight={"s"}>
+              <Ionicons
+                name="alert-circle"
+                color="semantic.warning"
+                size={20}
+              />
+            </Box>
+          )}
           <Box
             flexDirection="row"
             bg={item._count.walls > 0 ? "semantic.info" : "grayscale.700"}
@@ -122,6 +133,13 @@ const SectorItem: FC<Props> = ({ item }) => {
                       <Ionicons
                         name="checkmark-outline"
                         color="semantic.success"
+                        size={20}
+                      />
+                    )}
+                    {wall.notUploadedImage && (
+                      <Ionicons
+                        name="alert-circle-outline"
+                        color="semantic.warning"
                         size={20}
                       />
                     )}

@@ -7,6 +7,8 @@ import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 
+import { User } from "../utils/parseUsersToRole";
+
 export const photoContestRouter = t.router({
   getCurrentContest: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.photoContest.findFirst({
@@ -71,8 +73,24 @@ export const photoContestRouter = t.router({
       },
     });
 
+    const wallsWithImageNotSubmitted =
+      await ctx.prisma.userPhotoContestTopo.findMany({
+        where: { userId: ctx.user.id, isSubmitted: false, Topo: { image: {} } },
+        select: {
+          Topo: {
+            select: {
+              Wall: { select: { id: true, Sector: { select: { id: true } } } },
+            },
+          },
+        },
+      });
+
     const sectorsWithCompletion = zones.sectors.map((sector) => {
       const numberWalls = sector.walls.length;
+
+      const notUploadedImage = !!wallsWithImageNotSubmitted.find(
+        (wall) => wall.Topo.Wall.Sector.id === sector.id,
+      );
 
       const numberOfToposSubmitted = sector.walls.reduce(
         (acc, wall) => acc + wall._count.topos,
@@ -86,11 +104,20 @@ export const photoContestRouter = t.router({
       );
       const completion = (numberOfSubmittedToposByUser / numberWalls) * 100;
       const walls = sector.walls.map((wall) => {
-        const hasSubmitted = !!wall.topos.at(0);
-        return { ...wall, hasSubmitted };
+        const notUploadedImage = !!wallsWithImageNotSubmitted.find(
+          (wallWithImageNotSubmitted) =>
+            wallWithImageNotSubmitted.Topo.Wall.id === wall.id,
+        );
+
+        const submittedTopos =
+          wall.topos.at(0)?._count?.UserPhotoContestTopo || 0;
+        const hasSubmitted = submittedTopos > 0;
+
+        return { ...wall, hasSubmitted, notUploadedImage };
       });
       return {
         ...sector,
+        notUploadedImage,
         walls,
         completion,
         numberOfToposSubmitted,

@@ -32,6 +32,8 @@ const UploadTopoScreen: FC<Props> = ({
     wallId,
   });
 
+  console.log(submission.data?.id);
+
   const utils = trpc.useContext();
 
   const [loadingUpload, setLoadingUpload] = useState(false);
