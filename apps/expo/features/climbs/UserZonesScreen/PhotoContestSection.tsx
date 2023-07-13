@@ -1,4 +1,5 @@
 import { A, Box, Text } from "@andescalada/ui";
+import { showPhotoContestOnboardingAtom } from "@atoms/index";
 import { PhotoContestRoutes } from "@features/photoContest/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -14,6 +15,7 @@ const hasRunOnceAtom = atom(false);
 
 const PhotoContestSection = () => {
   const [hasRunOnce, setHasRunOnce] = useAtom(hasRunOnceAtom);
+  const [showPhotoContestOnboarding] = useAtom(showPhotoContestOnboardingAtom);
   const height = useSharedValue(hasRunOnce ? 70 : 0);
   const opacity = useSharedValue(hasRunOnce ? 1 : 0);
   useEffect(() => {
@@ -52,7 +54,9 @@ const PhotoContestSection = () => {
         style={pressableStyle}
         onPress={() =>
           rootNavigation.navigate(RootNavigationRoutes.PhotoContest, {
-            screen: PhotoContestRoutes.ZonesList,
+            screen: showPhotoContestOnboarding
+              ? PhotoContestRoutes.Onboarding
+              : PhotoContestRoutes.ZonesList,
           })
         }
       >

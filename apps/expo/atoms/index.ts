@@ -33,3 +33,8 @@ export const downloadedZonesAtom = atomWithMMKV<DownloadedZones>(
 export const downloadedImagesAtom = atomWithMMKV<{
   [zoneId: string]: ImagesToDownload;
 }>(Storage.DOWNLOADED_IMAGES, {});
+
+export const showPhotoContestOnboardingAtom = atomWithMMKV(
+  Storage.SHOW_PHOTO_CONTEST_ONBOARDING,
+  true,
+);

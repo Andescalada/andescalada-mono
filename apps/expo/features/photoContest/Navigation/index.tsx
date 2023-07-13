@@ -1,4 +1,4 @@
-import OnboardingScreen from "@features/photoContest/OnboardingScreen/OnboardingScreen";
+import OnboardingScreen from "@features/photoContest/OnboardingScreen";
 import RouteListScreen from "@features/photoContest/RouteListScreen";
 import ShareScreen from "@features/photoContest/ShareScreen";
 import UploadTopoScreen from "@features/photoContest/UploadTopoScreen";
