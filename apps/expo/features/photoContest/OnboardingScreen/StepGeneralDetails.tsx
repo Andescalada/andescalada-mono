@@ -1,5 +1,6 @@
 import { Box, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import PageIndicator from "@features/photoContest/OnboardingScreen/PageIndicator";
 import { FC } from "react";
 import { useWindowDimensions } from "react-native";
 
@@ -12,7 +13,7 @@ function getDayName(date = new Date(), locale = "es-CL") {
   return date.toLocaleDateString(locale, { weekday: "long" });
 }
 
-const StepGeneralDetails: FC<Props> = (props) => {
+const StepGeneralDetails: FC<Props> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
   const { data } = trpc.photoContest.getCurrentContest.useQuery();
   const today = new Date();

@@ -7,10 +7,10 @@ interface Props {
   index: number;
 }
 
-const StepWelcome: FC<Props> = (props) => {
+const StepWelcome: FC<Props> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
   return (
-    <Screen maxWidth={screenWidth}>
+    <Screen width={screenWidth}>
       <Box flex={1} justifyContent="center" alignItems="center" padding="m">
         <Text variant="h1" numberOfLines={3}>
           Bienvenido al 1º concurso de documentación

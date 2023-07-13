@@ -10,30 +10,26 @@ interface Props {
 const StepWhoWins: FC<Props> = (props) => {
   const { width: screenWidth } = useWindowDimensions();
   return (
-    <Screen maxWidth={screenWidth}>
+    <Screen width={screenWidth}>
       <Box
         flex={1}
         justifyContent="space-evenly"
         alignItems="flex-start"
         padding="l"
       >
-        <Text variant="p1R" numberOfLines={3}>
-          Estamos buscando fotos de paredes de:
+        <Text variant="h1" numberOfLines={3}>
+          ¿Quienes ganan?
         </Text>
         <Text variant="p1R" numberOfLines={3}>
-          La Cuesta las Chilcas y Cachacabuco
+          🏆 Las 3 personas a quienes elegimos más paredes
         </Text>
-
-        <Text variant="p1R" numberOfLines={3}>
-          1º Paso: Busca la pared que quieres documentar
+        <Text variant="p1R" numberOfLines={5}>
+          🎲 Sorteo entre las personas que compartan una foto en su historia en
+          Instagram etiquetando a @andescalada
         </Text>
-        <Text variant="p1R" numberOfLines={3}>
-          2º Sube una foto de la pared, puedes revisar las rutas que deben
-          aparecer en esa pared
-        </Text>
-        <Text variant="p1R" numberOfLines={3}>
-          3º Comparte la foto en una historia de Instagram y etiqueta a
-          @andescalada
+        <Text>
+          Puedes revisar más detalles de las bases en el siguiente enlace:
+          [AGREGAR ENLANCE]
         </Text>
       </Box>
     </Screen>
