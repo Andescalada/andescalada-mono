@@ -254,8 +254,7 @@ const ShareScreen: FC<Props> = ({
               if (!image || !submission?.data?.id) return;
               const imageBase64 = image.encodeToBase64(ImageFormat.PNG, 100);
 
-              // if (hasInstagramInstalled && !!imageBase64) {
-              if (false) {
+              if (hasInstagramInstalled && !!imageBase64) {
                 await Share.shareSingle({
                   appId: Env.FACEBOOK_DEV_APP_ID,
                   stickerImage: `data:image/png;base64,${imageBase64}`,
