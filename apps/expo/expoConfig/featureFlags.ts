@@ -25,7 +25,7 @@ const featureFlags: Record<
     storyBar: false,
     addZoneFlow: true,
     multiPitch: false,
-    photoContest: false,
+    photoContest: true,
   },
 };
 
