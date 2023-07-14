@@ -17,6 +17,7 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
 import {
   createRef,
@@ -26,7 +27,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { FlatList } from "react-native";
 
 type Wall = inferProcedureOutput<AppRouter["walls"]["byId"]>;
 
@@ -195,10 +195,11 @@ const RoutesList: FC = () => {
       borderTopRightRadius={10}
       backgroundColor="background"
     >
-      <FlatList
+      <FlashList
         refreshControl={refresh}
         onScrollBeginDrag={reset}
         showsVerticalScrollIndicator={false}
+        estimatedItemSize={100}
         data={data?.routes}
         renderItem={({ item, index }) => {
           const maxIndex = item.ChildrenRoutes.length - 1;
