@@ -17,12 +17,12 @@ const PrivacyPolicy = () => {
       </p>
       <ul className="list-disc">
         <li>Calidad: Mientras más densidad de pixeles, mejor.</li>
-        <li>Alcance: Si seven todas las rutas de la pared, mejor. </li>
+        <li>Alcance: Si se ven todas las rutas de la pared, mejor. </li>
         <li>Limpieza- Mientras más se vea la roca, mejor.</li>
         <li>Rareza: Si es una pared que pocas fotos tiene, mejor.</li>
       </ul>
       <p>
-        Premio or participación: Aleatorio entre los usuarios que participen
+        Premio por participación: Aleatorio entre los usuarios que participen
         Plazo de entrega Serán recibidas las fotos hasta 3 semanas de la fecha
         de publicación del concurso.
       </p>
