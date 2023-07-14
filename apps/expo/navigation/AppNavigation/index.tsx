@@ -47,26 +47,26 @@ const Navigator = () => {
 
   if (newSoftUpdate) {
     Updates.reloadAsync();
-    // return (
-    //   <Screen
-    //     backgroundColor="transitionScreen"
-    //     padding="m"
-    //     justifyContent="center"
-    //     alignItems="center"
-    //   >
-    //     <Text variant="h2" marginHorizontal="l" textAlign="center">
-    //       Hay una nueva versión disponible
-    //     </Text>
-    //     <Box marginVertical="l">
-    //       <Icon name="dancing-dinosaur-color" size={100} />
-    //     </Box>
-    //     <Button
-    //       variant="info"
-    //       title="Actualizar"
-    //       onPress={Updates.reloadAsync}
-    //     />
-    //   </Screen>
-    // );
+    return (
+      <Screen
+        backgroundColor="transitionScreen"
+        padding="m"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Text variant="h2" marginHorizontal="l" textAlign="center">
+          Hay una nueva versión disponible
+        </Text>
+        <Box marginVertical="l">
+          <Icon name="dancing-dinosaur-color" size={100} />
+        </Box>
+        <Button
+          variant="info"
+          title="Actualizar"
+          onPress={Updates.reloadAsync}
+        />
+      </Screen>
+    );
   }
 
   return (
