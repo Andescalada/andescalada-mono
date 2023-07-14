@@ -1,6 +1,6 @@
 import React from "react";
 
-const PrivacyPolicy = () => {
+const Bases1ConcursoDocumentacion = () => {
   return (
     <section className="m-20 flex flex-col space-y-4">
       <h1>Bases 1º concurso de documentación</h1>
@@ -37,4 +37,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default Bases1ConcursoDocumentacion;
