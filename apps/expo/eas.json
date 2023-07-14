@@ -59,6 +59,10 @@
       "ios": {
         "simulator": true
       }
+    },
+    "production-local": {
+      "autoIncrement": false,
+      "extends": "production"
     }
   },
   "submit": {

@@ -22,7 +22,7 @@
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json",
     "build:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1   npx eas-cli@latest build --profile production --non-interactive --platform all --auto-submit --no-wait",
     "build:production-simulator": "EAS_BUILD_AUTOCOMMIT=1 CI=1 npx node scripts/load-local-production-envs.mjs npx eas-cli@latest build --profile production-simulator --non-interactive --local",
-    "build-local:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1  npx eas-cli@latest build --profile production --non-interactive",
+    "build-local:production": "EAS_BUILD_AUTOCOMMIT=1 CI=1  npx eas-cli@latest build --profile production-local --non-interactive",
     "build:preview": "APP_VARIANT=preview CI=1  npx eas-cli@latest build --profile preview",
     "build:preview-local:ios": "npx node scripts/load-local-envs.mjs yarn build:preview --platform ios --local --non-interactive",
     "build:preview-local:android": "npx node scripts/load-local-envs.mjs yarn build:preview --platform android --local --non-interactive",

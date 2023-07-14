@@ -56,12 +56,12 @@
           "data": [
             {
               "scheme": "https",
-              "host": "*.andescalada.org",
+              "host": "www.andescalada.org",
               "pathPrefix": "/zona/"
             },
             {
               "scheme": "https",
-              "host": "*.andescalada.org",
+              "host": "www.andescalada.org",
               "pathPrefix": "/open-app"
             },
             {
