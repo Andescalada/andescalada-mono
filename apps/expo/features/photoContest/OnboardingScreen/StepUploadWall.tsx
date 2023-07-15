@@ -1,8 +1,8 @@
 import { Box, Image, Screen, Text } from "@andescalada/ui";
+import { images } from "@assets/images";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { ComponentProps, FC } from "react";
 import { useWindowDimensions } from "react-native";
-
 interface Props {
   onNext: () => void;
   index: number;
@@ -25,10 +25,12 @@ const StepUploadWall: FC<Props> = () => {
       padding="m"
       alignItems="center"
     >
-      <Box borderRadius={8} overflow="hidden" bg="contrast.bright.red">
+      <Box borderRadius={8} overflow="hidden">
         <Image
           source={exampleImage?.url}
           width={screenWidth * 0.9}
+          placeholder={images.placeholder}
+          placeholderContentFit="cover"
           height={250}
           contentFit="cover"
         />
