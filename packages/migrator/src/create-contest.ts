@@ -13,6 +13,18 @@ export const createContest = async () => {
   const starting = new Date(2023, 6, 14, 20, 0, 0); // '23:59:59 14-07-2023'
   const ending = new Date(2023, 6, 31, 23, 59, 59); // '23:59:59 31-07-2023'
 
+  const contestExist = await db.photoContest.findFirst({
+    where: {
+      starting,
+      ending,
+      Zones: { every: { OR: [{ id: chacabuco.id }, { id: chilcas.id }] } },
+    },
+  });
+
+  if (!!contestExist) {
+    throw new Error("Contest exist!");
+  }
+
   const contest = await db.photoContest.create({
     data: {
       starting,

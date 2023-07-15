@@ -2,6 +2,7 @@ import { slug } from "@andescalada/api/src/utils/slug";
 import { PrismaClient } from "@andescalada/db";
 import { oldDb } from "@andescalada/old-db";
 
+import { createContest } from "./create-contest";
 import { migrateLegacyZone } from "./migrate-legacy-zone";
 
 const oldDbClient = new oldDb.PrismaClient();
@@ -16,7 +17,7 @@ const selectedZonesForContest = [
 ];
 
 const main = async () => {
-  return;
+  await createContest();
 };
 
 main()
