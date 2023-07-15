@@ -82,7 +82,9 @@ const PhotoContestSection = () => {
           borderRadius={16}
           zIndex={100}
         >
-          <Text variant="h4">Concurso fotográfico 📸</Text>
+          <Text variant="h4" numberOfLines={1} ellipsizeMode="middle">
+            1º Concurso documentación 📸
+          </Text>
         </Box>
       </A.Pressable>
     </A.Box>
