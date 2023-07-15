@@ -10,6 +10,7 @@ import {
   ScrollView,
   Text,
 } from "@andescalada/ui";
+import { urlGen } from "@andescalada/utils/cloudinary";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,
@@ -41,9 +42,16 @@ const selectedZoneCarouselAtom = atom<ZoneCarouselModes>(
 
 const coverPhoto = (zoneName: string) => {
   if (zoneName === "Pared Burgos")
-    return "https://res.cloudinary.com/fundacion-andescalada/image/upload/v1689000239/andescalada.org/cover-pared-burgos_ipxuim.jpg";
+    return urlGen.optimizedImage({
+      publicId: "andescalada.org/cover-pared-burgos_ipxuim",
+      quality: 50,
+    })?.url;
   if (zoneName === "Muralla china")
-    return "https://res.cloudinary.com/fundacion-andescalada/image/upload/v1689000238/andescalada.org/cover-muralla-china_gkgzma.jpg";
+    return urlGen.optimizedImage({
+      publicId: "andescalada.org/cover-muralla-china_gkgzma",
+      quality: 50,
+    })?.url;
+
   return "";
 };
 
