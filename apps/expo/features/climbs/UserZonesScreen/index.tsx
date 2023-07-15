@@ -132,7 +132,7 @@ const UserZonesScreen = () => {
     );
   return (
     <Screen paddingBottom="none" safeAreaDisabled>
-      {featureFlags.photoContest && <PhotoContestSection />}
+      <PhotoContestSection />
       <Box flexDirection="row" width="100%" padding="m" paddingBottom="none">
         <Pressable
           borderRadius={4}
