@@ -20,13 +20,7 @@ const GrayText = (props: ComponentProps<typeof Text>) => (
 const StepGeneralDetails: FC<Props> = () => {
   const { width: screenWidth } = useWindowDimensions();
   const { data } = trpc.photoContest.getCurrentContest.useQuery();
-  const today = new Date();
-  const daysLeft = data
-    ? Math.max(
-        (data?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24),
-        0,
-      )
-    : 0;
+
   if (!data) return null;
   return (
     <Screen
@@ -53,9 +47,9 @@ const StepGeneralDetails: FC<Props> = () => {
         </GrayText>
       </GrayText>
       <Box flexDirection="row" alignItems="center" marginTop="xxl">
-        <Calendar days={daysLeft.toFixed(0)} />
+        <Calendar days={data.daysLeft.toFixed(0)} />
         <Box flex={1} padding="m">
-          <GrayText variant="p1R">{`El concurso dura ${daysLeft.toFixed(
+          <GrayText variant="p1R">{`El concurso dura ${data.daysLeft.toFixed(
             0,
           )} días, es decir, termina el ${getDayName(
             data.ending,

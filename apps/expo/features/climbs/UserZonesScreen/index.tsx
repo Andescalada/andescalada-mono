@@ -32,7 +32,6 @@ import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation } from "@react-navigation/native";
 import emptyArray from "@utils/emptyArray";
-import featureFlags from "@utils/featureFlags";
 import { atom, useAtom } from "jotai";
 import { FlatList } from "react-native";
 

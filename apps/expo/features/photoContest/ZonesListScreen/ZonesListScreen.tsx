@@ -26,20 +26,18 @@ import { FlatList } from "react-native";
 
 type Props = PhotoContestScreenProps<PhotoContestRoutes.ZonesList>;
 const SIZE = 100;
-const today = new Date();
 
 const ZoneListScreen: FC<Props> = ({ navigation }) => {
   const users = trpc.photoContest.usersParticipating.useQuery();
 
-  const { data, isLoading } = trpc.photoContest.getCurrentContest.useQuery();
+  const { data, isLoading } = trpc.photoContest.getCurrentContest.useQuery(
+    undefined,
+    {
+      staleTime: 24 * 60 * 60 * 1000,
+      cacheTime: 24 * 60 * 60 * 1000,
+    },
+  );
   const theme = useAppTheme();
-
-  const daysLeft = data
-    ? Math.max(
-        (data?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24),
-        0,
-      )
-    : 0;
 
   if (isLoading) return null;
 
@@ -52,9 +50,13 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
       />
       <Box flexDirection="row" alignItems="flex-end" gap="s">
         <Box flex={1} padding="s" height="100%">
-          <Text variant="p2R">
-            Empieza eligiendo la zona que quieres documentar.
-          </Text>
+          {data && data?.daysLeft > 0 ? (
+            <Text variant="p2R">
+              Empieza eligiendo la zona que quieres documentar.
+            </Text>
+          ) : (
+            <Text variant="p2R">¡Concurso finalizado 😄, vendrán más!</Text>
+          )}
           <Text
             variant="p2R"
             marginTop="m"
@@ -65,7 +67,11 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
             Más info
           </Text>
         </Box>
-        <Calendar title="Quedan" days={daysLeft.toFixed(0)} size={80} />
+        <Calendar
+          title="Quedan"
+          days={data?.daysLeft.toFixed(0) || "0"}
+          size={80}
+        />
       </Box>
       <Box gap="m" marginBottom="m">
         <Box borderBottomColor="brand.secondaryA" borderBottomWidth={2}>
@@ -125,7 +131,7 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
         ListEmptyComponent={() => (
           <Box marginTop="l">
             <Text variant="p3R">
-              No hay usuarios participando por esta pared todavía
+              No hay usuarios participando, sé el primero!
             </Text>
           </Box>
         )}

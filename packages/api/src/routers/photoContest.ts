@@ -8,13 +8,23 @@ import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 
 export const photoContestRouter = t.router({
-  getCurrentContest: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.photoContest.findFirst({
-      where: { ending: { gt: new Date() } },
+  getCurrentContest: protectedProcedure.query(async ({ ctx }) => {
+    const contest = await ctx.prisma.photoContest.findFirst({
       orderBy: { starting: "asc" },
       take: 1,
       include: { Zones: { select: { name: true, id: true } } },
     });
+
+    if (!contest) throw new Error("No contest found");
+
+    const today = new Date();
+
+    const daysLeft = Math.max(
+      (contest?.ending?.getTime() - today.getTime()) / (1000 * 3600 * 24),
+      0,
+    );
+
+    return { ...contest, daysLeft };
   }),
   getZone: protectedProcedure.input(zone.id).query(async ({ ctx, input }) => {
     const zones = await ctx.prisma.zone.findUniqueOrThrow({
