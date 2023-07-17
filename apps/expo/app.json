@@ -4,7 +4,7 @@
     "slug": "andescalada-app",
     "scheme": "andescalada",
     "owner": "andescalada",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "jsEngine": "hermes",
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
@@ -21,7 +21,6 @@
       "**/*"
     ],
     "ios": {
-      "jsEngine": "jsc",
       "supportsTablet": true,
       "bundleIdentifier": "com.andescalada.app",
       "associatedDomains": ["applinks:andescalada.org", "applinks:www.andescalada.org"],
