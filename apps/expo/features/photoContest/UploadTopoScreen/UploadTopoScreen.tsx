@@ -28,6 +28,8 @@ const UploadTopoScreen: FC<Props> = ({
   },
   navigation,
 }) => {
+  const currentContest = trpc.photoContest.getCurrentContest.useQuery();
+
   const submission = trpc.photoContest.getUserTopoSubmission.useQuery({
     wallId,
   });
@@ -124,12 +126,17 @@ const UploadTopoScreen: FC<Props> = ({
           justifyContent="center"
           alignItems="center"
           overflow="hidden"
+          disabled={currentContest.data && currentContest.data?.daysLeft <= 0}
           onPress={() => pickImage(selectedImage)}
         >
           {!imageToDisplay ? (
             <Box justifyContent="center" alignItems={"center"}>
               <Ionicons name="camera-outline" size={30} />
-              <Text marginTop="xs">Subir foto de esta pared</Text>
+              {currentContest.data && currentContest.data?.daysLeft > 0 ? (
+                <Text marginTop="xs">Subir foto de esta pared</Text>
+              ) : (
+                <Text>Concurso finalizado</Text>
+              )}
             </Box>
           ) : (
             <Image source={{ uri: imageToDisplay }} height={250} width="100%" />
@@ -190,6 +197,10 @@ const UploadTopoScreen: FC<Props> = ({
       <Button
         {...submitButtonOptions}
         marginBottom="l"
+        visible={
+          !currentContest.data ||
+          (currentContest.data && currentContest.data?.daysLeft > 0)
+        }
         disabled={submitTopo.isLoading || loadingUpload}
         isLoading={submitTopo.isLoading || loadingUpload}
         onPress={() => {
