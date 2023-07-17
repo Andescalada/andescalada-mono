@@ -1,3 +1,4 @@
+import { GlobalRoles } from "@andescalada/api/src/utils/globalRoles";
 import * as jose from "jose";
 import type { NextApiRequest } from "next";
 
@@ -9,7 +10,7 @@ const verifyAndDecodeToken = async (req: NextApiRequest) => {
         connectionStrategy: "email",
         email: "elevy@andescalada.org",
         auth0Id: "",
-        permissions: [] as string[],
+        permissions: [] as GlobalRoles[],
       },
     };
   }

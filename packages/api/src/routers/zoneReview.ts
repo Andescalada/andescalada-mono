@@ -2,6 +2,7 @@ import zone from "@andescalada/api/schemas/zone";
 import error from "@andescalada/api/src/utils/errors";
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import getAuth0UsersByRole from "@andescalada/api/src/utils/getAuth0UsersByRole";
+import { GlobalRoles } from "@andescalada/api/src/utils/globalRoles";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import pushNotification from "@andescalada/api/src/utils/pushNotification";
@@ -69,8 +70,8 @@ export const zoneReviewRouter = t.router({
   currentStatus: protectedProcedure
     .input(zone.status.pick({ status: true }))
     .query(async ({ ctx, input }) => {
-      if (!ctx.user.permissions.includes("review:zone"))
-        throw new TRPCError(error.unauthorizedAction("review:zone"));
+      if (!ctx.user.permissions.includes(GlobalRoles.REVIEW_ZONE))
+        throw new TRPCError(error.unauthorizedAction(GlobalRoles.REVIEW_ZONE));
 
       const zones = await ctx.prisma.zone.findMany({
         where: { currentStatus: input.status },
