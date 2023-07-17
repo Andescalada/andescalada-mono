@@ -46,7 +46,7 @@ const verifyAndDecodeToken = async (req: NextApiRequest) => {
           phoneNumber: data.phone_number as string | undefined,
           email: data.user_email as string | undefined,
           auth0Id: data.sub,
-          permissions: data.permissions as string[],
+          permissions: data.permissions as GlobalRoles[],
         },
       };
     }
