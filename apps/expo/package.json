@@ -48,7 +48,7 @@
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
     "@cloudinary/url-gen": "^1.8.6",
-    "@expo/react-native-action-sheet": "^3.13.0",
+    "@expo/react-native-action-sheet": "^4.0.1",
     "@gorhom/bottom-sheet": "^4",
     "@hookform/resolvers": "^2.9.8",
     "@mapbox/geo-viewport": "^0.5.0",
