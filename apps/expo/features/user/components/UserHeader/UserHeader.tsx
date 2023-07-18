@@ -53,7 +53,7 @@ const UserHeader = () => {
     Share.open({
       title: "Andescalada App",
       message: "Mira la app de la Fundación Andescalada",
-      url: "https://www.andescalada.org",
+      url: "https://www.andescalada.org/open-app",
     });
 
     return;
