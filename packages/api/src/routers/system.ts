@@ -6,8 +6,8 @@ export const systemRouter = t.router({
     .input(z.enum(["Android", "iOS"]))
     .query(({ input }) => {
       if (input === "Android") {
-        return 32;
+        return 33;
       }
-      return 45; // iOS
+      return 46; // iOS
     }),
 });

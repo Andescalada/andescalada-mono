@@ -2,6 +2,7 @@ import {
   ActionSheetOptions,
   useActionSheet,
 } from "@expo/react-native-action-sheet";
+import { isIOS } from "@utils/platform";
 import { useCallback, useMemo } from "react";
 
 type Options = Record<
@@ -15,7 +16,7 @@ interface Args extends Omit<ActionSheetOptions, "options"> {
 
 const useOptionsSheet = (
   optionsObject: Options,
-  { cancelButtonIndex, withCancel = true, ...args }: Args = {},
+  { cancelButtonIndex, withCancel = isIOS, ...args }: Args = {},
 ) => {
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -48,7 +49,8 @@ const useOptionsSheet = (
     showActionSheetWithOptions(
       {
         options,
-        cancelButtonIndex,
+        // @ts-expect-error https://github.com/expo/react-native-action-sheet/issues/187
+        cancelButtonIndex: isIOS ? cancelButtonIndex : "",
         ...args,
       },
       (buttonIndex) => {

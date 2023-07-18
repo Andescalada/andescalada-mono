@@ -11,7 +11,10 @@ import {
 import { TextInputRef } from "@andescalada/ui/TextInput/TextInput";
 import { pallete } from "@andescalada/ui/Theme/pallete";
 import { trpc } from "@andescalada/utils/trpc";
-import BottomSheet, { useBottomSheetInternal } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetFlatList,
+  useBottomSheetInternal,
+} from "@gorhom/bottom-sheet";
 import useDebounce from "@hooks/useDebounce";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
@@ -26,7 +29,6 @@ import {
   useState,
 } from "react";
 import {
-  FlatList,
   Keyboard,
   NativeSyntheticEvent,
   StyleSheet,
@@ -68,7 +70,14 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
       return;
     }
 
-    mutate({ search: value, filterMe });
+    mutate(
+      { search: value, filterMe },
+      {
+        onSuccess: () => {
+          Keyboard.dismiss();
+        },
+      },
+    );
   };
 
   const onDebounceChange = useDebounce(searchUsername);
@@ -131,9 +140,10 @@ const FindUser: ForwardRefRenderFunction<BottomSheet, Props> = (
               <ActivityIndicator size="large" />
             </Box>
           ) : (
-            <FlatList
+            <BottomSheetFlatList
               data={data}
               keyExtractor={(item) => item.id}
+              onTouchStart={Keyboard.dismiss}
               ListEmptyComponent={() =>
                 search ? (
                   <Box>

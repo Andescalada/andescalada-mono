@@ -1,4 +1,5 @@
 import error from "@andescalada/api/src/utils/errors";
+import { GlobalRoles } from "@andescalada/api/src/utils/globalRoles";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { Prisma, RoleNames, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
@@ -13,7 +14,11 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
     throw new TRPCError(error.sectorNotFound(input.zoneId));
   }
 
-  if (res.infoAccess !== "Public" && !ctx.permissions.has("Read")) {
+  if (
+    res.infoAccess !== "Public" &&
+    !ctx.permissions.has("Read") &&
+    !ctx.verifiedUser?.permissions?.includes(GlobalRoles.REVIEW_ZONE)
+  ) {
     return {
       ...res,
       sectors: undefined,

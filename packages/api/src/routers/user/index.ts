@@ -6,6 +6,7 @@ import assignAndCacheRole from "@andescalada/api/src/utils/assignAndCacheRole";
 import error from "@andescalada/api/src/utils/errors";
 import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import getAndParsePermissions from "@andescalada/api/src/utils/getAndParsePermissions";
+import { GlobalRoles } from "@andescalada/api/src/utils/globalRoles";
 import parseZonesToRole from "@andescalada/api/src/utils/parseZonesToRole";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
@@ -246,7 +247,7 @@ export const userRouter = t.router({
     .input(user.schema.pick({ username: true }).merge(user.role))
     .mutation(async ({ ctx, input }) => {
       if (
-        !ctx.user.permissions.includes("crud:roles") &&
+        !ctx.user.permissions.includes(GlobalRoles.CRUD_ROLES) &&
         !ctx.permissions.has("AssignZoneRole")
       ) {
         throw new TRPCError(
@@ -279,7 +280,7 @@ export const userRouter = t.router({
   adminDeleteRoleByUser: protectedProcedure
     .input(z.object({ roleByZoneId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user.permissions.includes("crud:roles")) {
+      if (!ctx.user.permissions.includes(GlobalRoles.CRUD_ROLES)) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       return removeRole(ctx, { id: input.roleByZoneId });
@@ -541,7 +542,7 @@ export const userRouter = t.router({
   selfAssignZoneToReview: protectedProcedure
     .input(zone.id)
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user.permissions.includes("review:zone")) {
+      if (!ctx.user.permissions.includes(GlobalRoles.REVIEW_ZONE)) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const roles = await assignAndCacheRole(ctx, {

@@ -25,6 +25,7 @@ import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import featureFlags from "@utils/featureFlags";
 import { useCallback, useMemo } from "react";
 import { Alert, StyleSheet, useWindowDimensions } from "react-native";
+import Share from "react-native-share";
 
 const HEADER_HEIGHT = 100;
 const CANVAS_WIDTH = pathTitle.width;
@@ -48,6 +49,16 @@ const UserHeader = () => {
 
   const dispatch = useAppDispatch();
 
+  const shareAndescalada = useCallback(async () => {
+    Share.open({
+      title: "Andescalada App",
+      message: "Mira la app de la Fundación Andescalada",
+      url: "https://www.andescalada.org/open-app",
+    });
+
+    return;
+  }, []);
+
   const rootNavigation = useRootNavigation();
   const onLogout = useCallback(() => {
     Alert.alert("Cerrar Sesión", "¿Seguro que quieres cerrar sesión?", [
@@ -70,6 +81,9 @@ const UserHeader = () => {
             screen: UserNavigationRoutes.Settings,
           }),
       },
+      "Compartir Andescalada": {
+        action: shareAndescalada,
+      },
       "Administrador de zonas": {
         action: () => {
           rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
@@ -82,7 +96,7 @@ const UserHeader = () => {
         action: onLogout,
       },
     },
-    { destructiveButtonIndex: 2 },
+    { destructiveButtonIndex: 3 },
   );
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -105,27 +119,29 @@ const UserHeader = () => {
       width={screenWidth}
       borderBottomColor="grayscale.400"
     >
-      <Canvas style={styles.canvas} mode="continuous">
-        <FitBox
-          src={rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)}
-          dst={rect(
-            HEADER_HEIGHT / 6,
-            HEADER_HEIGHT - responsiveCanvasHeight - HEADER_HEIGHT / 6,
-            responsiveCanvasWidth,
-            responsiveCanvasHeight,
-          )}
-        >
-          <Group clip={andescaladaPath}>
-            <Rect x={0} y={0} width={CANVAS_WIDTH} height={16}>
-              <LinearGradient
-                start={vec(0, 0)}
-                end={vec(HEADER_HEIGHT, CANVAS_WIDTH / 5)}
-                colors={[theme.colors.gradientB, theme.colors.gradientA]}
-              />
-            </Rect>
-          </Group>
-        </FitBox>
-      </Canvas>
+      <Pressable style={styles.canvas} onPress={shareAndescalada}>
+        <Canvas style={styles.canvas} mode="continuous">
+          <FitBox
+            src={rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)}
+            dst={rect(
+              HEADER_HEIGHT / 6,
+              HEADER_HEIGHT - responsiveCanvasHeight - HEADER_HEIGHT / 6,
+              responsiveCanvasWidth,
+              responsiveCanvasHeight,
+            )}
+          >
+            <Group clip={andescaladaPath}>
+              <Rect x={0} y={0} width={CANVAS_WIDTH} height={16}>
+                <LinearGradient
+                  start={vec(0, 0)}
+                  end={vec(HEADER_HEIGHT, CANVAS_WIDTH / 5)}
+                  colors={[theme.colors.gradientB, theme.colors.gradientA]}
+                />
+              </Rect>
+            </Group>
+          </FitBox>
+        </Canvas>
+      </Pressable>
 
       <Box
         justifyContent="center"
