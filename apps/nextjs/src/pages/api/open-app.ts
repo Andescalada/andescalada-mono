@@ -7,7 +7,7 @@ const OpenApp = (req: NextApiRequest, res: NextApiResponse) => {
   if (userAgent?.search("Android") !== -1) {
     // Redirect Android users to a specific URL
     res.redirect(
-      301,
+      302,
       "https://play.google.com/store/apps/details?id=com.andescalada.app&hl=es&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1",
     );
   } else if (
@@ -16,7 +16,7 @@ const OpenApp = (req: NextApiRequest, res: NextApiResponse) => {
   ) {
     // Redirect iOS users to a different URL
     res.redirect(
-      301,
+      302,
       "https://apps.apple.com/us/app/andescalada/id6443438367?itsct=apps_box_badge&amp;itscg=30200",
     );
   } else {
