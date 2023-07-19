@@ -218,7 +218,53 @@ export const photoContestRouter = t.router({
           User: { select: { username: true, profilePhoto: true } },
           Topo: {
             select: {
+              id: true,
               image: true,
+              RoutePath: {
+                where: {
+                  Route: {
+                    AND: [
+                      { isDeleted: SoftDelete.NotDeleted },
+                      {
+                        OR: [
+                          {
+                            Pitch: {
+                              MultiPitch: {
+                                isDeleted: SoftDelete.NotDeleted,
+                              },
+                            },
+                          },
+
+                          { Pitch: null },
+                        ],
+                      },
+                      {
+                        OR: [
+                          {
+                            Pitch: { isDeleted: SoftDelete.NotDeleted },
+                          },
+                          { Pitch: null },
+                        ],
+                      },
+                    ],
+                  },
+                },
+                orderBy: { Route: { Pitch: { number: "desc" as const } } },
+                include: {
+                  Route: {
+                    select: {
+                      id: true,
+                      position: true,
+                      extendedRouteId: true,
+                      variantRouteId: true,
+                      kind: true,
+                      name: true,
+                      RouteGrade: true,
+                      Pitch: { select: { number: true } },
+                    },
+                  },
+                },
+              },
               Wall: {
                 select: {
                   name: true,

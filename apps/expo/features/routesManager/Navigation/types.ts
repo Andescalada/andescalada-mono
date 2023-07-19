@@ -8,6 +8,7 @@ export enum RoutesManagerNavigationRoutes {
   RouteExtensionDrawer = "RoutesManagerRouteExtension",
   RouteVariantDrawer = "RoutesManagerRouteVariant",
   MultiPitchDrawer = "RoutesManagerMultiPitchDrawer",
+  TopoManager = "RoutesManagerTopoManager",
 }
 
 export type RoutesManagerNavigationParamList = {
@@ -19,6 +20,8 @@ export type RoutesManagerNavigationParamList = {
     wallId: Wall["id"];
     topoId: Topo["id"];
     zoneId: Zone["id"];
+    singleEdition?: true;
+    goBackOnSuccess?: true;
   };
   [RoutesManagerNavigationRoutes.RouteExtensionDrawer]: {
     route: {
@@ -57,6 +60,11 @@ export type RoutesManagerNavigationParamList = {
   [RoutesManagerNavigationRoutes.TopoViewer]: {
     topoId: Topo["id"];
     routeId?: Route["id"];
+    zoneId: Zone["id"];
+  };
+  [RoutesManagerNavigationRoutes.TopoManager]: {
+    topoId: Topo["id"];
+    wallId: Wall["id"];
     zoneId: Zone["id"];
   };
 };

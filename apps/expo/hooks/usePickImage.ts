@@ -10,6 +10,7 @@ export interface SelectedImage {
 }
 
 type Args = ImagePicker.ImagePickerOptions & {
+  onDelete?: () => void;
   onSuccess?: (selectedImage: {
     localUri: string;
     base64Img: string;
@@ -103,7 +104,10 @@ const usePickImage = (args?: Args) => {
         },
         {
           text: "Borrar",
-          onPress: () => setSelectedImage(undefined),
+          onPress: () => {
+            if (args?.onDelete) args.onDelete();
+            setSelectedImage(undefined);
+          },
         },
         {
           text: "Cancelar",
@@ -118,7 +122,7 @@ const usePickImage = (args?: Args) => {
 
       Alert.alert("Seleccionar imagen", "", options);
     },
-    [pickFromCamera, pickFromLibrary],
+    [pickFromCamera, pickFromLibrary, args],
   );
   return { pickImage, selectedImage };
 };

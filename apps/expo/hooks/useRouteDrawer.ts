@@ -32,6 +32,7 @@ interface Args {
   withLabel?: boolean;
   hideStart?: boolean;
   navigateOnSuccess?: () => void;
+  goBackOnSuccess?: true;
 }
 
 const useRouteDrawer = ({
@@ -47,6 +48,7 @@ const useRouteDrawer = ({
   withLabel = false,
   hideStart = false,
   navigateOnSuccess,
+  goBackOnSuccess,
 }: Args) => {
   const movement = useValue<SkPoint>(pointToVector(pitchLabelPoint, scale));
 
@@ -137,6 +139,10 @@ const useRouteDrawer = ({
             utils.walls.byId.invalidate({ wallId, zoneId });
             setTimeout(() => {
               if (data) {
+                if (goBackOnSuccess) {
+                  rootNavigation.goBack();
+                  return;
+                }
                 if (navigateOnSuccess) {
                   navigateOnSuccess();
                 } else {
