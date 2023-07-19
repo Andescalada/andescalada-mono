@@ -26,7 +26,14 @@ interface Props {
 
 const RouteDrawer: FC<Props> = ({ topos, fileUrl, height, width, scale }) => {
   const {
-    params: { route: routeParams, topoId, wallId, zoneId },
+    params: {
+      route: routeParams,
+      topoId,
+      wallId,
+      zoneId,
+      singleEdition,
+      goBackOnSuccess,
+    },
   } =
     useRoute<
       RoutesManagerRouteProps<RoutesManagerNavigationRoutes.RouteDrawer>
@@ -59,6 +66,7 @@ const RouteDrawer: FC<Props> = ({ topos, fileUrl, height, width, scale }) => {
     routePathId: topos?.selectedRoute?.id,
     zoneId,
     routeStrokeWidth,
+    goBackOnSuccess,
   });
 
   const onUndo = () => {
@@ -124,7 +132,7 @@ const RouteDrawer: FC<Props> = ({ topos, fileUrl, height, width, scale }) => {
         onReset={onReset}
         showRoutes={showRoutes}
         setShowRoutes={setShowRoutes}
-        showSaveAndAddButton={!isEdition}
+        showSaveAndAddButton={!isEdition && !singleEdition}
       />
     </Screen>
   );

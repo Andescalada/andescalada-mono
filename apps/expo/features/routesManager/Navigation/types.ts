@@ -20,6 +20,8 @@ export type RoutesManagerNavigationParamList = {
     wallId: Wall["id"];
     topoId: Topo["id"];
     zoneId: Zone["id"];
+    singleEdition?: true;
+    goBackOnSuccess?: true;
   };
   [RoutesManagerNavigationRoutes.RouteExtensionDrawer]: {
     route: {

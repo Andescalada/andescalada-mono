@@ -17,6 +17,7 @@ const TopoManagerScreen: FC<Props> = ({
   route: {
     params: { topoId, zoneId, wallId },
   },
+  navigation,
 }) => {
   const topo = trpc.topos.byId.useQuery({ topoId, zoneId });
   const { data: { routes } = {} } = useRouteList(
@@ -40,7 +41,11 @@ const TopoManagerScreen: FC<Props> = ({
   if (!topo.data) return null;
   return (
     <Screen>
-      <Header title={topo.data.Wall.name} padding="m" />
+      <Header
+        title={topo.data.Wall.name}
+        padding="m"
+        onGoBack={navigation.goBack}
+      />
       <Box flex={1}>
         <FlatList
           ListHeaderComponent={() => (
@@ -72,6 +77,19 @@ const TopoManagerScreen: FC<Props> = ({
                 justifyContent="space-between"
                 padding="l"
                 borderRadius={16}
+                onPress={() => {
+                  navigation.navigate(
+                    RoutesManagerNavigationRoutes.RouteDrawer,
+                    {
+                      topoId,
+                      zoneId,
+                      wallId,
+                      singleEdition: true,
+                      goBackOnSuccess: true,
+                      route: { id: route.id, position: route.position },
+                    },
+                  );
+                }}
               >
                 <Box flexDirection="row" flex={1}>
                   <Box

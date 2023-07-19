@@ -13,7 +13,7 @@ import { FC, useMemo } from "react";
 type Props =
   RoutesManagerScreenProps<RoutesManagerNavigationRoutes.RouteDrawer>;
 
-const DrawRoute: FC<Props> = ({
+const RouteDrawerScreen: FC<Props> = ({
   route: {
     params: { route: routeParams, topoId, zoneId },
   },
@@ -49,4 +49,4 @@ const DrawRoute: FC<Props> = ({
   );
 };
 
-export default DrawRoute;
+export default RouteDrawerScreen;
