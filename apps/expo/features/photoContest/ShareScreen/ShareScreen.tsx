@@ -37,9 +37,12 @@ const ShareScreen: FC<Props> = ({
 }) => {
   const userHasShared = trpc.photoContest.userHasShared.useMutation();
 
-  const submission = trpc.photoContest.getUserTopoSubmission.useQuery({
-    wallId,
-  });
+  const submission = trpc.photoContest.getUserTopoSubmission.useQuery(
+    {
+      wallId,
+    },
+    { staleTime: 0, cacheTime: 0 },
+  );
 
   const imageInServer = useCloudinaryUrl("optimizedImage", {
     publicId: submission.data?.Topo.image.publicId,
