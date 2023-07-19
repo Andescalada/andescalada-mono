@@ -117,8 +117,8 @@ const ShareScreen: FC<Props> = ({
         showOptions={false}
         onGoBack={navigation.goBack}
       />
-      <ScrollView>
-        <Box justifyContent="space-between" flex={1}>
+      <ScrollView marginTop="s" showsVerticalScrollIndicator={false}>
+        <Box gap="l" flex={1}>
           <Box
             borderStyle="dashed"
             justifyContent="center"
@@ -262,43 +262,43 @@ const ShareScreen: FC<Props> = ({
               story para concursar.
             </Text>
           </Box>
-          <Box marginBottom="l">
-            <Button
-              variant="transparentSimplified"
-              title="Compartir"
-              icon="ios-logo-instagram"
-              iconProps={{ size: 25 }}
-              gap="s"
-              height={50}
-              onPress={async () => {
-                const image = canvasRef.current?.makeImageSnapshot();
-                if (!image || !submission?.data?.id) return;
-                const imageBase64 = image.encodeToBase64(ImageFormat.PNG, 100);
-
-                if (hasInstagramInstalled && !!imageBase64) {
-                  await Share.shareSingle({
-                    appId: Env.FACEBOOK_DEV_APP_ID,
-                    stickerImage: `data:image/png;base64,${imageBase64}`,
-                    attributionURL: "https://www.andescalada.org",
-                    backgroundImage: storyBackground?.url,
-                    backgroundBottomColor: theme.colors["brand.primaryA"],
-                    backgroundTopColor: theme.colors["brand.primaryB"],
-                    social: Share.Social.INSTAGRAM_STORIES as Social,
-                  });
-                } else {
-                  await Share.open({
-                    url: `data:image/png;base64,${imageBase64}`,
-                    title: "Compartir",
-                    filename: `${submission.data?.Topo.Wall.name}.png`,
-                    type: "image/png",
-                  });
-                }
-                userHasShared.mutate({ submissionId: submission.data?.id });
-              }}
-            />
-          </Box>
         </Box>
       </ScrollView>
+      <Box marginTop="s" marginBottom="m">
+        <Button
+          variant="transparentSimplified"
+          title="Compartir"
+          icon="ios-logo-instagram"
+          iconProps={{ size: 25 }}
+          gap="s"
+          height={50}
+          onPress={async () => {
+            const image = canvasRef.current?.makeImageSnapshot();
+            if (!image || !submission?.data?.id) return;
+            const imageBase64 = image.encodeToBase64(ImageFormat.PNG, 100);
+
+            if (hasInstagramInstalled && !!imageBase64) {
+              await Share.shareSingle({
+                appId: Env.FACEBOOK_DEV_APP_ID,
+                stickerImage: `data:image/png;base64,${imageBase64}`,
+                attributionURL: "https://www.andescalada.org",
+                backgroundImage: storyBackground?.url,
+                backgroundBottomColor: theme.colors["brand.primaryA"],
+                backgroundTopColor: theme.colors["brand.primaryB"],
+                social: Share.Social.INSTAGRAM_STORIES as Social,
+              });
+            } else {
+              await Share.open({
+                url: `data:image/png;base64,${imageBase64}`,
+                title: "Compartir",
+                filename: `${submission.data?.Topo.Wall.name}.png`,
+                type: "image/png",
+              });
+            }
+            userHasShared.mutate({ submissionId: submission.data?.id });
+          }}
+        />
+      </Box>
     </Screen>
   );
 };

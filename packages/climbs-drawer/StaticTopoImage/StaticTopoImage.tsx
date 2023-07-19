@@ -35,9 +35,10 @@ const StaticTopoImage: React.FC<Props> = ({
           height={height}
           width={width}
           image={image}
-          fit="contain"
+          fit="cover"
         />
         <FitBox
+          fit="cover"
           src={rect(0, 0, image?.height() || 0, image?.width() || 0)}
           dst={rect(x, y, height, width)}
         >
