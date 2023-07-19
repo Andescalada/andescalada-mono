@@ -14,9 +14,12 @@ import {
   PhotoContestRoutes,
   PhotoContestScreenProps,
 } from "@features/photoContest/Navigation/types";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import usePickImage from "@hooks/usePickImage";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC, useEffect, useMemo, useState } from "react";
 import { Alert, FlatList } from "react-native";
 
@@ -33,6 +36,8 @@ const UploadTopoScreen: FC<Props> = ({
   const submission = trpc.photoContest.getUserTopoSubmission.useQuery({
     wallId,
   });
+
+  const rootNavigation = useRootNavigation();
 
   const utils = trpc.useContext();
 
@@ -161,8 +166,8 @@ const UploadTopoScreen: FC<Props> = ({
           variant="transparentSimplified"
           title="Compartir"
           icon="share-outline"
-          flex={1}
           iconProps={{ size: 18 }}
+          flex={1}
           gap="xs"
           titleVariant="p2R"
           onPress={() => {
@@ -180,6 +185,26 @@ const UploadTopoScreen: FC<Props> = ({
           }}
         />
       </Box>
+      {submission.data?.Topo.image && (
+        <Button
+          variant="transparentSimplified"
+          title="Dibujar Topos"
+          titleVariant="p2R"
+          icon="color-palette-outline"
+          gap="s"
+          height={30}
+          iconProps={{ size: 20 }}
+          onPress={() => {
+            if (!submission.data?.Topo.id)
+              throw new Error("Topo image without topo id");
+
+            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+              screen: RoutesManagerNavigationRoutes.TopoManager,
+              params: { topoId: submission.data?.Topo.id, zoneId },
+            });
+          }}
+        />
+      )}
       <Box flex={1}>
         <Text variant="p1R">Usuarios participando</Text>
         <FlatList

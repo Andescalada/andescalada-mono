@@ -8,6 +8,7 @@ export enum RoutesManagerNavigationRoutes {
   RouteExtensionDrawer = "RoutesManagerRouteExtension",
   RouteVariantDrawer = "RoutesManagerRouteVariant",
   MultiPitchDrawer = "RoutesManagerMultiPitchDrawer",
+  TopoManager = "RoutesManagerTopoManager",
 }
 
 export type RoutesManagerNavigationParamList = {
@@ -57,6 +58,10 @@ export type RoutesManagerNavigationParamList = {
   [RoutesManagerNavigationRoutes.TopoViewer]: {
     topoId: Topo["id"];
     routeId?: Route["id"];
+    zoneId: Zone["id"];
+  };
+  [RoutesManagerNavigationRoutes.TopoManager]: {
+    topoId: Topo["id"];
     zoneId: Zone["id"];
   };
 };

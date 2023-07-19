@@ -218,6 +218,7 @@ export const photoContestRouter = t.router({
           User: { select: { username: true, profilePhoto: true } },
           Topo: {
             select: {
+              id: true,
               image: true,
               Wall: {
                 select: {
