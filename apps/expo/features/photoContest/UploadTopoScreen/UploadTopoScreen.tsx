@@ -71,6 +71,7 @@ const UploadTopoScreen: FC<Props> = ({
           userPhotoContestTopoId: submission.data?.id,
           wallName,
         });
+        utils.topos.invalidate();
       } catch (error) {
         Alert.alert("No pudimos subir la foto", "Inténtalo de nuevo");
       }
@@ -101,16 +102,25 @@ const UploadTopoScreen: FC<Props> = ({
         variant: "transparent" as const,
       };
     }
-    if (submission.data?.isSubmitted)
+    if (submission.data?.isSubmitted && !!selectedImage)
       return {
         title: "Reenviar",
         variant: "info" as const,
+      };
+    if (submission.data?.isSubmitted && !selectedImage)
+      return {
+        title: "Reenviar",
+        variant: "transparent" as const,
       };
     return {
       title: "Enviar",
       variant: "success" as const,
     };
-  }, [submission.data?.Topo.image, submission.data?.isSubmitted]);
+  }, [
+    submission.data?.Topo.image,
+    submission.data?.isSubmitted,
+    selectedImage,
+  ]);
 
   if (submission.data === undefined) return null;
 
@@ -236,8 +246,14 @@ const UploadTopoScreen: FC<Props> = ({
             );
             return;
           }
-
-          if (submission.data?.isSubmitted) {
+          if (submission.data?.isSubmitted && !selectedImage) {
+            Alert.alert(
+              "No se ha subido una foto nueva",
+              "Presiona en la foto si quieres cambiarla",
+            );
+            return;
+          }
+          if (submission.data?.isSubmitted && !!selectedImage) {
             Alert.alert(
               "¿Volver a enviar?",
               "Tu entrega anterior será borrada y reemplazada por esta",

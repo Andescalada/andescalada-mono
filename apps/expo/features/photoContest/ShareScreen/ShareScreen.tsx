@@ -58,7 +58,7 @@ const ShareScreen: FC<Props> = ({
   });
 
   const { width: screenWidth } = useWindowDimensions();
-  const skiaImage = useImage(imageInServer?.url);
+
   const skiaLogo = useImage(logoInServer?.url);
   const skiaUserImage = useImage(userImage?.url);
 
