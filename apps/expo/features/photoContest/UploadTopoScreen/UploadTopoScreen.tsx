@@ -200,7 +200,7 @@ const UploadTopoScreen: FC<Props> = ({
 
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
               screen: RoutesManagerNavigationRoutes.TopoManager,
-              params: { topoId: submission.data?.Topo.id, zoneId },
+              params: { topoId: submission.data?.Topo.id, zoneId, wallId },
             });
           }}
         />

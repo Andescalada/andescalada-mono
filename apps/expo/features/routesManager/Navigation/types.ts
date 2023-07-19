@@ -62,6 +62,7 @@ export type RoutesManagerNavigationParamList = {
   };
   [RoutesManagerNavigationRoutes.TopoManager]: {
     topoId: Topo["id"];
+    wallId: Wall["id"];
     zoneId: Zone["id"];
   };
 };
