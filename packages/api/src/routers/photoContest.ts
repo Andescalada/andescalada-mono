@@ -2,6 +2,7 @@ import image from "@andescalada/api/schemas/image";
 import wall from "@andescalada/api/schemas/wall";
 import zone from "@andescalada/api/schemas/zone";
 import { t } from "@andescalada/api/src/createRouter";
+import { includeInTopo } from "@andescalada/api/src/routers/topos";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@andescalada/db";
@@ -231,51 +232,7 @@ export const photoContestRouter = t.router({
             select: {
               id: true,
               image: true,
-              RoutePath: {
-                where: {
-                  Route: {
-                    AND: [
-                      { isDeleted: SoftDelete.NotDeleted },
-                      {
-                        OR: [
-                          {
-                            Pitch: {
-                              MultiPitch: {
-                                isDeleted: SoftDelete.NotDeleted,
-                              },
-                            },
-                          },
-
-                          { Pitch: null },
-                        ],
-                      },
-                      {
-                        OR: [
-                          {
-                            Pitch: { isDeleted: SoftDelete.NotDeleted },
-                          },
-                          { Pitch: null },
-                        ],
-                      },
-                    ],
-                  },
-                },
-                orderBy: { Route: { Pitch: { number: "desc" as const } } },
-                include: {
-                  Route: {
-                    select: {
-                      id: true,
-                      position: true,
-                      extendedRouteId: true,
-                      variantRouteId: true,
-                      kind: true,
-                      name: true,
-                      RouteGrade: true,
-                      Pitch: { select: { number: true } },
-                    },
-                  },
-                },
-              },
+              RoutePath: selectRoutePath,
               Wall: {
                 select: {
                   name: true,
@@ -349,4 +306,99 @@ export const photoContestRouter = t.router({
         data: { UserPhotoContestTopo: { connect: { id: input.submissionId } } },
       }),
     ),
+  submittedPhotos: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.date().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 10;
+      const { cursor } = input;
+      const items = await ctx.prisma.userPhotoContestTopo.findMany({
+        where: { isSubmitted: true },
+        take: limit + 1,
+        cursor: cursor ? { createdAt: cursor } : undefined,
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          createdAt: true,
+          Topo: {
+            include: {
+              ...includeInTopo,
+              Wall: {
+                include: {
+                  Sector: { include: { Zone: { select: { name: true } } } },
+                },
+              },
+            },
+          },
+          User: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              profilePhoto: true,
+            },
+          },
+        },
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop();
+        nextCursor = nextItem!.createdAt;
+      }
+      return {
+        items,
+        nextCursor,
+      };
+    }),
 });
+
+const selectRoutePath = {
+  where: {
+    Route: {
+      AND: [
+        { isDeleted: SoftDelete.NotDeleted },
+        {
+          OR: [
+            {
+              Pitch: {
+                MultiPitch: {
+                  isDeleted: SoftDelete.NotDeleted,
+                },
+              },
+            },
+
+            { Pitch: null },
+          ],
+        },
+        {
+          OR: [
+            {
+              Pitch: { isDeleted: SoftDelete.NotDeleted },
+            },
+            { Pitch: null },
+          ],
+        },
+      ],
+    },
+  },
+  orderBy: { Route: { Pitch: { number: "desc" as const } } },
+  include: {
+    Route: {
+      select: {
+        id: true,
+        position: true,
+        extendedRouteId: true,
+        variantRouteId: true,
+        kind: true,
+        name: true,
+        RouteGrade: true,
+        Pitch: { select: { number: true } },
+      },
+    },
+  },
+};

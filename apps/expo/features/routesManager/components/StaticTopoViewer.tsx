@@ -1,16 +1,13 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { SkiaRoutePath, StaticTopoImage } from "@andescalada/climbs-drawer";
-import { routeKindLabel } from "@andescalada/common-assets/routeKind";
+import { StaticTopoImage } from "@andescalada/climbs-drawer";
 import { ThemeProvider } from "@andescalada/ui";
-import { useAppTheme } from "@hooks/useAppTheme";
+import ColoredRoute from "@features/routesManager/components/ColoredRoute";
 import { inferProcedureOutput } from "@trpc/server";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 
 type Data = inferProcedureOutput<AppRouter["topos"]["byId"]>;
 
 type RoutePaths = Data["RoutePath"];
-
-type PathItem = Data["RoutePath"][0];
 
 interface Props {
   x?: number;
@@ -59,48 +56,3 @@ const StaticTopoViewer: FC<Props> = ({
 };
 
 export default StaticTopoViewer;
-
-interface ColoredRouteProps {
-  path: PathItem;
-  selectedRoute: string | undefined;
-  scale: number;
-  strokeWidth: number;
-  pitchLabelPoint?: string;
-  pitchLabelTitle?: string;
-  withSimpleStartPoint?: boolean;
-}
-
-const ColoredRoute = ({
-  path,
-  selectedRoute,
-  scale,
-  strokeWidth,
-  pitchLabelPoint,
-  pitchLabelTitle,
-  withSimpleStartPoint = false,
-}: ColoredRouteProps) => {
-  const theme = useAppTheme();
-
-  const color = useMemo(() => {
-    if (path.routeId === selectedRoute)
-      return theme.colors["contrast.bright.green"];
-    if (!!selectedRoute && path.routeId !== selectedRoute)
-      return theme.colors["grayscale.transparent.80.600"];
-    return theme.colors[routeKindLabel(path.Route.kind).color];
-  }, [path.Route.kind, path.routeId, selectedRoute, theme.colors]);
-
-  return (
-    <SkiaRoutePath
-      withSimpleStartPoint={withSimpleStartPoint}
-      label={path.Route.position.toString()}
-      path={path.path}
-      key={path.id}
-      color={color}
-      scale={scale}
-      pitchLabelPoint={pitchLabelPoint}
-      pitchLabelTitle={pitchLabelTitle}
-      routeFromTheGround={!path.Route.extendedRouteId}
-      strokeWidth={strokeWidth}
-    />
-  );
-};
