@@ -8,6 +8,8 @@ export const buttonVariantsColors = {
   transparentButtonText: pallete.grayscale.black,
   transparentSimplifiedButtonBackground: pallete.grayscale.transparent[50][300],
   transparentSimplifiedButtonText: pallete.grayscale.black,
+  infoSimplifiedButtonBackground: pallete.semantic.info,
+  infoSimplifiedButtonText: pallete.grayscale.white,
   successButtonBackground: pallete.semantic.success,
   successButtonText: pallete.grayscale.white,
   successSmallOutlineButtonText: pallete.grayscale.black,
@@ -46,6 +48,12 @@ const buttonVariants = createBoxVariant({
   },
   transparentSimplified: {
     backgroundColor: "transparentButtonBackground",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  infoSimplified: {
+    backgroundColor: "infoSimplifiedButtonBackground",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",

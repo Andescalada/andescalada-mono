@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Header,
   Ionicons,
   Pressable,
@@ -118,6 +119,17 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
               <Text variant="p3B">{item.name}</Text>
             </Pressable>
           )}
+        />
+      </Box>
+      <Box>
+        <Button
+          icon="images-outline"
+          gap="s"
+          iconProps={{ size: 20 }}
+          titleVariant="p1R"
+          title="Ver fotos participando"
+          variant="infoSimplified"
+          padding="m"
         />
       </Box>
       <FlatList
