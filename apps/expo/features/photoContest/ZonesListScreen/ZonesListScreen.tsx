@@ -14,6 +14,7 @@ import {
   PhotoContestScreenProps,
 } from "@features/photoContest/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
+import useRefresh from "@hooks/useRefresh";
 import {
   Box as SkiaBox,
   Canvas,
@@ -29,6 +30,8 @@ const SIZE = 100;
 
 const ZoneListScreen: FC<Props> = ({ navigation }) => {
   const users = trpc.photoContest.usersParticipating.useQuery();
+
+  const refreshUsers = useRefresh(users.refetch, users.isFetching);
 
   const { data, isLoading } = trpc.photoContest.getCurrentContest.useQuery(
     undefined,
@@ -119,6 +122,7 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
       </Box>
       <FlatList
         data={users.data}
+        refreshControl={refreshUsers}
         ListHeaderComponent={() => (
           <Box
             marginVertical="s"

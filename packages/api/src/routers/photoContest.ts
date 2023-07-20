@@ -180,13 +180,20 @@ export const photoContestRouter = t.router({
       z
         .object({ image: image.schema })
         .and(wall.id)
-        .and(z.object({ wallName: z.string() }))
-        .and(z.object({ userPhotoContestTopoId: z.string().optional() })),
+        .and(z.object({ wallName: z.string() })),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.userPhotoContestTopoId) {
+      const existingSubmission =
+        await ctx.prisma.userPhotoContestTopo.findFirst({
+          where: {
+            userId: ctx.user.id,
+            Topo: { wallId: input.wallId },
+          },
+        });
+
+      if (existingSubmission?.id) {
         const updatedTopo = await ctx.prisma.userPhotoContestTopo.update({
-          where: { id: input.userPhotoContestTopoId },
+          where: { id: existingSubmission.id },
           data: { Topo: { update: { image: { create: input.image } } } },
         });
         return updatedTopo;

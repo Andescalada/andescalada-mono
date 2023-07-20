@@ -43,12 +43,7 @@ const UploadTopoScreen: FC<Props> = ({
 
   const [loadingUpload, setLoadingUpload] = useState(false);
 
-  const uploadImageSubmission = trpc.photoContest.uploadImageTopo.useMutation({
-    onSuccess: async () => {
-      await utils.photoContest.invalidate();
-      setLoadingUpload(false);
-    },
-  });
+  const uploadImageSubmission = trpc.photoContest.uploadImageTopo.useMutation();
 
   const submitTopo = trpc.photoContest.submitTopo.useMutation({
     onSuccess: () => {
@@ -68,13 +63,14 @@ const UploadTopoScreen: FC<Props> = ({
         await uploadImageSubmission.mutateAsync({
           image,
           wallId,
-          userPhotoContestTopoId: submission.data?.id,
           wallName,
         });
+        await utils.photoContest.invalidate();
         utils.topos.invalidate();
       } catch (error) {
         Alert.alert("No pudimos subir la foto", "Inténtalo de nuevo");
       }
+      setLoadingUpload(false);
     },
   });
 
