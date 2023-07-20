@@ -130,6 +130,9 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
           title="Ver fotos participando"
           variant="infoSimplified"
           padding="m"
+          onPress={() => {
+            navigation.navigate(PhotoContestRoutes.PhotosFeed);
+          }}
         />
       </Box>
       <FlatList
