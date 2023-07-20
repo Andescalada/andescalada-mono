@@ -138,21 +138,25 @@ export const photoContestRouter = t.router({
   }),
   userParticipatingByWall: protectedProcedure
     .input(wall.id)
-    .query(({ ctx, input }) => {
-      return ctx.prisma.userPhotoContestTopo.findMany({
+    .query(async ({ ctx, input }) => {
+      const usersWhoSubmitted = await ctx.prisma.userPhotoContestTopo.groupBy({
+        by: ["userId"],
         where: { Topo: { wallId: input.wallId }, isSubmitted: true },
+        _max: { updatedAt: true },
+      });
+
+      const users = await ctx.prisma.user.findMany({
+        where: {
+          id: { in: usersWhoSubmitted.map((user) => user.userId) },
+        },
         select: {
-          updatedAt: true,
-          User: {
-            select: {
-              id: true,
-              name: true,
-              username: true,
-              profilePhoto: true,
-            },
-          },
+          id: true,
+          name: true,
+          username: true,
+          profilePhoto: true,
         },
       });
+      return users;
     }),
   submittedToposByUser: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.userPhotoContestTopo.findMany({

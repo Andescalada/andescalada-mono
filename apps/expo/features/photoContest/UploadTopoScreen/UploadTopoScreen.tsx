@@ -226,7 +226,7 @@ const UploadTopoScreen: FC<Props> = ({
               </Text>
             </Box>
           )}
-          renderItem={({ item }) => <UserItem item={item.User} />}
+          renderItem={({ item }) => <UserItem item={item} />}
         />
       </Box>
       <Button
