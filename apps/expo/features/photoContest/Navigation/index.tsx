@@ -1,6 +1,7 @@
 import OnboardingScreen from "@features/photoContest/OnboardingScreen";
 import PhotosFeedScreen from "@features/photoContest/PhotosFeedScreen";
 import RouteListScreen from "@features/photoContest/RouteListScreen";
+import ShareContestScreen from "@features/photoContest/ShareContestScreen";
 import ShareScreen from "@features/photoContest/ShareScreen";
 import UploadTopoScreen from "@features/photoContest/UploadTopoScreen";
 import ZoneScreen from "@features/photoContest/ZoneScreen";
@@ -30,6 +31,10 @@ const Navigator = () => {
       <Stack.Screen
         component={PhotosFeedScreen}
         name={PhotoContestRoutes.PhotosFeed}
+      />
+      <Stack.Screen
+        component={ShareContestScreen}
+        name={PhotoContestRoutes.ShareContest}
       />
       <Stack.Screen component={ShareScreen} name={PhotoContestRoutes.Share} />
       <Stack.Screen

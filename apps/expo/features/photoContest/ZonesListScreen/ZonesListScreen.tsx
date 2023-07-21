@@ -23,6 +23,7 @@ import {
   rect,
   vec,
 } from "@shopify/react-native-skia";
+import { isAndroid } from "@utils/platform";
 import { FC } from "react";
 import { FlatList } from "react-native";
 
@@ -52,30 +53,33 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
         showOptions={false}
         onGoBack={navigation.goBack}
       />
-      <Box flexDirection="row" alignItems="flex-end" gap="s">
-        <Box flex={1} padding="s" height="100%">
-          {data && data?.daysLeft > 0 ? (
-            <Text variant="p2R">
-              Empieza eligiendo la zona que quieres documentar.
+      <Box justifyContent="space-between" gap="s">
+        <Box flexDirection="row" alignItems="flex-end" gap="s">
+          <Box flex={1} padding="s" height="100%">
+            {data && data?.daysLeft > 0 ? (
+              <Text variant="p2R">
+                Empieza eligiendo la zona que quieres documentar.
+              </Text>
+            ) : (
+              <Text variant="p2R">¡Concurso finalizado 😄, vendrán más!</Text>
+            )}
+            <Text
+              variant="p2R"
+              marginTop="m"
+              color="semantic.info"
+              textDecorationLine="underline"
+              onPress={() => navigation.replace(PhotoContestRoutes.Onboarding)}
+            >
+              Más info
             </Text>
-          ) : (
-            <Text variant="p2R">¡Concurso finalizado 😄, vendrán más!</Text>
-          )}
-          <Text
-            variant="p2R"
-            marginTop="m"
-            color="semantic.info"
-            textDecorationLine="underline"
-            onPress={() => navigation.replace(PhotoContestRoutes.Onboarding)}
-          >
-            Más info
-          </Text>
+          </Box>
+
+          <Calendar
+            title="Quedan"
+            days={data?.daysLeft.toFixed(0) || "0"}
+            size={80}
+          />
         </Box>
-        <Calendar
-          title="Quedan"
-          days={data?.daysLeft.toFixed(0) || "0"}
-          size={80}
-        />
       </Box>
       <Box gap="m" marginBottom="m">
         <Box borderBottomColor="brand.secondaryA" borderBottomWidth={2}>
@@ -121,20 +125,34 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
           )}
         />
       </Box>
-      <Box>
+      <Box flexDirection="row" marginVertical="s" gap="s">
         <Button
-          icon="images-outline"
+          icon="images"
           gap="s"
+          flex={1}
           iconProps={{ size: 20 }}
           titleVariant="p1R"
           title="Ver topos participando"
           variant="infoSimplified"
           padding="s"
-          marginVertical="s"
           onPress={() => {
             navigation.navigate(PhotoContestRoutes.PhotosFeed);
           }}
         />
+        <Pressable
+          bg="grayscale.500"
+          justifyContent="center"
+          alignItems="center"
+          width={40}
+          borderRadius={8}
+          onPress={() => navigation.navigate(PhotoContestRoutes.ShareContest)}
+        >
+          <Ionicons
+            color="background"
+            name={isAndroid ? "share-social" : "share"}
+            size={20}
+          />
+        </Pressable>
       </Box>
       <FlatList
         data={users.data}

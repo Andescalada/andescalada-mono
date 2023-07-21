@@ -210,8 +210,18 @@ const ZoneHeader = () => {
                 })
               }
             >
-              <Box position="absolute" top={5} right={5} height={20} width={20}>
-                <Ionicons name="share" color="background" size={20} />
+              <Box
+                position="absolute"
+                top={5}
+                right={isAndroid ? 7 : 5}
+                height={20}
+                width={20}
+              >
+                <Ionicons
+                  name={isAndroid ? "share-social" : "share"}
+                  color="background"
+                  size={20}
+                />
               </Box>
             </Pressable>
           </Box>
