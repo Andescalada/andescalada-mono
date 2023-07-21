@@ -9,6 +9,7 @@ import StaticTopoViewer from "@features/routesManager/components/StaticTopoViewe
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
+import useIsInstalled from "@hooks/useIsInstalled";
 import {
   Canvas,
   Fill,
@@ -23,8 +24,8 @@ import {
   useImage,
 } from "@shopify/react-native-skia";
 import Env from "@utils/env";
-import { FC, useEffect, useRef, useState } from "react";
-import { Linking, Platform, useWindowDimensions } from "react-native";
+import { FC, useRef } from "react";
+import { useWindowDimensions } from "react-native";
 import Share, { Social } from "react-native-share";
 
 type Props = PhotoContestScreenProps<PhotoContestRoutes.Share>;
@@ -84,21 +85,7 @@ const ShareScreen: FC<Props> = ({
   const fontSizeLight = 18;
   const fontLight = useFont(fonts["Rubik-400"], fontSizeLight);
 
-  const [hasInstagramInstalled, setHasInstagramInstalled] = useState(false);
-
-  useEffect(() => {
-    if (Platform.OS === "ios") {
-      Linking.canOpenURL("instagram://").then((val) =>
-        setHasInstagramInstalled(val),
-      );
-    } else {
-      Share.isPackageInstalled("com.instagram.android").then(
-        ({ isInstalled }) => {
-          setHasInstagramInstalled(isInstalled);
-        },
-      );
-    }
-  }, []);
+  const { inInstalled: hasInstagramInstalled } = useIsInstalled("instagram");
 
   const theme = useAppTheme();
 
