@@ -330,7 +330,9 @@ export const photoContestRouter = t.router({
               ...includeInTopo,
               Wall: {
                 include: {
-                  Sector: { include: { Zone: { select: { name: true } } } },
+                  Sector: {
+                    include: { Zone: { select: { name: true, id: true } } },
+                  },
                 },
               },
             },

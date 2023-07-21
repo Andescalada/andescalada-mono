@@ -1,14 +1,17 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { Box, Header, Image, Screen, Text } from "@andescalada/ui";
+import { Box, Header, Image, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   PhotoContestRoutes,
   PhotoContestScreenProps,
 } from "@features/photoContest/Navigation/types";
 import StaticRoutePaths from "@features/routesManager/components/StaticRoutePaths";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
 import useRefresh from "@hooks/useRefresh";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FlashList } from "@shopify/flash-list";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
@@ -61,6 +64,7 @@ const PhotosFeedScreen: FC<Props> = ({ navigation }) => {
 };
 
 const Item = ({ item }: { item: Item }) => {
+  const rootNavigation = useRootNavigation();
   const screenWidth = useWindowDimensions().width;
   const topoImage = item?.Topo.image;
   const imageInServer = useCloudinaryUrl("optimizedImage", {
@@ -100,7 +104,17 @@ const Item = ({ item }: { item: Item }) => {
           <Text variant="p3R">{item.User.username}</Text>
         </Box>
       </Box>
-      <Box>
+      <Pressable
+        onPress={() => {
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.TopoViewer,
+            params: {
+              topoId: item.Topo.id,
+              zoneId: item.Topo.Wall.Sector.Zone.id,
+            },
+          });
+        }}
+      >
         <Image
           position="absolute"
           transition={300}
@@ -118,7 +132,7 @@ const Item = ({ item }: { item: Item }) => {
           height={fitted.height}
           width={fitted.width}
         />
-      </Box>
+      </Pressable>
       <Box marginHorizontal="m" marginBottom="m">
         <Text variant="p1R">{item.Topo.Wall.name}</Text>
         <Text>

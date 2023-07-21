@@ -43,9 +43,9 @@ export default usePermissions;
 const getPermissionFromStorage = (userId: string, zoneId: string) => {
   try {
     const s = storage.getString(`${Storage.PERMISSIONS}.${userId}.${zoneId}`);
-    if (!s) return undefined;
+    if (!s) return new Set<Permissions>();
     return parse<Permissions>(s);
   } catch (error) {
-    return undefined;
+    return new Set<Permissions>();
   }
 };
