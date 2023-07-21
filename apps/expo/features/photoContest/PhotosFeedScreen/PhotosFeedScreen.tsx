@@ -69,6 +69,7 @@ const Item = ({ item }: { item: Item }) => {
   const topoImage = item?.Topo.image;
   const imageInServer = useCloudinaryUrl("optimizedImage", {
     publicId: topoImage.publicId,
+    quality: 50,
   });
 
   const fitted = useFitContent(
@@ -117,7 +118,9 @@ const Item = ({ item }: { item: Item }) => {
       >
         <Image
           position="absolute"
+          cachePolicy="memory"
           transition={300}
+          recyclingKey={item.Topo.id}
           contentFit={"contain"}
           top={0}
           left={0}
