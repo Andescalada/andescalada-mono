@@ -127,9 +127,10 @@ const ZoneListScreen: FC<Props> = ({ navigation }) => {
           gap="s"
           iconProps={{ size: 20 }}
           titleVariant="p1R"
-          title="Ver fotos participando"
+          title="Ver topos participando"
           variant="infoSimplified"
-          padding="m"
+          padding="s"
+          marginVertical="s"
           onPress={() => {
             navigation.navigate(PhotoContestRoutes.PhotosFeed);
           }}
