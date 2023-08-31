@@ -1,4 +1,5 @@
 import { t } from "@andescalada/api/src/createRouter";
+import { MULTI_PITCH } from "@andescalada/api/src/types/constants";
 import { InfoAccess, SoftDelete, Status } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -23,10 +24,17 @@ const publicWallById = t.procedure
             },
           },
         },
+        MultiPitch: {
+          where: { isDeleted: SoftDelete.NotDeleted },
+          orderBy: { position: "asc" },
+          include: {
+            Pitches: { include: { Route: { include: { RouteGrade: true } } } },
+          },
+        },
         routes: {
           where: { isDeleted: SoftDelete.NotDeleted },
           orderBy: { position: "asc" },
-          include: { RouteGrade: true },
+          include: { RouteGrade: true, Pitch: true },
         },
         topos: {
           where: { isDeleted: SoftDelete.NotDeleted },
@@ -53,6 +61,7 @@ const publicWallById = t.procedure
         },
       },
     });
+
     if (
       !wall ||
       wall.isDeleted !== SoftDelete.NotDeleted ||
@@ -70,7 +79,64 @@ const publicWallById = t.procedure
         message: `Wall with id '${input}' has infoAccess '${infoAccess}'`,
       });
     }
-    return wall;
+
+    const filteredRoutes = wall.routes
+      .filter((r) => !r.Pitch)
+      .map(({ id, name, RouteGrade, position, kind }) => ({
+        id,
+        name,
+        RouteGrade,
+        position,
+        kind,
+        type: "Route" as const,
+      }));
+
+    const multiPitches = wall.MultiPitch.map(
+      ({ id, name, Pitches, position }) => {
+        const multiPitchGrade = Pitches.map(
+          (pitch) => pitch.Route.RouteGrade,
+        ).reduce((prev, curr) => {
+          if (!curr) return prev;
+          if (!prev) return null;
+
+          if (curr.project) {
+            return curr;
+          }
+
+          if (prev.grade === null) {
+            return curr;
+          }
+
+          if (typeof curr.grade === "number") {
+            if (prev.grade > curr.grade) {
+              return prev;
+            }
+            return curr;
+          }
+
+          return null;
+        });
+
+        const kind = Pitches.find(
+          (pitch) => pitch.Route.id === multiPitchGrade?.routeId,
+        )?.Route.kind;
+
+        return {
+          id,
+          name,
+          RouteGrade: multiPitchGrade,
+          position,
+          kind: kind!,
+          type: MULTI_PITCH,
+        };
+      },
+    );
+
+    const routes = [...filteredRoutes, ...multiPitches].sort(
+      (a, b) => a.position - b.position,
+    );
+
+    return { ...wall, routes };
   });
 
 export default publicWallById;

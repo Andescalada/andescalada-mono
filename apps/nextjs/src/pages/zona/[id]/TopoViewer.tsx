@@ -18,7 +18,13 @@ interface Props {
   topo: Item;
 }
 
+const CIRCLE_RADIUS = 50;
+const ARROW_SCALE = 0.15;
+const STROKE_WIDTH = 10;
+
 const TopoViewer = ({ topo }: Props) => {
+  const scale = Math.max(0.5, topo.routeStrokeWidth.toNumber());
+
   return (
     <div className="relative flex">
       <Image
@@ -39,12 +45,13 @@ const TopoViewer = ({ topo }: Props) => {
         className="absolute top-0 left-0 right-0 bottom-0 flex-1"
       >
         {topo.RoutePath.map((routePath) => (
-          <>
+          <g key={routePath.id}>
             <polyline
               points={routePath.path}
               key={routePath.id}
               strokeLinejoin="miter"
-              className="stroke-contrast-bright-red fill-none stroke-[10] hover:stroke-contrast-bright-green"
+              strokeWidth={scale * STROKE_WIDTH}
+              className={`stroke-contrast-bright-red fill-none hover:stroke-contrast-bright-green`}
               onClick={() => {
                 window.alert(routePath.Route.name);
               }}
@@ -54,19 +61,25 @@ const TopoViewer = ({ topo }: Props) => {
                 pathToArray(routePath.path)[0][1]
               })`}
             >
-              <circle r={50} cx={0} cy={0} className="fill-white" />
+              <circle
+                r={CIRCLE_RADIUS * scale}
+                cx={0}
+                cy={0}
+                className="fill-white"
+              />
               <text
                 x={0}
                 y={0}
                 dy=".3em"
                 textAnchor="middle"
-                className="font-display font-bold text-6xl fill-current text-black"
+                fontSize={60 * scale}
+                className={`font-display font-bold fill-current text-black`}
               >
                 {routePath.Route.position}
               </text>
               <circle
-                r={50}
-                className="stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]"
+                r={CIRCLE_RADIUS * scale}
+                className={`stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]`}
                 cx={0}
                 cy={0}
               />
@@ -76,21 +89,27 @@ const TopoViewer = ({ topo }: Props) => {
                 pathToArray(routePath.path).slice(-1)[0][0]
               } ${pathToArray(routePath.path).slice(-1)[0][1]})`}
             >
-              <circle r={50} cx={0} cy={0} className="fill-white" />
+              <circle
+                r={CIRCLE_RADIUS * scale}
+                cx={0}
+                cy={0}
+                className="fill-white"
+              />
               <path
                 d="M -144 0 L 0 144 L 144 0 m -144 144 v -312"
-                className="stroke-contrast-bright-red stroke-[50] fill-none max-h-sm max-w-sm scale-[0.15]"
+                className={`stroke-contrast-bright-red stroke-[50] fill-none max-h-sm max-w-sm`}
+                style={{ transform: `scale(${ARROW_SCALE * scale})` }}
                 strokeLinejoin="miter"
                 strokeLinecap="round"
               />
               <circle
-                r={50}
-                className="stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]"
+                r={CIRCLE_RADIUS * scale}
+                className={`stroke-contrast-bright-red hover:stroke-contrast-bright-green fill-none stroke-[6]`}
                 cx={0}
                 cy={0}
               />
             </g>
-          </>
+          </g>
         ))}
       </svg>
     </div>
