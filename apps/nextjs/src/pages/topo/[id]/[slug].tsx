@@ -1,6 +1,7 @@
 import { createContext, prisma } from "@andescalada/api/src/createContext";
 import { appRouter } from "@andescalada/api/src/routers/_app";
 import { transformer } from "@andescalada/api/src/transformer";
+import { MULTI_PITCH } from "@andescalada/api/src/types/constants";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { SoftDeleteSchema, StatusSchema } from "@andescalada/db/zod";
 import { Icon } from "@andescalada/icons/WebIcons";
@@ -153,7 +154,9 @@ const TopoPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                 <div>
                   <p>{route.name}</p>
                   <p className="font-thin text-xs text-grayscale-400">
-                    {routeKindLabel(route.kind).long}
+                    {route.type === MULTI_PITCH
+                      ? "Multi Largo"
+                      : routeKindLabel(route.kind).long}
                   </p>
                 </div>
               </div>
