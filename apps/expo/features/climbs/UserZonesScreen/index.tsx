@@ -16,7 +16,6 @@ import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
-import PhotoContestSection from "@features/climbs/UserZonesScreen/PhotoContestSection";
 import { ZoneCarouselModes } from "@features/climbs/UserZonesScreen/types";
 import UserZoneCarouselSwitch from "@features/climbs/UserZonesScreen/UserZoneCarouselSwitch";
 import ZoneCarouselSelector from "@features/climbs/UserZonesScreen/ZoneCarouselSelector";
@@ -131,7 +130,6 @@ const UserZonesScreen = () => {
     );
   return (
     <Screen paddingBottom="none" safeAreaDisabled>
-      <PhotoContestSection />
       <Box flexDirection="row" width="100%" padding="m" paddingBottom="none">
         <Pressable
           borderRadius={4}
