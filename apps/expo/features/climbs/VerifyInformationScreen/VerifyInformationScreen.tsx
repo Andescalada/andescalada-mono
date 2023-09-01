@@ -37,7 +37,10 @@ const VerifyInformationScreen: FC<Props> = ({
   },
   navigation,
 }) => {
-  const toposToVerify = trpc.topos.toposToVerify.useQuery({ zoneId });
+  const toposToVerify = trpc.topos.toposToVerify.useQuery(
+    { zoneId },
+    { staleTime: 0 },
+  );
 
   const refresh = useRefresh(toposToVerify.refetch, toposToVerify.isFetching);
 

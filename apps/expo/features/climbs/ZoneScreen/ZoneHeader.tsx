@@ -1,5 +1,6 @@
 import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRouteProps,
@@ -43,6 +44,10 @@ const ZoneHeader = () => {
   const rootNavigation = useRootNavigation();
 
   const { data } = useZonesAllSectors({ zoneId });
+  const numberOfToposToVerify = trpc.topos.numberOfToposToVerify.useQuery({
+    zoneId,
+  });
+  const utils = trpc.useContext();
 
   const members = useMemo(
     () =>
@@ -225,25 +230,34 @@ const ZoneHeader = () => {
               </Box>
             </Pressable>
           </Box>
-          <Box
-            marginTop="s"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Pressable
-              bg="semantic.transparent.50.success"
-              borderRadius={16}
-              padding="s"
-              onPress={() =>
-                navigation.navigate(ClimbsNavigationRoutes.VerifyInformation, {
-                  zoneId,
-                })
-              }
-            >
-              <Text color="grayscale.white">Verificar información</Text>
-            </Pressable>
-          </Box>
+          {typeof numberOfToposToVerify.data === "number" &&
+            numberOfToposToVerify.data > 0 && (
+              <Box
+                marginTop="s"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Pressable
+                  bg="semantic.transparent.50.success"
+                  borderRadius={16}
+                  padding="s"
+                  onPress={() => {
+                    utils.topos.numberOfToposToVerify.invalidate({
+                      zoneId,
+                    });
+                    navigation.navigate(
+                      ClimbsNavigationRoutes.VerifyInformation,
+                      {
+                        zoneId,
+                      },
+                    );
+                  }}
+                >
+                  <Text color="grayscale.white">{`Verificar ${numberOfToposToVerify.data} topos`}</Text>
+                </Pressable>
+              </Box>
+            )}
           <ToolBar
             isDownloaded={isDownloaded}
             isFavorite={isFavorite}

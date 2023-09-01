@@ -2,6 +2,7 @@ import topo from "@andescalada/api/schemas/topo";
 import { t } from "@andescalada/api/src/createRouter";
 import {
   approveTopo,
+  numberOfToposToVerify,
   rejectTopo,
   toposToVerify,
 } from "@andescalada/api/src/routers/topos/topoVerification";
@@ -17,6 +18,7 @@ export const toposRouter = t.router({
   toposToVerify: toposToVerify,
   approveTopo: approveTopo,
   rejectTopo: rejectTopo,
+  numberOfToposToVerify: numberOfToposToVerify,
   // Asset being downloaded
   byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({

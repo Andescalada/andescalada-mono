@@ -58,3 +58,15 @@ export const rejectTopo = protectedZoneProcedure
       },
     });
   });
+
+export const numberOfToposToVerify = protectedZoneProcedure
+  .input(zone.id)
+  .query(({ ctx, input }) => {
+    return ctx.prisma.topo.count({
+      where: {
+        Wall: { Sector: { Zone: { id: input.zoneId } } },
+        Verification: { status: VerificationStatus.Pending },
+        UserPhotoContestTopo: { every: { isSubmitted: true } },
+      },
+    });
+  });
