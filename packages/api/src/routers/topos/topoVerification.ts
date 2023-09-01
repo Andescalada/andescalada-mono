@@ -1,10 +1,11 @@
+import topo from "@andescalada/api/schemas/topo";
 import zone from "@andescalada/api/schemas/zone";
 import { includeInTopo } from "@andescalada/api/src/routers/topos";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 
 import { VerificationStatus } from ".prisma/client";
 
-const toposToVerify = protectedZoneProcedure
+export const toposToVerify = protectedZoneProcedure
   .input(zone.id)
   .query(async ({ input, ctx }) => {
     const topos = await ctx.prisma.topo.findMany({
@@ -36,4 +37,24 @@ const toposToVerify = protectedZoneProcedure
     return topos;
   });
 
-export default toposToVerify;
+export const approveTopo = protectedZoneProcedure
+  .input(topo.id)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.topo.update({
+      where: { id: input.topoId },
+      data: {
+        Verification: { update: { status: VerificationStatus.Approved } },
+      },
+    });
+  });
+
+export const rejectTopo = protectedZoneProcedure
+  .input(topo.id)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.topo.update({
+      where: { id: input.topoId },
+      data: {
+        Verification: { update: { status: VerificationStatus.Rejected } },
+      },
+    });
+  });
