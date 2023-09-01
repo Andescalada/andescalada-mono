@@ -13,6 +13,7 @@ import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
 import RouteScreen from "@features/climbs/RouteScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
 import SectorScreen from "@features/climbs/SectorScreen";
+import VerifyInformationScreen from "@features/climbs/VerifyInformationScreen/VerifyInformationScreen";
 import WallScreen from "@features/climbs/WallScreen";
 import ZoneAgreementsEditorScreen from "@features/climbs/ZoneAgreementsEditorScreen";
 import ZoneAgreementsScreen from "@features/climbs/ZoneAgreementsScreen";
@@ -147,6 +148,10 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.EditRoutePosition}
           component={EditRoutePositionScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.VerifyInformation}
+          component={VerifyInformationScreen}
         />
       </Stack.Navigator>
       <OfflineNotification />

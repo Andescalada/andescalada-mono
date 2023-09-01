@@ -225,6 +225,25 @@ const ZoneHeader = () => {
               </Box>
             </Pressable>
           </Box>
+          <Box
+            marginTop="s"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Pressable
+              bg="semantic.transparent.50.success"
+              borderRadius={16}
+              padding="s"
+              onPress={() =>
+                navigation.navigate(ClimbsNavigationRoutes.VerifyInformation, {
+                  zoneId,
+                })
+              }
+            >
+              <Text color="grayscale.white">Verificar información</Text>
+            </Pressable>
+          </Box>
           <ToolBar
             isDownloaded={isDownloaded}
             isFavorite={isFavorite}

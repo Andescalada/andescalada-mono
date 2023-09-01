@@ -25,6 +25,7 @@ export enum ClimbsNavigationRoutes {
   AddAndEditRouteDescription = "Climbs-AddAndEditRouteDescription",
   MultiPitch = "Climbs-MultiPitchScreen",
   EditRoutePosition = "Climbs-EditRoutePosition",
+  VerifyInformation = "Climbs-VerifyInformation",
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -115,6 +116,9 @@ export type ClimbsNavigationNavigationParamList = {
     wallId: Wall["id"];
     zoneId: Zone["id"];
     multiPitchName: MultiPitch["name"];
+  };
+  [ClimbsNavigationRoutes.VerifyInformation]: {
+    zoneId: Zone["id"];
   };
 };
 
