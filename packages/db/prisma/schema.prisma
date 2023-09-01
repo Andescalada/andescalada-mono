@@ -79,6 +79,7 @@ model User {
   RouteGradeEvaluation       RouteGradeEvaluation[]
   AccepTermsAndConditions    AcceptTermsAndConditions[]
   UserPhotoContestTopo       UserPhotoContestTopo[]
+  Verification               Verification[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -500,10 +501,31 @@ model Topo {
   version              Int                    @default(0)
   routeStrokeWidth     Decimal                @default(1) @db.Decimal(4, 2)
   UserPhotoContestTopo UserPhotoContestTopo[]
+  Verification         Verification?          @relation(fields: [verificationId], references: [id])
+  verificationId       String?
 
   @@index([wallId])
   @@index([imageId])
   @@index([authorId])
+  @@index([verificationId])
+}
+
+model Verification {
+  id             String             @id @default(uuid())
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  status         VerificationStatus @default(Pending)
+  Topo           Topo[]
+  VerfierUser    User               @relation(fields: [verifierUserId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  verifierUserId String
+
+  @@index([verifierUserId])
+}
+
+enum VerificationStatus {
+  Pending
+  Approved
+  Rejected
 }
 
 model Route {
