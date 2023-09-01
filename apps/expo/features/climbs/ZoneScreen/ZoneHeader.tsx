@@ -230,7 +230,8 @@ const ZoneHeader = () => {
               </Box>
             </Pressable>
           </Box>
-          {typeof numberOfToposToVerify.data === "number" &&
+          {permission.has("MakeTopoVerification") &&
+            typeof numberOfToposToVerify.data === "number" &&
             numberOfToposToVerify.data > 0 && (
               <Box
                 marginTop="s"

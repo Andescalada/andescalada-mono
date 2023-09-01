@@ -1,13 +1,20 @@
 import topo from "@andescalada/api/schemas/topo";
 import zone from "@andescalada/api/schemas/zone";
 import { includeInTopo } from "@andescalada/api/src/routers/topos";
+import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { TRPCError } from "@trpc/server";
 
 import { VerificationStatus } from ".prisma/client";
 
 export const toposToVerify = protectedZoneProcedure
   .input(zone.id)
   .query(async ({ input, ctx }) => {
+    if (!ctx.permissions.has("MakeTopoVerification")) {
+      throw new TRPCError(
+        error.unauthorizedActionForZone(input.zoneId, "MakeTopoVerification"),
+      );
+    }
     const topos = await ctx.prisma.topo.findMany({
       where: {
         Wall: { Sector: { Zone: { id: input.zoneId } } },
@@ -40,6 +47,11 @@ export const toposToVerify = protectedZoneProcedure
 export const approveTopo = protectedZoneProcedure
   .input(topo.id)
   .mutation(({ ctx, input }) => {
+    if (!ctx.permissions.has("MakeTopoVerification")) {
+      throw new TRPCError(
+        error.unauthorizedActionForZone(input.zoneId, "MakeTopoVerification"),
+      );
+    }
     return ctx.prisma.topo.update({
       where: { id: input.topoId },
       data: {
@@ -56,6 +68,11 @@ export const approveTopo = protectedZoneProcedure
 export const rejectTopo = protectedZoneProcedure
   .input(topo.id)
   .mutation(({ ctx, input }) => {
+    if (!ctx.permissions.has("MakeTopoVerification")) {
+      throw new TRPCError(
+        error.unauthorizedActionForZone(input.zoneId, "MakeTopoVerification"),
+      );
+    }
     return ctx.prisma.topo.update({
       where: { id: input.topoId },
       data: {
