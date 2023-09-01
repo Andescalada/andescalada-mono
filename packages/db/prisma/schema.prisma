@@ -237,6 +237,7 @@ enum PermissionActions {
   PauseZoneAccess
   EditZoneAgreements
   EditZoneInfo
+  MakeTopoVerification
 }
 
 model ZoneAccessRequest {

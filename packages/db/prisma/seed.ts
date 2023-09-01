@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
 import agreementsScript from "./aplied_scripts/seed_agreements";
-import seed_edit_zone_permission_28_02_2023 from "./aplied_scripts/seed_edit_zone_permission_28_02_2023";
 import permissions4 from "./aplied_scripts/seed_edit_zone_permission_28_02_2023";
 import memberRole from "./aplied_scripts/seed_member_role";
 import permissions1 from "./aplied_scripts/seed_new_permissions_20-01-2023";
@@ -9,6 +8,7 @@ import permissions2 from "./aplied_scripts/seed_new_permissions_21-01-2023";
 import permissions3 from "./aplied_scripts/seed_new_permissions_22-01-2023";
 import permissions0 from "./aplied_scripts/seed_new_permissions_27_12_2022";
 import seedRoles from "./aplied_scripts/seed_roles";
+import permissions5 from "./new_seed_permission_01_09_2023";
 
 const prisma = new PrismaClient();
 
@@ -33,6 +33,7 @@ async function main() {
   await permissions2();
   await permissions3();
   await permissions4();
+  await permissions5();
 }
 
 main()
