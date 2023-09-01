@@ -2,6 +2,14 @@ import { PrismaClient } from "@andescalada/db";
 
 const db = new PrismaClient();
 
+const selectedZonesForContest = [
+  // "Las Chilcas",
+  // "Las Palestras",
+  // "Chacabuco",
+  // "Lo Curro",
+  // "Petorca",
+];
+
 export const createContest = async () => {
   const chilcas = await db.zone.findFirst({
     where: { name: "Cuesta Las Chilcas" },
