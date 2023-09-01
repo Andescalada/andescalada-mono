@@ -1,12 +1,12 @@
 {
-  "name": "console",
+  "name": "@andescalada/console",
   "version": "1.0.0",
   "main": "src/index.ts",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "run-once": "ts-node src/index.ts",
-    "dev:watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
+    "run:once": "ts-node src/index.ts",
+    "run:watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
   },
   "dependencies": {
     "@andescalada/db": "*",

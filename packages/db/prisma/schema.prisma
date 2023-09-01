@@ -79,7 +79,7 @@ model User {
   RouteGradeEvaluation       RouteGradeEvaluation[]
   AccepTermsAndConditions    AcceptTermsAndConditions[]
   UserPhotoContestTopo       UserPhotoContestTopo[]
-  Verification               Verification[]
+  VerifiedInformation        Verification[]
 
   @@index([email])
   @@index([profilePhotoId])
@@ -516,8 +516,8 @@ model Verification {
   updatedAt      DateTime           @updatedAt
   status         VerificationStatus @default(Pending)
   Topo           Topo[]
-  VerfierUser    User               @relation(fields: [verifierUserId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  verifierUserId String
+  VerifierUser   User?              @relation(fields: [verifierUserId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  verifierUserId String?
 
   @@index([verifierUserId])
 }

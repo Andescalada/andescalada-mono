@@ -1,11 +1,13 @@
 import { PrismaClient } from "@andescalada/db";
 import { oldDb } from "@andescalada/old-db";
 
+import verification from "./current-verified";
+
 const oldDbClient = new oldDb.PrismaClient();
 const db = new PrismaClient();
 
 const main = async () => {
-  return;
+  verification();
 };
 
 main()
