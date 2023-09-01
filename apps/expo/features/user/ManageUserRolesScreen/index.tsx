@@ -195,6 +195,7 @@ const ManageUserRolesScreen: FC<Props> = ({ navigation }) => {
       </ScrollView>
       <Button
         alignSelf="center"
+        padding="m"
         title={saveButton.title}
         variant={saveButton.variant}
         onPress={onSubmit}

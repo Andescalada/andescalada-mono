@@ -181,6 +181,7 @@ const PersonalInfoConfigScreen: FC<Props> = ({ navigation }) => {
           </Box>
           <Button
             title={saveButton.title}
+            padding="m"
             variant={saveButton.variant}
             alignSelf={"center"}
             marginTop="s"
