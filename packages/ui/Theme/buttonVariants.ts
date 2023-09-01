@@ -35,7 +35,6 @@ const buttonVariants = createBoxVariant({
   transparent: {
     backgroundColor: "transparentButtonBackground",
     borderRadius: 100,
-    padding: "m",
     justifyContent: "center",
     alignItems: "center",
   },

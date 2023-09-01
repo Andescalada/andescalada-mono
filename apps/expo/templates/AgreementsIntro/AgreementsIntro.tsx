@@ -123,6 +123,7 @@ const AgreementsIntro: FC<Props> = ({
                   )}
                   <Button
                     variant="transparent"
+                    padding="m"
                     title="Continuar"
                     onPress={onContinue}
                   />

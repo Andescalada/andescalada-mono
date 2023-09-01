@@ -77,6 +77,7 @@ const StepHowToPublish: FC<Props> = ({
       </Box>
       <Button
         variant="transparent"
+        padding="m"
         title={title}
         marginBottom="xxl"
         onPress={onNext}

@@ -35,6 +35,7 @@ const LoginScreen = ({ navigation }: Props) => {
           }
           onLongPress={loginWithPasswordHandler}
           variant="transparent"
+          padding="m"
           paddingHorizontal="l"
           titleProps={{ color: "grayscale.white" }}
         />
