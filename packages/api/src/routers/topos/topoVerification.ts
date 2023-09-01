@@ -43,7 +43,12 @@ export const approveTopo = protectedZoneProcedure
     return ctx.prisma.topo.update({
       where: { id: input.topoId },
       data: {
-        Verification: { update: { status: VerificationStatus.Approved } },
+        Verification: {
+          update: {
+            status: VerificationStatus.Approved,
+            VerifierUser: { connect: { id: ctx.user.id } },
+          },
+        },
       },
     });
   });
@@ -54,7 +59,12 @@ export const rejectTopo = protectedZoneProcedure
     return ctx.prisma.topo.update({
       where: { id: input.topoId },
       data: {
-        Verification: { update: { status: VerificationStatus.Rejected } },
+        Verification: {
+          update: {
+            status: VerificationStatus.Rejected,
+            VerifierUser: { connect: { id: ctx.user.id } },
+          },
+        },
       },
     });
   });
