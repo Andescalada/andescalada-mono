@@ -7,16 +7,7 @@ const oldDbClient = new oldDb.PrismaClient();
 const db = new PrismaClient();
 
 const main = async () => {
-  const topos = await db.topo.findMany({
-    where: {
-      // Wall: { Sector: { Zone: { id: input.zoneId } } },
-      Verification: { status: VerificationStatus.Pending },
-      UserPhotoContestTopo: { every: { isSubmitted: true } },
-    },
-    include: { UserPhotoContestTopo: true },
-  });
-
-  console.log(JSON.stringify(topos, null, 2));
+  verification();
 };
 
 main()

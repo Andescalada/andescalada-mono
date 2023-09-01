@@ -1,5 +1,14 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
-import { Box, Image, Pressable, Screen, Text } from "@andescalada/ui";
+import {
+  Box,
+  Button,
+  Header,
+  Image,
+  LoadingScreen,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationRoutes,
@@ -9,13 +18,13 @@ import StaticRoutePaths from "@features/routesManager/components/StaticRoutePath
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
+import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FlashList } from "@shopify/flash-list";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
-import { FC } from "react";
-import { useWindowDimensions } from "react-native";
+import { FC, useState } from "react";
+import { FlatList, useWindowDimensions } from "react-native";
 
 type Item = inferProcedureOutput<AppRouter["topos"]["toposToVerify"]>[number];
 
@@ -26,17 +35,35 @@ const VerifyInformationScreen: FC<Props> = ({
   route: {
     params: { zoneId },
   },
+  navigation,
 }) => {
   const toposToVerify = trpc.topos.toposToVerify.useQuery({ zoneId });
+
+  const refresh = useRefresh(toposToVerify.refetch, toposToVerify.isFetching);
+
   return (
     <Screen>
-      <FlashList
+      <Header
+        padding="m"
+        title="Topos que verificar"
+        showOptions={false}
+        onGoBack={navigation.goBack}
+      />
+      <FlatList
         data={toposToVerify.data}
-        // refreshControl={refresh}
+        refreshControl={refresh}
         showsVerticalScrollIndicator={false}
-        // onEndReached={loadNext}
+        keyExtractor={(item) => item.id}
         onEndReachedThreshold={0.2}
-        estimatedItemSize={300}
+        ListEmptyComponent={() => {
+          return toposToVerify.isLoading ? (
+            <LoadingScreen />
+          ) : (
+            <Text variant="p2R" marginTop="xxxl" padding="m">
+              No hay topos para verificar
+            </Text>
+          );
+        }}
         renderItem={({ item }) => <Item item={item} />}
       />
     </Screen>
@@ -44,6 +71,18 @@ const VerifyInformationScreen: FC<Props> = ({
 };
 
 const Item = ({ item }: { item: Item }) => {
+  const [status, setStatus] = useState<"Approved" | "Rejected" | null>(null);
+  const approve = trpc.topos.approveTopo.useMutation({
+    onMutate: () => {
+      setStatus("Approved");
+    },
+  });
+  const reject = trpc.topos.rejectTopo.useMutation({
+    onMutate: () => {
+      setStatus("Rejected");
+    },
+  });
+
   const rootNavigation = useRootNavigation();
   const screenWidth = useWindowDimensions().width;
   const topoImage = item?.image;
@@ -121,6 +160,43 @@ const Item = ({ item }: { item: Item }) => {
         <Text>
           {`${item.Wall.Sector.name} / ${item.Wall.Sector.Zone.name}`}
         </Text>
+      </Box>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        marginBottom="s"
+        paddingHorizontal="m"
+      >
+        <Button
+          variant={status === "Rejected" ? "transparent" : "success"}
+          title="Aprobar"
+          titleVariant="p2R"
+          icon="checkmark-circle"
+          iconProps={{ size: 20 }}
+          gap="s"
+          padding="s"
+          onPress={() => {
+            approve.mutate({
+              topoId: item.id,
+              zoneId: item.Wall.Sector.Zone.id,
+            });
+          }}
+        />
+        <Button
+          variant={status === "Approved" ? "transparent" : "error"}
+          titleVariant="p2R"
+          title="Rechazar"
+          icon="close-circle"
+          iconProps={{ size: 20 }}
+          gap="s"
+          padding="s"
+          onPress={() => {
+            reject.mutate({
+              topoId: item.id,
+              zoneId: item.Wall.Sector.Zone.id,
+            });
+          }}
+        />
       </Box>
     </Box>
   );
