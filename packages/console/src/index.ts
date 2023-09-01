@@ -1,4 +1,4 @@
-import { PrismaClient } from "@andescalada/db";
+import { PrismaClient, VerificationStatus } from "@andescalada/db";
 import { oldDb } from "@andescalada/old-db";
 
 import verification from "./current-verified";
@@ -7,7 +7,16 @@ const oldDbClient = new oldDb.PrismaClient();
 const db = new PrismaClient();
 
 const main = async () => {
-  verification();
+  const topos = await db.topo.findMany({
+    where: {
+      // Wall: { Sector: { Zone: { id: input.zoneId } } },
+      Verification: { status: VerificationStatus.Pending },
+      UserPhotoContestTopo: { every: { isSubmitted: true } },
+    },
+    include: { UserPhotoContestTopo: true },
+  });
+
+  console.log(JSON.stringify(topos, null, 2));
 };
 
 main()
