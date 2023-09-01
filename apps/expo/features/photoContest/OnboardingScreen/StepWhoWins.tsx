@@ -43,6 +43,7 @@ const StepWhoWins: FC<Props> = () => {
         <Button
           title="Continuar"
           variant="info"
+          padding="m"
           alignSelf="center"
           marginTop="l"
           onPress={() => {

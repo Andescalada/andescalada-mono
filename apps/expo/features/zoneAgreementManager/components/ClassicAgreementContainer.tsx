@@ -190,7 +190,12 @@ const SubmitButton = ({
   if (show)
     return (
       <A.Box entering={FadeIn} exiting={FadeOut} marginBottom="xl">
-        <Button variant="success" title={submitLabel} onPress={handleSubmit} />
+        <Button
+          variant="success"
+          padding="m"
+          title={submitLabel}
+          onPress={handleSubmit}
+        />
       </A.Box>
     );
   return <Box />;

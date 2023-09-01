@@ -82,7 +82,12 @@ const DrawRoute: FC<Props> = ({
           Primero debes dibujar la ruta original para luego agregar una
           extensión.
         </Text>
-        <Button title="Volver" variant="info" onPress={navigation.goBack} />
+        <Button
+          title="Volver"
+          variant="info"
+          padding="m"
+          onPress={navigation.goBack}
+        />
       </Screen>
     );
   }

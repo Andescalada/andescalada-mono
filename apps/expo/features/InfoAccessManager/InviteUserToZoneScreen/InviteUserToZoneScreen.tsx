@@ -82,6 +82,7 @@ const InviteUserToZoneScreen: FC<Props> = ({
           alignSelf="center"
           title="Invitar"
           variant="info"
+          padding="m"
           onPress={onInvite}
           isLoading={acceptAccess.isLoading}
           disabled={acceptAccess.isLoading || !user || acceptAccess.isSuccess}

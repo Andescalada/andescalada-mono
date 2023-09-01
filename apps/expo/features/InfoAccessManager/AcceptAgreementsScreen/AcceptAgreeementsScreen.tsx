@@ -123,6 +123,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
           </Text>
           <Button
             variant="success"
+            padding="m"
             title={
               accessStatus.data?.status === RequestStatusSchema.enum.Pending
                 ? "Solicitar acceso"
@@ -156,6 +157,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
         <Box flexDirection="row" marginVertical="l">
           <Button
             variant="warning"
+            padding="m"
             title="No gracias"
             flex={1}
             marginRight="s"
@@ -164,6 +166,7 @@ const AcceptAgreementsScreen: FC<Props> = ({
           />
           <Button
             variant="success"
+            padding="m"
             title="Aceptar"
             flex={1}
             marginLeft="s"

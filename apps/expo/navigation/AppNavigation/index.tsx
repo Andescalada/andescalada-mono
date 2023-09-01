@@ -62,6 +62,7 @@ const Navigator = () => {
         </Box>
         <Button
           variant="info"
+          padding="m"
           title="Actualizar"
           onPress={Updates.reloadAsync}
         />
