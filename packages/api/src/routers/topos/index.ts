@@ -17,6 +17,8 @@ import { SoftDelete, VerificationStatus } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { setMainTopo } from "./setMainTopo";
+
 export const toposRouter = t.router({
   toposToVerify: toposToVerify,
   approveTopo: approveTopo,
@@ -24,6 +26,7 @@ export const toposRouter = t.router({
   numberOfToposToVerify: numberOfToposToVerify,
   otherTopos: otherTopos,
   otherToposCount: otherToposCount,
+  setMainTopo: setMainTopo,
   // Asset being downloaded
   byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({

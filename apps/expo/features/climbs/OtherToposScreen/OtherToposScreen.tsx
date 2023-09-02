@@ -1,5 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
+  A,
   Box,
   Button,
   Header,
@@ -7,6 +8,7 @@ import {
   LoadingScreen,
   Screen,
   Text,
+  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -22,9 +24,15 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Pressable, useWindowDimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
+import {
+  FadeOut,
+  StretchInY,
+  StretchOutY,
+  Transition,
+} from "react-native-reanimated";
 
 type Item = inferProcedureOutput<AppRouter["topos"]["otherTopos"]>[number];
 
@@ -36,6 +44,7 @@ const OtherToposScreen: FC<Props> = ({
     params: { wallId, zoneId },
   },
 }) => {
+  const [chooseMainTopo, setChooseMainTopo] = useState(false);
   const topos = trpc.topos.otherTopos.useQuery({ zoneId, wallId });
 
   const refresh = useRefresh(topos.refetch, topos.isFetching);
@@ -48,6 +57,16 @@ const OtherToposScreen: FC<Props> = ({
         showOptions={false}
         onGoBack={navigation.goBack}
       />
+      <Box alignItems="flex-end" paddingHorizontal="m" paddingBottom="s">
+        <Button
+          variant={chooseMainTopo ? "infoSmall" : "infoSmallOutline"}
+          titleVariant="p3R"
+          title="Definir topo principal"
+          paddingHorizontal="s"
+          paddingVertical="xs"
+          onPress={() => setChooseMainTopo((prev) => !prev)}
+        />
+      </Box>
       <FlatList
         data={topos.data}
         refreshControl={refresh}
@@ -63,13 +82,49 @@ const OtherToposScreen: FC<Props> = ({
             </Text>
           );
         }}
-        renderItem={({ item }) => <Item item={item} />}
+        renderItem={({ item }) => (
+          <Item item={item} chooseMainTopo={chooseMainTopo} />
+        )}
       />
     </Screen>
   );
 };
 
-const Item = ({ item }: { item: Item }) => {
+const Item = ({
+  item,
+  chooseMainTopo,
+}: {
+  item: Item;
+  chooseMainTopo: boolean;
+}) => {
+  const utils = trpc.useContext();
+
+  const setMainTopo = trpc.topos.setMainTopo.useMutation({
+    onMutate: async ({ wallId, zoneId, topoId }) => {
+      await utils.topos.otherTopos.cancel({ wallId, zoneId });
+      const previousData = utils.topos.otherTopos.getData({ wallId, zoneId });
+      utils.topos.otherTopos.setData({ wallId, zoneId }, (data) => {
+        if (!data) return data;
+        const newData = data;
+        const currentMainTopo = data.findIndex((topo) => topo.main === true);
+        const mainTopo = data.findIndex((topo) => topo.id === topoId);
+        if (mainTopo === -1) return data;
+        newData[mainTopo].main = true;
+        if (currentMainTopo !== -1) newData[currentMainTopo].main = false;
+        return newData;
+      });
+      return { previousData };
+    },
+    onError: (_, { zoneId, wallId }, context) => {
+      utils.topos.otherTopos.setData({ wallId, zoneId }, context?.previousData);
+    },
+    onSettled: (_, __, params) => {
+      const { zoneId, wallId } = params;
+      utils.topos.otherTopos.invalidate({ wallId, zoneId });
+      utils.walls.byId.invalidate({ wallId, zoneId });
+    },
+  });
+
   const rootNavigation = useRootNavigation();
   const screenWidth = useWindowDimensions().width;
   const topoImage = item?.image;
@@ -146,7 +201,35 @@ const Item = ({ item }: { item: Item }) => {
           height={fitted.height}
           width={fitted.width}
         />
+        {item.main && (
+          <A.Box
+            position="absolute"
+            bg="semantic.success"
+            borderRadius={16}
+            top={16}
+            left={16}
+            padding="s"
+          >
+            <Text>Topo principal</Text>
+          </A.Box>
+        )}
       </Pressable>
+      {chooseMainTopo && (
+        <A.Box entering={StretchInY} exiting={FadeOut} padding="m">
+          <Button
+            variant="infoSmall"
+            title="Definir como topo principal"
+            titleVariant="p2R"
+            onPress={() => {
+              setMainTopo.mutate({
+                wallId: item.Wall.id,
+                zoneId: item.Wall.Sector.Zone.id,
+                topoId: item.id,
+              });
+            }}
+          />
+        </A.Box>
+      )}
     </Box>
   );
 };
