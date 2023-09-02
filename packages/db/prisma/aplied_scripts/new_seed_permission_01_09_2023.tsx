@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const access = Redis.fromEnv();
 
 const permissionsData: Prisma.PermissionsCreateInput[] = [
-  { action: "SetMainTopo" },
+  { action: "MakeTopoVerification" },
 ];
 
 export default async function main() {
@@ -26,7 +26,7 @@ export default async function main() {
     where: { name: RoleNames.Admin },
     data: {
       permissions: {
-        connect: [{ action: "SetMainTopo" }],
+        connect: [{ action: "MakeTopoVerification" }],
       },
     },
   });
@@ -58,13 +58,3 @@ export default async function main() {
 
   console.log(`Update finished.`);
 }
-
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
