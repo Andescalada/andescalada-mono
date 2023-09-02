@@ -9,6 +9,7 @@ import AgreementsIntroScreen from "@features/climbs/AgreementsIntroScreen";
 import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
 import EditRoutePositionScreen from "@features/climbs/EditRoutePositionScreen";
 import MultiPitchScreen from "@features/climbs/MultiPitchScreen";
+import { OtherToposScreen } from "@features/climbs/OtherToposScreen";
 import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
 import RouteScreen from "@features/climbs/RouteScreen";
 import SearchClimbsScreen from "@features/climbs/SearchClimbsScreen";
@@ -152,6 +153,10 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.VerifyInformation}
           component={VerifyInformationScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.OtherTopos}
+          component={OtherToposScreen}
         />
       </Stack.Navigator>
       <OfflineNotification />

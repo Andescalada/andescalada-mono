@@ -200,6 +200,12 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
             justifyContent="center"
             gap="s"
             flexDirection="row"
+            onPress={() =>
+              navigation.navigate(ClimbsNavigationRoutes.OtherTopos, {
+                wallId,
+                zoneId,
+              })
+            }
           >
             <Box bg="semantic.info" borderRadius={8} paddingHorizontal="s">
               <Text variant="p3R">{otherToposCount}</Text>
