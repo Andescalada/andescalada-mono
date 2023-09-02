@@ -18,6 +18,7 @@ import StaticRoutePaths from "@features/routesManager/components/StaticRoutePath
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
+import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
@@ -41,6 +42,8 @@ const OtherToposScreen: FC<Props> = ({
   const [chooseMainTopo, setChooseMainTopo] = useState(false);
   const topos = trpc.topos.otherTopos.useQuery({ zoneId, wallId });
 
+  const { permission } = usePermissions({ zoneId });
+
   const refresh = useRefresh(topos.refetch, topos.isFetching);
 
   return (
@@ -51,16 +54,18 @@ const OtherToposScreen: FC<Props> = ({
         showOptions={false}
         onGoBack={navigation.goBack}
       />
-      <Box alignItems="flex-end" paddingHorizontal="m" paddingBottom="s">
-        <Button
-          variant={chooseMainTopo ? "infoSmall" : "infoSmallOutline"}
-          titleVariant="p3R"
-          title="Definir topo principal"
-          paddingHorizontal="s"
-          paddingVertical="xs"
-          onPress={() => setChooseMainTopo((prev) => !prev)}
-        />
-      </Box>
+      {permission.has("SetMainTopo") && (
+        <Box alignItems="flex-end" paddingHorizontal="m" paddingBottom="s">
+          <Button
+            variant={chooseMainTopo ? "infoSmall" : "infoSmallOutline"}
+            titleVariant="p3R"
+            title="Definir topo principal"
+            paddingHorizontal="s"
+            paddingVertical="xs"
+            onPress={() => setChooseMainTopo((prev) => !prev)}
+          />
+        </Box>
+      )}
       <FlatList
         data={topos.data}
         refreshControl={refresh}

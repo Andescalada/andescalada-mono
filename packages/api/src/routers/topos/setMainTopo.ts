@@ -1,10 +1,18 @@
 import topo from "@andescalada/api/schemas/topo";
 import wall from "@andescalada/api/schemas/wall";
+import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { TRPCError } from "@trpc/server";
 
 export const setMainTopo = protectedZoneProcedure
   .input(topo.id.merge(wall.id))
   .mutation(async ({ ctx, input }) => {
+    if (!ctx.permissions.has("SetMainTopo")) {
+      throw new TRPCError(
+        error.unauthorizedActionForZone(input.zoneId, "SetMainTopo"),
+      );
+    }
+
     const setMainTopo = ctx.prisma.topo.update({
       where: { id: input.topoId },
       data: { main: true, version: { increment: 1 } },
