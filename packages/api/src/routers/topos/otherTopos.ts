@@ -48,6 +48,7 @@ export const otherToposCount = protectedZoneProcedure
     return ctx.prisma.topo.count({
       where: {
         wallId: input.wallId,
+        main: false,
         Verification: { status: VerificationStatus.Approved },
       },
     });
