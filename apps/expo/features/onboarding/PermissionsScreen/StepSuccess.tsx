@@ -41,6 +41,7 @@ const StepSuccess: FC<Props> = ({ onNext }) => {
         <Button
           title="Finalizar"
           variant="info"
+          padding="m"
           isLoading={isPressed}
           onPress={() => {
             setIsPressed(true);

@@ -1,15 +1,32 @@
 import topo from "@andescalada/api/schemas/topo";
+import { t } from "@andescalada/api/src/createRouter";
+import {
+  otherTopos,
+  otherToposCount,
+} from "@andescalada/api/src/routers/topos/otherTopos";
+import {
+  approveTopo,
+  numberOfToposToVerify,
+  rejectTopo,
+  toposToVerify,
+} from "@andescalada/api/src/routers/topos/topoVerification";
 import error from "@andescalada/api/src/utils/errors";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete } from "@andescalada/db";
+import { SoftDelete, VerificationStatus } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { t } from "../createRouter";
+import { setMainTopo } from "./setMainTopo";
 
 export const toposRouter = t.router({
+  toposToVerify: toposToVerify,
+  approveTopo: approveTopo,
+  rejectTopo: rejectTopo,
+  numberOfToposToVerify: numberOfToposToVerify,
+  otherTopos: otherTopos,
+  otherToposCount: otherToposCount,
+  setMainTopo: setMainTopo,
   // Asset being downloaded
   byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({
@@ -25,8 +42,13 @@ export const toposRouter = t.router({
 
     return topo;
   }),
-  add: protectedProcedure.input(topo.schema).mutation(({ ctx, input }) =>
-    ctx.prisma.topo.create({
+  add: protectedZoneProcedure.input(topo.schema).mutation(({ ctx, input }) => {
+    if (!ctx.permissions.has("Create")) {
+      throw new TRPCError(
+        error.unauthorizedActionForZone(input.zoneId, "Create"),
+      );
+    }
+    return ctx.prisma.topo.create({
       data: {
         main: input.main,
         name: input.name,
@@ -36,9 +58,15 @@ export const toposRouter = t.router({
           create: input.image,
         },
         Author: { connect: { id: ctx.user.id } },
+        Verification: {
+          create: {
+            status: VerificationStatus.Approved,
+            VerifierUser: { connect: { id: ctx.user.id } },
+          },
+        },
       },
-    }),
-  ),
+    });
+  }),
   modifyStrokeWidth: protectedZoneProcedure
     .input(topo.id.merge(z.object({ routeStrokeWidth: z.number() })))
     .mutation(({ ctx, input }) => {

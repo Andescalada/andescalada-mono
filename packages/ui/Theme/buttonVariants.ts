@@ -35,7 +35,6 @@ const buttonVariants = createBoxVariant({
   transparent: {
     backgroundColor: "transparentButtonBackground",
     borderRadius: 100,
-    padding: "m",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -61,28 +60,25 @@ const buttonVariants = createBoxVariant({
   success: {
     backgroundColor: "successButtonBackground",
     borderRadius: 100,
-    padding: "m",
     justifyContent: "center",
     alignItems: "center",
   },
   error: {
     backgroundColor: "errorButtonBackground",
     borderRadius: 100,
-    padding: "m",
+
     justifyContent: "center",
     alignItems: "center",
   },
   warning: {
     backgroundColor: "warningButtonBackground",
     borderRadius: 100,
-    padding: "m",
     justifyContent: "center",
     alignItems: "center",
   },
   info: {
     backgroundColor: "infoButtonBackground",
     borderRadius: 100,
-    padding: "m",
     justifyContent: "center",
     alignItems: "center",
   },

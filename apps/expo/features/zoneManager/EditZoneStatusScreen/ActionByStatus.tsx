@@ -53,6 +53,7 @@ const ActionByStatus: FC<Props> = ({
             disabled={disabled}
             title={nextStepTitle}
             variant="info"
+            padding="m"
             onPress={onPress}
           />
         </>

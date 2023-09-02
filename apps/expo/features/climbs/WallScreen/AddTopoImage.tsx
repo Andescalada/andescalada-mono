@@ -56,6 +56,7 @@ const AddTopoImage: FC = () => {
       await mutateAsync(
         {
           main: true,
+          zoneId,
           wallId,
           image,
           name: `${data?.name} topo`,
@@ -98,7 +99,7 @@ const AddTopoImage: FC = () => {
         marginVertical="s"
         onPress={() => pickImage()}
       >
-        <Text variant={"p1R"}>Agregar imagen para topo</Text>
+        <Text variant={"p1R"}>Agregar imagen para topo principal</Text>
       </Pressable>
     );
   }

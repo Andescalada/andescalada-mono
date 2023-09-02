@@ -1,5 +1,5 @@
 import type { Permissions } from "@andescalada/api/src/types/permissions";
-import type { Zone } from "@andescalada/db";
+import type { PermissionActions, Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
 import useOwnInfo from "@hooks/useOwnInfo";
 import storage, { Storage } from "@utils/mmkv/storage";
@@ -19,9 +19,9 @@ const usePermissions = ({ zoneId }: Args) => {
   const permissions = trpc.user.zonePermissions.useQuery(
     { zoneId },
     {
-      staleTime: 1000 * 60 * 2,
+      staleTime: storagePermissions !== undefined ? 1000 * 60 * 2 : 0,
       cacheTime: 1000 * 60 * 2,
-      initialData: storagePermissions,
+      ...(storagePermissions && { initialData: storagePermissions }),
       onSuccess: (data) => {
         storage.set(
           `${Storage.PERMISSIONS}.${userData.id}.${zoneId}`,
@@ -43,9 +43,9 @@ export default usePermissions;
 const getPermissionFromStorage = (userId: string, zoneId: string) => {
   try {
     const s = storage.getString(`${Storage.PERMISSIONS}.${userId}.${zoneId}`);
-    if (!s) return new Set<Permissions>();
+    if (!s) return undefined;
     return parse<Permissions>(s);
   } catch (error) {
-    return new Set<Permissions>();
+    return new Set<PermissionActions>();
   }
 };

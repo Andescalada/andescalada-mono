@@ -159,6 +159,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
             </Box>
             <Button
               variant="info"
+              padding="m"
               title="Continuar"
               alignSelf="center"
               marginTop="l"

@@ -6,7 +6,7 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "dev": "pscale connect andescalada preview --port 3309"
+    "dev": "pscale connect andescalada verification --port 3309"
   },
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10.2.4",

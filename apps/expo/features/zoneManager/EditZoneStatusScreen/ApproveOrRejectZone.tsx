@@ -63,6 +63,7 @@ const ApproveOrRejectZone: FC<Props> = ({ status }) => {
         {permission?.has("ApproveZone") && (
           <Button
             variant="success"
+            padding="m"
             title="Aprobar"
             disabled={rejectZone.isLoading || approveZone.isLoading}
             isLoading={approveZone.isLoading}
@@ -84,6 +85,7 @@ const ApproveOrRejectZone: FC<Props> = ({ status }) => {
         {permission?.has("RejectZone") && (
           <Button
             variant="error"
+            padding="m"
             title="Rechazar"
             disabled={rejectZone.isLoading || approveZone.isLoading}
             isLoading={rejectZone.isLoading}

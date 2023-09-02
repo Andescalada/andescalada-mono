@@ -203,6 +203,7 @@ const GradingOptions = ({
         onPress={onSave}
         isLoading={isLoading}
         disabled={!formState.isDirty || isLoading || isSuccess}
+        padding="m"
       />
     </Screen>
   );

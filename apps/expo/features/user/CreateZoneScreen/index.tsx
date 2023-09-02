@@ -148,6 +148,7 @@ const CreateZoneScreen: FC<Props> = () => {
           isLoading={isLoading}
           disabled={isLoading || !user || !isDirty || isSuccess}
           marginVertical="m"
+          padding="m"
         />
       </KeyboardDismiss>
       <FindUser ref={bottomSheetRef} onSetUser={setUser} filterMe={false} />

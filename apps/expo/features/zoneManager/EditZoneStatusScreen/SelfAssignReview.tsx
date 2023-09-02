@@ -36,6 +36,7 @@ const SelfAssignReview: FC<Props> = ({ status }) => {
       <Button
         marginTop="m"
         variant="info"
+        padding="m"
         title="Revisar zona"
         isLoading={selfAssignZoneToReview.isLoading}
         disabled={selfAssignZoneToReview.isLoading}

@@ -56,6 +56,7 @@ const UnpublishedZone: FC<Props> = ({ status }) => {
       />
       <Button
         variant="warning"
+        padding="m"
         title="Despublicar"
         disabled={unpublishZone.isLoading}
         isLoading={unpublishZone.isLoading}

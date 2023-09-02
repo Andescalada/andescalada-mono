@@ -116,6 +116,7 @@ const UserZonesScreen = () => {
         </Text>
         <Button
           variant="info"
+          padding="m"
           titleVariant={"p2R"}
           marginTop="xxl"
           title="Activar modo offline"
