@@ -1,7 +1,7 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { LoadingModal, Screen } from "@andescalada/ui";
+import { Box, LoadingModal, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -27,6 +27,13 @@ type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Wall>;
 
 const WallScreen: FC<Props> = ({ route, navigation }) => {
   const { wallId, zoneId, sectorId, wallName, sectorKind } = route.params;
+
+  const otherToposQuery = trpc.topos.otherToposCount.useQuery({
+    wallId,
+    zoneId,
+  });
+
+  const otherToposCount = otherToposQuery.data ?? 0;
 
   const utils = trpc.useContext();
 
@@ -183,6 +190,24 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         />
       </FormProvider>
       <TopoImage />
+      {otherToposCount > 0 && (
+        <Box paddingHorizontal="m" marginTop="m">
+          <Pressable
+            bg="grayscale.900"
+            borderRadius={8}
+            padding="s"
+            alignItems="center"
+            justifyContent="center"
+            gap="s"
+            flexDirection="row"
+          >
+            <Box bg="semantic.info" borderRadius={8} paddingHorizontal="s">
+              <Text variant="p3R">{otherToposCount}</Text>
+            </Box>
+            <Text variant="p2R">{`Ver otros topos`}</Text>
+          </Pressable>
+        </Box>
+      )}
       <RoutesList />
     </Screen>
   );
