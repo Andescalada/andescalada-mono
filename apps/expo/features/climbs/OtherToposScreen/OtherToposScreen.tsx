@@ -8,7 +8,6 @@ import {
   LoadingScreen,
   Screen,
   Text,
-  TextButton,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -27,12 +26,7 @@ import { inferProcedureOutput } from "@trpc/server";
 import { FC, useState } from "react";
 import { Pressable, useWindowDimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import {
-  FadeOut,
-  StretchInY,
-  StretchOutY,
-  Transition,
-} from "react-native-reanimated";
+import { FadeOut, StretchInY } from "react-native-reanimated";
 
 type Item = inferProcedureOutput<AppRouter["topos"]["otherTopos"]>[number];
 
