@@ -9,7 +9,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 const OtherTopos = () => {
   const {
-    params: { wallId, zoneId },
+    params: { wallId, zoneId, wallName },
   } = useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.Wall>>();
   const otherToposQuery = trpc.topos.otherToposCount.useQuery({
     wallId,
@@ -35,6 +35,13 @@ const OtherTopos = () => {
           iconProps={{ size: 20 }}
           gap="xs"
           justifyContent="center"
+          onPress={() =>
+            navigation.navigate(ClimbsNavigationRoutes.AddTopo, {
+              wallId,
+              zoneId,
+              wallName,
+            })
+          }
         />
       </Box>
     );
@@ -70,6 +77,13 @@ const OtherTopos = () => {
         iconProps={{ size: 20 }}
         gap="xs"
         justifyContent="center"
+        onPress={() =>
+          navigation.navigate(ClimbsNavigationRoutes.AddTopo, {
+            wallId,
+            zoneId,
+            wallName,
+          })
+        }
       />
     </Box>
   );
