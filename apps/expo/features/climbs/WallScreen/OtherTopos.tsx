@@ -1,4 +1,4 @@
-import { Box, Pressable, Text } from "@andescalada/ui";
+import { Box, Button, Pressable, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,
@@ -23,12 +23,25 @@ const OtherTopos = () => {
 
   const otherToposCount = otherToposQuery.data ?? 0;
 
-  console.log("otherToposCount", otherToposCount);
-
-  if (!otherToposCount) return null;
+  if (!otherToposCount)
+    return (
+      <Box paddingHorizontal="m" marginTop="m">
+        <Button
+          variant="infoSimplified"
+          title="Agregar topo"
+          titleVariant="p2R"
+          padding="s"
+          icon="add-circle"
+          iconProps={{ size: 20 }}
+          gap="xs"
+          justifyContent="center"
+        />
+      </Box>
+    );
   return (
-    <Box paddingHorizontal="m" marginTop="m">
+    <Box paddingHorizontal="m" marginTop="m" flexDirection="row" gap="s">
       <Pressable
+        flex={1}
         bg="grayscale.900"
         borderRadius={8}
         padding="s"
@@ -48,6 +61,16 @@ const OtherTopos = () => {
         </Box>
         <Text variant="p2R">{`Ver otros topos`}</Text>
       </Pressable>
+      <Button
+        variant="infoSimplified"
+        title=""
+        titleVariant="p2R"
+        padding="s"
+        icon="add-circle"
+        iconProps={{ size: 20 }}
+        gap="xs"
+        justifyContent="center"
+      />
     </Box>
   );
 };
