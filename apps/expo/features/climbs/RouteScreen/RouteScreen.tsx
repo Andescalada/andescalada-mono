@@ -164,22 +164,32 @@ const RouteContainer = ({
         <Pressable
           borderRadius={8}
           maxWidth={"30%"}
-          bg="grayscale.transparent.50.500"
+          bg={
+            !route.mainTopo
+              ? "grayscale.transparent.50.500"
+              : "brand.secondaryB"
+          }
           justifyContent="center"
           alignItems="center"
           py="s"
+          disabled={!route.mainTopo}
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
               screen: RoutesManagerNavigationRoutes.TopoViewer,
               params: {
-                topoId: route.mainTopo.id,
+                topoId: route.mainTopo?.id,
                 routeId: route.id,
                 zoneId: route.Wall.Sector.zoneId,
               },
             })
           }
         >
-          <Text variant="p3R">Ver topo</Text>
+          <Text
+            variant="p3R"
+            color={!route.mainTopo ? "grayscale.white" : "grayscale.black"}
+          >
+            {route.mainTopo?.id ? "Ver topo" : "Sin topo"}
+          </Text>
         </Pressable>
       </Box>
       <Box>
