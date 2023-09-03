@@ -6,6 +6,7 @@ export const lisItemVariantsColors = {
 };
 
 export const SQUARED_LIST_ITEM_SIZE = 100;
+export const SQUARED_LIST_ITEM_MAX_SIZE = 120;
 
 const listItemVariants = createBoxVariant({
   defaults: {
@@ -45,21 +46,24 @@ const listItemVariants = createBoxVariant({
   },
   squaredPrimaryA: {
     height: SQUARED_LIST_ITEM_SIZE,
-    width: SQUARED_LIST_ITEM_SIZE,
+    minWidth: SQUARED_LIST_ITEM_SIZE,
+    maxWidth: SQUARED_LIST_ITEM_MAX_SIZE,
     borderRadius: 16,
     borderColor: "brand.primaryA",
     backgroundColor: "brand.primaryA",
   },
   squaredPrimaryB: {
     height: SQUARED_LIST_ITEM_SIZE,
-    width: SQUARED_LIST_ITEM_SIZE,
+    minWidth: SQUARED_LIST_ITEM_SIZE,
+    maxWidth: SQUARED_LIST_ITEM_MAX_SIZE,
     borderRadius: 16,
     borderColor: "brand.primaryB",
     backgroundColor: "brand.primaryB",
   },
   squaredFilled: {
     height: SQUARED_LIST_ITEM_SIZE,
-    width: SQUARED_LIST_ITEM_SIZE,
+    minWidth: SQUARED_LIST_ITEM_SIZE,
+    maxWidth: SQUARED_LIST_ITEM_MAX_SIZE,
     borderRadius: 16,
     borderColor: "transparent",
     backgroundColor: "listItemBackground",
