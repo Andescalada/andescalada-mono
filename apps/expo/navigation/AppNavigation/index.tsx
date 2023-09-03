@@ -40,7 +40,12 @@ const Navigator = () => {
         <Box marginVertical="xl">
           <Icon name="cool-dinosaur-color" size={100} />
         </Box>
-        <Button variant="info" title="Ir a la tienda" onPress={goToAppStore} />
+        <Button
+          variant="info"
+          padding="m"
+          title="Ir a la tienda"
+          onPress={goToAppStore}
+        />
       </Screen>
     );
   }

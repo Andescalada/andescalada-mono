@@ -145,6 +145,7 @@ const AddDirectionsScreen: FC<Props> = ({
             </Text>
             <Button
               variant={isValid ? "info" : "transparent"}
+              padding="m"
               title="Continuar"
               marginVertical="l"
               isLoading={addDirection.isLoading}

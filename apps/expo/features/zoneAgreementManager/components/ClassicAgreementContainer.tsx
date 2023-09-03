@@ -152,6 +152,7 @@ const UndefinedAgreementButton = () => {
   return (
     <Button
       variant={isSelected ? "info" : "contrast"}
+      padding="m"
       title="Saltar"
       marginBottom="l"
       onPress={() => {

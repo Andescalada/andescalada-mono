@@ -192,6 +192,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
             </Box>
             <Button
               variant={requestStatus === "Pending" ? "transparent" : "info"}
+              padding="m"
               title={
                 requestStatus === "Pending" ? "Pendiente" : "Solicitar acceso"
               }
