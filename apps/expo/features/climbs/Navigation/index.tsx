@@ -3,7 +3,6 @@ import AddAndEditRouteDescription from "@features/climbs/AddAndEditRouteDescript
 import AddAndEditZoneDescription from "@features/climbs/AddAndEditZoneDescription";
 import AddRouteScreen from "@features/climbs/AddRouteScreen";
 import AddSectorScreen from "@features/climbs/AddSectorScreen";
-import { AddTopoScreen } from "@features/climbs/AddTopoScreen";
 import AddWallScreen from "@features/climbs/AddWallScreen";
 import AdminZoneOptionsScreen from "@features/climbs/AdminZoneOptionsScreen";
 import AgreementsIntroScreen from "@features/climbs/AgreementsIntroScreen";
@@ -158,10 +157,6 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.OtherTopos}
           component={OtherToposScreen}
-        />
-        <Stack.Screen
-          name={ClimbsNavigationRoutes.AddTopo}
-          component={AddTopoScreen}
         />
       </Stack.Navigator>
       <OfflineNotification />
