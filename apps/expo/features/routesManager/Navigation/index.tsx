@@ -4,6 +4,7 @@ import RouteExtensionDrawerScreen from "@features/routesManager/RouteExtensionDr
 import RouteVariantDrawerScreen from "@features/routesManager/RouteVariantDrawerScreen";
 import TopoManagerScreen from "@features/routesManager/TopoManagerScreen";
 import TopoViewerScreen from "@features/routesManager/TopoViewerScreen";
+import { UploadTopoImageScreen } from "@features/routesManager/UploadTopoImageScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -39,6 +40,10 @@ const Navigator = () => {
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.RouteVariantDrawer}
         component={RouteVariantDrawerScreen}
+      />
+      <Stack.Screen
+        name={RoutesManagerNavigationRoutes.UploadTopoImage}
+        component={UploadTopoImageScreen}
       />
       <Stack.Screen
         name={RoutesManagerNavigationRoutes.MultiPitchDrawer}

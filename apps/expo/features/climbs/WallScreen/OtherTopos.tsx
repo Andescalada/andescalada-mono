@@ -5,6 +5,9 @@ import {
   ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
+import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const OtherTopos = () => {
@@ -21,6 +24,8 @@ const OtherTopos = () => {
       ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Wall>
     >();
 
+  const rootNavigation = useRootNavigation();
+
   const otherToposCount = otherToposQuery.data ?? 0;
 
   if (!otherToposCount)
@@ -36,10 +41,13 @@ const OtherTopos = () => {
           gap="xs"
           justifyContent="center"
           onPress={() =>
-            navigation.navigate(ClimbsNavigationRoutes.AddTopo, {
-              wallId,
-              zoneId,
-              wallName,
+            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+              screen: RoutesManagerNavigationRoutes.UploadTopoImage,
+              params: {
+                wallId,
+                zoneId,
+                wallName,
+              },
             })
           }
         />
@@ -78,10 +86,13 @@ const OtherTopos = () => {
         gap="xs"
         justifyContent="center"
         onPress={() =>
-          navigation.navigate(ClimbsNavigationRoutes.AddTopo, {
-            wallId,
-            zoneId,
-            wallName,
+          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+            screen: RoutesManagerNavigationRoutes.UploadTopoImage,
+            params: {
+              wallId,
+              zoneId,
+              wallName,
+            },
           })
         }
       />
