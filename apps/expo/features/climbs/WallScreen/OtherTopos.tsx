@@ -19,6 +19,36 @@ const OtherTopos = () => {
     zoneId,
   });
 
+  const toposByUserCount = trpc.topos.toposByUserCount.useQuery({
+    wallId,
+    zoneId,
+  });
+
+  const onAddTopoPress = () => {
+    if (
+      typeof toposByUserCount.data === "number" &&
+      toposByUserCount.data > 0
+    ) {
+      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+        screen: RoutesManagerNavigationRoutes.ToposByUser,
+        params: {
+          wallId,
+          zoneId,
+          wallName,
+        },
+      });
+      return;
+    }
+    rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+      screen: RoutesManagerNavigationRoutes.UploadTopoImage,
+      params: {
+        wallId,
+        zoneId,
+        wallName,
+      },
+    });
+  };
+
   const navigation =
     useNavigation<
       ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.Wall>
@@ -27,6 +57,8 @@ const OtherTopos = () => {
   const rootNavigation = useRootNavigation();
 
   const otherToposCount = otherToposQuery.data ?? 0;
+
+  if (otherToposQuery.isLoading || toposByUserCount.isLoading) return null;
 
   if (!otherToposCount)
     return (
@@ -40,16 +72,7 @@ const OtherTopos = () => {
           iconProps={{ size: 20 }}
           gap="xs"
           justifyContent="center"
-          onPress={() =>
-            rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-              screen: RoutesManagerNavigationRoutes.UploadTopoImage,
-              params: {
-                wallId,
-                zoneId,
-                wallName,
-              },
-            })
-          }
+          onPress={onAddTopoPress}
         />
       </Box>
     );
@@ -85,16 +108,7 @@ const OtherTopos = () => {
         iconProps={{ size: 20 }}
         gap="xs"
         justifyContent="center"
-        onPress={() =>
-          rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-            screen: RoutesManagerNavigationRoutes.UploadTopoImage,
-            params: {
-              wallId,
-              zoneId,
-              wallName,
-            },
-          })
-        }
+        onPress={onAddTopoPress}
       />
     </Box>
   );
