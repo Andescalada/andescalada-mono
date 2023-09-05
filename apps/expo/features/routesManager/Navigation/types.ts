@@ -68,6 +68,7 @@ export type RoutesManagerNavigationParamList = {
     topoId: Topo["id"];
     wallId: Wall["id"];
     zoneId: Zone["id"];
+    goBackOnFinish?: true;
   };
   [RoutesManagerNavigationRoutes.UploadTopoImage]: {
     wallId: Wall["id"];

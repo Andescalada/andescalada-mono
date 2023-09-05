@@ -1,4 +1,4 @@
-import { Box, Header, ListItem, Screen, Text } from "@andescalada/ui";
+import { Box, Button, ListItem, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import {
@@ -15,7 +15,7 @@ type Props =
 
 const TopoManagerScreen: FC<Props> = ({
   route: {
-    params: { topoId, zoneId, wallId },
+    params: { topoId, zoneId, wallId, goBackOnFinish },
   },
   navigation,
 }) => {
@@ -41,11 +41,6 @@ const TopoManagerScreen: FC<Props> = ({
   if (!topo.data) return null;
   return (
     <Screen>
-      <Header
-        title={topo.data.Wall.name}
-        padding="m"
-        onGoBack={navigation.goBack}
-      />
       <Box flex={1}>
         <FlatList
           ListHeaderComponent={() => (
@@ -130,6 +125,25 @@ const TopoManagerScreen: FC<Props> = ({
           )}
         />
       </Box>
+      <Button
+        margin="m"
+        padding="s"
+        titleVariant="p1R"
+        marginBottom="xl"
+        title="Finalizar"
+        onPress={() => {
+          if (goBackOnFinish) {
+            navigation.goBack();
+            return;
+          }
+          navigation.navigate(RoutesManagerNavigationRoutes.ToposByUser, {
+            wallId,
+            wallName: topo.data.Wall.name,
+            zoneId,
+          });
+        }}
+        variant="infoSimplified"
+      />
     </Screen>
   );
 };
