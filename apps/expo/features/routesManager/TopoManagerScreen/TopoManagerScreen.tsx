@@ -1,17 +1,32 @@
-import { Box, Button, ListItem, Screen, Text } from "@andescalada/ui";
+import {
+  Box,
+  Button,
+  ListItem,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import {
   RoutesManagerNavigationRoutes,
+  RoutesManagerRouteProps,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import { useFitContent } from "@hooks/useFitContent";
-import useRouteList from "@hooks/useRouteList";
+import useNavigateToRouteDrawer from "@hooks/useNavigateToRouteDrawer";
+import useRouteList, { RouteListData } from "@hooks/useRouteList";
+import { useRoute } from "@react-navigation/native";
 import { FC } from "react";
 import { FlatList, useWindowDimensions } from "react-native";
 
 type Props =
   RoutesManagerScreenProps<RoutesManagerNavigationRoutes.TopoManager>;
+
+type Item = NonNullable<RouteListData>["routes"][number];
+
+type ChildrenItem =
+  NonNullable<RouteListData>["routes"][number]["ChildrenRoutes"][number];
 
 const TopoManagerScreen: FC<Props> = ({
   route: {
@@ -62,67 +77,7 @@ const TopoManagerScreen: FC<Props> = ({
           )}
           showsVerticalScrollIndicator={false}
           data={routes}
-          renderItem={({ item: route }) => (
-            <>
-              <ListItem
-                marginHorizontal="m"
-                flexDirection="row"
-                marginBottom="s"
-                alignItems="center"
-                justifyContent="space-between"
-                padding="l"
-                borderRadius={16}
-                onPress={() => {
-                  navigation.navigate(
-                    RoutesManagerNavigationRoutes.RouteDrawer,
-                    {
-                      topoId,
-                      zoneId,
-                      wallId,
-                      singleEdition: true,
-                      goBackOnSuccess: true,
-                      route: { id: route.id, position: route.position },
-                    },
-                  );
-                }}
-              >
-                <Box flexDirection="row" flex={1}>
-                  <Box
-                    borderWidth={1}
-                    borderColor="text"
-                    borderRadius={15}
-                    height={30}
-                    width={30}
-                    justifyContent="center"
-                    alignItems="center"
-                    marginRight="s"
-                  >
-                    <Text
-                      variant="p2B"
-                      paddingHorizontal="xs"
-                      fontSize={14}
-                      textAlign="center"
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                    >
-                      {route.position}
-                    </Text>
-                  </Box>
-                  <Box flex={1}>
-                    <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
-                      {route.name}
-                    </Text>
-                    <Text variant="caption" color="grayscale.400">
-                      {route.kindStringify}
-                    </Text>
-                  </Box>
-                </Box>
-                <Box flexDirection="row" alignItems="center">
-                  <Text variant="p2R">{route.gradeStringify}</Text>
-                </Box>
-              </ListItem>
-            </>
-          )}
+          renderItem={({ item: route }) => <RouteItem route={route} />}
         />
       </Box>
       <Button
@@ -145,6 +100,169 @@ const TopoManagerScreen: FC<Props> = ({
         variant="infoSimplified"
       />
     </Screen>
+  );
+};
+
+const RouteItem = ({ route }: { route: Item }) => {
+  const {
+    params: { topoId, wallId, zoneId },
+  } =
+    useRoute<
+      RoutesManagerRouteProps<RoutesManagerNavigationRoutes.TopoManager>
+    >();
+
+  const { navigateToDrawRoute } = useNavigateToRouteDrawer({
+    id: route.id,
+    position: route.position,
+    topoId,
+    zoneId,
+    wallId,
+    extendedRouteId: route.extendedRouteId,
+    variantRouteId: route.variantRouteId,
+  });
+
+  return (
+    <Box
+      marginBottom="s"
+      marginHorizontal="m"
+      alignItems="center"
+      justifyContent="center"
+      flex={1}
+    >
+      <ListItem
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        padding="l"
+        borderRadius={16}
+        onPress={navigateToDrawRoute}
+      >
+        <Box flexDirection="row" flex={1}>
+          <Box
+            borderWidth={1}
+            borderColor="text"
+            borderRadius={15}
+            height={30}
+            width={30}
+            justifyContent="center"
+            alignItems="center"
+            marginRight="s"
+          >
+            <Text
+              variant="p2B"
+              paddingHorizontal="xs"
+              fontSize={14}
+              textAlign="center"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {route.position}
+            </Text>
+          </Box>
+          <Box flex={1}>
+            <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
+              {route.name}
+            </Text>
+            <Text variant="caption" color="grayscale.400">
+              {route.kindStringify}
+            </Text>
+          </Box>
+        </Box>
+        <Box flexDirection="row" alignItems="center">
+          <Text variant="p2R">{route.gradeStringify}</Text>
+        </Box>
+      </ListItem>
+      <Box flex={1} width="95%">
+        {route.ChildrenRoutes.map((childrenRoute, index) => (
+          <ChildrenRouteItem
+            key={childrenRoute.id}
+            childrenRoute={childrenRoute}
+            index={index}
+            totalOfChildrenRoutes={route.ChildrenRoutes.length}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
+const ChildrenRouteItem = ({
+  childrenRoute,
+  index,
+  totalOfChildrenRoutes,
+}: {
+  childrenRoute: ChildrenItem;
+  index: number;
+  totalOfChildrenRoutes: number;
+}) => {
+  const {
+    params: { topoId, wallId, zoneId },
+  } =
+    useRoute<
+      RoutesManagerRouteProps<RoutesManagerNavigationRoutes.TopoManager>
+    >();
+  const { navigateToDrawRoute } = useNavigateToRouteDrawer({
+    id: childrenRoute.id,
+    position: childrenRoute.position,
+    topoId,
+    zoneId,
+    wallId,
+    extendedRouteId: childrenRoute.extendedRouteId,
+    variantRouteId: childrenRoute.variantRouteId,
+  });
+  return (
+    <Pressable
+      key={childrenRoute.id}
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+      borderBottomLeftRadius={index === totalOfChildrenRoutes - 1 ? 16 : 0}
+      borderBottomRightRadius={index === totalOfChildrenRoutes - 1 ? 16 : 0}
+      borderBottomWidth={index === totalOfChildrenRoutes - 1 ? 2 : 1}
+      borderLeftWidth={2}
+      borderRightWidth={2}
+      borderBottomColor="grayscale.white"
+      borderLeftColor="grayscale.white"
+      borderRightColor="grayscale.white"
+      flex={1}
+      padding="m"
+      onPress={navigateToDrawRoute}
+    >
+      <Box flexDirection="row" flex={1}>
+        <Box
+          borderWidth={1}
+          borderColor="text"
+          borderRadius={15}
+          height={30}
+          width={30}
+          justifyContent="center"
+          alignItems="center"
+          marginRight="s"
+        >
+          <Text
+            variant="p2B"
+            paddingHorizontal="xs"
+            fontSize={14}
+            textAlign="center"
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >
+            {childrenRoute.position}
+          </Text>
+        </Box>
+        <Box flex={1}>
+          <Text variant="p2R" ellipsizeMode="tail" numberOfLines={1}>
+            {childrenRoute.name}
+          </Text>
+          <Text variant="caption" color="grayscale.400">
+            {childrenRoute.kindStringify}
+          </Text>
+        </Box>
+      </Box>
+      <Box flexDirection="row" alignItems="center">
+        <Text variant="p2R">{childrenRoute.gradeStringify}</Text>
+      </Box>
+    </Pressable>
   );
 };
 
