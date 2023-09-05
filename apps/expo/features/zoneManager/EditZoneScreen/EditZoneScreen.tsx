@@ -167,6 +167,7 @@ const EditZoneScreen: FC<Props> = ({ navigation, route: { params } }) => {
           <Box padding="m" paddingHorizontal="xxl">
             <Button
               variant={form.formState.isValid ? "success" : "transparent"}
+              padding="m"
               title="Continuar"
               disabled={!form.formState.isValid}
               onPress={handleContinue}

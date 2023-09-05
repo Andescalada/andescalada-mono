@@ -1,9 +1,15 @@
 import topo from "@andescalada/api/schemas/topo";
 import { t } from "@andescalada/api/src/createRouter";
+import { create } from "@andescalada/api/src/routers/topos/create";
 import {
   otherTopos,
   otherToposCount,
 } from "@andescalada/api/src/routers/topos/otherTopos";
+import {
+  deleteTopoByUser,
+  toposByUser,
+  toposByUserCount,
+} from "@andescalada/api/src/routers/topos/toposByUser";
 import {
   approveTopo,
   numberOfToposToVerify,
@@ -18,6 +24,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { setMainTopo } from "./setMainTopo";
+import { sendToVerification } from "./toposByUser";
 
 export const toposRouter = t.router({
   toposToVerify: toposToVerify,
@@ -27,6 +34,11 @@ export const toposRouter = t.router({
   otherTopos: otherTopos,
   otherToposCount: otherToposCount,
   setMainTopo: setMainTopo,
+  create: create,
+  toposByUser: toposByUser,
+  toposByUserCount: toposByUserCount,
+  deleteTopoByUser: deleteTopoByUser,
+  sendToVerification: sendToVerification,
   // Asset being downloaded
   byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({

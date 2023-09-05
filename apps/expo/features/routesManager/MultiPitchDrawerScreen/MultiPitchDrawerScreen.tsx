@@ -1,5 +1,11 @@
 import { pathToArray } from "@andescalada/climbs-drawer/utils";
-import { ActivityIndicator, Screen } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  Button,
+  Ionicons,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import MultiPitchDrawer from "@features/routesManager/MultiPitchDrawerScreen/MultiPitchDrawer";
 import {
@@ -19,6 +25,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
   route: {
     params: { wallId, route: routeParams, topoId, zoneId, previousPitchId },
   },
+  navigation,
 }) => {
   const previousPitch =
     !!previousPitchId &&
@@ -58,6 +65,26 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     zoneId,
     imageQuality: constants.imageQuality,
   });
+
+  if (!!previousPitch && !previousPitch.isLoading && !previousPitchStart) {
+    return (
+      <Screen justifyContent="center" alignItems="center" gap="l" padding="l">
+        <Ionicons
+          name="close-circle-outline"
+          color="semantic.error"
+          size={60}
+        />
+        <Text variant="p1R">No encontramos el largo anterior</Text>
+        <Text>Primero debes dibujar el largo que viene antes de este</Text>
+        <Button
+          title="Volver"
+          variant="info"
+          padding="m"
+          onPress={navigation.goBack}
+        />
+      </Screen>
+    );
+  }
 
   if (topos && isImageLoaded && (!previousPitchId || !!previousPitchStart)) {
     return (

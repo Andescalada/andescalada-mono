@@ -17,6 +17,7 @@ export type MultiPitchManagerNavigationParamList = {
     zoneId: Zone["id"];
     topoId?: Topo["id"];
     wallId: Wall["id"];
+    drawingOnly?: true;
   };
   [MultiPitchManagerRoutes.AddPitch]: {
     multiPitchId: MultiPitch["id"];

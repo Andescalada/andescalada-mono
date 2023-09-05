@@ -49,6 +49,10 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     }, [zoneId, isOfflineMode]),
   );
 
+  const numberOfToposToVerify = trpc.topos.numberOfToposToVerify.useQuery({
+    zoneId,
+  });
+
   const { data, refetch, isFetching, isLoading, isPaused } = useZonesAllSectors(
     { zoneId },
     {
@@ -96,6 +100,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
   const refresh = useRefresh(() => {
     refetch();
     getPermissions();
+    numberOfToposToVerify.refetch();
   }, (isFetching || isLoadingPermissions) && !isLoading);
 
   const onOptions = useOptionsSheet({

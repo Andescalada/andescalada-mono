@@ -31,8 +31,10 @@ const usePermissions = ({ zoneId }: Args) => {
     },
   );
 
+  const defaultPermission = new Set<PermissionActions>();
+
   return {
-    permission: permissions.data,
+    permission: permissions.data ?? defaultPermission,
     getPermissions: permissions.refetch,
     isLoading: permissions.isLoading,
   };

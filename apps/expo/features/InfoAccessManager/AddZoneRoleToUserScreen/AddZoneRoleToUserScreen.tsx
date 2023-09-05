@@ -156,6 +156,7 @@ const AddZoneRoleToUserScreen: FC<Props> = ({
         alignSelf="center"
         title={saveButton.title}
         variant={saveButton.variant}
+        padding="m"
         onPress={onSubmit}
         isLoading={isLoading}
         disabled={isLoading || !user || !role || isSuccess}

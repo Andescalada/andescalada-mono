@@ -126,6 +126,7 @@ const EditAgreementScreen: FC<Props> = ({
           </Text>
           <Button
             variant={!isValid && isDirty ? "transparent" : "info"}
+            padding="m"
             title="Editar"
             isLoading={edit.isLoading}
             onPress={handleEdit}

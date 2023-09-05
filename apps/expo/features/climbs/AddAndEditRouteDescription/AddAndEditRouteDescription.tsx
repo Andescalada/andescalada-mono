@@ -125,6 +125,7 @@ const AddAndEditZoneDescription: FC<Props> = ({
             </Box>
           </Box>
           <Button
+            padding="m"
             variant={form.formState.isValid ? "info" : "transparent"}
             title="Continuar"
             marginVertical="l"

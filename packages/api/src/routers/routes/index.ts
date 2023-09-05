@@ -31,7 +31,7 @@ export const routesRouter = t.router({
   addRouteLength: addRouteLength,
   upsertDescription: upsertDescription,
   addOrEditGradeEvaluation: addOrEditGradeEvaluation,
-  byId: t.procedure
+  byId: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
       if (!input) return null;

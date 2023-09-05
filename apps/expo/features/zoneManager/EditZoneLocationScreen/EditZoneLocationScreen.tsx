@@ -125,6 +125,7 @@ const EditZoneLocationScreen: FC<Props> = ({
       >
         <Button
           variant={region ? "success" : "transparent"}
+          padding="m"
           title="Continuar"
           disabled={!region}
           onPress={handleContinue}

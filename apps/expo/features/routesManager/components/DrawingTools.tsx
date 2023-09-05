@@ -65,6 +65,7 @@ const DrawingTools = ({
           <Button
             title={canSave ? "Guardar" : "Finalizar"}
             variant={canSave ? "success" : "error"}
+            padding="m"
             titleVariant="p2R"
             titleProps={{ lineHeight: 20, textAlign: "center" }}
             isLoading={isLoading}

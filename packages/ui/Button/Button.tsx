@@ -46,7 +46,7 @@ const Button: FC<Props> = ({
 }) => {
   const props = useRestyle(restyleFunction, { variant, ...rest });
   return (
-    <Pressable {...props} flexDirection="row">
+    <Pressable flexDirection="row" {...props}>
       {isLoading ? (
         <ActivityIndicator color={`${variant}ButtonText` as Colors} />
       ) : (

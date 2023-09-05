@@ -134,7 +134,7 @@ const UserZonesScreen = () => {
       <Box flexDirection="row" width="100%" padding="m" paddingBottom="none">
         <Pressable
           borderRadius={4}
-          flex={2}
+          flex={1}
           backgroundColor="filledTextInputVariantBackground"
           height={40}
           onPress={() => {
@@ -152,7 +152,6 @@ const UserZonesScreen = () => {
         </Pressable>
         <Button
           title="Ver todas"
-          flex={0.5}
           marginLeft="s"
           variant="transparentSimplified"
           height={40}

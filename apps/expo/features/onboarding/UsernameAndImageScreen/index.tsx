@@ -144,6 +144,7 @@ const UsernameAndImageScreen: FC<Props> = ({ navigation }) => {
           <Button
             variant={submitButtonVariant}
             title="Continuar"
+            padding="m"
             alignSelf={"center"}
             marginTop="xxl"
             onPress={onSubmit}

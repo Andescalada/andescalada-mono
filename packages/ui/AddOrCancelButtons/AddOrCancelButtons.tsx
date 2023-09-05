@@ -26,6 +26,7 @@ const AddOrCancelButtons = ({
     <Box {...props}>
       <Button
         variant="primary"
+        padding="m"
         title={addLabel}
         onPress={onAdd}
         isLoading={isLoading}

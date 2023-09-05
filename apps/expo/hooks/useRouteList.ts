@@ -51,6 +51,8 @@ const useRouteList = (
             ),
             isMultiPitch: true,
             ChildrenRoutes: [] as ParsedChildrenRoute[],
+            variantRouteId: null,
+            extendedRouteId: null,
           }));
           const routesWithChildren = wall.routes.map((route) => ({
             ...route,

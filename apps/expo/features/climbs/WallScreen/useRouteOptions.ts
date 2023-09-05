@@ -160,7 +160,6 @@ const useRouteOptions = ({
       routeId: string;
       zoneId: string;
     }) => {
-      if (!topoId) return;
       rootNavigation.navigate(RootNavigationRoutes.Climbs, {
         screen: ClimbsNavigationRoutes.Route,
         params: {
@@ -170,7 +169,7 @@ const useRouteOptions = ({
         },
       });
     },
-    [rootNavigation, topoId],
+    [rootNavigation],
   );
 
   const onRouteOptions = ({

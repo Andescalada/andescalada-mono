@@ -9,6 +9,8 @@ export enum RoutesManagerNavigationRoutes {
   RouteVariantDrawer = "RoutesManagerRouteVariant",
   MultiPitchDrawer = "RoutesManagerMultiPitchDrawer",
   TopoManager = "RoutesManagerTopoManager",
+  UploadTopoImage = "RoutesManagerUploadTopoImage",
+  ToposByUser = "RoutesManagerToposByUser",
 }
 
 export type RoutesManagerNavigationParamList = {
@@ -66,6 +68,17 @@ export type RoutesManagerNavigationParamList = {
     topoId: Topo["id"];
     wallId: Wall["id"];
     zoneId: Zone["id"];
+    goBackOnFinish?: true;
+  };
+  [RoutesManagerNavigationRoutes.UploadTopoImage]: {
+    wallId: Wall["id"];
+    zoneId: Zone["id"];
+    wallName: Wall["name"];
+  };
+  [RoutesManagerNavigationRoutes.ToposByUser]: {
+    wallId: Wall["id"];
+    zoneId: Zone["id"];
+    wallName: Wall["name"];
   };
 };
 

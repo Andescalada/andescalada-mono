@@ -20,6 +20,8 @@ const Route = {
   unknownName: true,
   wallId: true,
   Author: { select: { id: true } },
+  extendedRouteId: true,
+  variantRouteId: true,
 };
 
 const parsedWall = async ({
