@@ -30,7 +30,14 @@ type Props =
 const MultiPitchManagerScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { multiPitchName, multiPitchId, zoneId, topoId, wallId },
+    params: {
+      multiPitchName,
+      multiPitchId,
+      zoneId,
+      topoId,
+      wallId,
+      drawingOnly,
+    },
   },
 }) => {
   const { data, isLoading, refetch, isRefetching } =
@@ -128,7 +135,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
       <Header
         title={multiPitchName}
         onGoBack={navigation.goBack}
-        showOptions={permission.has("Update") && !isOfflineMode}
+        showOptions={permission.has("Update") && !isOfflineMode && !drawingOnly}
         onOptions={onOptions}
         marginBottom="m"
       />
@@ -149,20 +156,22 @@ const MultiPitchManagerScreen: FC<Props> = ({
             </TextButton>
           </Box>
         }
-        ListHeaderComponent={() => (
-          <Box>
-            <Pressable
-              flexDirection="row"
-              paddingBottom="m"
-              justifyContent="space-between"
-              alignItems="center"
-              onPress={addPitch}
-            >
-              <Text variant="h4">Agregar largo</Text>
-              <AddButton onPress={addPitch} />
-            </Pressable>
-          </Box>
-        )}
+        ListHeaderComponent={() =>
+          drawingOnly ? null : (
+            <Box>
+              <Pressable
+                flexDirection="row"
+                paddingBottom="m"
+                justifyContent="space-between"
+                alignItems="center"
+                onPress={addPitch}
+              >
+                <Text variant="h4">Agregar largo</Text>
+                <AddButton onPress={addPitch} />
+              </Pressable>
+            </Box>
+          )
+        }
         renderItem={({ item, index }) => {
           const previousPitchId =
             index > 0 ? data?.Pitches[index - 1].id : undefined;
@@ -179,6 +188,7 @@ const MultiPitchManagerScreen: FC<Props> = ({
               wallId={data?.wallId || ""}
               topoId={topoId}
               position={data?.position || 0}
+              drawingOnly={drawingOnly}
             />
           );
         }}

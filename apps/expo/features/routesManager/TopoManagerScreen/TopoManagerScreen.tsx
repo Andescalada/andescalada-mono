@@ -7,6 +7,7 @@ import {
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
 import {
   RoutesManagerNavigationRoutes,
@@ -15,7 +16,9 @@ import {
 } from "@features/routesManager/Navigation/types";
 import { useFitContent } from "@hooks/useFitContent";
 import useNavigateToRouteDrawer from "@hooks/useNavigateToRouteDrawer";
+import useRootNavigation from "@hooks/useRootNavigation";
 import useRouteList, { RouteListData } from "@hooks/useRouteList";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useRoute } from "@react-navigation/native";
 import { FC } from "react";
 import { FlatList, useWindowDimensions } from "react-native";
@@ -111,6 +114,8 @@ const RouteItem = ({ route }: { route: Item }) => {
       RoutesManagerRouteProps<RoutesManagerNavigationRoutes.TopoManager>
     >();
 
+  const rootNavigation = useRootNavigation();
+
   const { navigateToDrawRoute } = useNavigateToRouteDrawer({
     id: route.id,
     position: route.position,
@@ -120,6 +125,24 @@ const RouteItem = ({ route }: { route: Item }) => {
     extendedRouteId: route.extendedRouteId,
     variantRouteId: route.variantRouteId,
   });
+
+  const navigateToDraw = () => {
+    if (route.isMultiPitch) {
+      rootNavigation.navigate(RootNavigationRoutes.MultiPitchManager, {
+        screen: MultiPitchManagerRoutes.MultiPitchManager,
+        params: {
+          multiPitchId: route.id,
+          multiPitchName: route.name,
+          zoneId,
+          topoId,
+          wallId,
+          drawingOnly: true,
+        },
+      });
+      return;
+    }
+    navigateToDrawRoute();
+  };
 
   return (
     <Box
@@ -135,7 +158,7 @@ const RouteItem = ({ route }: { route: Item }) => {
         justifyContent="space-between"
         padding="l"
         borderRadius={16}
-        onPress={navigateToDrawRoute}
+        onPress={navigateToDraw}
       >
         <Box flexDirection="row" flex={1}>
           <Box

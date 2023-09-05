@@ -30,6 +30,7 @@ interface Props {
   wallId: Wall["id"];
   topoId?: Topo["id"];
   position: number;
+  drawingOnly?: boolean;
 }
 
 const MultiPitchRouteItem = ({
@@ -43,6 +44,7 @@ const MultiPitchRouteItem = ({
   position,
   topoId,
   wallId,
+  drawingOnly,
   setKeepOpen,
 }: Props) => {
   const { onOpen, style } = useAnimatedHeight({
@@ -92,6 +94,29 @@ const MultiPitchRouteItem = ({
     },
   });
 
+  const navigateToDrawingScreen = () => {
+    if (!topoId) {
+      Alert.alert("Error", "No se puede editar la ruta sin un topo");
+      return;
+    }
+    rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+      screen: RoutesManagerNavigationRoutes.MultiPitchDrawer,
+      params: {
+        route: {
+          id: routeId,
+          position,
+        },
+        previousPitchId,
+        pitchNumber,
+        zoneId,
+        wallId,
+        topoId,
+        multiPitchId,
+        multiPitchName,
+      },
+    });
+  };
+
   return (
     <A.Box marginBottom="m">
       <ListItem
@@ -99,6 +124,10 @@ const MultiPitchRouteItem = ({
         alignItems="center"
         justifyContent="space-between"
         onPress={() => {
+          if (drawingOnly) {
+            navigateToDrawingScreen();
+            return;
+          }
           onOpen();
           setKeepOpen(routeId);
         }}
@@ -142,24 +171,7 @@ const MultiPitchRouteItem = ({
               index={1}
               height={50}
               maxIndex={2}
-              onPress={() => {
-                rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-                  screen: RoutesManagerNavigationRoutes.MultiPitchDrawer,
-                  params: {
-                    route: {
-                      id: routeId,
-                      position,
-                    },
-                    previousPitchId,
-                    pitchNumber,
-                    zoneId,
-                    wallId,
-                    topoId,
-                    multiPitchId,
-                    multiPitchName,
-                  },
-                });
-              }}
+              onPress={navigateToDrawingScreen}
             >
               <Text variant="p2R">Editar ruta</Text>
             </SubItem>
