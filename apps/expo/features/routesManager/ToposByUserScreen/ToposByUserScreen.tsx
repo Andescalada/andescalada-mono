@@ -20,7 +20,6 @@ import {
 } from "@features/routesManager/Navigation/types";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
-import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
