@@ -1,3 +1,4 @@
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
   ActivityIndicator,
   Box,
@@ -7,14 +8,18 @@ import {
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
+  ClimbsNavigationNavigationProps,
+  ClimbsNavigationRouteProps,
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
 import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
-import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
+import useNavigateToRouteDrawer from "@hooks/useNavigateToRouteDrawer";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { inferProcedureOutput } from "@trpc/server";
 import emptyArray from "@utils/emptyArray";
 import featureFlags from "@utils/featureFlags";
 import parseGrade from "@utils/parseGrade";
@@ -23,56 +28,54 @@ import { Alert } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.RouteOptions>;
 
-const EditOptions: FC<Props> = ({
+const EditOptionsContainer: FC<Props> = ({
   route: {
-    params: { routeId, wallId, zoneId, isChildrenRoute },
+    params: { routeId },
   },
-  navigation,
 }) => {
   const route = trpc.routes.byId.useQuery(routeId, {
     staleTime: 0,
     cacheTime: 0,
   });
 
+  if (!route.data) {
+    return (
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" />
+      </Box>
+    );
+  }
+  return <EditOptionsScreen data={route.data} />;
+};
+
+const EditOptionsScreen = ({
+  data,
+}: {
+  data: NonNullable<inferProcedureOutput<AppRouter["routes"]["byId"]>>;
+}) => {
+  const {
+    params: { zoneId, wallId, routeId, isChildrenRoute },
+  } =
+    useRoute<ClimbsNavigationRouteProps<ClimbsNavigationRoutes.RouteOptions>>();
+
+  const navigation =
+    useNavigation<
+      ClimbsNavigationNavigationProps<ClimbsNavigationRoutes.RouteOptions>
+    >();
+
   const { permission } = usePermissions({ zoneId });
 
   const rootNavigation = useRootNavigation();
 
-  const navigateToDrawRoute = () => {
-    if (!!extendedRouteId) {
-      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-        screen: RoutesManagerNavigationRoutes.RouteExtensionDrawer,
-        params: {
-          route: { id, position, extendedRouteId },
-          wallId,
-          topoId: Wall.topos[0].id,
-          zoneId,
-        },
-      });
-      return;
-    }
-    if (!!variantRouteId) {
-      rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-        screen: RoutesManagerNavigationRoutes.RouteVariantDrawer,
-        params: {
-          route: { id, position, variantRouteId },
-          wallId,
-          topoId: Wall.topos[0].id,
-          zoneId,
-        },
-      });
-      return;
-    }
-    rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
-      screen: RoutesManagerNavigationRoutes.RouteDrawer,
-      params: {
-        route: { id, position },
-        wallId,
-        topoId: Wall.topos[0].id,
-        zoneId,
-      },
-    });
-  };
+  const { navigateToDrawRoute } = useNavigateToRouteDrawer({
+    zoneId,
+    wallId,
+    id: routeId,
+    position: data.position,
+    topoId: data.Wall.topos[0].id,
+    extendedRouteId: data.extendedRouteId,
+    variantRouteId: data.variantRouteId,
+  });
 
   const utils = trpc.useContext();
   const convertToMultiPitch = trpc.multiPitch.convertRoute.useMutation({
@@ -91,24 +94,15 @@ const EditOptions: FC<Props> = ({
     },
   });
 
-  if (convertToMultiPitch.isLoading || !route.data) {
+  const { name, id, kind, RouteGrade, unknownName, Wall } = data;
+
+  if (convertToMultiPitch.isLoading) {
     return (
       <Box flex={1} justifyContent="center" alignItems="center">
         <ActivityIndicator size="large" />
       </Box>
     );
   }
-  const {
-    name,
-    id,
-    kind,
-    RouteGrade,
-    unknownName,
-    position,
-    Wall,
-    extendedRouteId,
-    variantRouteId,
-  } = route.data;
 
   return (
     <Screen safeAreaDisabled padding="m">
@@ -167,7 +161,7 @@ const EditOptions: FC<Props> = ({
         visible={
           permission.has("Create") &&
           featureFlags.multiPitch &&
-          !route.data.Pitch &&
+          !data.Pitch &&
           !isChildrenRoute
         }
         onPress={() =>
@@ -180,9 +174,9 @@ const EditOptions: FC<Props> = ({
                 text: "Convertir",
                 style: "default",
                 onPress: () => {
-                  if (route.data?.id)
+                  if (data?.id)
                     convertToMultiPitch.mutate({
-                      routeId: route.data.id,
+                      routeId: data.id,
                       zoneId,
                     });
                 },
@@ -207,4 +201,4 @@ const EditOptions: FC<Props> = ({
   );
 };
 
-export default EditOptions;
+export default EditOptionsContainer;
