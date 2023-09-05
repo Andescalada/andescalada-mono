@@ -255,7 +255,9 @@ const ZoneHeader = () => {
                     );
                   }}
                 >
-                  <Text color="grayscale.white">{`Verificar ${numberOfToposToVerify.data} topos`}</Text>
+                  <Text color="grayscale.white">{`Verificar ${
+                    numberOfToposToVerify.data
+                  } topo${numberOfToposToVerify.data > 1 && "s"}`}</Text>
                 </Pressable>
               </Box>
             )}
