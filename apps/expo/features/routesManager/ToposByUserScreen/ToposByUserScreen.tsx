@@ -238,13 +238,12 @@ const Item = ({ item }: { item: Item }) => {
             <Text variant="p2R">{"@" + item.Author.username}</Text>
           </Box>
         </Box>
-        <Box alignItems="flex-end">
+        <Box alignItems="flex-end" flexDirection="row" gap="s">
           <Text variant="p3R" color="grayscale.400">
             {item.createdAt.toLocaleDateString("es-CL").replaceAll("-", "/")}
           </Text>
           {item.Verification && (
             <VerifiedBadge
-              // verificationStatus={VerificationStatusSchema.enum.Rejected}
               rejectedAction={() => {
                 sendToVerification.mutate({
                   topoId: item.id,
