@@ -24,6 +24,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { setMainTopo } from "./setMainTopo";
+import { sendToVerification } from "./toposByUser";
 
 export const toposRouter = t.router({
   toposToVerify: toposToVerify,
@@ -37,6 +38,7 @@ export const toposRouter = t.router({
   toposByUser: toposByUser,
   toposByUserCount: toposByUserCount,
   deleteTopoByUser: deleteTopoByUser,
+  sendToVerification: sendToVerification,
   // Asset being downloaded
   byId: protectedZoneProcedure.input(topo.id).query(async ({ ctx, input }) => {
     const topo = await ctx.prisma.topo.findUnique({

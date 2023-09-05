@@ -5,7 +5,7 @@ import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 
-import { SoftDelete } from ".prisma/client";
+import { SoftDelete, VerificationStatus } from ".prisma/client";
 
 export const toposByUser = protectedZoneProcedure
   .input(wall.id)
@@ -74,5 +74,16 @@ export const deleteTopoByUser = protectedZoneProcedure
     return ctx.prisma.topo.update({
       where: { id: input.topoId },
       data: { isDeleted: SoftDelete.DeletedPublic },
+    });
+  });
+
+export const sendToVerification = protectedZoneProcedure
+  .input(topo.id)
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.topo.update({
+      where: { id: input.topoId },
+      data: {
+        Verification: { update: { status: VerificationStatus.Pending } },
+      },
     });
   });

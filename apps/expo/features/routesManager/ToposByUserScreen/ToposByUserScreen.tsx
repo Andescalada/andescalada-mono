@@ -1,8 +1,10 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { VerificationStatusSchema } from "@andescalada/db/zod";
 import {
   A,
   Box,
   Button,
+  Colors,
   Header,
   Image,
   Ionicons,
@@ -18,6 +20,8 @@ import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
+import Ribbon from "@features/routesManager/ToposByUserScreen/Ribbon";
+import { useAppTheme } from "@hooks/useAppTheme";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
 import useRefresh from "@hooks/useRefresh";
@@ -26,7 +30,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { useNavigation } from "@react-navigation/native";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
-import { FC } from "react";
+import { ComponentProps, FC } from "react";
 import { Alert, useWindowDimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -126,6 +130,44 @@ const Item = ({ item }: { item: Item }) => {
       utils.topos.invalidate();
     },
   });
+  const sendToVerification = trpc.topos.sendToVerification.useMutation({
+    onMutate: async ({ topoId, zoneId }) => {
+      await utils.topos.toposByUser.cancel({ wallId: item.Wall.id, zoneId });
+      const previousData = utils.topos.toposByUser.getData();
+
+      utils.topos.toposByUser.setData(
+        { wallId: item.Wall.id, zoneId },
+        (data) => {
+          if (!data) return data;
+
+          const newData = data;
+
+          const topoToVerifyIndex = data.findIndex(
+            (topo) => topo.id === topoId,
+          );
+          const topoToVerify = newData[topoToVerifyIndex];
+
+          if (!topoToVerify.Verification) return data;
+
+          topoToVerify.Verification.status =
+            VerificationStatusSchema.enum.Pending;
+
+          return newData;
+        },
+      );
+
+      return { previousData };
+    },
+    onError: (error, { zoneId }, context) => {
+      utils.topos.toposByUser.setData(
+        { wallId: item.Wall.id, zoneId },
+        context?.previousData,
+      );
+    },
+    onSettled: () => {
+      utils.topos.invalidate();
+    },
+  });
 
   const navigation =
     useNavigation<
@@ -196,10 +238,22 @@ const Item = ({ item }: { item: Item }) => {
             <Text variant="p2R">{"@" + item.Author.username}</Text>
           </Box>
         </Box>
-        <Box>
+        <Box alignItems="flex-end">
           <Text variant="p3R" color="grayscale.400">
             {item.createdAt.toLocaleDateString("es-CL").replaceAll("-", "/")}
           </Text>
+          {item.Verification && (
+            <VerifiedBadge
+              // verificationStatus={VerificationStatusSchema.enum.Rejected}
+              rejectedAction={() => {
+                sendToVerification.mutate({
+                  topoId: item.id,
+                  zoneId: item.Wall.Sector.Zone.id,
+                });
+              }}
+              verificationStatus={item.Verification.status}
+            />
+          )}
         </Box>
       </Box>
       <Pressable
@@ -276,6 +330,98 @@ const Item = ({ item }: { item: Item }) => {
         )}
       </Pressable>
     </Box>
+  );
+};
+
+const VerifiedBadge = ({
+  verificationStatus,
+  rejectedAction,
+}: {
+  verificationStatus: typeof VerificationStatusSchema._type;
+  rejectedAction: () => void;
+}) => {
+  switch (verificationStatus) {
+    case VerificationStatusSchema.enum.Approved: {
+      return (
+        <VerifiedBadgeBox
+          bg="semantic.success"
+          onPress={() => {
+            Alert.alert(
+              "Topo verificado",
+              "Este topo ha sido verificado por un administrador",
+            );
+          }}
+        >
+          <Ionicons name="checkmark" size={20} color="grayscale.white" />
+        </VerifiedBadgeBox>
+      );
+    }
+    case VerificationStatusSchema.enum.Pending: {
+      return (
+        <VerifiedBadgeBox
+          bg="semantic.warning"
+          onPress={() => {
+            Alert.alert(
+              "Topo pendiente de verificación",
+              "Este topo está pendiente de verificación por un administrador",
+            );
+          }}
+        >
+          <Ionicons name="alert" size={20} color="grayscale.black" />
+        </VerifiedBadgeBox>
+      );
+    }
+    case VerificationStatusSchema.enum.Rejected: {
+      return (
+        <VerifiedBadgeBox
+          bg="semantic.error"
+          onPress={() => {
+            Alert.alert(
+              "Topo rechazado",
+              "Este topo ha sido rechazado por un administrador",
+              [
+                { text: "Entendido" },
+                {
+                  text: "Volver a enviar",
+                  onPress: rejectedAction,
+                },
+              ],
+            );
+          }}
+        >
+          <Ionicons name="close" size={20} color="grayscale.white" />
+        </VerifiedBadgeBox>
+      );
+    }
+  }
+};
+
+const VerifiedBadgeBox = ({
+  children,
+  bg,
+  ...props
+}: Omit<ComponentProps<typeof Pressable>, "bg"> & { bg: Colors }) => {
+  const theme = useAppTheme();
+
+  return (
+    <Pressable
+      width={30}
+      height={30}
+      alignItems="center"
+      justifyContent="center"
+      {...props}
+    >
+      <>
+        <Ribbon
+          width={30}
+          height={30}
+          startColor={theme.colors[bg]}
+          stopColor={theme.colors[bg]}
+          style={{ position: "absolute", top: 0, left: 0 }}
+        />
+        {children}
+      </>
+    </Pressable>
   );
 };
 
