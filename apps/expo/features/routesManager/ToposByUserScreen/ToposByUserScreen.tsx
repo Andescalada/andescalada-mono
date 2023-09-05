@@ -2,15 +2,19 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
   A,
   Box,
+  Button,
   Header,
   Image,
+  Ionicons,
   LoadingScreen,
+  Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import StaticRoutePaths from "@features/routesManager/components/StaticRoutePaths";
 import {
+  RoutesManagerNavigationProps,
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
@@ -20,10 +24,11 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { useNavigation } from "@react-navigation/native";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
 import { FC } from "react";
-import { Pressable, useWindowDimensions } from "react-native";
+import { Alert, useWindowDimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 type Props =
@@ -39,9 +44,15 @@ const ToposByUserScreen: FC<Props> = ({
 }) => {
   const topos = trpc.topos.toposByUser.useQuery({ zoneId, wallId });
 
-  const { permission } = usePermissions({ zoneId });
-
   const refresh = useRefresh(topos.refetch, topos.isFetching);
+
+  const onAddTopo = () => {
+    navigation.navigate(RoutesManagerNavigationRoutes.UploadTopoImage, {
+      wallId,
+      zoneId,
+      wallName,
+    });
+  };
 
   return (
     <Screen>
@@ -51,6 +62,7 @@ const ToposByUserScreen: FC<Props> = ({
         showOptions={false}
         onGoBack={navigation.goBack}
       />
+
       <FlatList
         data={topos.data}
         refreshControl={refresh}
@@ -62,11 +74,23 @@ const ToposByUserScreen: FC<Props> = ({
             <LoadingScreen />
           ) : (
             <Text variant="p2R" marginTop="xxxl" padding="m">
-              No hay topos para verificar
+              Sin topos
             </Text>
           );
         }}
         renderItem={({ item }) => <Item item={item} />}
+      />
+      <Button
+        marginHorizontal="m"
+        marginBottom="xl"
+        variant="infoSimplified"
+        title="Agregar topo"
+        titleVariant="p1R"
+        padding="s"
+        icon="add-circle"
+        iconProps={{ size: 22 }}
+        gap="s"
+        onPress={onAddTopo}
       />
     </Screen>
   );
@@ -74,6 +98,40 @@ const ToposByUserScreen: FC<Props> = ({
 
 const Item = ({ item }: { item: Item }) => {
   const utils = trpc.useContext();
+
+  const deleteTopo = trpc.topos.deleteTopoByUser.useMutation({
+    onMutate: async ({ topoId, zoneId }) => {
+      await utils.topos.toposByUser.cancel({ wallId: item.Wall.id, zoneId });
+      const previousData = utils.topos.toposByUser.getData();
+
+      utils.topos.toposByUser.setData(
+        { wallId: item.Wall.id, zoneId },
+        (data) => (data ? data.filter((topo) => topo.id !== topoId) : data),
+      );
+
+      return { previousData };
+    },
+    onError: (error, { zoneId }, context) => {
+      if (error.message === "Cannot delete main") {
+        Alert.alert(
+          "No puedes eliminar el topo principal",
+          "Selecciona otro topo como principal para eliminar este",
+        );
+      }
+      utils.topos.toposByUser.setData(
+        { wallId: item.Wall.id, zoneId },
+        context?.previousData,
+      );
+    },
+    onSettled: () => {
+      utils.topos.invalidate();
+    },
+  });
+
+  const navigation =
+    useNavigation<
+      RoutesManagerNavigationProps<RoutesManagerNavigationRoutes.ToposByUser>
+    >();
 
   const rootNavigation = useRootNavigation();
   const screenWidth = useWindowDimensions().width;
@@ -91,6 +149,30 @@ const Item = ({ item }: { item: Item }) => {
     "width",
     screenWidth,
   );
+
+  const onEditTopo = () => {
+    navigation.navigate(RoutesManagerNavigationRoutes.TopoManager, {
+      topoId: item.id,
+      zoneId: item.Wall.Sector.Zone.id,
+      wallId: item.Wall.id,
+    });
+  };
+
+  const onDeleteTopo = () => {
+    Alert.alert("Eliminar topo", "¿Estás seguro de eliminar el topo?", [
+      {
+        text: "Eliminar",
+        onPress: () => {
+          deleteTopo.mutate({
+            topoId: item.id,
+            zoneId: item.Wall.Sector.Zone.id,
+          });
+        },
+        style: "destructive",
+      },
+      { text: "Cancelar", style: "cancel" },
+    ]);
+  };
 
   return (
     <Box
@@ -151,6 +233,36 @@ const Item = ({ item }: { item: Item }) => {
           height={fitted.height}
           width={fitted.width}
         />
+        <Box
+          position="absolute"
+          right={16}
+          top={16}
+          flexDirection="row"
+          gap="s"
+        >
+          <Pressable
+            bg="semantic.info"
+            width={40}
+            height={40}
+            borderRadius={20}
+            justifyContent="center"
+            alignItems="center"
+            onPress={onEditTopo}
+          >
+            <Ionicons name="pencil-sharp" size={24} color="grayscale.white" />
+          </Pressable>
+          <Pressable
+            bg="semantic.error"
+            width={40}
+            height={40}
+            borderRadius={20}
+            justifyContent="center"
+            alignItems="center"
+            onPress={onDeleteTopo}
+          >
+            <Ionicons name="close-sharp" size={24} color="grayscale.white" />
+          </Pressable>
+        </Box>
         {item.main && (
           <A.Box
             position="absolute"

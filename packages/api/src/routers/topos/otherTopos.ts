@@ -4,7 +4,7 @@ import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 
-import { VerificationStatus } from ".prisma/client";
+import { SoftDelete, VerificationStatus } from ".prisma/client";
 
 export const otherTopos = protectedZoneProcedure
   .input(wall.id)
@@ -18,6 +18,7 @@ export const otherTopos = protectedZoneProcedure
       where: {
         Wall: { id: input.wallId },
         Verification: { status: VerificationStatus.Approved },
+        isDeleted: SoftDelete.NotDeleted,
       },
       include: {
         ...includeInTopo,
@@ -50,6 +51,7 @@ export const otherToposCount = protectedZoneProcedure
         wallId: input.wallId,
         main: false,
         Verification: { status: VerificationStatus.Approved },
+        isDeleted: SoftDelete.NotDeleted,
       },
     });
   });
