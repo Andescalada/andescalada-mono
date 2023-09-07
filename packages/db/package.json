@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10.2.4",
-    "@prisma/client": "4.16.2"
+    "@prisma/client": "5",
+    "prisma": "5"
   },
   "peerDependencies": {
     "zod": "*"

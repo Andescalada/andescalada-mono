@@ -9,6 +9,7 @@
     "prisma": "^4.16.2"
   },
   "dependencies": {
-    "@prisma/client": "4.16.2"
+    "@prisma/client": "5",
+    "prisma": "5"
   }
 }
