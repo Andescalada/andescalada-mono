@@ -4,12 +4,17 @@ import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 
-import { SoftDelete, VerificationStatus } from ".prisma/client";
+import { InfoAccess, SoftDelete, VerificationStatus } from ".prisma/client";
 
 export const otherTopos = protectedZoneProcedure
   .input(wall.id)
   .query(async ({ ctx, input }) => {
-    if (!ctx.permissions.has("Read")) {
+    const zone = await ctx.prisma.zone.findUniqueOrThrow({
+      where: { id: input.zoneId },
+      select: { infoAccess: true },
+    });
+
+    if (!ctx.permissions.has("Read") && zone.infoAccess !== InfoAccess.Public) {
       throw new TRPCError(
         error.unauthorizedActionForZone(input.zoneId, "Read"),
       );
