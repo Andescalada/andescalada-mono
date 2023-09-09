@@ -10,6 +10,7 @@ interface Args {
   position: number;
   variantRouteId: string | null;
   extendedRouteId: string | null;
+  singleEdition?: true;
 }
 
 const useNavigateToRouteDrawer = ({
@@ -20,6 +21,7 @@ const useNavigateToRouteDrawer = ({
   zoneId,
   extendedRouteId,
   variantRouteId,
+  singleEdition,
 }: Args) => {
   const rootNavigation = useRootNavigation();
   const navigateToDrawRoute = () => {
@@ -54,6 +56,7 @@ const useNavigateToRouteDrawer = ({
         wallId,
         topoId,
         zoneId,
+        singleEdition,
       },
     });
   };
