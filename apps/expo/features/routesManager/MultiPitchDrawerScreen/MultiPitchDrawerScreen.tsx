@@ -14,7 +14,7 @@ import {
 } from "@features/routesManager/Navigation/types";
 import parsedTopo from "@features/routesManager/utils/parsedTopos";
 import useToposById from "@hooks/offlineQueries/useToposById";
-import useTopoImage from "@hooks/useTopoImage";
+import { useGetTopoImage } from "@hooks/useTopoImage";
 import constants from "@utils/constants";
 import { FC, useMemo } from "react";
 
@@ -60,9 +60,8 @@ const MultiPitchDrawerScreen: FC<Props> = ({
     [routeParams.id, data],
   );
 
-  const { fileUrl, isImageLoaded, fitted } = useTopoImage({
-    wallId,
-    zoneId,
+  const { fileUrl, isImageLoaded, fitted } = useGetTopoImage({
+    imageData: data?.image,
     imageQuality: constants.imageQuality,
   });
 
