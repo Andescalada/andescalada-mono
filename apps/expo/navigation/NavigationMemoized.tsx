@@ -6,12 +6,46 @@ import {
   InitialState,
   LinkingOptions,
   NavigationContainer,
+  useNavigationContainerRef,
 } from "@react-navigation/native";
 import { setIsNavigationReady } from "@store/localConfigs";
 import storage from "@utils/mmkv/storage";
 import Constants from "expo-constants";
 import * as Linking from "expo-linking";
-import { ComponentProps, FC, useCallback, useEffect, useState } from "react";
+import {
+  ComponentProps,
+  FC,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { configLoggerType, consoleTransport, logger } from "react-native-logs";
+
+const defaultConfig: configLoggerType = {
+  levels: {
+    info: 1,
+  },
+  severity: "debug",
+  transport: consoleTransport,
+  transportOptions: {
+    colors: {
+      info: "magenta",
+    },
+    extensionColors: {
+      nav: "white",
+    },
+  },
+  async: true,
+  dateFormat: "time",
+  printLevel: true,
+  printDate: true,
+  enabled: true,
+  enabledExtensions: ["nav"],
+};
+
+const l = logger.createLogger(defaultConfig);
+const log = l.extend("nav");
 
 const NAVIGATION_STATE_KEY = `NAVIGATION_STATE_KEY-${
   Constants.manifest && Constants.manifest.sdkVersion
@@ -77,9 +111,23 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
     }
   }, [dispatch, navigationReady]);
 
-  const onStateChange = useCallback((state: InitialState | undefined) => {
-    if (state) storage.set(NAVIGATION_STATE_KEY, JSON.stringify(state));
-  }, []);
+  const navigationRef = useNavigationContainerRef();
+  const routeNameRef = useRef<string | null>(null);
+
+  const onStateChange = useCallback(
+    async (state: InitialState | undefined) => {
+      const previousRouteName = routeNameRef.current;
+      const currentRouteName = navigationRef?.getCurrentRoute()?.name ?? null;
+      if (previousRouteName !== currentRouteName) {
+        routeNameRef.current = currentRouteName;
+        log.info(currentRouteName);
+      }
+      if (state) {
+        storage.set(NAVIGATION_STATE_KEY, JSON.stringify(state));
+      }
+    },
+    [navigationRef],
+  );
 
   if (!navigationReady) {
     return null;
@@ -87,6 +135,10 @@ const NavigationMemoized: FC<Props> = ({ children, ...props }) => {
   return (
     <NavigationContainer
       linking={linking}
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef?.getCurrentRoute()?.name ?? null;
+      }}
       {...{ onStateChange, initialState, ...props }}
     >
       {children}
