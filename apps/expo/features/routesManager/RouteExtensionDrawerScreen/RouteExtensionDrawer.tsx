@@ -36,7 +36,7 @@ const RouteExtensionDrawer: FC<Props> = ({
   const theme = useAppTheme();
   const navigation = useNavigation();
   const {
-    params: { wallId, route: routeParams, topoId, zoneId },
+    params: { wallId, route: routeParams, topoId, zoneId, goBackOnSuccess },
   } =
     useRoute<
       RoutesManagerRouteProps<RoutesManagerNavigationRoutes.RouteExtensionDrawer>
@@ -85,6 +85,7 @@ const RouteExtensionDrawer: FC<Props> = ({
     routeStrokeWidth,
     zoneId,
     hideStart: true,
+    goBackOnSuccess,
   });
 
   const onUndo = () => {

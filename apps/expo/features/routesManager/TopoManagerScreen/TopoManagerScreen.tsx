@@ -125,6 +125,7 @@ const RouteItem = ({ route }: { route: Item }) => {
     extendedRouteId: route.extendedRouteId,
     variantRouteId: route.variantRouteId,
     singleEdition: true,
+    goBackOnSuccess: true,
   });
 
   const navigateToDraw = () => {
@@ -138,6 +139,7 @@ const RouteItem = ({ route }: { route: Item }) => {
           topoId,
           wallId,
           drawingOnly: true,
+          goBackOnSuccess: true,
         },
       });
       return;
@@ -234,6 +236,7 @@ const ChildrenRouteItem = ({
     extendedRouteId: childrenRoute.extendedRouteId,
     variantRouteId: childrenRoute.variantRouteId,
     singleEdition: true,
+    goBackOnSuccess: true,
   });
   return (
     <Pressable
