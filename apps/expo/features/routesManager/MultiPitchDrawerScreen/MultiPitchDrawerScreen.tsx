@@ -23,7 +23,7 @@ type Props =
 
 const MultiPitchDrawerScreen: FC<Props> = ({
   route: {
-    params: { wallId, route: routeParams, topoId, zoneId, previousPitchId },
+    params: { route: routeParams, topoId, zoneId, previousPitchId },
   },
   navigation,
 }) => {

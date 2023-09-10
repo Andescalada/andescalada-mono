@@ -103,6 +103,10 @@ const useRouteDrawer = ({
     }
     if (route.path && data) {
       if (route.path.length <= 1) {
+        if (goBackOnSuccess) {
+          rootNavigation.goBack();
+          return;
+        }
         rootNavigation.replace(RootNavigationRoutes.Climbs, {
           screen: ClimbsNavigationRoutes.Wall,
           params: {

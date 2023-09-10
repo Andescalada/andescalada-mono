@@ -34,6 +34,7 @@ export type RoutesManagerNavigationParamList = {
     zoneId: Zone["id"];
     wallId: Wall["id"];
     topoId: Topo["id"];
+    goBackOnSuccess?: true;
   };
   [RoutesManagerNavigationRoutes.RouteVariantDrawer]: {
     route: {
@@ -44,6 +45,7 @@ export type RoutesManagerNavigationParamList = {
     zoneId: Zone["id"];
     wallId: Wall["id"];
     topoId: Topo["id"];
+    goBackOnSuccess?: true;
   };
   [RoutesManagerNavigationRoutes.MultiPitchDrawer]: {
     route: {
@@ -58,6 +60,7 @@ export type RoutesManagerNavigationParamList = {
     topoId: Topo["id"];
     multiPitchId: MultiPitch["id"];
     multiPitchName: MultiPitch["name"];
+    goBackOnSuccess?: true;
   };
   [RoutesManagerNavigationRoutes.TopoViewer]: {
     topoId: Topo["id"];

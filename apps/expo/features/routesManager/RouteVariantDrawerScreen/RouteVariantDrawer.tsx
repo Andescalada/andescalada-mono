@@ -38,7 +38,7 @@ const RouteVariantDrawer: FC<Props> = ({
   const theme = useAppTheme();
   const navigation = useNavigation();
   const {
-    params: { wallId, route: routeParams, topoId, zoneId },
+    params: { wallId, route: routeParams, topoId, zoneId, goBackOnSuccess },
   } =
     useRoute<
       RoutesManagerRouteProps<RoutesManagerNavigationRoutes.RouteVariantDrawer>
@@ -70,6 +70,7 @@ const RouteVariantDrawer: FC<Props> = ({
     routeStrokeWidth,
     zoneId,
     hideStart: false,
+    goBackOnSuccess,
   });
 
   const vectorRoutes = useComputedValue(() => {

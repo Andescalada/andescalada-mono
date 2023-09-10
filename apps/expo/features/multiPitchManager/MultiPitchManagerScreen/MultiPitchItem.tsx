@@ -59,7 +59,7 @@ const MultiPitchRouteItem = ({
     >();
 
   const {
-    params: { zoneId, multiPitchId, multiPitchName },
+    params: { zoneId, multiPitchId, multiPitchName, goBackOnSuccess },
   } =
     useRoute<
       MultiPitchManagerRouteProps<MultiPitchManagerRoutes.MultiPitchManager>
@@ -113,6 +113,7 @@ const MultiPitchRouteItem = ({
         topoId,
         multiPitchId,
         multiPitchName,
+        goBackOnSuccess,
       },
     });
   };

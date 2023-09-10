@@ -54,6 +54,7 @@ const MultiPitchDrawer: FC<Props> = ({
       pitchNumber,
       multiPitchId,
       multiPitchName,
+      goBackOnSuccess,
     },
   } =
     useRoute<
@@ -117,6 +118,7 @@ const MultiPitchDrawer: FC<Props> = ({
     scale: scale,
     withLabel: true,
     hideStart,
+    goBackOnSuccess,
     navigateOnSuccess: () => {
       rootNavigation.replace(RootNavigationRoutes.MultiPitchManager, {
         screen: MultiPitchManagerRoutes.MultiPitchManager,
