@@ -13,9 +13,7 @@ export const pushRouteGradeEvaluation = ({
       created.map<Prisma.RouteGradeEvaluationCreateManyInput>((c) => {
         return {
           evaluation: c.evaluation,
-          originalGradeSystem: GradeSystemsSchema.parse(
-            JSON.parse(c.originalGradeSystem),
-          ),
+          originalGradeSystem: GradeSystemsSchema.parse(c.originalGradeSystem),
           originalGrade: c.originalGrade,
           routeId: c.routeId,
           userId: user.id,
@@ -24,6 +22,7 @@ export const pushRouteGradeEvaluation = ({
           id: c.id,
         };
       });
+    console.log(cleanCreated);
     const create = prisma.routeGradeEvaluation.createMany({
       data: cleanCreated,
     });
@@ -31,18 +30,18 @@ export const pushRouteGradeEvaluation = ({
   }
   if (updated.length > 0) {
     const updates = updated.map(({ id, ...rest }) => {
-      const data: Prisma.RouteGradeEvaluationUpdateInput = {
+      const data = {
         evaluation: rest.evaluation,
-        originalGradeSystem: GradeSystemsSchema.parse(
-          JSON.parse(rest.originalGradeSystem),
-        ),
+        originalGradeSystem: GradeSystemsSchema.parse(rest.originalGradeSystem),
         originalGrade: rest.originalGrade,
         Route: { connect: { id: rest.routeId } },
         User: { connect: { id: user.id } },
       };
-      return prisma.routeGradeEvaluation.update({
+
+      return prisma.routeGradeEvaluation.upsert({
         where: { id },
-        data,
+        create: { id, ...data },
+        update: data,
       });
     });
     mutations.push(...updates);
