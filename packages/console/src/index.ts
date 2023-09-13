@@ -7,7 +7,12 @@ const oldDbClient = new oldDb.PrismaClient();
 const db = new PrismaClient();
 
 const main = async () => {
-  verification();
+  const route = await db.route.findUnique({
+    where: { id: "45b71322-0cdb-4fd1-a74c-ddbaac5ebc3e" },
+    include: { RouteGradeEvaluation: true },
+  });
+
+  console.log(JSON.stringify(route, null, 2));
 };
 
 main()
