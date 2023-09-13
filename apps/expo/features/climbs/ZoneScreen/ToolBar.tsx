@@ -56,7 +56,13 @@ const ToolBar = ({
           borderColor="zoneOptionsIcons"
           backgroundColor={isDownloaded ? "zoneOptionsIcons" : "background"}
         >
-          {!isDownloading ? (
+          {isDownloading && !isDownloaded ? (
+            <ActivityIndicator
+              color="zoneOptionsIcons"
+              size="small"
+              style={{ transform: [{ scale: 0.6 }] }}
+            />
+          ) : (
             <Ionicons
               name={"arrow-down-outline"}
               size={18}
@@ -65,12 +71,6 @@ const ToolBar = ({
               }}
               color={isDownloaded ? "background" : "zoneOptionsIcons"}
               allowFontScaling
-            />
-          ) : (
-            <ActivityIndicator
-              color="zoneOptionsIcons"
-              size="small"
-              style={{ transform: [{ scale: 0.6 }] }}
             />
           )}
         </Box>
