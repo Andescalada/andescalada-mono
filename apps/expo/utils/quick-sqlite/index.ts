@@ -82,12 +82,13 @@ const setAsync = async (
   try {
     const serializedData = stringify(data);
 
-    const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
+    const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES (?,?,?)`;
 
-    await db.executeAsync(query);
+    await db.executeAsync(query, [`${assetId}`, `${serializedData}`, version]);
 
     return serializedData;
   } catch (err) {
+    console.error(err);
     throw new Error(`${(err as any).message} - ${assetId}`);
   }
 };
@@ -101,8 +102,8 @@ const set = (
 ) => {
   try {
     const serializedData = stringify(data);
-    const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES ('${assetId}', '${serializedData}', ${version})`;
-    db.execute(query);
+    const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES (?,?,?)`;
+    db.execute(query, [`${assetId}`, `${serializedData}`, version]);
     return serializedData;
   } catch {
     return undefined;
