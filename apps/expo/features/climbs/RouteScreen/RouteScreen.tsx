@@ -11,6 +11,7 @@ import {
   Modal,
   Pressable,
   Screen,
+  ScrollView,
   Text,
   TextButton,
   TextInput,
@@ -31,6 +32,7 @@ import useGradeSystem from "@hooks/useGradeSystem";
 import useIsConnected from "@hooks/useIsConnected";
 import useOwnInfo, { useGetOwnInfo } from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
+import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import useGetRouteEvaluationQuery from "@local-database/hooks/useGetRouteEvaluationQuery";
 import useGetRouteGradeEvaluationQuery from "@local-database/hooks/useGetRouteGradeEvaluationQuery";
@@ -71,7 +73,7 @@ const RouteScreen: FC<Props> = ({
   },
   navigation,
 }) => {
-  const { data, isLoading } = useRoutesByIdWithEvaluation({
+  const { data, isLoading, refetch } = useRoutesByIdWithEvaluation({
     routeId,
     zoneId,
   });
@@ -100,6 +102,8 @@ const RouteScreen: FC<Props> = ({
         showOptions={false}
       />
       <RouteContainer
+        refetch={refetch}
+        isFetching={isLoading}
         route={data}
         evaluationValue={
           localDbEvaluation?.evaluation
@@ -114,16 +118,22 @@ const RouteScreen: FC<Props> = ({
 const RouteContainer = ({
   route,
   evaluationValue,
+  refetch,
+  isFetching,
 }: {
   route: Route;
   evaluationValue: number;
+  refetch: () => void;
+  isFetching: boolean;
 }) => {
   const { routeId, zoneId } = useRouteScreenParams();
   const rootNavigation = useRootNavigation();
   const { gradeLabel, changeGradeSystem } = useGradeSystem();
 
+  const refresh = useRefresh(refetch, isFetching);
+
   return (
-    <Box flex={1} gap="s">
+    <ScrollView gap="s" refreshControl={refresh}>
       <Box flexDirection="row">
         <Box flex={1} flexDirection="row" alignItems="center">
           <Box padding="s">
@@ -206,7 +216,7 @@ const RouteContainer = ({
           routeId={routeId}
         />
       </Box>
-    </Box>
+    </ScrollView>
   );
 };
 
@@ -458,28 +468,29 @@ const RouteGradeVoteModal = ({
         }}
         routeKind={routeKind}
       />
-      <Text variant="error">
-        Solo se puede elegir 2 grados más arriba o más abajo del grado oficial
-      </Text>
-
-      <Button
-        variant="infoSmall"
-        px="s"
-        titleVariant="p2R"
-        title="Guardar"
-        onPress={() => {
-          const originalGradeSystem = getSystem(routeKind);
-          if (!originalGradeSystem || !user) return;
-          mutate({
-            userId: user.id,
-            routeId,
-            evaluation: gradeVotedValue.value,
-            originalGrade: gradeVotedValue.originalGrade,
-            originalGradeSystem,
-          });
-          props.onDismiss();
-        }}
-      />
+      <Box zIndex={-1} justifyContent="space-around" alignItems="center">
+        <Text variant="error">
+          Solo se puede elegir 2 grados más arriba o más abajo del grado oficial
+        </Text>
+        <Button
+          variant="infoSmall"
+          px="s"
+          titleVariant="p2R"
+          title="Guardar"
+          onPress={() => {
+            const originalGradeSystem = getSystem(routeKind);
+            if (!originalGradeSystem || !user) return;
+            mutate({
+              userId: user.id,
+              routeId,
+              evaluation: gradeVotedValue.value,
+              originalGrade: gradeVotedValue.originalGrade,
+              originalGradeSystem,
+            });
+            props.onDismiss();
+          }}
+        />
+      </Box>
     </Modal>
   );
 };
