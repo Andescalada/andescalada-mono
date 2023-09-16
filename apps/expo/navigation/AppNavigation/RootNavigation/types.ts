@@ -1,3 +1,4 @@
+import { AlertsNavigationParamList } from "@features/alerts/Navigation/types";
 import { ClimbsNavigationNavigationParamList } from "@features/climbs/Navigation/types";
 import { ErrorNavigationParamList } from "@features/error/Navigation/types";
 import { ImageManagerNavigationParamList } from "@features/imageManager/Navigation/types";
@@ -29,6 +30,7 @@ export enum RootNavigationRoutes {
   InfoAccessManager = "RootInfoAccessManager",
   MultiPitchManager = "RootMultiPitchManager",
   PhotoContest = "RootPhotoContest",
+  Alert = "RootAlert",
 }
 
 export type RootNavigationNavigationParamList = {
@@ -46,6 +48,7 @@ export type RootNavigationNavigationParamList = {
   [RootNavigationRoutes.InfoAccessManager]: NavigatorScreenParams<InfoAccessManagerNavigationParamList>;
   [RootNavigationRoutes.MultiPitchManager]: NavigatorScreenParams<MultiPitchManagerNavigationParamList>;
   [RootNavigationRoutes.PhotoContest]: NavigatorScreenParams<PhotoContestNavigationParamList>;
+  [RootNavigationRoutes.Alert]: NavigatorScreenParams<AlertsNavigationParamList>;
 };
 
 export type RootNavigationRouteProps<T extends RootNavigationRoutes> =

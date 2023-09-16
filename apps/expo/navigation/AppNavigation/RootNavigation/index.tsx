@@ -1,4 +1,5 @@
 import { ActivityIndicator, Screen } from "@andescalada/ui";
+import AlertStackNavigation from "@features/alerts/Navigation";
 import ClimbsStackNavigation from "@features/climbs/Navigation";
 import FallbackErrorScreen from "@features/error/FallbackErrorScreen";
 import ErrorStackNavigation from "@features/error/Navigation";
@@ -111,6 +112,10 @@ const Navigator = () => {
           <Stack.Screen
             name={RootNavigationRoutes.PhotoContest}
             component={PhotoContestStackNavigation}
+          />
+          <Stack.Screen
+            name={RootNavigationRoutes.Alert}
+            component={AlertStackNavigation}
           />
         </Stack.Group>
       )}

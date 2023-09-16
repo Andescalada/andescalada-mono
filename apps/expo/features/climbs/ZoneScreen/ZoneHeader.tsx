@@ -1,6 +1,7 @@
 import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
-import { A, Box, Ionicons, Pressable, Text } from "@andescalada/ui";
+import { A, Box, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { AlertsRoutes } from "@features/alerts/Navigation/types";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRouteProps,
@@ -261,6 +262,33 @@ const ZoneHeader = () => {
                 </Pressable>
               </Box>
             )}
+          <Box marginTop="m">
+            <Box flexDirection="row" justifyContent="space-between">
+              <Text variant="h4">Alertas en rutas</Text>
+              <Button
+                variant="transparentSimplified"
+                title="Agregar alerta"
+                titleVariant="p3R"
+                paddingHorizontal="s"
+                onPress={() =>
+                  rootNavigation.navigate(RootNavigationRoutes.Alert, {
+                    screen: AlertsRoutes.AddRouteAlert,
+                    params: { zoneId },
+                  })
+                }
+              />
+            </Box>
+            <Box
+              height={50}
+              marginTop="s"
+              justifyContent="center"
+              alignItems="center"
+              bg="grayscale.transparent.50.600"
+              borderRadius={8}
+            >
+              <Text>Sin alertas</Text>
+            </Box>
+          </Box>
           <ToolBar
             isDownloaded={isDownloaded}
             isFavorite={isFavorite}
