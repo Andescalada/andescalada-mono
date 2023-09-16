@@ -4,7 +4,11 @@ import {
 } from "@andescalada/db/zod";
 import {
   Box,
+  Button,
   ButtonGroup,
+  Icon,
+  Ionicons,
+  Pressable,
   Screen,
   ScrollView,
   Text,
@@ -18,6 +22,7 @@ import SelectImage from "@features/components/SelectImage";
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import { onSuccessPick } from "@hooks/usePickImage";
 import { ComponentProps, FC, useCallback, useState } from "react";
+import DatePicker from "react-native-date-picker";
 
 import routeAlertKind from "../../../../../packages/common-assets/routeAlertKind";
 import routeAlertSeverity from "../../../../../packages/common-assets/routeAlertSeverity";
@@ -27,6 +32,9 @@ type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
 const AddRouteAlertScreen: FC<Props> = (props) => {
   const [imageToDisplay, setImageToDisplay] = useState<string | null>(null);
   const [loadingUpload, setLoadingUpload] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [withDueDate, setWithDueDate] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const [alertKind, setAlertKind] = useState<
     typeof RouteAlertKindSchema._type | undefined
@@ -65,6 +73,55 @@ const AddRouteAlertScreen: FC<Props> = (props) => {
             placeholder={`Escribe una descripción de la alerta`}
             textAlignVertical="top"
             containerProps={{ flex: 1, height: 200, padding: "s" }}
+          />
+          <Box flexDirection="row">
+            <Pressable
+              borderRadius={4}
+              flex={1}
+              backgroundColor="filledTextInputVariantBackground"
+              height={40}
+              onPress={() => {
+                setOpen(true);
+              }}
+              alignItems="center"
+              paddingLeft="s"
+              flexDirection="row"
+              overflow="hidden"
+            >
+              <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
+                {withDueDate
+                  ? date.toLocaleDateString("es-CL", {})
+                  : "Fecha de vigencia"}
+              </Text>
+            </Pressable>
+            {withDueDate && (
+              <Pressable
+                padding="s"
+                justifyContent={"center"}
+                alignItems={"center"}
+                onPress={() => setWithDueDate(false)}
+              >
+                <Ionicons name="trash-outline" size={24} />
+              </Pressable>
+            )}
+          </Box>
+          <DatePicker
+            modal
+            mode="date"
+            locale="es-CL"
+            confirmText="Confirmar"
+            cancelText="Cancelar"
+            open={open}
+            minimumDate={new Date()}
+            date={date}
+            onConfirm={(date) => {
+              setOpen(false);
+              setWithDueDate(true);
+              setDate(date);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
           />
         </Box>
         <ButtonGroup
