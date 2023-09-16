@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Header,
   Icon,
   Ionicons,
   Pressable,
@@ -29,7 +30,7 @@ import routeAlertSeverity from "../../../../../packages/common-assets/routeAlert
 
 type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
 
-const AddRouteAlertScreen: FC<Props> = (props) => {
+const AddRouteAlertScreen: FC<Props> = ({ navigation }) => {
   const [imageToDisplay, setImageToDisplay] = useState<string | null>(null);
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -55,8 +56,13 @@ const AddRouteAlertScreen: FC<Props> = (props) => {
   }, []);
 
   return (
-    <Screen>
-      <ScrollView showsVerticalScrollIndicator={false} padding="m">
+    <Screen padding="m">
+      <Header
+        title="Agregar alerta"
+        showOptions={false}
+        onGoBack={navigation.goBack}
+      />
+      <ScrollView showsVerticalScrollIndicator={false} gap="m">
         <SelectImage
           image={imageToDisplay}
           isLoading={loadingUpload}
@@ -105,58 +111,73 @@ const AddRouteAlertScreen: FC<Props> = (props) => {
               </Pressable>
             )}
           </Box>
-          <DatePicker
-            modal
-            mode="date"
-            locale="es-CL"
-            confirmText="Confirmar"
-            cancelText="Cancelar"
-            open={open}
-            minimumDate={new Date()}
-            date={date}
-            onConfirm={(date) => {
-              setOpen(false);
-              setWithDueDate(true);
-              setDate(date);
-            }}
-            onCancel={() => {
-              setOpen(false);
-            }}
-          />
         </Box>
-        <ButtonGroup
-          value={alertKind}
-          onChange={(v) => setAlertKind(v as typeof RouteAlertKindSchema._type)}
-        >
-          <Box flexWrap="wrap" flexDirection="row" gap="m">
-            {RouteAlertKindSchema.options.map((kind) => (
-              <ButtonGroup.Item
-                label={routeAlertKind(kind).label}
-                value={kind}
-                key={kind}
-              />
-            ))}
-          </Box>
-        </ButtonGroup>
-        <ButtonGroup
-          value={severity}
-          onChange={(v) =>
-            setSeverity(v as typeof RouteAlertSeveritySchema._type)
-          }
-        >
-          <Box flexWrap="wrap" flexDirection="row" gap="m">
-            {RouteAlertSeveritySchema.options.map((kind) => (
-              <ButtonGroup.Item
-                label={routeAlertSeverity(kind).label}
-                backgroundColor={routeAlertSeverity(kind).backgroundColor}
-                textColor={routeAlertSeverity(kind).color}
-                value={kind}
-                key={kind}
-              />
-            ))}
-          </Box>
-        </ButtonGroup>
+        <Box marginTop="m">
+          <Text variant="h4">Tipo de alerta</Text>
+          <ButtonGroup
+            value={alertKind}
+            onChange={(v) =>
+              setAlertKind(v as typeof RouteAlertKindSchema._type)
+            }
+          >
+            <Box flexWrap="wrap" flexDirection="row" gap="m">
+              {RouteAlertKindSchema.options.map((kind) => (
+                <ButtonGroup.Item
+                  label={routeAlertKind(kind).label}
+                  value={kind}
+                  key={kind}
+                />
+              ))}
+            </Box>
+          </ButtonGroup>
+        </Box>
+        <Box marginTop="m">
+          <Text variant="h4">Gravedad</Text>
+          <ButtonGroup
+            value={severity}
+            onChange={(v) =>
+              setSeverity(v as typeof RouteAlertSeveritySchema._type)
+            }
+          >
+            <Box flexWrap="wrap" flexDirection="row" gap="m">
+              {RouteAlertSeveritySchema.options.map((kind) => (
+                <ButtonGroup.Item
+                  label={routeAlertSeverity(kind).label}
+                  backgroundColor={routeAlertSeverity(kind).backgroundColor}
+                  textColor={routeAlertSeverity(kind).color}
+                  value={kind}
+                  key={kind}
+                />
+              ))}
+            </Box>
+          </ButtonGroup>
+        </Box>
       </ScrollView>
+      <DatePicker
+        modal
+        mode="date"
+        locale="es-CL"
+        confirmText="Confirmar"
+        cancelText="Cancelar"
+        open={open}
+        minimumDate={new Date()}
+        date={date}
+        onConfirm={(date) => {
+          setOpen(false);
+          setWithDueDate(true);
+          setDate(date);
+        }}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      />
+      <Button
+        variant="info"
+        title="Enviar"
+        padding="m"
+        marginBottom="l"
+        marginTop="m"
+      />
     </Screen>
   );
 };
