@@ -9,13 +9,15 @@ export interface SelectedImage {
   asset: ImagePicker.ImagePickerAsset;
 }
 
+export type onSuccessPick = (selectedImage: {
+  localUri: string;
+  base64Img: string;
+  asset: ImagePicker.ImagePickerAsset;
+}) => void;
+
 type Args = ImagePicker.ImagePickerOptions & {
   onDelete?: () => void;
-  onSuccess?: (selectedImage: {
-    localUri: string;
-    base64Img: string;
-    asset: ImagePicker.ImagePickerAsset;
-  }) => void;
+  onSuccess?: onSuccessPick;
 };
 
 export type PickImage = ReturnType<typeof usePickImage>["pickImage"];
