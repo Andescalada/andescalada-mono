@@ -23,6 +23,7 @@ export enum Table {
   // ROUTE_COMMENT = "RouteComment",
   ROUTE_EVALUATION = "RouteEvaluation",
   ROUTE_GRADE_EVALUATION = "RouteGradeEvaluation",
+  ROUTE_ALERT = "RouteAlert",
 }
 
 export const schema = {
@@ -58,6 +59,17 @@ export const schema = {
     evaluation: { type: "number", name: "evaluation" },
     originalGradeSystem: { type: "string", name: "originalGradeSystem" },
     originalGrade: { type: "string", name: "originalGrade" },
+  },
+  [Table.ROUTE_ALERT]: {
+    routeId: { type: "string", isIndexed: true, name: "routeId" },
+    userId: { type: "string", isIndexed: true, name: "userId" },
+    createdAt: { type: "number", name: "created_at" },
+    updatedAt: { type: "number", name: "updated_at" },
+    title: { type: "string", name: "title" },
+    description: { type: "string", name: "description" },
+    dueDate: { type: "number", name: "dueDate" },
+    kind: { type: "string", name: "kind" },
+    severity: { type: "string", name: "severity" },
   },
 } as const satisfies Schema;
 
@@ -95,4 +107,35 @@ export const columns = {
       schema[Table.ROUTE_GRADE_EVALUATION].originalGradeSystem.name,
     originalGrade: schema[Table.ROUTE_GRADE_EVALUATION].originalGrade.name,
   },
+  [Table.ROUTE_ALERT]: {
+    routeId: schema[Table.ROUTE_ALERT].routeId.name,
+    userId: schema[Table.ROUTE_ALERT].userId.name,
+    createdAt: schema[Table.ROUTE_ALERT].createdAt.name,
+    updatedAt: schema[Table.ROUTE_ALERT].updatedAt.name,
+    title: schema[Table.ROUTE_ALERT].title.name,
+    description: schema[Table.ROUTE_ALERT].description.name,
+    dueDate: schema[Table.ROUTE_ALERT].dueDate.name,
+    kind: schema[Table.ROUTE_ALERT].kind.name,
+    severity: schema[Table.ROUTE_ALERT].severity.name,
+  },
 } as const satisfies Column;
+
+export const migrationRecord = {
+  [2]: {
+    createTable: [
+      {
+        [Table.ROUTE_ALERT]: {
+          routeId: { type: "string", isIndexed: true, name: "routeId" },
+          userId: { type: "string", isIndexed: true, name: "userId" },
+          createdAt: { type: "number", name: "created_at" },
+          updatedAt: { type: "number", name: "updated_at" },
+          title: { type: "string", name: "title" },
+          description: { type: "string", name: "description" },
+          dueDate: { type: "number", name: "dueDate" },
+          kind: { type: "string", name: "kind" },
+          severity: { type: "string", name: "severity" },
+        },
+      },
+    ],
+  },
+} as const;
