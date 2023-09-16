@@ -1,4 +1,7 @@
-import { RouteAlertKindSchema } from "@andescalada/db/zod";
+import {
+  RouteAlertKindSchema,
+  RouteAlertSeveritySchema,
+} from "@andescalada/db/zod";
 import { Box, ButtonGroup, Screen, Text } from "@andescalada/ui";
 import {
   AlertsRoutes,
@@ -10,6 +13,7 @@ import { onSuccessPick } from "@hooks/usePickImage";
 import { ComponentProps, FC, useCallback, useState } from "react";
 
 import routeAlertKind from "../../../../../packages/common-assets/routeAlertKind";
+import routeAlertSeverity from "../../../../../packages/common-assets/routeAlertSeverity";
 
 type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
 
@@ -20,6 +24,11 @@ const AddRouteAlertScreen: FC<Props> = (props) => {
   const [alertKind, setAlertKind] = useState<
     typeof RouteAlertKindSchema._type | undefined
   >();
+
+  const [severity, setSeverity] = useState<
+    typeof RouteAlertSeveritySchema._type | undefined
+  >();
+
   const { uploadImage } = useCloudinaryImage();
 
   const pickImageHandler: onSuccessPick = useCallback(async (imageToUpload) => {
@@ -46,6 +55,24 @@ const AddRouteAlertScreen: FC<Props> = (props) => {
           {RouteAlertKindSchema.options.map((kind) => (
             <ButtonGroup.Item
               label={routeAlertKind(kind).label}
+              value={kind}
+              key={kind}
+            />
+          ))}
+        </Box>
+      </ButtonGroup>
+      <ButtonGroup
+        value={severity}
+        onChange={(v) =>
+          setSeverity(v as typeof RouteAlertSeveritySchema._type)
+        }
+      >
+        <Box flexWrap="wrap" flexDirection="row" gap="m">
+          {RouteAlertSeveritySchema.options.map((kind) => (
+            <ButtonGroup.Item
+              label={routeAlertSeverity(kind).label}
+              backgroundColor={routeAlertSeverity(kind).backgroundColor}
+              textColor={routeAlertSeverity(kind).color}
               value={kind}
               key={kind}
             />
