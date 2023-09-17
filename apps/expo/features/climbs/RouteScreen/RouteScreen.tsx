@@ -17,6 +17,7 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { AlertsRoutes } from "@features/alerts/Navigation/types";
 import VotingGradePicker from "@features/climbs/components/VotingGradePicker";
 import {
   ClimbsNavigationNavigationProps,
@@ -170,10 +171,9 @@ const RouteContainer = ({
           </Box>
         </Box>
       </Box>
-      <Box>
+      <Box flexDirection="row" gap="s" mb="s">
         <Pressable
           borderRadius={8}
-          maxWidth={"30%"}
           bg={
             !route.mainTopo
               ? "grayscale.transparent.50.500"
@@ -181,7 +181,7 @@ const RouteContainer = ({
           }
           justifyContent="center"
           alignItems="center"
-          py="s"
+          p="s"
           disabled={!route.mainTopo}
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
@@ -199,6 +199,23 @@ const RouteContainer = ({
             color={!route.mainTopo ? "grayscale.white" : "grayscale.black"}
           >
             {route.mainTopo?.id ? "Ver topo" : "Sin topo"}
+          </Text>
+        </Pressable>
+        <Pressable
+          borderRadius={8}
+          bg={"brand.secondaryB"}
+          justifyContent="center"
+          alignItems="center"
+          p="s"
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.Alert, {
+              screen: AlertsRoutes.AddRouteAlert,
+              params: { zoneId, routeId, routeName: route.name },
+            })
+          }
+        >
+          <Text variant="p3R" color={"grayscale.black"}>
+            Agregar alerta
           </Text>
         </Pressable>
       </Box>
