@@ -143,6 +143,7 @@ const AddRouteAlertScreen: FC<Props> = ({
               <Text variant="p1R">Ruta</Text>
               <Pressable
                 borderRadius={4}
+                disabled={!!routeId}
                 flex={1}
                 backgroundColor="filledTextInputVariantBackground"
                 height={40}
