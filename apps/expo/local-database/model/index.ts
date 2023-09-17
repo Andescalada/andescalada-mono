@@ -121,4 +121,32 @@ export class RouteEvaluation extends Model {
   user!: User;
 }
 
-export default [User, RouteEvaluation, RouteGradeEvaluation];
+export class RouteAlert extends Model {
+  static table = Table.ROUTE_ALERT;
+  static associations = {
+    [Table.USER]: {
+      type: belongsTo,
+      key: schema[Table.ROUTE_EVALUATION].userId.name,
+    },
+  };
+
+  @text(schema[Table.ROUTE_ALERT].routeId.name) routeId!: string;
+  @text(schema[Table.ROUTE_ALERT].userId.name) userId!: string;
+  @text(schema[Table.ROUTE_ALERT].description.name) title!: string;
+  @text(schema[Table.ROUTE_ALERT].description.name) description!:
+    | string
+    | undefined;
+  @field(schema[Table.ROUTE_ALERT].dueDate.name) dueDate!: Date | undefined;
+  @text(schema[Table.ROUTE_ALERT].kind.name) kind!: string;
+  @text(schema[Table.ROUTE_ALERT].severity.name) severity!: string;
+  @readonly
+  @date(schema[Table.ROUTE_EVALUATION].createdAt.name)
+  createdAt!: Date;
+  @readonly
+  @date(schema[Table.ROUTE_EVALUATION].updatedAt.name)
+  updatedAt!: Date;
+  @relation(Table.USER, schema[Table.ROUTE_EVALUATION].userId.name)
+  user!: User;
+}
+
+export default [User, RouteEvaluation, RouteGradeEvaluation, RouteAlert];

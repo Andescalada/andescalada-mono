@@ -18,6 +18,7 @@ interface Props {
   onDeletePickedImage?: () => void;
   isLoading?: boolean;
   image?: string | null;
+  selectText?: string;
 }
 
 const SelectImage: FC<Props> = ({
@@ -25,6 +26,7 @@ const SelectImage: FC<Props> = ({
   onPickImage,
   isLoading,
   onDeletePickedImage,
+  selectText = "Seleccionar",
 }) => {
   const viewImage = useViewImage();
   const { pickImage, selectedImage } = usePickImage({
@@ -66,7 +68,9 @@ const SelectImage: FC<Props> = ({
         {!image ? (
           <Box justifyContent="center" alignItems={"center"}>
             <Ionicons name="camera-outline" size={30} />
-            <Text marginTop="xs">Seleccionar</Text>
+            <Text marginTop="xs" textAlign="center">
+              {selectText}
+            </Text>
           </Box>
         ) : (
           <Image source={{ uri: image }} height={250} width="100%" />

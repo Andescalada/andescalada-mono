@@ -2,12 +2,12 @@ import {
   RouteAlertKindSchema,
   RouteAlertSeveritySchema,
 } from "@andescalada/db/zod";
+import useZodForm from "@andescalada/hooks/useZodForm";
 import {
   Box,
   Button,
   ButtonGroup,
   Header,
-  Icon,
   Ionicons,
   Pressable,
   Screen,
@@ -21,31 +21,82 @@ import {
 } from "@features/alerts/Navigation/types";
 import SelectImage from "@features/components/SelectImage";
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
+import useIsConnected from "@hooks/useIsConnected";
+import useOwnInfo from "@hooks/useOwnInfo";
 import { onSuccessPick } from "@hooks/usePickImage";
-import { ComponentProps, FC, useCallback, useState } from "react";
+import useSetOrCreateRouteAlertMutation from "@local-database/hooks/useSetOrCreateRouteAlertMutation";
+import { FC, useCallback, useState } from "react";
+import { useController } from "react-hook-form";
+import { Alert } from "react-native";
 import DatePicker from "react-native-date-picker";
+import { z } from "zod";
 
 import routeAlertKind from "../../../../../packages/common-assets/routeAlertKind";
 import routeAlertSeverity from "../../../../../packages/common-assets/routeAlertSeverity";
 
+const schema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  kind: RouteAlertKindSchema,
+  severity: RouteAlertSeveritySchema,
+  dueDate: z.date().optional(),
+});
+
 type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
 
-const AddRouteAlertScreen: FC<Props> = ({ navigation }) => {
+const AddRouteAlertScreen: FC<Props> = ({
+  navigation,
+  route: {
+    params: { routeId },
+  },
+}) => {
+  const form = useZodForm({ schema, mode: "onChange" });
   const [imageToDisplay, setImageToDisplay] = useState<string | null>(null);
   const [loadingUpload, setLoadingUpload] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const {
+    field: { value: date, onChange: setDate },
+  } = useController({
+    control: form.control,
+    name: "dueDate",
+    defaultValue: new Date(),
+  });
+
+  const title = useController({ control: form.control, name: "title" });
+  const description = useController({
+    control: form.control,
+    name: "description",
+  });
+  const {
+    field: { value: alertKind, onChange: setAlertKind },
+  } = useController({ control: form.control, name: "kind" });
+  const {
+    field: { value: severity, onChange: setSeverity },
+  } = useController({ control: form.control, name: "severity" });
+
   const [withDueDate, setWithDueDate] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const [alertKind, setAlertKind] = useState<
-    typeof RouteAlertKindSchema._type | undefined
-  >();
-
-  const [severity, setSeverity] = useState<
-    typeof RouteAlertSeveritySchema._type | undefined
-  >();
-
   const { uploadImage } = useCloudinaryImage();
+
+  const isConnected = useIsConnected();
+
+  const mutateLocal = useSetOrCreateRouteAlertMutation();
+
+  const user = useOwnInfo();
+
+  const submit = form.handleSubmit(
+    async (values) => {
+      if (isConnected) {
+        console.log("CONNECTED", values);
+        return;
+      }
+      if (!user?.data?.id || !routeId) return;
+      mutateLocal.mutate({ routeId, userId: user?.data?.id, ...values });
+    },
+    (invalid) => {
+      Alert.alert("Faltan campos requeridos");
+    },
+  );
 
   const pickImageHandler: onSuccessPick = useCallback(async (imageToUpload) => {
     setLoadingUpload(true);
@@ -68,52 +119,73 @@ const AddRouteAlertScreen: FC<Props> = ({ navigation }) => {
           isLoading={loadingUpload}
           onPickImage={pickImageHandler}
           onDeletePickedImage={() => setImageToDisplay(null)}
+          selectText={`Seleccionar imagen \n (Opcional)`}
         />
         <Box width="100%" flex={1} gap="m">
-          <TextInput
-            placeholder="Titulo"
-            containerProps={{ height: 50, paddingLeft: "s" }}
-          />
-          <TextInput
-            multiline
-            placeholder={`Escribe una descripción de la alerta`}
-            textAlignVertical="top"
-            containerProps={{ flex: 1, height: 200, padding: "s" }}
-          />
-          <Box flexDirection="row">
-            <Pressable
-              borderRadius={4}
-              flex={1}
-              backgroundColor="filledTextInputVariantBackground"
-              height={40}
-              onPress={() => {
-                setOpen(true);
-              }}
-              alignItems="center"
-              paddingLeft="s"
-              flexDirection="row"
-              overflow="hidden"
-            >
-              <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
-                {withDueDate
-                  ? date.toLocaleDateString("es-CL", {})
-                  : "Fecha de vigencia"}
-              </Text>
-            </Pressable>
-            {withDueDate && (
+          <Box>
+            <Text variant="p1R">Título</Text>
+            <TextInput
+              value={title.field.value}
+              onChangeText={title.field.onChange}
+              onBlur={title.field.onBlur}
+              placeholder="Titulo"
+              containerProps={{ height: 50, paddingLeft: "s" }}
+            />
+          </Box>
+          <Box>
+            <Text variant="p1R">
+              Descripción <Text variant="caption">Opcional</Text>
+            </Text>
+            <TextInput
+              value={description.field.value}
+              onChangeText={description.field.onChange}
+              onBlur={description.field.onBlur}
+              multiline
+              placeholder={`Escribe una descripción de la alerta`}
+              textAlignVertical="top"
+              containerProps={{ flex: 1, height: 200, padding: "s" }}
+            />
+          </Box>
+          <Box>
+            <Text variant="p1R">
+              Vigencia <Text variant="caption">Opcional</Text>
+            </Text>
+
+            <Box flexDirection="row">
               <Pressable
-                padding="s"
-                justifyContent={"center"}
-                alignItems={"center"}
-                onPress={() => setWithDueDate(false)}
+                borderRadius={4}
+                flex={1}
+                backgroundColor="filledTextInputVariantBackground"
+                height={40}
+                onPress={() => {
+                  setOpen(true);
+                }}
+                alignItems="center"
+                paddingLeft="s"
+                flexDirection="row"
+                overflow="hidden"
               >
-                <Ionicons name="trash-outline" size={24} />
+                <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
+                  {withDueDate
+                    ? date?.toLocaleDateString("es-CL", {})
+                    : "Seleccionar"}
+                </Text>
               </Pressable>
-            )}
+              {withDueDate && (
+                <Pressable
+                  padding="s"
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  onPress={() => setWithDueDate(false)}
+                >
+                  <Ionicons name="trash-outline" size={24} />
+                </Pressable>
+              )}
+            </Box>
           </Box>
         </Box>
         <Box marginTop="m">
-          <Text variant="h4">Tipo de alerta</Text>
+          <Text variant="p1R">Tipo de alerta</Text>
           <ButtonGroup
             value={alertKind}
             onChange={(v) =>
@@ -132,7 +204,7 @@ const AddRouteAlertScreen: FC<Props> = ({ navigation }) => {
           </ButtonGroup>
         </Box>
         <Box marginTop="m">
-          <Text variant="h4">Gravedad</Text>
+          <Text variant="p1R">Gravedad</Text>
           <ButtonGroup
             value={severity}
             onChange={(v) =>
@@ -143,8 +215,20 @@ const AddRouteAlertScreen: FC<Props> = ({ navigation }) => {
               {RouteAlertSeveritySchema.options.map((kind) => (
                 <ButtonGroup.Item
                   label={routeAlertSeverity(kind).label}
-                  backgroundColor={routeAlertSeverity(kind).backgroundColor}
-                  textColor={routeAlertSeverity(kind).color}
+                  selectedBackgroundColor={
+                    routeAlertSeverity(kind).backgroundColor
+                  }
+                  selectedTextColor={routeAlertSeverity(kind).color}
+                  backgroundColor={
+                    severity === undefined
+                      ? routeAlertSeverity(kind).backgroundColor
+                      : "grayscale.500"
+                  }
+                  textColor={
+                    severity === undefined
+                      ? routeAlertSeverity(kind).color
+                      : "grayscale.white"
+                  }
                   value={kind}
                   key={kind}
                 />
@@ -161,7 +245,7 @@ const AddRouteAlertScreen: FC<Props> = ({ navigation }) => {
         cancelText="Cancelar"
         open={open}
         minimumDate={new Date()}
-        date={date}
+        date={date!}
         onConfirm={(date) => {
           setOpen(false);
           setWithDueDate(true);
@@ -172,11 +256,12 @@ const AddRouteAlertScreen: FC<Props> = ({ navigation }) => {
         }}
       />
       <Button
-        variant="info"
+        variant={form.formState.isValid ? "info" : "transparent"}
         title="Enviar"
         padding="m"
         marginBottom="l"
         marginTop="m"
+        onPress={submit}
       />
     </Screen>
   );
