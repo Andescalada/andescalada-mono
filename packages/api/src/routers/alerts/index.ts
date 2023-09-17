@@ -1,3 +1,7 @@
 import { t } from "@andescalada/api/src/createRouter";
 
-export const alertsRouter = t.router({});
+import { upsertRouteAlert } from "./upsertRouteAlert";
+
+export const alertsRouter = t.router({
+  upsertRouteAlert,
+});

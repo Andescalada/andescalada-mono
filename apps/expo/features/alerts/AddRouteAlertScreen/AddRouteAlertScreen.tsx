@@ -15,6 +15,7 @@ import {
   Text,
   TextInput,
 } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   AlertsRoutes,
   AlertsScreenProps,
@@ -90,6 +91,8 @@ const AddRouteAlertScreen: FC<Props> = ({
 
   const isConnected = useIsConnected();
 
+  const mutateRemote = trpc.alerts.upsertRouteAlert.useMutation();
+
   const mutateLocal = useSetOrCreateRouteAlertMutation();
 
   const findRouteRef = useRef<BottomSheet>(null);
@@ -98,8 +101,17 @@ const AddRouteAlertScreen: FC<Props> = ({
 
   const submit = form.handleSubmit(
     async (values) => {
+      if (!user?.data?.id || !values?.route?.id) return;
       if (isConnected) {
-        console.log("CONNECTED", values);
+        mutateRemote.mutate({
+          kind: values.kind,
+          severity: values.severity,
+          title: values.title,
+          description: values.description,
+          routeId: values.route.id,
+          dueDate: values.dueDate,
+          zoneId,
+        });
         return;
       }
       if (!user?.data?.id || !values?.route?.id) return;
