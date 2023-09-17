@@ -10,6 +10,7 @@ import {
   addRouteLength,
   editRouteLength,
 } from "@andescalada/api/src/routers/routes/routeLength";
+import { searchInAZone } from "@andescalada/api/src/routers/routes/searchInAZone";
 import upsert from "@andescalada/api/src/routers/routes/upsert";
 import upsertDescription from "@andescalada/api/src/routers/routes/upsertDescription";
 import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
@@ -31,6 +32,7 @@ export const routesRouter = t.router({
   addRouteLength: addRouteLength,
   upsertDescription: upsertDescription,
   addOrEditGradeEvaluation: addOrEditGradeEvaluation,
+  searchInAZone: searchInAZone,
   byId: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {

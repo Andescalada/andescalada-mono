@@ -7,7 +7,11 @@ export enum AlertsRoutes {
 }
 
 export type AlertsNavigationParamList = {
-  [AlertsRoutes.AddRouteAlert]: { zoneId: Zone["id"]; routeId?: Route["id"] };
+  [AlertsRoutes.AddRouteAlert]: {
+    zoneId: Zone["id"];
+    routeId?: Route["id"];
+    routeName?: Route["name"];
+  };
 };
 
 export type AlertsRouteProps<T extends AlertsRoutes> = RouteProp<
