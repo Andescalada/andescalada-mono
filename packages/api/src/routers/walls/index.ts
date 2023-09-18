@@ -51,9 +51,35 @@ export const wallsRouter = t.router({
       );
     }
 
+    const contiguosWalls = await ctx.prisma.wall.findMany({
+      where: {
+        OR: [
+          { position: { equals: wall.position + 1 } },
+          { position: { equals: wall.position - 1 } },
+        ],
+        sectorId: wall.sectorId,
+        isDeleted: SoftDelete.NotDeleted,
+      },
+      select: { id: true, position: true, name: true },
+    });
+
+    const leftWall = contiguosWalls.find(
+      (contiguosWall) => contiguosWall.position === wall.position - 1,
+    );
+
+    const rightWall = contiguosWalls.find(
+      (contiguosWall) => contiguosWall.position === wall.position + 1,
+    );
+
     const parsedMultiPitch = parseMultiPitch(wall.MultiPitch);
 
-    const parsedWall = { ...wall, MultiPitch: parsedMultiPitch };
+    const parsedWall = {
+      ...wall,
+      MultiPitch: parsedMultiPitch,
+      hasContiguosWalls: !!leftWall || !!rightWall,
+      leftWall,
+      rightWall,
+    };
     return parsedWall;
   }),
 
@@ -64,6 +90,7 @@ export const wallsRouter = t.router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const result = await ctx.prisma.wall.aggregate({
+        where: { sectorId: input.sectorId, isDeleted: SoftDelete.NotDeleted },
         _max: { position: true },
       });
       const biggestPosition = result._max.position || 0;
@@ -155,6 +182,15 @@ export const wallsRouter = t.router({
       const wall = await ctx.prisma.wall.update({
         where: { id: input.wallId },
         data: { isDeleted: input.isDeleted },
+      });
+
+      await ctx.prisma.wall.updateMany({
+        where: {
+          sectorId: wall.sectorId,
+          position: { gt: wall.position },
+          isDeleted: SoftDelete.NotDeleted,
+        },
+        data: { position: { decrement: 1 } },
       });
 
       await ctx.prisma.sector.update({

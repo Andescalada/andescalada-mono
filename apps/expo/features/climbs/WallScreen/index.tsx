@@ -1,7 +1,15 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { Box, Button, LoadingModal, Screen } from "@andescalada/ui";
+import {
+  Box,
+  Button,
+  Ionicons,
+  LoadingModal,
+  Pressable,
+  Screen,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -20,7 +28,7 @@ import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { sectorKindAssets } from "@utils/sectorKindAssets";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { FormProvider } from "react-hook-form";
 import { Alert } from "react-native";
 
@@ -174,10 +182,17 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     { destructiveButtonIndex: !!mainTopoId?.data ? [4, 5] : 4 },
   );
 
-  const { isLoading: isLoadingWall } = useWallsById({
+  const { data, isLoading: isLoadingWall } = useWallsById({
     wallId,
     zoneId,
   });
+
+  useEffect(() => {
+    if (data?.rightWall?.id)
+      utils.walls.byId.prefetch({ zoneId, wallId: data?.rightWall?.id });
+    if (data?.leftWall?.id)
+      utils.walls.byId.prefetch({ zoneId, wallId: data?.leftWall?.id });
+  }, [data?.leftWall?.id, data?.rightWall?.id, utils.walls.byId, zoneId]);
 
   if (isLoadingWall) return null;
 
@@ -190,8 +205,80 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           editingTitle={headerMethods.editing}
           headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
           padding="s"
+          marginBottom="none"
         />
       </FormProvider>
+      {data?.hasContiguosWalls && (
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          marginHorizontal="m"
+        >
+          {data?.leftWall ? (
+            <Pressable
+              flexDirection="row"
+              alignItems="center"
+              paddingVertical="s"
+              gap="s"
+              maxWidth="50%"
+              onPress={() => {
+                if (!data.leftWall) return;
+                navigation.replace(ClimbsNavigationRoutes.Wall, {
+                  wallId: data.leftWall.id,
+                  wallName: data.leftWall.name,
+                  zoneId,
+                  sectorId,
+                  sectorKind,
+                });
+              }}
+            >
+              <Ionicons name="chevron-back" size={18} />
+              <Box>
+                <Text variant="caption" color="grayscale.500">
+                  {sectorKindAssets[sectorKind].label}
+                </Text>
+                <Text variant="p3R" numberOfLines={1} ellipsizeMode="middle">
+                  {data?.leftWall.name}
+                </Text>
+              </Box>
+            </Pressable>
+          ) : (
+            <Box />
+          )}
+          {!!data?.rightWall ? (
+            <Pressable
+              flexDirection="row"
+              alignItems="center"
+              paddingVertical="s"
+              gap="s"
+              maxWidth="50%"
+              onPress={() => {
+                if (!data.rightWall) return;
+                navigation.replace(ClimbsNavigationRoutes.Wall, {
+                  wallId: data.rightWall.id,
+                  wallName: data.rightWall.name,
+                  zoneId,
+                  sectorId,
+                  sectorKind,
+                });
+              }}
+            >
+              <Box>
+                <Text variant="caption" color="grayscale.500">
+                  {sectorKindAssets[sectorKind].label}
+                </Text>
+                <Text variant="p3R" numberOfLines={1} ellipsizeMode="middle">
+                  {data?.rightWall.name}
+                </Text>
+              </Box>
+              <Ionicons name="chevron-forward" size={18} />
+            </Pressable>
+          ) : (
+            <Box />
+          )}
+        </Box>
+      )}
       <TopoImage />
       <Box
         marginHorizontal="m"
