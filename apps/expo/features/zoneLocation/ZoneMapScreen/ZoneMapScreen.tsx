@@ -16,15 +16,16 @@ import {
   ZoneLocationRoutes,
   ZoneLocationScreenProps,
 } from "@features/zoneLocation/Navigation/types";
-import Pin, { OnPinSelected } from "@features/zoneManager/components/Pin";
+import Pin from "@features/zoneManager/components/Pin";
 import { ZoneManagerRoutes } from "@features/zoneManager/Navigation/types";
 import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { UserLocation } from "@rnmapbox/maps";
 import Env from "@utils/env";
-import { FC, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 
@@ -33,7 +34,7 @@ type Props = ZoneLocationScreenProps<ZoneLocationRoutes.ZoneMap>;
 const ZoneMapScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { zoneId, zoneName },
+    params: { zoneId, sectorId },
   },
 }) => {
   const { data, isLoading } = useZonesAllSectors({ zoneId });
@@ -60,15 +61,7 @@ const ZoneMapScreen: FC<Props> = ({
     | undefined
   >(undefined);
 
-  const [expandZoneCallout, setExpandZoneCallout] = useState(true);
-
-  const onPinSelected: OnPinSelected = ({ id }) => {
-    const selectedSector = sectors?.find((sector) => sector.id === id);
-    setSelectedPin((prev) => {
-      if (prev?.id === id) return undefined;
-      return selectedSector;
-    });
-  };
+  const [expandZoneCallout, setExpandZoneCallout] = useState(!sectorId);
 
   const sectors = useMemo(
     () =>
@@ -93,6 +86,23 @@ const ZoneMapScreen: FC<Props> = ({
     [data?.sectors],
   );
 
+  const onPinSelected = useCallback(
+    ({ id }: { id: string }) => {
+      const selectedSector = sectors?.find((sector) => sector.id === id);
+      setSelectedPin((prev) => {
+        if (prev?.id === id) return undefined;
+        return selectedSector;
+      });
+    },
+    [sectors],
+  );
+
+  useEffect(() => {
+    if (sectorId) {
+      onPinSelected({ id: sectorId });
+    }
+  }, [onPinSelected, sectorId]);
+
   if (isLoading)
     return (
       <Screen justifyContent="center" alignItems="center">
@@ -100,7 +110,7 @@ const ZoneMapScreen: FC<Props> = ({
       </Screen>
     );
 
-  if (!data?.Location?.latitude || !data?.Location?.longitude)
+  if (data?.name && (!data?.Location?.latitude || !data?.Location?.longitude))
     return (
       <Screen justifyContent="center" alignItems="center">
         <BackButton.Transparent onPress={navigation.goBack} />
@@ -112,7 +122,7 @@ const ZoneMapScreen: FC<Props> = ({
             onPress={() => {
               rootNavigation.replace(RootNavigationRoutes.ZoneManager, {
                 screen: ZoneManagerRoutes.SelectZoneLocation,
-                params: { zoneId, zoneName, skipOnboarding: true },
+                params: { zoneId, zoneName: data.name, skipOnboarding: true },
               });
             }}
           >
@@ -122,7 +132,7 @@ const ZoneMapScreen: FC<Props> = ({
       </Screen>
     );
 
-  if (sectors)
+  if (data && data.Location && sectors)
     return (
       <Screen safeAreaDisabled>
         <Mapbox.MapView
@@ -138,6 +148,10 @@ const ZoneMapScreen: FC<Props> = ({
           attributionEnabled={false}
           compassPosition={{ top: 110, right: 16 }}
         >
+          <UserLocation
+            androidRenderMode={"gps"}
+            showsUserHeadingIndicator={true}
+          />
           <Mapbox.Camera
             zoomLevel={14}
             animationMode="none"
