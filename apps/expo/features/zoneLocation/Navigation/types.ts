@@ -1,4 +1,4 @@
-import { Zone } from "@andescalada/db";
+import { Sector, Zone } from "@andescalada/db";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -7,7 +7,11 @@ export enum ZoneLocationRoutes {
 }
 
 export type ZoneLocationNavigationParamList = {
-  [ZoneLocationRoutes.ZoneMap]: { zoneId: Zone["id"]; zoneName: Zone["name"] };
+  [ZoneLocationRoutes.ZoneMap]: {
+    zoneId: Zone["id"];
+    zoneName?: Zone["name"];
+    sectorId?: Sector["id"];
+  };
 };
 
 export type ZoneLocationRouteProps<T extends ZoneLocationRoutes> = RouteProp<

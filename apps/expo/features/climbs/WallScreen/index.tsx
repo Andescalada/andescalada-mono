@@ -1,7 +1,7 @@
 import wall from "@andescalada/api/schemas/wall";
 import { SoftDeleteSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";
-import { LoadingModal, Screen } from "@andescalada/ui";
+import { Box, Button, LoadingModal, Screen } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import Header from "@features/climbs/components/Header";
 import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
@@ -13,6 +13,8 @@ import OtherTopos from "@features/climbs/WallScreen/OtherTopos";
 import RoutesList from "@features/climbs/WallScreen/RoutesList";
 import TopoImage from "@features/climbs/WallScreen/TopoImage";
 import { MultiPitchManagerRoutes } from "@features/multiPitchManager/Navigation/types";
+import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
+import useWallsById from "@hooks/offlineQueries/useWallsById";
 import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -172,6 +174,13 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
     { destructiveButtonIndex: !!mainTopoId?.data ? [4, 5] : 4 },
   );
 
+  const { isLoading: isLoadingWall } = useWallsById({
+    wallId,
+    zoneId,
+  });
+
+  if (isLoadingWall) return null;
+
   return (
     <Screen>
       <LoadingModal isLoading={deleteTopo.isLoading} text="Borrando topo" />
@@ -184,7 +193,32 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
         />
       </FormProvider>
       <TopoImage />
-      <OtherTopos />
+      <Box
+        marginHorizontal="m"
+        marginTop="m"
+        gap="m"
+        flexDirection="row"
+        justifyContent="space-around"
+        alignItems="center"
+      >
+        <Button
+          variant="infoSimplified"
+          padding="s"
+          title="Mapa"
+          titleVariant="p2R"
+          flexDirection="row-reverse"
+          gap="s"
+          icon="map-outline"
+          iconProps={{ size: 22 }}
+          onPress={() => {
+            rootNavigation.navigate(RootNavigationRoutes.ZoneLocation, {
+              screen: ZoneLocationRoutes.ZoneMap,
+              params: { zoneId, sectorId },
+            });
+          }}
+        />
+        <OtherTopos />
+      </Box>
       <RoutesList />
     </Screen>
   );
