@@ -143,6 +143,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
           <FlatList
             data={data?.sectors}
             refreshControl={refresh}
+            showsVerticalScrollIndicator={false}
             ListHeaderComponent={ZoneHeader}
             ListEmptyComponent={() => (
               <Box
