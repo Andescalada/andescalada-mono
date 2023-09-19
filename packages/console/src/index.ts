@@ -11,10 +11,11 @@ const main = async () => {
     include: { walls: { where: { isDeleted: SoftDelete.NotDeleted } } },
   });
   for (const sector of sectors) {
-    console.log(`Sector: ${sector.name} -----------------`);
+    console.log(`-Sector: ${sector.name}`);
     for (const [i, wall] of sector.walls.entries()) {
-      console.log(wall.name);
+      console.log(`---`, wall.name);
       console.log("Previous position", wall.position);
+      console.log("New position", i);
       const res = await db.wall.update({
         where: { id: wall.id },
         data: { position: i },
