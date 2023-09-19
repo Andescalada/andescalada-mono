@@ -186,6 +186,40 @@ export const sectorsRouter = t.router({
 
       return updatedSector;
     }),
+  editWallPosition: protectedZoneProcedure
+    .input(
+      sector.id.extend({
+        positions: z
+          .object({
+            id: z.string(),
+            position: z.number(),
+          })
+          .array(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.permissions.has("Update")) {
+        throw new TRPCError(
+          error.unauthorizedActionForZone(input.zoneId, "Update"),
+        );
+      }
+
+      const updatePositions = input.positions.map(({ id, position }) => {
+        return ctx.prisma.wall.update({
+          where: { id },
+          data: { position, version: { increment: 1 } },
+        });
+      });
+
+      const res = await ctx.prisma.$transaction(updatePositions);
+
+      await ctx.prisma.sector.update({
+        where: { id: input.sectorId },
+        data: { version: { increment: 1 } },
+      });
+
+      return res;
+    }),
 });
 
 export const selectFromSectorAllWalls = {
@@ -195,10 +229,12 @@ export const selectFromSectorAllWalls = {
   version: true,
   zoneId: true,
   name: true,
+
   Zone: { select: { name: true } },
   Location: true,
   walls: {
     where: { isDeleted: SoftDelete.NotDeleted },
-    select: { id: true, name: true },
+    select: { id: true, name: true, position: true },
+    orderBy: { position: "asc" as const },
   },
 };

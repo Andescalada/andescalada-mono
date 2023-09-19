@@ -108,6 +108,16 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
               })
             : null,
       },
+      "Editar posiciones": {
+        hide: !permission.has("Update"),
+        action: () =>
+          data
+            ? navigation.navigate(ClimbsNavigationRoutes.EditWallPositions, {
+                sectorId,
+                zoneId,
+              })
+            : null,
+      },
       "Eliminar sector": {
         hide: !permission.has("Delete"),
         action: () => {
@@ -132,7 +142,7 @@ const SectorScreen: FC<Props> = ({ route, navigation }) => {
         },
       },
     },
-    { destructiveButtonIndex: 3 },
+    { destructiveButtonIndex: 4 },
   );
 
   if (isLoading && !data)
