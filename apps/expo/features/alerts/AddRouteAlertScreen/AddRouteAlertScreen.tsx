@@ -1,3 +1,5 @@
+import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
+import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
 import {
   RouteAlertKindSchema,
   RouteAlertSeveritySchema,
@@ -34,9 +36,6 @@ import { useController } from "react-hook-form";
 import { Alert } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { z } from "zod";
-
-import routeAlertKind from "../../../../../packages/common-assets/routeAlertKind";
-import routeAlertSeverity from "../../../../../packages/common-assets/routeAlertSeverity";
 
 const schema = z.object({
   title: z.string().min(1),

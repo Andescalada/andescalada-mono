@@ -1,4 +1,5 @@
 import AddRouteAlertScreen from "@features/alerts/AddRouteAlertScreen";
+import RouteAlertsListScreen from "@features/alerts/RouteAlertsListScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import { AlertsNavigationParamList, AlertsRoutes } from "./types";
@@ -11,6 +12,10 @@ const Navigator = () => {
       <Stack.Screen
         name={AlertsRoutes.AddRouteAlert}
         component={AddRouteAlertScreen}
+      />
+      <Stack.Screen
+        name={AlertsRoutes.RouteAlertsList}
+        component={RouteAlertsListScreen}
       />
     </Stack.Navigator>
   );

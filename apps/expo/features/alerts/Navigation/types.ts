@@ -4,6 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum AlertsRoutes {
   AddRouteAlert = "Alert-AddRouteAlert",
+  RouteAlertsList = "Alert-RouteAlertsList",
 }
 
 export type AlertsNavigationParamList = {
@@ -11,6 +12,9 @@ export type AlertsNavigationParamList = {
     zoneId: Zone["id"];
     routeId?: Route["id"];
     routeName?: Route["name"];
+  };
+  [AlertsRoutes.RouteAlertsList]: {
+    zoneId: Zone["id"];
   };
 };
 

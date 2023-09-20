@@ -1,6 +1,4 @@
 import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
-import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
-import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
 import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
 import {
   A,
@@ -23,6 +21,7 @@ import ToolBar from "@features/climbs/ZoneScreen/ToolBar";
 import useDownloadedButton from "@features/climbs/ZoneScreen/useDownloadedButton";
 import useFavoritedButton from "@features/climbs/ZoneScreen/useFavoritedButton";
 import ZoneDescription from "@features/climbs/ZoneScreen/ZoneDescription";
+import RouteAlertCard from "@features/components/RouteAlertCard";
 import { InfoAccessManagerRoutes } from "@features/InfoAccessManager/Navigation/types";
 import { ZoneDirectionsRoutes } from "@features/zoneDirections/Navigation/types";
 import { ZoneLocationRoutes } from "@features/zoneLocation/Navigation/types";
@@ -140,9 +139,9 @@ const ZoneHeader = () => {
               title="Alertas"
               iconName="warning"
               onPress={() =>
-                navigation.navigate(ClimbsNavigationRoutes.ZoneAgreements, {
-                  zoneId,
-                  zoneName,
+                rootNavigation.navigate(RootNavigationRoutes.Alert, {
+                  screen: AlertsRoutes.RouteAlertsList,
+                  params: { zoneId },
                 })
               }
             />
@@ -310,7 +309,7 @@ const ZoneHeader = () => {
                   paddingHorizontal="s"
                   onPress={() =>
                     rootNavigation.navigate(RootNavigationRoutes.Alert, {
-                      screen: AlertsRoutes.AddRouteAlert,
+                      screen: AlertsRoutes.RouteAlertsList,
                       params: { zoneId },
                     })
                   }
@@ -334,66 +333,16 @@ const ZoneHeader = () => {
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={() => <Box width={8} />}
                 renderItem={({ item }) => (
-                  <Box
-                    flex={1}
-                    bg="grayscale.transparent.50.300"
-                    borderRadius={8}
-                    padding="s"
-                  >
-                    <Box
-                      flexDirection="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      flex={1}
-                      gap="xs"
-                    >
-                      <Box flex={1}>
-                        <Text
-                          variant="p2R"
-                          numberOfLines={1}
-                          ellipsizeMode="middle"
-                        >
-                          {item.title.originalText}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text variant="p3R">
-                          {item.updatedAt.toLocaleDateString("es-CL")}
-                        </Text>
-                      </Box>
-                    </Box>
-                    <Text color="grayscale.300">{`${item.Route.name} - ${item.Route.Wall.Sector.name}`}</Text>
-                    <Box
-                      flexDirection="row"
-                      alignItems="center"
-                      gap="s"
-                      marginTop="s"
-                    >
-                      <Box
-                        backgroundColor="semantic.info"
-                        borderRadius={16}
-                        padding="xs"
-                        paddingHorizontal="s"
-                      >
-                        <Text>
-                          {"Tipo: " + routeAlertKind(item.kind).label}
-                        </Text>
-                      </Box>
-                      <Box
-                        borderRadius={16}
-                        padding="xs"
-                        paddingHorizontal="s"
-                        backgroundColor={
-                          routeAlertSeverity(item.severity).backgroundColor
-                        }
-                      >
-                        <Text color={routeAlertSeverity(item.severity).color}>
-                          {"Gravedad: " +
-                            routeAlertSeverity(item.severity).label}
-                        </Text>
-                      </Box>
-                    </Box>
-                  </Box>
+                  <RouteAlertCard
+                    title={item.title.originalText}
+                    date={item.updatedAt}
+                    routeName={item.Route.name}
+                    routeId={item.Route.id}
+                    sectorName={item.Route.Wall.Sector.name}
+                    zoneId={zoneId}
+                    kind={item.kind}
+                    severity={item.severity}
+                  />
                 )}
               />
             </Box>
