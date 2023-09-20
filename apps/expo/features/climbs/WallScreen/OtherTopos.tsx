@@ -62,14 +62,15 @@ const OtherTopos = () => {
 
   if (!otherToposCount)
     return (
-      <Box paddingHorizontal="m" marginTop="m">
+      <Box flex={1}>
         <Button
           variant="infoSimplified"
           title="Agregar topo"
+          flexDirection="row-reverse"
           titleVariant="p2R"
           padding="s"
           icon="add-circle"
-          iconProps={{ size: 20 }}
+          iconProps={{ size: 22 }}
           gap="xs"
           justifyContent="center"
           onPress={onAddTopoPress}
@@ -77,7 +78,7 @@ const OtherTopos = () => {
       </Box>
     );
   return (
-    <Box paddingHorizontal="m" marginTop="m" flexDirection="row" gap="s">
+    <Box flex={1} flexDirection="row" gap="s">
       <Pressable
         flex={1}
         bg="grayscale.900"

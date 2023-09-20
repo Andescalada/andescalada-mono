@@ -1,4 +1,4 @@
-import Mapbox from "@andescalada/maps/mapbox";
+import Mapbox, { UserLocation } from "@andescalada/maps/mapbox";
 import { MapTypeToolbar, Screen, useMapType } from "@andescalada/ui";
 import Pin from "@features/zoneManager/components/Pin";
 import { ComponentProps, FC, ReactNode } from "react";
@@ -55,6 +55,10 @@ const MapLocationSelector: FC<Props> = ({
         }}
         {...props}
       >
+        <UserLocation
+          androidRenderMode={"gps"}
+          showsUserHeadingIndicator={true}
+        />
         <Mapbox.Camera
           zoomLevel={14}
           animationMode="none"

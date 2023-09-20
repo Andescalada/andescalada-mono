@@ -1,4 +1,4 @@
-import Mapbox from "@andescalada/maps/mapbox";
+import Mapbox, { UserLocation } from "@andescalada/maps/mapbox";
 import {
   Box,
   Button,
@@ -92,6 +92,10 @@ const SelectZoneLocationScreen: FC<Props> = ({
           setRegion({ latitude: center[1], longitude: center[0] });
         }}
       >
+        <UserLocation
+          androidRenderMode={"gps"}
+          showsUserHeadingIndicator={true}
+        />
         <Mapbox.Camera
           zoomLevel={14}
           animationMode="none"

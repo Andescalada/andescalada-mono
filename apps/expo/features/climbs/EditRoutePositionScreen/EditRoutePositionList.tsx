@@ -100,11 +100,15 @@ const EditRoutePositionList: FC<Props> = ({
         flexDirection="row"
         alignItems="center"
         justifyContent={"space-between"}
+        maxWidth="100%"
+        gap="s"
       >
         <BackButton onPress={navigation.goBack} />
-        <Text variant="p1R" numberOfLines={1} ellipsizeMode="tail">
-          {wallName}
-        </Text>
+        <Box flex={1}>
+          <Text variant="p1R" numberOfLines={1} ellipsizeMode="tail">
+            {wallName}
+          </Text>
+        </Box>
         <Button
           titleVariant="p3B"
           title="Guardar"
@@ -112,7 +116,7 @@ const EditRoutePositionList: FC<Props> = ({
           titleProps={{ lineHeight: undefined }}
           variant="infoSmall"
           height={40}
-          width={"30%"}
+          paddingHorizontal="s"
           onPress={onSavePositions}
         />
       </Box>

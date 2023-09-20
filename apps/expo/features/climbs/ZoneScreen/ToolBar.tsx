@@ -12,7 +12,7 @@ import {
   withTiming,
 } from "react-native-reanimated";
 
-export const toggleWalls = atom(false);
+export const toggleWalls = atom(true);
 
 interface ToolBarProps {
   isDownloaded: boolean;
