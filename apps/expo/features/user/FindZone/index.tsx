@@ -40,13 +40,6 @@ const FindZone: ForwardRefRenderFunction<BottomSheet, Props> = (
 
   const [isLoading, setIsLoading] = useState(false);
   const searchZone = (value: string) => {
-    const isValid = zone.nameSearch.safeParse(value);
-    if (!isValid.success) {
-      setIsLoading(false);
-      reset();
-      return;
-    }
-
     mutate(value);
   };
 
