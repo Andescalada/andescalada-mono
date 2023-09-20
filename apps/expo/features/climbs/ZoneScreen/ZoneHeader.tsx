@@ -2,7 +2,15 @@ import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
 import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
 import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
-import { A, Box, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
+import {
+  A,
+  Box,
+  Button,
+  Ionicons,
+  Pressable,
+  ScrollView,
+  Text,
+} from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { AlertsRoutes } from "@features/alerts/Navigation/types";
 import {
@@ -89,7 +97,12 @@ const ZoneHeader = () => {
       <ZoneDescription description={data.description?.originalText} />
       {data.hasAccess && (
         <Box>
-          <Box flexDirection="row" marginBottom="l">
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            flexDirection="row"
+            height={82}
+          >
             {showPublicationStatus && (
               <Pressable
                 width={60}
@@ -155,7 +168,7 @@ const ZoneHeader = () => {
               }
             />
             {featureFlags.storyBar && <StoryButton title="Flora y fauna" />}
-          </Box>
+          </ScrollView>
           <Box
             flexDirection="row"
             alignItems="center"
@@ -284,11 +297,15 @@ const ZoneHeader = () => {
             )}
           {routeAlerts.isSuccess && (
             <Box marginTop="m">
-              <Box flexDirection="row" justifyContent="space-between">
-                <Text variant="h4">Alertas en rutas</Text>
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                marginBottom="s"
+              >
+                <Text variant="h4">⚠️ Alertas graves</Text>
                 <Button
                   variant="transparentSimplified"
-                  title="Agregar alerta"
+                  title="Ver más"
                   titleVariant="p3R"
                   paddingHorizontal="s"
                   onPress={() =>
@@ -300,21 +317,29 @@ const ZoneHeader = () => {
                 />
               </Box>
               <FlatList
+                horizontal
                 ListEmptyComponent={() => (
                   <Box
                     height={50}
                     marginTop="s"
                     justifyContent="center"
                     alignItems="center"
-                    bg="grayscale.transparent.50.600"
+                    bg="grayscale.transparent.50.300"
                     borderRadius={8}
                   >
                     <Text>Sin alertas</Text>
                   </Box>
                 )}
                 data={routeAlerts.data}
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={() => <Box width={8} />}
                 renderItem={({ item }) => (
-                  <Box flex={1}>
+                  <Box
+                    flex={1}
+                    bg="grayscale.transparent.50.300"
+                    borderRadius={8}
+                    padding="s"
+                  >
                     <Box
                       flexDirection="row"
                       justifyContent="space-between"
@@ -332,12 +357,12 @@ const ZoneHeader = () => {
                         </Text>
                       </Box>
                       <Box>
-                        <Text>
+                        <Text variant="p3R">
                           {item.updatedAt.toLocaleDateString("es-CL")}
                         </Text>
                       </Box>
                     </Box>
-                    <Text>{`${item.Route.name} - ${item.Route.Wall.Sector.name}`}</Text>
+                    <Text color="grayscale.300">{`${item.Route.name} - ${item.Route.Wall.Sector.name}`}</Text>
                     <Box
                       flexDirection="row"
                       alignItems="center"
