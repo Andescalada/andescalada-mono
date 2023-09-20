@@ -116,7 +116,7 @@ const getOfflineAssets = async ({
       id: input.zoneId,
       isDeleted: SoftDelete.NotDeleted,
     },
-    select: selectZoneAllSectors({ userId: ctx.user.id }),
+    select: selectZoneAllSectors({ userId: ctx.user.id, zoneId: input.zoneId }),
   });
 
   const [
