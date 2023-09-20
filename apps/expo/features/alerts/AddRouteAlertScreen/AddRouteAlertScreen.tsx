@@ -28,6 +28,7 @@ import useIsConnected from "@hooks/useIsConnected";
 import useOwnInfo from "@hooks/useOwnInfo";
 import { onSuccessPick } from "@hooks/usePickImage";
 import useSetOrCreateRouteAlertMutation from "@local-database/hooks/useSetOrCreateRouteAlertMutation";
+import { useNotifications } from "@utils/notificated";
 import { FC, useCallback, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 import { Alert } from "react-native";
@@ -91,11 +92,13 @@ const AddRouteAlertScreen: FC<Props> = ({
 
   const isConnected = useIsConnected();
 
-  const mutateRemote = trpc.alerts.upsertRouteAlert.useMutation();
+  const mutateRemote = trpc.alerts.upsertRouteAlert.useMutation({ retry: 0 });
 
   const mutateLocal = useSetOrCreateRouteAlertMutation();
 
   const findRouteRef = useRef<BottomSheet>(null);
+
+  const notification = useNotifications();
 
   const user = useOwnInfo();
 
@@ -114,11 +117,16 @@ const AddRouteAlertScreen: FC<Props> = ({
         });
         return;
       }
-      if (!user?.data?.id || !values?.route?.id) return;
       mutateLocal.mutate({
         routeId: values.route.id,
         userId: user?.data?.id,
         ...values,
+      });
+      notification.notify("success", {
+        params: {
+          title: "Alerta creada",
+          description: "La alerta se creó correctamente",
+        },
       });
     },
     (invalid) => {
@@ -169,7 +177,11 @@ const AddRouteAlertScreen: FC<Props> = ({
               >
                 <Text
                   variant="p1R"
-                  color="grayscale.600"
+                  color={
+                    routeController.field.value
+                      ? "grayscale.black"
+                      : "grayscale.600"
+                  }
                   paddingLeft="xs"
                   numberOfLines={1}
                   ellipsizeMode="tail"

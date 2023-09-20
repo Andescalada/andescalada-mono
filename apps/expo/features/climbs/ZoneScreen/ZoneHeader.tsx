@@ -1,4 +1,7 @@
 import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
+import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
+import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
+import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
 import { A, Box, Button, Ionicons, Pressable, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { AlertsRoutes } from "@features/alerts/Navigation/types";
@@ -29,7 +32,7 @@ import featureFlags from "@utils/featureFlags";
 import { isAndroid } from "@utils/platform";
 import zoneStatus from "@utils/zoneStatus";
 import { useMemo } from "react";
-import { Share } from "react-native";
+import { FlatList, Share } from "react-native";
 import { FadeIn, FadeOut } from "react-native-reanimated";
 
 const ZoneHeader = () => {
@@ -48,6 +51,13 @@ const ZoneHeader = () => {
   const numberOfToposToVerify = trpc.topos.numberOfToposToVerify.useQuery({
     zoneId,
   });
+
+  const routeAlerts = trpc.zones.routeAlerts.useQuery({
+    zoneId,
+    take: 3,
+    severity: RouteAlertSeveritySchema.Enum.High,
+  });
+
   const utils = trpc.useContext();
 
   const members = useMemo(
@@ -106,6 +116,16 @@ const ZoneHeader = () => {
             <StoryButton
               title="Acuerdos"
               iconName="shake-hands"
+              onPress={() =>
+                navigation.navigate(ClimbsNavigationRoutes.ZoneAgreements, {
+                  zoneId,
+                  zoneName,
+                })
+              }
+            />
+            <StoryButton
+              title="Alertas"
+              iconName="warning"
               onPress={() =>
                 navigation.navigate(ClimbsNavigationRoutes.ZoneAgreements, {
                   zoneId,
@@ -262,33 +282,97 @@ const ZoneHeader = () => {
                 </Pressable>
               </Box>
             )}
-          <Box marginTop="m">
-            <Box flexDirection="row" justifyContent="space-between">
-              <Text variant="h4">Alertas en rutas</Text>
-              <Button
-                variant="transparentSimplified"
-                title="Agregar alerta"
-                titleVariant="p3R"
-                paddingHorizontal="s"
-                onPress={() =>
-                  rootNavigation.navigate(RootNavigationRoutes.Alert, {
-                    screen: AlertsRoutes.AddRouteAlert,
-                    params: { zoneId },
-                  })
-                }
+          {routeAlerts.isSuccess && (
+            <Box marginTop="m">
+              <Box flexDirection="row" justifyContent="space-between">
+                <Text variant="h4">Alertas en rutas</Text>
+                <Button
+                  variant="transparentSimplified"
+                  title="Agregar alerta"
+                  titleVariant="p3R"
+                  paddingHorizontal="s"
+                  onPress={() =>
+                    rootNavigation.navigate(RootNavigationRoutes.Alert, {
+                      screen: AlertsRoutes.AddRouteAlert,
+                      params: { zoneId },
+                    })
+                  }
+                />
+              </Box>
+              <FlatList
+                ListEmptyComponent={() => (
+                  <Box
+                    height={50}
+                    marginTop="s"
+                    justifyContent="center"
+                    alignItems="center"
+                    bg="grayscale.transparent.50.600"
+                    borderRadius={8}
+                  >
+                    <Text>Sin alertas</Text>
+                  </Box>
+                )}
+                data={routeAlerts.data}
+                renderItem={({ item }) => (
+                  <Box flex={1}>
+                    <Box
+                      flexDirection="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      flex={1}
+                      gap="xs"
+                    >
+                      <Box flex={1}>
+                        <Text
+                          variant="p2R"
+                          numberOfLines={1}
+                          ellipsizeMode="middle"
+                        >
+                          {item.title.originalText}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Text>
+                          {item.updatedAt.toLocaleDateString("es-CL")}
+                        </Text>
+                      </Box>
+                    </Box>
+                    <Text>{`${item.Route.name} - ${item.Route.Wall.Sector.name}`}</Text>
+                    <Box
+                      flexDirection="row"
+                      alignItems="center"
+                      gap="s"
+                      marginTop="s"
+                    >
+                      <Box
+                        backgroundColor="semantic.info"
+                        borderRadius={16}
+                        padding="xs"
+                        paddingHorizontal="s"
+                      >
+                        <Text>
+                          {"Tipo: " + routeAlertKind(item.kind).label}
+                        </Text>
+                      </Box>
+                      <Box
+                        borderRadius={16}
+                        padding="xs"
+                        paddingHorizontal="s"
+                        backgroundColor={
+                          routeAlertSeverity(item.severity).backgroundColor
+                        }
+                      >
+                        <Text color={routeAlertSeverity(item.severity).color}>
+                          {"Gravedad: " +
+                            routeAlertSeverity(item.severity).label}
+                        </Text>
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
               />
             </Box>
-            <Box
-              height={50}
-              marginTop="s"
-              justifyContent="center"
-              alignItems="center"
-              bg="grayscale.transparent.50.600"
-              borderRadius={8}
-            >
-              <Text>Sin alertas</Text>
-            </Box>
-          </Box>
+          )}
           <ToolBar
             isDownloaded={isDownloaded}
             isFavorite={isFavorite}

@@ -1,4 +1,3 @@
-import zone from "@andescalada/api/schemas/zone";
 import { Zone } from "@andescalada/db";
 import {
   ActivityIndicator,

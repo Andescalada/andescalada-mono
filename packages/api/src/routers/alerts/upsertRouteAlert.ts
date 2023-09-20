@@ -17,10 +17,34 @@ const schema = z.object({
 
 export const upsertRouteAlert = protectedZoneProcedure
   .input(schema)
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.routeAlert.upsert({
-      where: { id: input.id },
-      create: {
+  .mutation(async ({ ctx, input }) => {
+    if (input.id) {
+      return ctx.prisma.routeAlert.update({
+        where: { id: input.id },
+        data: {
+          title: { update: { originalText: input.title } },
+          ...(input.description && {
+            description: {
+              upsert: {
+                create: {
+                  originalText: input.description,
+                  originalLang: { connect: { languageId: "es" } },
+                },
+                update: {
+                  originalText: input.description,
+                },
+              },
+            },
+          }),
+          kind: input.kind,
+          severity: input.severity,
+          dueDate: input.dueDate,
+        },
+      });
+    }
+
+    return ctx.prisma.routeAlert.create({
+      data: {
         title: {
           create: {
             originalText: input.title,
@@ -38,17 +62,8 @@ export const upsertRouteAlert = protectedZoneProcedure
         kind: input.kind,
         severity: input.severity,
         dueDate: input.dueDate,
-        Route: {
-          connect: { id: input.routeId },
-        },
+        Route: { connect: { id: input.routeId } },
         Author: { connect: { id: ctx.user.id } },
-      },
-      update: {
-        title: { update: { originalText: input.title } },
-        description: { update: { originalText: input.description } },
-        kind: input.kind,
-        severity: input.severity,
-        dueDate: input.dueDate,
       },
     });
   });

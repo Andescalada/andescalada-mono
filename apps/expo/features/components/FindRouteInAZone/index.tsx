@@ -1,4 +1,3 @@
-import user from "@andescalada/api/schemas/user";
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import {
   ActivityIndicator,
