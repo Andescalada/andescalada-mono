@@ -8,7 +8,7 @@ import { TRPCError } from "@trpc/server";
 const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
   const res = await ctx.prisma.zone.findUnique({
     where: { id: input.zoneId },
-    select: selectZoneAllSectors({ userId: ctx.user.id }),
+    select: selectZoneAllSectors({ userId: ctx.user.id, zoneId: input.zoneId }),
   });
   if (!res || res?.isDeleted !== SoftDelete.NotDeleted) {
     throw new TRPCError(error.sectorNotFound(input.zoneId));
@@ -38,7 +38,13 @@ const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {
 
 export default allSectors;
 
-export const selectZoneAllSectors = ({ userId }: { userId: string }) =>
+export const selectZoneAllSectors = ({
+  userId,
+  zoneId,
+}: {
+  userId: string;
+  zoneId: string;
+}) =>
   ({
     _count: true,
     id: true,
@@ -104,6 +110,7 @@ export const selectZoneAllSectors = ({ userId }: { userId: string }) =>
             title: { select: { originalText: true } },
             description: { select: { originalText: true } },
             ZoneAgreement: {
+              where: { zoneId },
               select: { comment: { select: { originalText: true } } },
             },
           },
