@@ -1,10 +1,12 @@
 import { Route, Zone } from "@andescalada/db";
+import { RouteAlert } from "@local-database/model";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum AlertsRoutes {
   AddRouteAlert = "Alert-AddRouteAlert",
   RouteAlertsList = "Alert-RouteAlertsList",
+  RouteAlert = "Alert-RouteAlert",
 }
 
 export type AlertsNavigationParamList = {
@@ -14,6 +16,10 @@ export type AlertsNavigationParamList = {
     routeName?: Route["name"];
   };
   [AlertsRoutes.RouteAlertsList]: {
+    zoneId: Zone["id"];
+  };
+  [AlertsRoutes.RouteAlert]: {
+    routeAlertId: RouteAlert["id"];
     zoneId: Zone["id"];
   };
 };

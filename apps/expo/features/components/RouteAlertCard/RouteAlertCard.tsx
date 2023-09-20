@@ -5,9 +5,13 @@ import {
   RouteAlertSeveritySchema,
 } from "@andescalada/db/zod";
 import { Box, Pressable, Text } from "@andescalada/ui";
+import { AlertsRoutes } from "@features/alerts/Navigation/types";
+import useRootNavigation from "@hooks/useRootNavigation";
+import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { FC } from "react";
 
 interface Props {
+  id: string;
   title: string;
   date: Date;
   routeName: string;
@@ -19,12 +23,19 @@ interface Props {
 }
 
 const RouteAlertCard: FC<Props> = (props) => {
+  const rootNavigation = useRootNavigation();
   return (
     <Pressable
       flex={1}
       bg="grayscale.transparent.50.300"
       borderRadius={8}
       padding="s"
+      onPress={() => {
+        rootNavigation.navigate(RootNavigationRoutes.Alert, {
+          screen: AlertsRoutes.RouteAlert,
+          params: { routeAlertId: props.id, zoneId: props.zoneId },
+        });
+      }}
     >
       <Box
         flexDirection="row"

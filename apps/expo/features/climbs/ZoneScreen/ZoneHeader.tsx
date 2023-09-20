@@ -334,6 +334,7 @@ const ZoneHeader = () => {
                 ItemSeparatorComponent={() => <Box width={8} />}
                 renderItem={({ item }) => (
                   <RouteAlertCard
+                    id={item.id}
                     title={item.title.originalText}
                     date={item.updatedAt}
                     routeName={item.Route.name}

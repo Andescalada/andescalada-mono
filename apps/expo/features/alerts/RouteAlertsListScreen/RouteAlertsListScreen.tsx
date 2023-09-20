@@ -1,5 +1,3 @@
-import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
-import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
 import { Box, Button, Header, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -43,6 +41,7 @@ const RouteAlertsListScreen: FC<Props> = ({
         ItemSeparatorComponent={() => <Box height={8} />}
         renderItem={({ item }) => (
           <RouteAlertCard
+            id={item.id}
             title={item.title.originalText}
             date={item.updatedAt}
             routeName={item.Route.name}
