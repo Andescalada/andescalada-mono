@@ -60,14 +60,7 @@ const FindRouteInAZone: ForwardRefRenderFunction<BottomSheet, Props> = (
   } = trpc.routes.searchInAZone.useMutation();
 
   const [isLoading, setIsLoading] = useState(false);
-  const searchUsername = (value: string) => {
-    const isValid = user.usernameSearch.safeParse(value);
-    if (!isValid.success) {
-      setIsLoading(false);
-      reset();
-      return;
-    }
-
+  const searchRoute = (value: string) => {
     mutate(
       { search: value, zoneId },
       {
@@ -78,7 +71,7 @@ const FindRouteInAZone: ForwardRefRenderFunction<BottomSheet, Props> = (
     );
   };
 
-  const onDebounceChange = useDebounce(searchUsername);
+  const onDebounceChange = useDebounce(searchRoute);
   const [search, setSearch] = useState("");
   const onChange = (value: string) => {
     setIsLoading(true);
