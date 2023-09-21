@@ -12,7 +12,10 @@ import { membersList } from "@andescalada/api/src/routers/zones/membersList";
 import publicById from "@andescalada/api/src/routers/zones/publicById";
 import publicWallById from "@andescalada/api/src/routers/zones/publicWallById";
 import recentlyAdded from "@andescalada/api/src/routers/zones/recentlyAdded";
-import routeAlerts from "@andescalada/api/src/routers/zones/routeAlerts";
+import {
+  routeAlert,
+  routeAlertList,
+} from "@andescalada/api/src/routers/zones/routeAlerts";
 import statusById from "@andescalada/api/src/routers/zones/statusById";
 import upsertDescription from "@andescalada/api/src/routers/zones/upsertDescription";
 import usersByRole from "@andescalada/api/src/routers/zones/usersByRole";
@@ -37,5 +40,6 @@ export const zonesRouter = t.router({
   deleteDirection,
   upsertDescription: upsertDescription,
   featured: featured,
-  routeAlerts: routeAlerts,
+  routeAlertList: routeAlertList,
+  routeAlert: routeAlert,
 });

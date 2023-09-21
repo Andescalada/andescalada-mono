@@ -16,18 +16,16 @@ const RouteAlertsListScreen: FC<Props> = ({
     params: { zoneId },
   },
 }) => {
-  const routeAlerts = trpc.zones.routeAlerts.useQuery({
+  const routeAlerts = trpc.zones.routeAlertList.useQuery({
     zoneId,
   });
 
   return (
-    <Screen padding="m">
-      <Header title="Alertas en rutas" showOptions={false} marginBottom="m" />
+    <Screen padding="m" safeAreaDisabled>
       <FlatList
         ListEmptyComponent={() => (
           <Box
             height={50}
-            marginTop="s"
             justifyContent="center"
             alignItems="center"
             bg="grayscale.transparent.50.300"

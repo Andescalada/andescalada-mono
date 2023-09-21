@@ -9,7 +9,7 @@ const routeAlertKind = (
       return {
         color: "grayscale.white",
         backgroundColor: "semantic.error",
-        label: "Material en mal estado",
+        label: "Anclaje",
       };
     case RouteAlertKindSchema.Enum.BirdNest:
       return {

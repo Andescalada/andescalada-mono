@@ -59,7 +59,7 @@ const ZoneHeader = () => {
     zoneId,
   });
 
-  const routeAlerts = trpc.zones.routeAlerts.useQuery({
+  const routeAlerts = trpc.zones.routeAlertList.useQuery({
     zoneId,
     take: 3,
     severity: RouteAlertSeveritySchema.Enum.High,
@@ -294,14 +294,14 @@ const ZoneHeader = () => {
                 </Pressable>
               </Box>
             )}
-          {routeAlerts.isSuccess && (
+          {routeAlerts?.data && routeAlerts?.data.length > 0 && (
             <Box marginTop="m">
               <Box
                 flexDirection="row"
                 justifyContent="space-between"
                 marginBottom="s"
               >
-                <Text variant="h4">⚠️ Alertas graves</Text>
+                <Text variant="h4">🔴 Alertas altas</Text>
                 <Button
                   variant="transparentSimplified"
                   title="Ver más"
@@ -325,6 +325,8 @@ const ZoneHeader = () => {
                     alignItems="center"
                     bg="grayscale.transparent.50.300"
                     borderRadius={8}
+                    width="100%"
+                    flex={1}
                   >
                     <Text>Sin alertas</Text>
                   </Box>
