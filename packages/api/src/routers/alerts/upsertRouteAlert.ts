@@ -5,6 +5,8 @@ import {
 } from "@andescalada/db/zod";
 import { z } from "zod";
 
+import { Prisma } from ".prisma/client";
+
 const schema = z.object({
   id: z.string().optional(),
   title: z.string().min(1),
@@ -18,8 +20,9 @@ const schema = z.object({
 export const upsertRouteAlert = protectedZoneProcedure
   .input(schema)
   .mutation(async ({ ctx, input }) => {
+    const mutations: Prisma.PrismaPromise<any>[] = [];
     if (input.id) {
-      return ctx.prisma.routeAlert.update({
+      const update = ctx.prisma.routeAlert.update({
         where: { id: input.id },
         data: {
           title: { update: { originalText: input.title } },
@@ -41,29 +44,39 @@ export const upsertRouteAlert = protectedZoneProcedure
           dueDate: input.dueDate,
         },
       });
-    }
-
-    return ctx.prisma.routeAlert.create({
-      data: {
-        title: {
-          create: {
-            originalText: input.title,
-            originalLang: { connect: { languageId: "es" } },
-          },
-        },
-        ...(input.description && {
-          description: {
+      mutations.push(update);
+    } else {
+      const create = ctx.prisma.routeAlert.create({
+        data: {
+          title: {
             create: {
-              originalText: input.description,
+              originalText: input.title,
               originalLang: { connect: { languageId: "es" } },
             },
           },
-        }),
-        kind: input.kind,
-        severity: input.severity,
-        dueDate: input.dueDate,
-        Route: { connect: { id: input.routeId } },
-        Author: { connect: { id: ctx.user.id } },
-      },
+          ...(input.description && {
+            description: {
+              create: {
+                originalText: input.description,
+                originalLang: { connect: { languageId: "es" } },
+              },
+            },
+          }),
+          kind: input.kind,
+          severity: input.severity,
+          dueDate: input.dueDate,
+          Route: { connect: { id: input.routeId } },
+          Author: { connect: { id: ctx.user.id } },
+        },
+      });
+      mutations.push(create);
+    }
+
+    const updateRouteVersion = ctx.prisma.route.update({
+      where: { id: input.routeId },
+      data: { version: { increment: 1 } },
     });
+    mutations.push(updateRouteVersion);
+
+    return ctx.prisma.$transaction(mutations);
   });

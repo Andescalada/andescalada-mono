@@ -109,7 +109,7 @@ const AddRouteAlertScreen: FC<Props> = ({
   const submit = form.handleSubmit(
     async (values) => {
       if (!user?.data?.id || !values?.route?.id) return;
-      if (!isConnected) {
+      if (isConnected) {
         mutateRemote.mutate({
           kind: values.kind,
           severity: values.severity,

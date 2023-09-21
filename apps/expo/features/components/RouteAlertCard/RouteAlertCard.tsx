@@ -4,26 +4,30 @@ import {
   RouteAlertKindSchema,
   RouteAlertSeveritySchema,
 } from "@andescalada/db/zod";
-import { Box, Pressable, Text } from "@andescalada/ui";
+import { Box, Ionicons, Pressable, Text } from "@andescalada/ui";
 import { AlertsRoutes } from "@features/alerts/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { ComponentProps, FC } from "react";
+import { Alert } from "react-native";
 
 interface Props extends ComponentProps<typeof Pressable> {
   id: string;
   title: string;
   date: Date;
-  routeName: string;
+  routeName?: string;
   routeId: string;
-  sectorName: string;
+  sectorName?: string;
   zoneId: string;
   kind: typeof RouteAlertKindSchema._type;
   severity: typeof RouteAlertSeveritySchema._type;
+  isNotSynced?: boolean;
 }
 
 const RouteAlertCard: FC<Props> = (props) => {
   const rootNavigation = useRootNavigation();
+  const hideRouteName =
+    props.routeName === undefined || props.sectorName === undefined;
   return (
     <Pressable
       flex={1}
@@ -38,6 +42,33 @@ const RouteAlertCard: FC<Props> = (props) => {
         });
       }}
     >
+      {props.isNotSynced && (
+        <Pressable
+          flexDirection="row"
+          gap="xs"
+          alignSelf="flex-end"
+          height={20}
+          paddingHorizontal="xs"
+          // width={20}
+          borderRadius={10}
+          bg="semantic.warning"
+          justifyContent="center"
+          alignItems="center"
+          onPress={() => {
+            Alert.alert(
+              "Alerta sin sincronizar",
+              "Cuando vuelvas a tener internet se sincronizará automáticamente",
+            );
+          }}
+        >
+          <Text color="grayscale.black">No sincronizada</Text>
+          <Ionicons
+            name="cloud-offline-outline"
+            size={16}
+            color="grayscale.black"
+          />
+        </Pressable>
+      )}
       <Box
         flexDirection="row"
         justifyContent="space-between"
@@ -54,11 +85,13 @@ const RouteAlertCard: FC<Props> = (props) => {
           <Text variant="p3R">{props.date.toLocaleDateString("es-CL")}</Text>
         </Box>
       </Box>
-      <Text
-        color="grayscale.300"
-        numberOfLines={1}
-        ellipsizeMode="middle"
-      >{`${props.routeName} - ${props.sectorName}`}</Text>
+      {!hideRouteName && (
+        <Text
+          color="grayscale.300"
+          numberOfLines={1}
+          ellipsizeMode="middle"
+        >{`${props.routeName} - ${props.sectorName}`}</Text>
+      )}
       <Box flexDirection="row" alignItems="center" gap="s" marginTop="s">
         <Box
           backgroundColor="semantic.info"

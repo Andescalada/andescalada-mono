@@ -22,7 +22,7 @@ export const pushRouteGradeEvaluation = ({
           id: c.id,
         };
       });
-    console.log(cleanCreated);
+
     const create = prisma.routeGradeEvaluation.createMany({
       data: cleanCreated,
     });

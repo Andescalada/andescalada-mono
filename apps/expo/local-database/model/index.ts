@@ -139,7 +139,7 @@ export class RouteAlert extends Model {
   @text(schema[Table.ROUTE_ALERT].description.name) description!:
     | string
     | undefined;
-  @field(schema[Table.ROUTE_ALERT].dueDate.name) dueDate!: Date | undefined;
+  @date(schema[Table.ROUTE_ALERT].dueDate.name) dueDate!: Date | undefined;
   @text(schema[Table.ROUTE_ALERT].kind.name) kind!: string;
   @text(schema[Table.ROUTE_ALERT].severity.name) severity!: string;
   @readonly

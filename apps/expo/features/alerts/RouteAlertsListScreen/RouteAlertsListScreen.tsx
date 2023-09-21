@@ -107,6 +107,7 @@ const RouteAlertsListScreen: FC<Props> = ({
         marginHorizontal="m"
         gap="s"
         flexDirection="row-reverse"
+        marginTop="s"
         marginBottom="xl"
         onPress={() =>
           navigation.navigate(AlertsRoutes.AddRouteAlert, { zoneId })
