@@ -611,14 +611,14 @@ model RouteAlert {
   isDeleted     SoftDelete         @default(NotDeleted)
   image         Image?             @relation(fields: [imageId], references: [id])
   imageId       String?
-  Author        User               @relation("RouteAlertAuthor", fields: [authorId], references: [id])
-  authorId      String
+  Author        User               @relation("RouteAlertAuthor", fields: [userId], references: [id])
+  userId        String // required for local db instead of authorId
 
   @@index([routeId])
   @@index([descriptionId])
   @@index([imageId])
   @@index([titleId])
-  @@index([authorId])
+  @@index([userId])
   @@index([dismissedById])
 }
 
