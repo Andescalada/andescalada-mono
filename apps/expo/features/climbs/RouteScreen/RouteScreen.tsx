@@ -210,7 +210,12 @@ const RouteContainer = ({
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.Alert, {
               screen: AlertsRoutes.AddRouteAlert,
-              params: { zoneId, routeId, routeName: route.name },
+              params: {
+                zoneId,
+                routeId,
+                routeName: route.name,
+                sectorName: route.Wall.Sector.name,
+              },
             })
           }
         >

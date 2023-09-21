@@ -30,9 +30,14 @@ export const searchInAZone = protectedZoneProcedure
         slug: true,
         Wall: {
           select: {
+            id: true,
             name: true,
             Sector: {
-              select: { name: true, Zone: { select: { name: true } } },
+              select: {
+                id: true,
+                name: true,
+                Zone: { select: { id: true, name: true } },
+              },
             },
           },
         },

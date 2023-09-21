@@ -43,7 +43,9 @@ const schema = z.object({
   kind: RouteAlertKindSchema,
   severity: RouteAlertSeveritySchema,
   dueDate: z.date().optional(),
-  route: z.object({ id: z.string(), name: z.string() }).optional(),
+  route: z
+    .object({ id: z.string(), name: z.string(), sectorName: z.string() })
+    .optional(),
 });
 
 type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
@@ -51,7 +53,7 @@ type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
 const AddRouteAlertScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { routeId, zoneId, routeName },
+    params: { routeId, zoneId, routeName, sectorName },
   },
 }) => {
   const form = useZodForm({ schema, mode: "onChange" });
@@ -81,7 +83,10 @@ const AddRouteAlertScreen: FC<Props> = ({
     control: form.control,
     name: "route",
     ...(routeId &&
-      routeName && { defaultValue: { id: routeId, name: routeName } }),
+      routeName &&
+      sectorName && {
+        defaultValue: { id: routeId, name: routeName, sectorName: sectorName },
+      }),
   });
 
   const [withDueDate, setWithDueDate] = useState(false);
@@ -104,7 +109,7 @@ const AddRouteAlertScreen: FC<Props> = ({
   const submit = form.handleSubmit(
     async (values) => {
       if (!user?.data?.id || !values?.route?.id) return;
-      if (isConnected) {
+      if (!isConnected) {
         mutateRemote.mutate({
           kind: values.kind,
           severity: values.severity,
@@ -114,21 +119,34 @@ const AddRouteAlertScreen: FC<Props> = ({
           dueDate: values.dueDate,
           zoneId,
         });
+        notification.notify("success", {
+          params: {
+            title: "Alerta creada",
+            description: "La alerta se creó correctamente",
+          },
+        });
         return;
       }
       mutateLocal.mutate({
-        routeId: values.route.id,
         userId: user?.data?.id,
-        ...values,
+        zoneId,
+        kind: values.kind,
+        severity: values.severity,
+        title: values.title,
+        description: values.description,
+        routeId: values.route.id,
+        dueDate: values.dueDate,
+        routeName: values.route.name,
+        sectorName: values.route.sectorName,
       });
       notification.notify("success", {
         params: {
-          title: "Alerta creada",
-          description: "La alerta se creó correctamente",
+          title: "Alerta guardada",
+          description: "Cuando vuelvas a tener internet será compartida",
         },
       });
     },
-    (invalid) => {
+    () => {
       Alert.alert("Faltan campos requeridos");
     },
   );

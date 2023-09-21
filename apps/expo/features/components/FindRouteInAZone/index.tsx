@@ -35,14 +35,20 @@ import {
 
 type FindOutput = inferProcedureOutput<AppRouter["routes"]["searchInAZone"]>[0];
 
-export interface UserOutput {
+export interface RouteOutput {
   id: FindOutput["id"];
   name: FindOutput["name"];
+  wallName: FindOutput["Wall"]["name"];
+  wallId: FindOutput["Wall"]["id"];
+  sectorName: FindOutput["Wall"]["Sector"]["name"];
+  sectorId: FindOutput["Wall"]["Sector"]["id"];
+  zoneId: FindOutput["Wall"]["Sector"]["Zone"]["id"];
+  zoneName: FindOutput["Wall"]["Sector"]["Zone"]["name"];
 }
 
 interface Props {
   zoneId: string;
-  onSetRoute: (args: UserOutput) => void;
+  onSetRoute: (args: RouteOutput) => void;
 }
 
 const FindRouteInAZone: ForwardRefRenderFunction<BottomSheet, Props> = (
@@ -146,7 +152,16 @@ const FindRouteInAZone: ForwardRefRenderFunction<BottomSheet, Props> = (
                     justifyContent={"space-between"}
                     alignItems="center"
                     onPress={() => {
-                      onSetRoute({ id, name });
+                      onSetRoute({
+                        id,
+                        name,
+                        wallName: Wall.name,
+                        sectorName: Wall.Sector.name,
+                        wallId: Wall.id,
+                        sectorId: Wall.Sector.id,
+                        zoneId: Wall.Sector.Zone.id,
+                        zoneName: Wall.Sector.Zone.name,
+                      });
                       // @ts-expect-error ref is correctly typed
                       ref?.current?.close();
                     }}

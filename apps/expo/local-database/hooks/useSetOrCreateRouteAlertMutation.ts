@@ -11,8 +11,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const setOrCreateRouteEvaluation = async (input: {
   id?: string;
   routeId: string;
+  zoneId: string;
   userId: string;
   title: string;
+  routeName: string;
+  sectorName: string;
   description?: string;
   dueDate?: Date;
   kind: typeof RouteAlertKindSchema._type;
@@ -33,7 +36,10 @@ const setOrCreateRouteEvaluation = async (input: {
           routeAlert.severity = input.severity.toString();
           routeAlert.dueDate = input.dueDate;
           routeAlert.routeId = input.routeId;
+          routeAlert.zoneId = input.zoneId;
           routeAlert.userId = input.userId;
+          routeAlert.routeName = input.routeName;
+          routeAlert.sectorName = input.sectorName;
         });
       }
       return await database
@@ -46,7 +52,10 @@ const setOrCreateRouteEvaluation = async (input: {
           routeAlert.severity = input.severity.toString();
           routeAlert.dueDate = input.dueDate;
           routeAlert.routeId = input.routeId;
+          routeAlert.zoneId = input.zoneId;
           routeAlert.userId = input.userId;
+          routeAlert.routeName = input.routeName;
+          routeAlert.sectorName = input.sectorName;
         });
     } catch (error) {
       console.error("ERROR IN SET OR CREATE ROUTE ALERT", error);

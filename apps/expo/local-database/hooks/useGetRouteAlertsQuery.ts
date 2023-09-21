@@ -1,37 +1,74 @@
 import { columns } from "@andescalada/utils/local-database";
 import { Keys, LOCAL_DATABASE } from "@local-database/hooks/types";
 import { database } from "@local-database/index";
-import { RouteGradeEvaluation } from "@local-database/model";
+import { RouteAlert } from "@local-database/model";
 import { Table } from "@local-database/model/schema";
 import { Q } from "@nozbe/watermelondb";
 import { useQuery } from "@tanstack/react-query";
 
-type Arg = { routeId: string };
+type Arg = { routeId: string } | { zoneId: string };
 
-const getRouteAlerts = async ({ routeId }: Arg) => {
+const getRouteAlertsByRoute = async ({
+  routeId,
+}: {
+  routeId: string | undefined;
+}) => {
+  if (!routeId) throw new Error("routeId is required");
   const res = await database.read(() => {
     return database
-      .get<RouteGradeEvaluation>(Table.ROUTE_ALERT)
+      .get<RouteAlert>(Table.ROUTE_ALERT)
       .query(
-        Q.where(columns.RouteGradeEvaluation.routeId, routeId),
-        Q.sortBy(columns.RouteGradeEvaluation.createdAt, "desc"),
+        Q.where(columns.RouteAlert.routeId, routeId),
+        Q.sortBy(columns.RouteAlert.createdAt, "desc"),
       )
       .fetch();
   });
   return res;
 };
 
-const useGetRouteAlertsQuery = ({ routeId }: Arg) => {
-  const res = useQuery(
-    [LOCAL_DATABASE, Keys.GetRouteGradeEvaluation, routeId],
-    () => getRouteAlerts({ routeId }),
+const getRouteAlertsByZone = async ({
+  zoneId,
+}: {
+  zoneId: string | undefined;
+}) => {
+  if (!zoneId) throw new Error("zoneId is required");
+  const res = await database.read(() => {
+    return database
+      .get<RouteAlert>(Table.ROUTE_ALERT)
+      .query(
+        Q.where(columns.RouteAlert.zoneId, zoneId),
+        Q.sortBy(columns.RouteAlert.createdAt, "desc"),
+      )
+      .fetch();
+  });
+  return res;
+};
+
+const useGetRouteAlertsQuery = (args: Arg) => {
+  const routeId = "routeId" in args ? args.routeId : undefined;
+  const zoneId = "zoneId" in args ? args.zoneId : undefined;
+
+  const routeRes = useQuery(
+    [LOCAL_DATABASE, Keys.GetRouteAlert, routeId],
+    () => getRouteAlertsByRoute({ routeId }),
     {
       networkMode: "always",
       retry: 0,
+      enabled: !!routeId,
     },
   );
 
-  return res;
+  const zoneRes = useQuery(
+    [LOCAL_DATABASE, Keys.GetRouteAlert, zoneId],
+    () => getRouteAlertsByZone({ zoneId }),
+    {
+      networkMode: "always",
+      retry: 0,
+      enabled: !!zoneId,
+    },
+  );
+
+  return zoneId ? zoneRes : routeRes;
 };
 
 export default useGetRouteAlertsQuery;

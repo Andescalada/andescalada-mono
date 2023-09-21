@@ -111,22 +111,16 @@ const RouteAlertScreen: FC<Props> = ({
           }}
         >
           <Box flexDirection="row" gap="s" flex={1}>
-            <Box
-              borderRadius={40 / 2}
-              height={40}
-              width={40}
-              borderWidth={2}
-              borderColor="grayscale.500"
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
-              <Text variant="h4" numberOfLines={1} ellipsizeMode="tail">
-                {data.Route.position}
-              </Text>
-            </Box>
             <Box>
               <Text variant="p1R">{data.Route.name}</Text>
-              <Text>{routeKindLabel(data.Route.kind).long} </Text>
+              <Text>
+                {routeKindLabel(data.Route.kind).long}
+
+                <Text color="grayscale.500">
+                  {" - "}
+                  {data.Route.Wall.Sector.name}
+                </Text>
+              </Text>
             </Box>
           </Box>
           {data.Route.RouteGrade && (

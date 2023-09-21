@@ -1,4 +1,4 @@
-import { Route, Zone } from "@andescalada/db";
+import { Route, Sector, Zone } from "@andescalada/db";
 import { RouteAlert } from "@local-database/model";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,6 +14,7 @@ export type AlertsNavigationParamList = {
     zoneId: Zone["id"];
     routeId?: Route["id"];
     routeName?: Route["name"];
+    sectorName?: Sector["name"];
   };
   [AlertsRoutes.RouteAlertsList]: {
     zoneId: Zone["id"];

@@ -8,13 +8,13 @@ export const pushRouteAlert = ({
   const mutations: Prisma.PrismaPromise<any>[] = [];
 
   if (created.length > 0) {
-    const cleanCreated = created.map<Prisma.RouteAlertCreateManyInput>((c) => {
-      return {
+    const cleanCreated = created.map((c) => {
+      console.log({
+        id: c.id,
         createdAt: new Date(c.created_at),
         updatedAt: new Date(c.updated_at),
-        routeId: c.routeId,
-        authorId: user.id,
-        id: c.id,
+        Route: { connect: { id: c.routeId } },
+        Author: { connect: { id: user.id } },
         title: {
           create: {
             originalText: c.title,
@@ -32,12 +32,35 @@ export const pushRouteAlert = ({
         kind: c.kind,
         severity: c.severity,
         dueDate: c.dueDate,
-      };
+      });
+      return prisma.routeAlert.create({
+        data: {
+          id: c.id,
+          createdAt: new Date(c.created_at),
+          updatedAt: new Date(c.updated_at),
+          Route: { connect: { id: c.routeId } },
+          Author: { connect: { id: user.id } },
+          title: {
+            create: {
+              originalText: c.title,
+              originalLang: { connect: { languageId: "es" } },
+            },
+          },
+          ...(c.description && {
+            description: {
+              create: {
+                originalText: c.description,
+                originalLang: { connect: { languageId: "es" } },
+              },
+            },
+          }),
+          kind: c.kind,
+          severity: c.severity,
+          dueDate: c.dueDate,
+        },
+      });
     });
-    const create = prisma.routeAlert.createMany({
-      data: cleanCreated,
-    });
-    mutations.push(create);
+    mutations.push(...cleanCreated);
   }
   if (updated.length > 0) {
     const updates = updated.map(({ id, ...c }) => {

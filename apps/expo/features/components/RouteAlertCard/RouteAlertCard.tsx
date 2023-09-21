@@ -8,9 +8,9 @@ import { Box, Pressable, Text } from "@andescalada/ui";
 import { AlertsRoutes } from "@features/alerts/Navigation/types";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { FC } from "react";
+import { ComponentProps, FC } from "react";
 
-interface Props {
+interface Props extends ComponentProps<typeof Pressable> {
   id: string;
   title: string;
   date: Date;
@@ -30,6 +30,7 @@ const RouteAlertCard: FC<Props> = (props) => {
       bg="grayscale.transparent.50.300"
       borderRadius={8}
       padding="s"
+      {...props}
       onPress={() => {
         rootNavigation.navigate(RootNavigationRoutes.Alert, {
           screen: AlertsRoutes.RouteAlert,
@@ -53,7 +54,11 @@ const RouteAlertCard: FC<Props> = (props) => {
           <Text variant="p3R">{props.date.toLocaleDateString("es-CL")}</Text>
         </Box>
       </Box>
-      <Text color="grayscale.300">{`${props.routeName} - ${props.sectorName}`}</Text>
+      <Text
+        color="grayscale.300"
+        numberOfLines={1}
+        ellipsizeMode="middle"
+      >{`${props.routeName} - ${props.sectorName}`}</Text>
       <Box flexDirection="row" alignItems="center" gap="s" marginTop="s">
         <Box
           backgroundColor="semantic.info"

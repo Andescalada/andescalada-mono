@@ -345,6 +345,7 @@ const ZoneHeader = () => {
                     zoneId={zoneId}
                     kind={item.kind}
                     severity={item.severity}
+                    maxWidth={300}
                   />
                 )}
               />

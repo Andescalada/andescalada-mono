@@ -131,8 +131,11 @@ export class RouteAlert extends Model {
   };
 
   @text(schema[Table.ROUTE_ALERT].routeId.name) routeId!: string;
+  @text(schema[Table.ROUTE_ALERT].zoneId.name) zoneId!: string;
   @text(schema[Table.ROUTE_ALERT].userId.name) userId!: string;
-  @text(schema[Table.ROUTE_ALERT].description.name) title!: string;
+  @text(schema[Table.ROUTE_ALERT].routeName.name) routeName!: string;
+  @text(schema[Table.ROUTE_ALERT].sectorName.name) sectorName!: string;
+  @text(schema[Table.ROUTE_ALERT].title.name) title!: string;
   @text(schema[Table.ROUTE_ALERT].description.name) description!:
     | string
     | undefined;

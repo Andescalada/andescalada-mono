@@ -601,7 +601,7 @@ model RouteAlert {
   DismissedBy   User?              @relation("RouteAlertDismissedBy", fields: [dismissedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
   dismissedById String?
   Route         Route              @relation(fields: [routeId], references: [id])
-  routeId       String             @unique
+  routeId       String
   title         TextContent        @relation("RouteAlertTitle", fields: [titleId], references: [id])
   titleId       String
   description   TextContent?       @relation("RouteAlertDescription", fields: [descriptionId], references: [id])
