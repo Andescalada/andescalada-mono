@@ -1,7 +1,7 @@
 import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
 import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
-import { Box, Pressable, Screen, Text } from "@andescalada/ui";
+import { Box, Button, Pressable, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   AlertsRoutes,
@@ -36,12 +36,34 @@ const RouteAlertScreen: FC<Props> = ({
   if (!data) return null;
   return (
     <Screen padding="m" safeAreaDisabled gap="s">
-      <Box>
+      <Box
+        alignItems="center"
+        justifyContent="flex-end"
+        flexDirection="row"
+        gap="s"
+      >
         {ownInfo?.data?.id === data.Author.id && (
-          <Pressable>
-            <Text>Editar</Text>
-          </Pressable>
+          <Button
+            variant="infoSimplified"
+            title="Editar"
+            titleVariant="p3R"
+            icon="pencil-outline"
+            flexDirection="row-reverse"
+            gap="s"
+            iconProps={{ size: 16 }}
+            padding="s"
+          />
         )}
+        <Button
+          variant="errorSimplified"
+          title="Desestimar"
+          titleVariant="p3R"
+          icon="remove-circle-outline"
+          flexDirection="row-reverse"
+          gap="s"
+          iconProps={{ size: 16 }}
+          padding="s"
+        />
       </Box>
       <Text variant="h1">{data.title.originalText}</Text>
       <Box

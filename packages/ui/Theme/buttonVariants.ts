@@ -22,6 +22,8 @@ export const buttonVariantsColors = {
   contrastButtonText: pallete.grayscale.black,
   warningButtonBackground: pallete.semantic.warning,
   warningButtonText: pallete.grayscale.black,
+  errorSimplifiedButtonBackground: pallete.semantic.error,
+  errorSimplifiedButtonText: pallete.grayscale.white,
 };
 
 const buttonVariants = createBoxVariant({
@@ -53,6 +55,12 @@ const buttonVariants = createBoxVariant({
   },
   infoSimplified: {
     backgroundColor: "infoSimplifiedButtonBackground",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorSimplified: {
+    backgroundColor: "errorSimplifiedButtonBackground",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
