@@ -236,6 +236,16 @@ const RouteAlertScreen: FC<Props> = ({
           </Text>
         </Box>
       </Box>
+      {data.dueDate && (
+        <Box bg="grayscale.400" borderRadius={8} padding="m">
+          <Text variant="p2R" color="background">
+            Fecha de vencimiento:{" "}
+            <Text variant="p2B" color="background">
+              {data.dueDate.toLocaleDateString("es-CL")}
+            </Text>
+          </Text>
+        </Box>
+      )}
       <Box bg="backgroundContrast" borderRadius={8} padding="m">
         <Text variant="p2R" color="background">
           {data.description ?? "Sin descripción"}
