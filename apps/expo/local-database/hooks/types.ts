@@ -6,4 +6,5 @@ export const Keys = {
   GetRouteAlert: "GetRouteAlert",
   GetGradeSystems: "GetGradeSystems",
   GetOwnUser: "OwnUser",
+  Sync: "Sync",
 };

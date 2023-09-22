@@ -38,7 +38,11 @@ const RouteAlertCard: FC<Props> = (props) => {
       onPress={() => {
         rootNavigation.navigate(RootNavigationRoutes.Alert, {
           screen: AlertsRoutes.RouteAlert,
-          params: { routeAlertId: props.id, zoneId: props.zoneId },
+          params: {
+            routeAlertId: props.id,
+            zoneId: props.zoneId,
+            isSynced: !props.isNotSynced,
+          },
         });
       }}
     >

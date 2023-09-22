@@ -9,8 +9,33 @@ export const pushRouteAlert = ({
 
   if (created.length > 0) {
     const cleanCreated = created.map((c) => {
-      const createAlert = prisma.routeAlert.create({
-        data: {
+      const createAlert = prisma.routeAlert.upsert({
+        where: { id: c.id },
+        update: {
+          id: c.id,
+          createdAt: new Date(c.created_at),
+          updatedAt: new Date(c.updated_at),
+          Route: { connect: { id: c.routeId } },
+          Author: { connect: { id: user.id } },
+          title: {
+            create: {
+              originalText: c.title,
+              originalLang: { connect: { languageId: "es" } },
+            },
+          },
+          ...(c.description && {
+            description: {
+              create: {
+                originalText: c.description,
+                originalLang: { connect: { languageId: "es" } },
+              },
+            },
+          }),
+          kind: c.kind,
+          severity: c.severity,
+          dueDate: new Date(c.dueDate),
+        },
+        create: {
           id: c.id,
           createdAt: new Date(c.created_at),
           updatedAt: new Date(c.updated_at),

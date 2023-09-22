@@ -17,7 +17,7 @@ import { gradeSystemSelector } from "@hooks/useGradeSystem";
 import useIsConnected from "@hooks/useIsConnected";
 import useGetGradeSystemsQuery from "@local-database/hooks/useGetGradeSystemsQuery";
 import useSetUserGradingSystemMutation from "@local-database/hooks/useSetUserGradingSystemMutation";
-import sync from "@local-database/sync";
+import { useWatermelonSync } from "@local-database/sync";
 import { ComponentProps, FC, useMemo } from "react";
 import { useController } from "react-hook-form";
 
@@ -56,6 +56,8 @@ const GradingOptions = ({
     schema: user.gradeSystem,
   });
   const isConnected = useIsConnected();
+
+  const sync = useWatermelonSync();
 
   const { mutate, isSuccess, isLoading } = useSetUserGradingSystemMutation({
     onSuccess() {

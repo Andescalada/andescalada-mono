@@ -46,7 +46,7 @@ import useGetRouteGradeEvaluationQuery from "@local-database/hooks/useGetRouteGr
 import useSetOrCreateRouteEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteEvaluationMutation";
 import useSetOrCreateRouteGradeEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteGradeEvaluationMutation";
 import { RouteAlert } from "@local-database/model";
-import sync from "@local-database/sync";
+import { useWatermelonSync } from "@local-database/sync";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
@@ -405,6 +405,8 @@ const RouteEvaluation = ({
 
   const isConnected = useIsConnected();
 
+  const sync = useWatermelonSync();
+
   const mutation = useSetOrCreateRouteEvaluationMutation({
     onSuccess() {
       if (isConnected) sync();
@@ -520,6 +522,8 @@ const RouteGradeVoteModal = ({
   const isConnected = useIsConnected();
 
   const utils = trpc.useContext();
+
+  const sync = useWatermelonSync();
 
   const { mutate } = useSetOrCreateRouteGradeEvaluationMutation({
     async onSuccess() {

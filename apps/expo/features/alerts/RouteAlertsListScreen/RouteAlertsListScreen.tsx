@@ -1,4 +1,7 @@
-import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
+import {
+  RouteAlertKindSchema,
+  RouteAlertSeveritySchema,
+} from "@andescalada/db/zod";
 import { Box, Button, Screen, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -6,11 +9,11 @@ import {
   AlertsScreenProps,
 } from "@features/alerts/Navigation/types";
 import RouteAlertCard from "@features/components/RouteAlertCard";
+import useRefresh from "@hooks/useRefresh";
 import useGetRouteAlertsQuery from "@local-database/hooks/useGetRouteAlertsQuery";
+import { useWatermelonSync } from "@local-database/sync";
 import { FC } from "react";
 import { FlatList } from "react-native";
-
-import { RouteAlertKindSchema } from "../../../../../packages/db/zod/enums/RouteAlertKind";
 
 type Props = AlertsScreenProps<AlertsRoutes.RouteAlertsList>;
 
@@ -32,20 +35,21 @@ const RouteAlertsListScreen: FC<Props> = ({
 
   const isOfflineAlerts = !!offlineRouteAlertsNotSynced?.length;
 
+  const sync = useWatermelonSync();
+
+  const refresh = useRefresh(() => {
+    sync();
+    routeAlerts.refetch();
+    offlineRouteAlerts.refetch();
+  }, routeAlerts.isFetching);
+
   return (
-    <Screen safeAreaDisabled marginTop="m">
+    <Screen safeAreaDisabled padding="m">
       <FlatList
+        refreshControl={refresh}
         ListHeaderComponent={() =>
           isOfflineAlerts ? (
-            <Box
-              marginBottom="m"
-              borderRadius={16}
-              borderWidth={2}
-              borderColor="semantic.warning"
-              borderStyle="dashed"
-              padding="m"
-            >
-              <Text variant="p2R">Alertas sin sincronizar</Text>
+            <Box paddingBottom="s">
               <FlatList
                 data={offlineRouteAlertsNotSynced}
                 ItemSeparatorComponent={() => <Box height={8} />}
@@ -61,6 +65,7 @@ const RouteAlertsListScreen: FC<Props> = ({
                     zoneId={zoneId}
                     kind={RouteAlertKindSchema.parse(item.kind)}
                     severity={RouteAlertSeveritySchema.parse(item.severity)}
+                    isNotSynced={true}
                   />
                 )}
               />
@@ -82,19 +87,17 @@ const RouteAlertsListScreen: FC<Props> = ({
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <Box height={8} />}
         renderItem={({ item }) => (
-          <Box paddingHorizontal="m">
-            <RouteAlertCard
-              id={item.id}
-              title={item.title.originalText}
-              date={item.updatedAt}
-              routeName={item.Route.name}
-              routeId={item.Route.id}
-              sectorName={item.Route.Wall.Sector.name}
-              zoneId={zoneId}
-              kind={item.kind}
-              severity={item.severity}
-            />
-          </Box>
+          <RouteAlertCard
+            id={item.id}
+            title={item.title.originalText}
+            date={item.updatedAt}
+            routeName={item.Route.name}
+            routeId={item.Route.id}
+            sectorName={item.Route.Wall.Sector.name}
+            zoneId={zoneId}
+            kind={item.kind}
+            severity={item.severity}
+          />
         )}
       />
       <Button

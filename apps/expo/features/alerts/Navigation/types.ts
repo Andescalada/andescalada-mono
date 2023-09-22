@@ -22,6 +22,7 @@ export type AlertsNavigationParamList = {
   [AlertsRoutes.RouteAlert]: {
     routeAlertId: RouteAlert["id"];
     zoneId: Zone["id"];
+    isSynced?: boolean;
   };
 };
 
