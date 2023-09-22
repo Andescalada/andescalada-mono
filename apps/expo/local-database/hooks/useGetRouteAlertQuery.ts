@@ -17,7 +17,7 @@ const getRouteAlert = async ({ id }: { id: string | undefined }) => {
       .fetch();
   });
 
-  return res.at(0);
+  return res.at(0) ?? null;
 };
 
 const useGetRouteAlertQuery = ({ id }: Arg) => {

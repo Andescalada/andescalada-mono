@@ -40,7 +40,7 @@ import useOwnInfo, { useGetOwnInfo } from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
-import useGetRouteAlertsQuery from "@local-database/hooks/useGetRouteAlertsQuery";
+import useGetRouteAlertListQuery from "@local-database/hooks/useGetRouteAlertListQuery";
 import useGetRouteEvaluationQuery from "@local-database/hooks/useGetRouteEvaluationQuery";
 import useGetRouteGradeEvaluationQuery from "@local-database/hooks/useGetRouteGradeEvaluationQuery";
 import useSetOrCreateRouteEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteEvaluationMutation";
@@ -88,7 +88,7 @@ const RouteScreen: FC<Props> = ({
 
   const { data: localDbEvaluation } = useGetRouteEvaluationQuery({ routeId });
 
-  const { data: localAlerts } = useGetRouteAlertsQuery({ routeId });
+  const { data: localAlerts } = useGetRouteAlertListQuery({ routeId });
 
   if (isLoading || !data)
     return (

@@ -44,12 +44,12 @@ const getRouteAlertsByZone = async ({
   return res;
 };
 
-const useGetRouteAlertsQuery = (args: Arg) => {
+const useGetRouteAlertListQuery = (args: Arg) => {
   const routeId = "routeId" in args ? args.routeId : undefined;
   const zoneId = "zoneId" in args ? args.zoneId : undefined;
 
   const routeRes = useQuery(
-    [LOCAL_DATABASE, Keys.GetRouteAlert, routeId],
+    [LOCAL_DATABASE, Keys.GetRouteAlertList, routeId],
     () => getRouteAlertsByRoute({ routeId }),
     {
       networkMode: "always",
@@ -59,7 +59,7 @@ const useGetRouteAlertsQuery = (args: Arg) => {
   );
 
   const zoneRes = useQuery(
-    [LOCAL_DATABASE, Keys.GetRouteAlert, zoneId],
+    [LOCAL_DATABASE, Keys.GetRouteAlertList, zoneId],
     () => getRouteAlertsByZone({ zoneId }),
     {
       networkMode: "always",
@@ -71,4 +71,4 @@ const useGetRouteAlertsQuery = (args: Arg) => {
   return zoneId ? zoneRes : routeRes;
 };
 
-export default useGetRouteAlertsQuery;
+export default useGetRouteAlertListQuery;

@@ -10,7 +10,7 @@ import {
 } from "@features/alerts/Navigation/types";
 import RouteAlertCard from "@features/components/RouteAlertCard";
 import useRefresh from "@hooks/useRefresh";
-import useGetRouteAlertsQuery from "@local-database/hooks/useGetRouteAlertsQuery";
+import useGetRouteAlertListQuery from "@local-database/hooks/useGetRouteAlertListQuery";
 import { useWatermelonSync } from "@local-database/sync";
 import { FC } from "react";
 import { FlatList } from "react-native";
@@ -27,7 +27,7 @@ const RouteAlertsListScreen: FC<Props> = ({
     zoneId,
   });
 
-  const offlineRouteAlerts = useGetRouteAlertsQuery({ zoneId });
+  const offlineRouteAlerts = useGetRouteAlertListQuery({ zoneId });
 
   const offlineRouteAlertsNotSynced = offlineRouteAlerts.data?.filter(
     ({ syncStatus }) => syncStatus !== "synced",
