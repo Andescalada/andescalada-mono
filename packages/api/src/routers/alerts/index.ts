@@ -2,6 +2,7 @@ import { t } from "@andescalada/api/src/createRouter";
 import { deleteById } from "@andescalada/api/src/routers/alerts/delete";
 import { byId, list } from "@andescalada/api/src/routers/alerts/get";
 
+import { dismissRouteAlertById } from "./dismiss";
 import { upsertRouteAlert } from "./upsertRouteAlert";
 
 export const alertsRouter = t.router({
@@ -9,4 +10,5 @@ export const alertsRouter = t.router({
   byId: byId,
   list: list,
   deleteById: deleteById,
+  dismissRouteAlertById: dismissRouteAlertById,
 });

@@ -12,6 +12,7 @@ import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
 import useIsConnected from "@hooks/useIsConnected";
 import useOwnInfo from "@hooks/useOwnInfo";
+import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { LOCAL_DATABASE } from "@local-database/hooks/types";
 import useDeleteRouteAlertMutation from "@local-database/hooks/useDeleteRouteAlertMutation";
@@ -20,7 +21,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { FC } from "react";
 import { Alert } from "react-native";
-
 type Props = AlertsScreenProps<AlertsRoutes.RouteAlert>;
 
 const RouteAlertScreen: FC<Props> = ({
@@ -79,6 +79,8 @@ const RouteAlertScreen: FC<Props> = ({
   const queryClient = useQueryClient();
   const utils = trpc.useContext();
 
+  const { permission } = usePermissions({ zoneId });
+
   const deleteRouteAlert = (id: string) => {
     if (isSynced) {
       deleteRemote.mutate({ id });
@@ -106,6 +108,36 @@ const RouteAlertScreen: FC<Props> = ({
         onPress: () => {
           if (!data) return;
           deleteRouteAlert(data.id);
+          navigation.goBack();
+        },
+      },
+    ]);
+  };
+
+  const dismissAlert = trpc.alerts.dismissRouteAlertById.useMutation({
+    onSuccess: () => {
+      utils.alerts.invalidate();
+    },
+  });
+
+  const onDismiss = () => {
+    if (!isSynced) {
+      Alert.alert(
+        "No se puede desestimar",
+        "Vuelve a intentarlo cuando tengas conexión a internet",
+      );
+      return;
+    }
+    Alert.alert("¿Estás seguro?", "Esta acción no se puede deshacer", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Desestimar",
+        style: "destructive",
+        onPress: () => {
+          dismissAlert.mutate({ id: routeAlertId, zoneId });
           navigation.goBack();
         },
       },
@@ -147,16 +179,19 @@ const RouteAlertScreen: FC<Props> = ({
             />
           </>
         )}
-        <Button
-          variant="warningSimplified"
-          title="Desestimar"
-          titleVariant="p3R"
-          icon="remove-circle"
-          flexDirection="row-reverse"
-          gap="s"
-          iconProps={{ size: 20 }}
-          padding="s"
-        />
+        {permission.has("DismissRouteAlert") && (
+          <Button
+            variant="warningSimplified"
+            title="Desestimar"
+            titleVariant="p3R"
+            icon="remove-circle"
+            flexDirection="row-reverse"
+            gap="s"
+            iconProps={{ size: 20 }}
+            padding="s"
+            onPress={onDismiss}
+          />
+        )}
       </Box>
       <Text variant="h1">{data.title}</Text>
       <Box

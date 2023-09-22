@@ -79,6 +79,7 @@ export const includeInRoute = {
   RouteAlert: {
     where: {
       OR: [{ dueDate: null }, { dueDate: { gte: new Date() } }],
+      dismissedDate: null,
       isDeleted: SoftDelete.NotDeleted,
     },
     include: {

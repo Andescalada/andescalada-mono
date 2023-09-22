@@ -241,6 +241,7 @@ enum PermissionActions {
   EditZoneInfo
   MakeTopoVerification
   SetMainTopo
+  DismissRouteAlert
 }
 
 model ZoneAccessRequest {

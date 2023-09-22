@@ -15,7 +15,8 @@ export const list = protectedZoneProcedure
     const alerts = await ctx.prisma.routeAlert.findMany({
       where: {
         Route: { Wall: { Sector: { Zone: { id: input.zoneId } } } },
-        dismissedDate: undefined,
+        dismissedDate: null,
+        OR: [{ dueDate: null }, { dueDate: { gte: new Date() } }],
         isDeleted: SoftDelete.NotDeleted,
         severity: input.severity,
       },
