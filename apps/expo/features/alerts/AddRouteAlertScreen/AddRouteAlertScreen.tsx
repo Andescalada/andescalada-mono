@@ -168,13 +168,13 @@ const AddRouteAlertScreen: FC<Props> = ({
           onGoBack={navigation.goBack}
         />
         <ScrollView showsVerticalScrollIndicator={false} gap="m">
-          <SelectImage
+          {/* <SelectImage
             image={imageToDisplay}
             isLoading={loadingUpload}
             onPickImage={pickImageHandler}
             onDeletePickedImage={() => setImageToDisplay(null)}
             selectText={`Seleccionar imagen \n (Opcional)`}
-          />
+          /> */}
           <Box width="100%" flex={1} gap="m">
             <Box>
               <Text variant="p1R">Ruta</Text>
