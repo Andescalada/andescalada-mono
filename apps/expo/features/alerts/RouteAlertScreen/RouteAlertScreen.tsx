@@ -2,6 +2,7 @@ import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
 import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { Box, Button, Pressable, Screen, Text } from "@andescalada/ui";
+import { trpc } from "@andescalada/utils/trpc";
 import {
   AlertsRoutes,
   AlertsScreenProps,
@@ -12,7 +13,10 @@ import useGradeSystem from "@hooks/useGradeSystem";
 import useIsConnected from "@hooks/useIsConnected";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRootNavigation from "@hooks/useRootNavigation";
+import { LOCAL_DATABASE } from "@local-database/hooks/types";
+import useDeleteRouteAlertMutation from "@local-database/hooks/useDeleteRouteAlertMutation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { useQueryClient } from "@tanstack/react-query";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { FC } from "react";
 import { Alert } from "react-native";
@@ -34,6 +38,80 @@ const RouteAlertScreen: FC<Props> = ({
   const rootNavigation = useRootNavigation();
   const isConnected = useIsConnected();
 
+  const onEdit = () => {
+    if (!isConnected && isSynced) {
+      Alert.alert(
+        "No se puede editar",
+        "Vuelve a intentarlo cuando tengas conexión a internet",
+      );
+      return;
+    }
+    if (!data) return;
+    navigation.navigate(AlertsRoutes.AddRouteAlert, {
+      zoneId,
+      defaultValues: {
+        id: data.id,
+        kind: data.kind,
+        severity: data.severity,
+        description: data.description,
+        title: data.title,
+        dueDate: data.dueDate && data.dueDate?.valueOf(),
+        route: {
+          id: data.Route.id,
+          name: data.Route.name,
+          sectorName: data.Route.sectorName,
+        },
+      },
+    });
+  };
+
+  const deleteRemote = trpc.alerts.deleteById.useMutation({
+    onSuccess: () => {
+      utils.alerts.invalidate();
+    },
+  });
+  const deleteLocal = useDeleteRouteAlertMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries([LOCAL_DATABASE]);
+    },
+  });
+
+  const queryClient = useQueryClient();
+  const utils = trpc.useContext();
+
+  const deleteRouteAlert = (id: string) => {
+    if (isSynced) {
+      deleteRemote.mutate({ id });
+    } else {
+      deleteLocal.mutate({ id });
+    }
+  };
+
+  const onDelete = () => {
+    if (!isConnected && isSynced) {
+      Alert.alert(
+        "No se puede eliminar",
+        "Vuelve a intentarlo cuando tengas conexión a internet",
+      );
+      return;
+    }
+    Alert.alert("¿Estás seguro?", "Esta acción no se puede deshacer", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Eliminar",
+        style: "destructive",
+        onPress: () => {
+          if (!data) return;
+          deleteRouteAlert(data.id);
+          navigation.goBack();
+        },
+      },
+    ]);
+  };
+
   if (!data) return null;
   return (
     <Screen padding="m" safeAreaDisabled gap="s">
@@ -44,50 +122,39 @@ const RouteAlertScreen: FC<Props> = ({
         gap="s"
       >
         {ownInfo?.data?.id === data?.Author?.id && (
-          <Button
-            variant="infoSimplified"
-            title="Editar"
-            titleVariant="p3R"
-            icon="pencil-outline"
-            flexDirection="row-reverse"
-            gap="s"
-            iconProps={{ size: 16 }}
-            padding="s"
-            onPress={() => {
-              if (!isConnected && isSynced) {
-                Alert.alert(
-                  "No se puede editar",
-                  "Vuelve a intentarlo cuando tengas conexión a internet",
-                );
-                return;
-              }
-              navigation.navigate(AlertsRoutes.AddRouteAlert, {
-                zoneId,
-                defaultValues: {
-                  id: data.id,
-                  kind: data.kind,
-                  severity: data.severity,
-                  description: data.description,
-                  title: data.title,
-                  dueDate: data.dueDate && data.dueDate?.valueOf(),
-                  route: {
-                    id: data.Route.id,
-                    name: data.Route.name,
-                    sectorName: data.Route.sectorName,
-                  },
-                },
-              });
-            }}
-          />
+          <>
+            <Button
+              variant="infoSimplified"
+              title="Editar"
+              titleVariant="p3R"
+              icon="pencil-outline"
+              flexDirection="row-reverse"
+              gap="s"
+              iconProps={{ size: 16 }}
+              padding="s"
+              onPress={onEdit}
+            />
+            <Button
+              variant="errorSimplified"
+              title="Eliminar"
+              titleVariant="p3R"
+              icon="close-circle"
+              flexDirection="row-reverse"
+              gap="s"
+              iconProps={{ size: 20 }}
+              padding="s"
+              onPress={onDelete}
+            />
+          </>
         )}
         <Button
-          variant="errorSimplified"
+          variant="warningSimplified"
           title="Desestimar"
           titleVariant="p3R"
-          icon="remove-circle-outline"
+          icon="remove-circle"
           flexDirection="row-reverse"
           gap="s"
-          iconProps={{ size: 16 }}
+          iconProps={{ size: 20 }}
           padding="s"
         />
       </Box>
