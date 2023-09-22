@@ -1,5 +1,6 @@
 import { PrismaMutationChangesParams } from "@andescalada/api/src/routers/sync/types";
 import { Prisma, SoftDelete } from "@andescalada/db";
+import * as Sentry from "@sentry/nextjs";
 
 export const pushRouteAlert = ({
   ctx: { prisma, user },
@@ -99,11 +100,7 @@ export const pushRouteAlert = ({
     mutations.push(...updates);
   }
   if (deleted.length > 0) {
-    const deletes = prisma.routeAlert.updateMany({
-      where: { id: { in: deleted } },
-      data: { isDeleted: SoftDelete.DeletedDev },
-    });
-    mutations.push(deletes);
+    // TODO: delete route alert offline
   }
   return mutations;
 };
