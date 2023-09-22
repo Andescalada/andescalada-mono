@@ -107,7 +107,6 @@ const RouteAlertsListScreen: FC<Props> = ({
         icon="add-circle"
         iconProps={{ size: 24 }}
         padding="s"
-        marginHorizontal="m"
         gap="s"
         flexDirection="row-reverse"
         marginTop="s"

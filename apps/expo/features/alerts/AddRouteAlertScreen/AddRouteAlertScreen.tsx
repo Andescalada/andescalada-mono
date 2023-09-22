@@ -23,6 +23,7 @@ import {
   AlertsRoutes,
   AlertsScreenProps,
 } from "@features/alerts/Navigation/types";
+import { AddRouteAlertSchema } from "@features/alerts/schemas";
 import FindRouteInAZone from "@features/components/FindRouteInAZone";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
@@ -37,18 +38,6 @@ import { FC, useCallback, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 import { Alert } from "react-native";
 import DatePicker from "react-native-date-picker";
-import { z } from "zod";
-
-const schema = z.object({
-  title: z.string().min(1),
-  description: z.string().optional(),
-  kind: RouteAlertKindSchema,
-  severity: RouteAlertSeveritySchema,
-  dueDate: z.date().optional(),
-  route: z
-    .object({ id: z.string(), name: z.string(), sectorName: z.string() })
-    .optional(),
-});
 
 type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
 
@@ -59,7 +48,7 @@ const AddRouteAlertScreen: FC<Props> = ({
   },
 }) => {
   const form = useZodForm({
-    schema,
+    schema: AddRouteAlertSchema,
     mode: "onChange",
     defaultValues: {
       ...defaultValues,
