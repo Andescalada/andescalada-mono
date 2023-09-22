@@ -12,6 +12,7 @@ import {
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import RoutePathConfig from "@features/routesManager/components/RoutePathConfig";
 import TopoViewer from "@features/routesManager/components/TopoViewer";
+import TopoViewerInstructions from "@features/routesManager/components/TopoViewerInstructions";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
@@ -36,6 +37,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
   const rootNavigation = useRootNavigation();
 
   const [showRoutes, setShowRoutes] = useState(true);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const { data } = useToposById({ topoId, zoneId });
 
@@ -53,6 +55,11 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
   if (data)
     return (
       <Screen>
+        <TopoViewerInstructions
+          timeout={5000}
+          show={showInstructions}
+          setShow={setShowInstructions}
+        />
         <TopoViewer
           data={data}
           routeId={routeId}
@@ -96,6 +103,8 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
             setShow={setShowConfig}
             showRoutes={showRoutes}
             setShowRoutes={setShowRoutes}
+            showInstructions={showInstructions}
+            setShowInstructions={setShowInstructions}
           />
         )}
         {selectedRoute && route && (
