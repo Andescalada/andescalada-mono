@@ -14,7 +14,7 @@ export const searchInAZone = protectedZoneProcedure
       where: { id: zoneId },
     });
 
-    if (ctx.permissions.has("Read") && zone.infoAccess !== "Public") {
+    if (!ctx.permissions.has("Read") && zone.infoAccess !== "Public") {
       throw new TRPCError(error.unauthorizedActionForZone(zoneId, "Read"));
     }
 
