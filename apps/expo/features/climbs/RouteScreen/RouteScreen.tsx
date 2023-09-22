@@ -224,9 +224,13 @@ const RouteContainer = ({
               screen: AlertsRoutes.AddRouteAlert,
               params: {
                 zoneId,
-                routeId,
-                routeName: route.name,
-                sectorName: route.Wall.Sector.name,
+                defaultValues: {
+                  route: {
+                    id: routeId,
+                    name: route.name,
+                    sectorName: route.Wall.Sector.name,
+                  },
+                },
               },
             })
           }

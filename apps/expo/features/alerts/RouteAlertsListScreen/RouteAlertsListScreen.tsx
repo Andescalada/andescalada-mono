@@ -23,7 +23,7 @@ const RouteAlertsListScreen: FC<Props> = ({
     params: { zoneId },
   },
 }) => {
-  const routeAlerts = trpc.zones.routeAlertList.useQuery({
+  const routeAlerts = trpc.alerts.list.useQuery({
     zoneId,
   });
 

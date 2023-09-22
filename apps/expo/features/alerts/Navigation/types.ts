@@ -1,7 +1,30 @@
 import { Route, Sector, Zone } from "@andescalada/db";
+import {
+  RouteAlertKindSchema,
+  RouteAlertSeveritySchema,
+} from "@andescalada/db/zod";
 import { RouteAlert } from "@local-database/model";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { z } from "zod";
+
+export const AddRouteSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1),
+  description: z.string().optional(),
+  kind: RouteAlertKindSchema,
+  severity: RouteAlertSeveritySchema,
+  dueDate: z.date().optional(),
+  route: z
+    .object({ id: z.string(), name: z.string(), sectorName: z.string() })
+    .optional(),
+});
+
+export const SerializableAddRouteSchema = AddRouteSchema.omit({
+  dueDate: true,
+}).extend({
+  dueDate: z.number().optional(),
+});
 
 export enum AlertsRoutes {
   AddRouteAlert = "Alert-AddRouteAlert",
@@ -12,9 +35,7 @@ export enum AlertsRoutes {
 export type AlertsNavigationParamList = {
   [AlertsRoutes.AddRouteAlert]: {
     zoneId: Zone["id"];
-    routeId?: Route["id"];
-    routeName?: Route["name"];
-    sectorName?: Sector["name"];
+    defaultValues?: Partial<z.infer<typeof SerializableAddRouteSchema>>;
   };
   [AlertsRoutes.RouteAlertsList]: {
     zoneId: Zone["id"];

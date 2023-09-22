@@ -1,105 +1,26 @@
 import routeAlertKind from "@andescalada/common-assets/routeAlertKind";
 import routeAlertSeverity from "@andescalada/common-assets/routeAlertSeverity";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
-import {
-  RouteAlertKindSchema,
-  RouteAlertSeveritySchema,
-} from "@andescalada/db/zod";
 import { Box, Button, Pressable, Screen, Text } from "@andescalada/ui";
-import { trpc } from "@andescalada/utils/trpc";
 import {
   AlertsRoutes,
   AlertsScreenProps,
 } from "@features/alerts/Navigation/types";
+import useRouteAlert from "@features/alerts/RouteAlertScreen/useRouteAlert";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import useGradeSystem from "@hooks/useGradeSystem";
+import useIsConnected from "@hooks/useIsConnected";
 import useOwnInfo from "@hooks/useOwnInfo";
 import useRootNavigation from "@hooks/useRootNavigation";
-import useGetRouteAlertQuery from "@local-database/hooks/useGetRouteAlertQuery";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { FC } from "react";
+import { Alert } from "react-native";
 
 type Props = AlertsScreenProps<AlertsRoutes.RouteAlert>;
 
-const useRouteAlert = ({
-  id,
-  zoneId,
-  isSynced,
-}: {
-  id: string;
-  zoneId: string;
-  isSynced?: boolean;
-}) => {
-  const localAlert = useGetRouteAlertQuery({ id });
-  const remoteAlert = trpc.zones.routeAlert.useQuery(
-    {
-      id,
-      zoneId,
-    },
-    { enabled: isSynced },
-  );
-
-  const userInfo = useOwnInfo();
-
-  if (!isSynced)
-    return {
-      ...localAlert,
-      data: localAlert.data
-        ? {
-            title: localAlert.data.title,
-            description: localAlert.data.description,
-            kind: RouteAlertKindSchema.parse(localAlert.data.kind),
-            severity: RouteAlertSeveritySchema.parse(localAlert.data.severity),
-            updatedAt: localAlert.data.updatedAt,
-            Route: null,
-            Author: userInfo?.data
-              ? {
-                  id: userInfo?.data?.id,
-                  username: userInfo?.data?.username,
-                  profilePhoto: userInfo?.data?.profilePhoto,
-                }
-              : null,
-          }
-        : null,
-    };
-
-  return {
-    ...remoteAlert,
-    data: remoteAlert.data
-      ? {
-          title: remoteAlert.data.title.originalText,
-          description: remoteAlert.data.description?.originalText,
-          kind: RouteAlertKindSchema.parse(remoteAlert.data.kind),
-          severity: RouteAlertSeveritySchema.parse(remoteAlert.data.severity),
-          updatedAt: remoteAlert.data.updatedAt,
-          Author: {
-            id: remoteAlert.data.Author.id,
-            username: remoteAlert.data.Author.username,
-            profilePhoto: remoteAlert.data.Author.profilePhoto,
-          },
-          Route: {
-            id: remoteAlert.data.Route.id,
-            name: remoteAlert.data.Route.name,
-            kind: remoteAlert.data.Route.kind,
-            Wall: {
-              Sector: {
-                name: remoteAlert.data.Route.Wall.Sector.name,
-              },
-            },
-            RouteGrade: remoteAlert.data.Route.RouteGrade
-              ? {
-                  grade: remoteAlert.data.Route.RouteGrade.grade,
-                  project: remoteAlert.data.Route.RouteGrade.project,
-                }
-              : null,
-          },
-        }
-      : null,
-  };
-};
-
 const RouteAlertScreen: FC<Props> = ({
+  navigation,
   route: {
     params: { routeAlertId, zoneId, isSynced },
   },
@@ -111,6 +32,7 @@ const RouteAlertScreen: FC<Props> = ({
   const ownInfo = useOwnInfo();
 
   const rootNavigation = useRootNavigation();
+  const isConnected = useIsConnected();
 
   if (!data) return null;
   return (
@@ -131,6 +53,31 @@ const RouteAlertScreen: FC<Props> = ({
             gap="s"
             iconProps={{ size: 16 }}
             padding="s"
+            onPress={() => {
+              if (!isConnected && isSynced) {
+                Alert.alert(
+                  "No se puede editar",
+                  "Vuelve a intentarlo cuando tengas conexión a internet",
+                );
+                return;
+              }
+              navigation.navigate(AlertsRoutes.AddRouteAlert, {
+                zoneId,
+                defaultValues: {
+                  id: data.id,
+                  kind: data.kind,
+                  severity: data.severity,
+                  description: data.description,
+                  title: data.title,
+                  dueDate: data.dueDate && data.dueDate?.valueOf(),
+                  route: {
+                    id: data.Route.id,
+                    name: data.Route.name,
+                    sectorName: data.Route.sectorName,
+                  },
+                },
+              });
+            }}
           />
         )}
         <Button
@@ -218,12 +165,9 @@ const RouteAlertScreen: FC<Props> = ({
               <Box>
                 <Text variant="p1R">{data.Route.name}</Text>
                 <Text>
-                  {routeKindLabel(data.Route.kind).long}
-
-                  <Text color="grayscale.500">
-                    {" - "}
-                    {data.Route.Wall.Sector.name}
-                  </Text>
+                  {data.Route.kind &&
+                    `${routeKindLabel(data.Route.kind).long} - `}
+                  <Text color="grayscale.500">{data.Route.sectorName}</Text>
                 </Text>
               </Box>
             </Box>

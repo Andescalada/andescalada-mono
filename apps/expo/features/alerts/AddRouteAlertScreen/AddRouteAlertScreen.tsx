@@ -11,6 +11,7 @@ import {
   ButtonGroup,
   Header,
   Ionicons,
+  LoadingModal,
   Pressable,
   Screen,
   ScrollView,
@@ -23,13 +24,14 @@ import {
   AlertsScreenProps,
 } from "@features/alerts/Navigation/types";
 import FindRouteInAZone from "@features/components/FindRouteInAZone";
-import SelectImage from "@features/components/SelectImage";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useIsConnected from "@hooks/useIsConnected";
 import useOwnInfo from "@hooks/useOwnInfo";
 import { onSuccessPick } from "@hooks/usePickImage";
+import { LOCAL_DATABASE } from "@local-database/hooks/types";
 import useSetOrCreateRouteAlertMutation from "@local-database/hooks/useSetOrCreateRouteAlertMutation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNotifications } from "@utils/notificated";
 import { FC, useCallback, useRef, useState } from "react";
 import { useController } from "react-hook-form";
@@ -53,10 +55,19 @@ type Props = AlertsScreenProps<AlertsRoutes.AddRouteAlert>;
 const AddRouteAlertScreen: FC<Props> = ({
   navigation,
   route: {
-    params: { routeId, zoneId, routeName, sectorName },
+    params: { zoneId, defaultValues },
   },
 }) => {
-  const form = useZodForm({ schema, mode: "onChange" });
+  const form = useZodForm({
+    schema,
+    mode: "onChange",
+    defaultValues: {
+      ...defaultValues,
+      dueDate: defaultValues?.dueDate
+        ? new Date(defaultValues?.dueDate)
+        : undefined,
+    },
+  });
   const [imageToDisplay, setImageToDisplay] = useState<string | null>(null);
   const [loadingUpload, setLoadingUpload] = useState(false);
   const {
@@ -64,7 +75,6 @@ const AddRouteAlertScreen: FC<Props> = ({
   } = useController({
     control: form.control,
     name: "dueDate",
-    defaultValue: new Date(),
   });
 
   const title = useController({ control: form.control, name: "title" });
@@ -82,11 +92,6 @@ const AddRouteAlertScreen: FC<Props> = ({
   const routeController = useController({
     control: form.control,
     name: "route",
-    ...(routeId &&
-      routeName &&
-      sectorName && {
-        defaultValue: { id: routeId, name: routeName, sectorName: sectorName },
-      }),
   });
 
   const [withDueDate, setWithDueDate] = useState(false);
@@ -106,45 +111,69 @@ const AddRouteAlertScreen: FC<Props> = ({
 
   const user = useOwnInfo();
 
+  const utils = trpc.useContext();
+  const queryClient = useQueryClient();
+
   const submit = form.handleSubmit(
     async (values) => {
       if (!user?.data?.id || !values?.route?.id) return;
       if (isConnected) {
-        mutateRemote.mutate({
+        mutateRemote.mutate(
+          {
+            id: defaultValues?.id,
+            kind: values.kind,
+            severity: values.severity,
+            title: values.title,
+            description: values.description,
+            routeId: values.route.id,
+            dueDate: values.dueDate,
+            zoneId,
+          },
+          {
+            onSuccess: () => {
+              utils.alerts.invalidate();
+              notification.notify("success", {
+                params: {
+                  title: defaultValues?.id ? "Alerta editada" : "Alerta creada",
+                  description: defaultValues?.id
+                    ? "Alerta modificada con éxito"
+                    : "La alerta se creó correctamente",
+                },
+              });
+              navigation.goBack();
+            },
+          },
+        );
+
+        return;
+      }
+      mutateLocal.mutate(
+        {
+          id: defaultValues?.id,
+          userId: user?.data?.id,
+          zoneId,
           kind: values.kind,
           severity: values.severity,
           title: values.title,
           description: values.description,
           routeId: values.route.id,
           dueDate: values.dueDate,
-          zoneId,
-        });
-        notification.notify("success", {
-          params: {
-            title: "Alerta creada",
-            description: "La alerta se creó correctamente",
-          },
-        });
-        return;
-      }
-      mutateLocal.mutate({
-        userId: user?.data?.id,
-        zoneId,
-        kind: values.kind,
-        severity: values.severity,
-        title: values.title,
-        description: values.description,
-        routeId: values.route.id,
-        dueDate: values.dueDate,
-        routeName: values.route.name,
-        sectorName: values.route.sectorName,
-      });
-      notification.notify("success", {
-        params: {
-          title: "Alerta guardada",
-          description: "Cuando vuelvas a tener internet será compartida",
+          routeName: values.route.name,
+          sectorName: values.route.sectorName,
         },
-      });
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries([LOCAL_DATABASE]);
+            notification.notify("success", {
+              params: {
+                title: defaultValues?.id ? "Alerta editada" : "Alerta guardada",
+                description: "Cuando vuelvas a tener internet será compartida",
+              },
+            });
+            navigation.goBack();
+          },
+        },
+      );
     },
     () => {
       Alert.alert("Faltan campos requeridos");
@@ -161,6 +190,10 @@ const AddRouteAlertScreen: FC<Props> = ({
 
   return (
     <>
+      <LoadingModal
+        text="Guardando alerta"
+        isLoading={mutateLocal.isLoading || mutateRemote.isLoading}
+      />
       <Screen padding="m">
         <Header
           title="Agregar alerta"
@@ -180,7 +213,7 @@ const AddRouteAlertScreen: FC<Props> = ({
               <Text variant="p1R">Ruta</Text>
               <Pressable
                 borderRadius={4}
-                disabled={!!routeId}
+                disabled={!!defaultValues?.route?.id}
                 flex={1}
                 backgroundColor="filledTextInputVariantBackground"
                 height={40}
@@ -253,8 +286,8 @@ const AddRouteAlertScreen: FC<Props> = ({
                   overflow="hidden"
                 >
                   <Text variant="p1R" color="grayscale.600" paddingLeft="xs">
-                    {withDueDate
-                      ? date?.toLocaleDateString("es-CL", {})
+                    {date
+                      ? date.toLocaleDateString("es-CL", {})
                       : "Seleccionar"}
                   </Text>
                 </Pressable>
@@ -332,7 +365,7 @@ const AddRouteAlertScreen: FC<Props> = ({
           cancelText="Cancelar"
           open={open}
           minimumDate={new Date()}
-          date={date!}
+          date={date ?? new Date()}
           onConfirm={(date) => {
             setOpen(false);
             setWithDueDate(true);

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { SoftDelete } from ".prisma/client";
 
-export const routeAlertList = protectedZoneProcedure
+export const list = protectedZoneProcedure
   .input(
     z.object({
       take: z.number().optional(),
@@ -49,7 +49,7 @@ export const routeAlertList = protectedZoneProcedure
     return alerts;
   });
 
-export const routeAlert = protectedZoneProcedure
+export const byId = protectedZoneProcedure
   .input(z.object({ id: z.string() }))
   .query(async ({ ctx, input }) => {
     const alert = await ctx.prisma.routeAlert.findUnique({

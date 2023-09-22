@@ -59,7 +59,7 @@ const ZoneHeader = () => {
     zoneId,
   });
 
-  const routeAlerts = trpc.zones.routeAlertList.useQuery({
+  const routeAlerts = trpc.alerts.list.useQuery({
     zoneId,
     take: 3,
     severity: RouteAlertSeveritySchema.Enum.High,
