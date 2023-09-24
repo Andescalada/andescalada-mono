@@ -30,6 +30,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
       </Text>
       {permission?.has("EditZoneInfo") && (
         <ListItemOption
+          icon="information-circle"
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
               screen: ZoneManagerRoutes.EditZone,
@@ -45,8 +46,24 @@ const AdminZoneOptionsScreen: FC<Props> = ({
           Editar información
         </ListItemOption>
       )}
+      {permission?.has("EditZoneInfo") && (
+        <ListItemOption
+          icon="image-outline"
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.Climbs, {
+              screen: ClimbsNavigationRoutes.ManageZoneCoverPhotoScreen,
+              params: {
+                zoneId,
+              },
+            })
+          }
+        >
+          Foto de portada
+        </ListItemOption>
+      )}
       {permission?.has("Create") && (
         <ListItemOption
+          icon="add-circle"
           onPress={() =>
             navigation.replace(ClimbsNavigationRoutes.AddSector, {
               zoneId,
@@ -58,6 +75,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
       )}
       {permission?.has("EditZoneAgreements") && (
         <ListItemOption
+          icon="document-text-outline"
           onPress={() =>
             navigation.navigate(ClimbsNavigationRoutes.ZoneAgreementsEditor, {
               zoneId,
@@ -70,6 +88,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
       )}
       {permission?.has("Update") && data?.description?.originalText && (
         <ListItemOption
+          icon="create-outline"
           onPress={() =>
             navigation.navigate(
               ClimbsNavigationRoutes.AddAndEditZoneDescription,
@@ -86,6 +105,7 @@ const AdminZoneOptionsScreen: FC<Props> = ({
       )}
       {permission?.has("EditZoneInfo") && data?.Location && (
         <ListItemOption
+          icon="location-outline"
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.ZoneManager, {
               screen: ZoneManagerRoutes.EditZoneLocation,

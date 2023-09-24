@@ -28,6 +28,7 @@ export enum ClimbsNavigationRoutes {
   VerifyInformation = "Climbs-VerifyInformation",
   OtherTopos = "Climbs-OtherTopos",
   EditWallPositions = "Climbs-EditWallPosition",
+  ManageZoneCoverPhotoScreen = "Climbs-ManageZoneCoverPhotoScreen",
 }
 
 export type ClimbsNavigationNavigationParamList = {
@@ -128,6 +129,9 @@ export type ClimbsNavigationNavigationParamList = {
   };
   [ClimbsNavigationRoutes.EditWallPositions]: {
     sectorId: Sector["id"];
+    zoneId: Zone["id"];
+  };
+  [ClimbsNavigationRoutes.ManageZoneCoverPhotoScreen]: {
     zoneId: Zone["id"];
   };
 };

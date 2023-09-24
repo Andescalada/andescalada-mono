@@ -9,6 +9,7 @@ import AgreementsIntroScreen from "@features/climbs/AgreementsIntroScreen";
 import ClimbsHomeScreen from "@features/climbs/ClimbsHomeScreen";
 import EditRoutePositionScreen from "@features/climbs/EditRoutePositionScreen";
 import EditWallPositionsScreen from "@features/climbs/EditWallPositionsScreen";
+import ManageZoneCoverPhotoScreen from "@features/climbs/ManageZoneCoverPhotoScreen";
 import MultiPitchScreen from "@features/climbs/MultiPitchScreen";
 import { OtherToposScreen } from "@features/climbs/OtherToposScreen";
 import RouteOptionsScreen from "@features/climbs/RouteOptionsScreen";
@@ -162,6 +163,14 @@ const Navigator = () => {
         <Stack.Screen
           name={ClimbsNavigationRoutes.EditWallPositions}
           component={EditWallPositionsScreen}
+        />
+        <Stack.Screen
+          name={ClimbsNavigationRoutes.ManageZoneCoverPhotoScreen}
+          component={ManageZoneCoverPhotoScreen}
+          options={{
+            title: `Foto de portada`,
+            ...backHeader,
+          }}
         />
       </Stack.Navigator>
       <OfflineNotification />
