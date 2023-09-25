@@ -53,7 +53,7 @@ const DrawRoute: FC<Props> = ({
 
   const { fileUrl, isImageLoaded, fitted } = useGetTopoImage({
     imageData: data?.image,
-    imageQuality: constants.imageQuality,
+    imageQuality: constants.highImageQuality,
   });
 
   if (topos && isImageLoaded && !!extendedRouteStart) {

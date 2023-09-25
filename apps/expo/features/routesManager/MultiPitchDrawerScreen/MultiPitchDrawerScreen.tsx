@@ -62,7 +62,7 @@ const MultiPitchDrawerScreen: FC<Props> = ({
 
   const { fileUrl, isImageLoaded, fitted } = useGetTopoImage({
     imageData: data?.image,
-    imageQuality: constants.imageQuality,
+    imageQuality: constants.highImageQuality,
   });
 
   if (!!previousPitch && !previousPitch.isLoading && !previousPitchStart) {

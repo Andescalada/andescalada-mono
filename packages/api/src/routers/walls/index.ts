@@ -278,6 +278,51 @@ export const includeInWallById = {
       image: true,
       name: true,
       routeStrokeWidth: true,
+      RoutePath: {
+        where: {
+          Route: {
+            AND: [
+              { isDeleted: SoftDelete.NotDeleted },
+              {
+                OR: [
+                  {
+                    Pitch: {
+                      MultiPitch: {
+                        isDeleted: SoftDelete.NotDeleted,
+                      },
+                    },
+                  },
+
+                  { Pitch: null },
+                ],
+              },
+              {
+                OR: [
+                  {
+                    Pitch: { isDeleted: SoftDelete.NotDeleted },
+                  },
+                  { Pitch: null },
+                ],
+              },
+            ],
+          },
+        },
+        orderBy: { Route: { Pitch: { number: "desc" as const } } },
+        include: {
+          Route: {
+            select: {
+              id: true,
+              position: true,
+              extendedRouteId: true,
+              variantRouteId: true,
+              kind: true,
+              name: true,
+              RouteGrade: true,
+              Pitch: { select: { number: true } },
+            },
+          },
+        },
+      },
     },
   },
 };

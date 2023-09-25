@@ -98,7 +98,7 @@ const ZoneHeader = () => {
 
   const imageInServer = useCloudinaryUrl("optimizedImage", {
     publicId: data?.coverPhoto?.publicId,
-    quality: constants.imageQuality,
+    quality: constants.highImageQuality,
   });
 
   const { uri } = useCachedImage(imageInServer);

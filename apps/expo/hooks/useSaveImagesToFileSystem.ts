@@ -13,11 +13,15 @@ type ListToDownload = inferProcedureOutput<AppRouter["user"]["offlineAssets"]>;
 export const imageVariantsSavedOffline = (publicId: string) => {
   const mainImage = urlGen.optimizedImage({
     publicId,
-    quality: constants.imageQuality,
+    quality: constants.highImageQuality,
+  });
+  const lowImage = urlGen.optimizedImage({
+    publicId,
+    quality: constants.highImageQuality,
   });
   const thumbnailImage = urlGen.blurImage({ publicId });
 
-  return [thumbnailImage, mainImage];
+  return [thumbnailImage, mainImage, lowImage];
 };
 
 const downloadImage = async (publicId: string | null) => {

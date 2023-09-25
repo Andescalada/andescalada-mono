@@ -66,7 +66,7 @@ const TopoViewerScreen: FC<Props> = ({ route: navRoute, navigation }) => {
           strokeWidth={Number(data?.routeStrokeWidth)}
           hide={!showRoutes}
           onSelectedRoute={setSelectedRoute}
-          imageQuality={constants.imageQuality}
+          imageQuality={constants.highImageQuality}
         />
         <BackButton.Transparent
           onPress={() => navigation.pop()}
