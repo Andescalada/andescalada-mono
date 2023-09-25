@@ -36,8 +36,6 @@ const TopoViewerInstructions: FC<Props> = ({
   const [skip, setSkip] = useAtom(skipTopoInstructions);
   const [show, setShow] = useState(true);
 
-  console.log({ skip, forceShow, show });
-
   useEffect(() => {
     setTimeout(() => setShow(false), timeout);
   }, []);

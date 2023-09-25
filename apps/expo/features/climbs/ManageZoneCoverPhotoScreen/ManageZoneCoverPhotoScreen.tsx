@@ -49,21 +49,11 @@ const ManageZoneCoverPhotoScreen: FC<Props> = ({
     }
 
     setImageToDisplay(imageToUpload);
-
-    console.log({ aspectRatio, proportion });
-    console.log({
-      height: imageToUpload.asset.height,
-      width: imageToUpload.asset.width,
-    });
   }, []);
 
   const { uploadImage } = useCloudinaryImage();
 
   const utils = trpc.useContext();
-
-  const onSuccessMutation = () => {
-    utils.zones.invalidate();
-  };
 
   const notification = useNotifications();
 
