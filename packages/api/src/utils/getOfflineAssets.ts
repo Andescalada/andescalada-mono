@@ -9,13 +9,15 @@ import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure"
 import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 
-interface ImageToDownload {
-  id: string;
-  height: number;
-  width: number;
-  url: string;
-  publicId: string | null;
-}
+const imageSchema = z.object({
+  id: z.string(),
+  height: z.number(),
+  width: z.number(),
+  url: z.string(),
+  publicId: z.string().nullable(),
+});
+
+type ImageToDownload = z.infer<typeof imageSchema>;
 
 export enum AssetsToDownload {
   Routes = "routes.byIdWithEvaluation",
@@ -220,7 +222,7 @@ const getOfflineAssets = async ({
 
   const parsedTopos = toposResults
     .map((topo) => {
-      if (topo.image) imagesToDownload.push({ ...topo.image });
+      if (topo.image) imagesToDownload.push(imageSchema.parse(topo.image));
       return {
         router: "topos" as const,
         procedure: "byId" as const,
@@ -282,20 +284,25 @@ const getOfflineAssets = async ({
     });
 
   const parsedZone = zonesResults
-    .map((zone) => ({
-      router: "zones" as const,
-      procedure: "allSectors" as const,
-      params: { zoneId: zone.id },
-      assetId: `${AssetsToDownload.Zones}/${zone.id}` as const,
-      zoneId: zone.id,
-      data: {
-        ...zone,
-        hasAccess: true,
-        isDownloaded: zone.DownloadedBy.length > 0,
-        isFavorite: zone.FavoritedBy.length > 0,
-      },
-      version: zone.version,
-    }))
+    .map((zone) => {
+      if (zone.coverPhoto) {
+        imagesToDownload.push(imageSchema.parse(zone.coverPhoto));
+      }
+      return {
+        router: "zones" as const,
+        procedure: "allSectors" as const,
+        params: { zoneId: zone.id },
+        assetId: `${AssetsToDownload.Zones}/${zone.id}` as const,
+        zoneId: zone.id,
+        data: {
+          ...zone,
+          hasAccess: true,
+          isDownloaded: zone.DownloadedBy.length > 0,
+          isFavorite: zone.FavoritedBy.length > 0,
+        },
+        version: zone.version,
+      };
+    })
     .filter((item) => {
       const existingAsset = input.assetsToUpdate?.find(
         (asset) => asset.assetId === item.assetId,

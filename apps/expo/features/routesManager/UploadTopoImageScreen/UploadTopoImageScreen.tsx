@@ -1,26 +1,14 @@
-import {
-  A,
-  Box,
-  Button,
-  Header,
-  Image,
-  Ionicons,
-  Pressable,
-  Screen,
-  ScrollView,
-  Text,
-} from "@andescalada/ui";
+import { Box, Button, Header, Screen, ScrollView, Text } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import SelectImage from "@features/components/SelectImage";
 import {
   RoutesManagerNavigationRoutes,
   RoutesManagerScreenProps,
 } from "@features/routesManager/Navigation/types";
 import useCloudinaryImage from "@hooks/useCloudinaryImage";
-import usePickImage from "@hooks/usePickImage";
-import useViewImage from "@hooks/useViewImage";
+import { onSuccessPick } from "@hooks/usePickImage";
 import { FC, useState } from "react";
 import { Alert } from "react-native";
-import { StretchInY } from "react-native-reanimated";
 
 type Props =
   RoutesManagerScreenProps<RoutesManagerNavigationRoutes.UploadTopoImage>;
@@ -34,41 +22,30 @@ const AddTopoScreen: FC<Props> = ({
   const [imageToDisplay, setImageToDisplay] = useState<string | null>(null);
   const [loadingUpload, setLoadingUpload] = useState(false);
 
-  const [topoId, setTopoId] = useState<string | null>(null);
+  const [imageInServerId, setImageInServerId] = useState<string | null>(null);
 
   const utils = trpc.useContext();
 
-  const createTopo = trpc.topos.create.useMutation({
-    onSuccess: (data) => {
-      setTopoId(data.id);
-    },
-  });
+  const createTopo = trpc.topos.create.useMutation();
+
+  const saveImage = trpc.images.save.useMutation();
 
   const { uploadImage } = useCloudinaryImage();
 
-  const viewImage = useViewImage();
-
-  const { pickImage, selectedImage } = usePickImage({
-    allowsEditing: false,
-    onSuccess: async (imageToUpload) => {
-      setImageToDisplay(imageToUpload.localUri);
-      setLoadingUpload(true);
-      try {
-        const image = await uploadImage(imageToUpload.base64Img);
-        await createTopo.mutateAsync({
-          image,
-          wallId,
-          name: wallName,
-          zoneId,
-        });
-        await utils.photoContest.invalidate();
-        utils.topos.invalidate();
-      } catch (error) {
-        Alert.alert("No pudimos subir la foto", "Inténtalo de nuevo");
-      }
-      setLoadingUpload(false);
-    },
-  });
+  const onPickImage: onSuccessPick = async (imageToUpload) => {
+    setImageToDisplay(imageToUpload.localUri);
+    setLoadingUpload(true);
+    try {
+      const image = await uploadImage(imageToUpload.base64Img);
+      const savedImage = await saveImage.mutateAsync({
+        image,
+      });
+      setImageInServerId(savedImage.id);
+    } catch (error) {
+      Alert.alert("No pudimos subir la foto", "Inténtalo de nuevo");
+    }
+    setLoadingUpload(false);
+  };
 
   return (
     <Screen padding="m">
@@ -79,50 +56,11 @@ const AddTopoScreen: FC<Props> = ({
       />
       <ScrollView>
         <Box marginVertical="m">
-          <Pressable
-            height={250}
-            borderColor={imageToDisplay ? "transparent" : "semantic.info"}
-            borderWidth={2}
-            borderRadius={10}
-            borderStyle="dashed"
-            justifyContent="center"
-            alignItems="center"
-            overflow="hidden"
-            onPress={() => pickImage(selectedImage)}
-          >
-            {!imageToDisplay ? (
-              <Box justifyContent="center" alignItems={"center"}>
-                <Ionicons name="camera-outline" size={30} />
-                <Text marginTop="xs">Seleccionar</Text>
-              </Box>
-            ) : (
-              <Image
-                source={{ uri: imageToDisplay }}
-                height={250}
-                width="100%"
-              />
-            )}
-          </Pressable>
-          {selectedImage && (
-            <A.Box entering={StretchInY}>
-              <Button
-                title="Ver"
-                variant="infoSimplified"
-                titleVariant="p2R"
-                marginTop="s"
-                padding="s"
-                onPress={() =>
-                  viewImage({
-                    source: {
-                      uri: selectedImage.localUri,
-                      height: selectedImage.asset.height,
-                      width: selectedImage.asset.width,
-                    },
-                  })
-                }
-              />
-            </A.Box>
-          )}
+          <SelectImage
+            image={imageToDisplay}
+            onPickImage={onPickImage}
+            isLoading={loadingUpload}
+          />
         </Box>
         <Box>
           <Text variant="h1">Sube una imagen de la pared</Text>
@@ -136,16 +74,23 @@ const AddTopoScreen: FC<Props> = ({
         </Box>
       </ScrollView>
       <Button
-        disabled={loadingUpload || !topoId}
-        isLoading={loadingUpload}
+        disabled={createTopo.isLoading || !imageInServerId}
+        isLoading={createTopo.isLoading}
         title="Continuar"
-        variant={topoId ? "info" : "transparent"}
+        variant={imageInServerId ? "info" : "transparent"}
         padding="m"
         marginBottom="l"
-        onPress={() => {
-          if (!topoId) return;
+        onPress={async () => {
+          if (!imageInServerId) return;
+          const newTopo = await createTopo.mutateAsync({
+            imageId: imageInServerId,
+            wallId,
+            name: wallName,
+            zoneId,
+          });
+          utils.topos.invalidate();
           navigation.navigate(RoutesManagerNavigationRoutes.TopoManager, {
-            topoId,
+            topoId: newTopo.id,
             wallId,
             zoneId,
           });

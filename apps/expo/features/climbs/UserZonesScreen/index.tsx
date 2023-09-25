@@ -3,19 +3,18 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Image,
   Ionicons,
   Pressable,
   Screen,
   ScrollView,
   Text,
 } from "@andescalada/ui";
-import { urlGen } from "@andescalada/utils/cloudinary";
 import { trpc } from "@andescalada/utils/trpc";
 import {
   ClimbsNavigationNavigationProps,
   ClimbsNavigationRoutes,
 } from "@features/climbs/Navigation/types";
+import FeaturedZoneItem from "@features/climbs/UserZonesScreen/FeaturedZoneItem";
 import { ZoneCarouselModes } from "@features/climbs/UserZonesScreen/types";
 import UserZoneCarouselSwitch from "@features/climbs/UserZonesScreen/UserZoneCarouselSwitch";
 import ZoneCarouselSelector from "@features/climbs/UserZonesScreen/ZoneCarouselSelector";
@@ -31,27 +30,14 @@ import useSentryWithPermission from "@hooks/useSentryWithPermission";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation } from "@react-navigation/native";
 import emptyArray from "@utils/emptyArray";
-import { atom, useAtom } from "jotai";
+import { atomWithMMKV, Storage } from "@utils/mmkv/storage";
+import { useAtom } from "jotai";
 import { FlatList } from "react-native";
 
-const selectedZoneCarouselAtom = atom<ZoneCarouselModes>(
+const selectedZoneCarouselAtom = atomWithMMKV<ZoneCarouselModes>(
+  Storage.HOME_CAROUSEL,
   ZoneCarouselModes.favorites,
 );
-
-const coverPhoto = (zoneName: string) => {
-  if (zoneName === "Pared Burgos")
-    return urlGen.optimizedImage({
-      publicId: "andescalada.org/cover-pared-burgos_ipxuim",
-      quality: 50,
-    })?.url;
-  if (zoneName === "Muralla china")
-    return urlGen.optimizedImage({
-      publicId: "andescalada.org/cover-muralla-china_gkgzma",
-      quality: 50,
-    })?.url;
-
-  return "";
-};
 
 const UserZonesScreen = () => {
   const navigation =
@@ -175,32 +161,7 @@ const UserZonesScreen = () => {
           <FlatList
             horizontal
             data={featuredZones.data}
-            renderItem={({ item }) => (
-              <Pressable
-                onPress={() =>
-                  rootNavigation.navigate(RootNavigationRoutes.Climbs, {
-                    screen: ClimbsNavigationRoutes.Zone,
-                    params: { zoneId: item.id, zoneName: item.name },
-                  })
-                }
-                width={120}
-                height={150}
-                bg="grayscale.800"
-                marginHorizontal="xs"
-                borderRadius={16}
-                overflow="hidden"
-              >
-                <Image
-                  cachePolicy="memory"
-                  source={coverPhoto(item.name)}
-                  width={120}
-                  height={100}
-                />
-                <Box flex={1} justifyContent="center" margin="s">
-                  <Text variant="p3B">{item.name}</Text>
-                </Box>
-              </Pressable>
-            )}
+            renderItem={({ item }) => <FeaturedZoneItem item={item} />}
           />
         </Box>
         <Box>

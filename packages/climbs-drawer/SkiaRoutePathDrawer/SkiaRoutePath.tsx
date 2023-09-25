@@ -45,6 +45,8 @@ const SkiaRoutePath: FC<Props> = ({
     [scale, strokeWidthProp],
   );
 
+  if (points.current.length <= 1) return null;
+
   return (
     <Group>
       <Points

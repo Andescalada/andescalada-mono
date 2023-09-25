@@ -1,6 +1,11 @@
 import addDirection from "@andescalada/api/src/routers/zones/addDirection";
 import all from "@andescalada/api/src/routers/zones/all";
 import allSectors from "@andescalada/api/src/routers/zones/allSectors";
+import {
+  addCoverPhoto,
+  deleteCoverPhoto,
+  getCoverPhoto,
+} from "@andescalada/api/src/routers/zones/coverPhoto";
 import create from "@andescalada/api/src/routers/zones/create";
 import deleteDirection from "@andescalada/api/src/routers/zones/deleteDirection";
 import directionsById from "@andescalada/api/src/routers/zones/directionsById";
@@ -36,4 +41,7 @@ export const zonesRouter = t.router({
   deleteDirection,
   upsertDescription: upsertDescription,
   featured: featured,
+  getCoverPhoto: getCoverPhoto,
+  addCoverPhoto: addCoverPhoto,
+  deleteCoverPhoto: deleteCoverPhoto,
 });

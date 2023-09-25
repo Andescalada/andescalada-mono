@@ -6,11 +6,12 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "dev": "pscale connect andescalada preview --port 3309"
+    "dev": "pscale connect andescalada develop --port 3309"
   },
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10.2.4",
-    "@prisma/client": "4.16.2"
+    "@prisma/client": "5",
+    "prisma": "5"
   },
   "peerDependencies": {
     "zod": "*"

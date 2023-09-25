@@ -61,4 +61,6 @@ export const Icons = {
   "toilet": require( "./components-web/toilet").default,
   "united-color": require( "./components-web/united-color").default,
   "united": require( "./components-web/united").default,
+  "warning-color": require( "./components-web/warning-color").default,
+  "warning": require( "./components-web/warning").default,
 };

@@ -1,7 +1,7 @@
 import route from "@andescalada/api/schemas/route";
 import error from "@andescalada/api/src/utils/errors";
 import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { InfoAccess } from "@andescalada/db";
+import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 
 const byIdWithEvaluation = protectedZoneProcedure
@@ -76,6 +76,17 @@ export const includeInRoute = {
   description: true,
   RouteLength: true,
   RouteGrade: true,
+  RouteAlert: {
+    where: {
+      OR: [{ dueDate: null }, { dueDate: { gte: new Date() } }],
+      dismissedDate: null,
+      isDeleted: SoftDelete.NotDeleted,
+    },
+    include: {
+      title: { select: { originalText: true } },
+      description: { select: { originalText: true } },
+    },
+  },
   Wall: {
     select: {
       name: true,

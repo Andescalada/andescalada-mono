@@ -1,6 +1,8 @@
+import { Keys, LOCAL_DATABASE } from "@local-database/hooks/types";
 import { database } from "@local-database/index";
 import { Table } from "@local-database/model/schema";
 import { synchronize } from "@nozbe/watermelondb/sync";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import client from "@utils/trpc/client";
 
 const sync = async () => {
@@ -20,8 +22,29 @@ const sync = async () => {
         lastPulledAt: new Date(lastPulledAt),
       });
     },
-    // migrationsEnabledAtVersion: 1,
+    migrationsEnabledAtVersion: 1,
   });
+
+  return true;
+};
+
+export const useWatermelonSync = () => {
+  const queryClient = useQueryClient();
+
+  const sync = () => queryClient.invalidateQueries([LOCAL_DATABASE, Keys.Sync]);
+
+  return sync;
+};
+
+export const useWatermelon = () => {
+  const syncQuery = useQuery([LOCAL_DATABASE, Keys.Sync], sync, {
+    retry: 0,
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    networkMode: "online",
+  });
+
+  return syncQuery;
 };
 
 export default sync;

@@ -2,6 +2,10 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { RouteGrade } from "@andescalada/db";
 import {
+  RouteAlertKindSchema,
+  RouteAlertSeveritySchema,
+} from "@andescalada/db/zod";
+import {
   A,
   ActivityIndicator,
   Box,
@@ -17,6 +21,7 @@ import {
   TextInput,
 } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
+import { AlertsRoutes } from "@features/alerts/Navigation/types";
 import VotingGradePicker from "@features/climbs/components/VotingGradePicker";
 import {
   ClimbsNavigationNavigationProps,
@@ -24,6 +29,7 @@ import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
 } from "@features/climbs/Navigation/types";
+import RouteAlertCard from "@features/components/RouteAlertCard";
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useRoutesByIdWithEvaluation from "@hooks/offlineQueries/useRoutesByIdWithEvaluation";
 import { useAppTheme } from "@hooks/useAppTheme";
@@ -34,17 +40,19 @@ import useOwnInfo, { useGetOwnInfo } from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
+import useGetRouteAlertListQuery from "@local-database/hooks/useGetRouteAlertListQuery";
 import useGetRouteEvaluationQuery from "@local-database/hooks/useGetRouteEvaluationQuery";
 import useGetRouteGradeEvaluationQuery from "@local-database/hooks/useGetRouteGradeEvaluationQuery";
 import useSetOrCreateRouteEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteEvaluationMutation";
 import useSetOrCreateRouteGradeEvaluationMutation from "@local-database/hooks/useSetOrCreateRouteGradeEvaluationMutation";
-import sync from "@local-database/sync";
+import { RouteAlert } from "@local-database/model";
+import { useWatermelonSync } from "@local-database/sync";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import { isAndroid } from "@utils/platform";
 import React, { ComponentProps, FC, useRef, useState } from "react";
-import type { TextInput as TextInputRef } from "react-native";
+import { FlatList, TextInput as TextInputRef } from "react-native";
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -80,6 +88,8 @@ const RouteScreen: FC<Props> = ({
 
   const { data: localDbEvaluation } = useGetRouteEvaluationQuery({ routeId });
 
+  const { data: localAlerts } = useGetRouteAlertListQuery({ routeId });
+
   if (isLoading || !data)
     return (
       <Screen padding="m">
@@ -103,6 +113,7 @@ const RouteScreen: FC<Props> = ({
       />
       <RouteContainer
         refetch={refetch}
+        localAlerts={localAlerts}
         isFetching={isLoading}
         route={data}
         evaluationValue={
@@ -120,11 +131,13 @@ const RouteContainer = ({
   evaluationValue,
   refetch,
   isFetching,
+  localAlerts,
 }: {
   route: Route;
   evaluationValue: number;
   refetch: () => void;
   isFetching: boolean;
+  localAlerts: RouteAlert[] | undefined;
 }) => {
   const { routeId, zoneId } = useRouteScreenParams();
   const rootNavigation = useRootNavigation();
@@ -170,10 +183,9 @@ const RouteContainer = ({
           </Box>
         </Box>
       </Box>
-      <Box>
+      <Box flexDirection="row" gap="s" mb="s">
         <Pressable
           borderRadius={8}
-          maxWidth={"30%"}
           bg={
             !route.mainTopo
               ? "grayscale.transparent.50.500"
@@ -181,7 +193,7 @@ const RouteContainer = ({
           }
           justifyContent="center"
           alignItems="center"
-          py="s"
+          p="s"
           disabled={!route.mainTopo}
           onPress={() =>
             rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
@@ -201,6 +213,32 @@ const RouteContainer = ({
             {route.mainTopo?.id ? "Ver topo" : "Sin topo"}
           </Text>
         </Pressable>
+        <Pressable
+          borderRadius={8}
+          bg={"brand.secondaryB"}
+          justifyContent="center"
+          alignItems="center"
+          p="s"
+          onPress={() =>
+            rootNavigation.navigate(RootNavigationRoutes.Alert, {
+              screen: AlertsRoutes.AddRouteAlert,
+              params: {
+                zoneId,
+                defaultValues: {
+                  route: {
+                    id: routeId,
+                    name: route.name,
+                    sectorName: route.Wall.Sector.name,
+                  },
+                },
+              },
+            })
+          }
+        >
+          <Text variant="p3R" color={"grayscale.black"}>
+            Agregar alerta
+          </Text>
+        </Pressable>
       </Box>
       <Box>
         <RouteEvaluation
@@ -210,6 +248,9 @@ const RouteContainer = ({
         />
       </Box>
       <Box>
+        <RouteAlerts alerts={route.RouteAlert} localAlerts={localAlerts} />
+      </Box>
+      <Box>
         <RouteDescription
           description={route.description}
           zoneId={zoneId}
@@ -217,6 +258,62 @@ const RouteContainer = ({
         />
       </Box>
     </ScrollView>
+  );
+};
+
+const RouteAlerts = ({
+  alerts,
+  localAlerts,
+}: {
+  alerts: Route["RouteAlert"];
+  localAlerts: RouteAlert[] | undefined;
+}) => {
+  const { routeId, zoneId } = useRouteScreenParams();
+  if (!alerts.length) return null;
+  const sortedAlerts = alerts
+    .sort(
+      (a, b) =>
+        RouteAlertSeveritySchema.options.indexOf(b.severity) -
+        RouteAlertSeveritySchema.options.indexOf(a.severity),
+    )
+    .map((i) => ({ ...i, syncStatus: "synced" }));
+
+  const localUnSyncedAlerts =
+    localAlerts
+      ?.filter((a) => a.syncStatus !== "synced")
+      .map((a) => ({
+        id: a.id,
+        title: { originalText: a.title },
+        updatedAt: a.updatedAt,
+        kind: RouteAlertKindSchema.parse(a.kind),
+        severity: RouteAlertSeveritySchema.parse(a.severity),
+        syncStatus: "notSynced",
+      })) ?? [];
+
+  const data = [...localUnSyncedAlerts, ...sortedAlerts];
+  return (
+    <Box>
+      <Text variant="h4">Alertas</Text>
+      <FlatList
+        horizontal
+        data={data}
+        showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={() => <Box width={8} />}
+        renderItem={({ item }) => (
+          <RouteAlertCard
+            id={item.id}
+            title={item.title.originalText}
+            date={item.updatedAt}
+            routeId={routeId}
+            zoneId={zoneId}
+            kind={item.kind}
+            severity={item.severity}
+            maxWidth={300}
+            isNotSynced={item.syncStatus === "notSynced"}
+          />
+        )}
+      />
+    </Box>
   );
 };
 
@@ -311,6 +408,8 @@ const RouteEvaluation = ({
   const theme = useAppTheme();
 
   const isConnected = useIsConnected();
+
+  const sync = useWatermelonSync();
 
   const mutation = useSetOrCreateRouteEvaluationMutation({
     onSuccess() {
@@ -427,6 +526,8 @@ const RouteGradeVoteModal = ({
   const isConnected = useIsConnected();
 
   const utils = trpc.useContext();
+
+  const sync = useWatermelonSync();
 
   const { mutate } = useSetOrCreateRouteGradeEvaluationMutation({
     async onSuccess() {

@@ -279,34 +279,39 @@ const WallScreen: FC<Props> = ({ route, navigation }) => {
           )}
         </Box>
       )}
-      <TopoImage />
-      <Box
-        marginHorizontal="m"
-        marginTop="m"
-        gap="m"
-        flexDirection="row"
-        justifyContent="space-around"
-        alignItems="center"
-      >
-        <Button
-          variant="infoSimplified"
-          padding="s"
-          title="Mapa"
-          titleVariant="p2R"
-          flexDirection="row-reverse"
-          gap="s"
-          icon="map-outline"
-          iconProps={{ size: 22 }}
-          onPress={() => {
-            rootNavigation.navigate(RootNavigationRoutes.ZoneLocation, {
-              screen: ZoneLocationRoutes.ZoneMap,
-              params: { zoneId, sectorId },
-            });
-          }}
-        />
-        <OtherTopos />
-      </Box>
-      <RoutesList />
+      <RoutesList
+        ListHeaderComponent={() => (
+          <>
+            <TopoImage />
+            <Box
+              marginHorizontal="m"
+              marginTop="m"
+              gap="m"
+              flexDirection="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Button
+                variant="infoSimplified"
+                padding="s"
+                title="Mapa"
+                titleVariant="p2R"
+                flexDirection="row-reverse"
+                gap="s"
+                icon="map-outline"
+                iconProps={{ size: 22 }}
+                onPress={() => {
+                  rootNavigation.navigate(RootNavigationRoutes.ZoneLocation, {
+                    screen: ZoneLocationRoutes.ZoneMap,
+                    params: { zoneId, sectorId },
+                  });
+                }}
+              />
+              <OtherTopos />
+            </Box>
+          </>
+        )}
+      />
     </Screen>
   );
 };

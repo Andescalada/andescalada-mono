@@ -1,6 +1,6 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
-import { A, Box, ScrollView, Text, TextButton } from "@andescalada/ui";
+import { A, Box, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import RouteItem from "@features/climbs/components/RouteItem";
 import {
@@ -20,6 +20,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
 import {
+  ComponentProps,
   createRef,
   FC,
   RefObject,
@@ -27,6 +28,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useWindowDimensions } from "react-native";
 
 type Wall = inferProcedureOutput<AppRouter["walls"]["byId"]>;
 
@@ -38,7 +40,12 @@ type ParsedChildrenRoute = Wall["routes"][0]["Extension"][0] & {
   gradeStringify: string;
   routeRef: RefObject<ListItemRef>;
 };
-const RoutesList: FC = () => {
+
+interface Props {
+  ListHeaderComponent?: ComponentProps<typeof FlashList>["ListHeaderComponent"];
+}
+
+const RoutesList: FC<Props> = ({ ListHeaderComponent = null }) => {
   const route = useRoute<NavigationRoute>();
   const { zoneId, wallId } = route.params;
 
@@ -155,52 +162,43 @@ const RoutesList: FC = () => {
   const { data: user } = useOwnInfo();
   const { isOfflineMode } = useOfflineMode();
 
+  const screen = useWindowDimensions();
+
   if (isLoadingWall) return null;
-  if (!data?.routes || routesCount === 0)
-    return (
-      <ScrollView
-        refreshControl={refresh}
-        backgroundColor="background"
-        borderTopLeftRadius={10}
-        borderTopRightRadius={10}
-        contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 100,
-        }}
-      >
-        <Text variant="h3">Sin rutas</Text>
-        {permission.has("Create") && (
-          <TextButton
-            variant="info"
-            onPress={() => {
-              navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
-                zoneId,
-                wallId,
-              });
-            }}
-          >
-            Agregar ruta
-          </TextButton>
-        )}
-      </ScrollView>
-    );
 
   return (
-    <Box
-      flex={1}
-      paddingHorizontal="m"
-      paddingTop="m"
-      borderTopLeftRadius={10}
-      borderTopRightRadius={10}
-      backgroundColor="background"
-    >
+    <Box flex={1}>
       <FlashList
         refreshControl={refresh}
         onScrollBeginDrag={reset}
         showsVerticalScrollIndicator={false}
         estimatedItemSize={100}
         data={data?.routes}
+        ListHeaderComponent={ListHeaderComponent}
+        ListEmptyComponent={() => (
+          <Box
+            width={screen.width}
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
+            marginTop="xl"
+          >
+            <Text variant="h3">Sin rutas</Text>
+            {permission.has("Create") && (
+              <TextButton
+                variant="info"
+                onPress={() => {
+                  navigation.navigate(ClimbsNavigationRoutes.AddRoute, {
+                    zoneId,
+                    wallId,
+                  });
+                }}
+              >
+                Agregar ruta
+              </TextButton>
+            )}
+          </Box>
+        )}
         renderItem={({ item, index }) => {
           const maxIndex = item.ChildrenRoutes.length - 1;
           return (
@@ -209,6 +207,7 @@ const RoutesList: FC = () => {
               marginBottom={index === routesCount - 1 ? "xl" : "none"}
               flex={1}
               marginVertical="s"
+              paddingHorizontal="m"
             >
               <RouteItem
                 title={item.name}

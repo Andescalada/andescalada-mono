@@ -1,4 +1,5 @@
 import { t } from "@andescalada/api/src/createRouter";
+import { pushRouteAlert } from "@andescalada/api/src/routers/sync/pushRouteAlert";
 import { pushRouteEvaluation } from "@andescalada/api/src/routers/sync/pushRouteEvaluation";
 import { pushRouteGradeEvaluation } from "@andescalada/api/src/routers/sync/pushRouteGradeEvaluation";
 import { pushUser } from "@andescalada/api/src/routers/sync/pushUser";
@@ -78,6 +79,13 @@ export const syncRouter = t.router({
 
       Object.entries(changes).forEach(async ([t, changes]) => {
         const table = t as Table;
+        if (table === Table.ROUTE_ALERT) {
+          const routeAlertMutations = pushRouteAlert({
+            ctx,
+            changes,
+          });
+          mutations.push(...routeAlertMutations);
+        }
         if (table === Table.ROUTE_EVALUATION) {
           const routeEvaluationMutations = pushRouteEvaluation({
             ctx,

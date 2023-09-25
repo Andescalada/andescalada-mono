@@ -21,6 +21,7 @@ interface Props {
   routes?: RoutePaths;
   x?: number;
   y?: number;
+  strokeWidth?: number;
 }
 
 const StaticRoutePath: React.FC<Props> = ({
@@ -29,7 +30,7 @@ const StaticRoutePath: React.FC<Props> = ({
   imageHeight,
   imageWidth,
   routes,
-
+  strokeWidth = 1,
   x = 0,
   y = 0,
 }) => {
@@ -50,7 +51,7 @@ const StaticRoutePath: React.FC<Props> = ({
                 pitchLabelTitle={String(path.Route.Pitch?.number)}
                 scale={1}
                 selectedRoute={undefined}
-                strokeWidth={1}
+                strokeWidth={strokeWidth}
                 withSimpleStartPoint={!!path.Route.variantRouteId}
               />
             ))}

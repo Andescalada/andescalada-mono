@@ -7,6 +7,8 @@ interface Props {
   setShow: (show: boolean) => void;
   showRoutes: boolean;
   setShowRoutes: Dispatch<SetStateAction<boolean>>;
+  showInstructions: boolean;
+  setShowInstructions: Dispatch<SetStateAction<boolean>>;
 }
 
 const RoutePathConfig: FC<Props> = ({
@@ -14,6 +16,7 @@ const RoutePathConfig: FC<Props> = ({
   setShow,
   setShowRoutes,
   showRoutes,
+  setShowInstructions,
 }) => {
   if (show) {
     return (
@@ -41,6 +44,16 @@ const RoutePathConfig: FC<Props> = ({
               size={30}
               color="grayscale.black"
             />
+          </Pressable>
+        </Box>
+        <Box alignItems="center" justifyContent="center">
+          <Pressable
+            onPress={() => {
+              setShowInstructions(true);
+              setShow(false);
+            }}
+          >
+            <Ionicons name={"information"} size={30} color="grayscale.black" />
           </Pressable>
         </Box>
       </A.Box>

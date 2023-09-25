@@ -60,6 +60,17 @@ export const pallete = {
         black: "#12121280",
         trueBlack: "#00000080",
       },
+      "95": {
+        white: "#FFFFFFF2",
+        "100": "#F7F8FCF2",
+        "200": "#ECEFF1F2",
+        "300": "#D4D6D7F2",
+        "400": "#B0BEC5F2",
+        "500": "#A0B1B9F2",
+        "600": "#607D8BF2",
+        black: "#121212F2",
+        trueBlack: "#000000F2",
+      },
     },
   },
   semantic: {

@@ -2,7 +2,7 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
-import { ThemeProvider } from "@andescalada/ui";
+import { LoadingScreen, ThemeProvider } from "@andescalada/ui";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
@@ -49,7 +49,7 @@ const TopoViewer: FC<Props> = ({
     quality: imageQuality,
   });
 
-  const { fileUrl } = useCachedImage(image);
+  const { fileUrl, isLoading } = useCachedImage(image);
 
   const coords = useValue({ x: 0, y: 0 });
 
@@ -83,6 +83,8 @@ const TopoViewer: FC<Props> = ({
     setSelectedRoute(selectedRoute);
     onSelectedRoute?.(selectedRoute);
   });
+
+  if (isLoading) return <LoadingScreen />;
 
   return (
     <SkiaRouteCanvas

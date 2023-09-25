@@ -21,7 +21,6 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { inferProcedureOutput } from "@trpc/server";
 import emptyArray from "@utils/emptyArray";
-import featureFlags from "@utils/featureFlags";
 import parseGrade from "@utils/parseGrade";
 import { FC } from "react";
 import { Alert } from "react-native";
@@ -158,16 +157,11 @@ const EditOptionsScreen = ({
         Agregar variante
       </ListItemOption>
       <ListItemOption
-        visible={
-          permission.has("Create") &&
-          featureFlags.multiPitch &&
-          !data.Pitch &&
-          !isChildrenRoute
-        }
+        visible={permission.has("Create") && !data.Pitch && !isChildrenRoute}
         onPress={() =>
           Alert.alert(
             "Convertir a multi largo",
-            "¿Seguro que quieres convertir esta ruta en multilargo?, el cambio es irreversible",
+            "¿Seguro que quieres convertir esta ruta en multi largo?, el cambio es irreversible",
             [
               { text: "Cancelar", style: "cancel" },
               {

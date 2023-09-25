@@ -1,4 +1,4 @@
-import { PrismaClient, VerificationStatus } from "@andescalada/db";
+import { PrismaClient, SoftDelete, VerificationStatus } from "@andescalada/db";
 import { oldDb } from "@andescalada/old-db";
 
 import verification from "./current-verified";
@@ -7,7 +7,24 @@ const oldDbClient = new oldDb.PrismaClient();
 const db = new PrismaClient();
 
 const main = async () => {
-  verification();
+  const sectors = await db.sector.findMany({
+    include: { walls: { where: { isDeleted: SoftDelete.NotDeleted } } },
+  });
+  for (const sector of sectors) {
+    console.log(`-Sector: ${sector.name}`);
+    for (const [i, wall] of sector.walls.entries()) {
+      console.log(`---`, wall.name);
+      console.log("Previous position", wall.position);
+      console.log("New position", i);
+      const res = await db.wall.update({
+        where: { id: wall.id },
+        data: { position: i },
+      });
+      console.log("New position", res.position);
+    }
+  }
+
+  // console.log(JSON.stringify(sectors, null, 2));
 };
 
 main()
