@@ -55,7 +55,7 @@ const TopoImage: FC = () => {
 
   if (isLoadingWall || isLoadingImage)
     return (
-      <Box height={200}>
+      <Box height={Math.min(screenHeight * 0.5, fitted.height)}>
         <Box flex={1} justifyContent="center" alignItems="center">
           <ActivityIndicator size="large" />
         </Box>
