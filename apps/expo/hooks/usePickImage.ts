@@ -13,7 +13,7 @@ export type onSuccessPick = (selectedImage: {
   localUri: string;
   base64Img: string;
   asset: ImagePicker.ImagePickerAsset;
-}) => void;
+}) => Promise<void> | void;
 
 type Args = ImagePicker.ImagePickerOptions & {
   onDelete?: () => void;
@@ -45,12 +45,13 @@ const usePickImage = (args?: Args) => {
 
       const base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
-      if (args?.onSuccess)
-        args.onSuccess({
+      if (args?.onSuccess) {
+        await args.onSuccess({
           localUri: result.assets[0].uri,
           base64Img,
           asset: result.assets[0],
         });
+      }
 
       setSelectedImage({
         localUri: result.assets[0].uri,
@@ -79,12 +80,13 @@ const usePickImage = (args?: Args) => {
         const base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
         if (result.assets) {
-          if (args?.onSuccess)
-            args.onSuccess({
+          if (args?.onSuccess) {
+            await args.onSuccess({
               localUri: result.assets[0].uri,
               base64Img,
               asset: result.assets[0],
             });
+          }
 
           setSelectedImage({
             localUri: result.assets[0]?.uri,
