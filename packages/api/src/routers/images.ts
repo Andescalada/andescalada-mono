@@ -1,3 +1,4 @@
+import image from "@andescalada/api/schemas/image";
 import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
@@ -19,5 +20,19 @@ export const imagesRouter = t.router({
       );
 
       return { timestamp, signature };
+    }),
+  save: protectedProcedure
+    .input(z.object({ image: image.schema }))
+    .mutation(({ ctx, input }) => {
+      const { image } = input;
+
+      return ctx.prisma.image.create({
+        data: {
+          ...image,
+          User: {
+            connect: { id: ctx.user.id },
+          },
+        },
+      });
     }),
 });

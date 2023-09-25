@@ -4,9 +4,10 @@ import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZone
 import { slug } from "@andescalada/api/src/utils/slug";
 import { VerificationStatus } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const create = protectedZoneProcedure
-  .input(topo.schema)
+  .input(topo.schema.omit({ image: true }).extend({ imageId: z.string() }))
   .mutation(async ({ ctx, input }) => {
     if (!ctx.permissions.has("Create")) {
       throw new TRPCError(
@@ -28,7 +29,7 @@ export const create = protectedZoneProcedure
         slug: slug(input.name),
         Wall: { connect: { id: input.wallId } },
         image: {
-          create: input.image,
+          connect: { id: input.imageId },
         },
         Author: { connect: { id: ctx.user.id } },
         Verification: {
