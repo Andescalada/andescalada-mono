@@ -160,6 +160,7 @@ const UserZonesScreen = () => {
           </Text>
           <FlatList
             horizontal
+            showsHorizontalScrollIndicator={false}
             data={featuredZones.data}
             renderItem={({ item }) => <FeaturedZoneItem item={item} />}
           />
