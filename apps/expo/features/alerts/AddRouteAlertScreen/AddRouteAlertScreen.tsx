@@ -26,15 +26,13 @@ import {
 import { AddRouteAlertSchema } from "@features/alerts/schemas";
 import FindRouteInAZone from "@features/components/FindRouteInAZone";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
-import useCloudinaryImage from "@hooks/useCloudinaryImage";
 import useIsConnected from "@hooks/useIsConnected";
 import useOwnInfo from "@hooks/useOwnInfo";
-import { onSuccessPick } from "@hooks/usePickImage";
 import { LOCAL_DATABASE } from "@local-database/hooks/types";
 import useSetOrCreateRouteAlertMutation from "@local-database/hooks/useSetOrCreateRouteAlertMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNotifications } from "@utils/notificated";
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 import { Alert } from "react-native";
 import DatePicker from "react-native-date-picker";
@@ -57,8 +55,7 @@ const AddRouteAlertScreen: FC<Props> = ({
         : undefined,
     },
   });
-  const [imageToDisplay, setImageToDisplay] = useState<string | null>(null);
-  const [loadingUpload, setLoadingUpload] = useState(false);
+
   const {
     field: { value: date, onChange: setDate },
   } = useController({
@@ -83,10 +80,7 @@ const AddRouteAlertScreen: FC<Props> = ({
     name: "route",
   });
 
-  const [withDueDate, setWithDueDate] = useState(false);
   const [open, setOpen] = useState(false);
-
-  const { uploadImage } = useCloudinaryImage();
 
   const isConnected = useIsConnected();
 
@@ -105,7 +99,11 @@ const AddRouteAlertScreen: FC<Props> = ({
 
   const submit = form.handleSubmit(
     async (values) => {
-      if (!user?.data?.id || !values?.route?.id) return;
+      if (!values?.route?.id) {
+        Alert.alert("Debes seleccionar una ruta");
+        return;
+      }
+      if (!user?.data?.id) return;
       if (isConnected) {
         mutateRemote.mutate(
           {
@@ -168,14 +166,6 @@ const AddRouteAlertScreen: FC<Props> = ({
       Alert.alert("Faltan campos requeridos");
     },
   );
-
-  const pickImageHandler: onSuccessPick = useCallback(async (imageToUpload) => {
-    setLoadingUpload(true);
-    setImageToDisplay(imageToUpload.localUri);
-    setTimeout(() => {
-      setLoadingUpload(false);
-    }, 2000);
-  }, []);
 
   return (
     <>
@@ -280,12 +270,12 @@ const AddRouteAlertScreen: FC<Props> = ({
                       : "Seleccionar"}
                   </Text>
                 </Pressable>
-                {withDueDate && (
+                {date && (
                   <Pressable
                     padding="s"
                     justifyContent={"center"}
                     alignItems={"center"}
-                    onPress={() => setWithDueDate(false)}
+                    onPress={() => setDate(null)}
                   >
                     <Ionicons name="trash-outline" size={24} />
                   </Pressable>
@@ -357,7 +347,6 @@ const AddRouteAlertScreen: FC<Props> = ({
           date={date ?? new Date()}
           onConfirm={(date) => {
             setOpen(false);
-            setWithDueDate(true);
             setDate(date);
           }}
           onCancel={() => {
@@ -365,7 +354,11 @@ const AddRouteAlertScreen: FC<Props> = ({
           }}
         />
         <Button
-          variant={form.formState.isValid ? "info" : "transparent"}
+          variant={
+            form.formState.isValid && routeController?.field.value?.id
+              ? "info"
+              : "transparent"
+          }
           title="Enviar"
           padding="m"
           marginBottom="l"
