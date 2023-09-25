@@ -47,7 +47,7 @@ import zoneStatus from "@utils/zoneStatus";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMemo } from "react";
 import { FlatList, Share, useWindowDimensions } from "react-native";
-import { FadeIn, FadeOut } from "react-native-reanimated";
+import { FadeIn, FadeOut, SlideInLeft } from "react-native-reanimated";
 
 const ZoneHeader = () => {
   const {
@@ -362,7 +362,7 @@ const ZoneHeader = () => {
                 </Box>
               )}
             {routeAlerts?.data && routeAlerts?.data.length > 0 && (
-              <Box marginTop="m">
+              <A.Box marginTop="m" entering={SlideInLeft} exiting={FadeOut}>
                 <Box
                   flexDirection="row"
                   justifyContent="space-between"
@@ -416,7 +416,7 @@ const ZoneHeader = () => {
                     />
                   )}
                 />
-              </Box>
+              </A.Box>
             )}
             <ToolBar
               isDownloaded={isDownloaded}
