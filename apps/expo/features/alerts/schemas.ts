@@ -10,7 +10,7 @@ export const AddRouteAlertSchema = z.object({
   description: z.string().optional(),
   kind: RouteAlertKindSchema,
   severity: RouteAlertSeveritySchema,
-  dueDate: z.date().optional(),
+  dueDate: z.date().optional().nullable(),
   route: z
     .object({ id: z.string(), name: z.string(), sectorName: z.string() })
     .optional(),

@@ -34,7 +34,7 @@ export const pushRouteAlert = ({
           }),
           kind: c.kind,
           severity: c.severity,
-          dueDate: new Date(c.dueDate),
+          dueDate: c.dueDate ? new Date(c.dueDate) : null,
         },
         create: {
           id: c.id,
@@ -58,7 +58,7 @@ export const pushRouteAlert = ({
           }),
           kind: c.kind,
           severity: c.severity,
-          dueDate: new Date(c.dueDate),
+          dueDate: c.dueDate ? new Date(c.dueDate) : null,
         },
       });
       const updateRouteVersion = prisma.route.update({
@@ -89,7 +89,7 @@ export const pushRouteAlert = ({
         }),
         kind: c.kind,
         severity: c.severity,
-        dueDate: new Date(c.dueDate),
+        dueDate: c.dueDate ? new Date(c.dueDate) : null,
       };
 
       return prisma.routeAlert.update({
@@ -99,7 +99,7 @@ export const pushRouteAlert = ({
     });
     mutations.push(...updates);
   }
-  if (deleted.length > 0) {
+  if (deleted?.length > 0) {
     // TODO: delete route alert offline
   }
   return mutations;

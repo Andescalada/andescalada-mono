@@ -13,7 +13,7 @@ const schema = z.object({
   description: z.string().optional(),
   kind: RouteAlertKindSchema,
   severity: RouteAlertSeveritySchema,
-  dueDate: z.date().optional(),
+  dueDate: z.date().optional().nullable(),
   routeId: z.string(),
 });
 

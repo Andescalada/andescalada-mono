@@ -25,7 +25,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { UserLocation } from "@rnmapbox/maps";
 import Env from "@utils/env";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 
@@ -87,21 +87,34 @@ const ZoneMapScreen: FC<Props> = ({
   );
 
   const onPinSelected = useCallback(
-    ({ id }: { id: string }) => {
+    ({ id, disabled }: { id: string; disabled: boolean }) => {
+      if (disabled) return;
       const selectedSector = sectors?.find((sector) => sector.id === id);
       setSelectedPin((prev) => {
         if (prev?.id === id) return undefined;
         return selectedSector;
       });
+      return selectedSector;
     },
     [sectors],
   );
 
+  const camera = useRef<Mapbox.Camera>(null);
+
   useEffect(() => {
     if (sectorId) {
-      onPinSelected({ id: sectorId });
+      onPinSelected({ id: sectorId, disabled: false });
     }
-  }, [onPinSelected, sectorId]);
+  }, [onPinSelected, sectorId, camera]);
+
+  useEffect(() => {
+    if (!selectedPin) return;
+
+    camera.current?.moveTo([
+      Number(selectedPin.longitude),
+      Number(selectedPin.latitude),
+    ]);
+  }, [selectedPin]);
 
   if (isLoading)
     return (
@@ -110,7 +123,13 @@ const ZoneMapScreen: FC<Props> = ({
       </Screen>
     );
 
-  if (data?.name && (!data?.Location?.latitude || !data?.Location?.longitude))
+  if (
+    data?.name &&
+    (!data?.Location?.latitude || !data?.Location?.longitude) &&
+    camera &&
+    sectorId &&
+    selectedPin
+  )
     return (
       <Screen justifyContent="center" alignItems="center">
         <BackButton.Transparent onPress={navigation.goBack} />
@@ -153,14 +172,30 @@ const ZoneMapScreen: FC<Props> = ({
             showsUserHeadingIndicator={true}
           />
           <Mapbox.Camera
-            zoomLevel={14}
-            animationMode="none"
+            ref={camera}
+            zoomLevel={sectorId ? 18 : 14}
+            animationMode="flyTo"
+            triggerKey={selectedPin?.id}
+            centerCoordinate={
+              sectorId && selectedPin
+                ? [Number(selectedPin.longitude), Number(selectedPin.latitude)]
+                : [
+                    Number(data?.Location?.longitude),
+                    Number(data?.Location?.latitude),
+                  ]
+            }
             defaultSettings={{
               zoomLevel: 13,
-              centerCoordinate: [
-                Number(data?.Location?.longitude),
-                Number(data?.Location?.latitude),
-              ],
+              centerCoordinate:
+                sectorId && selectedPin
+                  ? [
+                      Number(selectedPin.longitude),
+                      Number(selectedPin.latitude),
+                    ]
+                  : [
+                      Number(data?.Location?.longitude),
+                      Number(data?.Location?.latitude),
+                    ],
             }}
           />
 
@@ -183,7 +218,9 @@ const ZoneMapScreen: FC<Props> = ({
               latitude={sector.latitude}
               longitude={sector.longitude}
               variant="orange"
-              onPinSelected={onPinSelected}
+              onPinSelected={({ id }) =>
+                onPinSelected({ id, disabled: !!sectorId })
+              }
             />
           ))}
         </Mapbox.MapView>

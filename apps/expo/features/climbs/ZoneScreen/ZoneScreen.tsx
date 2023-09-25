@@ -1,3 +1,4 @@
+import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
 import { Box, Header, Screen, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import {
@@ -54,6 +55,15 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     },
   );
 
+  const routeAlerts = trpc.alerts.list.useQuery(
+    {
+      zoneId,
+      take: 3,
+      severity: RouteAlertSeveritySchema.Enum.High,
+    },
+    { enabled: false },
+  );
+
   const {
     permission,
     getPermissions,
@@ -62,6 +72,7 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
 
   const refresh = useRefresh(() => {
     refetch();
+    routeAlerts.refetch();
     getPermissions();
     numberOfToposToVerify.refetch();
   }, (isFetching || isLoadingPermissions) && !isLoading);

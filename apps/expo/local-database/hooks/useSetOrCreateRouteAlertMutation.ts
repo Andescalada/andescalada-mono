@@ -17,7 +17,7 @@ const setOrCreateRouteEvaluation = async (input: {
   routeName: string;
   sectorName: string;
   description?: string;
-  dueDate?: Date;
+  dueDate?: Date | null;
   kind: typeof RouteAlertKindSchema._type;
   severity: typeof RouteAlertSeveritySchema._type;
 }) => {
@@ -34,7 +34,7 @@ const setOrCreateRouteEvaluation = async (input: {
           routeAlert.description = input.description?.toString();
           routeAlert.kind = input.kind.toString();
           routeAlert.severity = input.severity.toString();
-          routeAlert.dueDate = input.dueDate;
+          if (input.dueDate) routeAlert.dueDate = input.dueDate;
           routeAlert.routeId = input.routeId;
           routeAlert.zoneId = input.zoneId;
           routeAlert.userId = input.userId;
@@ -50,7 +50,7 @@ const setOrCreateRouteEvaluation = async (input: {
           routeAlert.description = input.description?.toString();
           routeAlert.kind = input.kind.toString();
           routeAlert.severity = input.severity.toString();
-          routeAlert.dueDate = input.dueDate;
+          if (input.dueDate) routeAlert.dueDate = input.dueDate;
           routeAlert.routeId = input.routeId;
           routeAlert.zoneId = input.zoneId;
           routeAlert.userId = input.userId;
