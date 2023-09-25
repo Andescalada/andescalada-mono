@@ -72,6 +72,7 @@ export const searchRouter = t.router({
             select: {
               id: true,
               name: true,
+              sectorKind: true,
               Zone: { select: { name: true, id: true } },
             },
           },
@@ -87,6 +88,7 @@ export const searchRouter = t.router({
             wallId: id,
             wallName: name,
             sectorId: result.Sector.id,
+            sectorKind: result.Sector.sectorKind,
             zoneId: result.Sector.Zone.id,
           },
           type: SearchType.Wall,
@@ -133,9 +135,8 @@ export const searchRouter = t.router({
           slug,
           detail: `${result.Wall.name}, ${result.Wall.Sector.name}, ${result.Wall.Sector.Zone.name}`,
           navigationParams: {
-            wallId: result.Wall.id,
-            wallName: result.Wall.name,
-            sectorId: result.Wall.Sector.id,
+            routeName: name,
+            routeId: id,
             zoneId: result.Wall.Sector.Zone.id,
           },
           type: SearchType.Route,
