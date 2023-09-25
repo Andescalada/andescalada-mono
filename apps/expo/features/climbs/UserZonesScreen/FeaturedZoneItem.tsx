@@ -36,7 +36,7 @@ const FeaturedZoneItem: FC<Props> = ({ item }) => {
       overflow="hidden"
     >
       <Image
-        cachePolicy="disk"
+        cachePolicy="memory-disk"
         source={imageInServer?.url}
         width={120}
         height={100}

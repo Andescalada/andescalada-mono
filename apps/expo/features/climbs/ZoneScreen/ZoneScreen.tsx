@@ -1,9 +1,5 @@
-import zone from "@andescalada/api/schemas/zone";
-import useZodForm from "@andescalada/hooks/useZodForm";
-import { Box, Screen, Text, TextButton } from "@andescalada/ui";
+import { Box, Header, Screen, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
-import Header from "@features/climbs/components/Header";
-import useHeaderOptionButton from "@features/climbs/components/HeaderOptionsButton/useHeaderOptions";
 import {
   ClimbsNavigationRoutes,
   ClimbsNavigationScreenProps,
@@ -13,16 +9,12 @@ import ZoneHeader from "@features/climbs/ZoneScreen/ZoneHeader";
 import ZoneItem from "@features/climbs/ZoneScreen/ZoneItem";
 import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import useOfflineMode from "@hooks/useOfflineMode";
-import useOptionsSheet from "@hooks/useOptionsSheet";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { useFocusEffect } from "@react-navigation/native";
 import constants from "@utils/constants";
 import { FC, useCallback } from "react";
-import { FormProvider } from "react-hook-form";
-import { Alert, FlatList } from "react-native";
-
-const { schema } = zone;
+import { FlatList } from "react-native";
 
 type Props = ClimbsNavigationScreenProps<ClimbsNavigationRoutes.Zone>;
 
@@ -62,35 +54,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     },
   );
 
-  const editZone = trpc.zones.edit.useMutation();
-  const methods = useZodForm({ schema: schema.pick({ name: true }) });
-
-  const onSubmit = methods.handleSubmit(
-    (input) => {
-      if (input.name !== zoneName)
-        editZone.mutate(
-          {
-            name: input.name,
-            zoneId,
-          },
-          {
-            onSuccess: () => {
-              utils.user.ownInfo.invalidate();
-            },
-          },
-        );
-      headerMethods.setEditing(false);
-    },
-    (error) => {
-      const errorMessage = error.name?.message || "Hubo un error";
-      Alert.alert(errorMessage);
-      methods.setValue("name", route.params.zoneName);
-      headerMethods.setEditing(false);
-    },
-  );
-
-  const headerMethods = useHeaderOptionButton({ onSave: onSubmit });
-
   const {
     permission,
     getPermissions,
@@ -103,20 +66,6 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     numberOfToposToVerify.refetch();
   }, (isFetching || isLoadingPermissions) && !isLoading);
 
-  const onOptions = useOptionsSheet({
-    "Editar zona": {
-      action: () =>
-        navigation.navigate(ClimbsNavigationRoutes.AdminZoneOptions, {
-          zoneId,
-          zoneName,
-        }),
-    },
-    "Cambiar Nombre": {
-      action: () => headerMethods.setEditing(true),
-      hide: !permission?.has("Update"),
-    },
-  });
-
   if (isPaused && !isOfflineMode)
     return (
       <Screen padding="m" justifyContent="center" alignItems="center">
@@ -125,19 +74,23 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
     );
 
   return (
-    <Screen padding="m">
-      <FormProvider {...methods}>
-        <Header
-          title={route.params.zoneName}
-          editingTitle={headerMethods.editing}
-          headerOptionsProps={{ ...headerMethods, onOptions: onOptions }}
-          onGoBack={() => {
-            navigation.reset({
-              routes: [{ name: ClimbsNavigationRoutes.Home }],
-            });
-          }}
-        />
-      </FormProvider>
+    <Screen>
+      <Header
+        padding="m"
+        title={data?.name ?? route.params.zoneName}
+        onOptions={() => {
+          navigation.navigate(ClimbsNavigationRoutes.AdminZoneOptions, {
+            zoneId,
+            zoneName,
+          });
+        }}
+        showOptions={permission?.has("Create")}
+        onGoBack={() => {
+          navigation.reset({
+            routes: [{ name: ClimbsNavigationRoutes.Home }],
+          });
+        }}
+      />
       <Box flex={1}>
         <SectorsGateway>
           <FlatList
@@ -167,7 +120,11 @@ const ZoneScreen: FC<Props> = ({ route, navigation }) => {
                 )}
               </Box>
             )}
-            renderItem={({ item }) => <ZoneItem item={item} />}
+            renderItem={({ item }) => (
+              <Box paddingHorizontal="m">
+                <ZoneItem item={item} />
+              </Box>
+            )}
           />
         </SectorsGateway>
       </Box>

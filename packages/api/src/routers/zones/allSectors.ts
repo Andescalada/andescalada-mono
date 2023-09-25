@@ -53,6 +53,7 @@ export const selectZoneAllSectors = ({
     searchVisibility: true,
     isDeleted: true,
     Location: true,
+    coverPhoto: true,
     sectors: {
       where: { isDeleted: SoftDelete.NotDeleted },
       include: {
