@@ -39,6 +39,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import { useNavigation, useRoute } from "@react-navigation/native";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { GlobalPermissions } from "@utils/auth0/types";
+import constants from "@utils/constants";
 import { createShareableLink } from "@utils/createSharableLink";
 import featureFlags from "@utils/featureFlags";
 import { isAndroid } from "@utils/platform";
@@ -97,10 +98,10 @@ const ZoneHeader = () => {
 
   const imageInServer = useCloudinaryUrl("optimizedImage", {
     publicId: data?.coverPhoto?.publicId,
-    quality: 60,
+    quality: constants.imageQuality,
   });
 
-  const { uri, isLoading } = useCachedImage(imageInServer);
+  const { uri } = useCachedImage(imageInServer);
 
   const screen = useWindowDimensions();
   const theme = useAppTheme();
@@ -121,15 +122,15 @@ const ZoneHeader = () => {
           onPress={() => {
             viewImage({
               source: {
-                uri: uri,
-                width: data.coverPhoto?.width,
+                ...uri,
                 height: data.coverPhoto?.height,
+                width: data.coverPhoto?.width,
               },
             });
           }}
         >
           <Image
-            source={imageInServer?.url}
+            source={uri}
             width={IMAGE_WIDTH}
             height={IMAGE_HEIGHT}
             cachePolicy="memory"
