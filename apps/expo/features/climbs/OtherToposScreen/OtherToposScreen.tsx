@@ -5,7 +5,9 @@ import {
   Button,
   Header,
   Image,
+  Ionicons,
   LoadingScreen,
+  Pressable,
   Screen,
   Text,
 } from "@andescalada/ui";
@@ -18,6 +20,7 @@ import StaticRoutePaths from "@features/routesManager/components/StaticRoutePath
 import { RoutesManagerNavigationRoutes } from "@features/routesManager/Navigation/types";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
+import useOwnInfo from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
@@ -25,7 +28,7 @@ import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/t
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";
 import { FC, useState } from "react";
-import { Pressable, useWindowDimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { FadeOut, StretchInY } from "react-native-reanimated";
 
@@ -97,6 +100,9 @@ const Item = ({
   chooseMainTopo: boolean;
 }) => {
   const utils = trpc.useContext();
+
+  const ownInfo = useOwnInfo();
+  const { permission } = usePermissions({ zoneId: item.Wall.Sector.Zone.id });
 
   const setMainTopo = trpc.topos.setMainTopo.useMutation({
     onMutate: async ({ wallId, zoneId, topoId }) => {
@@ -195,6 +201,7 @@ const Item = ({
         />
         <StaticRoutePaths
           routes={item.RoutePath}
+          strokeWidth={item.routeStrokeWidth.toNumber()}
           imageHeight={topoImage?.height}
           imageWidth={topoImage?.width}
           height={fitted.height}
@@ -211,6 +218,37 @@ const Item = ({
           >
             <Text>Topo principal</Text>
           </A.Box>
+        )}
+        {(permission.has("EditZoneInfo") ||
+          item.Author.id === ownInfo.data?.id) && (
+          <Box
+            position="absolute"
+            right={16}
+            top={16}
+            flexDirection="row"
+            gap="s"
+          >
+            <Pressable
+              bg="semantic.info"
+              width={40}
+              height={40}
+              borderRadius={20}
+              justifyContent="center"
+              alignItems="center"
+              onPress={() => {
+                rootNavigation.navigate(RootNavigationRoutes.RouteManager, {
+                  screen: RoutesManagerNavigationRoutes.TopoManager,
+                  params: {
+                    topoId: item.id,
+                    zoneId: item.Wall.Sector.Zone.id,
+                    wallId: item.Wall.id,
+                  },
+                });
+              }}
+            >
+              <Ionicons name="pencil-sharp" size={24} color="grayscale.white" />
+            </Pressable>
+          </Box>
         )}
       </Pressable>
       {chooseMainTopo && (

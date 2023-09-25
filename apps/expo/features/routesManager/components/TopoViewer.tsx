@@ -2,11 +2,21 @@ import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRouteCanvas, SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { pathToVector } from "@andescalada/climbs-drawer/usePathToPoints/usePathToPoints";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
-import { ThemeProvider } from "@andescalada/ui";
+import {
+  ActivityIndicator,
+  BackButton,
+  Screen,
+  ThemeProvider,
+} from "@andescalada/ui";
+import {
+  RoutesManagerNavigationProps,
+  RoutesManagerNavigationRoutes,
+} from "@features/routesManager/Navigation/types";
 import { useAppTheme } from "@hooks/useAppTheme";
 import useCachedImage from "@hooks/useCachedImage";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";
 import { useFitContent } from "@hooks/useFitContent";
+import { useNavigation } from "@react-navigation/native";
 import {
   useComputedValue,
   useValue,
@@ -49,7 +59,7 @@ const TopoViewer: FC<Props> = ({
     quality: imageQuality,
   });
 
-  const { fileUrl } = useCachedImage(image);
+  const { fileUrl, isLoading } = useCachedImage(image);
 
   const coords = useValue({ x: 0, y: 0 });
 
@@ -83,6 +93,22 @@ const TopoViewer: FC<Props> = ({
     setSelectedRoute(selectedRoute);
     onSelectedRoute?.(selectedRoute);
   });
+
+  const navigation =
+    useNavigation<
+      RoutesManagerNavigationProps<RoutesManagerNavigationRoutes.TopoViewer>
+    >();
+
+  if (isLoading)
+    return (
+      <Screen justifyContent="center" alignItems="center">
+        <BackButton.Transparent
+          onPress={() => navigation.pop()}
+          iconProps={{ color: "grayscale.black" }}
+        />
+        <ActivityIndicator size="large" />
+      </Screen>
+    );
 
   return (
     <SkiaRouteCanvas
