@@ -36,17 +36,18 @@ const StartPointer: FC<Props> = ({
     () => [{ translateX: c.current.x }, { translateY: c.current.y }],
     [c],
   );
-  if (font === null) {
-    return null;
-  }
-  const textWidth = font.getTextWidth(label);
+
+  const textX = useComputedValue(
+    () => (font ? -font.getTextWidth(label) / 2 : 0),
+    [font],
+  );
   if (simpleStart) {
     return <SimpleStartPointer color={color} c={c} scale={scale} />;
   }
   return (
     <Group transform={transform}>
       <Circle cx={0} cy={0} r={r} color={backgroundColor} />
-      <Text y={r / 2} x={-textWidth / 2} text={label} font={font} />
+      <Text y={r / 2} x={textX} text={label} font={font} />
       <Circle
         cx={0}
         cy={0}
