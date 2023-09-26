@@ -109,6 +109,7 @@ export const selectZoneAllSectors = ({
       select: { hasAgreed: true },
     },
     agreements: {
+      where: { isDeleted: SoftDelete.NotDeleted },
       include: {
         Agreement: {
           include: {
