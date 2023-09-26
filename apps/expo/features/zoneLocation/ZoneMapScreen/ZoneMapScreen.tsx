@@ -110,10 +110,10 @@ const ZoneMapScreen: FC<Props> = ({
   useEffect(() => {
     if (!selectedPin) return;
 
-    camera.current?.moveTo([
-      Number(selectedPin.longitude),
-      Number(selectedPin.latitude),
-    ]);
+    camera.current?.flyTo(
+      [Number(selectedPin.longitude), Number(selectedPin.latitude)],
+      500,
+    );
   }, [selectedPin]);
 
   if (isLoading)
