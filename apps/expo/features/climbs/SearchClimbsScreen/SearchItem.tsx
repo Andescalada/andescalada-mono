@@ -20,11 +20,12 @@ const SearchItem = ({ item }: { item: Data[0] }) => {
     [item.type],
   );
   return (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-
     <Pressable
       padding={"s"}
-      onPress={() => navigate(item.navigationParams as any)}
+      onPress={() =>
+        // @ts-expect-error unable to type this
+        navigate(item.navigationParams)
+      }
     >
       <Box
         marginBottom={"xs"}
@@ -90,8 +91,8 @@ const useSearchNavigation = (type: SearchType) => {
   switch (type) {
     case SearchType.Route:
       return (
-        params: ClimbsNavigationNavigationParamList[ClimbsNavigationRoutes.Wall],
-      ) => navigation.navigate(ClimbsNavigationRoutes.Wall, params);
+        params: ClimbsNavigationNavigationParamList[ClimbsNavigationRoutes.Route],
+      ) => navigation.navigate(ClimbsNavigationRoutes.Route, params);
     case SearchType.Zone:
       return (
         params: ClimbsNavigationNavigationParamList[ClimbsNavigationRoutes.Zone],
