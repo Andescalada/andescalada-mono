@@ -5,15 +5,17 @@ const selectRouteByPoint = (
   routes: SkiaValue<{ pathToVector: SkPoint[]; routeId: string }[]>,
   point: SkPoint,
 ) => {
+  const lastItemIndex = routes.current.length - 1;
+
   const selectClosestRoute = routes.current.reduce<{
     distances: { dx: number; dy: number };
     routeId: string | undefined;
   }>(
-    (prev, route) => {
+    (prev, route, index) => {
       const p = pointInRoute({
         path: route.pathToVector,
         point,
-        threshold: 1,
+        threshold: [0, lastItemIndex].includes(index) ? 1.6 : 1.5,
       });
       if (!p.isPointInRoute) {
         return prev;
