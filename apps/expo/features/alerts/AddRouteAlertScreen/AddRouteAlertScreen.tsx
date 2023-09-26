@@ -233,7 +233,10 @@ const AddRouteAlertScreen: FC<Props> = ({
             </Box>
             <Box>
               <Text variant="p1R">
-                Descripción <Text variant="caption">Opcional</Text>
+                Descripción{" "}
+                <Text variant="caption" lineHeight={26}>
+                  Opcional
+                </Text>
               </Text>
               <TextInput
                 value={description.field.value}
@@ -247,7 +250,10 @@ const AddRouteAlertScreen: FC<Props> = ({
             </Box>
             <Box>
               <Text variant="p1R">
-                Vigencia <Text variant="caption">Opcional</Text>
+                Vigencia{" "}
+                <Text variant="caption" lineHeight={26}>
+                  Opcional
+                </Text>
               </Text>
 
               <Box flexDirection="row">
