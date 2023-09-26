@@ -148,7 +148,7 @@ const SectorsGateway: FC<Props> = ({ children }) => {
         <ScrollView refreshControl={refresh}>
           <ZoneHeader />
           <Box flex={1} justifyContent={"flex-start"} marginTop="m">
-            <Box flex={1 / 2} justifyContent="center">
+            <Box flex={1 / 2} justifyContent="center" padding="m">
               <Text variant="h2" marginBottom="l">
                 Aceptar acuerdos
               </Text>
