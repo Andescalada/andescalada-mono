@@ -67,6 +67,7 @@ const ClassicAgreementContainer: FC<Props> = ({
   const zoneAgreementList = trpc.agreements.addToZoneList.useMutation({
     onSuccess: () => {
       utils.agreements.listByZone.invalidate({ zoneId });
+      utils.zones.allSectors.invalidate({ zoneId });
     },
   });
 

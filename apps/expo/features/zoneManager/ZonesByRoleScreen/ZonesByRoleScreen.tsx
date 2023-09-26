@@ -76,7 +76,8 @@ const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
               renderItem={({ item: zone, index }) => (
                 <Pressable
                   height={100}
-                  width={100}
+                  minWidth={100}
+                  maxWidth={150}
                   justifyContent="center"
                   borderColor={roleNameAssets[item.role].color}
                   borderWidth={3}
@@ -91,7 +92,9 @@ const ZonesByRoleScreen: FC<Props> = ({ navigation }) => {
                     })
                   }
                 >
-                  <Text variant="p2R">{zone.name}</Text>
+                  <Text variant="p2R" numberOfLines={2} ellipsizeMode="middle">
+                    {zone.name}
+                  </Text>
                 </Pressable>
               )}
             />

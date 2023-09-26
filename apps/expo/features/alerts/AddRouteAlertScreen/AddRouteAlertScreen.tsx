@@ -227,27 +227,33 @@ const AddRouteAlertScreen: FC<Props> = ({
                 value={title.field.value}
                 onChangeText={title.field.onChange}
                 onBlur={title.field.onBlur}
-                placeholder="Ej: Nido de zorzal"
+                placeholder="Ej: Nido de zorzal, roca suelta"
                 containerProps={{ height: 50, paddingLeft: "s" }}
               />
             </Box>
             <Box>
               <Text variant="p1R">
-                Descripción <Text variant="caption">Opcional</Text>
+                Descripción{" "}
+                <Text variant="caption" lineHeight={26}>
+                  Opcional
+                </Text>
               </Text>
               <TextInput
                 value={description.field.value}
                 onChangeText={description.field.onChange}
                 onBlur={description.field.onBlur}
                 multiline
-                placeholder={`Escribe una descripción de la alerta`}
+                placeholder={`Por ejemplo la posición de del nido o la roca suelta, el número de la chapa malas, etc`}
                 textAlignVertical="top"
                 containerProps={{ flex: 1, height: 200, padding: "s" }}
               />
             </Box>
             <Box>
               <Text variant="p1R">
-                Vigencia <Text variant="caption">Opcional</Text>
+                Vigencia{" "}
+                <Text variant="caption" lineHeight={26}>
+                  Opcional
+                </Text>
               </Text>
 
               <Box flexDirection="row">

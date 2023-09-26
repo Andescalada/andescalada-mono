@@ -42,7 +42,9 @@ const FeaturedZoneItem: FC<Props> = ({ item }) => {
         height={100}
       />
       <Box flex={1} justifyContent="center" margin="s">
-        <Text variant="p3B">{item.name}</Text>
+        <Text variant="p3B" numberOfLines={1} ellipsizeMode="tail">
+          {item.name}
+        </Text>
       </Box>
     </Pressable>
   );

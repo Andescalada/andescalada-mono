@@ -47,6 +47,7 @@ const EditAgreementScreen: FC<Props> = ({
   const edit = trpc.agreements.edit.useMutation({
     onSuccess: () => {
       utils.agreements.listByZone.invalidate({ zoneId });
+      utils.zones.allSectors.invalidate({ zoneId });
       navigation.goBack();
     },
   });

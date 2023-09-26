@@ -16,6 +16,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import useDebounce from "@hooks/useDebounce";
 import { inferProcedureOutput } from "@trpc/server";
+import { isAndroid } from "@utils/platform";
 import {
   ComponentProps,
   forwardRef,
@@ -55,7 +56,7 @@ const FindRouteInAZone: ForwardRefRenderFunction<BottomSheet, Props> = (
   { zoneId, onSetRoute },
   ref,
 ) => {
-  const snapPoints = useMemo(() => ["1%", "100%"], []);
+  const snapPoints = useMemo(() => ["1%", "95%"], []);
 
   const {
     data,
@@ -98,7 +99,7 @@ const FindRouteInAZone: ForwardRefRenderFunction<BottomSheet, Props> = (
   return (
     <BottomSheet
       ref={ref}
-      index={-1}
+      index={isAndroid ? 0 : -1}
       snapPoints={snapPoints}
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}

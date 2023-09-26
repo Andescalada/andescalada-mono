@@ -14,6 +14,7 @@ import AgreementLevelBadge from "@features/climbs/ZoneAgreementsEditorScreen/Agr
 import { ZoneAgreementsRoutes } from "@features/zoneAgreementManager/Navigation/types";
 import useZonesAllSectors from "@hooks/offlineQueries/useZonesAllSectors";
 import usePermissions from "@hooks/usePermissions";
+import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { ComponentProps, FC, useState } from "react";
@@ -35,7 +36,11 @@ const ZoneAgreementsScreen: FC<Props> = ({
   toggleDescriptions = false,
   ...props
 }) => {
-  const { data, isLoading } = useZonesAllSectors({ zoneId });
+  const { data, isLoading, refetch, isRefetching } = useZonesAllSectors({
+    zoneId,
+  });
+
+  const refresh = useRefresh(refetch, isRefetching);
 
   const { permission } = usePermissions({ zoneId });
   const [openDescription, setOpenDescription] = useState(!toggleDescriptions);
@@ -44,6 +49,7 @@ const ZoneAgreementsScreen: FC<Props> = ({
   return (
     <FlatList
       data={data.agreements}
+      refreshControl={refresh}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
       ListEmptyComponent={() => (
