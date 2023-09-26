@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   BackButton,
   Box,
+  Ionicons,
   MapTypeToolbar,
   Screen,
   Text,
@@ -27,6 +28,7 @@ import { UserLocation } from "@rnmapbox/maps";
 import Env from "@utils/env";
 import { isAndroid } from "@utils/platform";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FadeIn, FadeOut } from "react-native-reanimated";
 
 Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
 
@@ -233,7 +235,7 @@ const ZoneMapScreen: FC<Props> = ({
         {selectedPin && (
           <A.Pressable
             position="absolute"
-            backgroundColor={"grayscale.transparent.50.black"}
+            backgroundColor={"grayscale.transparent.95.black"}
             borderWidth={3}
             borderColor="listItemBackground"
             bottom="5%"
@@ -246,6 +248,8 @@ const ZoneMapScreen: FC<Props> = ({
             alignItems="center"
             justifyContent="space-between"
             flex={1}
+            entering={FadeIn}
+            exiting={FadeOut}
             onPress={() => {
               rootNavigation.navigate(RootNavigationRoutes.Climbs, {
                 screen: ClimbsNavigationRoutes.Sector,
@@ -267,6 +271,7 @@ const ZoneMapScreen: FC<Props> = ({
                 }`}
               </Text>
             </Box>
+            <Ionicons name="chevron-forward" size={30} color="grayscale.200" />
           </A.Pressable>
         )}
       </Screen>
