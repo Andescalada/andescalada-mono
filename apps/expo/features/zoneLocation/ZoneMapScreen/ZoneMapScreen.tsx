@@ -25,6 +25,7 @@ import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
 import { UserLocation } from "@rnmapbox/maps";
 import Env from "@utils/env";
+import { isAndroid } from "@utils/platform";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 Mapbox.setAccessToken(Env.MAPBOX_ACCESS_TOKEN);
@@ -165,7 +166,7 @@ const ZoneMapScreen: FC<Props> = ({
           scaleBarPosition={{ bottom: 8, left: 10 }}
           compassEnabled
           attributionEnabled={false}
-          compassPosition={{ top: 110, right: 16 }}
+          compassPosition={{ top: isAndroid ? 160 : 110, right: 16 }}
         >
           <UserLocation
             androidRenderMode={"gps"}
