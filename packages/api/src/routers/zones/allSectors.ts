@@ -64,7 +64,11 @@ export const selectZoneAllSectors = ({
           select: {
             name: true,
             id: true,
-            _count: true,
+            _count: {
+              select: {
+                routes: { where: { isDeleted: SoftDelete.NotDeleted } },
+              },
+            },
           },
           orderBy: { position: "asc" as const },
         },
