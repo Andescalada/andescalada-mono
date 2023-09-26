@@ -154,7 +154,7 @@ model RoleByZone {
   updatedAt    DateTime   @updatedAt
   User         User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId       String
-  Zone         Zone       @relation(fields: [zoneId], references: [id])
+  Zone         Zone       @relation(fields: [zoneId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   zoneId       String
   Role         Role       @relation(fields: [roleName], references: [name])
   roleName     RoleNames
