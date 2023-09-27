@@ -60,6 +60,7 @@ const ZoneOnboardingScreen: FC<Props> = ({
         data={data}
         initialNumToRender={1}
         horizontal
+        initialScrollIndex={0}
         snapToInterval={screenWidth}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) =>
