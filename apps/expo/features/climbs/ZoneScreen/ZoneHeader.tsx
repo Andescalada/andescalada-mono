@@ -1,5 +1,8 @@
 import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
-import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
+import {
+  RouteAlertSeveritySchema,
+  SearchVisibilitySchema,
+} from "@andescalada/db/zod";
 import {
   A,
   Box,
@@ -46,7 +49,7 @@ import { isAndroid } from "@utils/platform";
 import zoneStatus from "@utils/zoneStatus";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMemo } from "react";
-import { FlatList, Share, useWindowDimensions } from "react-native";
+import { Alert, FlatList, Share, useWindowDimensions } from "react-native";
 import { FadeIn, FadeOut, SlideInLeft } from "react-native-reanimated";
 
 const ZoneHeader = () => {
@@ -266,6 +269,23 @@ const ZoneHeader = () => {
                     {`Guía ${infoAccessAssets[data?.infoAccess]?.label}`}
                   </Text>
                 </Box>
+
+                {data?.searchVisibility ===
+                  SearchVisibilitySchema.enum.Unlisted && (
+                  <Pressable
+                    alignItems="center"
+                    justifyContent="center"
+                    marginHorizontal="s"
+                    onPress={() => {
+                      Alert.alert(
+                        "Zona Oculta",
+                        "Esta zona no aparecerá en las búsquedas de la app. Solo los miembros de la zona podrán verla o personas que tengan el link.",
+                      );
+                    }}
+                  >
+                    <Ionicons name="eye-off-outline" size={20} />
+                  </Pressable>
+                )}
 
                 {members.length === 0 && <Box marginLeft="s" />}
 
