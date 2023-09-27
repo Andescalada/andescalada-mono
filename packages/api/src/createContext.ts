@@ -10,7 +10,7 @@ const FALLBACK_LANGUAGE = "es";
 
 export const prisma = new PrismaClient({
   log:
-    process.env.NODE_ENV === "development"
+    process.env.NODE_ENV === "development" && !process.env.SILENT_LOG_QUERIES
       ? ["query", "error", "warn"]
       : ["error"],
 });
