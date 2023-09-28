@@ -8,6 +8,7 @@
     "db-up": "pscale connect andescalada develop --port 3309",
     "dev:nextjs": "turbo run dev --filter=@andescalada/nextjs",
     "dev:offline": "turbo run dev:offline --filter=!@andescalada/db",
+    "dev:silent": "SILENT_LOG_QUERIES=true yarn dev",
     "dev:expo": "turbo run dev --filter=expo-app",
     "build": "turbo run build",
     "lint": "turbo run lint",
