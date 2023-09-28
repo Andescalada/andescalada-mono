@@ -17,7 +17,6 @@ import useOwnInfo from "@hooks/useOwnInfo";
 import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
 import {
   ComponentProps,
@@ -28,7 +27,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useWindowDimensions } from "react-native";
+import { FlatList, useWindowDimensions } from "react-native";
 
 type Wall = inferProcedureOutput<AppRouter["walls"]["byId"]>;
 
@@ -42,7 +41,7 @@ type ParsedChildrenRoute = Wall["routes"][0]["Extension"][0] & {
 };
 
 interface Props {
-  ListHeaderComponent?: ComponentProps<typeof FlashList>["ListHeaderComponent"];
+  ListHeaderComponent?: ComponentProps<typeof FlatList>["ListHeaderComponent"];
 }
 
 const RoutesList: FC<Props> = ({ ListHeaderComponent = null }) => {
@@ -168,11 +167,10 @@ const RoutesList: FC<Props> = ({ ListHeaderComponent = null }) => {
 
   return (
     <Box flex={1}>
-      <FlashList
+      <FlatList
         refreshControl={refresh}
         onScrollBeginDrag={reset}
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={100}
         data={data?.routes}
         ListHeaderComponent={ListHeaderComponent}
         ListEmptyComponent={() => (
