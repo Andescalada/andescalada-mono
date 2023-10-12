@@ -1,4 +1,4 @@
-import { PrismaClient } from "@andescalada/db";
+import { planetScaleAdapter, PrismaClient } from "@andescalada/db";
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { Redis } from "@upstash/redis";
@@ -9,6 +9,7 @@ import verifyAndDecodeToken from "./utils/verifyAndDecodeToken";
 const FALLBACK_LANGUAGE = "es";
 
 export const prisma = new PrismaClient({
+  adapter: planetScaleAdapter,
   log:
     process.env.NODE_ENV === "development" && !process.env.SILENT_LOG_QUERIES
       ? ["query", "error", "warn"]

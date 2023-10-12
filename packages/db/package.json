@@ -9,18 +9,20 @@
     "dev": "pscale connect andescalada develop --port 3309"
   },
   "dependencies": {
-    "@mermaid-js/mermaid-cli": "^10.2.4",
-    "@prisma/client": "5",
-    "prisma": "5"
+    "@planetscale/database": "^1.11.0",
+    "@prisma/adapter-planetscale": "^5.4.2",
+    "@prisma/client": "^5.4.1",
+    "undici": "^5.26.3"
   },
   "peerDependencies": {
     "zod": "*"
   },
   "devDependencies": {
-    "@elevyg/prisma-zod-enums-generator": "^0.0.14",
+    "@elevyg/prisma-zod-enums-generator": "^0.0.15",
+    "@mermaid-js/mermaid-cli": "^10.5.0",
     "@quramy/prisma-fabbrica": "^1.1.0",
-    "prisma": "^4.16.2",
+    "prisma": "^5.4.1",
     "prisma-enum-generator": "^1.0.3",
-    "prisma-erd-generator": "^1.6.2"
+    "prisma-erd-generator": "^1.11.1"
   }
 }
