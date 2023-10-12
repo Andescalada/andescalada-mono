@@ -18,6 +18,7 @@ generator zod {
 generator erd {
   provider = "prisma-erd-generator"
   output   = "../ERD.pdf"
+  disabled = true
 }
 
 datasource db {
