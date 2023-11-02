@@ -6,7 +6,7 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "dev": "pscale connect andescalada develop --port 3309"
+    "dev-cli": "pscale connect andescalada develop --port 3309"
   },
   "dependencies": {
     "@planetscale/database": "^1.11.0",
