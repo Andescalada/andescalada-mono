@@ -122,7 +122,6 @@
     "react-native-star-rating-widget": "^1.7.1",
     "react-native-svg": "13.4.0",
     "react-native-tab-view": "^3.3.4",
-    "react-redux": "^8.0.2",
     "react-timing-hooks": "^2.2.3",
     "rn-vertical-slider": "^2.0.2",
     "sentry-expo": "~6.2.0",
