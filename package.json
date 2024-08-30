@@ -15,7 +15,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev": "turbo run dev",
     "clean": "find . -name node_modules -o -name .next -o -name .expo -type d -prune | xargs rm -rf",
-    "postinstall": "patch-package && prisma generate",
+    "postinstall": "patch-package && turbo run postinstall",
     "lint-and-fix": "eslint . --ext .ts,.tsx,.js,.jsx,.json --fix",
     "prettier-format": "prettier --config .prettierrc '**/*.{json,js,jsx,ts,tsx,css,scss,md}' --write",
     "db-reset": "npx prisma migrate reset --skip-seed --skip-generate -f",
@@ -23,21 +23,19 @@
     "db-seed": "npx prisma db seed",
     "db-clean-seed": "yarn db-reset && yarn db-push && yarn db-seed"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "apps/*"
-    ],
-    "nohoist": [
-      "**/@shopify/react-native-skia/**",
-      "**/@shopify/react-native-skia",
-      "**/@nozbe/watermelondb/**",
-      "**/@nozbe/watermelondb"
-    ]
-  },
-  "prisma": {
-    "schema": "packages/db/prisma/schema.prisma",
-    "seed": "ts-node packages/db/prisma/seed.ts"
+  "pnpm": {
+    "packageExtensions": {
+      "@shopify/react-native-skia": {
+        "peerDependencies": {
+          "react-native": "*"
+        }
+      },
+      "@nozbe/watermelondb": {
+        "peerDependencies": {
+          "react-native": "*"
+        }
+      }
+    }
   },
   "dependencies": {
     "@tanstack/react-query": "^4.3.9",

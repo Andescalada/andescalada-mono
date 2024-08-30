@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .ts,.js,.json"
   },
   "dependencies": {
-    "@andescalada/ui": "*",
-    "@andescalada/db": "*"
+    "@andescalada/ui": "workspace:*",
+    "@andescalada/db": "workspace:*"
   }
 }

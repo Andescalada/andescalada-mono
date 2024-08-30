@@ -19,3 +19,7 @@ coverage/
 apps/expo/.env
 
 db-backup/
+
+# pnpm
+pnpm-lock.yaml
+.pnpm-store/

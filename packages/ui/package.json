@@ -19,9 +19,9 @@
     "@shopify/react-native-skia": "0.1.195"
   },
   "peerDependencies": {
-    "@andescalada/icons": "*",
-    "@andescalada/ui": "*",
-    "@andescalada/utils": "*",
+    "@andescalada/icons": "workspace:*",
+    "@andescalada/ui": "workspace:*",
+    "@andescalada/utils": "workspace:*",
     "@shopify/react-native-skia": "0.1.195",
     "expo": "*",
     "react": "*",

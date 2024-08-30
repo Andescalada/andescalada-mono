@@ -9,9 +9,9 @@
     "run:watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
   },
   "dependencies": {
-    "@andescalada/db": "*",
-    "@andescalada/old-db": "*",
-    "@andescalada/api": "*",
-    "@andescalada/common-assets": "*"
+    "@andescalada/db": "workspace:*",
+    "@andescalada/old-db": "workspace:*",
+    "@andescalada/api": "workspace:*",
+    "@andescalada/common-assets": "workspace:*"
   }
 }

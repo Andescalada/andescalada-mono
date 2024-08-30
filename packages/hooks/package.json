@@ -11,6 +11,6 @@
     "react": "*",
     "react-router-dom": "*",
     "react-hook-form": "*",
-    "@hookform/resolvers/zod": "*"
+    "@hookform/resolvers": "*"
   }
 }

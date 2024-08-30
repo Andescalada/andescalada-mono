@@ -5,6 +5,10 @@
   "main": "index.ts",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate"
+  },
   "dependencies": {
     "@prisma/client": "^5.4.1"
   },

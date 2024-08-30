@@ -14,6 +14,9 @@
     "dev:offline": {
       "cache": false
     },
+    "postinstall": {
+      "cache": false
+    },
     "lint": {
       "outputs": []
     }

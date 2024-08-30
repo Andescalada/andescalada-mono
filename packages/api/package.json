@@ -10,8 +10,8 @@
     "lint": "eslint . --ext .ts,.js,.json"
   },
   "dependencies": {
-    "@andescalada/utils": "*",
-    "@andescalada/common-assets": "*",
+    "@andescalada/utils": "workspace:*",
+    "@andescalada/common-assets": "workspace:*",
     "@auth0/nextjs-auth0": "^1.9.1",
     "@upstash/redis": "^1.13.1",
     "accept-language": "^3.0.18",

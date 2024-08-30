@@ -6,7 +6,9 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "dev-cli": "pscale connect andescalada develop --port 3309"
+    "dev-cli": "pscale connect andescalada develop --port 3309",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate"
   },
   "dependencies": {
     "@planetscale/database": "^1.11.0",

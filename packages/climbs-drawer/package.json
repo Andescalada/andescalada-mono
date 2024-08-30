@@ -6,7 +6,7 @@
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json"
   },
   "dependencies": {
-    "@andescalada/ui": "*",
+    "@andescalada/ui": "workspace:*",
     "react-native": "0.71.6"
   },
   "peerDependencies": {
