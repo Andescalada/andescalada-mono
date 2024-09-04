@@ -1,11 +1,14 @@
 {
   "cli": {
     "version": ">= 3.14.0",
+    
     "requireCommit": false,
     "appVersionSource": "remote"
   },
   "build": {
     "base": {
+      "pnpm": "9.9.0",
+      "node": "20.16.0",
       "ios": {
         "resourceClass": "m-medium"
       }

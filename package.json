@@ -4,11 +4,12 @@
   "version": "0.0.1",
   "author": "elevyg",
   "license": "GNU AGPLv3 with Commons Clause",
+  "packageManager": "pnpm@9.9.0",
   "scripts": {
     "db-up": "pscale connect andescalada develop --port 3309",
     "dev:nextjs": "turbo run dev --filter=@andescalada/nextjs",
     "dev:offline": "turbo run dev:offline --filter=!@andescalada/db",
-    "dev:silent": "SILENT_LOG_QUERIES=true yarn dev",
+    "dev:silent": "SILENT_LOG_QUERIES=true pnpm run dev",
     "dev:expo": "turbo run dev --filter=expo-app",
     "build": "turbo run build",
     "lint": "turbo run lint",
@@ -21,7 +22,7 @@
     "db-reset": "npx prisma migrate reset --skip-seed --skip-generate -f",
     "db-push": "npx prisma db push",
     "db-seed": "npx prisma db seed",
-    "db-clean-seed": "yarn db-reset && yarn db-push && yarn db-seed"
+    "db-clean-seed": "pnpm run db-reset && pnpm run db-push && pnpm run db-seed"
   },
   "pnpm": {
     "packageExtensions": {
