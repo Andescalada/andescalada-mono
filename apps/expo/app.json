@@ -113,14 +113,13 @@
         "expo-build-properties",
         {
           "ios": {
-            "flipper": true
+            "flipper": false
           },
           "android": {
             "kotlinVersion": "1.6.10"
           }
         }
       ],
-      "react-native-flipper-performance-plugin",
       "sentry-expo",
       [
         "expo-notifications",

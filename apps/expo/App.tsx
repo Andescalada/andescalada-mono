@@ -13,7 +13,6 @@ import { StatusBar } from "expo-status-bar";
 import { connectToDevTools } from "react-devtools-core";
 import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { initializeMMKVFlipper } from "react-native-mmkv-flipper-plugin";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
 import * as Sentry from "sentry-expo";
@@ -23,7 +22,6 @@ if (__DEV__) {
     host: "localhost",
     port: 8097,
   });
-  initializeMMKVFlipper({ default: storage });
 }
 
 if (!__DEV__) {

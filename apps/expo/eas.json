@@ -15,7 +15,8 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "APP_VARIANT": "development"
+        "APP_VARIANT": "development",
+        "FLIPPER_DISABLE": "1"
       },
       "channel": "development"
     },
