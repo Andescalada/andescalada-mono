@@ -31,7 +31,7 @@ interface Props {
 
 const localHost =
   Constants.manifest2?.extra?.expoGo?.debuggerHost ||
-  Constants.manifest?.debuggerHost;
+  Constants.expoConfig?.extra?.expoGo?.debuggerHost;
 
 const url =
   process.env.APP_VARIANT === "development"

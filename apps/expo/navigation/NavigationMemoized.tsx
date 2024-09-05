@@ -48,7 +48,7 @@ const l = logger.createLogger(defaultConfig);
 const log = l.extend("nav");
 
 const NAVIGATION_STATE_KEY = `NAVIGATION_STATE_KEY-${
-  Constants.manifest && Constants.manifest.sdkVersion
+  Constants.expoConfig && Constants.expoConfig.sdkVersion
 }`;
 interface Props extends ComponentProps<typeof NavigationContainer> {
   children: React.ReactNode;
