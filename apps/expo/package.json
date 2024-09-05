@@ -76,7 +76,7 @@
     "dotenv": "^16.0.2",
     "expo": "^49.0.0",
     "expo-application": "~5.3.0",
-    "expo-auth-session": "~5.0.2",
+    "expo-auth-session": "^4.0.2",
     "expo-build-properties": "~0.8.3",
     "expo-constants": "~14.4.2",
     "expo-crypto": "~12.4.1",
