@@ -2,14 +2,10 @@
   "name": "@andescalada/maps",
   "version": "0.0.1",
   "description": "Map module with default provider",
-  "main": "index.ts",
+  "main": "mapbox/index.ts",
   "private": true,
   "scripts": {
     "lint": "eslint . --ext .tsx,.ts,.js,.json"
-  },
-  "devDependencies": {
-    "react": "*",
-    "react-native": "*"
   },
   "peerDependencies": {
     "react": "*",
