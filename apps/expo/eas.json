@@ -8,7 +8,8 @@
     "base": {
       "ios": {
         "resourceClass": "m-medium"
-      }
+      },
+      "channel": "base"
     },
     "development": {
       "extends": "base",
@@ -43,7 +44,8 @@
       "extends": "preview",
       "ios": {
         "simulator": true
-      }
+      },
+      "channel": "preview-simulator"
     },
     "production": {
       "extends": "base",
@@ -59,12 +61,14 @@
       "extends": "production",
       "ios": {
         "simulator": true
-      }
+      },
+      "channel": "production-simulator"
     },
     "production-local": {
       "autoIncrement": false,
       "distribution": "internal",
-      "extends": "production"
+      "extends": "production",
+      "channel": "production-local"
     }
   },
   "submit": {

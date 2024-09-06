@@ -1,6 +1,6 @@
+import * as Sentry from "@sentry/react-native";
 import { encodeBase64 } from "@utils/base64";
 import * as FileSystem from "expo-file-system";
-import * as Sentry from "sentry-expo";
 
 const IMAGE_DIR = "imageDir/";
 
@@ -51,7 +51,7 @@ const safeGetInfo = async (fileUri: string) => {
     const res = await FileSystem.getInfoAsync(fileUri);
     return res;
   } catch (err) {
-    Sentry.Native.captureException(err);
+    Sentry.captureException(err);
     return { exists: false };
   }
 };

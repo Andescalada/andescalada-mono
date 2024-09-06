@@ -1,8 +1,8 @@
 import type { Zone } from "@andescalada/db";
+import Mapbox from "@andescalada/maps";
 import { trpc } from "@andescalada/utils/trpc";
 import { downloadedAssetsListAtom, downloadedZonesAtom } from "@atoms/index";
 import useDeleteZoneSavedImages from "@hooks/useDeleteZoneSavedImages";
-import Mapbox from "@rnmapbox/maps";
 import { useNotifications } from "@utils/notificated";
 import offlineDb from "@utils/quick-sqlite";
 import { useAtom } from "jotai";

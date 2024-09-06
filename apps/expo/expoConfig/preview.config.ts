@@ -36,18 +36,13 @@ const previewConfig = (config: ConfigContext["config"]): ExpoConfig => {
         },
       },
     },
-    runtimeVersion: {
-      policy: "sdkVersion",
-    },
-    updates: {
-      url: "https://u.expo.dev/a034137d-75c2-4941-a3b0-003e7b6ff487",
-    },
     plugins: [
       ...configPlugin,
       [
         "@rnmapbox/maps",
         {
           RNMapboxMapsImpl: "mapbox",
+          RNMapboxMapsVersion: "10.17.0",
           RNMapboxMapsDownloadToken: process.env.MAPBOX_ACCESS_TOKEN_DEV,
         },
       ],

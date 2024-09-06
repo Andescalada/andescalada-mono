@@ -31,6 +31,8 @@
     "nohoist": [
       "**/@shopify/react-native-skia/**",
       "**/@shopify/react-native-skia",
+      "**/@rnmapbox/maps/**",
+      "**/@rnmapbox/maps",
       "**/@nozbe/watermelondb/**",
       "**/@nozbe/watermelondb"
     ]

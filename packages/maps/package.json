@@ -7,11 +7,12 @@
   "scripts": {
     "lint": "eslint . --ext .tsx,.ts,.js,.json"
   },
+  "dependencies": {
+    "@rnmapbox/maps": "10.1.29"
+  },
   "peerDependencies": {
     "react": "*",
+    "@rnmapbox/maps": ">=10.1.0",
     "react-native": "*"
-  },
-  "dependencies": {
-    "@rnmapbox/maps": "^10.0.9-rc.0"
   }
 }

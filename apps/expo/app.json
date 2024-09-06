@@ -9,12 +9,16 @@
     "icon": "./assets/expoConfig/icon_ae.png",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
     "splash": {
       "image": "./assets/expoConfig/ae_splash_white.png",
       "resizeMode": "contain",
       "backgroundColor": "#121212"
     },
     "updates": {
+      "url": "https://u.expo.dev/a034137d-75c2-4941-a3b0-003e7b6ff487",
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
@@ -97,7 +101,9 @@
     "plugins": [
       [
         "@morrowdigital/watermelondb-expo-plugin",
+        
         {
+          "disableJsi": true,
           "databases": ["userAssets.db"]
         }
       ],
@@ -113,14 +119,20 @@
         "expo-build-properties",
         {
           "ios": {
-            "flipper": false
+            "flipper": false,
+            "deploymentTarget": "13.4"
           },
           "android": {
-            "kotlinVersion": "1.6.10"
+            "kotlinVersion": "1.6.10",
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 23,
+            "buildToolsVersion": "34.0.0"
           }
         }
       ],
-      "sentry-expo",
+      "@sentry/react-native/expo",
+      "expo-font",
       [
         "expo-notifications",
         {
@@ -129,18 +141,8 @@
         }
       ]
     ],
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "setCommit": true,
-            "organization": "andescalada",
-            "project": "andescalada-app",
-            "authToken": false
-          }
-        }
-      ]
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }

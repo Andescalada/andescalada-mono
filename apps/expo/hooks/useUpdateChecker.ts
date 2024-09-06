@@ -4,22 +4,9 @@ import client from "@utils/trpc/client";
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
 import { useCallback, useEffect, useState } from "react";
-import * as Sentry from "sentry-expo";
 
 const useUpdateChecker = () => {
-  const [newSoftUpdate, setNewSoftUpdate] = useState(false);
-
-  const eventListener = (event: Updates.UpdateEvent) => {
-    if (event.type === Updates.UpdateEventType.ERROR) {
-      Sentry.Native.captureEvent(new Error(event.message));
-    } else if (event.type === Updates.UpdateEventType.NO_UPDATE_AVAILABLE) {
-      setNewSoftUpdate(false);
-    } else if (event.type === Updates.UpdateEventType.UPDATE_AVAILABLE) {
-      setNewSoftUpdate(true);
-    }
-  };
-
-  Updates.useUpdateEvents(eventListener);
+  const { isUpdateAvailable } = Updates.useUpdates();
 
   const [newBuildUpdate, setNewBuildUpdate] = useState(false);
 
@@ -40,7 +27,7 @@ const useUpdateChecker = () => {
     checkBuildVersion();
   }, [checkBuildVersion]);
 
-  return { newBuildUpdate, newSoftUpdate };
+  return { newBuildUpdate, newSoftUpdate: isUpdateAvailable };
 };
 
 export default useUpdateChecker;

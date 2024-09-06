@@ -1,6 +1,6 @@
 import { Location } from "@andescalada/db";
+import Mapbox from "@andescalada/maps";
 import geoViewport from "@mapbox/geo-viewport";
-import Mapbox from "@rnmapbox/maps";
 import Env from "@utils/env";
 import { Dimensions } from "react-native";
 import type { DefaultVariants } from "react-native-notificated/lib/typescript/defaultConfig/types";

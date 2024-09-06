@@ -5,12 +5,12 @@ import useUpdateChecker from "@hooks/useUpdateChecker";
 import RootNavigation from "@navigation/AppNavigation/RootNavigation";
 import useAutoLogin from "@navigation/AppNavigation/useAutoLogin";
 import useHideSplashScreen from "@navigation/AppNavigation/useHideSplashScreen";
+import * as Sentry from "@sentry/react-native";
 import goToAppStore from "@utils/goToAppStore";
 import TRPCProvider from "@utils/trpc/TRPCProvider";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import ErrorBoundary from "react-native-error-boundary";
-import * as Sentry from "sentry-expo";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,8 +19,7 @@ const Navigator = () => {
   useAutoLogin();
 
   const { newBuildUpdate, newSoftUpdate } = useUpdateChecker();
-  const captureException = (error: Error) =>
-    Sentry.Native.captureException(error);
+  const captureException = (error: Error) => Sentry.captureException(error);
 
   if (!fontsLoaded) {
     return <Screen backgroundColor="transitionScreen" />;
@@ -80,13 +79,15 @@ const Navigator = () => {
       onError={captureException}
       FallbackComponent={FallbackErrorScreen}
     >
-      {isAuth && accessToken ? (
-        <TRPCProvider accessToken={accessToken}>
-          <RootNavigation />
-        </TRPCProvider>
-      ) : (
-        <AuthNavigation />
-      )}
+      <>
+        {isAuth && accessToken ? (
+          <TRPCProvider accessToken={accessToken}>
+            <RootNavigation />
+          </TRPCProvider>
+        ) : (
+          <AuthNavigation />
+        )}
+      </>
     </ErrorBoundary>
   );
 };

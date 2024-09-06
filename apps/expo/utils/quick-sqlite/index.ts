@@ -1,10 +1,10 @@
 import {
-  open as openDb,
-  QuickSQLiteConnection,
-} from "react-native-quick-sqlite";
+  type SQLiteDatabase as QuickSQLiteConnection,
+  openDatabaseSync as openDb,
+} from "expo-sqlite";
 import { parse, stringify } from "superjson";
 
-const open = () => openDb({ name: "offlineAssets.db", location: "default" });
+const open = () => openDb("offlineAssets.db");
 
 const createZoneTable = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `CREATE TABLE IF NOT EXISTS '${zoneId}' (
@@ -13,7 +13,7 @@ const createZoneTable = async (db: QuickSQLiteConnection, zoneId: string) => {
         version INTEGER
     );`;
 
-  const res = await db.executeAsync(query);
+  const res = await db.runAsync(query);
 
   return res;
 };
@@ -27,12 +27,12 @@ const getAsync = async <Return>(
 
   let results;
   try {
-    const { rows } = await db.executeAsync(query);
-
-    const result = rows?._array[0] as {
+    const result = await db.getFirstAsync<{
       data: string;
       version: number;
-    };
+    }>(query);
+
+    if (!result) throw new Error("no result found in getAsync");
 
     const data = parse<Return>(result.data);
     const version = result.version;
@@ -54,12 +54,12 @@ const get = <Return>(
 
   let results;
   try {
-    const { rows } = db.execute(query);
-
-    const result = rows?._array[0] as {
+    const result = db.getFirstSync<{
       data: string;
       version: number;
-    };
+    }>(query);
+
+    if (!result) throw new Error("no result found in get");
 
     const data = parse<Return>(result.data);
     const version = result.version;
@@ -84,7 +84,7 @@ const setAsync = async (
 
     const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES (?,?,?)`;
 
-    await db.executeAsync(query, [`${assetId}`, `${serializedData}`, version]);
+    await db.runAsync(query, [`${assetId}`, `${serializedData}`, version]);
 
     return serializedData;
   } catch (err) {
@@ -103,7 +103,7 @@ const set = (
   try {
     const serializedData = stringify(data);
     const query = `INSERT OR REPLACE INTO '${zoneId}' (assetId, data, version) VALUES (?,?,?)`;
-    db.execute(query, [`${assetId}`, `${serializedData}`, version]);
+    db.runSync(query, [`${assetId}`, `${serializedData}`, version]);
     return serializedData;
   } catch {
     return undefined;
@@ -117,14 +117,14 @@ const deleteAsset = async (
 ) => {
   const query = `DELETE FROM ? WHERE assetId = ?`;
 
-  const res = await db.executeAsync(query, [`${zoneId}`, `${assetId}`]);
+  const res = await db.runAsync(query, [`${zoneId}`, `${assetId}`]);
 
   return res;
 };
 
 const deleteZone = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `DROP TABLE '${zoneId}';`;
-  const res = await db.executeAsync(query);
+  const res = await db.runAsync(query);
 
   return res;
 };
@@ -138,18 +138,20 @@ const allSavedZones = (db: QuickSQLiteConnection) => {
       type ='table' AND 
       name NOT LIKE 'sqlite_%';`;
 
-  const res = db.execute(query);
+  const res = db.getAllSync<string[]>(query);
 
-  return res.rows?._array as string[];
+  return res;
 };
 
 const allAssetsOfZone = async (db: QuickSQLiteConnection, zoneId: string) => {
   try {
     const query = `SELECT assetId, version FROM '${zoneId}'`;
 
-    const res = await db.executeAsync(query);
+    const res = await db.getAllAsync<{ assetId: string; version: number }[]>(
+      query,
+    );
 
-    return res.rows?._array as { assetId: string; version: number }[];
+    return res;
   } catch (err) {
     return [];
   }

@@ -1,12 +1,12 @@
 import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { urlGen } from "@andescalada/utils/cloudinary";
 import { downloadedImagesAtom } from "@atoms/index";
+import * as Sentry from "@sentry/react-native";
 import { inferProcedureOutput } from "@trpc/server";
 import constants from "@utils/constants";
 import fileSystem from "@utils/FileSystem";
 import { useAtom } from "jotai";
 import { useCallback } from "react";
-import * as Sentry from "sentry-expo";
 
 type ListToDownload = inferProcedureOutput<AppRouter["user"]["offlineAssets"]>;
 
@@ -30,7 +30,7 @@ const downloadImage = async (publicId: string | null) => {
   for (const variant of variantsToDownload) {
     const { uniqueId, url } = variant || {};
     if (!url || !uniqueId) {
-      Sentry.Native.captureMessage(
+      Sentry.captureMessage(
         `Image couldn't be downloaded url:${url} uniqueId:${uniqueId} por publicId:${publicId}`,
         "error",
       );

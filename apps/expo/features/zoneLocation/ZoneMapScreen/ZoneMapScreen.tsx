@@ -1,5 +1,5 @@
 import { isDefined } from "@andescalada/api/src/utils/filterGuards";
-import Mapbox from "@andescalada/maps/mapbox";
+import Mapbox, { UserLocation } from "@andescalada/maps";
 import {
   A,
   ActivityIndicator,
@@ -24,7 +24,6 @@ import useOfflineMode from "@hooks/useOfflineMode";
 import usePermissions from "@hooks/usePermissions";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
-import { UserLocation } from "@rnmapbox/maps";
 import Env from "@utils/env";
 import { isAndroid } from "@utils/platform";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
