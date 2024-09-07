@@ -11,7 +11,6 @@ import { trpc } from "@utils/trpc";
 import logger from "@utils/trpc/logger";
 import Constants from "expo-constants";
 import { FC, ReactNode, useState } from "react";
-import { addPlugin } from "react-query-native-devtools";
 
 export interface AccessToken {
   exp: number;
@@ -53,7 +52,7 @@ const TRPCProvider: FC<Props> = ({ accessToken, children }) => {
         },
       },
     });
-    if (__DEV__) addPlugin({ queryClient: client });
+
     return client;
   });
   const [trpcClient] = useState(() =>

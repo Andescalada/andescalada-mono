@@ -13,23 +13,6 @@ module.exports = function (api) {
           allowUndefined: true,
         },
       ],
-      [
-        "module-resolver",
-        {
-          root: ["."],
-          alias: {
-            "@navigation": "./navigation",
-            "@features": "./features",
-            "@assets": "./assets",
-            "@utils": "./utils",
-            "@store": "./store",
-            "@hooks": "./hooks",
-            "@templates": "./templates",
-            "@atoms": "./atoms",
-            "@local-database": "./local-database",
-          },
-        },
-      ],
       ["react-native-reanimated/plugin"],
     ],
   };

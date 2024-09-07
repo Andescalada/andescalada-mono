@@ -8,21 +8,12 @@ import NavigationMemoized from "@navigation/NavigationMemoized";
 import * as Sentry from "@sentry/react-native";
 import { Store } from "@store/index";
 import Env from "@utils/env";
-import storage from "@utils/mmkv/storage";
 import { NotificationsProvider } from "@utils/notificated";
 import { StatusBar } from "expo-status-bar";
-import { connectToDevTools } from "react-devtools-core";
 import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
-
-if (__DEV__) {
-  connectToDevTools({
-    host: "localhost",
-    port: 8097,
-  });
-}
 
 if (!__DEV__) {
   Sentry.init({

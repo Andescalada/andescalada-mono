@@ -2,31 +2,34 @@
   "name": "@andescalada/ui",
   "version": "1.0.0",
   "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
     "lint": "eslint . --ext .tsx,.ts,.js,.json"
   },
   "dependencies": {
     "@shopify/restyle": "^2.4.2",
-    "deepmerge": "^4.2.2"
+    "deepmerge": "^4.2.2",
+    "expo-image": "~1.12.15",
+    "react-native-country-picker-modal": "^2.0.0",
+    "react-native-phone-number-input": "^2.1.0"
   },
   "devDependencies": {
     "@shopify/react-native-skia": "0.1.195"
   },
   "peerDependencies": {
-    "expo-image": "*",
-    "@expo/vector-icons": "*",
-    "react-native": "*",
-    "react-native-gesture-handler": "*",
-    "react-native-phone-number-input": "*",
-    "react-native-safe-area-context": "*",
     "@andescalada/icons": "*",
     "@andescalada/ui": "*",
     "@andescalada/utils": "*",
+    "@expo/vector-icons": "*",
     "@shopify/react-native-skia": "0.1.195",
     "expo": "*",
     "react": "*",
     "react-hook-form": "*",
+    "react-native": "*",
+    "react-native-gesture-handler": "*",
     "react-native-reanimated": "2.17.0",
+    "react-native-safe-area-context": "*",
     "zod": "*"
   }
 }
