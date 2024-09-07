@@ -103,7 +103,7 @@ const EnterCodeScreen: FC<Props> = ({ route: { params }, navigation }) => {
         padding="m"
         paddingTop="xxxl"
       >
-        <AnimatedBackground />
+        {/* <AnimatedBackground /> */}
         <BackButton.Transparent
           onPress={navigation.goBack}
           iconProps={{ color: "grayscale.white" }}

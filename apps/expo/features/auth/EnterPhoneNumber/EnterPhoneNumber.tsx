@@ -89,7 +89,7 @@ const EnterPhoneNumber: FC<Props> = ({ navigation, route: { params } }) => {
 
   return (
     <Screen safeAreaDisabled minHeight={isAndroid ? windowHeight : undefined}>
-      <AnimatedBackground />
+      {/* <AnimatedBackground /> */}
       <KeyboardDismiss
         justifyContent="flex-start"
         alignItems="center"

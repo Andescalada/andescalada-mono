@@ -20,7 +20,7 @@ const LoginScreen = ({ navigation }: Props) => {
   };
   return (
     <Screen alignItems="center" justifyContent="center" safeAreaDisabled>
-      <AnimatedBackground withLogo />
+      {/* <AnimatedBackground withLogo /> */}
       <A.Box
         entering={FadeIn.duration(500).delay(DURATION + 500)}
         justifyContent="flex-end"
