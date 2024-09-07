@@ -57,17 +57,9 @@ const config = {
       },
     ];
   },
-  experimental: {
-    swcPlugins: [
-      [
-        "next-superjson-plugin",
-        {
-          excluded: [],
-        },
-      ],
-    ],
-  },
 };
+
+require("dotenv").config({ path: `../../.env` });
 
 module.exports = withSentryConfig(
   config,

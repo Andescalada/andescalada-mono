@@ -5,18 +5,46 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "react": [ "../../node_modules/@types/react" ],
-      "@navigation/*": ["./navigation/*"],
-      "@features/*": ["./features/*"],
-      "@assets/*": ["./assets/*"],
-      "@utils/*": ["./utils/*"],
-      "@store/*": ["./store/*"],
-      "@hooks/*": ["./hooks/*"],
-      "@templates/*": ["./templates/*"],
-      "@atoms/*": ["./atoms/*"],
-      "@local-database/*": ["./local-database/*"],
+      "react": [
+        "../../node_modules/@types/react"
+      ],
+      "@navigation/*": [
+        "./navigation/*"
+      ],
+      "@features/*": [
+        "./features/*"
+      ],
+      "@assets/*": [
+        "./assets/*"
+      ],
+      "@utils/*": [
+        "./utils/*"
+      ],
+      "@store/*": [
+        "./store/*"
+      ],
+      "@hooks/*": [
+        "./hooks/*"
+      ],
+      "@templates/*": [
+        "./templates/*"
+      ],
+      "@atoms/*": [
+        "./atoms/*"
+      ],
+      "@local-database/*": [
+        "./local-database/*"
+      ]
     },
     "strict": true
   },
-  "exclude": ["./dist"]
+  "exclude": [
+    "./dist"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }
