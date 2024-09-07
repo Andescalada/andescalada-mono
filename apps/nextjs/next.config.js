@@ -59,7 +59,10 @@ const config = {
   },
 };
 
-require("dotenv").config({ path: `../../.env` });
+// Load .env file only in development
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config({ path: `../../.env` });
+}
 
 module.exports = withSentryConfig(
   config,
