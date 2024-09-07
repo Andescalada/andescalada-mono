@@ -1,3 +1,14 @@
+# Updating to EXPO SDK 51
+
+The following tasks are still pending for this branch to be eligible for merging into main:
+
+- [ ] Fix ComponentProps not extracting correctly the types in packages/ui and packages/icons and reflecting the errors in apps/expo
+- [ ] Fix Skia new signatures and breaking changes from 0.195.1 to 1.2.3
+- [ ] Refactor Auth process because AuthSession.startAsync has been deprecated in expo expo-auth-session@5 and keep using expo-auth-session@4 is not an option due to incompatible dependencies.
+- [ ] Test the app running in iOS and Android 
+
+Please ensure all these tasks are completed and thoroughly tested before merging this branch into main.
+
 # Andescalada Monorepo
 
 [![Update Preview](https://github.com/Andescalada/andescalada-mono/actions/workflows/update-preview.yml/badge.svg?branch=main&event=deployment_status)](https://github.com/Andescalada/andescalada-mono/actions/workflows/update-preview.yml)
