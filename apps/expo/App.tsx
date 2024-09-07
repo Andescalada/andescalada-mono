@@ -1,7 +1,7 @@
 import "expo-dev-client";
 
+import { Text, ThemeProvider } from "@andescalada/ui";
 import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
-import ThemeProvider from "@andescalada/ui/Theme/ThemeProvider";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import AppNavigation from "@navigation/AppNavigation";
 import NavigationMemoized from "@navigation/NavigationMemoized";
@@ -10,7 +10,7 @@ import { Store } from "@store/index";
 import Env from "@utils/env";
 import { NotificationsProvider } from "@utils/notificated";
 import { StatusBar } from "expo-status-bar";
-import { LogBox } from "react-native";
+import { LogBox, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
@@ -33,20 +33,32 @@ function App() {
     <ThemeProvider>
       <SafeAreaProvider>
         <NotificationsProvider>
-          <StoreProvider store={Store}>
-            <ActionSheetProvider>
-              <GestureHandlerRootView style={{ flex: 1 }}>
+          {/* <StoreProvider store={Store}>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <ActionSheetProvider>
                 <NavigationMemoized theme={darkTheme}>
-                  <StatusBar style="light" />
-                  <AppNavigation />
-                </NavigationMemoized>
-              </GestureHandlerRootView>
-            </ActionSheetProvider>
-          </StoreProvider>
+                  <StatusBar style="light" /> */}
+          {/* <AppNavigation /> */}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "red",
+            }}
+          >
+            <Text>Hello</Text>
+          </View>
+          {/* </NavigationMemoized>
+              </ActionSheetProvider>
+            </GestureHandlerRootView>
+          </StoreProvider> */}
         </NotificationsProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );
 }
 
-export default Sentry.wrap(App);
+export default App;
+
+// export default Sentry.wrap(App);

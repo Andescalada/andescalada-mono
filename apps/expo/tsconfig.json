@@ -31,6 +31,9 @@
       ],
       "@local-database/*": [
         "./local-database/*"
+      ],
+      "@andescalada/*": [
+        "../packages/*"
       ]
     },
     "strict": true
@@ -42,6 +45,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "../packages/**/*.ts",
+    "../packages/**/*.tsx"
   ]
 }
