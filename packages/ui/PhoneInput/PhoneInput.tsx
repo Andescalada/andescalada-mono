@@ -7,7 +7,7 @@ import PhoneNumberInput, {
 } from "react-native-phone-number-input";
 
 import Box from "../Box/Box";
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 export type PhoneInputRef = PhoneNumberInput;
 

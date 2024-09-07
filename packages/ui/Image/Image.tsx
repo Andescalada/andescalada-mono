@@ -2,7 +2,7 @@ import { createBox } from "@shopify/restyle";
 import { Image as ExpoImage } from "expo-image";
 import { ComponentProps } from "react";
 
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 const Image = createBox<Theme, ComponentProps<typeof ExpoImage>>(ExpoImage);
 

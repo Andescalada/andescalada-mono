@@ -2,7 +2,7 @@ import { createBox } from "@shopify/restyle";
 import { ScrollView as RNScrollView, ScrollViewProps } from "react-native";
 import { ScrollView as RNGHScrollView } from "react-native-gesture-handler";
 
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 export const SV = createBox<Theme, ScrollViewProps>(RNScrollView);
 

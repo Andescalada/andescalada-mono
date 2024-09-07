@@ -8,7 +8,7 @@ import {
 import { ComponentProps, FC } from "react";
 import { ActivityIndicator as RNActivityIndicator } from "react-native";
 
-import { Colors, Theme } from "../Theme/theme";
+import { Colors, Theme } from "../Theme/config";
 
 interface Props
   extends SpacingProps<Theme>,

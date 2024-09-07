@@ -3,7 +3,7 @@ import { ComponentProps, FC, useMemo, useState } from "react";
 import Box from "../Box/Box";
 import Ionicons from "../Ionicons/Ionicons";
 import Pressable from "../Pressable/Pressable";
-import { Colors } from "../Theme/theme";
+import { Colors } from "../Theme/config";
 
 interface Props extends ComponentProps<typeof Box> {
   setMapType: (mapType: "satellite" | "standard") => void;

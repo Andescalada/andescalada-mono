@@ -2,7 +2,7 @@ import ExpoIonicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@shopify/restyle";
 import { ComponentProps, FC } from "react";
 
-import { Colors, Theme } from "../Theme/Theme";
+import { Colors, Theme } from "../Theme/config";
 
 export type IoniconsNames = ComponentProps<typeof ExpoIonicons>["name"];
 

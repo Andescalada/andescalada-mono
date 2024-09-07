@@ -10,7 +10,7 @@ import { ComponentProps, FC } from "react";
 import Box from "../Box/Box";
 import Ionicons from "../Ionicons/Ionicons";
 import Pressable from "../Pressable/Pressable";
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 interface Props extends ComponentProps<typeof Pressable> {
   containerProps?: ComponentProps<typeof Box>;

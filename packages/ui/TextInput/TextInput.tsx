@@ -1,5 +1,5 @@
 import Box from "@andescalada/ui/Box/Box";
-import { Theme } from "@andescalada/ui/Theme/theme";
+import { Theme } from "@andescalada/ui/Theme/config";
 import {
   createRestyleComponent,
   createText,

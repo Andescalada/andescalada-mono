@@ -5,7 +5,7 @@ import {
   VariantProps,
 } from "@shopify/restyle";
 
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 const ListItem = createRestyleComponent<
   VariantProps<Theme, "listItemVariants"> &

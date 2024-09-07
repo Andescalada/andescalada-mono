@@ -2,7 +2,7 @@ import { createBox } from "@shopify/restyle";
 import { ComponentProps } from "react";
 import { KeyboardAvoidingView as RNKeyboardAvoidingView } from "react-native";
 
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 const Component = createBox<
   Theme,

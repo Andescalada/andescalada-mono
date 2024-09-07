@@ -1,4 +1,4 @@
-import { Theme } from "@andescalada/ui/Theme/theme";
+import { Theme } from "@andescalada/ui/Theme/config";
 import { createBox } from "@shopify/restyle";
 import { ComponentProps } from "react";
 import { Pressable as ReactPressable } from "react-native";

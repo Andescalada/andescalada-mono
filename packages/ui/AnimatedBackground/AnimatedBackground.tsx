@@ -22,7 +22,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import pathLogo from "../assets/andescaladaPathLogo";
 import pathTitle from "../assets/andescaladaPathLTitleUppercase";
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 const SCALE = 1;
 const DURATION = 2000;

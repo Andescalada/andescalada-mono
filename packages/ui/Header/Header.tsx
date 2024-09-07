@@ -5,7 +5,7 @@ import { ComponentProps } from "react";
 import BackButton from "../BackButton/BackButton";
 import Box from "../Box";
 import Text from "../Text";
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 interface Props extends ComponentProps<typeof Box> {
   title: string;

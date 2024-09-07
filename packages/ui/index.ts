@@ -38,5 +38,5 @@ export { default as Text } from "./Text/Text";
 export { default as TextButton } from "./TextButton/TextButton";
 export { default as TextFieldAccordion } from "./TextFieldAccordion/TextFieldAccordion";
 export { default as TextInput } from "./TextInput/TextInput";
+export type { BaseTheme, Colors, Theme } from "./Theme/config";
 export { ThemeProvider } from "./Theme/ThemeProvider";
-export type { BaseTheme, Colors, Theme } from "./Theme/themeTheme";

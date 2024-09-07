@@ -5,7 +5,7 @@ import {
 import { useTheme } from "@shopify/restyle";
 import { ComponentProps, FC, useMemo } from "react";
 
-import { Theme } from "../Theme/theme";
+import { Theme } from "../Theme/config";
 
 interface Props
   extends Omit<ComponentProps<typeof AndescaladaIcon>, "color" | "name"> {

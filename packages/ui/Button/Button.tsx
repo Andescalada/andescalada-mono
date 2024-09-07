@@ -11,7 +11,7 @@ import Box from "../Box/Box";
 import Ionicons, { IoniconsNames } from "../Ionicons/Ionicons";
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
-import { Colors, Theme } from "../Theme/theme";
+import { Colors, Theme } from "../Theme/config";
 
 type RestyleProps = ComponentProps<typeof Pressable> &
   Required<VariantProps<Theme, "buttonVariants">>;

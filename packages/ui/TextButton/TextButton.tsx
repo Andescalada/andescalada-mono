@@ -3,7 +3,7 @@ import { ComponentProps, FC, ReactNode, useMemo } from "react";
 import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
-import { Colors } from "../Theme/theme";
+import { Colors } from "../Theme/config";
 
 interface Props extends ComponentProps<typeof Pressable> {
   variant: "info" | "error" | "transparent";
