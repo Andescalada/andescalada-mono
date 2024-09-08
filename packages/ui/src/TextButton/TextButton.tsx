@@ -1,6 +1,6 @@
 import { ComponentProps, FC, ReactNode, useMemo } from "react";
 
-import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
+import ActivityIndicator from "../ActivityIndicator";
 import Pressable from "../Pressable/Pressable";
 import Text from "../Text/Text";
 import { Colors } from "../Theme/config";

@@ -1,9 +1,9 @@
-import Pressable from "@andescalada/ui/Pressable/Pressable";
 import {
   createRestyleComponent,
   createVariant,
   VariantProps,
 } from "@shopify/restyle";
+import Pressable from "Pressable/Pressable";
 
 import { Theme } from "../Theme/config";
 

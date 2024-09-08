@@ -1,4 +1,4 @@
-import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
+import ActivityIndicator from "../ActivityIndicator";
 import Screen from "../Screen/Screen";
 
 const LoadingScreen = () => {

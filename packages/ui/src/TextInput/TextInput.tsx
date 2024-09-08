@@ -1,5 +1,3 @@
-import Box from "@andescalada/ui/Box/Box";
-import { Theme } from "@andescalada/ui/Theme/config";
 import {
   createRestyleComponent,
   createText,
@@ -7,6 +5,7 @@ import {
   useTheme,
   VariantProps,
 } from "@shopify/restyle";
+import Box from "Box";
 import {
   ComponentProps,
   forwardRef,
@@ -14,6 +13,7 @@ import {
   useMemo,
 } from "react";
 import { TextInput as RNTextInput, TextInputProps } from "react-native";
+import { Theme } from "Theme/config";
 
 import InputAdornment from "../InputAdornment/InputAdornment";
 

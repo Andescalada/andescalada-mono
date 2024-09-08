@@ -1,7 +1,7 @@
-import { Theme } from "@andescalada/ui/Theme/config";
 import { createBox } from "@shopify/restyle";
 import { ComponentProps } from "react";
 import { Pressable as ReactPressable } from "react-native";
+import { Theme } from "Theme/config";
 
 const Pressable = createBox<Theme, ComponentProps<typeof ReactPressable>>(
   ReactPressable,

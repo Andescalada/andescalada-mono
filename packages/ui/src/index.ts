@@ -1,4 +1,4 @@
-export { default as ActivityIndicator } from "./ActivityIndicator/ActivityIndicator";
+export { default as ActivityIndicator } from "./ActivityIndicator";
 export { default as AddButton } from "./AddButton/AddButton";
 export { default as AddOrCancelButtons } from "./AddOrCancelButtons/AddOrCancelButtons";
 export { default as A } from "./Animated/Animated";
@@ -6,16 +6,16 @@ export { default as AnimatedBackground } from "./AnimatedBackground/AnimatedBack
 export { default as BackButton } from "./BackButton/BackButton";
 export { default as Box } from "./Box/Box";
 export { default as Button } from "./Button/Button";
+export type { ButtonGroupProps } from "./ButtonGroup/ButtonGroup";
 export {
   default as ButtonGroup,
-  ButtonGroupProps,
   useButtonGroup,
 } from "./ButtonGroup/ButtonGroup";
 export { default as EditableTitle } from "./EditableTitle/EditableTitle";
 export { default as Header } from "./Header/Header";
 export { default as Icon } from "./Icon/Icon";
 export { default as Image } from "./Image/Image";
-export { default as Ionicons, IoniconsNames } from "./Ionicons/Ionicons";
+export { type IoniconsNames, default as Ionicons } from "./Ionicons/Ionicons";
 export { default as KeyboardAvoidingBox } from "./KeyboardAvoidingBox/KeyboardAvoidingBox";
 export { default as KeyboardDismiss } from "./KeyboardDismiss/KeyboardDismiss";
 export { default as ListItem } from "./ListItem/ListItem";
@@ -27,7 +27,10 @@ export {
   useMapType,
 } from "./MapTypeToolbar/MapTypeToolbar";
 export { default as Modal } from "./Modal/Modal";
-export { default as PhoneInput, PhoneInputRef } from "./PhoneInput/PhoneInput";
+export {
+  type PhoneInputRef,
+  default as PhoneInput,
+} from "./PhoneInput/PhoneInput";
 export { default as Pressable } from "./Pressable/Pressable";
 export { default as SafeAreaView } from "./SafeAreaView/SafeAreaView";
 export { default as Screen } from "./Screen/Screen";

@@ -1,5 +1,5 @@
-import { BaseTheme } from "@andescalada/ui/Theme/config";
 import { BoxProps, TextProps } from "@shopify/restyle";
+import { BaseTheme } from "Theme/config";
 
 export const createBoxVariant = <
   T extends { [name: string]: BoxProps<BaseTheme> },

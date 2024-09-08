@@ -1,4 +1,4 @@
-import { createBoxVariant } from "@andescalada/ui/Theme/createVariants";
+import { createBoxVariant } from "Theme/createVariants";
 
 const textFieldVariants = createBoxVariant({
   // outlined: {

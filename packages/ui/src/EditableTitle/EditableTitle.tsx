@@ -1,7 +1,7 @@
-import TextInput from "@andescalada/ui/TextInput/TextInput";
 import { ComponentProps } from "react";
 import type { FieldValues, UseControllerProps } from "react-hook-form";
 import { useController } from "react-hook-form";
+import TextInput from "TextInput/TextInput";
 
 type TextInputProps = Omit<ComponentProps<typeof TextInput>, "defaultValue">;
 

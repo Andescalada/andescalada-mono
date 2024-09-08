@@ -6,7 +6,7 @@ import {
 } from "@shopify/restyle";
 import { ComponentProps, FC } from "react";
 
-import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
+import ActivityIndicator from "../ActivityIndicator";
 import Box from "../Box/Box";
 import Ionicons, { IoniconsNames } from "../Ionicons/Ionicons";
 import Pressable from "../Pressable/Pressable";

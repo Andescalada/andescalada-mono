@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import ActivityIndicator from "../ActivityIndicator/ActivityIndicator";
+import ActivityIndicator from "../ActivityIndicator";
 import Modal from "../Modal/Modal";
 import Text from "../Text/Text";
 
