@@ -42,4 +42,5 @@ export { default as TextButton } from "./TextButton/TextButton";
 export { default as TextFieldAccordion } from "./TextFieldAccordion/TextFieldAccordion";
 export { default as TextInput } from "./TextInput/TextInput";
 export type { BaseTheme, Colors, Theme } from "./Theme/config";
+export { darkTheme } from "./Theme/navigationTheme";
 export { ThemeProvider } from "./Theme/ThemeProvider";

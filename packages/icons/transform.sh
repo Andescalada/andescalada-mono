@@ -1,32 +1,47 @@
+#!/bin/bash
 
-echo "Cleaninig Icons"
+# Create src directory if it doesn't exist
+mkdir -p src
+
+echo "Cleaning Icons"
 npx svgo -f svg
 
 echo "Done cleaning :broom:"
 
 echo "Transforming icons"
-rm -r components-native
-mkdir components-native
-npx @svgr/cli --native --icon --no-prettier --filename-case kebab --replace-attr-values "#000={props.fill}" --out-dir components-native -- svg 
+rm -rf src/components-native
+mkdir -p src/components-native
+npx @svgr/cli --native --icon --no-prettier --filename-case kebab --replace-attr-values "#000={props.fill}" --out-dir src/components-native -- svg 
 
 echo "Done transforming icons"
 
-rm map.ts
+rm -f src/map.ts
 
 printf "\e[1m\e[92mCreating the map...\e[0m\n"
-echo "const base = \"./components-native/\";" > map.ts
-echo >> map.ts
-echo "export const Icons = {" >> map.ts
-for file in components-native/*.js
+cat << EOF > src/map.ts
+/* eslint-disable @typescript-eslint/no-var-requires */
+// This file is auto-generated. DO NOT EDIT MANUALLY.
+
+const base = "./components-native/";
+
+export const Icons = {
+EOF
+
+for file in src/components-native/*.js
 do
-  if [ "$file" != "components-native/index.js" ]
+  if [ "$file" != "src/components-native/index.js" ]
   then
       base_name=$(basename ${file%.js})
       echo $base_name
-      echo "  \"$base_name\": require(base + \"$base_name\").default," >> map.ts
+      echo "  \"$base_name\": require(base + \"$base_name\").default," >> src/map.ts
   else 
     echo "Skipping index.js"
   fi
 done
 
-echo "};" >> map.ts
+echo "};" >> src/map.ts
+
+echo "Running Prettier on map.ts"
+npx prettier --write src/map.ts
+
+echo "Transformation complete. Results stored in the src directory."

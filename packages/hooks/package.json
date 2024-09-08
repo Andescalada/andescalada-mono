@@ -7,6 +7,9 @@
   "scripts": {
     "lint": "eslint . --ext .ts,.js,.json"
   },
+  "dependencies": {
+    "@andescalada/tsconfig": "*"
+  },
   "peerDependencies": {
     "react": "*",
     "react-router-dom": "*",

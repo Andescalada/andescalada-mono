@@ -1,0 +1,11 @@
+{
+  "name": "@andescalada/tsconfig",
+  "version": "0.0.1",
+  "description": "Module to manage typescript configs ",
+  "author": "elevyg",
+  "license": "MIT ",
+  "private": true,
+  "files": [
+    "*.json"
+  ]
+}

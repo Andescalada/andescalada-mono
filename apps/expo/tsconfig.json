@@ -3,6 +3,8 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "module": "Node16",
+    "moduleResolution": "node16",
     "baseUrl": ".",
     "paths": {
       "@navigation/*": [
@@ -31,12 +33,9 @@
       ],
       "@local-database/*": [
         "./local-database/*"
-      ],
-      "@andescalada/*": [
-        "../packages/*"
       ]
     },
-    "strict": true
+    "strict": true,
   },
   "exclude": [
     "./dist"

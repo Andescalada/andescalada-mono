@@ -1,6 +1,8 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "@andescalada/tsconfig/react-native-base.json",
   "compilerOptions": {
-    "strict": false
-  }
+    "strict": false,
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"]
 }

@@ -1,7 +1,6 @@
 import "expo-dev-client";
 
-import { Text, ThemeProvider } from "@andescalada/ui";
-import { darkTheme } from "@andescalada/ui/Theme/navigationTheme";
+import { darkTheme, Text, ThemeProvider } from "@andescalada/ui";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import AppNavigation from "@navigation/AppNavigation";
 import NavigationMemoized from "@navigation/NavigationMemoized";
