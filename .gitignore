@@ -23,3 +23,6 @@ db-backup/
 seed/
 
 dump_*.sql
+
+.turbo/cookies
+.turbo/daemon
