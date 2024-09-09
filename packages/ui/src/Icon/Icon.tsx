@@ -1,14 +1,14 @@
 import {
   Icon as AndescaladaIcon,
   IconNames,
+  Props as IconProps,
 } from "@andescalada/icons/NativeIcons";
 import { useTheme } from "@shopify/restyle";
-import { ComponentProps, FC, useMemo } from "react";
+import { FC, useMemo } from "react";
 
 import { Theme } from "../Theme/config";
 
-interface Props
-  extends Omit<ComponentProps<typeof AndescaladaIcon>, "color" | "name"> {
+interface Props extends Omit<IconProps, "color" | "name"> {
   color?: keyof Theme["colors"];
   name?: IconNames;
 }

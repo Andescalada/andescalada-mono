@@ -3,20 +3,19 @@
   "version": "1.0.0",
   "description": "Svg Icons for Andescalada ",
   "private": true,
-  "main": "index.ts",
   "exports": {
-      "./NativeIcons": {
-        "types": "./dist/NativeIcons.d.ts",
-        "default": "./dist/NativeIcons.js"
-      },
-      "./WebIcons": {
-        "types": "./dist/WebIcons.d.ts",
-        "default": "./dist/WebIcons.js"
-      }
+    "./NativeIcons": {
+      "types": "./dist/src/NativeIcons.d.ts",
+      "default": "./dist/src/NativeIcons.js"
     },
+    "./WebIcons": {
+      "types": "./dist/src/WebIcons.d.ts",
+      "default": "./dist/src/WebIcons.js"
+    }
+  },
   "scripts": {
     "transform": "sh transform.sh && sh transform-web.sh",
-     "build": "tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "@andescalada/tsconfig": "*"

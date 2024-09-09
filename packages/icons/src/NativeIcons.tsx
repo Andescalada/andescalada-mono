@@ -4,7 +4,7 @@ import { Icons } from "./map";
 
 export type IconNames = keyof typeof Icons;
 
-interface Props {
+export interface Props {
   name: IconNames;
   size?: number;
   color?: string;
