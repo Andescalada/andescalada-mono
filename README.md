@@ -6,7 +6,7 @@ The following tasks are still pending for this branch to be eligible for merging
 - [ ] Fix Skia new signatures and breaking changes from 0.195.1 to 1.2.3
 - [ ] Refactor Auth process because AuthSession.startAsync has been deprecated in expo expo-auth-session@5 and keep using expo-auth-session@4 is not an option due to incompatible dependencies.
 - [ ] Test the app running in iOS and Android 
-- [ ] Fix problems that appear in `yarn tsCheck` in apps/expo
+- [ ] Fix problems that appear in `yarn tsCheck` in apps/expo!
 
 Please ensure all these tasks are completed and thoroughly tested before merging this branch into main.
 
