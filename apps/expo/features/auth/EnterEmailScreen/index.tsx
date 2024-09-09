@@ -71,7 +71,7 @@ const EnterEmailScreen: FC<Props> = ({ navigation }) => {
       padding="m"
       paddingTop="xxxl"
     >
-      <AnimatedBackground />
+      {/* <AnimatedBackground /> */}
       <BackButton.Transparent
         onPress={navigation.goBack}
         iconProps={{ color: "grayscale.white" }}
