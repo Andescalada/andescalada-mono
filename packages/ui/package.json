@@ -4,15 +4,12 @@
   "private": true,
   "exports": {
     ".": {
-      "types": "./dist/src/index.d.ts",
+      "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
     "./*": {
-      "types": "./dist/src/*.d.ts",
-      "default": [
-        "./src/*.ts",
-        "./src/*.tsx"
-      ]
+      "types": "./src/*.ts",
+      "default": "./src/*.ts"
     }
   },
   "scripts": {
@@ -33,11 +30,10 @@
   "devDependencies": {
     "@shopify/react-native-skia": "0.1.195",
     "@types/react": "^18.3.5",
-    "typescript": "^5.5.4"
+    "typescript": "5.1.3"
   },
   "peerDependencies": {
     "@andescalada/icons": "*",
-    "@andescalada/ui": "*",
     "@andescalada/utils": "*",
     "@expo/vector-icons": "*",
     "@shopify/react-native-skia": "0.1.195",

@@ -33,6 +33,12 @@
       ],
       "@local-database/*": [
         "./local-database/*"
+      ],
+      "@andescalada/ui": [
+        "../packages/ui/src"
+      ],
+      "@andescalada/ui/*": [
+        "../packages/ui/src/*"
       ]
     },
     "strict": true,
