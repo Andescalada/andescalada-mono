@@ -153,8 +153,8 @@ const UserHeader = () => {
         <Ionicons
           name={
             isOfflineMode
-              ? "md-arrow-down-circle-sharp"
-              : "md-arrow-down-circle-outline"
+              ? "arrow-down-circle-sharp"
+              : "arrow-down-circle-outline"
           }
           color="grayscale.600"
           size={30}

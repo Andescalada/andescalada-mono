@@ -168,7 +168,7 @@ const AddTopoImage: FC = () => {
                 onPress={() => pickImage(selectedImage)}
               >
                 <Ionicons
-                  name="ios-image-outline"
+                  name="image-outline"
                   color="grayscale.white"
                   size={16}
                 />

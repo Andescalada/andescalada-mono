@@ -28,7 +28,7 @@ const StepSharePhoto: FC<Props> = (props) => {
         <Button
           variant="transparentSimplified"
           title="Compartir"
-          icon="ios-logo-instagram"
+          icon="logo-instagram"
           iconProps={{ size: 25 }}
           gap="s"
           marginHorizontal="l"

@@ -77,7 +77,7 @@ const ShareContestScreen: FC<Props> = ({ navigation }) => {
               variant="transparentSimplified"
               title="Historia"
               paddingHorizontal="s"
-              icon="ios-logo-instagram"
+              icon="logo-instagram"
               iconProps={{ size: 25 }}
               gap="s"
               height={50}

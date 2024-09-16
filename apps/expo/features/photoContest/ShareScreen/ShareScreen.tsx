@@ -258,7 +258,7 @@ const ShareScreen: FC<Props> = ({
         <Button
           variant="transparentSimplified"
           title="Compartir"
-          icon="ios-logo-instagram"
+          icon="logo-instagram"
           iconProps={{ size: 25 }}
           gap="s"
           height={50}

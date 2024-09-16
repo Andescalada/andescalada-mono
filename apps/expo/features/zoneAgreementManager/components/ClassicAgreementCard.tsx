@@ -93,7 +93,7 @@ const ClassicAgreementCard = ({
         <Ionicons
           name={
             isSelected
-              ? "md-checkmark-sharp"
+              ? "checkmark-sharp"
               : isSelected === false
               ? "remove-sharp"
               : "add-sharp"
