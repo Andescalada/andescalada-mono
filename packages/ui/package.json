@@ -10,6 +10,14 @@
     "./*": {
       "types": "./src/*.tsx",
       "default": "./src/*.tsx"
+    },
+    "./Theme": {
+      "types": "./src/Theme/index.ts",
+      "default": "./src/Theme/index.ts"
+    },
+    "./Theme/*": {
+      "types": "./src/Theme/*.ts",
+      "default": "./src/Theme/*.ts"
     }
   },
   "scripts": {
