@@ -72,7 +72,7 @@ const useSetAssetsToDb = () => {
           [zoneId]: { assets: data.assetList },
         }));
 
-        db.close();
+        await db.closeAsync();
 
         await saveImagesToFileSystem({
           imagesToDownload: data.imagesToDownload,

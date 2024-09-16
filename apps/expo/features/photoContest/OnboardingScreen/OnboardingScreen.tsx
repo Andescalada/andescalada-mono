@@ -8,7 +8,6 @@ import {
   Steps,
   stepsCount,
 } from "@features/photoContest/OnboardingScreen/Steps";
-import { set } from "immer/dist/internal";
 import { FC, useRef, useState } from "react";
 import { FlatList, useWindowDimensions } from "react-native";
 

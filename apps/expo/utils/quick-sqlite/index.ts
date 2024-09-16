@@ -1,10 +1,13 @@
 import {
   type SQLiteDatabase as QuickSQLiteConnection,
+  deleteDatabaseAsync,
   openDatabaseSync as openDb,
 } from "expo-sqlite";
 import { parse, stringify } from "superjson";
 
-const open = () => openDb("offlineAssets.db");
+const DB_NAME = "offlineAssets.db";
+
+const open = () => openDb(DB_NAME);
 
 const createZoneTable = async (db: QuickSQLiteConnection, zoneId: string) => {
   const query = `CREATE TABLE IF NOT EXISTS '${zoneId}' (
@@ -157,6 +160,8 @@ const allAssetsOfZone = async (db: QuickSQLiteConnection, zoneId: string) => {
   }
 };
 
+const deleteDb = () => deleteDatabaseAsync(DB_NAME);
+
 const offlineDb = {
   open,
   getAsync,
@@ -165,6 +170,7 @@ const offlineDb = {
   set,
   delete: deleteAsset,
   deleteZone,
+  deleteDb,
   allSavedZones,
   allAssetsOfZone,
   createZoneTable,

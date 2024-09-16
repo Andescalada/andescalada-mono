@@ -40,7 +40,7 @@ const useDeleteAssetsFromDb = () => {
         const deleteImages = deleteZoneSavedImages({ zoneId });
         const deleteMap = Mapbox.offlineManager.deletePack(zoneId);
         await Promise.allSettled([deleteFromDb, deleteImages, deleteMap]);
-        db.close();
+        await db.closeAsync();
 
         setDownloadedAssetsList((old) => {
           delete old[zoneId];

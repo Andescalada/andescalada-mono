@@ -210,8 +210,7 @@ export default authSlice;
 
 const clearAllLocalData = async () => {
   storage.clearAll();
-  const db = offlineDb.open();
-  db.delete();
+  await offlineDb.deleteDb();
   await database.write(async () => {
     await database.unsafeResetDatabase();
   });

@@ -1,7 +1,7 @@
 import { SearchType } from "@andescalada/api/schemas/search";
 import type { AppRouter } from "@andescalada/api/src/routers/_app";
 import { Box, Pressable, Text } from "@andescalada/ui";
-import { Colors } from "@andescalada/ui/Theme/theme";
+import { Colors } from "@andescalada/ui/Theme/config";
 import {
   ClimbsNavigationNavigationParamList,
   ClimbsNavigationNavigationProps,

@@ -1,4 +1,4 @@
-import { Theme } from "@andescalada/ui/Theme/theme";
+import { Theme } from "@andescalada/ui/Theme/config";
 import { useTheme } from "@shopify/restyle";
 import { useMemo } from "react";
 import { RefreshControl } from "react-native";
