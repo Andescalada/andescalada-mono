@@ -55,7 +55,7 @@ export interface ListItemRef extends Partial<RefObject<GestureType>> {
   reset: () => void;
 }
 
-const ListItem: ForwardRefRenderFunction<ListItemRef, Props> = (
+const ListItem: ForwardRefRenderFunction<ListItemRef, Omit<Props, "ref">> = (
   {
     children,
     onRightAction: onRightAction,

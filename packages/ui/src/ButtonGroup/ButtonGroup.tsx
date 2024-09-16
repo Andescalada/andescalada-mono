@@ -1,3 +1,4 @@
+import { Pressable, Text } from "index";
 import {
   ComponentProps,
   createContext,
@@ -6,9 +7,6 @@ import {
   useCallback,
   useContext,
 } from "react";
-
-import Pressable from "../Pressable/Pressable";
-import Text from "../Text/Text";
 
 interface ButtonItemProps
   extends Omit<ComponentProps<typeof Pressable>, "backgroundColor"> {

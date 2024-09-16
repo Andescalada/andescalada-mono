@@ -23,7 +23,7 @@ interface Props extends CustomListItemProps {
   onDelete?: () => void;
 }
 
-const RouteItem: ForwardRefRenderFunction<ListItemRef, Props> = (
+const RouteItem: ForwardRefRenderFunction<ListItemRef, Omit<Props, "ref">> = (
   { index, onDelete, onOptions, title, grade, kind, position, ...props },
   ref,
 ) => {
