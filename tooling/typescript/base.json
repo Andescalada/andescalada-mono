@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "jsx": "react",
-    "baseUrl": ".",
     "paths": {
       "@andescalada/*": ["packages/*"]
     }

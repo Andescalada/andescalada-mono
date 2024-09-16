@@ -23,5 +23,5 @@
     "lib": ["es2022"]
     
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"]
+  "include": ["src/**/*"]
 }

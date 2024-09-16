@@ -8,8 +8,8 @@
       "default": "./src/index.ts"
     },
     "./*": {
-      "types": "./src/*.ts",
-      "default": "./src/*.ts"
+      "types": "./src/*.tsx",
+      "default": "./src/*.tsx"
     }
   },
   "scripts": {
@@ -21,6 +21,7 @@
     "clean:all": "yarn run clean:tsc && yarn run clean:npm"
   },
   "dependencies": {
+    "@andescalada/icons": "*",
     "@shopify/restyle": "^2.4.2",
     "deepmerge": "^4.2.2",
     "expo-image": "~1.12.15",
@@ -33,7 +34,6 @@
     "typescript": "5.1.3"
   },
   "peerDependencies": {
-    "@andescalada/icons": "*",
     "@andescalada/utils": "*",
     "@expo/vector-icons": "*",
     "@shopify/react-native-skia": "0.1.195",
