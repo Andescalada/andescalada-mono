@@ -17,12 +17,12 @@ import usePermissions from "@hooks/usePermissions";
 import useRefresh from "@hooks/useRefresh";
 import useRootNavigation from "@hooks/useRootNavigation";
 import { RootNavigationRoutes } from "@navigation/AppNavigation/RootNavigation/types";
+import { FlashList } from "@shopify/flash-list";
 import { ComponentProps, FC, useState } from "react";
-import { FlatList } from "react-native";
 import { FadeInUp, FadeOut, Layout } from "react-native-reanimated";
 
 type FlatListFiltered = Omit<
-  ComponentProps<typeof FlatList>,
+  ComponentProps<typeof FlashList>,
   "data" | "keyExtractor" | "renderItem" | "extraData" | "getItem"
 >;
 
@@ -47,7 +47,8 @@ const ZoneAgreementsScreen: FC<Props> = ({
   const rootNavigation = useRootNavigation();
   if (!data) return null;
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={100}
       data={data.agreements}
       refreshControl={refresh}
       keyExtractor={(item) => item.id}

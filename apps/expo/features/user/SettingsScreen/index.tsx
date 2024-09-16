@@ -150,9 +150,9 @@ const SettingsScreen: FC<Props> = ({ navigation }) => {
         {globalPermissions.includes(GlobalPermissions.DEVELOP_INFO) && (
           <Box>
             <Text variant="p2R">Developer Info</Text>
-            <Text>{`Ultima actualización: ${new Date(
-              Updates.manifest?.createdAt,
-            ).toLocaleString("es-CL")}`}</Text>
+            <Text>{`Ultima actualización: ${Updates.createdAt?.toLocaleString(
+              "es-CL",
+            )}`}</Text>
             <Text>{`Id actualización: ${Updates.updateId}`}</Text>
             <Text>{`Version: ${Constants.expoConfig?.version}`}</Text>
             <Text>{`SDK: ${Updates.runtimeVersion}`}</Text>

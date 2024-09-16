@@ -7,7 +7,6 @@ import { RouteGrade } from "@andescalada/db";
 import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import useGetGradeSystemsQuery from "@local-database/hooks/useGetGradeSystemsQuery";
 import { useCallback, useEffect, useState } from "react";
-import { or } from "react-native-reanimated";
 
 const addOneWrap = (n: number, value: number) => (value + 1) % (n + 1);
 

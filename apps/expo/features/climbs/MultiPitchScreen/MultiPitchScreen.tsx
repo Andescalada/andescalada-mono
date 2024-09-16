@@ -173,10 +173,8 @@ const MultiPitchScreen: FC<Props> = ({
                       screen: MultiPitchManagerRoutes.AddPitch,
                       params: {
                         multiPitchId,
-                        multiPitchName,
                         zoneId,
                         topoId: mainTopo?.id,
-                        wallId,
                         previousPitchKind: undefined,
                       },
                     },
