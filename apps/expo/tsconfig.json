@@ -33,12 +33,6 @@
       ],
       "@local-database/*": [
         "./local-database/*"
-      ],
-      "@andescalada/ui": [
-        "../packages/ui/src"
-      ],
-      "@andescalada/ui/*": [
-        "../packages/ui/src/*"
       ]
     },
     "strict": true,
@@ -47,11 +41,9 @@
     "./dist"
   ],
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "./**/*.ts",
+    "./**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "../packages/**/*.ts",
-    "../packages/**/*.tsx"
+    "expo-env.d.ts"
   ]
 }
