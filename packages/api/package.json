@@ -10,23 +10,16 @@
     "lint": "eslint . --ext .ts,.js,.json"
   },
   "dependencies": {
-    "@andescalada/utils": "*",
-    "@andescalada/common-assets": "*",
-    "@andescalada/tsconfig": "*",
-    "@auth0/nextjs-auth0": "^1.9.1",
+    "@andescalada/common-assets": "workspace:*",
+    "@andescalada/tsconfig": "workspace:*",
+    "@andescalada/utils": "workspace:*",
     "@upstash/redis": "^1.13.1",
     "accept-language": "^3.0.18",
     "axios": "^0.27.2",
     "cloudinary": "^1.33.0",
     "expo-server-sdk": "^3.7.0",
     "jose": "^4.11.0",
-    "superjson": "^1.10.0"
-  },
-  "peerDependencies": {
-    "@trpc/react-query": "*",
-    "@trpc/server": "*"
-  },
-  "devDependencies": {
-    "next": "*"
+    "superjson": "^1.10.0",
+    "@trpc/server": "10.23.1"
   }
 }

@@ -1,3 +1,6 @@
 {
-  "extends": "@andescalada/tsconfig/base"
+  "extends": "@andescalada/tsconfig/base",
+  "compilerOptions": {
+    "baseUrl": "src"
+  }
 }
