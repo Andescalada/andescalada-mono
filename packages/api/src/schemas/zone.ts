@@ -1,11 +1,11 @@
-import global from "@andescalada/api/schemas/global";
-import { r } from "@andescalada/api/src/utils/regex";
 import {
   InfoAccessSchema,
   SearchVisibilitySchema,
   StatusSchema,
   TransportationModeSchema,
 } from "@andescalada/db/zod";
+import global from "schemas/global";
+import { r } from "utils/regex";
 import { z } from "zod";
 
 const id = z.object({ zoneId: z.string() });

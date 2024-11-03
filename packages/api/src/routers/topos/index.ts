@@ -1,26 +1,23 @@
-import topo from "@andescalada/api/schemas/topo";
-import { t } from "@andescalada/api/src/createRouter";
-import { create } from "@andescalada/api/src/routers/topos/create";
-import {
-  otherTopos,
-  otherToposCount,
-} from "@andescalada/api/src/routers/topos/otherTopos";
+import { SoftDelete, VerificationStatus } from "@andescalada/db";
+import { TRPCError } from "@trpc/server";
+import { t } from "createRouter";
+import { create } from "routers/topos/create";
+import { otherTopos, otherToposCount } from "routers/topos/otherTopos";
 import {
   deleteTopoByUser,
   toposByUser,
   toposByUserCount,
-} from "@andescalada/api/src/routers/topos/toposByUser";
+} from "routers/topos/toposByUser";
 import {
   approveTopo,
   numberOfToposToVerify,
   rejectTopo,
   toposToVerify,
-} from "@andescalada/api/src/routers/topos/topoVerification";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { slug } from "@andescalada/api/src/utils/slug";
-import { SoftDelete, VerificationStatus } from "@andescalada/db";
-import { TRPCError } from "@trpc/server";
+} from "routers/topos/topoVerification";
+import topo from "schemas/topo";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import { slug } from "utils/slug";
 import { z } from "zod";
 
 import { setMainTopo } from "./setMainTopo";

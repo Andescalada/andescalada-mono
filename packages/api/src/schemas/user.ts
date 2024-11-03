@@ -1,6 +1,6 @@
-import image from "@andescalada/api/schemas/image";
-import { r } from "@andescalada/api/src/utils/regex";
 import { GradeSystemsSchema, RoleNamesSchema } from "@andescalada/db/zod";
+import image from "schemas/image";
+import { r } from "utils/regex";
 import { z } from "zod";
 
 const schema = z.object({

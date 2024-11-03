@@ -1,11 +1,8 @@
-import { Access, Permissions } from "@andescalada/api/src/types/permissions";
-import getAndParsePermissions from "@andescalada/api/src/utils/getAndParsePermissions";
-import { InferContext } from "@andescalada/api/src/utils/inferContext";
-import {
-  isAuth,
-  protectedProcedure,
-} from "@andescalada/api/src/utils/protectedProcedure";
 import { deserialize } from "superjson";
+import { Access, Permissions } from "types/permissions";
+import getAndParsePermissions from "utils/getAndParsePermissions";
+import { InferContext } from "utils/inferContext";
+import { isAuth, protectedProcedure } from "utils/protectedProcedure";
 import { z } from "zod";
 
 const _protectedZoneMiddleware = isAuth.unstable_pipe(({ ctx, next }) => {

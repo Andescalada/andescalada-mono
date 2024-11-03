@@ -1,7 +1,7 @@
-import { t } from "@andescalada/api/src/createRouter";
-import { MULTI_PITCH } from "@andescalada/api/src/types/constants";
 import { InfoAccess, SoftDelete, Status } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import { t } from "createRouter";
+import { MULTI_PITCH } from "types/constants";
 import { z } from "zod";
 
 const publicWallById = t.procedure

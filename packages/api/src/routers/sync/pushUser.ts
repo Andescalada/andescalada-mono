@@ -1,6 +1,6 @@
-import { PrismaMutationChangesParams } from "@andescalada/api/src/routers/sync/types";
 import { Prisma } from "@andescalada/db";
 import { GradeSystemsSchema } from "@andescalada/db/zod";
+import { PrismaMutationChangesParams } from "routers/sync/types";
 
 const parseGradingSystem = (gradingSystem: string) => {
   const e = GradeSystemsSchema.parse(gradingSystem);

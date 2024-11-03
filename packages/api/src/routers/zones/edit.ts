@@ -1,9 +1,9 @@
-import zone from "@andescalada/api/schemas/zone";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { slug } from "@andescalada/api/src/utils/slug";
 import { InfoAccessSchema, SearchVisibilitySchema } from "@andescalada/db/zod";
 import { TRPCError } from "@trpc/server";
+import zone from "schemas/zone";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import { slug } from "utils/slug";
 import { z } from "zod";
 
 const edit = protectedZoneProcedure

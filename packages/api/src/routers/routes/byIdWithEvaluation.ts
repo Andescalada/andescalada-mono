@@ -1,8 +1,8 @@
-import route from "@andescalada/api/schemas/route";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import route from "schemas/route";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 
 const byIdWithEvaluation = protectedZoneProcedure
   .input(route.routeId)

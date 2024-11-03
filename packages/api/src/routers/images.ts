@@ -1,6 +1,6 @@
-import image from "@andescalada/api/schemas/image";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { v2 as cloudinary } from "cloudinary";
+import image from "schemas/image";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { z } from "zod";
 
 import { t } from "../createRouter";

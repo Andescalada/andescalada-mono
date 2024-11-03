@@ -1,7 +1,7 @@
-import multiPitch from "@andescalada/api/schemas/multiPitch";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
+import multiPitch from "schemas/multiPitch";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 
 const editPitch = protectedZoneProcedure
   .input(multiPitch.pitchId.merge(multiPitch.addPitch))

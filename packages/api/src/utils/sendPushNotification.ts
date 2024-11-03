@@ -1,7 +1,7 @@
-import { isDefined, notNull } from "@andescalada/api/src/utils/filterGuards";
-import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
 import Expo, { ExpoPushMessage } from "expo-server-sdk";
+import { isDefined, notNull } from "utils/filterGuards";
+import { ProtectedContext } from "utils/protectedProcedure";
 
 const sendPushNotification = async (
   ctx: ProtectedContext,

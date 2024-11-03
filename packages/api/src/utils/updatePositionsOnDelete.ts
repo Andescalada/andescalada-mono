@@ -1,4 +1,4 @@
-import parsedWall from "@andescalada/api/src/utils/parsedWall";
+import parsedWall from "utils/parsedWall";
 
 import { ProtectedZoneContext } from "./protectedZoneProcedure";
 

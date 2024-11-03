@@ -1,5 +1,5 @@
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { z } from "zod";
 
 import { SoftDelete } from ".prisma/client";

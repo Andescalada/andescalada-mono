@@ -1,6 +1,6 @@
-import { t } from "@andescalada/api/src/createRouter";
-import { deleteById } from "@andescalada/api/src/routers/alerts/delete";
-import { byId, list } from "@andescalada/api/src/routers/alerts/get";
+import { t } from "createRouter";
+import { deleteById } from "routers/alerts/delete";
+import { byId, list } from "routers/alerts/get";
 
 import { dismissRouteAlertById } from "./dismiss";
 import { upsertRouteAlert } from "./upsertRouteAlert";

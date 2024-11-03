@@ -1,9 +1,9 @@
-import topo from "@andescalada/api/schemas/topo";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { slug } from "@andescalada/api/src/utils/slug";
 import { VerificationStatus } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import topo from "schemas/topo";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import { slug } from "utils/slug";
 import { z } from "zod";
 
 export const create = protectedZoneProcedure

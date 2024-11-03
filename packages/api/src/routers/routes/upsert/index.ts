@@ -1,8 +1,8 @@
-import routeSchema from "@andescalada/api/schemas/route";
-import upsertExtension from "@andescalada/api/src/routers/routes/upsert/upsertExtension";
-import upsertRoute from "@andescalada/api/src/routers/routes/upsert/upsertRoute";
-import upsertVariant from "@andescalada/api/src/routers/routes/upsert/upsertVariant";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import upsertExtension from "routers/routes/upsert/upsertExtension";
+import upsertRoute from "routers/routes/upsert/upsertRoute";
+import upsertVariant from "routers/routes/upsert/upsertVariant";
+import routeSchema from "schemas/route";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 
 const upsert = protectedZoneProcedure
   .input(routeSchema.upsertRoute)

@@ -1,5 +1,3 @@
-import error from "@andescalada/api/src/utils/errors";
-import { ProtectedZoneContext } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import {
   GradeSystems,
   InfoAccess,
@@ -9,6 +7,8 @@ import {
   Zone,
 } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import error from "utils/errors";
+import { ProtectedZoneContext } from "utils/protectedZoneProcedure";
 
 const Route = {
   name: true,

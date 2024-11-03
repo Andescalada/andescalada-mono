@@ -1,7 +1,7 @@
-import { t } from "@andescalada/api/src/createRouter";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
+import { t } from "createRouter";
 import Expo, { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { z } from "zod";
 
 export const notificationsRouter = t.router({

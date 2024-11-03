@@ -1,5 +1,5 @@
-import { t } from "@andescalada/api/src/createRouter";
 import { InfoAccess, SoftDelete } from "@andescalada/db";
+import { t } from "createRouter";
 import { z } from "zod";
 
 const publicById = t.procedure

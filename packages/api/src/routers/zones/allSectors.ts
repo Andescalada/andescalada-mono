@@ -1,8 +1,8 @@
-import error from "@andescalada/api/src/utils/errors";
-import { GlobalRoles } from "@andescalada/api/src/utils/globalRoles";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { Prisma, RoleNames, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import error from "utils/errors";
+import { GlobalRoles } from "utils/globalRoles";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 
 // Procedure being downloaded
 const allSectors = protectedZoneProcedure.query(async ({ ctx, input }) => {

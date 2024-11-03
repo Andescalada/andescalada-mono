@@ -1,8 +1,8 @@
-import wall from "@andescalada/api/schemas/wall";
-import { includeInTopo } from "@andescalada/api/src/routers/topos";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
+import { includeInTopo } from "routers/topos";
+import wall from "schemas/wall";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 
 import { InfoAccess, SoftDelete, VerificationStatus } from ".prisma/client";
 

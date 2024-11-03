@@ -1,13 +1,13 @@
-import { t } from "@andescalada/api/src/createRouter";
-import { pushRouteAlert } from "@andescalada/api/src/routers/sync/pushRouteAlert";
-import { pushRouteEvaluation } from "@andescalada/api/src/routers/sync/pushRouteEvaluation";
-import { pushRouteGradeEvaluation } from "@andescalada/api/src/routers/sync/pushRouteGradeEvaluation";
-import { pushUser } from "@andescalada/api/src/routers/sync/pushUser";
-import { TableChanges } from "@andescalada/api/src/routers/sync/types";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { Prisma } from "@andescalada/db";
 import { Table } from "@andescalada/utils/local-database";
 import { TRPCError } from "@trpc/server";
+import { t } from "createRouter";
+import { pushRouteAlert } from "routers/sync/pushRouteAlert";
+import { pushRouteEvaluation } from "routers/sync/pushRouteEvaluation";
+import { pushRouteGradeEvaluation } from "routers/sync/pushRouteGradeEvaluation";
+import { pushUser } from "routers/sync/pushUser";
+import { TableChanges } from "routers/sync/types";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { z } from "zod";
 
 const Changes = z.record(z.nativeEnum(Table), TableChanges);

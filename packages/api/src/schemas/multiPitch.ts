@@ -1,4 +1,4 @@
-import route from "@andescalada/api/schemas/route";
+import route from "schemas/route";
 import { z } from "zod";
 
 const addPitchFrontEnd = route.schema

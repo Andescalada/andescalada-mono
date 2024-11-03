@@ -1,8 +1,8 @@
-import multiPitch from "@andescalada/api/schemas/multiPitch";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import multiPitch from "schemas/multiPitch";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { z } from "zod";
 
 const pitchById = protectedZoneProcedure

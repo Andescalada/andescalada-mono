@@ -1,13 +1,13 @@
-import global from "@andescalada/api/schemas/global";
-import wall from "@andescalada/api/schemas/wall";
-import routeList from "@andescalada/api/src/routers/walls/routeList";
-import error from "@andescalada/api/src/utils/errors";
-import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
-import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { slug } from "@andescalada/api/src/utils/slug";
 import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import routeList from "routers/walls/routeList";
+import global from "schemas/global";
+import wall from "schemas/wall";
+import error from "utils/errors";
+import getMainTopo from "utils/getMainTopo";
+import parseMultiPitch from "utils/parseMultiPitch";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import { slug } from "utils/slug";
 import { z } from "zod";
 
 import { t } from "../../createRouter";

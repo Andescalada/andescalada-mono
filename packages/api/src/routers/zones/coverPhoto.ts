@@ -1,7 +1,7 @@
-import image from "@andescalada/api/schemas/image";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
+import image from "schemas/image";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { z } from "zod";
 
 import { SoftDelete } from ".prisma/client";

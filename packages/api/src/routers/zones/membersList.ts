@@ -1,7 +1,7 @@
-import user from "@andescalada/api/schemas/user";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
+import user from "schemas/user";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { z } from "zod";
 
 export const membersList = protectedZoneProcedure

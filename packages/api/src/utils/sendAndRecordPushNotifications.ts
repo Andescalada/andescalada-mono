@@ -1,7 +1,7 @@
-import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
-import sendPushNotification from "@andescalada/api/src/utils/sendPushNotification";
 import { Entity, EntityTypeId } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
+import { ProtectedContext } from "utils/protectedProcedure";
+import sendPushNotification from "utils/sendPushNotification";
 
 const sendAndRecordPushNotification = async (
   ctx: ProtectedContext,

@@ -1,5 +1,5 @@
-import { Permissions } from "@andescalada/api/src/types/permissions";
-import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
+import { Permissions } from "types/permissions";
+import { ProtectedContext } from "utils/protectedProcedure";
 
 const getAndParsePermissions = async (
   ctx: ProtectedContext,

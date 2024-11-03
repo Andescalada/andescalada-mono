@@ -1,6 +1,6 @@
-import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
-import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 import { RoleNames, User, Zone } from "@andescalada/db";
+import { ProtectedContext } from "utils/protectedProcedure";
+import updateRedisPermissions from "utils/updatePermissions";
 
 const removeRole = async (
   ctx: ProtectedContext,

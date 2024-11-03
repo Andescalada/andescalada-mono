@@ -1,5 +1,5 @@
-import { rolesObject } from "@andescalada/api/src/utils/rolesObject";
 import { Role, RoleByZone, RoleNames } from "@andescalada/db";
+import { rolesObject } from "utils/rolesObject";
 
 export type User = {
   profilePhoto: {

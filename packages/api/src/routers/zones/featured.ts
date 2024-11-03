@@ -1,5 +1,5 @@
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { SoftDelete } from "@andescalada/db";
+import { protectedProcedure } from "utils/protectedProcedure";
 
 const featured = protectedProcedure.query(async ({ ctx }) => {
   return ctx.prisma.zone.findMany({

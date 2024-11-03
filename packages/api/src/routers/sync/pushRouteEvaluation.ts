@@ -1,5 +1,5 @@
-import { PrismaMutationChangesParams } from "@andescalada/api/src/routers/sync/types";
 import { Prisma, SoftDelete } from "@andescalada/db";
+import { PrismaMutationChangesParams } from "routers/sync/types";
 
 export const pushRouteEvaluation = ({
   ctx: { prisma, user },

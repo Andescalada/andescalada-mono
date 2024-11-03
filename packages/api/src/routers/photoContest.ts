@@ -1,11 +1,11 @@
-import image from "@andescalada/api/schemas/image";
-import wall from "@andescalada/api/schemas/wall";
-import zone from "@andescalada/api/schemas/zone";
-import { t } from "@andescalada/api/src/createRouter";
-import { includeInTopo } from "@andescalada/api/src/routers/topos";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
-import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@andescalada/db";
+import { t } from "createRouter";
+import { includeInTopo } from "routers/topos";
+import image from "schemas/image";
+import wall from "schemas/wall";
+import zone from "schemas/zone";
+import { protectedProcedure } from "utils/protectedProcedure";
+import { slug } from "utils/slug";
 import { z } from "zod";
 
 export const photoContestRouter = t.router({

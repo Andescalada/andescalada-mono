@@ -1,9 +1,9 @@
-import routeSchema from "@andescalada/api/schemas/route";
-import { UpsertAction } from "@andescalada/api/src/types/upsertRoute";
-import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
-import { ProtectedZoneContext } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { slug } from "@andescalada/api/src/utils/slug";
 import { TRPCError } from "@trpc/server";
+import routeSchema from "schemas/route";
+import { UpsertAction } from "types/upsertRoute";
+import getMainTopo from "utils/getMainTopo";
+import { ProtectedZoneContext } from "utils/protectedZoneProcedure";
+import { slug } from "utils/slug";
 import { z } from "zod";
 
 const upsertVariant = async ({

@@ -1,8 +1,8 @@
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import {
   RouteAlertKindSchema,
   RouteAlertSeveritySchema,
 } from "@andescalada/db/zod";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { z } from "zod";
 
 import { Prisma } from ".prisma/client";

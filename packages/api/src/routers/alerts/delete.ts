@@ -1,6 +1,6 @@
-import error from "@andescalada/api/src/utils/errors";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
+import error from "utils/errors";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { z } from "zod";
 
 import { SoftDelete } from ".prisma/client";

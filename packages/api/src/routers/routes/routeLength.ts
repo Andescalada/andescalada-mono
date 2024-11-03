@@ -1,8 +1,8 @@
-import route from "@andescalada/api/schemas/route";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { UnitSchema } from "@andescalada/db/zod";
 import { TRPCError } from "@trpc/server";
+import route from "schemas/route";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { z } from "zod";
 
 const addRouteLength = protectedZoneProcedure

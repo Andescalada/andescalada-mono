@@ -1,5 +1,5 @@
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@andescalada/db";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { z } from "zod";
 
 const deleteDirection = protectedZoneProcedure

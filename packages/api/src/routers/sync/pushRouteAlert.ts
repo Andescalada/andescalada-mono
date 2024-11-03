@@ -1,6 +1,6 @@
-import { PrismaMutationChangesParams } from "@andescalada/api/src/routers/sync/types";
 import { Prisma, SoftDelete } from "@andescalada/db";
 import * as Sentry from "@sentry/nextjs";
+import { PrismaMutationChangesParams } from "routers/sync/types";
 
 export const pushRouteAlert = ({
   ctx: { prisma, user },

@@ -1,5 +1,5 @@
-import { rolesObject } from "@andescalada/api/src/utils/rolesObject";
 import { InfoAccess, RoleNames } from "@andescalada/db";
+import { rolesObject } from "utils/rolesObject";
 
 type Zone = {
   id: string;

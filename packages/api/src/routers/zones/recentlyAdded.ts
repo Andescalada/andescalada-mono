@@ -1,5 +1,5 @@
-import { t } from "@andescalada/api/src/createRouter";
 import { SearchVisibility, SoftDelete, Status } from "@andescalada/db";
+import { t } from "createRouter";
 
 const recentlyAdded = t.procedure.query(({ ctx }) =>
   ctx.prisma.zone.findMany({
