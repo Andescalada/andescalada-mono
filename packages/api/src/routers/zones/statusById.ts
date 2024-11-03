@@ -1,5 +1,5 @@
-import error from "utils/errors";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import error from "@andescalada/api/src/utils/errors";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 
 const statusById = protectedZoneProcedure.query(async ({ ctx, input }) => {

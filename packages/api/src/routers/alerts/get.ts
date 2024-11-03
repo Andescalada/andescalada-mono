@@ -1,4 +1,4 @@
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { RouteAlertSeveritySchema } from "@andescalada/db/zod";
 import { z } from "zod";
 

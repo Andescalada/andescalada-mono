@@ -1,4 +1,4 @@
-import { notNull } from "utils/filterGuards";
+import { notNull } from "@andescalada/api/src/utils/filterGuards";
 import { ClassicAgreementSchema, SoftDeleteSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,

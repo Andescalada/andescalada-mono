@@ -1,4 +1,4 @@
-import { t } from "createRouter";
+import { t } from "@andescalada/api/src/createRouter";
 import { SearchVisibility, SoftDelete, Status } from "@andescalada/db";
 
 const recentlyAdded = t.procedure.query(({ ctx }) =>

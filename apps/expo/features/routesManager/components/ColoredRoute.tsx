@@ -1,4 +1,4 @@
-import { AppRouter } from "routers/_app";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { SkiaRoutePath } from "@andescalada/climbs-drawer";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { useAppTheme } from "@hooks/useAppTheme";

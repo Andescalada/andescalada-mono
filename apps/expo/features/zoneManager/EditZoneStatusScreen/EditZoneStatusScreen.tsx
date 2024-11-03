@@ -1,4 +1,4 @@
-import { AppRouter } from "routers/_app";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { StatusSchema } from "@andescalada/db/zod";
 import {
   ActivityIndicator,

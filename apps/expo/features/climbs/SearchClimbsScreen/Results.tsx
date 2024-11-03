@@ -1,4 +1,4 @@
-import { AppRouter } from "routers/_app";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { ActivityIndicator, Box, Text } from "@andescalada/ui";
 import SearchItem from "@features/climbs/SearchClimbsScreen/SearchItem";
 import { inferProcedureOutput } from "@trpc/server";

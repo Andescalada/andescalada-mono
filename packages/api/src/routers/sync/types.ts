@@ -1,4 +1,4 @@
-import { ProtectedContext } from "utils/protectedProcedure";
+import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import { z } from "zod";
 
 export const TableChanges = z.object({

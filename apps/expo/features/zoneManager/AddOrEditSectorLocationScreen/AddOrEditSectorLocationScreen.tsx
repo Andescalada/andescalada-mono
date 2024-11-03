@@ -1,4 +1,4 @@
-import { isDefined } from "utils/filterGuards";
+import { isDefined } from "@andescalada/api/src/utils/filterGuards";
 import { BackButton, Box, Button, Text, useMapType } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";
 import { images } from "@assets/images";

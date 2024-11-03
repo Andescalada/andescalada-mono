@@ -1,4 +1,4 @@
-import { r } from "utils/regex";
+import { r } from "@andescalada/api/src/utils/regex";
 import { z } from "zod";
 
 const schema = z.object({

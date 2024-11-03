@@ -1,7 +1,7 @@
-import topo from "schemas/topo";
-import wall from "schemas/wall";
-import error from "utils/errors";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import topo from "@andescalada/api/schemas/topo";
+import wall from "@andescalada/api/schemas/wall";
+import error from "@andescalada/api/src/utils/errors";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 
 export const setMainTopo = protectedZoneProcedure

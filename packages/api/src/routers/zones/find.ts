@@ -1,5 +1,5 @@
-import zone from "schemas/zone";
-import { protectedProcedure } from "utils/protectedProcedure";
+import zone from "@andescalada/api/schemas/zone";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { SoftDelete } from "@andescalada/db";
 
 const find = protectedProcedure

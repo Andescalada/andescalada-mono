@@ -1,25 +1,25 @@
-import addDirection from "routers/zones/addDirection";
-import all from "routers/zones/all";
-import allSectors from "routers/zones/allSectors";
+import addDirection from "@andescalada/api/src/routers/zones/addDirection";
+import all from "@andescalada/api/src/routers/zones/all";
+import allSectors from "@andescalada/api/src/routers/zones/allSectors";
 import {
   addCoverPhoto,
   deleteCoverPhoto,
   getCoverPhoto,
-} from "routers/zones/coverPhoto";
-import create from "routers/zones/create";
-import deleteDirection from "routers/zones/deleteDirection";
-import directionsById from "routers/zones/directionsById";
-import edit from "routers/zones/edit";
-import featured from "routers/zones/featured";
-import find from "routers/zones/find";
-import location from "routers/zones/location";
-import { membersList } from "routers/zones/membersList";
-import publicById from "routers/zones/publicById";
-import publicWallById from "routers/zones/publicWallById";
-import recentlyAdded from "routers/zones/recentlyAdded";
-import statusById from "routers/zones/statusById";
-import upsertDescription from "routers/zones/upsertDescription";
-import usersByRole from "routers/zones/usersByRole";
+} from "@andescalada/api/src/routers/zones/coverPhoto";
+import create from "@andescalada/api/src/routers/zones/create";
+import deleteDirection from "@andescalada/api/src/routers/zones/deleteDirection";
+import directionsById from "@andescalada/api/src/routers/zones/directionsById";
+import edit from "@andescalada/api/src/routers/zones/edit";
+import featured from "@andescalada/api/src/routers/zones/featured";
+import find from "@andescalada/api/src/routers/zones/find";
+import location from "@andescalada/api/src/routers/zones/location";
+import { membersList } from "@andescalada/api/src/routers/zones/membersList";
+import publicById from "@andescalada/api/src/routers/zones/publicById";
+import publicWallById from "@andescalada/api/src/routers/zones/publicWallById";
+import recentlyAdded from "@andescalada/api/src/routers/zones/recentlyAdded";
+import statusById from "@andescalada/api/src/routers/zones/statusById";
+import upsertDescription from "@andescalada/api/src/routers/zones/upsertDescription";
+import usersByRole from "@andescalada/api/src/routers/zones/usersByRole";
 
 import { t } from "../../createRouter";
 

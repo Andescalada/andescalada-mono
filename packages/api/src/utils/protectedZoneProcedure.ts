@@ -1,7 +1,10 @@
-import { Access, Permissions } from "types/permissions";
-import getAndParsePermissions from "utils/getAndParsePermissions";
-import { InferContext } from "utils/inferContext";
-import { isAuth, protectedProcedure } from "utils/protectedProcedure";
+import { Access, Permissions } from "@andescalada/api/src/types/permissions";
+import getAndParsePermissions from "@andescalada/api/src/utils/getAndParsePermissions";
+import { InferContext } from "@andescalada/api/src/utils/inferContext";
+import {
+  isAuth,
+  protectedProcedure,
+} from "@andescalada/api/src/utils/protectedProcedure";
 import { deserialize } from "superjson";
 import { z } from "zod";
 

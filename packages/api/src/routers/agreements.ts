@@ -1,9 +1,9 @@
-import error from "utils/errors";
-import { protectedProcedure } from "utils/protectedProcedure";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import agreements from "@andescalada/api/schemas/agreements";
+import error from "@andescalada/api/src/utils/errors";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
-import agreements from "schemas/agreements";
 import { z } from "zod";
 
 import { t } from "../createRouter";

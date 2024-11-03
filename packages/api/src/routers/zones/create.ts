@@ -1,7 +1,7 @@
-import zone from "schemas/zone";
-import { protectedProcedure } from "utils/protectedProcedure";
-import { slug } from "utils/slug";
-import updateRedisPermissions from "utils/updatePermissions";
+import zone from "@andescalada/api/schemas/zone";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { slug } from "@andescalada/api/src/utils/slug";
+import updateRedisPermissions from "@andescalada/api/src/utils/updatePermissions";
 
 const create = protectedProcedure
   .input(zone.schema)

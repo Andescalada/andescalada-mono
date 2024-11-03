@@ -1,4 +1,4 @@
-import { rolesObject } from "utils/rolesObject";
+import { rolesObject } from "@andescalada/api/src/utils/rolesObject";
 import { Role, RoleByZone, RoleNames } from "@andescalada/db";
 
 export type User = {

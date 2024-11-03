@@ -1,8 +1,8 @@
-import topo from "schemas/topo";
-import zone from "schemas/zone";
-import { includeInTopo } from "routers/topos";
-import error from "utils/errors";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import topo from "@andescalada/api/schemas/topo";
+import zone from "@andescalada/api/schemas/zone";
+import { includeInTopo } from "@andescalada/api/src/routers/topos";
+import error from "@andescalada/api/src/utils/errors";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 
 import { VerificationStatus } from ".prisma/client";

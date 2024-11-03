@@ -1,11 +1,11 @@
+import route from "@andescalada/api/schemas/route";
+import wall from "@andescalada/api/schemas/wall";
+import error from "@andescalada/api/src/utils/errors";
+import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { slug } from "@andescalada/api/src/utils/slug";
 import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
-import route from "schemas/route";
-import wall from "schemas/wall";
-import error from "utils/errors";
-import getMainTopo from "utils/getMainTopo";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
-import { slug } from "utils/slug";
 import { z } from "zod";
 
 const add = protectedZoneProcedure

@@ -1,20 +1,23 @@
-import global from "schemas/global";
-import routeSchema from "schemas/route";
-import { t } from "createRouter";
-import addOrEditEvaluation from "routers/routes/addOrEditEvaluation";
-import addOrEditGradeEvaluation from "routers/routes/addOrEditGradeEvaluation";
-import byIdWithEvaluation from "routers/routes/byIdWithEvaluation";
-import editPosition from "routers/routes/editPositions";
-import evaluationById from "routers/routes/evaluationById";
-import { addRouteLength, editRouteLength } from "routers/routes/routeLength";
-import { searchInAZone } from "routers/routes/searchInAZone";
-import upsert from "routers/routes/upsert";
-import upsertDescription from "routers/routes/upsertDescription";
-import getMainTopo from "utils/getMainTopo";
-import { protectedProcedure } from "utils/protectedProcedure";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
-import { slug } from "utils/slug";
-import updatePositionsOnDelete from "utils/updatePositionsOnDelete";
+import global from "@andescalada/api/schemas/global";
+import routeSchema from "@andescalada/api/schemas/route";
+import { t } from "@andescalada/api/src/createRouter";
+import addOrEditEvaluation from "@andescalada/api/src/routers/routes/addOrEditEvaluation";
+import addOrEditGradeEvaluation from "@andescalada/api/src/routers/routes/addOrEditGradeEvaluation";
+import byIdWithEvaluation from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
+import editPosition from "@andescalada/api/src/routers/routes/editPositions";
+import evaluationById from "@andescalada/api/src/routers/routes/evaluationById";
+import {
+  addRouteLength,
+  editRouteLength,
+} from "@andescalada/api/src/routers/routes/routeLength";
+import { searchInAZone } from "@andescalada/api/src/routers/routes/searchInAZone";
+import upsert from "@andescalada/api/src/routers/routes/upsert";
+import upsertDescription from "@andescalada/api/src/routers/routes/upsertDescription";
+import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { slug } from "@andescalada/api/src/utils/slug";
+import updatePositionsOnDelete from "@andescalada/api/src/utils/updatePositionsOnDelete";
 import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";

@@ -1,4 +1,4 @@
-import { AppRouter } from "routers/_app";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { Box, Image, Pressable, Text } from "@andescalada/ui";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";
 import useCloudinaryUrl from "@hooks/useCloudinaryUrl";

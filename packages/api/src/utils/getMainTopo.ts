@@ -1,4 +1,4 @@
-import { ProtectedContext } from "utils/protectedProcedure";
+import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import { SoftDelete, Wall } from "@andescalada/db";
 
 const getMainTopo = async ({

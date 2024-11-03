@@ -1,4 +1,4 @@
-import { AppRouter } from "routers/_app";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { StaticTopoImage } from "@andescalada/climbs-drawer";
 import { ThemeProvider } from "@andescalada/ui";
 import ColoredRoute from "@features/routesManager/components/ColoredRoute";

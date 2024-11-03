@@ -1,6 +1,6 @@
-import wall from "schemas/wall";
-import parsedWall from "utils/parsedWall";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import wall from "@andescalada/api/schemas/wall";
+import parsedWall from "@andescalada/api/src/utils/parsedWall";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 
 const routeList = protectedZoneProcedure
   .input(wall.id)

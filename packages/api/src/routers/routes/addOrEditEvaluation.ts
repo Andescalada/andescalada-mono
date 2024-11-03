@@ -1,6 +1,6 @@
-import route from "schemas/route";
-import error from "utils/errors";
-import { protectedProcedure } from "utils/protectedProcedure";
+import route from "@andescalada/api/schemas/route";
+import error from "@andescalada/api/src/utils/errors";
+import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

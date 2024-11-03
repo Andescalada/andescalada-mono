@@ -1,4 +1,4 @@
-import type { Permissions } from "types/permissions";
+import type { Permissions } from "@andescalada/api/src/types/permissions";
 import type { PermissionActions, Zone } from "@andescalada/db";
 import { trpc } from "@andescalada/utils/trpc";
 import useOwnInfo from "@hooks/useOwnInfo";

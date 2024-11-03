@@ -1,4 +1,4 @@
-import { slug } from "utils/slug";
+import { slug } from "@andescalada/api/src/utils/slug";
 
 export const createShareableLink = ({
   zoneId,

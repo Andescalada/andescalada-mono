@@ -1,11 +1,11 @@
-import { includeInMultiPitch } from "routers/multiPitch/byId";
-import { includeInRoute } from "routers/routes/byIdWithEvaluation";
-import { selectFromSectorAllWalls } from "routers/sectors";
-import { includeInTopo } from "routers/topos";
-import { includeInWallById } from "routers/walls";
-import { selectZoneAllSectors } from "routers/zones/allSectors";
-import parseMultiPitch from "utils/parseMultiPitch";
-import { ProtectedContext } from "utils/protectedProcedure";
+import { includeInMultiPitch } from "@andescalada/api/src/routers/multiPitch/byId";
+import { includeInRoute } from "@andescalada/api/src/routers/routes/byIdWithEvaluation";
+import { selectFromSectorAllWalls } from "@andescalada/api/src/routers/sectors";
+import { includeInTopo } from "@andescalada/api/src/routers/topos";
+import { includeInWallById } from "@andescalada/api/src/routers/walls";
+import { selectZoneAllSectors } from "@andescalada/api/src/routers/zones/allSectors";
+import parseMultiPitch from "@andescalada/api/src/utils/parseMultiPitch";
+import { ProtectedContext } from "@andescalada/api/src/utils/protectedProcedure";
 import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 

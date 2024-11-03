@@ -1,7 +1,7 @@
-import user from "schemas/user";
-import error from "utils/errors";
-import parseUsersToRole from "utils/parseUsersToRole";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import user from "@andescalada/api/schemas/user";
+import error from "@andescalada/api/src/utils/errors";
+import parseUsersToRole from "@andescalada/api/src/utils/parseUsersToRole";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

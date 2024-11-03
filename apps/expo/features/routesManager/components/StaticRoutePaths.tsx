@@ -1,4 +1,4 @@
-import { AppRouter } from "routers/_app";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { ThemeProvider } from "@andescalada/ui";
 import ColoredRoute from "@features/routesManager/components/ColoredRoute";
 import { Canvas, FitBox, rect } from "@shopify/react-native-skia";

@@ -1,6 +1,6 @@
-import multiPitch from "schemas/multiPitch";
-import error from "utils/errors";
-import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
+import multiPitch from "@andescalada/api/schemas/multiPitch";
+import error from "@andescalada/api/src/utils/errors";
+import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
 import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 

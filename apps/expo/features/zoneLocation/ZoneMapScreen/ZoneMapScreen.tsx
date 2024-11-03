@@ -1,4 +1,4 @@
-import { isDefined } from "utils/filterGuards";
+import { isDefined } from "@andescalada/api/src/utils/filterGuards";
 import Mapbox, { UserLocation } from "@andescalada/maps";
 import {
   A,

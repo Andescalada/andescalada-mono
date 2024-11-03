@@ -1,4 +1,4 @@
-import { AppRouter } from "routers/_app";
+import { AppRouter } from "@andescalada/api/src/routers/_app";
 import { trpc } from "@andescalada/utils/trpc";
 import { inferProcedureOutput } from "@trpc/server";
 import { atomWithMMKV, Storage } from "@utils/mmkv/storage";

@@ -1,4 +1,4 @@
-import { t } from "createRouter";
+import { t } from "@andescalada/api/src/createRouter";
 import { z } from "zod";
 
 const email = z.object({
