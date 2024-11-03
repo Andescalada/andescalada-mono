@@ -1,4 +1,4 @@
-import { columns } from "@andescalada/utils/local-database";
+import { columns } from "@andescalada/local-database";
 import { Keys, LOCAL_DATABASE } from "@local-database/hooks/types";
 import { database } from "@local-database/index";
 import { RouteGradeEvaluation } from "@local-database/model";

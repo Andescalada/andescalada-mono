@@ -1,5 +1,5 @@
 import { GradeSystemsSchema } from "@andescalada/db/zod";
-import { columns, Table } from "@andescalada/utils/local-database";
+import { columns, Table } from "@andescalada/local-database";
 import { LOCAL_DATABASE } from "@local-database/hooks/types";
 import { database } from "@local-database/index";
 import { RouteGradeEvaluation } from "@local-database/model";

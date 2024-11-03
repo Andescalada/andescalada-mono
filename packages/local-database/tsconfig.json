@@ -1,0 +1,7 @@
+{
+  "extends": "@andescalada/tsconfig/base",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "include": ["index.ts"]
+}

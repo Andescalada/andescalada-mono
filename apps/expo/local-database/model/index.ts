@@ -1,5 +1,5 @@
 import { GradeSystemsSchema } from "@andescalada/db/zod";
-import { columns } from "@andescalada/utils/local-database";
+import { columns } from "@andescalada/local-database";
 import { schema, Table } from "@local-database/model/schema";
 import { Model } from "@nozbe/watermelondb";
 import {

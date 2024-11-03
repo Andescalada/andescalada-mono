@@ -1,4 +1,4 @@
-import { columns, Table } from "@andescalada/utils/local-database";
+import { columns, Table } from "@andescalada/local-database";
 import { Keys, LOCAL_DATABASE } from "@local-database/hooks/types";
 import { database } from "@local-database/index";
 import { User } from "@local-database/model";

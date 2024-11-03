@@ -1,4 +1,4 @@
-import { schema, Table } from "@andescalada/utils/local-database";
+import { schema, Table } from "@andescalada/local-database";
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 const tables = Object.entries(schema).map(([name, columns]) => {

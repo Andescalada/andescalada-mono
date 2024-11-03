@@ -34,13 +34,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@andescalada/api@npm:*, @andescalada/api@npm:0.0.1, @andescalada/api@workspace:packages/api":
+"@andescalada/api@npm:0.0.1, @andescalada/api@workspace:*, @andescalada/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@andescalada/api@workspace:packages/api"
   dependencies:
     "@andescalada/common-assets": "workspace:*"
+    "@andescalada/local-database": "workspace:*"
     "@andescalada/tsconfig": "workspace:*"
-    "@andescalada/utils": "workspace:*"
     "@trpc/server": "npm:10.23.1"
     "@upstash/redis": "npm:^1.13.1"
     accept-language: "npm:^3.0.18"
@@ -52,7 +52,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@andescalada/climbs-drawer@npm:*, @andescalada/climbs-drawer@workspace:packages/climbs-drawer":
+"@andescalada/climbs-drawer@workspace:*, @andescalada/climbs-drawer@workspace:packages/climbs-drawer":
   version: 0.0.0-use.local
   resolution: "@andescalada/climbs-drawer@workspace:packages/climbs-drawer"
   dependencies:
@@ -69,12 +69,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@andescalada/common-assets@npm:*, @andescalada/common-assets@workspace:*, @andescalada/common-assets@workspace:packages/common-assets":
+"@andescalada/common-assets@workspace:*, @andescalada/common-assets@workspace:packages/common-assets":
   version: 0.0.0-use.local
   resolution: "@andescalada/common-assets@workspace:packages/common-assets"
   dependencies:
-    "@andescalada/db": "npm:*"
-    "@andescalada/ui": "npm:*"
+    "@andescalada/db": "workspace:*"
+    "@andescalada/tsconfig": "workspace:*"
+    "@andescalada/ui": "workspace:*"
   languageName: unknown
   linkType: soft
 
@@ -82,17 +83,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@andescalada/console@workspace:packages/console"
   dependencies:
-    "@andescalada/api": "npm:*"
-    "@andescalada/common-assets": "npm:*"
-    "@andescalada/db": "npm:*"
-    "@andescalada/old-db": "npm:*"
+    "@andescalada/api": "workspace:*"
+    "@andescalada/common-assets": "workspace:*"
+    "@andescalada/db": "workspace:*"
+    "@andescalada/old-db": "workspace:*"
   languageName: unknown
   linkType: soft
 
-"@andescalada/db@npm:*, @andescalada/db@npm:1.0.0, @andescalada/db@workspace:packages/db":
+"@andescalada/db@npm:1.0.0, @andescalada/db@workspace:*, @andescalada/db@workspace:packages/db":
   version: 0.0.0-use.local
   resolution: "@andescalada/db@workspace:packages/db"
   dependencies:
+    "@andescalada/tsconfig": "workspace:*"
     "@elevyg/prisma-zod-enums-generator": "npm:^0.0.15"
     "@mermaid-js/mermaid-cli": "npm:^10.5.0"
     "@planetscale/database": "npm:^1.11.0"
@@ -103,12 +105,11 @@ __metadata:
     prisma-enum-generator: "npm:^1.0.3"
     prisma-erd-generator: "npm:^1.11.1"
     undici: "npm:^5.26.3"
-  peerDependencies:
-    zod: "*"
+    zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
 
-"@andescalada/hooks@npm:*, @andescalada/hooks@workspace:packages/hooks":
+"@andescalada/hooks@workspace:*, @andescalada/hooks@workspace:packages/hooks":
   version: 0.0.0-use.local
   resolution: "@andescalada/hooks@workspace:packages/hooks"
   dependencies:
@@ -128,7 +129,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@andescalada/icons@npm:*, @andescalada/icons@workspace:packages/icons":
+"@andescalada/icons@npm:*, @andescalada/icons@workspace:*, @andescalada/icons@workspace:packages/icons":
   version: 0.0.0-use.local
   resolution: "@andescalada/icons@workspace:packages/icons"
   dependencies:
@@ -140,7 +141,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@andescalada/maps@npm:*, @andescalada/maps@workspace:packages/maps":
+"@andescalada/local-database@workspace:*, @andescalada/local-database@workspace:packages/local-database":
+  version: 0.0.0-use.local
+  resolution: "@andescalada/local-database@workspace:packages/local-database"
+  dependencies:
+    "@andescalada/tsconfig": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@andescalada/maps@workspace:*, @andescalada/maps@workspace:packages/maps":
   version: 0.0.0-use.local
   resolution: "@andescalada/maps@workspace:packages/maps"
   dependencies:
@@ -196,7 +205,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@andescalada/old-db@npm:*, @andescalada/old-db@workspace:packages/old-db":
+"@andescalada/old-db@workspace:*, @andescalada/old-db@workspace:packages/old-db":
   version: 0.0.0-use.local
   resolution: "@andescalada/old-db@workspace:packages/old-db"
   dependencies:
@@ -211,7 +220,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@andescalada/ui@npm:*, @andescalada/ui@workspace:*, @andescalada/ui@workspace:packages/ui":
+"@andescalada/ui@workspace:*, @andescalada/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@andescalada/ui@workspace:packages/ui"
   dependencies:
@@ -239,7 +248,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@andescalada/utils@npm:*, @andescalada/utils@workspace:*, @andescalada/utils@workspace:packages/utils":
+"@andescalada/utils@workspace:*, @andescalada/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@andescalada/utils@workspace:packages/utils"
   dependencies:
@@ -10179,15 +10188,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "expo-app@workspace:apps/expo"
   dependencies:
-    "@andescalada/api": "npm:*"
-    "@andescalada/climbs-drawer": "npm:*"
-    "@andescalada/common-assets": "npm:*"
-    "@andescalada/db": "npm:*"
-    "@andescalada/hooks": "npm:*"
-    "@andescalada/icons": "npm:*"
-    "@andescalada/maps": "npm:*"
-    "@andescalada/ui": "npm:*"
-    "@andescalada/utils": "npm:*"
+    "@andescalada/api": "workspace:*"
+    "@andescalada/climbs-drawer": "workspace:*"
+    "@andescalada/common-assets": "workspace:*"
+    "@andescalada/db": "workspace:*"
+    "@andescalada/hooks": "workspace:*"
+    "@andescalada/icons": "workspace:*"
+    "@andescalada/local-database": "workspace:*"
+    "@andescalada/maps": "workspace:*"
+    "@andescalada/ui": "workspace:*"
+    "@andescalada/utils": "workspace:*"
     "@babel/core": "npm:^7.24.0"
     "@babel/plugin-proposal-decorators": "npm:^7.22.3"
     "@cloudinary/url-gen": "npm:^1.8.6"

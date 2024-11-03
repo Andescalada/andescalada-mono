@@ -1,5 +1,5 @@
 import { Prisma } from "@andescalada/db";
-import { Table } from "@andescalada/utils/local-database";
+import { Table } from "@andescalada/local-database";
 import { TRPCError } from "@trpc/server";
 import { t } from "createRouter";
 import { pushRouteAlert } from "routers/sync/pushRouteAlert";

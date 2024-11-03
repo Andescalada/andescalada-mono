@@ -2,7 +2,7 @@ import {
   RouteAlertKindSchema,
   RouteAlertSeveritySchema,
 } from "@andescalada/db/zod";
-import { Table } from "@andescalada/utils/local-database";
+import { Table } from "@andescalada/local-database";
 import { LOCAL_DATABASE } from "@local-database/hooks/types";
 import { database } from "@local-database/index";
 import { RouteAlert } from "@local-database/model";

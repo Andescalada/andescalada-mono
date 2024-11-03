@@ -11,8 +11,8 @@
     "@rnmapbox/maps": "10.1.29"
   },
   "peerDependencies": {
-    "react": "*",
     "@rnmapbox/maps": ">=10.1.0",
+    "react": "*",
     "react-native": "*"
   }
 }

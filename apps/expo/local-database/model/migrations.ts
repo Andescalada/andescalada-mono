@@ -1,5 +1,5 @@
 import { isDefined } from "@andescalada/api/src/utils/filterGuards";
-import { migrationRecord } from "@andescalada/utils/local-database";
+import { migrationRecord } from "@andescalada/local-database";
 import {
   createTable,
   schemaMigrations,
