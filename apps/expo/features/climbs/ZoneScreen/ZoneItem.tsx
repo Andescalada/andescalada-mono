@@ -1,4 +1,4 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { AppRouter } from "routers/_app";
 import {
   A,
   Box,

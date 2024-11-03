@@ -1,6 +1,6 @@
-import { createContext, prisma } from "@andescalada/api/src/createContext";
-import { appRouter } from "@andescalada/api/src/routers/_app";
-import { transformer } from "@andescalada/api/src/transformer";
+import { createContext, prisma } from "createContext";
+import { appRouter } from "routers/_app";
+import { transformer } from "transformer";
 import agreementLevelAssets from "@andescalada/common-assets/agreementLevel";
 import infoAccessAssets from "@andescalada/common-assets/infoAccessAssets";
 import {

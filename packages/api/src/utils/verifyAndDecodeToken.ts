@@ -1,4 +1,4 @@
-import { GlobalRoles } from "@andescalada/api/src/utils/globalRoles";
+import { GlobalRoles } from "utils/globalRoles";
 import * as jose from "jose";
 import type { NextApiRequest } from "next";
 

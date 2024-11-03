@@ -1,4 +1,4 @@
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import {
   RouteAlertKindSchema,
   RouteAlertSeveritySchema,

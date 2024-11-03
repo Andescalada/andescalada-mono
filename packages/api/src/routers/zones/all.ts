@@ -1,4 +1,4 @@
-import { t } from "@andescalada/api/src/createRouter";
+import { t } from "createRouter";
 import { SearchVisibility, SoftDelete, Status } from "@andescalada/db";
 
 const all = t.procedure.query(({ ctx }) =>

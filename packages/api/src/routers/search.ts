@@ -1,5 +1,5 @@
-import { SearchType } from "@andescalada/api/schemas/search";
-import { isDefined } from "@andescalada/api/src/utils/filterGuards";
+import { SearchType } from "schemas/search";
+import { isDefined } from "utils/filterGuards";
 import { SearchVisibility, SoftDelete, Status } from "@andescalada/db";
 import { z } from "zod";
 

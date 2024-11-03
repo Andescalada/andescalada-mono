@@ -1,4 +1,4 @@
-import { slug } from "@andescalada/api/src/utils/slug";
+import { slug } from "utils/slug";
 import { gradeUnits } from "@andescalada/common-assets/climbingGrades";
 import { Prisma, PrismaClient } from "@andescalada/db";
 import { oldDb } from "@andescalada/old-db";

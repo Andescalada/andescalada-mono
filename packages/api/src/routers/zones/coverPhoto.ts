@@ -1,6 +1,6 @@
-import image from "@andescalada/api/schemas/image";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import image from "schemas/image";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

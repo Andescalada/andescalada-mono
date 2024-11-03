@@ -1,9 +1,9 @@
-import routeSchema from "@andescalada/api/schemas/route";
-import { UpsertAction } from "@andescalada/api/src/types/upsertRoute";
-import error from "@andescalada/api/src/utils/errors";
-import getMainTopo from "@andescalada/api/src/utils/getMainTopo";
-import { ProtectedZoneContext } from "@andescalada/api/src/utils/protectedZoneProcedure";
-import { slug } from "@andescalada/api/src/utils/slug";
+import routeSchema from "schemas/route";
+import { UpsertAction } from "types/upsertRoute";
+import error from "utils/errors";
+import getMainTopo from "utils/getMainTopo";
+import { ProtectedZoneContext } from "utils/protectedZoneProcedure";
+import { slug } from "utils/slug";
 import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";

@@ -1,6 +1,6 @@
-import zone from "@andescalada/api/schemas/zone";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import zone from "schemas/zone";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

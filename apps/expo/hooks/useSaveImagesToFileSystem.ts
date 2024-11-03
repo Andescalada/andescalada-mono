@@ -1,4 +1,4 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { AppRouter } from "routers/_app";
 import { urlGen } from "@andescalada/utils/cloudinary";
 import { downloadedImagesAtom } from "@atoms/index";
 import * as Sentry from "@sentry/react-native";

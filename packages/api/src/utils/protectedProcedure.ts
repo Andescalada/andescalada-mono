@@ -1,6 +1,6 @@
-import { Context } from "@andescalada/api/src/createContext";
-import { InferContext } from "@andescalada/api/src/utils/inferContext";
-import session, { SessionUser } from "@andescalada/api/src/utils/session";
+import { Context } from "createContext";
+import { InferContext } from "utils/inferContext";
+import session, { SessionUser } from "utils/session";
 import { SoftDelete } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 

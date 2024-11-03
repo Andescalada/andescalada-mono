@@ -1,4 +1,4 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { AppRouter } from "routers/_app";
 import { EntityTypeIdSchema } from "@andescalada/db/zod";
 import { trpc } from "@andescalada/utils/trpc";
 import { ClimbsNavigationRoutes } from "@features/climbs/Navigation/types";

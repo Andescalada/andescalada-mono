@@ -1,5 +1,5 @@
-import image from "@andescalada/api/schemas/image";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import image from "schemas/image";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
 

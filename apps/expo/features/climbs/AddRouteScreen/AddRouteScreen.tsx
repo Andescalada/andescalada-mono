@@ -1,5 +1,5 @@
 import route from "@andescalada/api/schemas/route";
-import { UpsertAction } from "@andescalada/api/src/types/upsertRoute";
+import { UpsertAction } from "types/upsertRoute";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { RouteKindSchema } from "@andescalada/db/zod";
 import useZodForm from "@andescalada/hooks/useZodForm";

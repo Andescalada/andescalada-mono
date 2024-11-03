@@ -1,8 +1,6 @@
-import { isDefined } from "@andescalada/api/src/utils/filterGuards";
-import getOfflineAssets, {
-  AssetsToUpdate,
-} from "@andescalada/api/src/utils/getOfflineAssets";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { isDefined } from "utils/filterGuards";
+import getOfflineAssets, { AssetsToUpdate } from "utils/getOfflineAssets";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { z } from "zod";
 
 const AssetsToUpdateZod = z.object({

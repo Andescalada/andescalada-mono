@@ -1,6 +1,6 @@
-import route from "@andescalada/api/schemas/route";
-import error from "@andescalada/api/src/utils/errors";
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import route from "schemas/route";
+import error from "utils/errors";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { TRPCError } from "@trpc/server";
 
 const upsertDescription = protectedZoneProcedure

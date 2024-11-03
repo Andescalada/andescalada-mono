@@ -1,4 +1,4 @@
-import { transformer } from "@andescalada/api/src/transformer";
+import { transformer } from "transformer";
 import NetInfo from "@react-native-community/netinfo";
 import {
   onlineManager,

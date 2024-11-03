@@ -1,4 +1,4 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { AppRouter } from "routers/_app";
 import { Box, Ionicons, Modal, Pressable, Text } from "@andescalada/ui";
 import UserProfileImage from "@templates/UserProfileImage/UserProfileImage";
 import { inferProcedureOutput } from "@trpc/server";

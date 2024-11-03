@@ -1,4 +1,4 @@
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { SoftDelete } from "@andescalada/db";
 
 const featured = protectedProcedure.query(async ({ ctx }) => {

@@ -1,4 +1,4 @@
-import { protectedZoneProcedure } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import { protectedZoneProcedure } from "utils/protectedZoneProcedure";
 import { SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 

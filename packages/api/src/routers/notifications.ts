@@ -1,5 +1,5 @@
-import { t } from "@andescalada/api/src/createRouter";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import { t } from "createRouter";
+import { protectedProcedure } from "utils/protectedProcedure";
 import { TRPCError } from "@trpc/server";
 import Expo, { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
 import { z } from "zod";

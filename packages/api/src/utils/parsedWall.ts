@@ -1,5 +1,5 @@
-import error from "@andescalada/api/src/utils/errors";
-import { ProtectedZoneContext } from "@andescalada/api/src/utils/protectedZoneProcedure";
+import error from "utils/errors";
+import { ProtectedZoneContext } from "utils/protectedZoneProcedure";
 import {
   GradeSystems,
   InfoAccess,

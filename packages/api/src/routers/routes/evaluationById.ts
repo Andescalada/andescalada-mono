@@ -1,5 +1,5 @@
-import route from "@andescalada/api/schemas/route";
-import { protectedProcedure } from "@andescalada/api/src/utils/protectedProcedure";
+import route from "schemas/route";
+import { protectedProcedure } from "utils/protectedProcedure";
 
 const evaluationById = protectedProcedure
   .input(route.routeId)

@@ -1,4 +1,4 @@
-import { AppRouter } from "@andescalada/api/src/routers/_app";
+import { AppRouter } from "routers/_app";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { A, Box, Text, TextButton } from "@andescalada/ui";
 import { trpc } from "@andescalada/utils/trpc";

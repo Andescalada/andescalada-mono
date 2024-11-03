@@ -1,5 +1,5 @@
-import global from "@andescalada/api/schemas/global";
-import { r } from "@andescalada/api/src/utils/regex";
+import global from "schemas/global";
+import { r } from "utils/regex";
 import {
   InfoAccessSchema,
   SearchVisibilitySchema,

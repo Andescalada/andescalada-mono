@@ -1,5 +1,5 @@
-import image from "@andescalada/api/schemas/image";
-import { r } from "@andescalada/api/src/utils/regex";
+import image from "schemas/image";
+import { r } from "utils/regex";
 import { GradeSystemsSchema, RoleNamesSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 

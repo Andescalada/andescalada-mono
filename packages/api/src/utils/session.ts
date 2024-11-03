@@ -1,4 +1,4 @@
-import { Context } from "@andescalada/api/src/createContext";
+import { Context } from "createContext";
 import { Prisma } from "@andescalada/db";
 import { TRPCError } from "@trpc/server";
 import { deserialize, serialize } from "superjson";

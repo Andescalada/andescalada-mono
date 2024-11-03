@@ -1,4 +1,4 @@
-import { t } from "@andescalada/api/src/createRouter";
+import { t } from "createRouter";
 import { InfoAccess, SoftDelete } from "@andescalada/db";
 import { z } from "zod";
 

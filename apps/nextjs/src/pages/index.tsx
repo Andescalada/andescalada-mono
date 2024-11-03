@@ -1,6 +1,6 @@
-import { createContext } from "@andescalada/api/src/createContext";
-import { appRouter } from "@andescalada/api/src/routers/_app";
-import { transformer } from "@andescalada/api/src/transformer";
+import { createContext } from "createContext";
+import { appRouter } from "routers/_app";
+import { transformer } from "transformer";
 import useZodForm from "@andescalada/hooks/useZodForm";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import MobileVideoFrame from "components/MobileVideoFrame";

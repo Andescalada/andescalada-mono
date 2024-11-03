@@ -1,4 +1,4 @@
-import { r } from "@andescalada/api/src/utils/regex";
+import { r } from "utils/regex";
 import { GradeSystemsSchema, RouteKindSchema } from "@andescalada/db/zod";
 import { z } from "zod";
 

@@ -1,7 +1,7 @@
-import { createContext, prisma } from "@andescalada/api/src/createContext";
-import { appRouter } from "@andescalada/api/src/routers/_app";
-import { transformer } from "@andescalada/api/src/transformer";
-import { MULTI_PITCH } from "@andescalada/api/src/types/constants";
+import { createContext, prisma } from "createContext";
+import { appRouter } from "routers/_app";
+import { transformer } from "transformer";
+import { MULTI_PITCH } from "types/constants";
 import { routeKindLabel } from "@andescalada/common-assets/routeKind";
 import { SoftDeleteSchema, StatusSchema } from "@andescalada/db/zod";
 import { Icon } from "@andescalada/icons/WebIcons";

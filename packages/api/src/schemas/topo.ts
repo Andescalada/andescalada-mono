@@ -1,4 +1,4 @@
-import image from "@andescalada/api/schemas/image";
+import image from "schemas/image";
 import { z } from "zod";
 
 const schema = z.object({
