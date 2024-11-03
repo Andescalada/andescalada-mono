@@ -1,6 +1,9 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "@andescalada/tsconfig/react-native-base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "outDir": "./dist"
   }
 }
