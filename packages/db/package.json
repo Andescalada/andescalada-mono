@@ -12,7 +12,7 @@
     "dev-cli": "pscale connect andescalada develop --port 3309"
   },
   "dependencies": {
-    "@andescalada/tsconfig": "workspace:*",
+    "@andescalada/tsconfig": "*",
     "@elevyg/prisma-zod-enums-generator": "^0.0.15",
     "@planetscale/database": "^1.11.0",
     "@prisma/adapter-planetscale": "^5.4.2",

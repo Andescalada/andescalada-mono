@@ -10,9 +10,9 @@
     "lint": "eslint . --ext .ts,.js,.json"
   },
   "dependencies": {
-    "@andescalada/common-assets": "workspace:*",
-    "@andescalada/local-database": "workspace:*",
-    "@andescalada/tsconfig": "workspace:*",
+    "@andescalada/common-assets": "*",
+    "@andescalada/local-database": "*",
+    "@andescalada/tsconfig": "*",
     "@trpc/server": "10.23.1",
     "@upstash/redis": "^1.13.1",
     "accept-language": "^3.0.18",

@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.json"
   },
   "dependencies": {
-    "@andescalada/ui": "workspace:*",
+    "@andescalada/ui": "*",
     "@shopify/react-native-skia": "0.1.195"
   },
   "peerDependencies": {
@@ -21,7 +21,7 @@
     "react-native-redash": "*"
   },
   "devDependencies": {
-    "@andescalada/tsconfig": "workspace:*",
+    "@andescalada/tsconfig": "*",
     "@types/react-native": "*"
   }
 }
