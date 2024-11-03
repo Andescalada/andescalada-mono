@@ -1,7 +1,6 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "@andescalada/tsconfig/base",
   "compilerOptions": {
-    "strict": true,
     "baseUrl": "."
   },
   "include": ["index.ts"]
