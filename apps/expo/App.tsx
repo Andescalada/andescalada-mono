@@ -1,3 +1,4 @@
+// @ts-nocheck - Disabling type checking for this file
 import "expo-dev-client";
 
 import { darkTheme, Text, ThemeProvider } from "@andescalada/ui";

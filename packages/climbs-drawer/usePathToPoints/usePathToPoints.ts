@@ -6,7 +6,7 @@ import {
 } from "@shopify/react-native-skia";
 import { useEffect } from "react";
 
-import { scalePathArray } from "../utils";
+import { scalePathArray } from "../utils.js.js";
 
 export const pathToVector = (path: string | undefined, scale = 1) => {
   const points = scalePathArray(path, scale);

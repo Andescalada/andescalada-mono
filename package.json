@@ -21,7 +21,9 @@
     "db-reset": "npx prisma migrate reset --skip-seed --skip-generate -f",
     "db-push": "npx prisma db push",
     "db-seed": "npx prisma db seed",
-    "db-clean-seed": "yarn db-reset && yarn db-push && yarn db-seed"
+    "db-clean-seed": "yarn db-reset && yarn db-push && yarn db-seed",
+    "typecheck": "turbo run typecheck",
+    "typecheck:expo": "cd apps/expo && npx tsc --noEmit"
   },
   "workspaces": {
     "packages": [

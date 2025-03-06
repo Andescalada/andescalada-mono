@@ -18,9 +18,9 @@ import {
 
 import usePathToPoints, {
   pathToVector,
-} from "../usePathToPoints/usePathToPoints";
-import EndPointer from "./EndPointer";
-import StartPointer from "./StartPointer";
+} from "../usePathToPoints/usePathToPoints.js.js";
+import EndPointer from "./EndPointer.js";
+import StartPointer from "./StartPointer.js";
 
 interface Props {
   coords: SkiaValue<{

@@ -2,6 +2,7 @@
   "name": "@andescalada/utils",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "lint": "eslint . --ext .ts,.js,.json"
   },
@@ -16,6 +17,8 @@
     "@trpc/server": "*"
   },
   "devDependencies": {
-    "@shopify/restyle": "*"
+    "@shopify/restyle": "*",
+    "@andescalada/tsconfig": "*",
+    "typescript": "5.1.3"
   }
 }

@@ -7,8 +7,8 @@ import {
 } from "@shopify/react-native-skia";
 import { FC, memo, useMemo } from "react";
 
-import usePathToPoints from "../usePathToPoints/usePathToPoints";
-import { pointToVector } from "../utils";
+import usePathToPoints from "../usePathToPoints/usePathToPoints.js";
+import { pointToVector } from "../utils.js";
 import EndPointer from "./EndPointer";
 import StartPointer from "./StartPointer";
 

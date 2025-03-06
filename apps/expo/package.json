@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx expo start --dev-client",
     "tsCheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "build": "expo export --output-dir ./build --platform all",
     "android": "npx expo run:android",
     "ios": "npx expo run:ios",

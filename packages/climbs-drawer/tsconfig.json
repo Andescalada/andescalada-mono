@@ -2,8 +2,20 @@
   "extends": "@andescalada/tsconfig/react-native-base",
   "compilerOptions": {
     "strict": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
+    "module": "CommonJS",
     "baseUrl": ".",
-    "outDir": "./dist"
-  }
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "declaration": true,
+    "composite": true,
+    "jsx": "react-native",
+    "paths": {
+      "@andescalada/utils/*": ["../utils/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

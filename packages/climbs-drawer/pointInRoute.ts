@@ -1,5 +1,6 @@
-import roundPoint from "@andescalada/utils/roundPoint";
 import type { SkPoint } from "@shopify/react-native-skia";
+
+import roundPoint from "../utils/roundPoint";
 
 const pointInRoute = ({
   path: pathArg,
@@ -13,14 +14,14 @@ const pointInRoute = ({
   roundPointDecimal?: number;
 }) => {
   const pathLength = pathArg.length;
-  const path = pathArg.map(roundPoint);
+  const path = pathArg.map((p: SkPoint) => roundPoint(p, roundPointDecimal));
   const pt3 = roundPoint(point, roundPointDecimal);
 
   const distances = { dx: 1000000, dy: 100000 };
 
-  const isPointInRoute = path.some((pt1, index) => {
+  const isPointInRoute = path.some((pt1: SkPoint, index: number) => {
     if (index === pathLength - 1) return false;
-    const pt2 = path[index + 1];
+    const pt2 = path[index + 1] as SkPoint;
 
     const dx = (pt3.x - pt1.x) / (pt2.x - pt1.x);
     const dy = (pt3.y - pt1.y) / (pt2.y - pt1.y);

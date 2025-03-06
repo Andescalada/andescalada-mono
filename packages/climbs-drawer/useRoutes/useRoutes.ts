@@ -1,7 +1,7 @@
 import { createRef, useCallback, useReducer } from "react";
 
-// import { RouteRef } from "../RoutePath/RoutePath";
-import { SkiaRouteRef } from "../SkiaRoutePathDrawer/SkiaRoutePathDrawer";
+// import { RouteRef } from "../RoutePath/RoutePath.js";
+import { SkiaRouteRef } from "../SkiaRoutePathDrawer/SkiaRoutePathDrawer.js";
 
 type Path = string | undefined;
 type Id = string;

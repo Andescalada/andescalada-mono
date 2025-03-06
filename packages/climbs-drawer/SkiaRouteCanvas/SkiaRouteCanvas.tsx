@@ -8,7 +8,7 @@ import {
 import { FC, ReactNode, useEffect, useRef } from "react";
 import { Dimensions, Platform } from "react-native";
 
-import { GestureHandler } from "../GestureHandler/GestureHandler";
+import { GestureHandler } from "../GestureHandler/GestureHandler.js";
 
 export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
   Dimensions.get("window");
