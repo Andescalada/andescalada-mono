@@ -1,5 +1,7 @@
 import { AgreementLevelSchema } from "@andescalada/db/zod";
-import { type Colors } from "@andescalada/ui";
+
+// Define our own Colors type to avoid dependency on UI package
+type Colors = string;
 
 const agreementLevel = (
   level: typeof AgreementLevelSchema._type,

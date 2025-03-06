@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev-cli": "pscale connect andescalada develop --port 3309"
+    "dev-cli": "pscale connect andescalada develop --port 3309",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@andescalada/tsconfig": "*",

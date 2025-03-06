@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "dev": "next dev",
     "dev:offline": "OFFLINE_DEV=true next dev",
     "build": "next build",

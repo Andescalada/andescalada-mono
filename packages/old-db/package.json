@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "name": "@andescalada/old-db",
   "version": "1.0.0",
   "description": "Old Postgress database",

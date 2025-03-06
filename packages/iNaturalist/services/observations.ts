@@ -1,4 +1,4 @@
-import Constants from "../utils/constants";
+import Constants from "../utils/Constants";
 
 interface FetchObservationsParams {
   taxon_id: number;

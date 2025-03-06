@@ -1,4 +1,6 @@
-import type { AppRouter } from "@andescalada/api/src/routers/_app";
+// We need to avoid direct imports from other packages
+// Instead, we'll use a general type
+export type AppRouter = any;
 import {
   createTRPCReact,
   inferReactQueryProcedureOptions,

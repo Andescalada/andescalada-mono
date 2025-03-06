@@ -1,5 +1,7 @@
 import { RouteKindSchema } from "@andescalada/db/zod";
-import { Colors } from "@andescalada/ui";
+
+// Define our own Colors type to avoid dependency on UI package
+type Colors = string;
 
 const RouteKind = RouteKindSchema.Enum;
 

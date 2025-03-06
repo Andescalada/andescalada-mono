@@ -7,7 +7,8 @@
     "src"
   ],
   "scripts": {
-    "lint": "eslint . --ext .ts,.js,.json"
+    "lint": "eslint . --ext .ts,.js,.json",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@andescalada/common-assets": "*",

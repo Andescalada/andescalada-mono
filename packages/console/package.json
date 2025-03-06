@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "run:once": "ts-node src/index.ts",
-    "run:watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
+    "run:watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@andescalada/api": "*",

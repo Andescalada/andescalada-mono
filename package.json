@@ -23,6 +23,7 @@
     "db-seed": "npx prisma db seed",
     "db-clean-seed": "yarn db-reset && yarn db-push && yarn db-seed",
     "typecheck": "turbo run typecheck",
+    "typecheck:safe": "./typecheck-safe.sh",
     "typecheck:expo": "cd apps/expo && npx tsc --noEmit"
   },
   "workspaces": {
