@@ -8,7 +8,11 @@ export const pathToArray = (path: string | undefined | null) => {
 
 export const scalePathArray = (path: string | undefined, scale = 1) => {
   const points = pathToArray(path);
-  return points.map((p) => [p[0] * scale, p[1] * scale]);
+  // Fix nullability issues by adding null check
+  return points.map((p) => [
+    p[0] !== undefined ? p[0] * scale : 0,
+    p[1] !== undefined ? p[1] * scale : 0,
+  ]);
 };
 
 export const scalePath = (path: string | undefined, scale = 1) => {
@@ -23,6 +27,33 @@ export const pointToVector = (
   scale: number,
 ) => {
   if (!point) return DEFAULT_POSITION;
-  const [x, y] = point.split(",").map((n) => parseFloat(n));
+  const parts = point.split(",");
+  const x = parseFloat(parts[0] || "0");
+  const y = parseFloat(parts[1] || "0");
   return { x: x * scale, y: y * scale };
 };
+
+// Add roundPoint function to avoid dependency on utils package
+export const roundPoint = <T extends { x: number; y: number }>(
+  point: T,
+  precision = 2,
+): T => {
+  const factor = Math.pow(10, precision);
+  return {
+    ...point,
+    x: Math.round(point.x * factor) / factor,
+    y: Math.round(point.y * factor) / factor,
+  };
+};
+
+// Add omit function to avoid dependency on utils package
+export function omit<T extends Record<string, any>, K extends keyof T>(
+  obj: T,
+  ...keys: K[]
+): Omit<T, K> {
+  const result = { ...obj };
+  keys.forEach((key) => {
+    delete result[key];
+  });
+  return result;
+}

@@ -6,7 +6,7 @@ import {
 } from "@shopify/react-native-skia";
 import { useEffect } from "react";
 
-import { scalePathArray } from "../utils.js.js";
+import { scalePathArray } from "../utils";
 
 export const pathToVector = (path: string | undefined, scale = 1) => {
   const points = scalePathArray(path, scale);
@@ -25,11 +25,17 @@ const usePathToPoints = (path: string | undefined, scale = 1) => {
   }, [path]);
 
   useComputedValue(() => {
-    if (points.current.length > 0) start.current = points.current[0];
+    if (points.current.length > 0) {
+      // Ensure we have a valid point
+      start.current = points.current[0] || vec(0, 0);
+    }
   }, [points]);
   useComputedValue(() => {
-    if (points.current.length > 1)
-      end.current = points.current[points.current.length - 1];
+    if (points.current.length > 1) {
+      // Ensure we have a valid point
+      const lastPoint = points.current[points.current.length - 1];
+      end.current = lastPoint || vec(0, 0);
+    }
   }, [points]);
 
   useEffect(

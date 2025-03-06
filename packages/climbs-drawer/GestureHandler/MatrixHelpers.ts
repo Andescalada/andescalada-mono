@@ -5,12 +5,14 @@ import {
   multiply4,
   processTransform3d,
   Transforms3d,
-  Vec3,
 } from "react-native-redash";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export const vec3 = (x: number, y: number, z: number) => [x, y, z] as const;
+// Define Vec3 type to replace the one from react-native-redash
+export type Vec3 = readonly [number, number, number];
+export const vec3 = (x: number, y: number, z: number): Vec3 =>
+  [x, y, z] as const;
 
 export const initial4 = ({
   height,

@@ -1,4 +1,3 @@
-import { Image } from "@andescalada/ui";
 import {
   Canvas,
   SkiaDomView,
@@ -6,7 +5,7 @@ import {
   useMultiTouchHandler,
 } from "@shopify/react-native-skia";
 import { FC, ReactNode, useEffect, useRef } from "react";
-import { Dimensions, Platform } from "react-native";
+import { Dimensions, Image, Platform, StyleSheet } from "react-native";
 
 import { GestureHandler } from "../GestureHandler/GestureHandler.js";
 
@@ -92,21 +91,15 @@ const SkiaRouteCanvas: FC<Props> = ({
         center={center}
       >
         <Image
-          cachePolicy="memory"
-          position="absolute"
-          height={height}
-          width={width}
-          transition={500}
-          source={imageUrl}
-        />
-        <Canvas
           style={{
+            position: "absolute",
             height,
             width,
           }}
-          onTouch={touchHandler}
-          ref={ref}
-        >
+          source={{ uri: imageUrl }}
+        />
+        {/* @ts-ignore - Canvas from Skia doesn't have proper typings for style */}
+        <Canvas onTouch={touchHandler} ref={ref}>
           {children}
         </Canvas>
       </GestureHandler>

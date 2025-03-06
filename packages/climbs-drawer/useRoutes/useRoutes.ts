@@ -68,24 +68,40 @@ interface State {
 const reducer = (state: State, action: ActionTypes) => {
   switch (action.type) {
     case Actions.SavePath: {
-      const newState = state;
-      const selectedRoute = newState.routes.findIndex(
+      const newState = { ...state };
+      const selectedRouteIndex = newState.routes.findIndex(
         (r) => r.id === action.id,
       );
-      newState.routes[selectedRoute].path = action.path;
-      if (newState.route) {
-        newState.route.path = action.path;
+      // Check if route exists at the found index
+      if (selectedRouteIndex !== -1) {
+        const selectedRoute = newState.routes[selectedRouteIndex];
+        if (selectedRoute) {
+          selectedRoute.path = action.path;
+
+          // Update current route if it's the same ID
+          if (newState.route && newState.route.id === action.id) {
+            newState.route.path = action.path;
+          }
+        }
       }
       return newState;
     }
     case Actions.FinishRoute: {
-      const newState = state;
-      const selectedRoute = newState.routes.findIndex(
+      const newState = { ...state };
+      const selectedRouteIndex = newState.routes.findIndex(
         (r) => r.id === action.id,
       );
-      newState.routes[selectedRoute].finished = action.finished;
-      if (newState.route) {
-        newState.route.finished = action.finished;
+      // Check if route exists at the found index
+      if (selectedRouteIndex !== -1) {
+        const selectedRoute = newState.routes[selectedRouteIndex];
+        if (selectedRoute) {
+          selectedRoute.finished = action.finished;
+
+          // Update current route if it's the same ID
+          if (newState.route && newState.route.id === action.id) {
+            newState.route.finished = action.finished;
+          }
+        }
       }
       return newState;
     }

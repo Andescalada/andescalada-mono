@@ -1,6 +1,7 @@
-import omit from "@andescalada/utils/omit";
 import React, { createContext, useContext } from "react";
-import { RoutesReturnTypes } from "useRoutes/useRoutes";
+
+import { RoutesReturnTypes } from "../useRoutes/useRoutes";
+import { omit } from "../utils";
 
 const RoutesContext = createContext<RoutesReturnTypes | null>(null);
 

@@ -1,6 +1,6 @@
 import type { SkPoint } from "@shopify/react-native-skia";
 
-import roundPoint from "../utils/roundPoint";
+import { roundPoint } from "./utils";
 
 const pointInRoute = ({
   path: pathArg,
