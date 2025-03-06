@@ -4,6 +4,8 @@
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "dist",
+    "composite": true,
+    "tsBuildInfoFile": "./dist/tsbuildinfo",
     "paths": {
       "@andescalada/icons/*": ["../icons/src/*"],
       "Box": ["./src/Box"],

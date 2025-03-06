@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const colors = require("../../packages/ui/Theme/colors.cjs");
+const colors = require("../../packages/ui/src/Theme/colors.cjs");
 
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],

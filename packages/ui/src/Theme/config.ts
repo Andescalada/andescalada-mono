@@ -1,4 +1,4 @@
-import { flattenObject } from "@andescalada/utils/flattenObject";
+import { flattenObject } from "../utils/flattenObject";
 import { createTheme } from "@shopify/restyle";
 
 import breakpoints from "./breakpoints";

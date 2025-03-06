@@ -11,7 +11,7 @@
     "android": "npx expo run:android",
     "ios": "npx expo run:ios",
     "web": "expo start --web",
-    "dev": "APP_VARIANT=development yarn start",
+    "dev": "APP_VARIANT=development yarn start --port 8082",
     "dev:ios": "APP_VARIANT=development yarn ios",
     "dev:android": "APP_VARIANT=development yarn android",
     "dev:clean": "AVOID_MEMOIZED_NAVIGATION=true yarn dev -c",
