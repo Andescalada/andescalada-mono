@@ -5,15 +5,15 @@ import {
   useTheme,
   VariantProps,
 } from "@shopify/restyle";
-import Box from "Box";
-import {
+import Box from "../Box";
+import React, {
   ComponentProps,
   forwardRef,
   ForwardRefRenderFunction,
   useMemo,
 } from "react";
 import { TextInput as RNTextInput, TextInputProps } from "react-native";
-import { Theme } from "Theme/config";
+import { Theme } from "../Theme/config";
 
 import InputAdornment from "../InputAdornment/InputAdornment";
 

@@ -10,9 +10,9 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "jsx": "react",
-    "paths": {
-      "@andescalada/*": ["packages/*"]
-    }
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "declaration": true
   },
-  "exclude": ["node-modules"]
+  "exclude": ["node_modules", "dist"]
 }

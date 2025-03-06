@@ -37,6 +37,7 @@
     "react-native-phone-number-input": "^2.1.0"
   },
   "devDependencies": {
+    "@andescalada/tsconfig": "*",
     "@shopify/react-native-skia": "0.1.195",
     "@types/react": "^18.3.5",
     "typescript": "5.1.3"

@@ -1,5 +1,5 @@
 import { BoxProps, TextProps } from "@shopify/restyle";
-import { BaseTheme } from "Theme/config";
+import { BaseTheme } from "../Theme/config";
 
 export const createBoxVariant = <
   T extends { [name: string]: BoxProps<BaseTheme> },

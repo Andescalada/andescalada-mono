@@ -1,4 +1,4 @@
-import { Pressable, Text } from "index";
+import { Pressable, Text } from "../index";
 import {
   ComponentProps,
   createContext,

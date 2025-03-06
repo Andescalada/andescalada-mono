@@ -1,7 +1,11 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "@andescalada/tsconfig/base",
   "compilerOptions": {
-    "strict": true
-    
-  }
+    "strict": true,
+    "composite": true,
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "."
+  },
+  "include": ["**/*"]
 }

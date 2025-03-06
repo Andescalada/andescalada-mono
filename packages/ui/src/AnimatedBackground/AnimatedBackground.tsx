@@ -17,7 +17,7 @@ import {
 } from "@shopify/react-native-skia";
 import { useTheme } from "@shopify/restyle";
 import React, { FC } from "react";
-import { Dimensions, useWindowDimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import pathLogo from "../assets/andescaladaPathLogo";

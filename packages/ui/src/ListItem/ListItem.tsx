@@ -3,7 +3,7 @@ import {
   createVariant,
   VariantProps,
 } from "@shopify/restyle";
-import Pressable from "Pressable/Pressable";
+import Pressable from "../Pressable/Pressable";
 
 import { Theme } from "../Theme/config";
 

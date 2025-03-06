@@ -3,42 +3,25 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "strict": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "baseUrl": ".",
     "paths": {
-      "@navigation/*": [
-        "./navigation/*"
-      ],
-      "@features/*": [
-        "./features/*"
-      ],
-      "@assets/*": [
-        "./assets/*"
-      ],
-      "@utils/*": [
-        "./utils/*"
-      ],
-      "@store/*": [
-        "./store/*"
-      ],
-      "@hooks/*": [
-        "./hooks/*"
-      ],
-      "@templates/*": [
-        "./templates/*"
-      ],
-      "@atoms/*": [
-        "./atoms/*"
-      ],
-      "@local-database/*": [
-        "./local-database/*"
-      ]
-    },
-    "strict": true,
+      "@navigation/*": ["./navigation/*"],
+      "@features/*": ["./features/*"],
+      "@assets/*": ["./assets/*"],
+      "@utils/*": ["./utils/*"],
+      "@store/*": ["./store/*"],
+      "@hooks/*": ["./hooks/*"],
+      "@templates/*": ["./templates/*"],
+      "@atoms/*": ["./atoms/*"],
+      "@local-database/*": ["./local-database/*"]
+    }
   },
   "exclude": [
-    "./dist"
+    "./dist",
+    "node_modules"
   ],
   "include": [
     "./**/*.ts",

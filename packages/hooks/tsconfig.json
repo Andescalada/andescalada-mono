@@ -2,6 +2,11 @@
   "extends": "@andescalada/tsconfig/base",
   "compilerOptions": {
     "baseUrl": ".",
+    "composite": true,
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "."
   },
+  "include": ["**/*"]
 }
 

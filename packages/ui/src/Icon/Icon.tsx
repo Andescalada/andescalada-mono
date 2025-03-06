@@ -2,7 +2,7 @@ import {
   Icon as AndescaladaIcon,
   IconNames,
   Props as IconProps,
-} from "@andescalada/icons/NativeIcons";
+} from "../../../icons/src/NativeIcons";
 import { useTheme } from "@shopify/restyle";
 import { FC, useMemo } from "react";
 

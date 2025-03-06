@@ -1,27 +1,21 @@
 {
+  "extends":"@andescalada/tsconfig/react-native-base",
   "compilerOptions": {
-    "baseUrl": "src",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    "verbatimModuleSyntax": false,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "module": "NodeNext",
+    "baseUrl": ".",
+    "rootDir": ".",
     "outDir": "dist",
-    "sourceMap": true,
-    "declaration": true,
-    "composite": true,
-    "declarationMap": true,
-    "tsBuildInfoFile": "dist/tsbuildinfo",
-    "jsx": "react-native",
-    "lib": ["es2022"]
-    
+    "paths": {
+      "@andescalada/icons/*": ["../icons/src/*"],
+      "Box": ["./src/Box"],
+      "TextInput/TextInput": ["./src/TextInput/TextInput"],
+      "Pressable/Pressable": ["./src/Pressable/Pressable"],
+      "Theme/config": ["./src/Theme/config"],
+      "Theme/createVariants": ["./src/Theme/createVariants"],
+      "index": ["./src/index"]
+    }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../icons" }
+  ]
 }

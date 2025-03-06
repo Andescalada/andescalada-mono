@@ -1,6 +1,6 @@
 import * as jose from "jose";
 import type { NextApiRequest } from "next";
-import { GlobalRoles } from "utils/globalRoles";
+import { GlobalRoles } from "./globalRoles";
 
 const verifyAndDecodeToken = async (req: NextApiRequest) => {
   if (process.env.OFFLINE_DEV === "true") {
